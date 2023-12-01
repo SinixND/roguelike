@@ -1,0 +1,31 @@
+{
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "make project",
+      "command": "make",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": "build"
+    },
+    {
+      "type": "shell",
+      "label": "make test",
+      "command": "make test",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": "build"
+    }
+  ],
+  "version": "2.0.0"
+}
