@@ -7,12 +7,11 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # Current 
-[0] Rework makefile to separate main.cpp from binary name
+[0] implement environment
 
 # Shortterm
-[0] Render unit
 
 # Longterm 
 
 # Done
-
+[x] Render unit

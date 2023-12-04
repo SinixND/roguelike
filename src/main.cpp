@@ -1,4 +1,6 @@
-#include "Scenes.h"
+#include "CurrentScene.h"
+#include "Game.h"
+#include "Scene.h"
 #define RAYGUI_IMPLEMENTATION // only define once
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
 #include "../resources/iconset.rgi.h"
@@ -8,21 +10,33 @@
 
 int main(/* int argc, char **argv */)
 {
-    // Initialization
+    // General Initialization
     //---------------------------------
-    const int screenWidth = 450;
-    const int screenHeight = 550;
+
+    // Raylib
+    constexpr int screenWidth = 620;
+    constexpr int screenHeight = 480;
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SetConfigFlags(FLAG_WINDOW_TRANSPARENT);
+    SetConfigFlags(FLAG_VSYNC_HINT); // used instead of SetTargetFPS()
 
-    InitWindow(screenWidth, screenHeight, "TITLE");
+    InitWindow(screenWidth, screenHeight, "roguelike");
 
-    SetTargetFPS(60);
+    MaximizeWindow();
     // SetExitKey(0); // deactivate exit on ESC
     //---------------------------------
 
-    Game game;
+    // Application Initialize
+    //---------------------------------
+    // Define scenes
+    sxd::Game game{};
+    game.initialize();
+
+    // Set default scene
+    sxd::CurrentScene* currentScene{sxd::CurrentScene::getInstance()};
+    currentScene->setScene(game);
+    //---------------------------------
 
     // Main app loop
     //---------------------------------
@@ -30,18 +44,10 @@ int main(/* int argc, char **argv */)
     {
         if (IsWindowResized())
         {
-            game.Initialize();
+            currentScene->getScene().initialize();
         }
 
-        switch (currentScene)
-        {
-        case GAME:
-            game.Update();
-            break;
-
-        default:
-            break;
-        }
+        currentScene->getScene().update();
     }
     //---------------------------------
 

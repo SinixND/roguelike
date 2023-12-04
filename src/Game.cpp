@@ -1,35 +1,47 @@
-#include "Scenes.h"
+#include "Game.h"
+#include "Character.h"
+#include "Units.h"
 #include <raylib.h>
 
-Game::Game()
+namespace sxd
 {
-}
+    Game::Game()
+        : player_(Vector2{0, 0}, 10, GOLD)
+    {
+    }
 
-void Game::Initialize()
-{
-}
+    void Game::initialize()
+    {
+        player_.setPosition(Vector2{GetScreenWidth() / 2.0f, GetRenderHeight() / 2.0f});
+    };
 
-void Game::Update()
-{
-    ProcessInput();
-    UpdateState();
+    void Game::processInput()
+    {
+        switch (GetKeyPressed())
+        {
+        case KEY_LEFT:
+            player_.move(Unit::left(), Unit::field());
+            break;
+        case KEY_RIGHT:
+            player_.move(Unit::right(), Unit::field());
+            break;
+        case KEY_UP:
+            player_.move(Unit::up(), Unit::field());
+            break;
+        case KEY_DOWN:
+            player_.move(Unit::down(), Unit::field());
+            break;
+        default:
+            break;
+        }
+    };
 
-    BeginDrawing();
-    ClearBackground(BLACK);
+    void Game::updateState(){};
 
-    RenderOutput();
+    void Game::renderOutput()
+    {
+        render(player_);
+    };
 
-    EndDrawing();
-}
-
-void Game::ProcessInput()
-{
-}
-
-void Game::UpdateState()
-{
-}
-
-void Game::RenderOutput()
-{
+    void Game::deinitialize(){};
 }
