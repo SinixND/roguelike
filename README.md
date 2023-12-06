@@ -6,12 +6,14 @@ development of a (maybe) roguelike game with c++ and raylib
 - emscripten
 
 # TODOs
-# Current 
-[0] implement environment
+# Current
+[0] compile for linux & windows !
 
 # Shortterm
+[0] plan struchture with UML
 
 # Longterm 
+[0] implement environment
 
 # Done
 [x] Render unit
