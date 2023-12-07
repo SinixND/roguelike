@@ -30,11 +30,11 @@ int main(/* int argc, char **argv */)
     // Application Initialize
     //---------------------------------
     // Define scenes
-    sxd::Game game{};
+    snd::Game game{};
     game.initialize();
 
     // Set default scene
-    sxd::CurrentScene* currentScene{sxd::CurrentScene::getInstance()};
+    snd::CurrentScene* currentScene{snd::CurrentScene::getInstance()};
     currentScene->setScene(game);
     //---------------------------------
 

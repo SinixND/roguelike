@@ -2,7 +2,7 @@
 
 #include "Renderable.h"
 
-namespace sxd
+namespace snd
 {
     void Render::render(Renderable& renderable)
     {

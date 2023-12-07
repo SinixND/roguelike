@@ -3,7 +3,7 @@
 
 struct Vector2;
 
-namespace sxd
+namespace snd
 {
     struct Unit
     {

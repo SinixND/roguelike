@@ -3,7 +3,7 @@
 #include "Units.h"
 #include <raylib.h>
 
-namespace sxd
+namespace snd
 {
     Game::Game()
         : player_(Vector2{0, 0}, 10, GOLD)

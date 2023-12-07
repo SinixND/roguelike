@@ -1,7 +1,7 @@
 #include "Units.h"
 #include <raylib.h>
 
-namespace sxd
+namespace snd
 {
     Vector2 Unit::left() { return Vector2{-1, 0}; };
     Vector2 Unit::right() { return Vector2{1, 0}; };

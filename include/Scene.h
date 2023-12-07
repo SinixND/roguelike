@@ -3,7 +3,7 @@
 
 #include <raylib.h>
 
-namespace sxd
+namespace snd
 {
     class Scene
     {

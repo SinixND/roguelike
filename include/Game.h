@@ -5,12 +5,12 @@
 #include "Render.h"
 #include "Scene.h"
 
-namespace sxd
+namespace snd
 {
 
     class Game
         : public Scene
-        , public Render
+        , public Renderer
     {
     public:
         Game();

@@ -6,7 +6,7 @@
 
 struct Vector2;
 
-namespace sxd
+namespace snd
 {
     class Character
         : public Renderable

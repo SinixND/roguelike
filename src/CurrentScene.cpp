@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace sxd
+namespace snd
 {
     Scene* CurrentScene::scene_{};
 

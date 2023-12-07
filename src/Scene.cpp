@@ -6,7 +6,7 @@
 constexpr float BORDER_WEIGHT{1};
 constexpr Color BORDER_COLOR{GRAY};
 
-namespace sxd
+namespace snd
 {
     Globals* globals{Globals::getInstance()};
 

@@ -2,7 +2,7 @@
 
 #include <raylib.h>
 
-namespace sxd
+namespace snd
 {
 
     Character::Character(Vector2 position, float size, Color color)

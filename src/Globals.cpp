@@ -2,7 +2,7 @@
 
 #include <raylib.h>
 
-namespace sxd
+namespace snd
 {
     Color Globals::foreground_{WHITE};
     Color Globals::background_{BLACK};

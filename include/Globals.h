@@ -10,7 +10,7 @@
     T(const T&) = delete;           \
     T& operator=(const T&) = delete;
 
-namespace sxd
+namespace snd
 {
     class Globals
     {
