@@ -2,7 +2,7 @@
 #define GAME_H_20231203204745
 
 #include "Character.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "Scene.h"
 
 namespace snd

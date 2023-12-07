@@ -1,10 +1,12 @@
-#include "Render.h"
+#include "Renderer.h"
 
 #include "Renderable.h"
 
 namespace snd
 {
-    void Render::render(Renderable& renderable)
+    Renderer::~Renderer(){};
+
+    void Renderer::render(Renderable& renderable)
     {
         renderable.render();
     }
