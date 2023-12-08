@@ -16,19 +16,19 @@ namespace snd
 
     // Singleton
     //-------------------------------------
-    Globals* Globals::Globals_{nullptr};
+    Globals* Globals::globals_{nullptr};
     std::mutex Globals::mutex_;
 
     Globals* Globals::getInstance()
     {
         std::lock_guard<std::mutex> lock(mutex_);
 
-        if (Globals_ == nullptr)
+        if (globals_ == nullptr)
         {
-            Globals_ = new Globals();
+            globals_ = new Globals();
         }
 
-        return Globals_;
+        return globals_;
     }
     //-------------------------------------
 }

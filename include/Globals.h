@@ -35,7 +35,7 @@ namespace snd
 
         // Singleton attributes
         //---------------------------------
-        static Globals* Globals_;
+        static Globals* globals_;
         static std::mutex mutex_;
 
         // make ctor private
