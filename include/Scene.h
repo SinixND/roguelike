@@ -8,7 +8,7 @@ namespace snd
     class Scene
     {
     public:
-        void update();
+        virtual void update();
 
         virtual ~Scene();
         virtual void initialize();
