@@ -1,25 +1,26 @@
 #ifndef GAME_H_20231203204745
 #define GAME_H_20231203204745
 
-#include "Character.h"
 #include "Renderer.h"
 #include "Scene.h"
 
 namespace snd
 {
 
-    class Game
+    class GameScene
         : public Scene
         , public Renderer
+    //, public Controller
     {
     public:
-        Game();
+        GameScene();
 
         void initialize() override;
         void deinitialize() override;
 
     private:
-        Character player_;
+        Renderer renderer;
+        // Controller controller;
 
         void processInput() override;
         void updateState() override;

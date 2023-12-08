@@ -8,8 +8,7 @@ namespace snd
     class Renderer
     {
     public:
-        virtual ~Renderer();
-        void render(Renderable& renderable);
+        void execute(Renderable& renderable);
     };
 }
 

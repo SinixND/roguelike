@@ -1,4 +1,4 @@
-#include "CurrentScene.h"
+#include "ActiveScene.h"
 #include "Game.h"
 #include "Scene.h"
 #define RAYGUI_IMPLEMENTATION // only define once
@@ -30,12 +30,12 @@ int main(/* int argc, char **argv */)
     // Application Initialize
     //---------------------------------
     // Define scenes
-    snd::Game game{};
+    snd::GameScene game{};
     game.initialize();
 
     // Set default scene
-    snd::CurrentScene* currentScene{snd::CurrentScene::getInstance()};
-    currentScene->setScene(game);
+    snd::ActiveScene* activeScene{snd::ActiveScene::getInstance()};
+    activeScene->setScene(game);
     //---------------------------------
 
     // Main app loop
@@ -44,10 +44,10 @@ int main(/* int argc, char **argv */)
     {
         if (IsWindowResized())
         {
-            currentScene->getScene().initialize();
+            activeScene->getScene().initialize();
         }
 
-        currentScene->getScene().update();
+        activeScene->getScene().update();
     }
     //---------------------------------
 

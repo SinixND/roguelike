@@ -11,7 +11,7 @@
 
 namespace snd
 {
-    class CurrentScene
+    class ActiveScene
     {
     public:
         static Scene& getScene();
@@ -19,8 +19,8 @@ namespace snd
 
         // Singleton attributes
         //---------------------------------
-        // get CurrentScene instance
-        static CurrentScene* getInstance();
+        // get ActiveScene instance
+        static ActiveScene* getInstance();
         //---------------------------------
 
     private:
@@ -28,15 +28,15 @@ namespace snd
 
         // Singleton attributes
         //---------------------------------
-        static CurrentScene* currentScene_;
+        static ActiveScene* currentScene_;
         static std::mutex mutex_;
 
         // make ctor private
-        CurrentScene();
+        ActiveScene();
         // make dtor private
-        ~CurrentScene();
+        ~ActiveScene();
 
-        DISALLOW_COPY_AND_ASSIGN(CurrentScene)
+        DISALLOW_COPY_AND_ASSIGN(ActiveScene)
         //---------------------------------
     };
 }

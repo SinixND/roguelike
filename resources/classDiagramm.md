@@ -43,22 +43,43 @@ classDiagram
     }
     ActiveScene --> ActiveScene
 
-    class Renderer {
-        + execute(Renderable) void
-    }
-    Renderer --> Renderable : uses
-
 
     class GameScene {
         + InitializeMap()
     }
     GameScene ..|> Scene : implements
     GameScene *-- Renderer : owns
+    GameScene *-- Controller : owns
 
-    class Renderable{
+    class Renderer {
+        + execute(Renderable) void
+    }
+    Renderer --> Renderable : uses
+
+    class Renderable {
         <<Interface>>
         + render()* void
     }
+
+    class Positional {
+        <<Interface>>
+        - Vector2 position
+        + getPosition() Vector2
+        + setPosition() Vector2
+        + move(Direction, distance)* void
+    }
+
+    class Controller {
+        + execute(Controllable) void
+    }
+
+    class Controllable {
+        <<Interface>>
+        - bool selected
+        + isSelected()* bool
+        + select()* void
+    }
+    Controllable ..|> Positional : implements
 
     class Map { 
         + Field[] fields
@@ -90,22 +111,40 @@ classDiagram
 
     class Wall
     Wall ..|> Tile : implements
+    Wall ..|> Positional : implements
+    Wall ..|> Renderable : implements
     
     class Floor 
     Floor ..|> Tile : implements
+    Floor ..|> Positional : implements
+    Floor ..|> Renderable : implements
 
 
-    class Unit 
-
-    class Controllable 
+    class Unit {
+        <<Interface>>
+        - int Health
+        + getHealth() int
+        + setHealth(health) void
+    }
 
     class Player 
+    Player ..|> Unit : implements
+    Player ..|> Controllable : implements
+    Player ..|> Renderable : implements
 
 
-    class NPC 
+    class NPC {
+        <<Interface>>
+    }
+    NPC ..|> Positional : implements
     
     class Monster 
+    Monster ..|> Unit : implements
+    Monster ..|> NPC : implements
+    Monster ..|> Renderable : implements
 
 
     class Item 
+    Item ..|> Positional : implements
+    Item ..|> Renderable : implements
 ```

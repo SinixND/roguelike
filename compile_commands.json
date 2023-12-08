@@ -10,12 +10,30 @@
       "-I/usr/include",
       "-I./include",
       "-o",
-      "build/main.o",
-      "./src/main.cpp"
+      "build/Game.o",
+      "./src/Game.cpp"
     ],
     "directory": "/home/arch/coding/git_repos/roguelike",
-    "file": "/home/arch/coding/git_repos/roguelike/src/main.cpp",
-    "output": "/home/arch/coding/git_repos/roguelike/build/main.o"
+    "file": "/home/arch/coding/git_repos/roguelike/src/Game.cpp",
+    "output": "/home/arch/coding/git_repos/roguelike/build/Game.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++2b",
+      "-DGTEST_HAS_PTHREAD=1",
+      "-pthread",
+      "-I/usr/local/include",
+      "-I/usr/include",
+      "-I./include",
+      "-o",
+      "build/Renderer.o",
+      "./src/Renderer.cpp"
+    ],
+    "directory": "/home/arch/coding/git_repos/roguelike",
+    "file": "/home/arch/coding/git_repos/roguelike/src/Renderer.cpp",
+    "output": "/home/arch/coding/git_repos/roguelike/build/Renderer.o"
   },
   {
     "arguments": [
@@ -34,6 +52,60 @@
     "directory": "/home/arch/coding/git_repos/roguelike",
     "file": "/home/arch/coding/git_repos/roguelike/src/Scene.cpp",
     "output": "/home/arch/coding/git_repos/roguelike/build/Scene.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++2b",
+      "-DGTEST_HAS_PTHREAD=1",
+      "-pthread",
+      "-I/usr/local/include",
+      "-I/usr/include",
+      "-I./include",
+      "-o",
+      "build/main.o",
+      "./src/main.cpp"
+    ],
+    "directory": "/home/arch/coding/git_repos/roguelike",
+    "file": "/home/arch/coding/git_repos/roguelike/src/main.cpp",
+    "output": "/home/arch/coding/git_repos/roguelike/build/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++2b",
+      "-DGTEST_HAS_PTHREAD=1",
+      "-pthread",
+      "-I/usr/local/include",
+      "-I/usr/include",
+      "-I./include",
+      "-o",
+      "build/Globals.o",
+      "./src/Globals.cpp"
+    ],
+    "directory": "/home/arch/coding/git_repos/roguelike",
+    "file": "/home/arch/coding/git_repos/roguelike/src/Globals.cpp",
+    "output": "/home/arch/coding/git_repos/roguelike/build/Globals.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++2b",
+      "-DGTEST_HAS_PTHREAD=1",
+      "-pthread",
+      "-I/usr/local/include",
+      "-I/usr/include",
+      "-I./include",
+      "-o",
+      "build/ActiveScene.o",
+      "./src/ActiveScene.cpp"
+    ],
+    "directory": "/home/arch/coding/git_repos/roguelike",
+    "file": "/home/arch/coding/git_repos/roguelike/src/ActiveScene.cpp",
+    "output": "/home/arch/coding/git_repos/roguelike/build/ActiveScene.o"
   },
   {
     "arguments": [

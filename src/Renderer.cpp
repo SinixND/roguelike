@@ -4,9 +4,7 @@
 
 namespace snd
 {
-    Renderer::~Renderer(){};
-
-    void Renderer::render(Renderable& renderable)
+    void Renderer::execute(Renderable& renderable)
     {
         renderable.render();
     }
