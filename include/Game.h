@@ -5,13 +5,10 @@
 
 namespace snd
 {
-
     class GameScene
         : public Scene
     {
     public:
-        GameScene();
-
         void initialize() override;
         void deinitialize() override;
 
@@ -20,6 +17,5 @@ namespace snd
         void updateState() override;
         void renderOutput() override;
     };
-
 }
 #endif

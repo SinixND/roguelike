@@ -48,13 +48,15 @@ WIN_DEP_EXT 		:= win.d
 VPATH 				:= $(shell find . -type d) 
 ### here go all source files (with the $(SRC_EXT) extension)
 SRC_DIR 			:= ./src
-SRC_DIRS 			:= $(shell find $(SRC_DIR) -type d) 
+SRC_DIRS 			:= $(shell find $(SRC_DIR) -wholename "**" -type d) 
 ### here go local include files
 LOC_INC_DIR 		:= ./include
 ### here go external include files
 EXT_INC_DIR 		:= ./include/external
 ### here go local library files
 LOC_LIB_DIR 		:= ./lib
+SRC_DIRS			+= $(shell find $(LOC_LIB_DIR) -maxdepth 1 -wholename "*src*" -type d)
+LOC_INC_DIR			+= $(shell find $(LOC_LIB_DIR) -maxdepth 1 -wholename "*include*" -type d)
 ### here the object files will be outputted
 OBJ_DIR 			:= ./build
 ### here the binary file will be outputted
@@ -70,8 +72,8 @@ WIN_SYS_INC_DIR 	:= /usr/x86_64-w64-mingw32/include
 ifdef TERMUX_VERSION
 	SYS_INC_DIR := $(PREFIX)/usr/include 
 endif
-EXT_INC_DIRS 		:= $(shell find $(EXT_INC_DIR) -type d) 
-LOC_INC_DIRS 		:= $(shell find $(LOC_INC_DIR) -type d) 
+EXT_INC_DIRS 		:= $(shell find $(EXT_INC_DIR) -wholename "**" -type d) 
+LOC_INC_DIRS 		:= $(shell find $(LOC_INC_DIR) -wholename "**" -type d) 
 
 ### set the locations of all possible libraries used
 SYS_LIB_DIR 		:= /usr/local/lib /usr/lib 
@@ -97,7 +99,7 @@ LD_FLAGS 			:= #-fsanitize=address
 
 ### make linker flags by prefixing every provided library with -l (should work for most libraries due to convention); probably pkg-config makes duplicates...
 LD_LIBS 			:= $(addprefix -l,$(LIBRARIES)) #$(shell pkg-config --libs $(LIBRARIES))
-WIN_LD_LIBS 			:= $(addprefix -l,$(WIN_LIBRARIES)) #$(shell pkg-config --libs $(WIN_LIBRARIES))
+WIN_LD_LIBS 		:= $(addprefix -l,$(WIN_LIBRARIES)) #$(shell pkg-config --libs $(WIN_LIBRARIES))
 
 ### make library flags by prefixing every provided path with -L; this might take a while for the first time, but will NOT be repeated every time
 SYS_LIB_FLAGS 		:= $(addprefix -L,$(SYS_LIB_DIR))
@@ -105,7 +107,7 @@ WIN_SYS_LIB_FLAGS 	:= $(addprefix -L,$(WIN_SYS_LIB_DIR))
 LOC_LIB_FLAGS 		:= $(addprefix -L,$(LOC_LIB_DIRS))
 
 LIB_FLAGS 			:= $(SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
-WIN_LIB_FLAGS 			:= $(WIN_SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
+WIN_LIB_FLAGS 		:= $(WIN_SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
 
 ### make include flags by prefixing every provided path with -I
 SYS_INC_FLAGS 		:= $(addprefix -I,$(SYS_INC_DIR))
@@ -127,8 +129,8 @@ SRC_NAMES 			:= $(patsubst %.$(SRC_EXT),%,$(SRC_NAMES))
 ### IMPORTANT for linker dependency, so they are found as compile rule
 OBJS 				:= $(patsubst %,$(OBJ_DIR)/%.$(OBJ_EXT),$(SRC_NAMES))
 WIN_OBJS 			:= $(patsubst %,$(OBJ_DIR)/%.$(WIN_OBJ_EXT),$(SRC_NAMES))
-TEST_OBJS 			:= $(TEST_DIR)/test.$(OBJ_EXT) $(patsubst ./build/$(BINARY).o,,$(OBJS))
-BM_OBJS 			:= $(TEST_DIR)/benchmark.$(OBJ_EXT) $(patsubst ./build/$(BINARY).o,,$(OBJS))
+TEST_OBJS 			:= $(TEST_DIR)/test.$(OBJ_EXT) $(patsubst $(OBJ_DIR)/$(BINARY).o,,$(OBJS))
+BM_OBJS 			:= $(TEST_DIR)/benchmark.$(OBJ_EXT) $(patsubst $(OBJ_DIR)/$(BINARY).o,,$(OBJS))
 ### make list of dependency files
 DEPS 				:= $(patsubst $(OBJ_DIR)/%.$(OBJ_EXT),$(OBJ_DIR)/%.$(DEP_EXT),$(OBJS))
 WIN_DEPS 			:= $(patsubst $(OBJ_DIR)/%.$(WIN_OBJ_EXT),$(OBJ_DIR)/%.$(WIN_DEP_EXT),$(WIN_OBJS))
@@ -180,14 +182,20 @@ endif
 $(BIN_DIR)/$(BINARY).$(BINARY_EXT): $(OBJS)
 ### $@ (target, left of ":")
 ### $^ (all dependencies, all right of ":")
+	$(info )
+	$(info === Link main ===)
 	$(CXX) -o $@ $^ $(LD_FLAGS) $(LIB_FLAGS) $(LD_LIBS) 
 
 ### LINK TEST
 $(TEST_DIR)/test.$(BINARY_EXT): $(TEST_OBJS)
+	$(info )
+	$(info === Link test ===)
 	$(CXX) -o $@ $^ $(LD_FLAGS) $(LIB_FLAGS) $(LD_LIBS)
 
 ### LINK BENCHMARK
 $(TEST_DIR)/benchmark.$(BINARY_EXT): $(BM_OBJS)
+	$(info )
+	$(info === Link benchmark ===)
 	$(CXX) -o $@ $^ $(LD_FLAGS) $(LIB_FLAGS) $(LD_LIBS)
 
 
@@ -196,14 +204,20 @@ $(TEST_DIR)/benchmark.$(BINARY_EXT): $(BM_OBJS)
 $(OBJ_DIR)/%.$(OBJ_EXT): %.$(SRC_EXT)
 ### $< (first dependency, first right of ":")
 ### $@ (target, left of ":")
-	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
+	$(info )
+	$(info === Compile main ===)
+	$(CXX) -o $@  -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
 ### COMPILE TEST 
 $(TEST_DIR)/test.$(OBJ_EXT): test.$(SRC_EXT)
-	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
+	$(info )
+	$(info === Compile test ===)
+	$(CXX) -o $@  -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
 ### COMPILE BENCHMARK 
 $(TEST_DIR)/benchmark.$(OBJ_EXT): benchmark.$(SRC_EXT)
+	$(info )
+	$(info === Compile benchmark ===)
 	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
 

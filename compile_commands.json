@@ -10,6 +10,9 @@
       "-isystem./include/external",
       "-I./include",
       "-I./include/external",
+      "-I./lib/include",
+      "-I./lib/include/Components",
+      "-I./lib/include/Systems",
       "-o",
       "build/Game.o",
       "./src/Game.cpp"
@@ -29,44 +32,9 @@
       "-isystem./include/external",
       "-I./include",
       "-I./include/external",
-      "-o",
-      "build/Renderer.o",
-      "./src/Renderer.cpp"
-    ],
-    "directory": "/home/arch/coding/git_repos/roguelike",
-    "file": "/home/arch/coding/git_repos/roguelike/src/Renderer.cpp",
-    "output": "/home/arch/coding/git_repos/roguelike/build/Renderer.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-c",
-      "-std=c++2a",
-      "-pthread",
-      "-I/usr/local/include",
-      "-I/usr/include",
-      "-isystem./include/external",
-      "-I./include",
-      "-I./include/external",
-      "-o",
-      "build/main.o",
-      "./src/main.cpp"
-    ],
-    "directory": "/home/arch/coding/git_repos/roguelike",
-    "file": "/home/arch/coding/git_repos/roguelike/src/main.cpp",
-    "output": "/home/arch/coding/git_repos/roguelike/build/main.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-c",
-      "-std=c++2a",
-      "-pthread",
-      "-I/usr/local/include",
-      "-I/usr/include",
-      "-isystem./include/external",
-      "-I./include",
-      "-I./include/external",
+      "-I./lib/include",
+      "-I./lib/include/Components",
+      "-I./lib/include/Systems",
       "-o",
       "build/Globals.o",
       "./src/Globals.cpp"
@@ -86,6 +54,31 @@
       "-isystem./include/external",
       "-I./include",
       "-I./include/external",
+      "-I./lib/include",
+      "-I./lib/include/Components",
+      "-I./lib/include/Systems",
+      "-o",
+      "build/main.o",
+      "./src/main.cpp"
+    ],
+    "directory": "/home/arch/coding/git_repos/roguelike",
+    "file": "/home/arch/coding/git_repos/roguelike/src/main.cpp",
+    "output": "/home/arch/coding/git_repos/roguelike/build/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++2a",
+      "-pthread",
+      "-I/usr/local/include",
+      "-I/usr/include",
+      "-isystem./include/external",
+      "-I./include",
+      "-I./include/external",
+      "-I./lib/include",
+      "-I./lib/include/Components",
+      "-I./lib/include/Systems",
       "-o",
       "build/ActiveScene.o",
       "./src/ActiveScene.cpp"
@@ -105,13 +98,16 @@
       "-isystem./include/external",
       "-I./include",
       "-I./include/external",
+      "-I./lib/include",
+      "-I./lib/include/Components",
+      "-I./lib/include/Systems",
       "-o",
-      "build/Controller.o",
-      "./src/Controller.cpp"
+      "build/EntityManger.o",
+      "./lib/src/EntityManger.cpp"
     ],
     "directory": "/home/arch/coding/git_repos/roguelike",
-    "file": "/home/arch/coding/git_repos/roguelike/src/Controller.cpp",
-    "output": "/home/arch/coding/git_repos/roguelike/build/Controller.o"
+    "file": "/home/arch/coding/git_repos/roguelike/lib/src/EntityManger.cpp",
+    "output": "/home/arch/coding/git_repos/roguelike/build/EntityManger.o"
   },
   {
     "arguments": [
@@ -124,6 +120,9 @@
       "-isystem./include/external",
       "-I./include",
       "-I./include/external",
+      "-I./lib/include",
+      "-I./lib/include/Components",
+      "-I./lib/include/Systems",
       "-o",
       "test/test.o",
       "./test/test.cpp"
@@ -143,6 +142,9 @@
       "-isystem./include/external",
       "-I./include",
       "-I./include/external",
+      "-I./lib/include",
+      "-I./lib/include/Components",
+      "-I./lib/include/Systems",
       "-o",
       "test/benchmark.o",
       "./test/benchmark.cpp"

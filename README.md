@@ -7,20 +7,18 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] active scene is global
-[1] render with function arguments
-[2] player (controlable unit) at runtime
+[0] make ECS
 [4] split globals and settings
 [5] Render sprites/textures
 
 # Shortterm
-[0] plan struchture with UML
-[0] implement environment
 
 # Longterm 
-[0] compile for linux & windows !
+
+# Continuous
+[0] plan structure with UML
 
 # Notes
 
 # Done
-[x] Render unit
+[x] compile for linux & windows !

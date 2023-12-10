@@ -1,11 +1,26 @@
 #include "Game.h"
-#include <raylib.h>
+#include "Entity.h"
+#include "EntityManager.h"
 
 namespace snd
 {
-    GameScene::GameScene(){};
+    // Instantiate managers
+    EntityManager* entityManager{EntityManager::getInstance()};
 
-    void GameScene::initialize(){};
+    // Declare entities
+    Entity player;
+
+    // Declare components
+
+    void GameScene::initialize()
+    {
+        // Declare entities
+        player = entityManager->createEntity();
+
+        // Declare components
+
+        // Add components to entities
+    };
 
     void GameScene::processInput(){};
 
@@ -14,4 +29,5 @@ namespace snd
     void GameScene::renderOutput(){};
 
     void GameScene::deinitialize(){};
+
 }
