@@ -45,14 +45,13 @@ classDiagram
 
 
     class GameScene {
-        + InitializeMap()
     }
     GameScene ..|> Scene : implements
     GameScene *-- Renderer : owns
     GameScene *-- Controller : owns
 
     class Renderer {
-        + execute(Renderable) void
+        + render(Renderable) void
     }
     Renderer --> Renderable : uses
 
@@ -65,43 +64,34 @@ classDiagram
         <<Interface>>
         - Vector2 position
         + getPosition() Vector2
-        + setPosition() Vector2
-        + move(Direction, distance)* void
+        + setPosition(Vector2) void
     }
 
     class Controller {
-        + execute(Controllable) void
+        + move(Positional, Direction, distance) void
     }
-
-    class Controllable {
-        <<Interface>>
-        - bool selected
-        + isSelected()* bool
-        + select()* void
-    }
-    Controllable ..|> Positional : implements
 
     class Map { 
-        + Field[] fields
+        + MapEntity[] fields
         + Tile[] tiles
         + Unit[] units
         + Item[] items
     }
     note for Map "key-value-container"
-    Map *-- Field : has
+    Map *-- MapEntity : has
     Map *-- Tile : has
     Map *-- Item : has
     Map *-- Unit : has
 
-    class Field {
-        Vector2 position
+    class MapEntity {
         Tile tile
         Item item
         Unit unit
     }
-    Field --> Tile : holds
-    Field --> Item : holds
-    Field --> Unit : holds
+    MapEntity ..|> Positional : implements
+    MapEntity --> Tile : holds
+    MapEntity --> Item : holds
+    MapEntity --> Unit : holds
 
     class Tile {
         <<Interface>>
@@ -129,20 +119,8 @@ classDiagram
 
     class Player 
     Player ..|> Unit : implements
-    Player ..|> Controllable : implements
+    Player ..|> Positional : implements
     Player ..|> Renderable : implements
-
-
-    class NPC {
-        <<Interface>>
-    }
-    NPC ..|> Positional : implements
-    
-    class Monster 
-    Monster ..|> Unit : implements
-    Monster ..|> NPC : implements
-    Monster ..|> Renderable : implements
-
 
     class Item 
     Item ..|> Positional : implements

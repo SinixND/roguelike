@@ -8,10 +8,10 @@ development of a (maybe) roguelike game with c++ and raylib
 # TODOs
 # active
 [0] active scene is global
-[1] render function arguments
+[1] render with function arguments
 [2] player (controlable unit) at runtime
-[3] units are globals -> move
 [4] split globals and settings
+[5] Render sprites/textures
 
 # Shortterm
 [0] plan struchture with UML

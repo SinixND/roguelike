@@ -5,6 +5,7 @@
 
 ### label used libraries so the respective -l flags (eg. -lraylib)
 LIBRARIES 			:= raylib
+WIN_LIBRARIES 		:= $(LIBRARIES) opengl32 gdi32 winmm
 ifdef TERMUX_VERSION
 LIBRARIES 			+= #log
 else
@@ -15,7 +16,7 @@ endif
 # -MMD			provides dependency information (header files) for make in .d files
 # -pg			ADD FOR gprof analysis TO BOTH COMPILE AND LINK COMMAND!!
 
-CXX_FLAGS 			:= -std=c++2b `pkg-config --cflags $(LIBRARIES)` -pthread 
+CXX_FLAGS 			:= -std=c++2a -pthread #`pkg-config --cflags $(LIBRARIES)`
 debug: CXX_FLAGS 	+= -g -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -MMD -O0 #-fsanitize=address 
 
 ### set the projects label, used for the binary (eg. main.exe, root .cpp file needs same name)
@@ -27,16 +28,20 @@ MAKEFLAGS 			:=
 #######################################
 ### set the used compiler to g++ or clang++
 CXX 				:= g++ 
+WIN_CXX 			:= /bin/x86_64-w64-mingw32-g++ 
 
 ### set the binary file extension
 BINARY_EXT 			:= exe
+WIN_BINARY_EXT 		:= windows.exe
 
 ### set the used file extension for c-files, usually either .c or .cpp
 SRC_EXT 			:= cpp
 ### set the used file extension for object files, usually .o
 OBJ_EXT 			:= o
+WIN_OBJ_EXT 		:= win.o
 ### set the used file extension for dependency files, usually .d (header/source connection)
 DEP_EXT 			:= d
+WIN_DEP_EXT 		:= win.d
 
 ### set the respective folders from structure
 ### set VPATH as std dir to look for compile targets
@@ -46,6 +51,8 @@ SRC_DIR 			:= ./src
 SRC_DIRS 			:= $(shell find $(SRC_DIR) -type d) 
 ### here go local include files
 LOC_INC_DIR 		:= ./include
+### here go external include files
+EXT_INC_DIR 		:= ./include/external
 ### here go local library files
 LOC_LIB_DIR 		:= ./lib
 ### here the object files will be outputted
@@ -59,13 +66,16 @@ WEB_DIR 			:= ./web
 
 ### set the locations of header files
 SYS_INC_DIR 		:= /usr/local/include /usr/include 
+WIN_SYS_INC_DIR 	:= /usr/x86_64-w64-mingw32/include 
 ifdef TERMUX_VERSION
 	SYS_INC_DIR := $(PREFIX)/usr/include 
 endif
+EXT_INC_DIRS 		:= $(shell find $(EXT_INC_DIR) -type d) 
 LOC_INC_DIRS 		:= $(shell find $(LOC_INC_DIR) -type d) 
 
 ### set the locations of all possible libraries used
 SYS_LIB_DIR 		:= /usr/local/lib /usr/lib 
+WIN_SYS_LIB_DIR 	:= /usr/x86_64-w64-mingw32/lib 
 ifdef TERMUX_VERSION
 	SYS_LIB_DIR := $(PREFIX)/usr/lib 
 endif
@@ -73,6 +83,7 @@ LOC_LIB_DIRS 		:= $(shell find $(LOC_LIB_DIR) -type d)
 
 ### set raylib and emscripten directory as needed
 RAYLIB_DIR 			:= /usr/lib/raylib
+WIN_RAYLIB_DIR 		:= /usr/x86_64-w64-mingw32/lib/raylib/src
 ifdef TERMUX_VERSION
 RAYLIB_DIR 			:= $(PREFIX)/lib/raylib
 endif
@@ -85,17 +96,25 @@ LD_FLAGS 			:= #-fsanitize=address
 #######################
 
 ### make linker flags by prefixing every provided library with -l (should work for most libraries due to convention); probably pkg-config makes duplicates...
-LD_LIBS 			:= $(addprefix -l,$(LIBRARIES)) $(shell pkg-config --libs $(LIBRARIES))
+LD_LIBS 			:= $(addprefix -l,$(LIBRARIES)) #$(shell pkg-config --libs $(LIBRARIES))
+WIN_LD_LIBS 			:= $(addprefix -l,$(WIN_LIBRARIES)) #$(shell pkg-config --libs $(WIN_LIBRARIES))
 
 ### make library flags by prefixing every provided path with -L; this might take a while for the first time, but will NOT be repeated every time
 SYS_LIB_FLAGS 		:= $(addprefix -L,$(SYS_LIB_DIR))
+WIN_SYS_LIB_FLAGS 	:= $(addprefix -L,$(WIN_SYS_LIB_DIR))
 LOC_LIB_FLAGS 		:= $(addprefix -L,$(LOC_LIB_DIRS))
+
 LIB_FLAGS 			:= $(SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
+WIN_LIB_FLAGS 			:= $(WIN_SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
 
 ### make include flags by prefixing every provided path with -I
 SYS_INC_FLAGS 		:= $(addprefix -I,$(SYS_INC_DIR))
+WIN_SYS_INC_FLAGS	:= $(addprefix -I,$(WIN_SYS_INC_DIR))
 LOC_INC_FLAGS 		:= $(addprefix -I,$(LOC_INC_DIRS))
-INC_FLAGS 			:= $(SYS_INC_FLAGS) $(LOC_INC_FLAGS)
+EXT_INC_FLAGS 		:= $(addprefix -isystem,$(EXT_INC_DIRS))
+
+INC_FLAGS 			:= $(SYS_INC_FLAGS) $(EXT_INC_FLAGS) $(LOC_INC_FLAGS)
+WIN_INC_FLAGS 		:= $(WIN_SYS_INC_FLAGS) $(EXT_INC_FLAGS) $(LOC_INC_FLAGS)
 
 ### list all source files found in source file directory;
 SRCS 				:= $(shell find $(SRC_DIR) -type f)
@@ -107,13 +126,15 @@ SRC_NAMES 			:= $(patsubst %.$(SRC_EXT),%,$(SRC_NAMES))
 ### (patsubst pattern,replacement,target)
 ### IMPORTANT for linker dependency, so they are found as compile rule
 OBJS 				:= $(patsubst %,$(OBJ_DIR)/%.$(OBJ_EXT),$(SRC_NAMES))
+WIN_OBJS 			:= $(patsubst %,$(OBJ_DIR)/%.$(WIN_OBJ_EXT),$(SRC_NAMES))
 TEST_OBJS 			:= $(TEST_DIR)/test.$(OBJ_EXT) $(patsubst ./build/$(BINARY).o,,$(OBJS))
 BM_OBJS 			:= $(TEST_DIR)/benchmark.$(OBJ_EXT) $(patsubst ./build/$(BINARY).o,,$(OBJS))
 ### make list of dependency files
 DEPS 				:= $(patsubst $(OBJ_DIR)/%.$(OBJ_EXT),$(OBJ_DIR)/%.$(DEP_EXT),$(OBJS))
+WIN_DEPS 			:= $(patsubst $(OBJ_DIR)/%.$(WIN_OBJ_EXT),$(OBJ_DIR)/%.$(WIN_DEP_EXT),$(WIN_OBJS))
 
 ### Non-file (.phony)targets (or rules)
-.PHONY: all debug release web build rebuild run clean
+.PHONY: all debug release web windows build rebuild run clean
 ifndef TERMUX_VERSION
 .PHONY: bear test benchmark
 endif
@@ -145,7 +166,7 @@ benchmark: $(TEST_DIR)/benchmark.$(BINARY_EXT)
 
 ### rule for release build process with binary as prerequisite
 release: CXX_FLAGS += -O2
-release: clean build web clean
+release: build web #windows 
 
 ### rule for native build process with binary as prerequisite
 build: $(BIN_DIR)/$(BINARY).$(BINARY_EXT) 
@@ -188,8 +209,17 @@ $(TEST_DIR)/benchmark.$(OBJ_EXT): benchmark.$(SRC_EXT)
 
 ### rule for web build process
 web:
-	emcc -o index.html $(SRCS) -Os -Wall $(RAYLIB_DIR)/libraylib.a $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) -L$(RAYLIB_DIR) -s USE_GLFW=3 -s ASYNCIFY --shell-file $(RAYLIB_DIR)/minshell.html -DPLATFORM_WEB
-	emcc -o web/game.html $(SRCS) -Os -Wall $(RAYLIB_DIR)/libraylib.a $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) -L$(RAYLIB_DIR) -s USE_GLFW=3 -s ASYNCIFY --shell-file $(RAYLIB_DIR)/minshell.html -DPLATFORM_WEB
+	emcc -o index.html $(SRCS) -Os -Wall $(RAYLIB_DIR)/src/libraylib.a $(LOC_INC_FLAGS) -I$(RAYLIB_DIR)/src -L$(RAYLIB_DIR) -s USE_GLFW=3 -s ASYNCIFY --shell-file $(RAYLIB_DIR)/src/minshell.html -DPLATFORM_WEB
+	emcc -o web/game.html $(SRCS) -Os -Wall $(RAYLIB_DIR)/src/libraylib.a $(LOC_INC_FLAGS) -I$(RAYLIB_DIR)/src -L$(RAYLIB_DIR) -s USE_GLFW=3 -s ASYNCIFY --shell-file $(RAYLIB_DIR)/src/minshell.html -DPLATFORM_WEB
+
+### rule for windows build process
+windows: $(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT) 
+
+$(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT): $(WIN_OBJS)
+	$(WIN_CXX) -o $@ $^ $(WIN_LD_FLAGS) $(WIN_LIB_FLAGS) -L$(WIN_RAYLIB_DIR) $(WIN_LD_LIBS) -static -static-libgcc -static-libstdc++
+
+$(OBJ_DIR)/%.$(WIN_OBJ_EXT): %.$(SRC_EXT)
+	$(WIN_CXX) -o $@ -c $< $(CXX_FLAGS) $(WIN_INC_FLAGS) -I$(RAYLIB_DIR)
 
 
 ### clear dynamically created directories

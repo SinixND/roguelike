@@ -3,12 +3,13 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
-      "-std=c++2b",
-      "-DGTEST_HAS_PTHREAD=1",
+      "-std=c++2a",
       "-pthread",
       "-I/usr/local/include",
       "-I/usr/include",
+      "-isystem./include/external",
       "-I./include",
+      "-I./include/external",
       "-o",
       "build/Game.o",
       "./src/Game.cpp"
@@ -21,12 +22,13 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
-      "-std=c++2b",
-      "-DGTEST_HAS_PTHREAD=1",
+      "-std=c++2a",
       "-pthread",
       "-I/usr/local/include",
       "-I/usr/include",
+      "-isystem./include/external",
       "-I./include",
+      "-I./include/external",
       "-o",
       "build/Renderer.o",
       "./src/Renderer.cpp"
@@ -39,30 +41,13 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
-      "-std=c++2b",
-      "-DGTEST_HAS_PTHREAD=1",
+      "-std=c++2a",
       "-pthread",
       "-I/usr/local/include",
       "-I/usr/include",
+      "-isystem./include/external",
       "-I./include",
-      "-o",
-      "build/Scene.o",
-      "./src/Scene.cpp"
-    ],
-    "directory": "/home/arch/coding/git_repos/roguelike",
-    "file": "/home/arch/coding/git_repos/roguelike/src/Scene.cpp",
-    "output": "/home/arch/coding/git_repos/roguelike/build/Scene.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-c",
-      "-std=c++2b",
-      "-DGTEST_HAS_PTHREAD=1",
-      "-pthread",
-      "-I/usr/local/include",
-      "-I/usr/include",
-      "-I./include",
+      "-I./include/external",
       "-o",
       "build/main.o",
       "./src/main.cpp"
@@ -75,12 +60,13 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
-      "-std=c++2b",
-      "-DGTEST_HAS_PTHREAD=1",
+      "-std=c++2a",
       "-pthread",
       "-I/usr/local/include",
       "-I/usr/include",
+      "-isystem./include/external",
       "-I./include",
+      "-I./include/external",
       "-o",
       "build/Globals.o",
       "./src/Globals.cpp"
@@ -93,12 +79,13 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
-      "-std=c++2b",
-      "-DGTEST_HAS_PTHREAD=1",
+      "-std=c++2a",
       "-pthread",
       "-I/usr/local/include",
       "-I/usr/include",
+      "-isystem./include/external",
       "-I./include",
+      "-I./include/external",
       "-o",
       "build/ActiveScene.o",
       "./src/ActiveScene.cpp"
@@ -111,12 +98,32 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
-      "-std=c++2b",
-      "-DGTEST_HAS_PTHREAD=1",
+      "-std=c++2a",
       "-pthread",
       "-I/usr/local/include",
       "-I/usr/include",
+      "-isystem./include/external",
       "-I./include",
+      "-I./include/external",
+      "-o",
+      "build/Controller.o",
+      "./src/Controller.cpp"
+    ],
+    "directory": "/home/arch/coding/git_repos/roguelike",
+    "file": "/home/arch/coding/git_repos/roguelike/src/Controller.cpp",
+    "output": "/home/arch/coding/git_repos/roguelike/build/Controller.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++2a",
+      "-pthread",
+      "-I/usr/local/include",
+      "-I/usr/include",
+      "-isystem./include/external",
+      "-I./include",
+      "-I./include/external",
       "-o",
       "test/test.o",
       "./test/test.cpp"
@@ -129,12 +136,13 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
-      "-std=c++2b",
-      "-DGTEST_HAS_PTHREAD=1",
+      "-std=c++2a",
       "-pthread",
       "-I/usr/local/include",
       "-I/usr/include",
+      "-isystem./include/external",
       "-I./include",
+      "-I./include/external",
       "-o",
       "test/benchmark.o",
       "./test/benchmark.cpp"
