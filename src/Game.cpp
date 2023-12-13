@@ -1,25 +1,24 @@
 #include "Game.h"
 #include "Entity.h"
 #include "EntityManager.h"
+#include <iostream>
+#include <memory>
+#include <utility>
 
 namespace snd
 {
     // Instantiate managers
-    EntityManager* entityManager{EntityManager::getInstance()};
+    auto entityManager{std::make_unique<EntityManager>()};
 
     // Declare entities
     Entity player;
 
-    // Declare components
-
     void GameScene::initialize()
     {
-        // Declare entities
+        // Define entities
         player = entityManager->createEntity();
 
-        // Declare components
-
-        // Add components to entities
+        // Assign components to entities
     };
 
     void GameScene::processInput(){};

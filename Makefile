@@ -47,16 +47,13 @@ WIN_DEP_EXT 		:= win.d
 ### set VPATH as std dir to look for compile targets
 VPATH 				:= $(shell find . -type d) 
 ### here go all source files (with the $(SRC_EXT) extension)
-SRC_DIR 			:= ./src
-SRC_DIRS 			:= $(shell find $(SRC_DIR) -wholename "**" -type d) 
+SRC_DIRS 			:= $(shell find -wholename "*src*" -type d) 
 ### here go local include files
-LOC_INC_DIR 		:= ./include
+LOC_INC_DIR 		:= ./include #deprecated
 ### here go external include files
 EXT_INC_DIR 		:= ./include/external
 ### here go local library files
 LOC_LIB_DIR 		:= ./lib
-SRC_DIRS			+= $(shell find $(LOC_LIB_DIR) -maxdepth 1 -wholename "*src*" -type d)
-LOC_INC_DIR			+= $(shell find $(LOC_LIB_DIR) -maxdepth 1 -wholename "*include*" -type d)
 ### here the object files will be outputted
 OBJ_DIR 			:= ./build
 ### here the binary file will be outputted
@@ -73,7 +70,7 @@ ifdef TERMUX_VERSION
 	SYS_INC_DIR := $(PREFIX)/usr/include 
 endif
 EXT_INC_DIRS 		:= $(shell find $(EXT_INC_DIR) -wholename "**" -type d) 
-LOC_INC_DIRS 		:= $(shell find $(LOC_INC_DIR) -wholename "**" -type d) 
+LOC_INC_DIRS 		:= $(shell find . -wholename "*include*" -type d) 
 
 ### set the locations of all possible libraries used
 SYS_LIB_DIR 		:= /usr/local/lib /usr/lib 
@@ -119,7 +116,7 @@ INC_FLAGS 			:= $(SYS_INC_FLAGS) $(EXT_INC_FLAGS) $(LOC_INC_FLAGS)
 WIN_INC_FLAGS 		:= $(WIN_SYS_INC_FLAGS) $(EXT_INC_FLAGS) $(LOC_INC_FLAGS)
 
 ### list all source files found in source file directory;
-SRCS 				:= $(shell find $(SRC_DIR) -type f)
+SRCS 				:= $(shell find $(SRC_DIRS) -type f)
 SRC_NAMES 			:= $(shell find $(SRC_DIRS) -type f -printf "%f\n")
 ### strip file extensions to get a list of sourcefile labels
 SRC_NAMES 			:= $(patsubst %.$(SRC_EXT),%,$(SRC_NAMES))

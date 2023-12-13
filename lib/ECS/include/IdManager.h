@@ -1,9 +1,10 @@
 #ifndef ENTITYMANAGER_H_20231210202055
 #define ENTITYMANAGER_H_20231210202055
 
-#include "Entity.h"
-#include <map>
-#include <mutex>
+#include "Id.h"
+#include <cstdint> // uint32_t
+#include <mutex>   // thread locks
+#include <set>     // std::set
 
 #define DISALLOW_COPY_AND_ASSIGN(T) \
     T(const T&) = delete;           \
@@ -11,27 +12,30 @@
 
 namespace snd
 {
-    class EntityManager
+    class IdManager
     {
     public:
-        static Entity createEntity();
-        static void removeEntity(Entity entity);
+        static Id createId();
+        static void removeId(Id id);
 
         // Singleton attributes
         //---------------------------------
-        static EntityManager* getInstance();
+        static IdManager* getInstance();
         //---------------------------------
 
     private:
-        static int lastEntity_;
+        static std::set<Id> usedIds_;
+        static std::set<Id> freeIds_;
+
+        static Id lastId_;
 
         // Singleton attributes
         //---------------------------------
-        static EntityManager* singleton_;
+        static IdManager* singleton_;
         static std::mutex mutex_;
-        EntityManager(){};
-        ~EntityManager(){};
-        DISALLOW_COPY_AND_ASSIGN(EntityManager)
+        IdManager(){};
+        ~IdManager(){};
+        DISALLOW_COPY_AND_ASSIGN(IdManager)
         //---------------------------------
     };
 

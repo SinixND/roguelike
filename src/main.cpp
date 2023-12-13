@@ -45,11 +45,6 @@ int main(/* int argc, char **argv */)
     //---------------------------------
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
-        if (IsWindowResized())
-        {
-            activeScene->getScene().initialize();
-        }
-
         activeScene->getScene().update();
     }
     //---------------------------------

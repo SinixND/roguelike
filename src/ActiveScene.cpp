@@ -15,8 +15,6 @@ namespace snd
     {
         std::lock_guard<std::mutex> lock(mutex_);
 
-        std::cout << "Request ActiveScene instance...\n";
-
         if (currentScene_ == nullptr)
         {
             currentScene_ = new ActiveScene();
