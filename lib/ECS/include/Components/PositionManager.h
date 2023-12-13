@@ -12,19 +12,23 @@ namespace snd
     {
     public:
         // Add a component to an entity
-        Position assign(Entity entity, Position position);
+        //Position assign(Entity entity, Position position) // MOVE TO ECSManager;
+        Position createPosition();
 
         // Access a component from a specific entity
-        Position* get(Entity entity);
+        //Position* get(Entity entity) // MOVE TO ECSManager;
 
         // Remove a component from an entity
-        void remove(Entity entity);
+        //void unassign(Entity entity) // MOVE TO ECSManager;
+        void removePosition(Position);
+
 
         // 4. Iterate over all items
+        void iteratePositions(std::function<void(Position position)> lambda);
 
     private:
-        std::vector<Position> components; // positions aka position components
-        std::map<Entity, Position*> entityMap;
+        std::vector<Position> positions; // vector index is used as position id
+        //std::map<Entity, Positin*> entityToPosition; // MOVE TO ECSManager
     };
 }
 

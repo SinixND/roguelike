@@ -15,8 +15,8 @@ namespace snd
     class IdManager
     {
     public:
-        static Id createId();
-        static void removeId(Id id);
+        static Id requestId();
+        static void suspendId(Id id);
 
         // Singleton attributes
         //---------------------------------

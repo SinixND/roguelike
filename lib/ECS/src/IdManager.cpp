@@ -9,7 +9,7 @@ namespace snd
     std::set<Id> IdManager::freeIds_{};
     Id IdManager::lastId_{0};
 
-    Id IdManager::createId()
+    Id IdManager::requestId()
     {
         Id id;
 
@@ -29,7 +29,7 @@ namespace snd
         return lastId_;
     };
 
-    void IdManager::removeId(Id id)
+    void IdManager::suspendId(Id id)
     {
         if (usedIds_.count(id) < 1)
         {
