@@ -1,14 +1,19 @@
 #include "PositionManager.h"
+#include "Id.h"
 
 namespace snd
 {
+    Position createPosition(int x, int y){
+        Id id = std::static_cast<Id>( positions_.size() );
+        positions_.push_back(Position(x,y));
+        return id;
+    };
 
-    // Add a component to an entity
-    // Position PositionManager::assign(Entity entity, Position position){};
+    void removePosition(Id id){
+        //positions_.swap();
+        //position_.pop_back();
+    };
 
-    // Access a component from a specific entity
-    // Position* PositionManager::get(Entity entity){};
+        void iteratePositions(std::function<void(Position position)> lambda){};
 
-    // Remove a component from an entity
-    // void PositionManager::remove(Entity entity){};
 }

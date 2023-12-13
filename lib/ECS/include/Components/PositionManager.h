@@ -27,7 +27,7 @@ namespace snd
         void iteratePositions(std::function<void(Position position)> lambda);
 
     private:
-        std::vector<Position> positions; // vector index is used as position id
+        std::vector<Position> positions{}; // vector index is used as position id
         //std::map<Entity, Positin*> entityToPosition; // MOVE TO ECSManager
     };
 }
