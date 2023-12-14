@@ -22,5 +22,4 @@ namespace snd
         auto entitiesIterator{entities_.find(entity)};
         entities_.erase(entity);
     };
-
 }

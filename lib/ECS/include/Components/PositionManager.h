@@ -6,21 +6,25 @@
 #include <map>
 #include <vector>
 
+typedef size_t Index;
+
 namespace snd
 {
     class PositionManager //: public ComponentManager<Position>
     {
     public:
+        Id createPosition(int x, int y);
         // Add a component to an entity
         //Position assign(Entity entity, Position position) // MOVE TO ECSManager;
-        Id createPosition(int x, int y);
 
         // Access a component from a specific entity
         //Position* get(Entity entity) // MOVE TO ECSManager;
 
+        Position* getPosition(Id);
+
         // Remove a component from an entity
         //void unassign(Entity entity) // MOVE TO ECSManager;
-        Id removePosition(Id);
+        void removePosition(Id);
 
 
         // 4. Iterate over all items
@@ -28,6 +32,7 @@ namespace snd
 
     private:
         std::vector<Position> positions_; // vector index is used as position id
+        std::map<Id, Index> idToIndex_;
         //std::map<Entity, Positin*> entityToPosition; // MOVE TO ECSManager
     };
 }

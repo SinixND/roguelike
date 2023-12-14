@@ -7,11 +7,12 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
+[0] comps cannot exist without entities -> component id == entity
+
+# Shortterm
 [0] make ECS
 [4] split globals and settings
 [5] Render sprites/textures
-
-# Shortterm
 
 # Longterm 
 
