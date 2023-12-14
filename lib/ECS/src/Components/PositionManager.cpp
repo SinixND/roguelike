@@ -1,56 +1,65 @@
 #include "PositionManager.h"
-#include "Id.h"
-#include "IdManager.h"
+
+#include "Entity.h"
+#include "PositionComponent.h"
 #include <iostream>
-#include <vector>
 #include <map>
+#include <utility>
+#include <vector>
 
 namespace snd
 {
     // template <typename... ArgTypes>
     // function(ArgTypes... args){
-        // subfunction(args...);
+    // subfunction(args...);
     // }
-    Id PositionManager::createPosition(int x, int y){
-        IdManager* idManager{IdManager::getInstance()};
-        Id positionId = idManager.requestId();
-
-        Index positionIndex = positions_.size();
-        positions_.push_back(Position(x, y));
-        lastId_ = positionId;
-        idToIndex_.create(std::make_pair(positionId, positionIndex));
-
-        return positionId;
-    };
-
-    Position* PositionManager::get(Id id)
+    void PositionManager::assignPosition(Entity entity, Position position)
     {
-        return &positions_[idToIndex_[id]];
+        Index positionIndex = positions_.size();
+
+        positions_.push_back(position);
+        entityToPosition_.insert(std::make_pair(entity, positionIndex));
+        positionToEntity_.insert(std::make_pair(positionIndex, entity));
     };
 
-    void PositionManager::removePosition(Id removedPositionId){
-        if (!positions_.size()) { return };
+    Position* PositionManager::getPosition(Entity entity)
+    {
+        return &positions_[entityToPosition_[entity]];
+    };
 
-        Index lastPositionIndex = positions_.size() - 1;
-        Id keptPositionId = positions_[lastPositionIndex].id_;
+    void PositionManager::removePosition(Entity entity)
+    {
+        std::cout << "map end: " << entityToPosition_.find(entity)->first << "\n";
 
-        Index removedPositionIndex = idToIndex_[removedPositionId];
+        if (!entityToPosition_.find(entity)->first)
+        {
+            return;
+        };
 
-        // swap before popping if more than one element to keep elements contiguous  
+        Index removedPositionIndex = entityToPosition_[entity];
+
+        // replace with last component before popping if more than one element to keep elements contiguous
         if (positions_.size() > 1)
         {
+            Index lastPositionIndex = positions_.size() - 1;
+            Entity keptEntity = positionToEntity_[lastPositionIndex];
+
             // swap positions (by index) so last entry can be popped
             positions_[removedPositionIndex] = positions_[lastPositionIndex];
             // update mapping (by id)
-            idToIndex_[keptPositionId] = removedPositionIndex;
-            // remove removed id from mapping
-            idToIndex_.erase(removedPositionId);
+            entityToPosition_[keptEntity] = removedPositionIndex;
         }
+
+        // remove removed entity from mapping
+        entityToPosition_.erase(entity);
+        // remove removed position from mapping
+        positionToEntity_.erase(removedPositionIndex);
 
         positions_.pop_back();
     };
 
-    void PositionManager::iteratePositions(std::function<void(Position position)> lambda){
+    void PositionManager::iteratePositions(std::function<void(Position position)> lambda)
+    {
         for (auto& position : positions_)
         {
             lambda(position);

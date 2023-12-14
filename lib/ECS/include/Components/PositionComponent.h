@@ -5,16 +5,11 @@
 
 namespace snd
 {
-    // typedef Vector2 Position; // has float values...
-
     struct Position
     {
-        int x_;
-        int y_;
-
-        Position(int x, int y)
-            : x_{x}
-            , y_{y} {};
+        // typedef Vector2 Position; // has float values...
+        int x;
+        int y;
     };
 }
 

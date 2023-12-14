@@ -3,6 +3,7 @@
 
 #include "Entity.h"
 #include "PositionComponent.h"
+#include <functional>
 #include <map>
 #include <vector>
 
@@ -13,27 +14,22 @@ namespace snd
     class PositionManager //: public ComponentManager<Position>
     {
     public:
-        Id createPosition(int x, int y);
         // Add a component to an entity
-        //Position assign(Entity entity, Position position) // MOVE TO ECSManager;
+        void assignPosition(Entity entity, Position position);
 
         // Access a component from a specific entity
-        //Position* get(Entity entity) // MOVE TO ECSManager;
-
-        Position* getPosition(Id);
+        Position* getPosition(Entity entity);
 
         // Remove a component from an entity
-        //void unassign(Entity entity) // MOVE TO ECSManager;
-        void removePosition(Id);
-
+        void removePosition(Entity entity);
 
         // 4. Iterate over all items
         void iteratePositions(std::function<void(Position position)> lambda);
 
     private:
-        std::vector<Position> positions_; // vector index is used as position id
-        std::map<Id, Index> idToIndex_;
-        //std::map<Entity, Positin*> entityToPosition; // MOVE TO ECSManager
+        std::vector<Position> positions_;          // vector index is used as position id
+        std::map<Entity, Index> entityToPosition_; // entity is used to identify position, because position cant exist alone
+        std::map<Index, Entity> positionToEntity_; // store a position to entity mapping for removing
     };
 }
 

@@ -19,9 +19,10 @@ namespace snd
     {
         // Define entities
         player = entityManager->createEntity();
-        positionManager->createPosition(2, 3);
 
-        // Assign components to entities
+        // Assign components
+        positionManager->assignPosition(player, Position{2, 3});
+        positionManager->removePosition(player);
     };
 
     void GameScene::processInput(){};
