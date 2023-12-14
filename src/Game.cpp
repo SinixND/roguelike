@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Entity.h"
 #include "EntityManager.h"
+#include "PositionManager.h"
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -9,6 +10,7 @@ namespace snd
 {
     // Instantiate managers
     auto entityManager{std::make_unique<EntityManager>()};
+    auto positionManager{std::make_unique<PositionManager>()};
 
     // Declare entities
     Entity player;
@@ -17,6 +19,7 @@ namespace snd
     {
         // Define entities
         player = entityManager->createEntity();
+        positionManager->createPosition(2, 3);
 
         // Assign components to entities
     };

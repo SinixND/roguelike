@@ -7,7 +7,7 @@ namespace snd
 
     Entity EntityManager::createEntity()
     {
-        Entity entity{idManager->createId()};
+        Entity entity{idManager->requestId()};
         entities_.insert(entity);
         return entity;
     };
