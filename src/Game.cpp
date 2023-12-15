@@ -1,9 +1,10 @@
 #include "Game.h"
 // #include "ECS.h"
 #include "AttributeManager.h"
+#include "ECS/Components/PositionAttribute.h"
 #include "Entity.h"
 #include "EntityManager.h"
-#include "PositionAttribute.h"
+#include <iostream>
 #include <memory> // make_unique pointer
 
 namespace snd

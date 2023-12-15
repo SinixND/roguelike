@@ -2,6 +2,8 @@
 #define ATTRIBUTEMANAGER_H_20231212234818
 
 #include "Entity.h"
+#include "Id.h"
+#include "IdManager.h"
 #include <functional>
 #include <map>
 #include <vector>
@@ -25,7 +27,7 @@ namespace snd
         };
 
         // Access a attribute from a specific entity
-        AttributeType* get(Entity entity)
+        AttributeType& get(Entity entity)
         {
             return &attributes_[entityToAttribute_[entity]];
         };
@@ -69,11 +71,24 @@ namespace snd
             };
         };
 
+        Id getAttributeTypeId() { return attributeTypeId_; };
+
+        AttributeManager()
+        {
+            IdManager* idManager{IdManager::getInstance()};
+
+            attributeTypeId_ = idManager->requestId();
+        };
+
     private:
+        static Id attributeTypeId_;
+
         std::vector<AttributeType> attributes_;     // vector index is used as attribute id
         std::map<Entity, Index> entityToAttribute_; // entity is used to identify attribute, because attribute cant exist alone
         std::map<Index, Entity> attributeToEntity_; // store a attribute to entity mapping for removing
     };
 }
-
 #endif
+
+template <typename AttributeType>
+snd::Id snd::AttributeManager<AttributeType>::attributeTypeId_{0};

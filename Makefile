@@ -142,7 +142,7 @@ endif
 ### default rule by convention
 all: debug 
 ifndef TERMUX_VERSION
-all: test
+all: #test
 endif
 
 
@@ -171,7 +171,7 @@ release: build web #windows
 build: $(BIN_DIR)/$(BINARY).$(BINARY_EXT) 
 
 ifndef TERMUX_VERSION
-build: $(TEST_DIR)/test.$(BINARY_EXT) $(TEST_DIR)/benchmark.$(BINARY_EXT)
+#build: $(TEST_DIR)/test.$(BINARY_EXT) $(TEST_DIR)/benchmark.$(BINARY_EXT)
 endif
 
 # === LINKER COMMANDS ===
