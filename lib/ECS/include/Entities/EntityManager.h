@@ -9,8 +9,8 @@ namespace snd
     class EntityManager
     {
     public:
-        Entity createEntity();
-        void removeEntity(Entity entity);
+        Entity create();
+        void remove(Entity entity);
 
     private:
         std::set<Entity> entities_{};

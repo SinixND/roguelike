@@ -1,16 +1,16 @@
 #include "Game.h"
+// #include "ECS.h"
+#include "AttributeManager.h"
 #include "Entity.h"
 #include "EntityManager.h"
-#include "PositionManager.h"
-#include <iostream>
-#include <memory>
-#include <utility>
+#include "PositionAttribute.h"
+#include <memory> // make_unique pointer
 
 namespace snd
 {
     // Instantiate managers
     auto entityManager{std::make_unique<EntityManager>()};
-    auto positionManager{std::make_unique<PositionManager>()};
+    auto positionManager{std::make_unique<AttributeManager<Position>>()};
 
     // Declare entities
     Entity player;
@@ -18,11 +18,11 @@ namespace snd
     void GameScene::initialize()
     {
         // Define entities
-        player = entityManager->createEntity();
+        player = entityManager->create();
 
-        // Assign components
-        positionManager->assignPosition(player, Position{2, 3});
-        positionManager->removePosition(player);
+        // Assign attributes
+        positionManager->assign(player, Position{2, 3});
+        positionManager->remove(player);
     };
 
     void GameScene::processInput(){};

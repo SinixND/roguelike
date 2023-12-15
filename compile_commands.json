@@ -15,12 +15,12 @@
       "-I./lib/ECS/include/Systems",
       "-I./lib/ECS/include/Entities",
       "-o",
-      "build/IdManager.o",
-      "./lib/ECS/src/IdManager.cpp"
+      "build/EntityManager.o",
+      "./lib/ECS/src/Entities/EntityManager.cpp"
     ],
     "directory": "/home/arch/coding/git_repos/roguelike",
-    "file": "/home/arch/coding/git_repos/roguelike/lib/ECS/src/IdManager.cpp",
-    "output": "/home/arch/coding/git_repos/roguelike/build/IdManager.o"
+    "file": "/home/arch/coding/git_repos/roguelike/lib/ECS/src/Entities/EntityManager.cpp",
+    "output": "/home/arch/coding/git_repos/roguelike/build/EntityManager.o"
   },
   {
     "arguments": [
@@ -38,12 +38,12 @@
       "-I./lib/ECS/include/Systems",
       "-I./lib/ECS/include/Entities",
       "-o",
-      "build/Game.o",
-      "./src/Game.cpp"
+      "build/IdManager.o",
+      "./lib/ECS/src/IdManager.cpp"
     ],
     "directory": "/home/arch/coding/git_repos/roguelike",
-    "file": "/home/arch/coding/git_repos/roguelike/src/Game.cpp",
-    "output": "/home/arch/coding/git_repos/roguelike/build/Game.o"
+    "file": "/home/arch/coding/git_repos/roguelike/lib/ECS/src/IdManager.cpp",
+    "output": "/home/arch/coding/git_repos/roguelike/build/IdManager.o"
   },
   {
     "arguments": [
@@ -113,6 +113,29 @@
     "directory": "/home/arch/coding/git_repos/roguelike",
     "file": "/home/arch/coding/git_repos/roguelike/src/ActiveScene.cpp",
     "output": "/home/arch/coding/git_repos/roguelike/build/ActiveScene.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++2a",
+      "-pthread",
+      "-I/usr/local/include",
+      "-I/usr/include",
+      "-isystem./include/external",
+      "-I./include",
+      "-I./include/external",
+      "-I./lib/ECS/include",
+      "-I./lib/ECS/include/Components",
+      "-I./lib/ECS/include/Systems",
+      "-I./lib/ECS/include/Entities",
+      "-o",
+      "build/Game.o",
+      "./src/Game.cpp"
+    ],
+    "directory": "/home/arch/coding/git_repos/roguelike",
+    "file": "/home/arch/coding/git_repos/roguelike/src/Game.cpp",
+    "output": "/home/arch/coding/git_repos/roguelike/build/Game.o"
   },
   {
     "arguments": [

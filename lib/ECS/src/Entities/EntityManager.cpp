@@ -5,16 +5,16 @@ namespace snd
 {
     IdManager* idManager{IdManager::getInstance()};
 
-    Entity EntityManager::createEntity()
+    Entity EntityManager::create()
     {
         Entity entity{idManager->requestId()};
         entities_.insert(entity);
         return entity;
     };
 
-    void EntityManager::removeEntity(Entity entity)
+    void EntityManager::remove(Entity entity)
     {
-        if (entities_.count(entity) < 1)
+        if (!entities_.count(entity))
         {
             return;
         };
