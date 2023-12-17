@@ -12,7 +12,7 @@ namespace snd
     // public:
     // ID id_{};
 
-    //// to be able to put it in a std::map
+    //// to be able to put it in a std::unordered_map
     // friend bool operator<(const EntityID& l, const EntityID& r) { return l.id_ < r.id_; }
     //};
 }

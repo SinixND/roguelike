@@ -5,9 +5,8 @@ namespace snd
 {
     struct Position
     {
-        // typedef Vector2 Component; // has float values...
-        int x;
-        int y;
+        float x;
+        float y;
     };
 }
 

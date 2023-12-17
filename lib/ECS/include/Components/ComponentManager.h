@@ -1,13 +1,14 @@
 #ifndef COMPONENTMANAGER_H_20231212234818
 #define COMPONENTMANAGER_H_20231212234818
 
-#include "Container.h"
+#include "ContiguousContainer.h"
 #include "Entity.h"
 #include "Id.h"
 #include "IdManager.h"
 #include <cassert>
 #include <functional>
-#include <map>
+#include <set>
+#include <unordered_map>
 #include <vector>
 
 typedef size_t Index;
@@ -35,6 +36,7 @@ namespace snd
         void assignTo(Entity entity, ComponentType component)
         {
             assignedComponents_.addElement(entity, component);
+            componentMaskEntities_.addElement(componentTypeId_, std::set<Entity>{entity});
         };
 
         // Access a component from a specific entity
@@ -43,10 +45,16 @@ namespace snd
             return assignedComponents_.retrieveElement(entity);
         };
 
+        std::set<Entity>& retrieveMask()
+        {
+            return componentMaskEntities_.retrieveElement(componentTypeId_);
+        }
+
         // Remove a component from an entity
         void removeFrom(Entity entity)
         {
             assignedComponents_.removeElement(entity);
+            componentMaskEntities_.retrieveElement(componentTypeId_).erase(entity);
         };
 
         // 4. Iterate over all items
@@ -65,7 +73,9 @@ namespace snd
     private:
         Id componentTypeId_;
 
-        Container<Id, ComponentType> assignedComponents_;
+        ContiguousContainer<Id, std::set<Entity>> componentMaskEntities_;
+
+        ContiguousContainer<Id, ComponentType> assignedComponents_;
     };
 
 }

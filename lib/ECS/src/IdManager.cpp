@@ -9,7 +9,7 @@ namespace snd
 {
     std::set<Id> IdManager::usedIds_{};
     std::set<Id> IdManager::freeIds_{};
-    Id IdManager::lastId_{1};
+    Id IdManager::lastId_{0};
 
     Id IdManager::requestId()
     {

@@ -2,7 +2,7 @@
 #define ENITITYMANAGER_H_20231213001142
 
 #include "Entity.h"
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 namespace snd
@@ -14,7 +14,7 @@ namespace snd
         void remove(Entity entity);
 
     private:
-        std::map<Entity, std::vector<bool>> entities_{};
+        std::unordered_map<Entity, std::vector<bool>> entities_{};
     };
 }
 #endif

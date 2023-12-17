@@ -23,8 +23,8 @@ title ECS
 
     class IdManager {
         <<Singleton>>
-        - std::set usedIds
-        - std::set freeIds
+        - set usedIds
+        - set freeIds
         + request() Id
         + suspend(Id) void
     }
@@ -38,7 +38,7 @@ title ECS
     EntityManager *-- Entity : owns
 
     class EntityManager {
-        - std::set entities
+        - set entities
         + create() Entity
         + remove(Entity) void
     }
@@ -52,9 +52,9 @@ title ECS
     class ComponentManager {
         <<BaseComponentType>>
         - Id componentTypeId
-        - std::vector components
-        - std::map entity_to_component
-        - std::map component_to_entity
+        - vector components
+        - map entity_to_component
+        - map component_to_entity
         + getComponentTypeId() Id
         + assignTo(Entity, ComponentType) void
         + retrieveFrom(Entity) ComponentType
@@ -64,9 +64,9 @@ title ECS
 
     class ECS {
         - EntityManager entityManager
-        - std::vector componentManagers
-        - std::vector_bool entityMask
-        - std::map typeId_to_managerIndex
+        - vector componentManagers
+        - vector_bool entityMask
+        - map typeId_to_managerIndex
         + createEntity() Entity
         + removeEntity(Entity) void
         + assignComponent(Entity) void

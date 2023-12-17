@@ -2,13 +2,18 @@
 #define ECS_H_20231215005456
 
 #include "ComponentManager.h"
+#include "ContiguousContainer.h"
+#include "Entity.h"
 #include "EntityManager.h"
 #include "Id.h"
-#include <any>
+#include <bitset>
 #include <cassert>
 #include <iostream>
-#include <map>
 #include <memory>
+#include <set>
+#include <unordered_map>
+
+typedef std::string TypeId; // use string as componentTypeId type (obtained by typeid(Type).name() function) because real id cant be retrieved before manager initialization
 
 namespace snd
 {
@@ -36,55 +41,101 @@ namespace snd
         template <typename ComponentType>
         static void assignComponent(Entity entity, ComponentType component)
         {
-            std::string componentTypeId{typeid(ComponentType).name()};
+            // get type id (string)
+            TypeId componentTypeId{typeid(ComponentType).name()};
 
+            // check if manager exists
             if (!componentManagers_.count(componentTypeId))
             {
+                // add non-existing manager
                 componentManagers_.insert(std::make_pair(componentTypeId, std::make_shared<ComponentManager<ComponentType>>()));
             }
 
-            std::static_pointer_cast<ComponentManager<ComponentType>>(
-                componentManagers_.at(componentTypeId))
-                ->assignTo(entity, component);
+            // retrieve ComponentManager
+            auto componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
+                componentManagers_.at(componentTypeId))};
+
+            // assign component to entity
+            componentManager->assignTo(entity, component);
+
+            // update entityMask
+            if (!entityMaskComponents_.tryElement(entity))
+            {
+                // add new Mask + component
+                entityMaskComponents_.addElement(entity, std::set<Id>{componentManager->getComponentTypeId()});
+
+                return;
+            }
+
+            // add component
+            entityMaskComponents_.retrieveElement(entity).insert(componentManager->getComponentTypeId());
         }
 
         template <typename ComponentType>
         static ComponentType& retrieveComponent(Entity entity)
         {
-            std::string componentTypeId{typeid(ComponentType).name()};
+            // get type id (string)
+            TypeId componentTypeId{typeid(ComponentType).name()};
 
+            // assert if manager exists (else no component can be returned)
             assert(componentManagers_.count(componentTypeId) && "NO ASSIGNED COMPONENT FOUND!");
 
+            // return component
             return std::static_pointer_cast<ComponentManager<ComponentType>>(
                        componentManagers_.at(componentTypeId))
                 ->retrieveFrom(entity);
         }
 
+        static std::set<Id>& retrieveEntityMask(Entity entity)
+        {
+            return entityMaskComponents_.retrieveElement(entity);
+        }
+
+        template <typename ComponentType>
+        static std::set<Entity>& retrieveComponentMask()
+        {
+            // get type id (string)
+            TypeId componentTypeId{typeid(ComponentType).name()};
+
+            // retrieve ComponentManager
+            auto componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
+                componentManagers_.at(componentTypeId))};
+
+            return componentManager->retrieveMask();
+        }
+
         template <typename ComponentType>
         static void removeComponent(Entity entity)
         {
-            std::string componentTypeId{typeid(ComponentType).name()};
+            // get type id (string)
+            TypeId componentTypeId{typeid(ComponentType).name()};
 
+            // check if manager exists
             if (!componentManagers_.count(componentTypeId))
             {
+                // no removable component exists
                 return;
             }
 
-            std::static_pointer_cast<ComponentManager<ComponentType>>(
-                componentManagers_.at(componentTypeId))
-                ->removeFrom(entity);
+            // retrieve ComponentManager
+            auto componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
+                componentManagers_.at(componentTypeId))};
+
+            // update entityMask
+            entityMaskComponents_.retrieveElement(entity).erase(componentManager->getComponentTypeId());
+
+            // remove component from entity
+            componentManager->removeFrom(entity);
         }
 
         // template <typename ComponentType>
         // void iterateAll(std::function<void(ComponentType component)> lambda)
         //{
-        // std::string componentTypeId{typeid(ComponentType).name()};
-
+        // TypeId componentTypeId{typeid(ComponentType).name()};
         // if (!componentManagers_.count(componentTypeId))
         //{
         // return;
         //}
-
         // std::static_pointer_cast<ComponentManager<ComponentType>>(
         // componentManagers_.at(componentTypeId))
         //->iterateAll(lambda);
@@ -93,12 +144,15 @@ namespace snd
         // Logic
 
     private:
+        // Entities
+        static ContiguousContainer<Entity, std::set<Id>> entityMaskComponents_;
+
         // Managers
         static std::unique_ptr<EntityManager> entityManager;
 
-        static std::map<std::string, std::shared_ptr<BaseComponentManager>> componentManagers_;
+        static std::unordered_map<TypeId, std::shared_ptr<BaseComponentManager>> componentManagers_;
 
-        // Container<std::shared_ptr<System>> systems;
+        // ContiguousContainer<std::shared_ptr<System>> systems;
     };
 }
 

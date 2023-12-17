@@ -1,14 +1,14 @@
 /* DESCRIPTION:
-// Container to store elements contiguously but accessible by Id
+// ContiguousContainer to store elements contiguously but accessible by Id
 */
 
-#ifndef CONTAINER_H_20231216163005
-#define CONTAINER_H_20231216163005
+#ifndef CONTIGUOUSCONTAINER_H_20231216163005
+#define CONTIGUOUSCONTAINER_H_20231216163005
 
 #include <cassert>
 #include <functional>
-#include <map>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 typedef size_t Index;
@@ -16,7 +16,7 @@ typedef size_t Index;
 namespace snd
 {
     template <typename Id, typename Type>
-    class Container
+    class ContiguousContainer
     {
     public:
         bool tryElement(Id id)
@@ -84,9 +84,9 @@ namespace snd
         };
 
     private:
-        std::vector<Type> elements_;        // vector index is used as element id
-        std::map<Id, Index> id_to_element_; // id is used to identify element
-        std::map<Index, Id> element_to_id_; // store a element to id mapping for removing
+        std::vector<Type> elements_;                  // vector index is used as element id
+        std::unordered_map<Id, Index> id_to_element_; // id is used to identify element
+        std::unordered_map<Index, Id> element_to_id_; // store a element to id mapping for removing
     };
 }
 
