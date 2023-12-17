@@ -1,7 +1,8 @@
 #include "Game.h"
 // #include "ECS.h"
-#include "AttributeManager.h"
-#include "ECS/Components/PositionAttribute.h"
+#include "ComponentManager.h"
+#include "ECS.h"
+#include "ECS/Components/PositionComponent.h"
 #include "Entity.h"
 #include "EntityManager.h"
 #include <iostream>
@@ -9,21 +10,22 @@
 
 namespace snd
 {
-    // Instantiate managers
-    auto entityManager{std::make_unique<EntityManager>()};
-    auto positionManager{std::make_unique<AttributeManager<Position>>()};
+    // Declare ECS
+    std::unique_ptr<ECS> ecs;
 
     // Declare entities
     Entity player;
 
     void GameScene::initialize()
     {
-        // Define entities
-        player = entityManager->create();
+        // Initialize ECS
+        ECS::init();
 
-        // Assign attributes
-        positionManager->assign(player, Position{2, 3});
-        positionManager->remove(player);
+        // Define entities
+        player = ECS::createEntity();
+
+        // Assign components
+        ECS::assignComponent(player, Position{2, 3});
     };
 
     void GameScene::processInput(){};

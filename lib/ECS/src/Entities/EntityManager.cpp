@@ -1,5 +1,7 @@
 #include "EntityManager.h"
 #include "IdManager.h"
+#include <utility>
+#include <vector>
 
 namespace snd
 {
@@ -8,7 +10,8 @@ namespace snd
     Entity EntityManager::create()
     {
         Entity entity{idManager->requestId()};
-        entities_.insert(entity);
+        std::vector<bool> entitySignature;
+        entities_.insert(std::make_pair(entity, entitySignature));
         return entity;
     };
 

@@ -20,14 +20,14 @@ int main(/* int argc, char **argv */)
     SetConfigFlags(FLAG_WINDOW_HIGHDPI);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SetConfigFlags(FLAG_WINDOW_TRANSPARENT);
-    SetConfigFlags(FLAG_VSYNC_HINT); // used instead of SetTargetFPS()
     SetConfigFlags(FLAG_WINDOW_MAXIMIZED);
 
     // InitWindow(screenWidth, screenHeight, "roguelike");
-    InitWindow(0, 0, "roguelike");
+    InitWindow(0, 0, "Roguelike");
 
-    // MaximizeWindow();
     //  SetExitKey(0); // deactivate exit on ESC
+    SetTargetFPS(145);
+    // SetConfigFlags(FLAG_VSYNC_HINT); // used instead of SetTargetFPS()
     //---------------------------------
 
     // Application Initialize

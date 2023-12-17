@@ -116,7 +116,7 @@ INC_FLAGS 			:= $(SYS_INC_FLAGS) $(EXT_INC_FLAGS) $(LOC_INC_FLAGS)
 WIN_INC_FLAGS 		:= $(WIN_SYS_INC_FLAGS) $(EXT_INC_FLAGS) $(LOC_INC_FLAGS)
 
 ### list all source files found in source file directory;
-SRCS 				:= $(shell find $(SRC_DIRS) -wholename "*$(SRC_EXT)"-type f)
+SRCS 				:= $(shell find $(SRC_DIRS) -wholename "*$(SRC_EXT)" -type f)
 SRC_NAMES 			:= $(shell find $(SRC_DIRS) -wholename "*$(SRC_EXT)" -type f -printf "%f\n")
 ### strip file extensions to get a list of sourcefile labels
 SRC_NAMES 			:= $(patsubst %.$(SRC_EXT),%,$(SRC_NAMES))

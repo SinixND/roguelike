@@ -1,6 +1,8 @@
 #include "IdManager.h"
 #include "Id.h"
+#include <assert.h>
 #include <iostream>
+#include <limits> // max value of type
 #include <set>
 
 namespace snd
@@ -22,7 +24,7 @@ namespace snd
 
             return id;
         }
-
+        assert(lastId_ < std::numeric_limits<Id>::max() && "ID OVERFLOWING!");
         ++lastId_;
         usedIds_.insert(lastId_);
 
