@@ -28,11 +28,11 @@ namespace snd
         // Assign components
         ECS::assignComponent(player, Position{2, 3});
         ECS::assignComponent(player, Range{1.0f});
-        ECS::assignComponent(player, Sprite{textureManager->retrieveTexture(PLAYER)});
+        ECS::assignComponent(player, Texture{textureManager->retrieveTexture(PLAYER)});
 
         // Test retrieve component
-        std::cout << "Position x: " << ECS::retrieveComponent<Position>(player).x << "\n";
-        std::cout << "Range r: " << ECS::retrieveComponent<Range>(player).range << "\n";
+        std::cout << "Position x: " << ECS::retrieveComponent<Position>(player).x_ << "\n";
+        std::cout << "Range r: " << ECS::retrieveComponent<Range>(player).range_ << "\n";
 
         // Test retrieve entityMask
         auto entityMask{ECS::retrieveEntityMask(player)};
@@ -54,7 +54,7 @@ namespace snd
         // Test remove component
         ECS::removeComponent<Position>(player);
         ECS::removeComponent<Range>(player);
-        ECS::removeComponent<Sprite>(player);
+        ECS::removeComponent<Texture>(player);
     };
 
     void GameScene::processInput(){};

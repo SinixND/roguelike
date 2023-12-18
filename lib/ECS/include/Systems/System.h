@@ -19,7 +19,12 @@ namespace snd
             entities_.erase(entity);
         };
 
-        virtual ~System();
+        System() = default;
+        virtual ~System() = default;
+        System(const System&) = default;
+        System& operator=(const System&) = default;
+        System(System&&) = default;
+        System& operator=(System&&) = default;
 
     protected:
         std::set<EntityId> entities_;

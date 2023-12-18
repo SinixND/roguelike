@@ -1,7 +1,3 @@
-/* DESCRIPTION:
-// ContiguousContainer to store elements contiguously but accessible by Id
-*/
-
 #ifndef CONTIGUOUSCONTAINER_H_20231216163005
 #define CONTIGUOUSCONTAINER_H_20231216163005
 
@@ -17,6 +13,7 @@ namespace snd
 {
     template <typename Id, typename Type>
     class ContiguousContainer
+    // ContiguousContainer to store elements contiguously in a std::vector but accessible by Id
     {
     public:
         bool tryElement(Id id)
@@ -31,10 +28,16 @@ namespace snd
                 return;
             };
 
+            // get new list index for element
             Index elementIndex = elements_.size();
 
+            // add new element to list
             elements_.push_back(element);
+
+            // add id to elementIndex mapping
             id_to_element_.insert(std::make_pair(id, elementIndex));
+
+            // add elementIndex to id mapping (internal use only to keep list contiguous)
             element_to_id_.insert(std::make_pair(elementIndex, id));
         };
 
@@ -53,34 +56,38 @@ namespace snd
                 return;
             };
 
+            // get list index of removed element
             Index removedelementIndex = id_to_element_[id];
 
-            // replace with last element before popping if more than one element to keep elements contiguous
+            // replace with last element before popping (if more than one element exists) to keep elements contiguous
             if (elements_.size() > 1)
             {
+                // get list index of (kept) last element that replaces removed element
                 Index lastelementIndex = elements_.size() - 1;
+
+                // get id of replacing/kept element
                 Id keptid = element_to_id_[lastelementIndex];
 
-                // swap elements (by index) so last entry can be popped
+                // replace (removed) element with kept element (by index) so last entry (duplicate) can be popped
                 elements_[removedelementIndex] = elements_[lastelementIndex];
-                // update mapping (by id)
+
+                // update id to elementIndex mapping for kept id
                 id_to_element_[keptid] = removedelementIndex;
             }
 
             // remove removed id from mapping
             id_to_element_.erase(id);
+
             // remove removed element from mapping
             element_to_id_.erase(removedelementIndex);
 
+            // remove (duplicate) last element
             elements_.pop_back();
         };
 
-        void iterateAllElements(std::function<void(Type element)> lambda)
+        std::vector<Type>& retrieveAllElements()
         {
-            for (auto& element : elements_)
-            {
-                lambda(element);
-            };
+            return elements_;
         };
 
     private:

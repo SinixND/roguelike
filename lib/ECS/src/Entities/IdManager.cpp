@@ -6,7 +6,7 @@
 
 namespace snd
 {
-    std::set<Id> IdManager::usedIds_{};
+    std::set<Id> IdManager::activeIds_{};
     std::set<Id> IdManager::freeIds_{};
     Id IdManager::lastId_{0};
 
@@ -18,28 +18,33 @@ namespace snd
         {
             auto freeIdsIterator{freeIds_.begin()};
             id = *freeIdsIterator;
-            usedIds_.insert(id);
+            activeIds_.insert(id);
             freeIds_.erase(freeIdsIterator);
 
             return id;
         }
         assert(lastId_ < std::numeric_limits<Id>::max() && "ID OVERFLOWING!");
         ++lastId_;
-        usedIds_.insert(lastId_);
+        activeIds_.insert(lastId_);
 
         return lastId_;
     };
 
+    std::set<Id>& IdManager::retrieveActiveIds()
+    {
+        return activeIds_;
+    };
+
     void IdManager::suspendId(Id id)
     {
-        if (usedIds_.count(id) < 1)
+        if (activeIds_.count(id) < 1)
         {
             return;
         };
 
-        auto usedIdsIterator{usedIds_.find(id)};
+        auto usedIdsIterator{activeIds_.find(id)};
         freeIds_.insert(*usedIdsIterator);
-        usedIds_.erase(usedIdsIterator);
+        activeIds_.erase(usedIdsIterator);
     };
 
     // Singleton

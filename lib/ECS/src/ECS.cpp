@@ -1,4 +1,5 @@
 #include "ECS.h"
+#include "Id.h"
 
 namespace snd
 {
@@ -7,5 +8,5 @@ namespace snd
 
     IdManager* ECS::entityManager{};
 
-    std::unordered_map<std::string, std::shared_ptr<BaseComponentManager>> ECS::componentManagers_{};
+    std::unordered_map<Id, std::shared_ptr<BaseComponentManager>> ECS::componentManagers_{};
 }

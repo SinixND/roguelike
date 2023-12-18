@@ -6,13 +6,10 @@
 #include "EntityId.h"
 #include "Id.h"
 #include "IdManager.h"
-#include <bitset>
 #include <cassert>
 #include <memory>
 #include <set>
 #include <unordered_map>
-
-typedef std::string TypeId; // use string as componentTypeId type (obtained by typeid(Type).name() function) because real id cant be retrieved before manager initialization
 
 namespace snd
 {
@@ -40,8 +37,8 @@ namespace snd
         template <typename ComponentType>
         static void assignComponent(EntityId entity, ComponentType component)
         {
-            // get type id (string)
-            TypeId componentTypeId{typeid(ComponentType).name()};
+            // get type id
+            Id componentTypeId = Component<ComponentType>::getId();
 
             // check if manager exists
             if (!componentManagers_.count(componentTypeId))
@@ -58,24 +55,23 @@ namespace snd
             componentManager->assignTo(entity, component);
 
             // update entityMask
-            /// NOTIFY SYSTEMS ABOUT NEW ENTITY
             if (!entityMaskComponents_.tryElement(entity))
             {
                 // add new Mask + component
-                entityMaskComponents_.addElement(entity, std::set<Id>{componentManager->getComponentTypeId()});
+                entityMaskComponents_.addElement(entity, std::set<Id>{Component<ComponentType>::getId()});
 
                 return;
             }
 
             // add component
-            entityMaskComponents_.retrieveElement(entity).insert(componentManager->getComponentTypeId());
+            entityMaskComponents_.retrieveElement(entity).insert(Component<ComponentType>::getId());
         }
 
         template <typename ComponentType>
         static ComponentType& retrieveComponent(EntityId entity)
         {
-            // get type id (string)
-            TypeId componentTypeId{typeid(ComponentType).name()};
+            // get type id
+            Id componentTypeId = Component<ComponentType>::getId();
 
             // assert if manager exists (else no component can be returned)
             assert(componentManagers_.count(componentTypeId) && "NO ASSIGNED COMPONENT FOUND!");
@@ -94,21 +90,21 @@ namespace snd
         template <typename ComponentType>
         static std::set<EntityId>& retrieveComponentMask()
         {
-            // get type id (string)
-            TypeId componentTypeId{typeid(ComponentType).name()};
+            // get type id
+            Id componentTypeId = Component<ComponentType>::getId();
 
             // retrieve ComponentManager
             auto componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
                 componentManagers_.at(componentTypeId))};
 
-            return componentManager->retrieveMask();
+            return componentManager->retrieveAssociatedEntities();
         }
 
         template <typename ComponentType>
         static void removeComponent(EntityId entity)
         {
-            // get type id (string)
-            TypeId componentTypeId{typeid(ComponentType).name()};
+            // get type id
+            Id componentTypeId = Component<ComponentType>::getId();
 
             // check if manager exists
             if (!componentManagers_.count(componentTypeId))
@@ -122,7 +118,7 @@ namespace snd
                 componentManagers_.at(componentTypeId))};
 
             // update entityMask
-            entityMaskComponents_.retrieveElement(entity).erase(componentManager->getComponentTypeId());
+            entityMaskComponents_.retrieveElement(entity).erase(Component<ComponentType>::getId());
 
             // remove component from entity
             componentManager->removeFrom(entity);
@@ -131,7 +127,7 @@ namespace snd
         // template <typename ComponentType>
         // void iterateAll(std::function<void(ComponentType component)> lambda)
         //{
-        // TypeId componentTypeId{typeid(ComponentType).name()};
+        // Id componentTypeId{typeid(ComponentType).name()};
         // if (!componentManagers_.count(componentTypeId))
         //{
         // return;
@@ -150,7 +146,7 @@ namespace snd
         // Managers
         static IdManager* entityManager;
 
-        static std::unordered_map<TypeId, std::shared_ptr<BaseComponentManager>> componentManagers_;
+        static std::unordered_map<Id, std::shared_ptr<BaseComponentManager>> componentManagers_;
 
         // ContiguousContainer<std::shared_ptr<System>> systems;
     };

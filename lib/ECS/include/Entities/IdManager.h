@@ -16,6 +16,7 @@ namespace snd
     {
     public:
         static Id requestId();
+        static std::set<Id>& retrieveActiveIds();
         static void suspendId(Id id);
 
         // Singleton attributes
@@ -24,7 +25,7 @@ namespace snd
         //---------------------------------
 
     private:
-        static std::set<Id> usedIds_;
+        static std::set<Id> activeIds_;
         static std::set<Id> freeIds_;
 
         static Id lastId_;
