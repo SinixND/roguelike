@@ -4,8 +4,8 @@
 #include "ECS/Components/Position.h"
 #include "ECS/Components/Range.h"
 #include "ECS/Components/Sprite.h"
-#include "Entity.h"
-#include "EntityManager.h"
+#include "EntityId.h"
+#include "IdManager.h"
 #include "TextureManager.h"
 #include <iostream>
 #include <memory> // make_unique pointer
@@ -13,11 +13,8 @@
 
 namespace snd
 {
-    // Declare ECS
-    std::unique_ptr<ECS> ecs;
-
     // Declare entities
-    Entity player;
+    EntityId player;
 
     void GameScene::initialize()
     {
@@ -40,7 +37,7 @@ namespace snd
         // Test retrieve entityMask
         auto entityMask{ECS::retrieveEntityMask(player)};
         std::cout << "Size of entityMask is: " << sizeof(entityMask) << "\n";
-        std::cout << "Entity has following components:\n";
+        std::cout << "EntityId has following components:\n";
         for (auto& component : entityMask)
         {
             std::cout << component << "\n";

@@ -2,7 +2,7 @@
 #define COMPONENTMANAGER_H_20231212234818
 
 #include "ContiguousContainer.h"
-#include "Entity.h"
+#include "EntityId.h"
 #include "Id.h"
 #include "IdManager.h"
 #include <cassert>
@@ -33,25 +33,25 @@ namespace snd
         Id getComponentTypeId() { return componentTypeId_; };
 
         // Add a component to an entity
-        void assignTo(Entity entity, ComponentType component)
+        void assignTo(EntityId entity, ComponentType component)
         {
             assignedComponents_.addElement(entity, component);
-            componentMaskEntities_.addElement(componentTypeId_, std::set<Entity>{entity});
+            componentMaskEntities_.addElement(componentTypeId_, std::set<EntityId>{entity});
         };
 
         // Access a component from a specific entity
-        ComponentType& retrieveFrom(Entity entity)
+        ComponentType& retrieveFrom(EntityId entity)
         {
             return assignedComponents_.retrieveElement(entity);
         };
 
-        std::set<Entity>& retrieveMask()
+        std::set<EntityId>& retrieveMask()
         {
             return componentMaskEntities_.retrieveElement(componentTypeId_);
         }
 
         // Remove a component from an entity
-        void removeFrom(Entity entity)
+        void removeFrom(EntityId entity)
         {
             assignedComponents_.removeElement(entity);
             componentMaskEntities_.retrieveElement(componentTypeId_).erase(entity);
@@ -73,7 +73,7 @@ namespace snd
     private:
         Id componentTypeId_;
 
-        ContiguousContainer<Id, std::set<Entity>> componentMaskEntities_;
+        ContiguousContainer<Id, std::set<EntityId>> componentMaskEntities_;
 
         ContiguousContainer<Id, ComponentType> assignedComponents_;
     };

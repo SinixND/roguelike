@@ -15,61 +15,13 @@ classDiagram
 direction TB
 title ECS
 
-    class Id {
-        <<int>>
-    }
+class Entity {
+    <<Id>>
+}
 
-    IdManager *-- Id : owns
+class Component {
+    <<struct>>
+    + type attribute
+}
 
-    class IdManager {
-        <<Singleton>>
-        - set usedIds
-        - set freeIds
-        + request() Id
-        + suspend(Id) void
-    }
-
-    Entity --|> Id
-
-    class Entity {
-        <<Id>>
-    }
-
-    EntityManager *-- Entity : owns
-
-    class EntityManager {
-        - set entities
-        + create() Entity
-        + remove(Entity) void
-    }
-
-    class Component {
-        <<struct, ComponentType>>
-    }
-
-    ComponentManager *-- Component : owns
-
-    class ComponentManager {
-        <<BaseComponentType>>
-        - Id componentTypeId
-        - vector components
-        - map entity_to_component
-        - map component_to_entity
-        + getComponentTypeId() Id
-        + assignTo(Entity, ComponentType) void
-        + retrieveFrom(Entity) ComponentType
-        + removeFrom(Entity) void
-        + iterateAll(lambda(ComponentType)) void
-    }
-
-    class ECS {
-        - EntityManager entityManager
-        - vector componentManagers
-        - vector_bool entityMask
-        - map typeId_to_managerIndex
-        + createEntity() Entity
-        + removeEntity(Entity) void
-        + assignComponent(Entity) void
-        + removeComponent(Entity) void
-    }
 ```

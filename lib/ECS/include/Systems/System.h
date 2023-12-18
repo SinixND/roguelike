@@ -1,7 +1,7 @@
 #ifndef SYSTEM_H_20231217204502
 #define SYSTEM_H_20231217204502
 
-#include "Entity.h"
+#include "EntityId.h"
 #include <set>
 
 namespace snd
@@ -9,12 +9,12 @@ namespace snd
     class System
     {
     public:
-        void addEntity(Entity entity)
+        void addEntity(EntityId entity)
         {
             entities_.insert(entity);
         };
 
-        void removeEntity(Entity entity)
+        void removeEntity(EntityId entity)
         {
             entities_.erase(entity);
         };
@@ -22,7 +22,7 @@ namespace snd
         virtual ~System();
 
     protected:
-        std::set<Entity> entities_;
+        std::set<EntityId> entities_;
     };
 }
 

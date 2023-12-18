@@ -3,9 +3,9 @@
 
 #include "ComponentManager.h"
 #include "ContiguousContainer.h"
-#include "Entity.h"
-#include "EntityManager.h"
+#include "EntityId.h"
 #include "Id.h"
+#include "IdManager.h"
 #include <bitset>
 #include <cassert>
 #include <memory>
@@ -22,23 +22,23 @@ namespace snd
         // ECS
         static void init()
         {
-            entityManager = std::make_unique<EntityManager>();
+            entityManager = IdManager::getInstance();
         }
 
         // Entities
-        static Entity createEntity()
+        static EntityId createEntity()
         {
-            return entityManager->create();
+            return entityManager->requestId();
         }
 
-        static void removeEntity(Entity entity)
+        static void removeEntity(EntityId entity)
         {
-            entityManager->remove(entity);
+            entityManager->suspendId(entity);
         }
 
         // Components
         template <typename ComponentType>
-        static void assignComponent(Entity entity, ComponentType component)
+        static void assignComponent(EntityId entity, ComponentType component)
         {
             // get type id (string)
             TypeId componentTypeId{typeid(ComponentType).name()};
@@ -72,7 +72,7 @@ namespace snd
         }
 
         template <typename ComponentType>
-        static ComponentType& retrieveComponent(Entity entity)
+        static ComponentType& retrieveComponent(EntityId entity)
         {
             // get type id (string)
             TypeId componentTypeId{typeid(ComponentType).name()};
@@ -86,13 +86,13 @@ namespace snd
                 ->retrieveFrom(entity);
         }
 
-        static std::set<Id>& retrieveEntityMask(Entity entity)
+        static std::set<Id>& retrieveEntityMask(EntityId entity)
         {
             return entityMaskComponents_.retrieveElement(entity);
         }
 
         template <typename ComponentType>
-        static std::set<Entity>& retrieveComponentMask()
+        static std::set<EntityId>& retrieveComponentMask()
         {
             // get type id (string)
             TypeId componentTypeId{typeid(ComponentType).name()};
@@ -105,7 +105,7 @@ namespace snd
         }
 
         template <typename ComponentType>
-        static void removeComponent(Entity entity)
+        static void removeComponent(EntityId entity)
         {
             // get type id (string)
             TypeId componentTypeId{typeid(ComponentType).name()};
@@ -145,10 +145,10 @@ namespace snd
 
     private:
         // Entities
-        static ContiguousContainer<Entity, std::set<Id>> entityMaskComponents_;
+        static ContiguousContainer<EntityId, std::set<Id>> entityMaskComponents_;
 
         // Managers
-        static std::unique_ptr<EntityManager> entityManager;
+        static IdManager* entityManager;
 
         static std::unordered_map<TypeId, std::shared_ptr<BaseComponentManager>> componentManagers_;
 
