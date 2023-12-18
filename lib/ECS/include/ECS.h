@@ -8,7 +8,6 @@
 #include "Id.h"
 #include <bitset>
 #include <cassert>
-#include <iostream>
 #include <memory>
 #include <set>
 #include <unordered_map>
@@ -59,6 +58,7 @@ namespace snd
             componentManager->assignTo(entity, component);
 
             // update entityMask
+            /// NOTIFY SYSTEMS ABOUT NEW ENTITY
             if (!entityMaskComponents_.tryElement(entity))
             {
                 // add new Mask + component

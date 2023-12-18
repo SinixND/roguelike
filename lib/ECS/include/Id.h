@@ -7,7 +7,7 @@
 
 namespace snd
 {
-    typedef uint32_t Id;
+    typedef uint64_t Id;
 }
 
 #endif

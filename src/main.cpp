@@ -1,11 +1,12 @@
 #include "ActiveScene.h"
 #include "Game.h"
+#include "Globals.h"
 #include "Scene.h"
+#include "TextureManager.h"
 #define RAYGUI_IMPLEMENTATION // only define once
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
-#include "../resources/iconset.rgi.h"
+#include "../resources/iconset/iconset.rgi.h"
 #include "raygui.h"
-#include <iostream>
 #include <raylib.h>
 
 int main(/* int argc, char **argv */)
@@ -30,8 +31,12 @@ int main(/* int argc, char **argv */)
     // SetConfigFlags(FLAG_VSYNC_HINT); // used instead of SetTargetFPS()
     //---------------------------------
 
-    // Application Initialize
+    // Application Initialization
     //---------------------------------
+    // Load textures
+    snd::TextureManager* textureManager{snd::TextureManager::getInstance()};
+    textureManager->loadTexture(PLAYER, "Player.png");
+
     // Define scenes
     snd::GameScene game{};
     game.initialize();
@@ -51,6 +56,12 @@ int main(/* int argc, char **argv */)
 
     // De-Initialization
     //---------------------------------
+    // Unlaod textures
+    textureManager->unloadAllTextures();
+
+    // Deinitialize scenes
+    game.deinitialize();
+
     CloseWindow(); // Close window and OpenGL context
     //---------------------------------
 

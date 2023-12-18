@@ -1,7 +1,6 @@
 #include "IdManager.h"
 #include "Id.h"
 #include <assert.h>
-#include <iostream>
 #include <limits> // max value of type
 #include <set>
 

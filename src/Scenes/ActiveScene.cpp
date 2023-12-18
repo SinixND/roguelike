@@ -1,7 +1,5 @@
 #include "ActiveScene.h"
 
-#include <iostream>
-
 namespace snd
 {
     Scene* ActiveScene::scene_{};
