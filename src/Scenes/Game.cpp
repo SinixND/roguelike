@@ -3,7 +3,7 @@
 #include "ECS.h"
 #include "ECS/Components/Position.h"
 #include "ECS/Components/Range.h"
-#include "ECS/Components/Sprite.h"
+#include "ECS/Components/Texture.h"
 #include "EntityId.h"
 #include "IdManager.h"
 #include "TextureManager.h"

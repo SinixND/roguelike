@@ -2,6 +2,8 @@
 #define SYSTEM_H_20231217204502
 
 #include "EntityId.h"
+#include "Id.h"
+#include <initializer_list>
 #include <set>
 
 namespace snd
@@ -9,17 +11,38 @@ namespace snd
     class System
     {
     public:
-        void addEntity(EntityId entity)
+        void setRequiredComponents(Id componentTypeId)
         {
-            entities_.insert(entity);
+                requiredComponentTypeIds_.insert(componentTypeId);
         };
 
-        void removeEntity(EntityId entity)
+        // provide required component types
+        std::set<Id>& retrieveRequiredComponentTypIds()
         {
-            entities_.erase(entity);
+            return requiredComponentTypeIds_;
         };
 
-        System() = default;
+        // add entity to processed entities
+        void registerEntity(EntityId entity)
+        {
+            processedEntities_.insert(entity);
+        };
+
+        // remove entity from processed entities
+        void deRegisterEntity(EntityId entity)
+        {
+            processedEntities_.erase(entity);
+        };
+
+        // perform action on all processed entities
+        void execute(int deltaTime = 0)
+        {
+            for (auto entity : processedEntities_)
+            {
+                action(entity);
+            }
+        };
+
         virtual ~System() = default;
         System(const System&) = default;
         System& operator=(const System&) = default;
@@ -27,7 +50,11 @@ namespace snd
         System& operator=(System&&) = default;
 
     protected:
-        std::set<EntityId> entities_;
+        std::set<EntityId> processedEntities_;
+        std::set<Id> requiredComponentTypeIds_;
+
+        // system specific action executed on one processed entity
+        virtual void action(EntityId entity){};
     };
 }
 

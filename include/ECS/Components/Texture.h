@@ -1,5 +1,5 @@
-#ifndef SPRITE_H_20231217205122
-#define SPRITE_H_20231217205122
+#ifndef TEXTURE_H_20231220001155
+#define TEXTURE_H_20231220001155
 
 #include "Component.h"
 #include <raylib.h>

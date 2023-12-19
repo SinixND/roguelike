@@ -16,18 +16,23 @@ classDiagram
 direction LR
 title ECS
 
-class EntityId {
-    <<Id>>
-}
-
-IdManager *-- EntityId : owns
 class IdManager {
     <<Singleton>>
     - set_Id activeIds[]
     - set_Id freeIds[]
     + requestId() Id
-    + retrieveIds() set_Id
     + suspendId(Id) void
+}
+
+class EntityId {
+    <<Id>>
+}
+
+EntityManager ..> IdManager : uses
+class EntityManager {
+- map entityId_to_signature
++ createEntity()
++ removeEntiy()
 }
 
 BaseComponent ..> IdManager : uses
@@ -45,13 +50,29 @@ ComponentManager *-- Component : owns
 ComponentManager ..> EntityId : uses
 class ComponentManager {
     <<template>>
-    - set_Component components
-    - ??? set_EntiyId associatedEntities
+    - list_Component components
+    - list_EntiyId associatedEntities
     + assignTo(EntityId) void
     + retrieveFrom(EntityId) Component
     + removeFrom(EntityId) void
-    + retrieveComponents() set_Component
-    + ??? retrieveAssociatedEntities() set_EntityId
+    + retrieveComponents() list_Component
+    + retrieveAssociatedEntities() list_EntityId
 }
 
+class System {
+    - list_Id requiredComponentTypeIds
+    - list_EntityId processedEntities
+    + registerEntity(EntityId)
+    + deRegisterEntity(EntityId)
+    + execute(list_EntityId) void
+    - setRequiredComponentType(ComponentTypeId) void
+}
+
+class ECS {
+    - IdManager idMgr
+    - list_ComponentManager cMgrs
+    - list_System systems
+    + registerComponent(ComponentType) void
+    + registerSystem(SystemType) void
+}
 ```
