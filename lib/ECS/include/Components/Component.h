@@ -12,8 +12,8 @@ namespace snd
     public:
         static inline Id getId()
         {
-            IdManager* idManager{IdManager::getInstance()};
-            static Id id = idManager->requestId();
+            //IdManager* idManager{IdManager::getInstance()};
+            static Id id{IdManager::getInstance()->requestId()}; // initialized only once because it is static
             return id;
         }
 
