@@ -13,7 +13,7 @@ namespace snd
     public:
         void setRequiredComponents(Id componentTypeId)
         {
-                requiredComponentTypeIds_.insert(componentTypeId);
+            requiredComponentTypeIds_.insert(componentTypeId);
         };
 
         // provide required component types
@@ -23,13 +23,13 @@ namespace snd
         };
 
         // add entity to processed entities
-        void registerEntity(EntityId entity)
+        void registerEntity(Entity entity)
         {
             processedEntities_.insert(entity);
         };
 
         // remove entity from processed entities
-        void deRegisterEntity(EntityId entity)
+        void deRegisterEntity(Entity entity)
         {
             processedEntities_.erase(entity);
         };
@@ -50,11 +50,11 @@ namespace snd
         System& operator=(System&&) = default;
 
     protected:
-        std::set<EntityId> processedEntities_;
+        std::set<Entity> processedEntities_;
         std::set<Id> requiredComponentTypeIds_;
 
         // system specific action executed on one processed entity
-        virtual void action(EntityId entity){};
+        virtual void action(Entity entity){};
     };
 }
 

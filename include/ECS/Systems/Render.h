@@ -15,7 +15,7 @@ namespace snd
         Render()
             : System{Component<Texture>::getId()} {};
 
-        void action(EntityId entity) override{};
+        void action(Entity entity) override{};
     };
 }
 

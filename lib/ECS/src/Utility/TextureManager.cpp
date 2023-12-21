@@ -1,4 +1,5 @@
 #include "TextureManager.h"
+
 #include <cstring>
 #include <raylib.h>
 #include <string>

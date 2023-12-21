@@ -4,15 +4,12 @@
 #include "Component.h"
 #include "ContiguousContainer.h"
 #include "EntityId.h"
-#include "Id.h"
-#include "IdManager.h"
+#include "Signature.h"
 #include <cassert>
 #include <functional>
 #include <set>
 #include <unordered_map>
 #include <vector>
-
-typedef size_t Index;
 
 namespace snd
 {
@@ -31,48 +28,73 @@ namespace snd
     class ComponentManager : public BaseComponentManager
     {
     public:
-        // Add a component to an entity
-        void assignTo(EntityId entity, ComponentType component)
+        // Add component to entiy
+        void assignTo(Signature& signature, EntityId& entity, ComponentType component)
         {
-            components_.addElement(entity, component);
-
-            associatedEntities_.insert(entity);
-        };
-
-        // Access a component from a specific entity
-        ComponentType& retrieveFrom(EntityId entity)
-        {
-            return components_.retrieveElement(entity);
+            // add to signature
+            components_.insert(signature).addElement(entity, component);
         };
 
         // Remove a component from an entity
-        void removeFrom(EntityId entity)
+        void removeFrom(Signature& signature, EntityId entity)
         {
-            components_.removeElement(entity);
-
-            associatedEntities_.erase(entity);
+            components_.at(signature).removeElement(entity);
+            // delete empty signature
+            if (!component_.at(signature).retrieveAllElements().size())
+            {
+                component_.erease(signature);
+            }
         };
 
-        std::vector<ComponentType>& retrieveComponents()
+        // update signature associated container on entity signature change
+        void updateSignature(Signature oldSignature, Signature& newSignature, Entity& entiy)
         {
-            return components_.retrieveAllElements();
+            // move from oldSignature to newSignature
+            components_.insert(newSignature).addElement(entity, std::move(components_.at(oldSignature).retrieveElement(entity)));
+
+            // delete from oldSignature
+            removeFrom(oldSignature, entity);
         };
 
-        std::set<EntityId>& retrieveAssociatedEntities()
+        // Access a component from a specific entity
+        ComponentType& retrieveFrom(Signature& signature, EntityId entity)
         {
-            return associatedEntities_;
-        }
+            return components_.at(signature).retrieveElement(entity);
+        };
 
-        // 4. Iterate over all items
-        // void iterateAll(std::function<void(ComponentType component)> lambda)
-        //{
-        // assignedComponents_.iterateAllElements(lambda);
-        //};
+        // Access components for a specific signature
+        std::vector<std::vector<ComponentType>*> retrieveFor(Signature& signature)
+        {
+            std::vector<std::vector<ComponentType>*> returnVector{};
+
+            for (auto it : components_)
+            {
+                // check if provided signature is subset of signature key
+                if ((it->first & signature) == signature)
+                {
+                    returnVector.push_back(&(it->second.retrieveAllElements()));
+                    
+                }
+            }
+
+            return returnVector;
+        };
+
+        // Access all components
+        std::vector<std::vector<ComponentType>*> retrieveAllComponents()
+        {
+            std::vector<std::vector<ComponentType>*> returnVector{};
+
+            for (auto it : components_)
+            {
+                    returnVector.push_back(&(it->second.retrieveAllElements()));
+            }
+
+            return returnVector;
+        };
 
     private:
-        ContiguousContainer<Id, ComponentType> components_;
-
-        std::set<EntityId> associatedEntities_;
+        std::unordered_map<Signature, ContiguousContainer<Id, ComponentType>> components_;
     };
 
 }

@@ -12,8 +12,7 @@ namespace snd
     public:
         static inline Id getId()
         {
-            //IdManager* idManager{IdManager::getInstance()};
-            static Id id{IdManager::getInstance()->requestId()}; // initialized only once because it is static
+            static Id id{componentTypeIdManager_.requestId()}; // initialized only once because it is static
             return id;
         }
 
@@ -23,6 +22,9 @@ namespace snd
         Component& operator=(const Component&) = default;
         Component(Component&&) = default;
         Component& operator=(Component&&) = default;
+
+    private:
+        static inline IdManager componentTypeIdManager_;
     };
 }
 
