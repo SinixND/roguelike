@@ -7,14 +7,23 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[5] Render sprites/textures
-    - check managers for entities, or entities for components, or on component change notify systems
+[0] rename variables to snake_case, abbreviate variable names
+
+[1] std::set to std::unordered_set
+
+[1] (const preferred) reference function arguments, out-params as address
+
+[1] check contiguous memory in ContiguousContainer and the retrieved elements
 
 # Shortterm
-[0] make ECS
-[4] split globals and settings
+[0] Render sprites/textures
+
+    - check managers for entities, or entities for components, or on component change notify systems
+
+[1] split globals and settings
 
 # Longterm 
+[0] make ECS
 
 # Continuous
 [0] plan structure with UML
@@ -31,29 +40,35 @@ development of a (maybe) roguelike game with c++ and raylib
 1.3.1 register component type(s) to system signature
 
 2. create entity
+
 3. add component to entity
+
 4. execute system
 
 
 ## Variadic function template:
 ### Distinct types:
-template <typename Type, typename... VariadicTypes>
-void doSomething(Type firstArg, VariadicTypes... variadicArgs) // recursive variadic function
 {
-    // Handle first argument
-    cout << firstArg << endl;
- 
-    // Handle remaining (variadic) arguments
-    doSomething(variadicArgs...);
+    template <typename Type, typename... VariadicTypes>
+    void doSomething(Type firstArg, VariadicTypes... variadicArgs) // recursive variadic function
+    {
+        // Handle first argument
+        cout << firstArg << endl;
+    
+        // Handle remaining (variadic) arguments
+        doSomething(variadicArgs...);
+    }
 }
 
 ### Similar types:
-template <class Type>
-void func2( std::initializer_list<Type> arguments )
 {
-    for( auto argument : arguments )
+    template <class Type>
+    void func2( std::initializer_list<Type> arguments )
     {
-        std::cout << argument << std::endl ;
+        for( auto argument : arguments )
+        {
+            std::cout << argument << std::endl ;
+        }
     }
 }
 
