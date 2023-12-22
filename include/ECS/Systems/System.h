@@ -3,35 +3,28 @@
 
 #include "EntityId.h"
 #include "Id.h"
-#include <initializer_list>
-#include <set>
+#include "Signature.h"
+#include <unordered_set>
 
 namespace snd
 {
     class System
     {
     public:
-        void setRequiredComponents(Id componentTypeId)
+        void setSystemSignature(Id componentTypeId)
         {
-            requiredComponentTypeIds_.insert(componentTypeId);
+            systemSignature_.set(componentTypeId);
         };
 
         // provide required component types
-        std::set<Id>& retrieveRequiredComponentTypIds()
+        Signature& retrieveSystemSignature()
         {
-            return requiredComponentTypeIds_;
+            return systemSignature_;
         };
 
         // add entity to processed entities
-        void registerEntity(Entity entity)
+        void syncRegisterComponents(Signature signature)
         {
-            processedEntities_.insert(entity);
-        };
-
-        // remove entity from processed entities
-        void deRegisterEntity(Entity entity)
-        {
-            processedEntities_.erase(entity);
         };
 
         // perform action on all processed entities
@@ -50,8 +43,8 @@ namespace snd
         System& operator=(System&&) = default;
 
     protected:
-        std::set<Entity> processedEntities_;
-        std::set<Id> requiredComponentTypeIds_;
+        std::unordered_set<Entity> processedEntities_;
+        Signature systemSignature_;
 
         // system specific action executed on one processed entity
         virtual void action(Entity entity){};

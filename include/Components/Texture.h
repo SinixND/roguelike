@@ -9,9 +9,9 @@ namespace snd
 {
     struct Texture : Component<Texture>
     {
-        Texture2D texture_;
+        Texture2D* texture_;
 
-        Texture(Texture2D texture)
+        Texture(Texture2D* texture)
             : texture_{texture} {};
     };
 }

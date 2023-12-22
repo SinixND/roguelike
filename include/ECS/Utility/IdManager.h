@@ -3,7 +3,7 @@
 
 #include "Id.h"
 #include <limits>
-#include <set> // std::set
+#include <unordered_set>
 
 namespace snd
 {
@@ -16,12 +16,12 @@ namespace snd
         IdManager(Id maxId = std::numeric_limits<Id>::max());
 
     private:
-        Id maxId_{};
+        const Id maxId_{};
 
-        Id lastId_;
+        Id lastId_{1};
 
-        std::set<Id> activeIds_;
-        std::set<Id> freeIds_;
+        std::unordered_set<Id> activeIds_;
+        std::unordered_set<Id> freeIds_;
     };
 
 }

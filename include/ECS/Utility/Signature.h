@@ -9,6 +9,11 @@ namespace snd
     constexpr Id MAX_COMPONENTS = 10;
 
     using Signature = std::bitset<MAX_COMPONENTS>;
+
+    class SignatureS 
+    {
+        
+    };
 }
 
 #endif

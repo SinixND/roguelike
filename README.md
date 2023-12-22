@@ -7,12 +7,6 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] rename variables to snake_case, abbreviate variable names
-
-[1] std::set to std::unordered_set
-
-[1] (const preferred) reference function arguments, out-params as address
-
 [1] check contiguous memory in ContiguousContainer and the retrieved elements
 
 # Shortterm
@@ -24,6 +18,7 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # Longterm 
 [0] make ECS
+[1] make ECS a static library and/or single header
 
 # Continuous
 [0] plan structure with UML

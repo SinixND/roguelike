@@ -17,9 +17,9 @@ namespace snd
         textures_.insert(std::make_pair(textureId, LoadTexture((texturePath + path).c_str())));
     };
 
-    Texture2D& TextureManager::retrieveTexture(TextureId textureId)
+    Texture2D* TextureManager::retrieveTexture(TextureId textureId)
     {
-        return textures_.at(textureId);
+        return &textures_.at(textureId);
     };
 
     void TextureManager::unloadAllTextures()

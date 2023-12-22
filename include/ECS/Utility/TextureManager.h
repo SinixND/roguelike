@@ -21,7 +21,7 @@ namespace snd
     {
     public:
         static void loadTexture(TextureId, std::string filename);
-        static Texture2D& retrieveTexture(TextureId);
+        static Texture2D* retrieveTexture(TextureId);
         static void unloadAllTextures();
 
         // Singleton attributes

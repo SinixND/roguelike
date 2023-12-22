@@ -3,6 +3,7 @@
 
 #include "Id.h"
 #include "IdManager.h"
+#include "Signature.h"
 
 namespace snd
 {
@@ -24,7 +25,7 @@ namespace snd
         Component& operator=(Component&&) = default;
 
     private:
-        static inline IdManager componentTypeIdManager_;
+        static inline IdManager componentTypeIdManager_{MAX_COMPONENTS - 1};
     };
 }
 

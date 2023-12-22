@@ -27,7 +27,7 @@ MAKEFLAGS 			:=
 
 #######################################
 ### set the used compiler to g++ or clang++
-CXX 				:= g++ 
+CXX 				:= g++
 WIN_CXX 			:= /bin/x86_64-w64-mingw32-g++ 
 
 ### set the binary file extension
@@ -239,7 +239,7 @@ clean:
 
 
 ### clean dynamically created directories before building fresh
-rebuild: clean build
+rebuild: clean debug
 
 
 ### run binary file after building

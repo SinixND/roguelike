@@ -17,7 +17,7 @@ namespace snd
         {
             Id newId{entityIdManager_.requestId()};
 
-            entity_to_signature_.insert(std::make_pair(newId, Signature()));
+            entityToSignature_.insert(std::make_pair(newId, Signature()));
 
             return newId;
         };
@@ -25,27 +25,27 @@ namespace snd
         void remove(EntityId entityId)
         {
             entityIdManager_.suspendId(entityId);
-            entity_to_signature_.erase(entityId);
+            entityToSignature_.erase(entityId);
         };
 
         void setSignature(EntityId entity, Id componentType)
         {
-            entity_to_signature_.at(entity).set(componentType);
+            entityToSignature_.at(entity).set(componentType);
         };
 
         void resetSignature(EntityId entity, Id componentType)
         {
-            entity_to_signature_.at(entity).reset(componentType);
+            entityToSignature_.at(entity).reset(componentType);
         };
 
         Signature& requestSignature(EntityId entity)
         {
-            return entity_to_signature_.at(entity);
+            return entityToSignature_.at(entity);
         };
 
     private:
         IdManager entityIdManager_;
-        std::unordered_map<EntityId, Signature> entity_to_signature_;
+        std::unordered_map<EntityId, Signature> entityToSignature_;
     };
 }
 
