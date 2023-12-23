@@ -44,10 +44,22 @@ namespace snd
             signatureToComponentsByEntity_.at(oldSignature).removeElement(entity);
 
             // delete empty signature container
-            // if (!signatureToComponentsByEntity_.at(oldSignature).retrieveAllElements().size())
-            //{
-            // signatureToComponentsByEntity_.erease(oldSignature);
-            //}
+            if (!signatureToComponentsByEntity_.at(oldSignature).retrieveAllElements().size())
+            {
+                signatureToComponentsByEntity_.erease(oldSignature);
+            }
+        };
+
+        void updateSignature(const Signature& oldSignature, const Signature& newSignature, EntityId entity)
+        {
+            ComponentType* componentPtr{retrieveFrom(oldSignature, entity)};
+
+            if (componentPtr == nullptr)
+                return;
+
+            assignTo(newSignature, entity, *componentPtr);
+
+            removeFrom(oldSignature, entity);
         };
 
         // Access a component from a specific entity

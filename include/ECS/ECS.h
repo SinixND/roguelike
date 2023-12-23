@@ -3,19 +3,20 @@
 
 #include "ComponentManager.h"
 #include "ContiguousContainer.h"
-#include "Entities/EntityManager.h"
 #include "EntityId.h"
 #include "EntityManager.h"
 #include "Id.h"
 #include "Signature.h"
 #include <cassert>
+#include <iostream>
 #include <memory>
 #include <set>
-#include <iostream>
 #include <unordered_map>
 
 namespace snd
 {
+    using ComponentTypeId = Id;
+
     class ECS
     {
     public:
@@ -45,7 +46,7 @@ namespace snd
         static void registerComponent()
         {
             // get type id
-            Id componentTypeId = Component<ComponentType>::getId();
+            ComponentTypeId componentTypeId = Component<ComponentType>::getId();
 
             componentManagers_[componentTypeId] = std::make_shared<ComponentManager<ComponentType>>();
         }
@@ -54,7 +55,14 @@ namespace snd
         static void assignComponent(EntityId entity, ComponentType component)
         {
             // get component type id
-            Id componentTypeId = Component<ComponentType>::getId();
+            ComponentTypeId componentTypeId = Component<ComponentType>::getId();
+
+            // retrieve ComponentManager
+            auto componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
+                componentManagers_.at(componentTypeId))};
+
+            // request entity signature
+            Signature oldSignature{entityManager_.requestSignature(entity)};
 
             // set entity signature
             entityManager_.setSignature(entity, componentTypeId);
@@ -62,19 +70,44 @@ namespace snd
             // request entity signature
             Signature newSignature{entityManager_.requestSignature(entity)};
 
-            // retrieve ComponentManager
-            auto componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
-                componentManagers_.at(componentTypeId))};
-
             // assign component to entity
             componentManager->assignTo(newSignature, entity, component);
+
+            // update other componentManagers
+            updateComponentManagers(oldSignature, newSignature, entity);
+        }
+
+        template <typename ComponentType>
+        static void removeComponent(EntityId entity)
+        {
+            // get type id
+            ComponentTypeId componentTypeId = Component<ComponentType>::getId();
+
+            // retrieve ComponentManager
+            std::shared_ptr<ComponentManager<ComponentType>> componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
+                componentManagers_.at(componentTypeId))};
+
+            // remove component from entity
+            componentManager->removeFrom(oldSignature, entity);
+
+            // request entity signature
+            Signature& oldSignature{entityManager_.requestSignature(entity)};
+
+            // set entity signature
+            entityManager_.resetSignature(entity, componentTypeId);
+
+            // request entity signature
+            Signature newSignature{entityManager_.requestSignature(entity)};
+
+            // update other componentManagers
+            updateComponentManagers(oldSignature, newSignature, entity);
         }
 
         template <typename ComponentType>
         static ComponentType* retrieveComponent(EntityId entity)
         {
             // get component type id
-            Id componentTypeId = Component<ComponentType>::getId();
+            ComponentTypeId componentTypeId = Component<ComponentType>::getId();
 
             // request entity signature
             Signature& signature{entityManager_.requestSignature(entity)};
@@ -84,26 +117,6 @@ namespace snd
                        componentManagers_.at(componentTypeId))
                 ->retrieveFrom(signature, entity);
         }
-
-        template <typename ComponentType>
-        static void removeComponent(EntityId entity)
-        {
-            // get type id
-            Id componentTypeId = Component<ComponentType>::getId();
-
-            // request entity signature
-            Signature& oldSignature{entityManager_.requestSignature(entity)};
-
-            // retrieve ComponentManager
-            std::shared_ptr<ComponentManager<ComponentType>> componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
-                componentManagers_.at(componentTypeId))};
-
-            // remove component from entity
-            componentManager->removeFrom(oldSignature, entity);
-
-            // set entity signature
-            entityManager_.resetSignature(entity, componentTypeId);
-        }
         // ============================
 
         // Logic
@@ -112,7 +125,36 @@ namespace snd
 
     private:
         static inline EntityManager entityManager_;
-        static inline std::unordered_map<Id, std::shared_ptr<BaseComponentManager>> componentManagers_;
+        static inline std::unordered_map<ComponentTypeId, std::shared_ptr<BaseComponentManager>> componentManagers_;
+
+        // Components
+        // ============================
+        template <typename ComponentType>
+        void updateComponentManagers(const Signature& oldSignature, const Signature& newSignature, EntityId entity)
+        {
+            // get unchanged component types
+            Signature unchanged{oldSignature ^ newSignature};
+            std::cout << "oldSignature: " << oldSignature << "\n";
+            std::cout << "newSignature: " << newSignature << "\n";
+            std::cout << "Unchanged   : " << unchanged << "\n";
+
+            for (auto& manager : componentManagers_)
+            {
+
+                if (!unchanged.test(manager.first))
+                {
+                    continue;
+                }
+
+                // get type id
+                ComponentTypeId componentTypeId = manager.first;
+
+                // retrieve ComponentManager
+                std::shared_ptr<ComponentManager<ComponentType>> componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
+                    componentManagers_.at(componentTypeId))};
+            }
+        };
+        // ============================
     };
 }
 
