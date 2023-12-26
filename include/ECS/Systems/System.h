@@ -1,53 +1,47 @@
-#ifndef SYSTEM_H_20231217204502
-#define SYSTEM_H_20231217204502
+#ifndef SYSTEM_H_20231226184152
+#define SYSTEM_H_20231226184152
 
-#include "EntityId.h"
+#include "ComponentManager.h"
 #include "Id.h"
 #include "Signature.h"
-#include <unordered_set>
+#include <iostream>
+#include <memory>
+#include <unordered_map>
 
 namespace snd
 {
-    class System
+    struct BaseSystem
+    {
+        static inline Id typeId{0};
+        virtual void execute() = 0;
+    };
+
+    template <typename SystemType>
+    class System : public BaseSystem
     {
     public:
-        void setSystemSignature(Id componentTypeId)
-        {
-            systemSignature_.set(componentTypeId);
-        };
+        Signature signature_{0};
 
-        // provide required component types
-        Signature& retrieveSystemSignature()
+        void execute()
         {
-            return systemSignature_;
-        };
+            std::cout << "DUMMY: Execute systems action...\n";
+            action();
+        }
 
-        // add entity to processed entities
-        void syncRegisterComponents(Signature signature)
+        virtual void action(){};
+
+        static inline Id getId()
         {
-        };
+            static Id id{++typeId}; // initialized only once per templated type because it is static
+            return id;
+        }
 
-        // perform action on all processed entities
-        void execute(int deltaTime = 0)
-        {
-            for (auto entity : processedEntities_)
-            {
-                action(entity);
-            }
-        };
-
+        System() = default;
         virtual ~System() = default;
         System(const System&) = default;
         System& operator=(const System&) = default;
         System(System&&) = default;
         System& operator=(System&&) = default;
-
-    protected:
-        std::unordered_set<Entity> processedEntities_;
-        Signature systemSignature_;
-
-        // system specific action executed on one processed entity
-        virtual void action(Entity entity){};
     };
 }
 

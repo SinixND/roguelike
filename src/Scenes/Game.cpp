@@ -2,11 +2,12 @@
 
 #include "Component.h"
 #include "ComponentManager.h"
-#include "Components/Position.h"
-#include "Components/Texture.h"
+#include "ComponentPosition.h"
+#include "ComponentTexture.h"
 #include "ECS.h"
 #include "EntityId.h"
 #include "IdManager.h"
+#include "SystemRender.h"
 #include "TextureManager.h"
 #include <iostream>
 #include <memory> // make_unique pointer
@@ -14,39 +15,63 @@
 
 namespace snd
 {
+    // Initialize ECS
+    // ================================
+    std::unique_ptr<ECS> ecs{std::make_unique<ECS>()};
+    // ================================
+
     // Declare entities
+    // ================================
     EntityId player;
+    // ================================
 
     void GameScene::initialize()
     {
-        // Initialize ECS
-        ECS::init();
         TextureManager* textureManager{TextureManager::getInstance()};
-        ECS::registerComponent<Position>();
-        ECS::registerComponent<Texture>();
+
+        // Register component types
+        // ============================
+        ecs->registerComponent<Position>();
+        ecs->registerComponent<Texture>();
+        // ============================
+
+        // Register Systems
+        // ============================
+        ecs->registerSystem<Render>();
+        // ============================
 
         // Define entities
-        player = ECS::createEntity();
+        // ============================
+        player = ecs->createEntity();
+        // ============================
 
         // Test remove component
+        // ============================
         std::cout << "STEP: Test remove Position\n";
-        ECS::removeComponent<Position>(player);
+        ecs->removeComponent<Position>(player);
+        // ============================
 
         // Assign components
+        // ============================
         std::cout << "STEP: Assign Position\n";
-        ECS::assignComponent<Position>(player, Position{2, 3});
+        ecs->assignComponent<Position>(player, Position{2, 3});
         std::cout << "STEP: Assign Texture\n";
-        ECS::assignComponent<Texture>(player, Texture{textureManager->retrieveTexture(PLAYER)});
+        ecs->assignComponent<Texture>(player, Texture{textureManager->retrieveTexture(PLAYER)});
+        // ============================
 
-        // Test retrieve component
-        std::cout << "STEP: Test retrieve Position\n";
-        std::cout << "Position x: " << ECS::retrieveComponent<Position>(player)->x_ << "\n";
+        // Retrieve component
+        // ============================
+        std::cout << "STEP: Retrieve Position\n";
+        std::cout << "Position x: " << ecs->retrieveComponent<Position>(player)->x_ << "\n";
+        // ============================
 
-        // Test remove component
-        std::cout << "STEP: Test remove Position\n";
-        ECS::removeComponent<Position>(player);
-        std::cout << "STEP: Test remove Texture\n";
-        ECS::removeComponent<Texture>(player);
+        // Remove component
+        // ============================
+        std::cout << "STEP: Remove Position\n";
+        ecs->removeComponent<Position>(player);
+        std::cout << "STEP: Remove Texture\n";
+        ecs->removeComponent<Texture>(player);
+        // ============================
     };
 
     void GameScene::processInput(){};

@@ -7,6 +7,7 @@
 #include "EntityManager.h"
 #include "Id.h"
 #include "Signature.h"
+#include "System.h"
 #include <cassert>
 #include <iostream>
 #include <memory>
@@ -16,25 +17,27 @@
 namespace snd
 {
     using ComponentTypeId = Id;
+    using SystemTypeId = Id;
 
     class ECS
     {
     public:
         // ECS
         // ============================
-        static void init()
+        void update()
         {
+            // execute systems
         }
         // ============================
 
         // Entities
         // ============================
-        static EntityId createEntity()
+        EntityId createEntity()
         {
             return entityManager_.create();
         }
 
-        static void removeEntity(EntityId entity)
+        void removeEntity(EntityId entity)
         {
             entityManager_.remove(entity);
         }
@@ -43,16 +46,16 @@ namespace snd
         // Components
         // ============================
         template <typename ComponentType>
-        static void registerComponent()
+        void registerComponent()
         {
             // get type id
-            ComponentTypeId componentTypeId = Component<ComponentType>::getId();
+            ComponentTypeId componentTypeId{Component<ComponentType>::getId()};
 
             componentManagers_[componentTypeId] = std::make_shared<ComponentManager<ComponentType>>();
         }
 
         template <typename ComponentType>
-        static void assignComponent(EntityId entity, ComponentType component)
+        void assignComponent(EntityId entity, ComponentType component)
         {
             // get component type id
             ComponentTypeId componentTypeId = Component<ComponentType>::getId();
@@ -75,10 +78,12 @@ namespace snd
 
             // update other componentManagers
             updateComponentManagers(oldSignature, newSignature, entity);
+
+            // push components to respective systems
         }
 
         template <typename ComponentType>
-        static void removeComponent(EntityId entity)
+        void removeComponent(EntityId entity)
         {
             // get type id
             ComponentTypeId componentTypeId = Component<ComponentType>::getId();
@@ -104,7 +109,7 @@ namespace snd
         }
 
         template <typename ComponentType>
-        static ComponentType* retrieveComponent(EntityId entity)
+        ComponentType* retrieveComponent(EntityId entity)
         {
             // get component type id
             ComponentTypeId componentTypeId = Component<ComponentType>::getId();
@@ -119,17 +124,34 @@ namespace snd
         }
         // ============================
 
-        // Logic
+        // Systems
         // ============================
+        template <typename SystemType>
+        void registerSystem()
+        {
+            // get type id
+            SystemTypeId systemTypeId{System<SystemType>::getId()};
+
+            auto system = std::make_shared<System<SystemType>>();
+
+            systems_[systemTypeId] = std::make_shared<System<SystemType>>();
+        }
+
+        template <typename SystemType>
+        void updateSystem()
+        {
+            Signature systemSignature{SystemType::getId()};
+        }
         // ============================
 
     private:
-        static inline EntityManager entityManager_;
-        static inline std::unordered_map<ComponentTypeId, std::shared_ptr<BaseComponentManager>> componentManagers_;
+        EntityManager entityManager_;
+        std::unordered_map<ComponentTypeId, std::shared_ptr<BaseComponentManager>> componentManagers_;
+        std::unordered_map<SystemTypeId, std::shared_ptr<BaseSystem>> systems_;
 
         // Components
         // ============================
-        static void updateComponentManagers(const Signature& oldSignature, const Signature& newSignature, EntityId entity)
+        void updateComponentManagers(const Signature& oldSignature, const Signature& newSignature, EntityId entity)
         {
             // check if signature changed
             // if (oldSignature == newSignature)
