@@ -3,3 +3,8 @@ test
 .cache
 *.d
 *.o
+.clang-format
+test
+bin
+.vscode
+*.json

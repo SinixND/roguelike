@@ -2,9 +2,9 @@
 
 #include "Component.h"
 #include "ComponentManager.h"
-#include "ECS.h"
 #include "Components/Position.h"
 #include "Components/Texture.h"
+#include "ECS.h"
 #include "EntityId.h"
 #include "IdManager.h"
 #include "TextureManager.h"
@@ -21,7 +21,7 @@ namespace snd
     {
         // Initialize ECS
         ECS::init();
-        [[maybe_unused]] TextureManager* textureManager{TextureManager::getInstance()};
+        TextureManager* textureManager{TextureManager::getInstance()};
         ECS::registerComponent<Position>();
         ECS::registerComponent<Texture>();
 
@@ -29,17 +29,23 @@ namespace snd
         player = ECS::createEntity();
 
         // Test remove component
+        std::cout << "STEP: Test remove Position\n";
         ECS::removeComponent<Position>(player);
 
         // Assign components
+        std::cout << "STEP: Assign Position\n";
         ECS::assignComponent<Position>(player, Position{2, 3});
+        std::cout << "STEP: Assign Texture\n";
         ECS::assignComponent<Texture>(player, Texture{textureManager->retrieveTexture(PLAYER)});
 
         // Test retrieve component
+        std::cout << "STEP: Test retrieve Position\n";
         std::cout << "Position x: " << ECS::retrieveComponent<Position>(player)->x_ << "\n";
 
         // Test remove component
+        std::cout << "STEP: Test remove Position\n";
         ECS::removeComponent<Position>(player);
+        std::cout << "STEP: Test remove Texture\n";
         ECS::removeComponent<Texture>(player);
     };
 

@@ -18,7 +18,7 @@ namespace snd
     private:
         const Id maxId_{};
 
-        Id lastId_{1};
+        Id lastId_{0};
 
         std::unordered_set<Id> activeIds_;
         std::unordered_set<Id> freeIds_;

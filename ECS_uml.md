@@ -17,7 +17,6 @@ direction LR
 title ECS
 
 class IdManager {
-    <<Singleton>>
     - set_Id activeIds[]
     - set_Id freeIds[]
     + requestId() Id

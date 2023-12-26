@@ -7,6 +7,7 @@
 #include "Signature.h"
 #include <cassert>
 #include <functional>
+#include <iostream>
 #include <set>
 #include <unordered_map>
 #include <vector>
@@ -16,6 +17,8 @@ namespace snd
     class BaseComponentManager
     {
     public:
+        virtual void updateSignature(const Signature& oldSignature, const Signature& newSignature, EntityId entity) = 0;
+
         BaseComponentManager() = default;
         virtual ~BaseComponentManager() = default;
         BaseComponentManager(const BaseComponentManager&) = default;
@@ -46,19 +49,25 @@ namespace snd
             // delete empty signature container
             if (!signatureToComponentsByEntity_.at(oldSignature).retrieveAllElements().size())
             {
-                signatureToComponentsByEntity_.erease(oldSignature);
+                signatureToComponentsByEntity_.erase(oldSignature);
             }
         };
 
         void updateSignature(const Signature& oldSignature, const Signature& newSignature, EntityId entity)
         {
-            ComponentType* componentPtr{retrieveFrom(oldSignature, entity)};
+            // create a pointer to the component to be moved
+            auto* componentPtr{retrieveFrom(oldSignature, entity)};
 
-            if (componentPtr == nullptr)
-                return;
+            // if component does not exist
+            /// if (componentPtr == nullptr)
+            /// return;
 
+            // assign component to new container
+            std::cout << "Move component \nto   signature " << newSignature << "\n";
             assignTo(newSignature, entity, *componentPtr);
 
+            // remove component from old container
+            std::cout << "from signature " << oldSignature << "\n";
             removeFrom(oldSignature, entity);
         };
 

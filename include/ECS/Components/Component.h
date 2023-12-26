@@ -2,18 +2,22 @@
 #define COMPONENT_H_20231219002351
 
 #include "Id.h"
-#include "IdManager.h"
 #include "Signature.h"
 
 namespace snd
 {
+    struct BaseComponent
+    {
+        static inline Id typeId{0};
+    };
+
     template <typename ComponentType>
-    class Component
+    class Component : public BaseComponent
     {
     public:
         static inline Id getId()
         {
-            static Id id{componentTypeIdManager_.requestId()}; // initialized only once because it is static
+            static Id id{++typeId}; // initialized only once per templated type because it is static
             return id;
         }
 
@@ -23,9 +27,6 @@ namespace snd
         Component& operator=(const Component&) = default;
         Component(Component&&) = default;
         Component& operator=(Component&&) = default;
-
-    private:
-        static inline IdManager componentTypeIdManager_{MAX_COMPONENTS - 1};
     };
 }
 

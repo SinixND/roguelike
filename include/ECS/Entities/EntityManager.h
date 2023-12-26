@@ -5,6 +5,7 @@
 #include "EntityId.h"
 #include "IdManager.h"
 #include "Signature.h"
+#include <iostream>
 #include <unordered_map>
 #include <utility>
 
@@ -31,6 +32,7 @@ namespace snd
         void setSignature(EntityId entity, Id componentType)
         {
             entityToSignature_.at(entity).set(componentType);
+            std::cout << "Set EntitySig: " << entityToSignature_.at(entity) << "\n";
         };
 
         void resetSignature(EntityId entity, Id componentType)

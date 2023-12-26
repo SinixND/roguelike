@@ -64,7 +64,7 @@ namespace snd
             // request entity signature
             Signature oldSignature{entityManager_.requestSignature(entity)};
 
-            // set entity signature
+            // set type in entity signature
             entityManager_.setSignature(entity, componentTypeId);
 
             // request entity signature
@@ -87,17 +87,17 @@ namespace snd
             std::shared_ptr<ComponentManager<ComponentType>> componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
                 componentManagers_.at(componentTypeId))};
 
-            // remove component from entity
-            componentManager->removeFrom(oldSignature, entity);
-
             // request entity signature
             Signature& oldSignature{entityManager_.requestSignature(entity)};
 
-            // set entity signature
+            // reset type in entity signature
             entityManager_.resetSignature(entity, componentTypeId);
 
             // request entity signature
-            Signature newSignature{entityManager_.requestSignature(entity)};
+            Signature& newSignature{entityManager_.requestSignature(entity)};
+
+            // remove component from entity
+            componentManager->removeFrom(oldSignature, entity);
 
             // update other componentManagers
             updateComponentManagers(oldSignature, newSignature, entity);
@@ -129,31 +129,37 @@ namespace snd
 
         // Components
         // ============================
-        template <typename ComponentType>
-        void updateComponentManagers(const Signature& oldSignature, const Signature& newSignature, EntityId entity)
+        static void updateComponentManagers(const Signature& oldSignature, const Signature& newSignature, EntityId entity)
         {
+            // check if signature changed
+            // if (oldSignature == newSignature)
+            if (oldSignature == newSignature)
+                return;
+
             // get unchanged component types
-            Signature unchanged{oldSignature ^ newSignature};
-            std::cout << "oldSignature: " << oldSignature << "\n";
-            std::cout << "newSignature: " << newSignature << "\n";
-            std::cout << "Unchanged   : " << unchanged << "\n";
+            Signature unchangedTypes{oldSignature & newSignature};
+
+            // check if there are types to update
+            if (unchangedTypes == 0)
+                return;
+
+            std::cout << "Update component managers of unchanged signature parts: " << unchangedTypes << "\n";
 
             for (auto& manager : componentManagers_)
             {
+                // get type id
+                ComponentTypeId componentTypeId = manager.first;
 
-                if (!unchanged.test(manager.first))
+                // check if manager matches unchanged types
+                if (!unchangedTypes.test(componentTypeId))
                 {
                     continue;
                 }
 
-                // get type id
-                ComponentTypeId componentTypeId = manager.first;
-
-                // retrieve ComponentManager
-                std::shared_ptr<ComponentManager<ComponentType>> componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
-                    componentManagers_.at(componentTypeId))};
+                // update containers
+                manager.second->updateSignature(oldSignature, newSignature, entity);
             }
-        };
+        }
         // ============================
     };
 }

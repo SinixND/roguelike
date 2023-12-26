@@ -81,7 +81,7 @@ endif
 LOC_LIB_DIRS 		:= $(shell find $(LOC_LIB_DIR) -type d) 
 
 ### set raylib and emscripten directory as needed
-RAYLIB_DIR 			:= /usr/lib/raylib
+RAYLIB_DIR 			:= /usr/lib/raylib/src
 WIN_RAYLIB_DIR 		:= /usr/x86_64-w64-mingw32/lib/raylib/src
 ifdef TERMUX_VERSION
 RAYLIB_DIR 			:= $(PREFIX)/lib/raylib
@@ -220,8 +220,7 @@ $(TEST_DIR)/benchmark.$(OBJ_EXT): benchmark.$(SRC_EXT)
 
 ### rule for web build process
 web:
-	emcc -o index.html $(SRCS) -Os -Wall $(RAYLIB_DIR)/src/libraylib.a $(LOC_INC_FLAGS) -I$(RAYLIB_DIR)/src -L$(RAYLIB_DIR) -s USE_GLFW=3 -s ASYNCIFY --shell-file $(RAYLIB_DIR)/src/minshell.html -DPLATFORM_WEB
-	emcc -o web/game.html $(SRCS) -Os -Wall $(RAYLIB_DIR)/src/libraylib.a $(LOC_INC_FLAGS) -I$(RAYLIB_DIR)/src -L$(RAYLIB_DIR) -s USE_GLFW=3 -s ASYNCIFY --shell-file $(RAYLIB_DIR)/src/minshell.html -DPLATFORM_WEB
+	emcc -o web/app.html $(SRCS) -Os -Wall $(RAYLIB_DIR)/libraylib.a $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) -L$(RAYLIB_DIR) -s USE_GLFW=3 -s ASYNCIFY --shell-file $(RAYLIB_DIR)/minshell.html -DPLATFORM_WEB
 
 ### rule for windows build process
 windows: $(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT) 
