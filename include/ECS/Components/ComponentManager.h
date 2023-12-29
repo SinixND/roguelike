@@ -1,137 +1,170 @@
-#ifndef COMPONENTMANAGER_H_20231212234818
-#define COMPONENTMANAGER_H_20231212234818
+#ifndef COMPONENTMANAGER_H_20240101214521
+#define COMPONENTMANAGER_H_20240101214521
 
 #include "Component.h"
-#include "ContiguousContainer.h"
+#include "ComponentTypeId.h"
+#include "ContiguousMap.h"
 #include "EntityId.h"
 #include "Signature.h"
-#include <cassert>
-#include <functional>
-#include <iostream>
-#include <set>
+#include <memory>
 #include <unordered_map>
-#include <vector>
 
 namespace snd
 {
-    class BaseComponentManager
-    {
-    public:
-        virtual void updateSignature(const Signature& oldSignature, const Signature& newSignature, EntityId entity) = 0;
-
-        BaseComponentManager() = default;
-        virtual ~BaseComponentManager() = default;
-        BaseComponentManager(const BaseComponentManager&) = default;
-        BaseComponentManager& operator=(const BaseComponentManager&) = default;
-        BaseComponentManager(BaseComponentManager&&) = default;
-        BaseComponentManager& operator=(BaseComponentManager&&) = default;
-    };
-
-    template <typename ComponentType>
-    class ComponentManager : public BaseComponentManager
+    class ComponentManager
     {
     public:
         // Add component to entiy
-        void assignTo(Signature newSignature, EntityId entity, ComponentType component)
+        template <typename ComponentType>
+        void insert(const Signature& newSignature, EntityId entity, ComponentType component)
         {
+            // get component container (and create if needed)
+            auto componentContainer{
+                ensureComponentTypeContainer<ComponentType>(newSignature)};
+
             // add to signature
-            signatureToComponentsByEntity_[newSignature].addElement(entity, component);
-        };
+            componentContainer->insert(entity, component);
+        }
 
-        // Remove a component from an entity
-        void removeFrom(Signature oldSignature, EntityId entity)
+        void updateSignature(ComponentTypeId componentTypeId, const Signature& oldSignature, const Signature& newSignature, EntityId entity)
         {
-            if (!tryEntity(oldSignature, entity))
-                return;
+            // get old component container
+            auto oldComponentContainer{
+                getComponentContainer(componentTypeId, oldSignature)};
 
-            signatureToComponentsByEntity_.at(oldSignature).removeElement(entity);
-
-            // delete empty signature container
-            if (!signatureToComponentsByEntity_.at(oldSignature).retrieveAllElements().size())
-            {
-                signatureToComponentsByEntity_.erase(oldSignature);
-            }
-        };
-
-        void updateSignature(const Signature& oldSignature, const Signature& newSignature, EntityId entity)
-        {
-            // create a pointer to the component to be moved
-            auto* componentPtr{retrieveFrom(oldSignature, entity)};
-
-            // if component does not exist
-            /// if (componentPtr == nullptr)
-            /// return;
+            // get old component container
+            auto newComponentContainer{
+                getComponentContainer(componentTypeId, newSignature)};
 
             // assign component to new container
-            std::cout << "Move component \nto   signature " << newSignature << "\n";
-            assignTo(newSignature, entity, *componentPtr);
+            std::cout << "Move component \nto   signature " << newSignature /*.getString()*/ << "\n";
+            // newComponentContainer->insert(entity, oldComponentContainer.get());
+            newComponentContainer->insert(entity, *oldComponentContainer->get(entity));
 
             // remove component from old container
-            std::cout << "from signature " << oldSignature << "\n";
-            removeFrom(oldSignature, entity);
-        };
+            std::cout << "from signature " << oldSignature /*.getString()*/ << "\n";
+            // oldComponentContainer->erase(entity);
+        }
 
-        // Access a component from a specific entity
-        ComponentType* retrieveFrom(Signature signature, EntityId entity)
-        {
-            if (!tryEntity(signature, entity))
-                return nullptr;
+        // Remove a component from an entity
+        //* template <typename ComponentType>
+        //* void erase(const Signature& oldSignature, EntityId entity)
+        //* {
+        //* // check if entity has component to be removed
+        //* if (!testEntity<ComponentType>(oldSignature, entity))
+        //* return;
 
-            return signatureToComponentsByEntity_.at(signature).retrieveElement(entity);
-        };
+        //* // get component container
+        //* auto componentContainer{
+        //* getComponentContainer<ComponentType>(oldSignature)};
 
-        // Access components for a specific signature
-        std::vector<std::vector<ComponentType>*> retrieveFor(Signature signature)
-        {
-            std::vector<std::vector<ComponentType>*> returnVector{};
+        //* // remove component
+        //* componentContainer.erase(entity);
 
-            if (!trySignature(signature))
-                return returnVector;
+        //* // delete empty signature container
+        //* //* if
+        //* //* signatureToComponentsByEntity_.at(oldSignature).retrieveAllElements().size())
+        //* //* {
+        //* //* signatureToComponentsByEntity_.erase(oldSignature);
+        //* //* }
+        //* }
 
-            for (auto keyValue : signatureToComponentsByEntity_)
-            {
-                // check if provided signature is subset of signature key
-                if ((keyValue->first & signature) == signature)
-                {
-                    returnVector.push_back(&(keyValue->second.retrieveAllElements()));
-                }
-            }
+        //* // Access a component from a specific entity
+        //* ComponentType* retrieveFrom(const Signature& signature, EntityId entity)
+        //* {
+        //* if (!testEntity(signature, entity))
+        //* return nullptr;
 
-            return returnVector;
-        };
+        //* return components_.at(signature).retrieveElement(entity);
+        //* };
 
-        // Access all components
-        std::vector<std::vector<ComponentType>*> retrieveAllComponents()
-        {
-            std::vector<std::vector<ComponentType>*> returnVector{};
+        //* // Access components for a specific signature
+        //* std::vector<std::vector<ComponentType>*>
+        //* retrieveFor(const Signature& signature)
+        //* {
+        //* std::vector<std::vector<ComponentType>*> returnVector{};
 
-            for (auto it : signatureToComponentsByEntity_)
-            {
-                returnVector.push_back(&(it->second.retrieveAllElements()));
-            }
+        //* if (!testSignature(signature))
+        //* return returnVector;
 
-            return returnVector;
-        };
+        //* for (auto keyValue : components_)
+        //* {
+        //* // check if provided signature is subset of signature key
+        //* if ((keyValue->first & signature) == signature)
+        //* {
+        //* returnVector.push_back(&(keyValue->second.retrieveAllElements()));
+        //* }
+        //* }
+
+        //* return returnVector;
+        //* };
+
+        //* // Access all components
+        //* std::vector<std::vector<ComponentType>*> retrieveAllComponents()
+        //* {
+        //* std::vector<std::vector<ComponentType>*> returnVector{};
+
+        //* for (auto it : components_)
+        //* {
+        //* returnVector.push_back(&(it->second.retrieveAllElements()));
+        //* }
+
+        //* return returnVector;
+        //* };
 
     private:
-        static inline std::unordered_map<Signature, ContiguousContainer<Id, ComponentType>> signatureToComponentsByEntity_;
+        std::unordered_map<ComponentTypeId, std::unordered_map<Signature, std::shared_ptr<BaseContiguousMap>>> components_{};
 
-        bool trySignature(Signature signature)
+        template <typename ComponentType>
+        auto ensureComponentTypeContainer(const Signature& signature)
         {
-            return signatureToComponentsByEntity_.find(signature) != signatureToComponentsByEntity_.end();
-        };
+            // check for container existance
+            if (!testSignature<ComponentType>(signature))
+            {
+                // make new component container
+                components_[Component<ComponentType>::getId()][signature] = std::make_shared<ContiguousMap<EntityId, ComponentType>>();
+            }
 
-        bool tryEntity(Signature signature, EntityId entity)
+            return std::static_pointer_cast<ContiguousMap<EntityId, ComponentType>>(components_[Component<ComponentType>::getId()][signature]);
+        }
+
+        std::shared_ptr<BaseContiguousMap> getComponentContainer(ComponentTypeId componentTypeId, const Signature& signature)
         {
-            if (!trySignature(signature))
+            return components_[componentTypeId][signature];
+        }
+
+        template <typename ComponentType>
+        bool testEntity(const Signature& signature, EntityId entity)
+        {
+            if (!testSignature<ComponentType>(signature))
             {
                 return false;
             }
 
-            return signatureToComponentsByEntity_.at(signature).tryElement(entity);
-        };
-    };
+            return components_.at(Component<ComponentType>::getId()).at(signature).tryElement(entity);
+        }
 
-}
+        template <typename ComponentType>
+        bool testSignature(const Signature& signature)
+        {
+            if (!testComponentTypeId<ComponentType>())
+            {
+                return false;
+            }
+
+            auto atComponentTypeId{
+                components_[Component<ComponentType>::getId()]};
+
+            // return components_[Component<ComponentType>::getId()].second.find(signature) != components_[Component<ComponentType>::getId()].end();
+            return atComponentTypeId.find(signature) != atComponentTypeId.end();
+        }
+
+        template <typename ComponentType>
+        bool testComponentTypeId()
+        {
+            return components_.find(Component<ComponentType>::getId()) != components_.end();
+        }
+    };
+} // namespace snd
 
 #endif

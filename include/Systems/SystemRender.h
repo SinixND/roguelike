@@ -8,7 +8,7 @@
 
 namespace snd
 {
-    class RenderSystem : public System<RenderSystem>
+    class RenderSystem : public System
     {
     public:
         RenderSystem()

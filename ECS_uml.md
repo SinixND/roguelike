@@ -16,6 +16,9 @@ classDiagram
 direction LR
 title ECS
 
+class Id
+
+IdManager *-- Id : own
 class IdManager {
     - set_Id activeIds[]
     - set_Id freeIds[]
@@ -27,22 +30,31 @@ class EntityId {
     <<Id>>
 }
 
-EntityManager ..> IdManager : uses
+EntityManager *-- IdManager : owns
+EntityManager *-- EntityId : owns
 class EntityManager {
-- map entityId_to_signature
-+ createEntity()
-+ removeEntiy()
+- map entityIdToSignature
++ createEntity() EntityId
++ removeEntiy(EntityId) void
++ setSignature(EntityId, ComponentTypeId) void
++ resetSignature(EntityId, ComponentTypeId) void
++ requestSignature(EntityId) Signature
 }
 
-BaseComponent ..> IdManager : uses
-class BaseComponent {
-    <<template>>
-    + getId() Id
-}
-
-Component --|> BaseComponent : is-a
 class Component {
+    + Id typeId
     + type attribute
+}
+
+class Signature {
+    <<bitset>>
+}
+
+
+class ComponentManager {
+    <<template ComponentType>>
+    - map signatureToComponentsByEntity    
+    + addComponent(ComponentType)
 }
 
 ComponentManager *-- Component : owns

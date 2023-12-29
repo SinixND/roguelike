@@ -1,13 +1,11 @@
 #ifndef ENTITYMANAGER_H_20231220225105
 #define ENTITYMANAGER_H_20231220225105
 
-#include "ContiguousContainer.h"
 #include "EntityId.h"
 #include "IdManager.h"
 #include "Signature.h"
 #include <iostream>
 #include <unordered_map>
-#include <utility>
 
 namespace snd
 {
@@ -29,15 +27,15 @@ namespace snd
             entityToSignature_.erase(entityId);
         };
 
-        void setSignature(EntityId entity, Id componentType)
+        void setComponent(EntityId entity, Id componentTypeId)
         {
-            entityToSignature_.at(entity).set(componentType);
-            std::cout << "Set EntitySig: " << entityToSignature_.at(entity) << "\n";
+            entityToSignature_.at(entity).set(componentTypeId);
+            std::cout << "Set EntitySig: " << entityToSignature_.at(entity) /*.getString()*/ << "\n";
         };
 
-        void resetSignature(EntityId entity, Id componentType)
+        void resetComponent(EntityId entity, Id componentTypeId)
         {
-            entityToSignature_.at(entity).reset(componentType);
+            entityToSignature_.at(entity).reset(componentTypeId);
         };
 
         Signature& requestSignature(EntityId entity)

@@ -9,6 +9,7 @@ namespace snd
     struct BaseComponent
     {
         static inline Id typeId{0};
+        virtual ~BaseComponent() = default;
     };
 
     template <typename ComponentType>
@@ -20,13 +21,6 @@ namespace snd
             static Id id{++typeId}; // initialized only once per templated type because it is static
             return id;
         }
-
-        Component() = default;
-        virtual ~Component() = default;
-        Component(const Component&) = default;
-        Component& operator=(const Component&) = default;
-        Component(Component&&) = default;
-        Component& operator=(Component&&) = default;
     };
 }
 

@@ -5,7 +5,7 @@
 
 namespace snd
 {
-    typedef Id EntityId;
+    using EntityId = Id;
 }
 
 #endif

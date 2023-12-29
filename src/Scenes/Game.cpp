@@ -1,16 +1,13 @@
 #include "Game.h"
 
-#include "Component.h"
-#include "ComponentManager.h"
 #include "ComponentPosition.h"
 #include "ComponentTexture.h"
 #include "ECS.h"
 #include "EntityId.h"
-#include "IdManager.h"
 #include "SystemRender.h"
 #include "TextureManager.h"
 #include <iostream>
-#include <memory> // make_unique pointer
+#include <memory>
 #include <raylib.h>
 
 namespace snd
@@ -29,17 +26,6 @@ namespace snd
     {
         TextureManager* textureManager{TextureManager::getInstance()};
 
-        // Register component types
-        // ============================
-        ecs->registerComponent<PositionComponent>();
-        ecs->registerComponent<TextureComponent>();
-        // ============================
-
-        // Register Systems
-        // ============================
-        ecs->registerSystem<RenderSystem>();
-        // ============================
-
         // Define entities
         // ============================
         player = ecs->createEntity();
@@ -47,8 +33,8 @@ namespace snd
 
         // Test remove component
         // ============================
-        std::cout << "STEP: Test remove Position\n";
-        ecs->removeComponent<PositionComponent>(player);
+        //* std::cout << "STEP: Test remove Position\n";
+        //* ecs->removeComponent<PositionComponent>(player);
         // ============================
 
         // Assign components
@@ -61,16 +47,16 @@ namespace snd
 
         // Retrieve component
         // ============================
-        std::cout << "STEP: Retrieve Position\n";
-        std::cout << "Position x: " << ecs->retrieveComponent<PositionComponent>(player)->x_ << "\n";
+        //* std::cout << "STEP: Retrieve Position\n";
+        //* std::cout << "Position x: " << ecs->retrieveComponent<PositionComponent>(player)->x_ << "\n";
         // ============================
 
         // Remove component
         // ============================
-        std::cout << "STEP: Remove Position\n";
-        ecs->removeComponent<PositionComponent>(player);
-        std::cout << "STEP: Remove Texture\n";
-        ecs->removeComponent<TextureComponent>(player);
+        //* std::cout << "STEP: Remove Position\n";
+        //* ecs->removeComponent<PositionComponent>(player);
+        //* std::cout << "STEP: Remove Texture\n";
+        //* ecs->removeComponent<TextureComponent>(player);
         // ============================
     };
 
