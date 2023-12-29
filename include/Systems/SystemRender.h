@@ -1,25 +1,26 @@
 #ifndef RENDER_H_20231217205005
 #define RENDER_H_20231217205005
 
-#include "Component.h"
 #include "ComponentPosition.h"
 #include "ComponentTexture.h"
 #include "System.h"
 #include <iostream>
-#include <raylib.h>
 
 namespace snd
 {
-    class Render : public System<Render>
+    class RenderSystem : public System<RenderSystem>
     {
     public:
-        void action() { std::cout << "DUMMY: Execute render action...\n"; };
-
-        Render()
+        RenderSystem()
         {
-            signature_.set(Texture::getId());
-            signature_.set(Position::getId());
+            signature_.set(TextureComponent::getId());
+            signature_.set(PositionComponent::getId());
         };
+
+        void action(TextureComponent& texture, PositionComponent& position)
+        {
+            std::cout << "DUMMY: Execute render action on texture " << texture.getId() << " and position " << position.getId() << "\n";
+        }
     };
 }
 

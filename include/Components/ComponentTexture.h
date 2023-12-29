@@ -7,11 +7,11 @@
 
 namespace snd
 {
-    struct Texture : Component<Texture>
+    struct TextureComponent : Component<TextureComponent>
     {
         Texture2D* texture_;
 
-        Texture(Texture2D* texture)
+        TextureComponent(Texture2D* texture)
             : texture_{texture} {};
     };
 }

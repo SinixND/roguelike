@@ -31,13 +31,13 @@ namespace snd
 
         // Register component types
         // ============================
-        ecs->registerComponent<Position>();
-        ecs->registerComponent<Texture>();
+        ecs->registerComponent<PositionComponent>();
+        ecs->registerComponent<TextureComponent>();
         // ============================
 
         // Register Systems
         // ============================
-        ecs->registerSystem<Render>();
+        ecs->registerSystem<RenderSystem>();
         // ============================
 
         // Define entities
@@ -48,29 +48,29 @@ namespace snd
         // Test remove component
         // ============================
         std::cout << "STEP: Test remove Position\n";
-        ecs->removeComponent<Position>(player);
+        ecs->removeComponent<PositionComponent>(player);
         // ============================
 
         // Assign components
         // ============================
         std::cout << "STEP: Assign Position\n";
-        ecs->assignComponent<Position>(player, Position{2, 3});
+        ecs->assignComponent<PositionComponent>(player, PositionComponent{2, 3});
         std::cout << "STEP: Assign Texture\n";
-        ecs->assignComponent<Texture>(player, Texture{textureManager->retrieveTexture(PLAYER)});
+        ecs->assignComponent<TextureComponent>(player, TextureComponent{textureManager->retrieveTexture(PLAYER)});
         // ============================
 
         // Retrieve component
         // ============================
         std::cout << "STEP: Retrieve Position\n";
-        std::cout << "Position x: " << ecs->retrieveComponent<Position>(player)->x_ << "\n";
+        std::cout << "Position x: " << ecs->retrieveComponent<PositionComponent>(player)->x_ << "\n";
         // ============================
 
         // Remove component
         // ============================
         std::cout << "STEP: Remove Position\n";
-        ecs->removeComponent<Position>(player);
+        ecs->removeComponent<PositionComponent>(player);
         std::cout << "STEP: Remove Texture\n";
-        ecs->removeComponent<Texture>(player);
+        ecs->removeComponent<TextureComponent>(player);
         // ============================
     };
 

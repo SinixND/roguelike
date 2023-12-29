@@ -5,9 +5,9 @@
 
 namespace snd
 {
-    struct Position : public Component<Position>
+    struct PositionComponent : public Component<PositionComponent>
     {
-        Position(float x, float y)
+        PositionComponent(float x, float y)
             : x_{x}
             , y_{y} {};
 

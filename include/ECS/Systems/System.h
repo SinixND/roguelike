@@ -1,6 +1,7 @@
 #ifndef SYSTEM_H_20231226184152
 #define SYSTEM_H_20231226184152
 
+#include "Component.h"
 #include "ComponentManager.h"
 #include "Id.h"
 #include "Signature.h"
@@ -12,28 +13,33 @@ namespace snd
 {
     struct BaseSystem
     {
-        static inline Id typeId{0};
-        virtual void execute() = 0;
+        Signature& getSignature()
+        {
+            return signature_;
+        };
+
+        BaseSystem() = default;
+        virtual ~BaseSystem() = default;
+        BaseSystem(const BaseSystem&) = default;
+        BaseSystem& operator=(const BaseSystem&) = default;
+        BaseSystem(BaseSystem&&) = default;
+        BaseSystem& operator=(BaseSystem&&) = default;
+
+    protected:
+        Signature signature_{0};
     };
 
     template <typename SystemType>
     class System : public BaseSystem
     {
     public:
-        Signature signature_{0};
+        template <typename Type, typename... ArgTypes>
+        void action(Type, ArgTypes...) {}
 
         void execute()
         {
             std::cout << "DUMMY: Execute systems action...\n";
-            action();
-        }
-
-        virtual void action(){};
-
-        static inline Id getId()
-        {
-            static Id id{++typeId}; // initialized only once per templated type because it is static
-            return id;
+            void action();
         }
 
         System() = default;
@@ -42,6 +48,10 @@ namespace snd
         System& operator=(const System&) = default;
         System(System&&) = default;
         System& operator=(System&&) = default;
+
+    protected:
+        // vector of pointers to component vectors for matching signature
+        // std::vector<std::vector<ComponentType>*> vector;
     };
 }
 

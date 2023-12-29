@@ -79,7 +79,19 @@ namespace snd
             // update other componentManagers
             updateComponentManagers(oldSignature, newSignature, entity);
 
-            // push components to respective systems
+            // refresh systems pointer to component containers with matching signature
+            // (EXTRACT TO SEPARATE FUNCTION)
+            for (auto& system : systems_)
+            {
+                Signature systemSignature{system->getSignature()};
+
+                // check if entity signature matches system signature
+                if ((newSignature & systemSignature) != systemSignature)
+                    continue;
+
+                // pass new container (pointers) to system
+                // system.include(componentManager->retrieveFor(newSignature));
+            }
         }
 
         template <typename ComponentType>
@@ -129,25 +141,14 @@ namespace snd
         template <typename SystemType>
         void registerSystem()
         {
-            // get type id
-            SystemTypeId systemTypeId{System<SystemType>::getId()};
-
-            auto system = std::make_shared<System<SystemType>>();
-
-            systems_[systemTypeId] = std::make_shared<System<SystemType>>();
-        }
-
-        template <typename SystemType>
-        void updateSystem()
-        {
-            Signature systemSignature{SystemType::getId()};
+            systems_.push_back(std::make_shared<System<SystemType>>());
         }
         // ============================
 
     private:
         EntityManager entityManager_;
         std::unordered_map<ComponentTypeId, std::shared_ptr<BaseComponentManager>> componentManagers_;
-        std::unordered_map<SystemTypeId, std::shared_ptr<BaseSystem>> systems_;
+        std::vector<std::shared_ptr<BaseSystem>> systems_;
 
         // Components
         // ============================
