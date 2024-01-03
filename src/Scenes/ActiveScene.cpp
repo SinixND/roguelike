@@ -8,7 +8,7 @@ namespace snd
     void ActiveScene::setScene(Scene& scene) { scene_ = &scene; }
 
     // Singleton attributes
-    //-------------------------------------
+    //=====================================
     ActiveScene* ActiveScene::getInstance()
     {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -26,5 +26,5 @@ namespace snd
 
     ActiveScene::ActiveScene() {}
     ActiveScene::~ActiveScene() {}
-    //-------------------------------------
+    //=====================================
 }

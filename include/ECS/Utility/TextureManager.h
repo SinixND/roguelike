@@ -1,7 +1,7 @@
 #ifndef TEXTUREMANAGER_H_20231217234438
 #define TEXTUREMANAGER_H_20231217234438
 
-#include <mutex> // thread locks
+#include <mutex> // Thread locks
 #include <raylib.h>
 #include <string>
 #include <unordered_map>
@@ -25,21 +25,24 @@ namespace snd
         static void unloadAllTextures();
 
         // Singleton attributes
-        //---------------------------------
+        //=================================
         static TextureManager* getInstance();
-        //---------------------------------
+        //=================================
 
     private:
         static std::unordered_map<TextureId, Texture2D> textures_;
 
         // Singleton attributes
-        //---------------------------------
+        //=================================
         static TextureManager* singleton_;
         static std::mutex mutex_;
+
+    private:
         TextureManager(){};
         ~TextureManager(){};
+
         DISALLOW_COPY_AND_ASSIGN(TextureManager)
-        //---------------------------------
+        //=================================
     };
 
 }

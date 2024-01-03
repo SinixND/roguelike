@@ -1,189 +1,110 @@
 #ifndef ECS_H_20231215005456
 #define ECS_H_20231215005456
 
+#include "Component.h"
 #include "ComponentManager.h"
-#include "ContiguousContainer.h"
+#include "ComponentTypeId.h"
+#include "ContiguousMap.h"
 #include "EntityId.h"
 #include "EntityManager.h"
-#include "Id.h"
 #include "Signature.h"
 #include "System.h"
-#include <cassert>
+#include "SystemManager.h"
 #include <iostream>
 #include <memory>
-#include <set>
-#include <unordered_map>
 
 namespace snd
 {
-    using ComponentTypeId = Id;
-    using SystemTypeId = Id;
-
     class ECS
     {
     public:
-        // ECS
-        // ============================
-        void update()
-        {
-            // execute systems
-        }
-        // ============================
-
         // Entities
         // ============================
         EntityId createEntity()
         {
-            return entityManager_.create();
+            return entityManager_.request();
         }
 
         void removeEntity(EntityId entity)
         {
             entityManager_.remove(entity);
         }
+
+        Signature* requestEntitySignature(EntityId entity)
+        {
+            return entityManager_.getSignature(entity);
+        }
         // ============================
 
         // Components
         // ============================
         template <typename ComponentType>
-        void registerComponent()
+        void assignComponent(EntityId entity, const ComponentType& component)
         {
-            // get type id
-            ComponentTypeId componentTypeId{Component<ComponentType>::getId()};
+            // Assign component to entity
+            componentManager_.assignTo(entity, component);
 
-            componentManagers_[componentTypeId] = std::make_shared<ComponentManager<ComponentType>>();
-        }
-
-        template <typename ComponentType>
-        void assignComponent(EntityId entity, ComponentType component)
-        {
             // get component type id
-            ComponentTypeId componentTypeId = Component<ComponentType>::getId();
+            ComponentTypeId componentTypeId{
+                Component<ComponentType>::getId()};
 
-            // retrieve ComponentManager
-            auto componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
-                componentManagers_.at(componentTypeId))};
+            // Update entity signature
+            entityManager_.setComponent(entity, componentTypeId);
 
-            // request entity signature
-            Signature oldSignature{entityManager_.requestSignature(entity)};
-
-            // set type in entity signature
-            entityManager_.setSignature(entity, componentTypeId);
-
-            // request entity signature
-            Signature newSignature{entityManager_.requestSignature(entity)};
-
-            // assign component to entity
-            componentManager->assignTo(newSignature, entity, component);
-
-            // update other componentManagers
-            updateComponentManagers(oldSignature, newSignature, entity);
-
-            // refresh systems pointer to component containers with matching signature
-            // (EXTRACT TO SEPARATE FUNCTION)
-            for (auto& system : systems_)
-            {
-                Signature systemSignature{system->getSignature()};
-
-                // check if entity signature matches system signature
-                if ((newSignature & systemSignature) != systemSignature)
-                    continue;
-
-                // pass new container (pointers) to system
-                // system.include(componentManager->retrieveFor(newSignature));
-            }
+            // notify systems about added component
+            // (entity can only become relevant, not obsolete)
+            notifyAdd(entity, componentTypeId);
         }
 
         template <typename ComponentType>
         void removeComponent(EntityId entity)
         {
-            // get type id
-            ComponentTypeId componentTypeId = Component<ComponentType>::getId();
+            // Remove component from entity
+            componentManager_.removeFrom<ComponentType>(entity);
 
-            // retrieve ComponentManager
-            std::shared_ptr<ComponentManager<ComponentType>> componentManager{std::static_pointer_cast<ComponentManager<ComponentType>>(
-                componentManagers_.at(componentTypeId))};
+            // get component type id
+            ComponentTypeId componentTypeId{
+                Component<ComponentType>::getId()};
 
-            // request entity signature
-            Signature& oldSignature{entityManager_.requestSignature(entity)};
+            // Update entity signature
+            entityManager_.resetComponent(entity, componentTypeId);
 
-            // reset type in entity signature
-            entityManager_.resetSignature(entity, componentTypeId);
-
-            // request entity signature
-            Signature& newSignature{entityManager_.requestSignature(entity)};
-
-            // remove component from entity
-            componentManager->removeFrom(oldSignature, entity);
-
-            // update other componentManagers
-            updateComponentManagers(oldSignature, newSignature, entity);
+            // notify systems about removed component
+            // (entity can only become obsolete, not relevant)
+            notifyRemove(entity, componentTypeId);
         }
 
         template <typename ComponentType>
         ComponentType* retrieveComponent(EntityId entity)
         {
-            // get component type id
-            ComponentTypeId componentTypeId = Component<ComponentType>::getId();
+            // Return component
+            return componentManager_.retrieveFrom<ComponentType>(entity);
+        }
 
-            // request entity signature
-            Signature& signature{entityManager_.requestSignature(entity)};
-
-            // return component
-            return std::static_pointer_cast<ComponentManager<ComponentType>>(
-                       componentManagers_.at(componentTypeId))
-                ->retrieveFrom(signature, entity);
+        template <typename ComponentType>
+        std::vector<ComponentType>* retrieveAllComponents()
+        {
+            return componentManager_.retrieveAll<ComponentType>();
         }
         // ============================
 
         // Systems
         // ============================
         template <typename SystemType>
-        void registerSystem()
+        std::shared_ptr<SystemType> registerSystem()
         {
-            systems_.push_back(std::make_shared<System<SystemType>>());
+            auto system{
+                std::make_shared<SystemType>(componentManager_)};
+
+            systems_.push_back(system);
+            return system;
         }
         // ============================
 
     private:
         EntityManager entityManager_;
-        std::unordered_map<ComponentTypeId, std::shared_ptr<BaseComponentManager>> componentManagers_;
+        ComponentManager componentManager_;
         std::vector<std::shared_ptr<BaseSystem>> systems_;
-
-        // Components
-        // ============================
-        void updateComponentManagers(const Signature& oldSignature, const Signature& newSignature, EntityId entity)
-        {
-            // check if signature changed
-            // if (oldSignature == newSignature)
-            if (oldSignature == newSignature)
-                return;
-
-            // get unchanged component types
-            Signature unchangedTypes{oldSignature & newSignature};
-
-            // check if there are types to update
-            if (unchangedTypes == 0)
-                return;
-
-            std::cout << "Update component managers of unchanged signature parts: " << unchangedTypes << "\n";
-
-            for (auto& manager : componentManagers_)
-            {
-                // get type id
-                ComponentTypeId componentTypeId = manager.first;
-
-                // check if manager matches unchanged types
-                if (!unchangedTypes.test(componentTypeId))
-                {
-                    continue;
-                }
-
-                // update containers
-                manager.second->updateSignature(oldSignature, newSignature, entity);
-            }
-        }
-        // ============================
     };
 }
 

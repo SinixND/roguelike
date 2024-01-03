@@ -7,12 +7,12 @@ namespace snd
 {
     struct PositionComponent : public Component<PositionComponent>
     {
+        float x_;
+        float y_;
+
         PositionComponent(float x, float y)
             : x_{x}
             , y_{y} {};
-
-        float x_;
-        float y_;
     };
 }
 

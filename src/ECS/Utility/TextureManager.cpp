@@ -26,13 +26,14 @@ namespace snd
     {
         for (auto& texture : textures_)
         {
-            UnloadTexture(texture.second);
+            Texture2D tex = texture.second;
+            UnloadTexture(tex);
         }
         textures_.clear();
     };
 
     // Singleton
-    //-------------------------------------
+    //=====================================
     TextureManager* TextureManager::singleton_{nullptr};
     std::mutex TextureManager::mutex_;
 
@@ -47,5 +48,5 @@ namespace snd
 
         return singleton_;
     }
-    //-------------------------------------
+    //=====================================
 }

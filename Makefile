@@ -47,7 +47,7 @@ WIN_DEP_EXT 		:= win.d
 ### set VPATH as std dir to look for compile targets
 VPATH 				:= $(shell find . -type d) 
 ### here go all source files (with the $(SRC_EXT) extension)
-SRC_DIRS 			:= $(shell find -wholename "*src*" -type d) 
+SRC_DIRS 			:= ./src
 ### here go local include files
 LOC_INC_DIR 		:= ./include #deprecated
 ### here go external include files
@@ -154,18 +154,18 @@ debug: build
 
 
 ### exclude main object file to avoid multiple definitions of main
-test: $(TEST_DIR)/test.$(BINARY_EXT)
-	$(TEST_DIR)/test.$(BINARY_EXT)
+test: $(BIN_DIR)/test.$(BINARY_EXT)
+	$(BIN_DIR)/test.$(BINARY_EXT)
 
 
 benchmark: CXX_FLAGS += -O3 -DNDEBUG
-benchmark: $(TEST_DIR)/benchmark.$(BINARY_EXT)
-	$(TEST_DIR)/benchmark.$(BINARY_EXT)
+benchmark: $(BIN_DIR)/benchmark.$(BINARY_EXT)
+	$(BIN_DIR)/benchmark.$(BINARY_EXT)
 
 
 ### rule for release build process with binary as prerequisite
 release: CXX_FLAGS += -O2
-release: build web #windows 
+release: build web windows 
 
 ### rule for native build process with binary as prerequisite
 build: $(BIN_DIR)/$(BINARY).$(BINARY_EXT) 
@@ -184,13 +184,13 @@ $(BIN_DIR)/$(BINARY).$(BINARY_EXT): $(OBJS)
 	$(CXX) -o $@ $^ $(LD_FLAGS) $(LIB_FLAGS) $(LD_LIBS) 
 
 ### LINK TEST
-$(TEST_DIR)/test.$(BINARY_EXT): $(TEST_OBJS)
+$(BIN_DIR)/test.$(BINARY_EXT): $(TEST_OBJS)
 	$(info )
 	$(info === Link test ===)
 	$(CXX) -o $@ $^ $(LD_FLAGS) $(LIB_FLAGS) $(LD_LIBS)
 
 ### LINK BENCHMARK
-$(TEST_DIR)/benchmark.$(BINARY_EXT): $(BM_OBJS)
+$(BIN_DIR)/benchmark.$(BINARY_EXT): $(BM_OBJS)
 	$(info )
 	$(info === Link benchmark ===)
 	$(CXX) -o $@ $^ $(LD_FLAGS) $(LIB_FLAGS) $(LD_LIBS)
@@ -220,7 +220,9 @@ $(TEST_DIR)/benchmark.$(OBJ_EXT): benchmark.$(SRC_EXT)
 
 ### rule for web build process
 web:
-	emcc -o web/app.html $(SRCS) -Os -Wall $(RAYLIB_DIR)/libraylib.a $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) -L$(RAYLIB_DIR) -s USE_GLFW=3 -s ASYNCIFY --shell-file $(RAYLIB_DIR)/minshell.html -DPLATFORM_WEB
+	$(info )
+	$(info === Compile web ===)
+	emcc -o web/app.html $(SRCS) $(CXX_FLAGS) -Os -Wall $(RAYLIB_DIR)/libraylib.a $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) -L$(RAYLIB_DIR) -s USE_GLFW=3 -s ASYNCIFY --shell-file $(RAYLIB_DIR)/minshell.html -DPLATFORM_WEB
 
 ### rule for windows build process
 windows: $(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT) 

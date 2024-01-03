@@ -45,7 +45,7 @@ development of a (maybe) roguelike game with c++ and raylib
 ### Distinct types:
 {
     template <typename Type, typename... VariadicTypes>
-    void doSomething(Type firstArg, VariadicTypes... variadicArgs) // recursive variadic function
+    void doSomething(Type firstArg, VariadicTypes... variadicArgs) // Recursive variadic function
     {
         // Handle first argument
         cout << firstArg << endl;

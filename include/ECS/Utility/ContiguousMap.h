@@ -18,7 +18,7 @@ namespace snd
     class ContiguousMap : public BaseContiguousMap
     {
     public:
-        void insert(Key key, Type element)
+        void insert(const Key& key, const Type& element)
         {
 
             if (test(key))
@@ -26,61 +26,61 @@ namespace snd
                 return;
             }
 
-            // get new list index for element
+            // Get new list index for element
             Index elementIndex = elements_.size();
 
-            // add new element to list
+            // Add new element to list
             elements_.push_back(element);
 
-            // add key to elementIndex mapping
+            // Add key to elementIndex mapping
             keyToIndex_.insert(std::make_pair(key, elementIndex));
 
-            // add elementIndex to key mapping (internal use only to keep list contiguous)
+            // Add elementIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.insert(std::make_pair(elementIndex, key));
         };
 
-        void erase(Key key)
+        void erase(const Key& key)
         {
             if (test(key))
             {
                 return;
             };
 
-            // get list index of removed element
+            // Get list index of removed element
             Index removedelementIndex = keyToIndex_[key];
 
-            // replace with last element before popping (if more than one element exists) to keep elements contiguous
+            // Replace with last element before popping (if more than one element exists) to keep elements contiguous
             if (elements_.size() > 1)
             {
-                // get list index of (kept) last element that replaces removed element
+                // Get list index of (kept) last element that replaces removed element
                 Index lastelementIndex = elements_.size() - 1;
 
-                // get key of replacing/kept element
+                // Get key of replacing/kept element
                 Key keptkey = indexToKey_[lastelementIndex];
 
-                // replace (removed) element with kept element (by index) so last entry (duplicate) can be popped
+                // Replace (removed) element with kept element (by index) so last entry (duplicate) can be popped
                 elements_[removedelementIndex] = elements_[lastelementIndex];
 
-                // update key to elementIndex mapping for kept key
+                // Update key to elementIndex mapping for kept key
                 keyToIndex_[keptkey] = removedelementIndex;
             }
 
-            // remove removed key from mapping
+            // Remove removed key from mapping
             keyToIndex_.erase(key);
 
-            // remove removed element from mapping
+            // Remove removed element from mapping
             indexToKey_.erase(removedelementIndex);
 
-            // remove (duplicate) last element
+            // Remove (duplicate) last element
             elements_.pop_back();
         };
 
-        bool test(Key key)
+        bool test(const Key& key)
         {
             return keyToIndex_.count(key);
         };
 
-        Type* get(Key key)
+        Type* get(const Key& key)
         {
 
             if (!test(key))
@@ -95,9 +95,9 @@ namespace snd
         };
 
     private:
-        std::vector<Type> elements_{};                // vector index is used as element key
-        std::unordered_map<Key, Index> keyToIndex_{}; // key is used to keyentify element
-        std::unordered_map<Index, Key> indexToKey_{}; // store a element to key mapping (internal use only)
+        std::vector<Type> elements_{};                // Vector index is used as element key
+        std::unordered_map<Key, Index> keyToIndex_{}; // Key is used to identify element
+        std::unordered_map<Index, Key> indexToKey_{}; // Store a index (element) to key mapping (internal use only)
     };
 }
 

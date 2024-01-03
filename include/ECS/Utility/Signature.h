@@ -5,12 +5,12 @@
 #include <iostream>
 #include <string_view>
 
-// define signature implementation type
-// ====================================
+// Define signature implementation type
+//=====================================
 // Options:
 // BITSET
 #define BITSET
-// ====================================
+//=====================================
 
 #ifdef BITSET
 #include <bitset>
@@ -18,14 +18,14 @@
 
 namespace snd
 {
-    // set signature type
-    // ================================
+    // Set signature type
+    //=================================
 #ifdef BITSET
     const Id MAX_COMPONENTS = 10;
     //* using SignatureType = std::bitset<MAX_COMPONENTS>;
     using Signature = std::bitset<MAX_COMPONENTS>;
 #endif
-    // ================================
+    //=================================
     /*
         class Signature
         {

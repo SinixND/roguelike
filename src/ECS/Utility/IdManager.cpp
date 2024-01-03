@@ -2,7 +2,7 @@
 
 #include "Id.h"
 #include <assert.h>
-#include <limits> // max value of type
+#include <limits> // Max value of type
 
 namespace snd
 {
@@ -25,7 +25,7 @@ namespace snd
             return id;
         }
 
-        // start with id = 1
+        // Start with id = 1
         ++lastId_;
 
         activeIds_.insert(lastId_);

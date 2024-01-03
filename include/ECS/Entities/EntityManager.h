@@ -1,6 +1,7 @@
 #ifndef ENTITYMANAGER_H_20231220225105
 #define ENTITYMANAGER_H_20231220225105
 
+#include "ComponentTypeId.h"
 #include "EntityId.h"
 #include "IdManager.h"
 #include "Signature.h"
@@ -12,9 +13,10 @@ namespace snd
     class EntityManager
     {
     public:
-        EntityId create()
+        EntityId request()
         {
-            Id newId{entityIdManager_.requestId()};
+            EntityId newId{
+                idManager_.requestId()};
 
             entityToSignature_.insert(std::make_pair(newId, Signature()));
 
@@ -23,28 +25,28 @@ namespace snd
 
         void remove(EntityId entityId)
         {
-            entityIdManager_.suspendId(entityId);
+            idManager_.suspendId(entityId);
             entityToSignature_.erase(entityId);
         };
 
-        void setComponent(EntityId entity, Id componentTypeId)
+        void setComponent(EntityId entityId, ComponentTypeId componentTypeId)
         {
-            entityToSignature_.at(entity).set(componentTypeId);
-            std::cout << "Set EntitySig: " << entityToSignature_.at(entity) /*.getString()*/ << "\n";
+            entityToSignature_.at(entityId).set(componentTypeId);
+            std::cout << "Set EntitySig: " << entityToSignature_.at(entityId) /*.getString()*/ << "\n";
         };
 
-        void resetComponent(EntityId entity, Id componentTypeId)
+        void resetComponent(EntityId entity, ComponentTypeId componentTypeId)
         {
             entityToSignature_.at(entity).reset(componentTypeId);
         };
 
-        Signature& requestSignature(EntityId entity)
+        Signature* getSignature(EntityId entity)
         {
-            return entityToSignature_.at(entity);
+            return &entityToSignature_.at(entity);
         };
 
     private:
-        IdManager entityIdManager_;
+        IdManager idManager_;
         std::unordered_map<EntityId, Signature> entityToSignature_;
     };
 }

@@ -1,9 +1,9 @@
-// define type of Ids
+// Define type of Ids
 
 #ifndef ID_H_20231212235144
 #define ID_H_20231212235144
 
-#include <cstddef> // size_t
+#include <cstddef> // Size_t
 
 namespace snd
 {

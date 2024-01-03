@@ -1,7 +1,8 @@
 #ifndef SCENE_H_20231201203725
 #define SCENE_H_20231201203725
 
-#include "Globals.h"
+#include "Configs.h"
+#include "Constants.h"
 #include <raylib.h>
 
 namespace snd
@@ -19,13 +20,14 @@ namespace snd
 
             BeginDrawing();
 
-            Globals* globals{Globals::getInstance()};
+            Constants* constants{Constants::getInstance()};
+            Configs* configs{Configs::getInstance()};
 
-            ClearBackground(globals->getBackgroundColor());
+            ClearBackground(constants->getBackgroundColor());
 
             DrawRectangleLinesEx(Rectangle{0, 0, static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())}, BORDER_WEIGHT, BORDER_COLOR);
 
-            if (globals->getDebugMode() == true)
+            if (configs->getDebugMode() == true)
             {
                 DrawFPS(0, 0);
             }
@@ -50,7 +52,7 @@ namespace snd
         virtual void updateState(){};
         virtual void renderOutput(){};
     };
-    //-------------------------------------
+    //=====================================
 }
 
 #endif

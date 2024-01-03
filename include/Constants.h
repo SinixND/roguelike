@@ -1,43 +1,46 @@
-#ifndef CURRENTSCENE_H_20231203203224
-#define CURRENTSCENE_H_20231203203224
+#ifndef GLOBALS_H_20231203205506
+#define GLOBALS_H_20231203205506
 
-#include "Scene.h"
 #include <mutex>
+#include <raylib.h>
 
 // Included as an example of a parameterized macro
+// Delete assignment operator and copy constructor
 #define DISALLOW_COPY_AND_ASSIGN(T) \
     T(const T&) = delete;           \
     T& operator=(const T&) = delete;
 
 namespace snd
 {
-    class ActiveScene
+    class Constants
     {
     public:
-        static Scene& getScene();
-        static void setScene(Scene& scene);
+        static Color& getForegroundColor();
+        static Color& getBackgroundColor();
 
         // Singleton attributes
         //=================================
-        // Get ActiveScene instance
-        static ActiveScene* getInstance();
+        // Get Constants instance
+        static Constants* getInstance();
         //=================================
 
     private:
-        static Scene* scene_;
+        static Color foreground_;
+        static Color background_;
 
         // Singleton attributes
         //=================================
-        static ActiveScene* currentScene_;
+        static Constants* globals_;
         static std::mutex mutex_;
 
         // Make ctor private
-        ActiveScene();
+        Constants(){};
         // Make dtor private
-        ~ActiveScene();
+        ~Constants(){};
 
-        DISALLOW_COPY_AND_ASSIGN(ActiveScene)
+        DISALLOW_COPY_AND_ASSIGN(Constants)
         //=================================
     };
 }
+
 #endif
