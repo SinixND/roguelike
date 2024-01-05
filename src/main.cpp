@@ -33,9 +33,13 @@ int main(/* int argc, char **argv */)
 
     // Application Initialization
     //=================================
-    snd::Configs* configs{snd::Configs::getInstance()};
+    snd::Configs* configs{
+        snd::Configs::getInstance()};
+
     // Load textures
-    snd::TextureManager* textureManager{snd::TextureManager::getInstance()};
+    snd::TextureManager* textureManager{
+        snd::TextureManager::getInstance()};
+
     textureManager->loadTexture(PLAYER, "Player.png");
 
     // Define scenes

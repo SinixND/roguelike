@@ -13,13 +13,13 @@ namespace snd
     {
     public:
         template <typename SystemType>
-        std::shared_ptr<SystemType> registerSystem(ComponentManager& componentManager)
+        SystemType* registerSystem(ComponentManager& componentManager)
         {
             auto system{
-                std::make_shared<SystemType>(componentManager)};
+                std::make_unique<SystemType>(componentManager)};
 
             systems_.push_back(system);
-            return system;
+            return &system;
         }
 
         std::vector<std::shared_ptr<BaseSystem>>* retrieveSystems()

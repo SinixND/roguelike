@@ -18,24 +18,24 @@ namespace snd
 {
     // Initialize ECS
     //=================================
-    std::unique_ptr<ECS> ecs{
-        std::make_unique<ECS>()};
+    ECS ecs;
     //=================================
 
     // Initialize entities
     //=================================
-    EntityId player{
-        ecs->createEntity()};
+    auto player{
+        ecs.createEntity()};
     //=================================
 
     // Initialize systems
     //=================================
-    std::shared_ptr<RenderSystem> renderSystem{
-        ecs->registerSystem<RenderSystem>()};
+    auto renderSystem{
+        ecs.registerSystem<RenderSystem>()};
     //=================================
 
     void GameScene::initialize()
     {
+        std::cout << "STEP: Initialize GameScene\n";
 
         // Initialize texture manager
         //=================================
@@ -45,42 +45,54 @@ namespace snd
         // Test remove component
         //=============================
         std::cout << "STEP: Test remove Position\n";
-        ecs->removeComponent<PositionComponent>(player);
+        ecs.removeComponent<PositionComponent>(player);
         //=============================
 
         // Assign components
         //=============================
         std::cout << "STEP: Assign Position\n";
-        ecs->assignComponent<PositionComponent>(player, PositionComponent{2, 3});
+        ecs.assignComponent<PositionComponent>(player, PositionComponent{2, 3});
         std::cout << "STEP: Assign Texture\n";
-        ecs->assignComponent<TextureComponent>(player, TextureComponent{textureManager->retrieveTexture(PLAYER)});
-        //=============================
-
-        // Retrieve component
-        //=============================
-        std::cout << "STEP: Retrieve Position\n";
-        std::cout << "Position x: " << ecs->retrieveComponent<PositionComponent>(player)->x_ << "\n";
-        //=============================
-
-        // Remove component
-        //=============================
-        std::cout << "STEP: Remove Position\n";
-        ecs->removeComponent<PositionComponent>(player);
-        std::cout << "STEP: Remove Texture\n";
-        ecs->removeComponent<TextureComponent>(player);
+        ecs.assignComponent<TextureComponent>(player, TextureComponent{textureManager->retrieveTexture(PLAYER)});
         //=============================
     };
 
     void GameScene::processInput(){};
 
-    void GameScene::updateState(){};
+    void GameScene::updateState()
+    {
+        std::cout << "STEP: UpdateState GameScene\n";
+
+        // Retrieve component
+        //=============================
+        std::cout << "STEP: Retrieve Position\n";
+        std::cout << "Position x: " << ecs.retrieveComponent<PositionComponent>(player)->x_ << "\n";
+        //=============================
+    };
 
     void GameScene::renderOutput()
     {
-        renderSystem->execute();
+        std::cout << "STEP: Execute renderSystem\n";
 
+        // Execute systems
+        //=============================
+        renderSystem->execute();
+        //=============================
+
+        // Call app termination
         Configs::getInstance()->closeApp();
     };
 
-    void GameScene::deinitialize(){};
+    void GameScene::deinitialize()
+    {
+        std::cout << "STEP: Deinitialize GameScene\n";
+
+        // Remove component
+        //=============================
+        std::cout << "STEP: Remove Position\n";
+        ecs.removeComponent<PositionComponent>(player);
+        std::cout << "STEP: Remove Texture\n";
+        ecs.removeComponent<TextureComponent>(player);
+        //=============================
+    };
 }

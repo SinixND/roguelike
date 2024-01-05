@@ -24,7 +24,7 @@ namespace snd
 
     void TextureManager::unloadAllTextures()
     {
-        for (auto& texture : textures_)
+        for (const auto& texture : textures_)
         {
             Texture2D tex = texture.second;
             UnloadTexture(tex);

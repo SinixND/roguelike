@@ -35,14 +35,14 @@ namespace snd
             std::cout << "Set EntitySig: " << entityToSignature_.at(entityId) /*.getString()*/ << "\n";
         };
 
-        void resetComponent(EntityId entity, ComponentTypeId componentTypeId)
+        void resetComponent(EntityId entityId, ComponentTypeId componentTypeId)
         {
-            entityToSignature_.at(entity).reset(componentTypeId);
+            entityToSignature_.at(entityId).reset(componentTypeId);
         };
 
-        Signature* getSignature(EntityId entity)
+        Signature& getSignature(EntityId entityId)
         {
-            return &entityToSignature_.at(entity);
+            return entityToSignature_.at(entityId);
         };
 
     private:

@@ -7,24 +7,25 @@
 #include "EntityId.h"
 #include "System.h"
 #include <iostream>
+#include <raylib.h>
 
 namespace snd
 {
     class RenderSystem : public System<TextureComponent, PositionComponent>
     {
     public:
-        void action(EntityId entity)
+        void action(EntityId entityId)
         {
             // Get component pointers
-            auto texture{
-                componentManager_.retrieveFrom<TextureComponent>(entity)};
+            const auto& texture{
+                componentManager_.retrieveFrom<TextureComponent>(entityId)};
 
-            auto position{
-                componentManager_.retrieveFrom<PositionComponent>(entity)};
+            const auto& position{
+                componentManager_.retrieveFrom<PositionComponent>(entityId)};
 
             // Action
             std::cout << "DUMMY: RenderSystem signature is: " << signature_ << "\n";
-            std::cout << "DUMMY: Execute render action on entity: " << entity << "\n";
+            std::cout << "DUMMY: Execute render action on entityId: " << entityId << "\n";
             std::cout << "DUMMY: Process texture " << texture->getId() << " and position " << position->getId() << "\n";
         }
 

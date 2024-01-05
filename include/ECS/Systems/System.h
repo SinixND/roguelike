@@ -7,6 +7,7 @@
 #include "Signature.h"
 #include "SystemId.h"
 #include <iostream>
+#include <set>
 #include <unordered_set>
 
 class ECS;
@@ -20,30 +21,31 @@ namespace snd
 
         void execute()
         {
-            for (auto& entity : entities_)
+            for (const auto& entityId : entities_)
             {
-                action(entity);
+                action(entityId);
             }
         }
 
-        void registerEntity(EntityId entity)
+        void registerEntity(EntityId entityId)
         {
-            entities_.insert(entity);
+            entities_.insert(entityId);
         }
 
-        void deregisterEntity(EntityId entity)
+        void deregisterEntity(EntityId entityId)
         {
-            entities_.erase(entity);
+            entities_.erase(entityId);
         }
 
-        Signature* getSignature()
+        Signature& getSignature()
         {
-            return &signature_;
+            return signature_;
         }
 
         virtual ~BaseSystem() = default;
 
     protected:
+        //* std::vector<EntityId> entities_; // WHY DOES UNORDERED_SET NOT WORK?
         std::unordered_set<EntityId> entities_;
         Signature signature_;
     };

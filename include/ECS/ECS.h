@@ -25,60 +25,58 @@ namespace snd
             return entityManager_.request();
         }
 
-        void removeEntity(EntityId entity)
+        void removeEntity(EntityId entityId)
         {
-            entityManager_.remove(entity);
+            entityManager_.remove(entityId);
         }
 
-        Signature* requestEntitySignature(EntityId entity)
+        Signature& requestEntitySignature(EntityId entityId)
         {
-            return entityManager_.getSignature(entity);
+            return entityManager_.getSignature(entityId);
         }
         // ============================
 
         // Components
         // ============================
         template <typename ComponentType>
-        void assignComponent(EntityId entity, const ComponentType& component)
+        void assignComponent(EntityId entityId, const ComponentType& component)
         {
             // Assign component to entity
-            componentManager_.assignTo(entity, component);
+            componentManager_.assignTo(entityId, component);
 
             // get component type id
             ComponentTypeId componentTypeId{
                 Component<ComponentType>::getId()};
 
             // Update entity signature
-            entityManager_.setComponent(entity, componentTypeId);
+            entityManager_.setComponent(entityId, componentTypeId);
 
             // notify systems about added component
-            // (entity can only become relevant, not obsolete)
-            notifyAdd(entity, componentTypeId);
+            notifyAdd(entityId, componentTypeId);
         }
 
         template <typename ComponentType>
-        void removeComponent(EntityId entity)
+        void removeComponent(EntityId entityId)
         {
             // Remove component from entity
-            componentManager_.removeFrom<ComponentType>(entity);
+            componentManager_.removeFrom<ComponentType>(entityId);
 
             // get component type id
             ComponentTypeId componentTypeId{
                 Component<ComponentType>::getId()};
 
-            // Update entity signature
-            entityManager_.resetComponent(entity, componentTypeId);
-
             // notify systems about removed component
-            // (entity can only become obsolete, not relevant)
-            notifyRemove(entity, componentTypeId);
+            notifyRemove(entityId, componentTypeId);
+
+            // Update entity signature
+            entityManager_.resetComponent(entityId, componentTypeId);
         }
 
         template <typename ComponentType>
-        ComponentType* retrieveComponent(EntityId entity)
+        ComponentType* retrieveComponent(EntityId entityId)
         {
             // Return component
-            return componentManager_.retrieveFrom<ComponentType>(entity);
+            return componentManager_.retrieveFrom<ComponentType>(entityId);
         }
 
         template <typename ComponentType>
@@ -91,7 +89,7 @@ namespace snd
         // Systems
         // ============================
         template <typename SystemType>
-        std::shared_ptr<SystemType> registerSystem()
+        auto registerSystem()
         {
             auto system{
                 std::make_shared<SystemType>(componentManager_)};
@@ -105,6 +103,48 @@ namespace snd
         EntityManager entityManager_;
         ComponentManager componentManager_;
         std::vector<std::shared_ptr<BaseSystem>> systems_;
+
+    private:
+        // Systems
+        // ============================
+        void notifyAdd(EntityId entityId, ComponentTypeId componentTypeId)
+        {
+            for (const auto& system : systems_)
+            {
+                // get system signature
+                auto systemSignature{
+                    system->getSignature()};
+
+                // check if component type is relevant to system
+                if (!systemSignature.test(componentTypeId)) continue;
+
+                // check if entity signature is relevant to system
+                if ((entityManager_.getSignature(entityId) & systemSignature) != systemSignature) continue;
+
+                // register entity
+                system->registerEntity(entityId);
+            }
+        }
+
+        void notifyRemove(EntityId entityId, ComponentTypeId componentTypeId)
+        {
+            for (const auto& system : systems_)
+            {
+                // get system signature
+                auto systemSignature{
+                    system->getSignature()};
+
+                // check if component type is relevant to system
+                if (!systemSignature.test(componentTypeId)) continue;
+
+                // check if entity signature is relevant to system
+                if ((entityManager_.getSignature(entityId) & systemSignature) != systemSignature) continue;
+
+                // deregister entity
+                system->deregisterEntity(entityId);
+            }
+        }
+        // ============================
     };
 }
 
