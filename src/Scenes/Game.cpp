@@ -1,15 +1,16 @@
 #include "Game.h"
 
+#include "CONFIGS.h"
 #include "Component.h"
 #include "ComponentManager.h"
+#include "ComponentOrientation.h"
 #include "ComponentPosition.h"
 #include "ComponentTexture.h"
-#include "Configs.h"
 #include "ECS.h"
 #include "EntityId.h"
 #include "IdManager.h"
 #include "SystemRender.h"
-#include "TextureManager.h"
+#include "TEXTURE_MANAGER.h"
 #include <iostream>
 #include <memory>
 #include <raylib.h>
@@ -35,25 +36,13 @@ namespace snd
 
     void GameScene::initialize()
     {
-        std::cout << "STEP: Initialize GameScene\n";
-
-        // Initialize texture manager
-        //=================================
-        TextureManager* textureManager{TextureManager::getInstance()};
-        //=================================
-
-        // Test remove component
-        //=============================
-        std::cout << "STEP: Test remove Position\n";
-        ecs.removeComponent<PositionComponent>(player);
-        //=============================
-
         // Assign components
         //=============================
-        std::cout << "STEP: Assign Position\n";
-        ecs.assignComponent<PositionComponent>(player, PositionComponent{2, 3});
-        std::cout << "STEP: Assign Texture\n";
-        ecs.assignComponent<TextureComponent>(player, TextureComponent{textureManager->retrieveTexture(PLAYER)});
+        TEXTURE_MANAGER* textureManager{TEXTURE_MANAGER::getInstance()};
+        ecs.assignComponent<TextureComponent>(player, textureManager->retrieveTexture(PLAYER));
+        ecs.assignComponent<PositionComponent>(player, Vector2{150, 100});
+        ecs.assignComponent<DirectionComponent>(player, RIGHT);
+
         //=============================
     };
 
@@ -66,7 +55,7 @@ namespace snd
         // Retrieve component
         //=============================
         std::cout << "STEP: Retrieve Position\n";
-        std::cout << "Position x: " << ecs.retrieveComponent<PositionComponent>(player)->x_ << "\n";
+        std::cout << "Position x: " << ecs.retrieveComponent<PositionComponent>(player)->position_.x << "\n";
         //=============================
     };
 
@@ -80,7 +69,7 @@ namespace snd
         //=============================
 
         // Call app termination
-        Configs::getInstance()->closeApp();
+        //* Configs::getInstance()->closeApp();
     };
 
     void GameScene::deinitialize()

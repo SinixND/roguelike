@@ -1,8 +1,8 @@
-#include "ActiveScene.h"
-#include "Configs.h"
+#include "ACTIVE_SCENE.h"
+#include "CONFIGS.h"
 #include "Game.h"
 #include "Scene.h"
-#include "TextureManager.h"
+#include "TEXTURE_MANAGER.h"
 #define RAYGUI_IMPLEMENTATION // Only define once
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
 #include "../resources/iconset/iconset.rgi.h"
@@ -33,12 +33,12 @@ int main(/* int argc, char **argv */)
 
     // Application Initialization
     //=================================
-    snd::Configs* configs{
-        snd::Configs::getInstance()};
+    snd::CONFIGS* configs{
+        snd::CONFIGS::getInstance()};
 
     // Load textures
-    snd::TextureManager* textureManager{
-        snd::TextureManager::getInstance()};
+    snd::TEXTURE_MANAGER* textureManager{
+        snd::TEXTURE_MANAGER::getInstance()};
 
     textureManager->loadTexture(PLAYER, "Player.png");
 
@@ -47,7 +47,7 @@ int main(/* int argc, char **argv */)
     game.initialize();
 
     // Set default scene
-    snd::ActiveScene* activeScene{snd::ActiveScene::getInstance()};
+    snd::ACTIVE_SCENE* activeScene{snd::ACTIVE_SCENE::getInstance()};
     activeScene->setScene(game);
     //=================================
 

@@ -38,10 +38,11 @@ namespace snd
 
         // Components
         // ============================
-        template <typename ComponentType>
-        void assignComponent(EntityId entityId, const ComponentType& component)
+        template <typename ComponentType, typename... Args>
+        void assignComponent(EntityId entityId, Args&&... args)
         {
             // Assign component to entity
+            ComponentType component{std::forward<Args>(args)...};
             componentManager_.assignTo(entityId, component);
 
             // get component type id

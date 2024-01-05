@@ -2,17 +2,19 @@
 #define POSITION_H_20231215002439
 
 #include "Component.h"
+#include <raylib.h>
 
 namespace snd
 {
     struct PositionComponent : public Component<PositionComponent>
     {
-        float x_;
-        float y_;
+        Vector2 position_;
 
         PositionComponent(float x, float y)
-            : x_{x}
-            , y_{y} {};
+            : position_{x, y} {};
+
+        PositionComponent(Vector2 position)
+            : position_{position} {};
     };
 }
 

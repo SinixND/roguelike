@@ -15,7 +15,7 @@ namespace snd
     public:
         // Add component to entity
         template <typename ComponentType>
-        void assignTo(EntityId entity, const ComponentType& component)
+        void assignTo(EntityId entityId, const ComponentType& component)
         {
             // Check if container exists
             if (!componentContainersByTypeId_.contains(getId<ComponentType>()))
@@ -24,31 +24,31 @@ namespace snd
             }
 
             // Add component
-            getComponentContainer<ComponentType>()->insert(entity, component);
+            getComponentContainer<ComponentType>()->insert(entityId, component);
         }
 
         // Remove a component from an entity
         template <typename ComponentType>
-        void removeFrom(EntityId entity)
+        void removeFrom(EntityId entityId)
         {
             // Check if entity exists
-            if (!testEntity<ComponentType>(entity))
+            if (!testEntity<ComponentType>(entityId))
                 return;
 
             // Remove component
-            getComponentContainer<ComponentType>()->erase(entity);
+            getComponentContainer<ComponentType>()->erase(entityId);
         }
 
         // Access a component from a specific entity
         template <typename ComponentType>
-        ComponentType* retrieveFrom(EntityId entity)
+        ComponentType* retrieveFrom(EntityId entityId)
         {
             // Check if entity exists
-            if (!testEntity<ComponentType>(entity))
+            if (!testEntity<ComponentType>(entityId))
                 return nullptr;
 
             // Return component
-            return getComponentContainer<ComponentType>()->get(entity);
+            return getComponentContainer<ComponentType>()->get(entityId);
         }
 
         // Access all components
@@ -68,11 +68,11 @@ namespace snd
     private:
         // Check if entity exists in container
         template <typename ComponentType>
-        bool testEntity(EntityId entity)
+        bool testEntity(EntityId entityId)
         {
             if (!testContainer<ComponentType>()) return false;
 
-            return getComponentContainer<ComponentType>()->test(entity);
+            return getComponentContainer<ComponentType>()->test(entityId);
         }
 
         // Check if container exists

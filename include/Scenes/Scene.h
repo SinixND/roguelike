@@ -1,8 +1,8 @@
 #ifndef SCENE_H_20231201203725
 #define SCENE_H_20231201203725
 
-#include "Configs.h"
-#include "Constants.h"
+#include "CONFIGS.h"
+#include "CONSTANTS.h"
 #include <raylib.h>
 
 namespace snd
@@ -20,8 +20,8 @@ namespace snd
 
             BeginDrawing();
 
-            Constants* constants{Constants::getInstance()};
-            Configs* configs{Configs::getInstance()};
+            CONSTANTS* constants{CONSTANTS::getInstance()};
+            CONFIGS* configs{CONFIGS::getInstance()};
 
             ClearBackground(constants->getBackgroundColor());
 
