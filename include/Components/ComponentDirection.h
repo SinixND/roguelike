@@ -2,7 +2,7 @@
 #define COMPONENTDIRECTION_H_20240105191159
 
 #include "Component.h"
-#include <raylib.h>
+#include "raylib.h"
 
 namespace snd
 {

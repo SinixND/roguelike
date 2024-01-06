@@ -8,8 +8,8 @@
 #include "ComponentTexture.h"
 #include "EntityId.h"
 #include "System.h"
+#include "raylib.h"
 #include <iostream>
-#include <raylib.h>
 
 namespace snd
 {

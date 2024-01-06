@@ -8,3 +8,5 @@ test
 bin
 .vscode
 *.json
+*.out
+*.txt

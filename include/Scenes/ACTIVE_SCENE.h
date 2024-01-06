@@ -2,7 +2,9 @@
 #define CURRENTSCENE_H_20231203203224
 
 #include "Scene.h"
+#ifndef __EMSCRIPTEN__
 #include <mutex>
+#endif
 #include <type_traits>
 
 // Included as an example of a parameterized macro
@@ -27,7 +29,9 @@ namespace snd
         // Get ActiveScene instance
         static inline ACTIVE_SCENE* getInstance()
         {
+#ifndef __EMSCRIPTEN__
             std::lock_guard<std::mutex> lock(mutex_);
+#endif
 
             if (singleton_ == nullptr)
             {
@@ -39,7 +43,9 @@ namespace snd
 
     private:
         static inline ACTIVE_SCENE* singleton_{nullptr};
+#ifndef __EMSCRIPTEN__
         static inline std::mutex mutex_{};
+#endif
 
         // Make ctor private
         ACTIVE_SCENE(){};

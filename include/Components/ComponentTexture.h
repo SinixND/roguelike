@@ -2,7 +2,7 @@
 #define TEXTURE_H_20231220001155
 
 #include "Component.h"
-#include <raylib.h>
+#include "raylib.h"
 #include <string>
 
 namespace snd

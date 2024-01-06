@@ -1,8 +1,10 @@
 #ifndef TEXTUREMANAGER_H_20231217234438
 #define TEXTUREMANAGER_H_20231217234438
 
-#include <mutex> // Thread locks
-#include <raylib.h>
+#ifndef __EMSCRIPTEN__
+#include <mutex>
+#endif
+#include "raylib.h"
 #include <string>
 #include <unordered_map>
 
@@ -50,7 +52,9 @@ namespace snd
     public:
         static inline TEXTURE_MANAGER* getInstance()
         {
+#ifndef __EMSCRIPTEN__
             std::lock_guard<std::mutex> lock(mutex_);
+#endif
 
             if (singleton_ == nullptr)
             {
@@ -62,7 +66,9 @@ namespace snd
 
     private:
         static inline TEXTURE_MANAGER* singleton_{nullptr};
+#ifndef __EMSCRIPTEN__
         static inline std::mutex mutex_{};
+#endif
 
         TEXTURE_MANAGER(){};
         ~TEXTURE_MANAGER(){};
