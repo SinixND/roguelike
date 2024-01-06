@@ -15,16 +15,16 @@ int main(/* int argc, char **argv */)
     //=================================
 
     // Raylib
-    // Constexpr int screenWidth = 620;
-    // Constexpr int screenHeight = 480;
+    constexpr int screenWidth = 0;
+    constexpr int screenHeight = 0;
 
     SetConfigFlags(FLAG_WINDOW_HIGHDPI);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SetConfigFlags(FLAG_WINDOW_TRANSPARENT);
-    SetConfigFlags(FLAG_WINDOW_MAXIMIZED);
 
-    // InitWindow(screenWidth, screenHeight, "roguelike");
-    InitWindow(0, 0, "Roguelike");
+    InitWindow(screenWidth, screenHeight, "Roguelike");
+
+    HideCursor();
 
     //  SetExitKey(0); // Deactivate exit on ESC
     SetTargetFPS(145);
@@ -33,14 +33,13 @@ int main(/* int argc, char **argv */)
 
     // Application Initialization
     //=================================
-    snd::CONFIGS* configs{
-        snd::CONFIGS::getInstance()};
+    snd::CONFIGS* configs{snd::CONFIGS::getInstance()};
 
     // Load textures
-    snd::TEXTURE_MANAGER* textureManager{
-        snd::TEXTURE_MANAGER::getInstance()};
+    snd::TEXTURE_MANAGER* textureManager{snd::TEXTURE_MANAGER::getInstance()};
 
     textureManager->loadTexture(PLAYER, "Player.png");
+    textureManager->loadTexture(CURSOR, "Cursor.png");
 
     // Define scenes
     snd::GameScene game{};

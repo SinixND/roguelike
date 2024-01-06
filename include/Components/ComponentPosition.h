@@ -13,7 +13,7 @@ namespace snd
         PositionComponent(float x, float y)
             : position_{x, y} {};
 
-        PositionComponent(Vector2 position)
+        PositionComponent(Vector2 position = {0, 0})
             : position_{position} {};
     };
 }

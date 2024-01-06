@@ -1,5 +1,5 @@
-#ifndef COMPONENTORIENTATION_H_20240105191159
-#define COMPONENTORIENTATION_H_20240105191159
+#ifndef COMPONENTDIRECTION_H_20240105191159
+#define COMPONENTDIRECTION_H_20240105191159
 
 #include "Component.h"
 #include <raylib.h>
@@ -19,7 +19,7 @@ namespace snd
         Vector2 directionVector_;
         float directionDeg_;
 
-        DirectionComponent(Direction direction)
+        DirectionComponent(Direction direction = RIGHT)
         {
             switch (direction)
             {

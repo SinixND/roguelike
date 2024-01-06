@@ -13,6 +13,7 @@
 typedef enum
 {
     PLAYER,
+    CURSOR,
 } TextureId;
 
 namespace snd

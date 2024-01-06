@@ -4,8 +4,9 @@
 ### @ (as a prefix to a cli command): suppress cli output; use make -n to debug commands
 
 ### label used libraries so the respective -l flags (eg. -lraylib)
-LIBRARIES 			:= raylib
-WIN_LIBRARIES 		:= $(LIBRARIES) opengl32 gdi32 winmm
+LIBRARIES 			:= raylib_desktop
+WEB_LIBRARIES 		:= raylib_web
+WIN_LIBRARIES 		:= raylib opengl32 gdi32 winmm
 ifdef TERMUX_VERSION
 LIBRARIES 			+= #log
 else
@@ -16,7 +17,7 @@ endif
 # -MMD			provides dependency information (header files) for make in .d files
 # -pg			ADD FOR gprof analysis TO BOTH COMPILE AND LINK COMMAND!!
 
-CXX_FLAGS 			:= -std=c++2a -pthread #`pkg-config --cflags $(LIBRARIES)`
+CXX_FLAGS 			:= -std=c++2a -pthread 
 debug: CXX_FLAGS 	+= -g -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -MMD -O0 #-fsanitize=address 
 
 ### set the projects label, used for the binary (eg. main.exe, root .cpp file needs same name)
@@ -95,11 +96,13 @@ LD_FLAGS 			:= #-fsanitize=address
 #######################
 
 ### make linker flags by prefixing every provided library with -l (should work for most libraries due to convention); probably pkg-config makes duplicates...
-LD_LIBS 			:= $(addprefix -l,$(LIBRARIES)) #$(shell pkg-config --libs $(LIBRARIES))
-WIN_LD_LIBS 		:= $(addprefix -l,$(WIN_LIBRARIES)) #$(shell pkg-config --libs $(WIN_LIBRARIES))
+LD_FLAGS 			+= $(addprefix -l,$(LIBRARIES))
+LD_FLAGS_WEB		+= $(addprefix -l,$(WEB_LIBRARIES))
+WIN_LD_FLAGS 		:= $(addprefix -l,$(WIN_LIBRARIES))
 
 ### make library flags by prefixing every provided path with -L; this might take a while for the first time, but will NOT be repeated every time
-SYS_LIB_FLAGS 		:= $(addprefix -L,$(SYS_LIB_DIR))
+SYS_LIB_FLAGS 		:= $(addprefix -L,$(SYS_LIB_DIR)) 
+SYS_LIB_FLAGS		+= $(addprefix -L,$(RAYLIB_DIR))
 WIN_SYS_LIB_FLAGS 	:= $(addprefix -L,$(WIN_SYS_LIB_DIR))
 LOC_LIB_FLAGS 		:= $(addprefix -L,$(LOC_LIB_DIRS))
 
@@ -181,19 +184,19 @@ $(BIN_DIR)/$(BINARY).$(BINARY_EXT): $(OBJS)
 ### $^ (all dependencies, all right of ":")
 	$(info )
 	$(info === Link main ===)
-	$(CXX) -o $@ $^ $(LD_FLAGS) $(LIB_FLAGS) $(LD_LIBS) 
+	$(CXX) -o $@ $^ $(LIB_FLAGS) $(LD_FLAGS) 
 
 ### LINK TEST
 $(BIN_DIR)/test.$(BINARY_EXT): $(TEST_OBJS)
 	$(info )
 	$(info === Link test ===)
-	$(CXX) -o $@ $^ $(LD_FLAGS) $(LIB_FLAGS) $(LD_LIBS)
+	$(CXX) -o $@ $^ $(LIB_FLAGS) $(LD_FLAGS)
 
 ### LINK BENCHMARK
 $(BIN_DIR)/benchmark.$(BINARY_EXT): $(BM_OBJS)
 	$(info )
 	$(info === Link benchmark ===)
-	$(CXX) -o $@ $^ $(LD_FLAGS) $(LIB_FLAGS) $(LD_LIBS)
+	$(CXX) -o $@ $^ $(LIB_FLAGS) $(LD_FLAGS)
 
 
 # === COMPILER COMMANDS ===
@@ -222,13 +225,13 @@ $(TEST_DIR)/benchmark.$(OBJ_EXT): benchmark.$(SRC_EXT)
 web:
 	$(info )
 	$(info === Compile web ===)
-	emcc -o web/app.html $(SRCS) $(CXX_FLAGS) -Os -Wall $(RAYLIB_DIR)/libraylib.a $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) -L$(RAYLIB_DIR) -s USE_GLFW=3 -s ASYNCIFY --shell-file $(RAYLIB_DIR)/minshell.html -DPLATFORM_WEB
+	emcc -o web/app.html $(SRCS) $(CXX_FLAGS) -Os -Wall $(LD_FLAGS_WEB) $(LIB_FLAGS) $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) -L$(RAYLIB_DIR) -sUSE_GLFW=3 -sASYNCIFY -sGL_ENABLE_GET_PROC_ADDRESS --shell-file $(RAYLIB_DIR)/minshell.html -DPLATFORM_WEB
 
 ### rule for windows build process
 windows: $(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT) 
 
 $(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT): $(WIN_OBJS)
-	$(WIN_CXX) -o $@ $^ $(WIN_LD_FLAGS) $(WIN_LIB_FLAGS) -L$(WIN_RAYLIB_DIR) $(WIN_LD_LIBS) -static -static-libgcc -static-libstdc++
+	$(WIN_CXX) -o $@ $^ $(WIN_LD_FLAGS) $(WIN_LIB_FLAGS) -L$(WIN_RAYLIB_DIR) $(WIN_LD_FLAGS) -static -static-libgcc -static-libstdc++
 
 $(OBJ_DIR)/%.$(WIN_OBJ_EXT): %.$(SRC_EXT)
 	$(WIN_CXX) -o $@ -c $< $(CXX_FLAGS) $(WIN_INC_FLAGS) -I$(RAYLIB_DIR)

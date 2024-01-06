@@ -46,8 +46,7 @@ namespace snd
             componentManager_.assignTo(entityId, component);
 
             // get component type id
-            ComponentTypeId componentTypeId{
-                Component<ComponentType>::getId()};
+            ComponentTypeId componentTypeId{Component<ComponentType>::getId()};
 
             // Update entity signature
             entityManager_.setComponent(entityId, componentTypeId);
@@ -63,8 +62,7 @@ namespace snd
             componentManager_.removeFrom<ComponentType>(entityId);
 
             // get component type id
-            ComponentTypeId componentTypeId{
-                Component<ComponentType>::getId()};
+            ComponentTypeId componentTypeId{Component<ComponentType>::getId()};
 
             // notify systems about removed component
             notifyRemove(entityId, componentTypeId);
@@ -92,8 +90,7 @@ namespace snd
         template <typename SystemType>
         auto registerSystem()
         {
-            auto system{
-                std::make_shared<SystemType>(componentManager_)};
+            auto system{std::make_shared<SystemType>(componentManager_)};
 
             systems_.push_back(system);
             return system;
@@ -113,8 +110,7 @@ namespace snd
             for (const auto& system : systems_)
             {
                 // get system signature
-                auto systemSignature{
-                    system->getSignature()};
+                auto systemSignature{system->getSignature()};
 
                 // check if component type is relevant to system
                 if (!systemSignature.test(componentTypeId)) continue;
@@ -132,8 +128,7 @@ namespace snd
             for (const auto& system : systems_)
             {
                 // get system signature
-                auto systemSignature{
-                    system->getSignature()};
+                auto systemSignature{system->getSignature()};
 
                 // check if component type is relevant to system
                 if (!systemSignature.test(componentTypeId)) continue;

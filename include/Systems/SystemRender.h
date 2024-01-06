@@ -2,8 +2,8 @@
 #define RENDER_H_20231217205005
 
 #include "CONSTANTS.h"
+#include "ComponentDirection.h"
 #include "ComponentManager.h"
-#include "ComponentOrientation.h"
 #include "ComponentPosition.h"
 #include "ComponentTexture.h"
 #include "EntityId.h"
@@ -18,15 +18,12 @@ namespace snd
     public:
         void action(EntityId entityId)
         {
-            // Get component pointers
-            const auto& texture{
-                componentManager_.retrieveFrom<TextureComponent>(entityId)->texture_};
+            // Get components
+            const auto& texture{componentManager_.retrieveFrom<TextureComponent>(entityId)->texture_};
 
-            const auto& position{
-                componentManager_.retrieveFrom<PositionComponent>(entityId)->position_};
+            const auto& position{componentManager_.retrieveFrom<PositionComponent>(entityId)->position_};
 
-            const auto& direction{
-                componentManager_.retrieveFrom<DirectionComponent>(entityId)->directionDeg_};
+            const auto& direction{componentManager_.retrieveFrom<DirectionComponent>(entityId)->directionDeg_};
 
             // Action
             const auto& CONSTANTS{CONSTANTS::getInstance()};

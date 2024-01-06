@@ -3,6 +3,7 @@
 
 #include "CONFIGS.h"
 #include "CONSTANTS.h"
+#include <iostream>
 #include <raylib.h>
 
 namespace snd
@@ -27,6 +28,10 @@ namespace snd
 
             DrawRectangleLinesEx(Rectangle{0, 0, static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())}, BORDER_WEIGHT, BORDER_COLOR);
 
+            std::cout << "RENDERHEIGHT: " << GetRenderHeight() << "\n";
+            std::cout << "SCREENHEIGHT: " << GetScreenHeight() << "\n";
+            std::cout << "MONITORHEIGHT: " << GetMonitorHeight(GetCurrentMonitor()) << "\n";
+
             if (configs->getDebugMode() == true)
             {
                 DrawFPS(0, 0);
@@ -40,12 +45,7 @@ namespace snd
         virtual void initialize(){};
         virtual void deinitialize(){};
 
-        Scene() = default;
         virtual ~Scene() = default;
-        Scene(const Scene&) = default;
-        Scene& operator=(const Scene&) = default;
-        Scene(Scene&&) = default;
-        Scene& operator=(Scene&&) = default;
 
     protected:
         virtual void processInput(){};

@@ -20,7 +20,7 @@ namespace snd
         static inline void closeApp() { appShouldClose_ = true; };
 
     private:
-        static inline bool debugMode_{false};
+        static inline bool debugMode_{true};
         static inline bool appShouldClose_{false};
 
         // Singleton attributes
