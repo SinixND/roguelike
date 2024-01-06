@@ -2,7 +2,7 @@
 #define FLAGCONTROL_H_20240106170329
 
 #include "Component.h"
-#include <raylib.h>
+#include "raylib.h"
 
 namespace snd
 {

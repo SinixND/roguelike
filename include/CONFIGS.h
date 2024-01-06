@@ -1,8 +1,9 @@
 #ifndef CONFIGS_H_20240103224203
 #define CONFIGS_H_20240103224203
 
+#ifndef __EMSCRIPTEN__
 #include <mutex>
-#include <raylib.h>
+#endif
 
 // Included as an example of a parameterized macro
 // Delete assignment operator and copy constructor
@@ -29,7 +30,9 @@ namespace snd
         // Get Configs instance
         static inline CONFIGS* getInstance()
         {
+#ifndef __EMSCRIPTEN__
             std::lock_guard<std::mutex> lock(mutex_);
+#endif
 
             if (singleton_ == nullptr)
             {
@@ -41,7 +44,9 @@ namespace snd
 
     private:
         static inline CONFIGS* singleton_{nullptr};
+#ifndef __EMSCRIPTEN__
         static inline std::mutex mutex_{};
+#endif
 
         // Make ctor private
         CONFIGS(){};

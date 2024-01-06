@@ -7,22 +7,44 @@
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
 #include "../resources/iconset/iconset.rgi.h"
 #include "raygui.h"
-#include <raylib.h>
+#include "raylib.h"
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#endif
+
+snd::CONFIGS* configs{snd::CONFIGS::getInstance()};
+snd::TEXTURE_MANAGER* textureManager{snd::TEXTURE_MANAGER::getInstance()};
+snd::ACTIVE_SCENE* activeScene{snd::ACTIVE_SCENE::getInstance()};
+
+void updateGameLoop();
 int main(/* int argc, char **argv */)
 {
     // General Initialization
     //=================================
 
     // Raylib
-    constexpr int screenWidth = 0;
-    constexpr int screenHeight = 0;
+#ifndef __EMSCRIPTEN__
+    constexpr int screenWidth{0};
+    constexpr int screenHeight{0};
+#else
+    std::cout << "SET EMSCRIPTEN WINDOW SIZE 500, 500\n";
+    constexpr int screenWidth{500};
+    constexpr int screenHeight{500};
+#endif
 
     SetConfigFlags(FLAG_WINDOW_HIGHDPI);
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SetConfigFlags(FLAG_WINDOW_TRANSPARENT);
 
+#ifndef __EMSCRIPTEN__
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+#endif
+
     InitWindow(screenWidth, screenHeight, "Roguelike");
+
+#ifdef __EMSCRIPTEN__
+    SetWindowSize(GetRenderWidth() - 50, GetRenderHeight() - 50);
+#endif
 
     HideCursor();
 
@@ -33,11 +55,8 @@ int main(/* int argc, char **argv */)
 
     // Application Initialization
     //=================================
-    snd::CONFIGS* configs{snd::CONFIGS::getInstance()};
 
     // Load textures
-    snd::TEXTURE_MANAGER* textureManager{snd::TEXTURE_MANAGER::getInstance()};
-
     textureManager->loadTexture(PLAYER, "Player.png");
     textureManager->loadTexture(CURSOR, "Cursor.png");
 
@@ -46,16 +65,19 @@ int main(/* int argc, char **argv */)
     game.initialize();
 
     // Set default scene
-    snd::ACTIVE_SCENE* activeScene{snd::ACTIVE_SCENE::getInstance()};
     activeScene->setScene(game);
     //=================================
 
     // Main app loop
     //=================================
-    while (!WindowShouldClose() && !configs->shouldAppClose()) // Detect window close button or ESC key
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(updateGameLoop, 145, 1);
+#else
+    while (!WindowShouldClose() && !configs->shouldAppClose())
     {
-        activeScene->getScene().update();
+        updateGameLoop();
     }
+#endif
     //=================================
 
     // De-Initialization
@@ -70,4 +92,9 @@ int main(/* int argc, char **argv */)
     //=================================
 
     return 0;
+}
+
+void updateGameLoop()
+{
+    activeScene->getScene().update();
 }

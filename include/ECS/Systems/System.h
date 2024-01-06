@@ -45,7 +45,6 @@ namespace snd
         virtual ~BaseSystem() = default;
 
     protected:
-        //* std::vector<EntityId> entities_; // WHY DOES UNORDERED_SET NOT WORK?
         std::unordered_set<EntityId> entities_;
         Signature signature_;
     };

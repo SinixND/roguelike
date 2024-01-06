@@ -7,7 +7,8 @@
 #include "FlagControl.h"
 #include "System.h"
 #include "Utility.h"
-#include <raylib.h>
+#include "raylib.h"
+
 namespace snd
 {
     class ControlSystem : public System<ControlFlag, PositionComponent>

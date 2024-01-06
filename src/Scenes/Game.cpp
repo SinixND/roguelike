@@ -13,9 +13,9 @@
 #include "SystemControl.h"
 #include "SystemRender.h"
 #include "TEXTURE_MANAGER.h"
+#include "raylib.h"
 #include <iostream>
 #include <memory>
-#include <raylib.h>
 
 namespace snd
 {
@@ -56,23 +56,16 @@ namespace snd
 
     void GameScene::processInput()
     {
-        std::cout << "STEP: Execute controlSystem\n";
-
         // Execute systems
         //=============================
         controlSystem->execute();
         //=============================
     };
 
-    void GameScene::updateState()
-    {
-        std::cout << "STEP: UpdateState GameScene\n";
-    };
+    void GameScene::updateState(){};
 
     void GameScene::renderOutput()
     {
-        std::cout << "STEP: Execute renderSystem\n";
-
         // Execute systems
         //=============================
         renderSystem->execute();
@@ -84,13 +77,9 @@ namespace snd
 
     void GameScene::deinitialize()
     {
-        std::cout << "STEP: Deinitialize GameScene\n";
-
         // Remove component
         //=============================
-        std::cout << "STEP: Remove Position\n";
         ecs.removeComponent<PositionComponent>(player);
-        std::cout << "STEP: Remove Texture\n";
         ecs.removeComponent<TextureComponent>(player);
         //=============================
     };

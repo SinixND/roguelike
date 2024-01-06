@@ -4,9 +4,8 @@
 ### @ (as a prefix to a cli command): suppress cli output; use make -n to debug commands
 
 ### label used libraries so the respective -l flags (eg. -lraylib)
-LIBRARIES 			:= raylib_desktop
-WEB_LIBRARIES 		:= raylib_web
-WIN_LIBRARIES 		:= raylib opengl32 gdi32 winmm
+LIBRARIES 			:= raylib pthread
+WIN_LIBRARIES 		:= $(LIBRARIES) opengl32 gdi32 winmm
 ifdef TERMUX_VERSION
 LIBRARIES 			+= #log
 else
@@ -17,8 +16,8 @@ endif
 # -MMD			provides dependency information (header files) for make in .d files
 # -pg			ADD FOR gprof analysis TO BOTH COMPILE AND LINK COMMAND!!
 
-CXX_FLAGS 			:= -std=c++2a -pthread 
-debug: CXX_FLAGS 	+= -g -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -MMD -O0 #-fsanitize=address 
+CXX_FLAGS		:= -std=c++2a
+debug: CXX_FLAGS 	+= -g -pg -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -MMD -O0 #-fsanitize=address 
 
 ### set the projects label, used for the binary (eg. main.exe, root .cpp file needs same name)
 BINARY 				:= main
@@ -85,7 +84,7 @@ LOC_LIB_DIRS 		:= $(shell find $(LOC_LIB_DIR) -type d)
 RAYLIB_DIR 			:= /usr/lib/raylib/src
 WIN_RAYLIB_DIR 		:= /usr/x86_64-w64-mingw32/lib/raylib/src
 ifdef TERMUX_VERSION
-RAYLIB_DIR 			:= $(PREFIX)/lib/raylib
+RAYLIB_DIR 			:= $(PREFIX)/lib/raylib/src
 endif
 
 ### set linker flags
@@ -97,7 +96,6 @@ LD_FLAGS 			:= #-fsanitize=address
 
 ### make linker flags by prefixing every provided library with -l (should work for most libraries due to convention); probably pkg-config makes duplicates...
 LD_FLAGS 			+= $(addprefix -l,$(LIBRARIES))
-LD_FLAGS_WEB		+= $(addprefix -l,$(WEB_LIBRARIES))
 WIN_LD_FLAGS 		:= $(addprefix -l,$(WIN_LIBRARIES))
 
 ### make library flags by prefixing every provided path with -L; this might take a while for the first time, but will NOT be repeated every time
@@ -111,6 +109,7 @@ WIN_LIB_FLAGS 		:= $(WIN_SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
 
 ### make include flags by prefixing every provided path with -I
 SYS_INC_FLAGS 		:= $(addprefix -I,$(SYS_INC_DIR))
+SYS_INC_FLAGS 		:= $(addprefix -I,$(RAYLIB_DIR))
 WIN_SYS_INC_FLAGS	:= $(addprefix -I,$(WIN_SYS_INC_DIR))
 LOC_INC_FLAGS 		:= $(addprefix -I,$(LOC_INC_DIRS))
 EXT_INC_FLAGS 		:= $(addprefix -isystem,$(EXT_INC_DIRS))
@@ -184,19 +183,19 @@ $(BIN_DIR)/$(BINARY).$(BINARY_EXT): $(OBJS)
 ### $^ (all dependencies, all right of ":")
 	$(info )
 	$(info === Link main ===)
-	$(CXX) -o $@ $^ $(LIB_FLAGS) $(LD_FLAGS) 
+	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS) 
 
 ### LINK TEST
 $(BIN_DIR)/test.$(BINARY_EXT): $(TEST_OBJS)
 	$(info )
 	$(info === Link test ===)
-	$(CXX) -o $@ $^ $(LIB_FLAGS) $(LD_FLAGS)
+	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
 ### LINK BENCHMARK
 $(BIN_DIR)/benchmark.$(BINARY_EXT): $(BM_OBJS)
 	$(info )
 	$(info === Link benchmark ===)
-	$(CXX) -o $@ $^ $(LIB_FLAGS) $(LD_FLAGS)
+	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
 
 # === COMPILER COMMANDS ===
@@ -225,7 +224,8 @@ $(TEST_DIR)/benchmark.$(OBJ_EXT): benchmark.$(SRC_EXT)
 web:
 	$(info )
 	$(info === Compile web ===)
-	emcc -o web/app.html $(SRCS) $(CXX_FLAGS) -Os -Wall $(LD_FLAGS_WEB) $(LIB_FLAGS) $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) -L$(RAYLIB_DIR) -sUSE_GLFW=3 -sASYNCIFY -sGL_ENABLE_GET_PROC_ADDRESS --shell-file $(RAYLIB_DIR)/minshell.html -DPLATFORM_WEB
+	emcc -o web/$(BINARY).html $(SRCS) $(CXX_FLAGS) -Os -Wall -L$(RAYLIB_DIR)/web -lraylib -lpthread $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) --preload-file resources/  --shell-file $(RAYLIB_DIR)/minshell.html -sUSE_GLFW=3 -D__EMSCRIPTEN__ -DPLATFORM_WEB
+
 
 ### rule for windows build process
 windows: $(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT) 
@@ -239,7 +239,9 @@ $(OBJ_DIR)/%.$(WIN_OBJ_EXT): %.$(SRC_EXT)
 
 ### clear dynamically created directories
 clean:
-	rm -rf $(shell find . -type f -wholename "*.$(DEP_EXT)") $(shell find . -type f -wholename "*.$(OBJ_EXT)") $(shell find . -type f -wholename "*.$(BINARY_EXT)") 
+	rm -rf $(shell find . -type f -wholename "*.$(BINARY_EXT)") 
+	rm -rf $(shell find . -type f -wholename "*.$(OBJ_EXT)") 
+	rm -rf $(shell find . -type f -wholename "*.$(DEP_EXT)") 
 
 
 ### clean dynamically created directories before building fresh

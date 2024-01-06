@@ -22,7 +22,6 @@ namespace snd
     //=================================
 #ifdef BITSET
     const Id MAX_COMPONENTS = 10;
-    //* using SignatureType = std::bitset<MAX_COMPONENTS>;
     using Signature = std::bitset<MAX_COMPONENTS>;
 #endif
     //=================================
