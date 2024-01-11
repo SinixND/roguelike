@@ -1,15 +1,9 @@
-#ifndef RENDER_H_20231217205005
-#define RENDER_H_20231217205005
+#ifndef SYSTEMS_H_20240110222501
+#define SYSTEMS_H_20240110222501
 
-#include "CONSTANTS.h"
-#include "ComponentDirection.h"
-#include "ComponentManager.h"
-#include "ComponentPosition.h"
-#include "ComponentTexture.h"
-#include "EntityId.h"
+#include "Components.h"
 #include "System.h"
-#include "raylib.h"
-#include <iostream>
+#include "Utility.h"
 
 namespace snd
 {
@@ -49,6 +43,24 @@ namespace snd
 
         RenderSystem(ComponentManager& componentManager)
             : System<TextureComponent, PositionComponent, DirectionComponent>(componentManager)
+        {
+        }
+    };
+
+    class ControlSystem : public System<ControlFlag, PositionComponent>
+    {
+    public:
+        void action(EntityId entityId)
+        {
+            // Get components
+            auto& position{componentManager_.retrieveFrom<PositionComponent>(entityId)->position_};
+
+            // Action
+            position = Utility::coordinateToPosition(GetMousePosition());
+        }
+
+        ControlSystem(ComponentManager& componentManager)
+            : System<ControlFlag, PositionComponent>(componentManager)
         {
         }
     };

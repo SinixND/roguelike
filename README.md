@@ -15,7 +15,6 @@ development of a (maybe) roguelike game with c++ and raylib
 [2] implement viewport
 
 # Longterm 
-[1] make ECS a static library and/or single header
 
 # Continuous
 

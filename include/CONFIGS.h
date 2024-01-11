@@ -23,6 +23,7 @@ namespace snd
     private:
         static inline bool debugMode_{true};
         static inline bool appShouldClose_{false};
+        static inline int seed_{};
 
         // Singleton attributes
         //=================================

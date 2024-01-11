@@ -109,10 +109,10 @@ WIN_LIB_FLAGS 		:= $(WIN_SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
 
 ### make include flags by prefixing every provided path with -I
 SYS_INC_FLAGS 		:= $(addprefix -I,$(SYS_INC_DIR))
-SYS_INC_FLAGS 		:= $(addprefix -I,$(RAYLIB_DIR))
 WIN_SYS_INC_FLAGS	:= $(addprefix -I,$(WIN_SYS_INC_DIR))
 LOC_INC_FLAGS 		:= $(addprefix -I,$(LOC_INC_DIRS))
 EXT_INC_FLAGS 		:= $(addprefix -isystem,$(EXT_INC_DIRS))
+SYS_INC_FLAGS 		:= $(addprefix -isystem,$(RAYLIB_DIR))
 
 INC_FLAGS 			:= $(SYS_INC_FLAGS) $(EXT_INC_FLAGS) $(LOC_INC_FLAGS)
 WIN_INC_FLAGS 		:= $(WIN_SYS_INC_FLAGS) $(EXT_INC_FLAGS) $(LOC_INC_FLAGS)

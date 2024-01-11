@@ -1,11 +1,15 @@
-#ifndef COMPONENTDIRECTION_H_20240105191159
-#define COMPONENTDIRECTION_H_20240105191159
+#ifndef COMPONENTS_H_20240110221821
+#define COMPONENTS_H_20240110221821
 
 #include "Component.h"
 #include "raylib.h"
+#include <functional>
+#include <memory_resource>
 
 namespace snd
 {
+    // Components
+    //=================================
     typedef enum
     {
         LEFT,
@@ -46,6 +50,33 @@ namespace snd
             }
         }
     };
+
+    struct PositionComponent : public Component<PositionComponent>
+    {
+        Vector2 position_;
+
+        PositionComponent(float x, float y)
+            : position_{x, y} {};
+
+        PositionComponent(Vector2 position = {0, 0})
+            : position_{position} {};
+    };
+
+    struct TextureComponent : Component<TextureComponent>
+    {
+        Texture2D* texture_;
+
+        TextureComponent(Texture2D* texture)
+            : texture_{texture} {};
+    };
+    //=================================
+
+    // Flags
+    //=================================
+    struct ControlFlag : public Component<ControlFlag>
+    {
+    };
+    //=================================
 }
 
 #endif
