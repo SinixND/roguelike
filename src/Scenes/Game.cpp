@@ -26,23 +26,22 @@ namespace snd
     // Initialize systems
     //=================================
     auto renderSystem{ecs.registerSystem<RenderSystem>()};
-    auto controlSystem{ecs.registerSystem<ControlSystem>()};
+    auto controlSystem{ecs.registerSystem<MouseCursorSystem>()};
     //=================================
 
     void GameScene::initialize()
     {
-        TEXTURE_MANAGER* textureManager{TEXTURE_MANAGER::getInstance()};
-
         // Assign components
         //=============================
-        ecs.assignComponent<PositionComponent>(player, Vector2{150, 100});
-        ecs.assignComponent<TextureComponent>(player, textureManager->retrieveTexture(PLAYER));
+        ecs.assignComponent<PositionComponent>(player, Vector2{0, 0});
+        ecs.assignComponent<TextureComponent>(player, TEXTURE_MANAGER::getInstance()->retrieveTexture(PLAYER));
         ecs.assignComponent<DirectionComponent>(player, RIGHT);
+        ecs.assignComponent<TransformComponent>(player, Vector2{GetRenderWidth() / 2.0f, GetRenderHeight() / 2.0f});
 
         ecs.assignComponent<PositionComponent>(cursor);
-        ecs.assignComponent<TextureComponent>(cursor, textureManager->retrieveTexture(CURSOR));
+        ecs.assignComponent<TextureComponent>(cursor, TEXTURE_MANAGER::getInstance()->retrieveTexture(CURSOR));
         ecs.assignComponent<DirectionComponent>(cursor);
-        ecs.assignComponent<ControlFlag>(cursor);
+        ecs.assignComponent<MouseControlFlag>(cursor);
         //=============================
     };
 

@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "CONSTANTS.h"
 #include "raylib.h"
 
 namespace snd
@@ -10,14 +11,11 @@ namespace snd
 
         BeginDrawing();
 
-        CONSTANTS* constants{CONSTANTS::getInstance()};
-        CONFIGS* configs{CONFIGS::getInstance()};
-
-        ClearBackground(constants->getBackgroundColor());
+        ClearBackground(CONSTANTS::getInstance()->getBackgroundColor());
 
         DrawRectangleLinesEx(Rectangle{0, 0, static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())}, BORDER_WEIGHT, BORDER_COLOR);
 
-        if (configs->getDebugMode() == true)
+        if (CONFIGS::getInstance()->getDebugMode() == true)
         {
             DrawFPS(0, 0);
         }

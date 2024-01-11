@@ -7,16 +7,12 @@
 
 namespace snd
 {
-    class Utility
+    const inline Vector2 coordinateToPosition(const Vector2& coordinates)
     {
-    public:
-        static const inline Vector2 coordinateToPosition(const Vector2& coordinates)
-        {
-            Vector2 tileSize{CONSTANTS::getInstance()->getTileSize()};
+        Vector2 tileSize{CONSTANTS::getInstance()->getTileSize()};
 
-            return Vector2{static_cast<int>(coordinates.x / tileSize.x) * tileSize.x, static_cast<int>(coordinates.y / tileSize.y) * tileSize.y};
-        }
-    };
+        return Vector2{static_cast<int>(coordinates.x / tileSize.x) * tileSize.x, static_cast<int>(coordinates.y / tileSize.y) * tileSize.y};
+    }
 }
 
 #endif

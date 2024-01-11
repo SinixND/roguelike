@@ -50,7 +50,8 @@ namespace snd
     };
 
     template <typename ComponentType, typename... ComponentTypes>
-    class System : public BaseSystem
+    class System
+        : public BaseSystem
     {
     public:
         virtual void action(EntityId) = 0;

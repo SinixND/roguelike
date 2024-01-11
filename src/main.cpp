@@ -13,10 +13,6 @@
 #include <emscripten/emscripten.h>
 #endif
 
-snd::CONFIGS* configs{snd::CONFIGS::getInstance()};
-snd::TEXTURE_MANAGER* textureManager{snd::TEXTURE_MANAGER::getInstance()};
-snd::ACTIVE_SCENE* activeScene{snd::ACTIVE_SCENE::getInstance()};
-
 void updateGameLoop();
 int main(/* int argc, char **argv */)
 {
@@ -57,15 +53,15 @@ int main(/* int argc, char **argv */)
     //=================================
 
     // Load textures
-    textureManager->loadTexture(PLAYER, "Player.png");
-    textureManager->loadTexture(CURSOR, "Cursor.png");
+    snd::TEXTURE_MANAGER::getInstance()->loadTexture(PLAYER, "Player.png");
+    snd::TEXTURE_MANAGER::getInstance()->loadTexture(CURSOR, "Cursor.png");
 
     // Define scenes
     snd::GameScene game{};
     game.initialize();
 
     // Set default scene
-    activeScene->setScene(game);
+    snd::ACTIVE_SCENE::getInstance()->setScene(game);
     //=================================
 
     // Main app loop
@@ -73,7 +69,7 @@ int main(/* int argc, char **argv */)
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(updateGameLoop, 145, 1);
 #else
-    while (!WindowShouldClose() && !configs->shouldAppClose())
+    while (!WindowShouldClose() && !snd::CONFIGS::getInstance()->shouldAppClose())
     {
         updateGameLoop();
     }
@@ -83,10 +79,12 @@ int main(/* int argc, char **argv */)
     // De-Initialization
     //=================================
     // Unlaod textures
-    textureManager->unloadAllTextures();
+    snd::TEXTURE_MANAGER::getInstance()->unloadAllTextures();
 
     // Deinitialize scenes
     game.deinitialize();
+
+    // Delete Singletons
 
     CloseWindow(); // Close window and OpenGL context
     //=================================
@@ -96,5 +94,5 @@ int main(/* int argc, char **argv */)
 
 void updateGameLoop()
 {
-    activeScene->getScene().update();
+    snd::ACTIVE_SCENE::getInstance()->getScene().update();
 }

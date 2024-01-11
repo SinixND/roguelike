@@ -15,7 +15,8 @@ namespace snd
     };
 
     template <typename Key, typename Type>
-    class ContiguousMap : public BaseContiguousMap
+    class ContiguousMap
+        : public BaseContiguousMap
     {
     public:
         void insert(const Key& key, const Type& element)

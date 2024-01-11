@@ -18,7 +18,8 @@ namespace snd
         DOWN,
     } Direction;
 
-    struct DirectionComponent : public Component<DirectionComponent>
+    struct DirectionComponent
+        : public Component<DirectionComponent>
     {
         Vector2 directionVector_;
         float directionDeg_;
@@ -51,29 +52,49 @@ namespace snd
         }
     };
 
-    struct PositionComponent : public Component<PositionComponent>
+    struct PositionComponent
+        : public Component<PositionComponent>
     {
         Vector2 position_;
 
         PositionComponent(float x, float y)
-            : position_{x, y} {};
+            : position_(x, y){};
 
         PositionComponent(Vector2 position = {0, 0})
-            : position_{position} {};
+            : position_(position){};
     };
 
-    struct TextureComponent : Component<TextureComponent>
+    struct TextureComponent
+        : public Component<TextureComponent>
     {
         Texture2D* texture_;
 
         TextureComponent(Texture2D* texture)
-            : texture_{texture} {};
+            : texture_(texture){};
+    };
+
+    struct TransformComponent
+        : public Component<TransformComponent>
+    {
+        Vector2 transform_;
+
+        TransformComponent(float x, float y)
+            : transform_(x, y){};
+
+        TransformComponent(Vector2 transform = {0, 0})
+            : transform_(transform){};
     };
     //=================================
 
     // Flags
     //=================================
-    struct ControlFlag : public Component<ControlFlag>
+    struct MouseControlFlag
+        : public Component<MouseControlFlag>
+    {
+    };
+
+    struct ControlFlag
+        : public Component<ControlFlag>
     {
     };
     //=================================

@@ -50,6 +50,7 @@ namespace snd
         // Singleton attributes
         //=================================
     public:
+        // Get Singleton instance
         static inline TEXTURE_MANAGER* getInstance()
         {
 #ifndef __EMSCRIPTEN__
@@ -62,6 +63,12 @@ namespace snd
             }
 
             return singleton_;
+        };
+
+        // Delete Singleton instance
+        static inline void deleteInstance()
+        {
+            delete singleton_;
         };
 
     private:

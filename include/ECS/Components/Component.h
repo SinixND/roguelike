@@ -14,7 +14,8 @@ namespace snd
     };
 
     template <typename ComponentType>
-    class Component : public BaseComponent
+    class Component
+        : public BaseComponent
     {
     public:
         static inline ComponentTypeId getId()

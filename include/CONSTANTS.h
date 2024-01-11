@@ -32,7 +32,7 @@ namespace snd
         // Singleton attributes
         //=================================
     public:
-        // Get Constants instance
+        // Get Singleton instance
         static inline CONSTANTS* getInstance()
         {
 #ifndef __EMSCRIPTEN__
@@ -45,6 +45,12 @@ namespace snd
             }
 
             return singleton_;
+        };
+
+        // Delete Singleton instance
+        static inline void deleteInstance()
+        {
+            delete singleton_;
         };
 
     private:

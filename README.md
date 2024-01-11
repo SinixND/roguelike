@@ -7,7 +7,7 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[1] check contiguous memory in ContiguousContainer and the retrieved elements
+[0] realize viewport system (render relative to window -> update Rendersystem: pos 0,0 & transform 0, 0 == center of screen)
 
 # Shortterm
 [1] map generation
