@@ -1,5 +1,6 @@
 #include "ACTIVE_SCENE.h"
 #include "CONFIGS.h"
+#include "CONSTANTS.h"
 #include "Game.h"
 #include "Scene.h"
 #include "TEXTURE_MANAGER.h"
@@ -42,7 +43,7 @@ int main(/* int argc, char **argv */)
     SetWindowSize(GetRenderWidth() - 50, GetRenderHeight() - 50);
 #endif
 
-    HideCursor();
+    //* HideCursor();
 
     //  SetExitKey(0); // Deactivate exit on ESC
     SetTargetFPS(145);
@@ -85,6 +86,10 @@ int main(/* int argc, char **argv */)
     game.deinitialize();
 
     // Delete Singletons
+    snd::ACTIVE_SCENE::deleteInstance();
+    snd::TEXTURE_MANAGER::deleteInstance();
+    snd::CONFIGS::deleteInstance();
+    snd::CONSTANTS::deleteInstance();
 
     CloseWindow(); // Close window and OpenGL context
     //=================================

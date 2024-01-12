@@ -63,7 +63,7 @@ namespace snd
         }
 
     protected:
-        [[maybe_unused]] ComponentManager& componentManager_;
+        ComponentManager& componentManager_;
 
     protected:
         template <typename LastType>

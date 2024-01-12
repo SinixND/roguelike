@@ -33,15 +33,16 @@ namespace snd
     {
         // Assign components
         //=============================
-        ecs.assignComponent<PositionComponent>(player, Vector2{0, 0});
+        ecs.assignComponent<PositionComponent>(player);
         ecs.assignComponent<TextureComponent>(player, TEXTURE_MANAGER::getInstance()->retrieveTexture(PLAYER));
-        ecs.assignComponent<DirectionComponent>(player, RIGHT);
-        ecs.assignComponent<TransformComponent>(player, Vector2{GetRenderWidth() / 2.0f, GetRenderHeight() / 2.0f});
+        ecs.assignComponent<RotationComponent>(player);
+        ecs.assignComponent<TransformComponent>(player, ecs.retrieveComponent<PositionComponent>(player)->position_);
 
         ecs.assignComponent<PositionComponent>(cursor);
         ecs.assignComponent<TextureComponent>(cursor, TEXTURE_MANAGER::getInstance()->retrieveTexture(CURSOR));
-        ecs.assignComponent<DirectionComponent>(cursor);
+        ecs.assignComponent<RotationComponent>(cursor);
         ecs.assignComponent<MouseControlFlag>(cursor);
+        ecs.assignComponent<TransformComponent>(cursor, ecs.retrieveComponent<PositionComponent>(player)->position_);
         //=============================
     };
 

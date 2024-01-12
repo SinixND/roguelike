@@ -1,17 +1,21 @@
 #ifndef SYSTEMS_H_20240110222501
 #define SYSTEMS_H_20240110222501
 
+#include "CONSTANTS.h"
 #include "ComponentManager.h"
 #include "Components.h"
 #include "EntityId.h"
 #include "System.h"
 #include "Utility.h"
+#include "raylib.h"
+#include "raymath.h"
+#include <iostream>
 #include <vector>
 
 namespace snd
 {
     class RenderSystem
-        : public System<TextureComponent, PositionComponent, DirectionComponent>
+        : public System<TextureComponent, PositionComponent, RotationComponent, TransformComponent>
     {
     public:
         void action(EntityId entityId)
@@ -21,24 +25,18 @@ namespace snd
 
             const auto& position{componentManager_.retrieveFrom<PositionComponent>(entityId)->position_};
 
-            const auto& direction{componentManager_.retrieveFrom<DirectionComponent>(entityId)->directionDeg_};
+            const auto& rotation{componentManager_.retrieveFrom<RotationComponent>(entityId)->rotationDeg_};
 
-            // Get optional components
-            auto* transformPtr{componentManager_.retrieveFrom<TransformComponent>(entityId)};
-            Vector2 transform;
-
-            if (!transformPtr)
-            {
-                transform = {0, 0};
-            }
-            else
-            {
-                transform = {transformPtr->transform_.x, transformPtr->transform_.y};
-            }
-            transform = coordinateToPosition(transform);
+            const auto& transform{componentManager_.retrieveFrom<TransformComponent>(entityId)->transform_};
 
             // Action
-            const auto& CONSTANTS{CONSTANTS::getInstance()};
+            Vector2 pixelPosition{
+                Vector2Subtract(
+                    transformedTileToPixel(
+                        Vector2Subtract(
+                            position,
+                            transform)),
+                    CONSTANTS::getInstance()->getTileSize())};
 
             DrawTexturePro(
                 *texture,
@@ -48,25 +46,25 @@ namespace snd
                     float(texture->width),
                     float(texture->height)},
                 Rectangle{
-                    position.x + transform.x,
-                    position.y + transform.y,
-                    CONSTANTS->getTileSize().x,
-                    CONSTANTS->getTileSize().y},
+                    pixelPosition.x,
+                    pixelPosition.y,
+                    CONSTANTS::getInstance()->getTileSize().x,
+                    CONSTANTS::getInstance()->getTileSize().y},
                 Vector2{
                     0,
                     0},
-                direction,
+                rotation,
                 WHITE);
         }
 
         RenderSystem(ComponentManager& componentManager)
-            : System<TextureComponent, PositionComponent, DirectionComponent>(componentManager)
+            : System<TextureComponent, PositionComponent, RotationComponent, TransformComponent>(componentManager)
         {
         }
     };
 
     class MouseCursorSystem
-        : public System<MouseControlFlag, PositionComponent>
+        : public System<MouseControlFlag, PositionComponent, TransformComponent>
     {
     public:
         void action(EntityId entityId)
@@ -74,12 +72,14 @@ namespace snd
             // Get components
             auto& position{componentManager_.retrieveFrom<PositionComponent>(entityId)->position_};
 
+            const auto& transform{componentManager_.retrieveFrom<TransformComponent>(entityId)->transform_};
+
             // Action
-            position = coordinateToPosition(GetMousePosition());
+            position = Vector2Subtract(pixelToTransformedTile(GetMousePosition()), transform);
         }
 
         MouseCursorSystem(ComponentManager& componentManager)
-            : System<MouseControlFlag, PositionComponent>(componentManager)
+            : System<MouseControlFlag, PositionComponent, TransformComponent>(componentManager)
         {
         }
     };
@@ -92,7 +92,7 @@ namespace snd
         //* {
         //* // Get components
         //* auto& position{componentManager_.retrieveFrom<PositionComponent>(entityId)->position_};
-        //* auto* transforms{componentManager_.retrieveAll<TransformComponent>()};
+        //* auto* transforms{componentManager_.retrieveAll<SharedTransformComponent>()};
 
         //* // Action
         //* // Move entity

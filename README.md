@@ -9,6 +9,8 @@ development of a (maybe) roguelike game with c++ and raylib
 # active
 [0] realize viewport system (render relative to window -> update Rendersystem: pos 0,0 & transform 0, 0 == center of screen)
 
+[1] adjust texture to default direction right
+
 # Shortterm
 [1] map generation
 

@@ -2,7 +2,9 @@
 #define COMPONENTS_H_20240110221821
 
 #include "Component.h"
+#include "Utility.h"
 #include "raylib.h"
+#include "raymath.h"
 #include <functional>
 #include <memory_resource>
 
@@ -16,37 +18,37 @@ namespace snd
         RIGHT,
         UP,
         DOWN,
-    } Direction;
+    } Rotation;
 
-    struct DirectionComponent
-        : public Component<DirectionComponent>
+    struct RotationComponent
+        : public Component<RotationComponent>
     {
         Vector2 directionVector_;
-        float directionDeg_;
+        float rotationDeg_;
 
-        DirectionComponent(Direction direction = RIGHT)
+        RotationComponent(Rotation rotation = UP)
         {
-            switch (direction)
+            switch (rotation)
             {
-            default:
             case RIGHT:
                 directionVector_ = {1, 0};
-                directionDeg_ = 0;
+                rotationDeg_ = 90;
                 break;
 
             case LEFT:
                 directionVector_ = {-1, 0};
-                directionDeg_ = 180;
+                rotationDeg_ = -90;
                 break;
 
+            default:
             case UP:
                 directionVector_ = {0, -1};
-                directionDeg_ = -90;
+                rotationDeg_ = 0;
                 break;
 
             case DOWN:
                 directionVector_ = {0, 1};
-                directionDeg_ = 90;
+                rotationDeg_ = 180;
                 break;
             }
         }
@@ -55,6 +57,7 @@ namespace snd
     struct PositionComponent
         : public Component<PositionComponent>
     {
+        // Tile position
         Vector2 position_;
 
         PositionComponent(float x, float y)
@@ -76,13 +79,18 @@ namespace snd
     struct TransformComponent
         : public Component<TransformComponent>
     {
-        Vector2 transform_;
+        // Offset from game tile position to screen tile position
+        static inline Vector2 transform_;
 
-        TransformComponent(float x, float y)
-            : transform_(x, y){};
+        TransformComponent(Vector2 position = {0, 0})
+        {
+            transform_ = position;
+        };
 
-        TransformComponent(Vector2 transform = {0, 0})
-            : transform_(transform){};
+        TransformComponent(float positionX, float positionY)
+        {
+            transform_ = {positionX, positionY};
+        };
     };
     //=================================
 
