@@ -59,7 +59,7 @@ namespace snd
             if (!testContainer<ComponentType>()) return nullptr;
 
             // Return vector of components
-            return getComponentContainer<ComponentType>()->getAll();
+            return getComponentContainer<ComponentType>()->getAllElements();
         }
 
         std::unordered_map<ComponentTypeId, std::shared_ptr<BaseContiguousMap<EntityId>>>* retrieveAllContainers() { return &componentContainersByTypeId_; };

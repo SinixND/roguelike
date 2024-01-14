@@ -1,13 +1,8 @@
 #ifndef CONSTANTS_H_20240105182421
 #define CONSTANTS_H_20240105182421
 
-#ifndef __EMSCRIPTEN__
-#include <mutex>
-#endif
 #include "raylib.h"
 
-// Included as an example of a parameterized macro
-// Delete assignment operator and copy constructor
 #define DISALLOW_COPY_AND_ASSIGN(T) \
     T(const T&) = delete;           \
     T& operator=(const T&) = delete;
@@ -33,36 +28,15 @@ namespace snd
         //=================================
     public:
         // Get Singleton instance
-        static inline CONSTANTS* getInstance()
+        static inline CONSTANTS& get()
         {
-#ifndef __EMSCRIPTEN__
-            std::lock_guard<std::mutex> lock(mutex_);
-#endif
-
-            if (singleton_ == nullptr)
-            {
-                singleton_ = new CONSTANTS();
-            }
-
-            return singleton_;
-        };
-
-        // Delete Singleton instance
-        static inline void deleteInstance()
-        {
-            delete singleton_;
+            static CONSTANTS singleton;
+            return singleton;
         };
 
     private:
-        static inline CONSTANTS* singleton_{nullptr};
-#ifndef __EMSCRIPTEN__
-        static inline std::mutex mutex_;
-#endif
-
-        // Make ctor private
-        CONSTANTS(){};
-        // Make dtor private
-        ~CONSTANTS(){};
+        CONSTANTS() = default;
+        ~CONSTANTS() = default;
 
         DISALLOW_COPY_AND_ASSIGN(CONSTANTS)
         //=================================

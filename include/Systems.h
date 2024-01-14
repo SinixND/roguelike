@@ -15,7 +15,7 @@
 namespace snd
 {
     class SRender
-        : public System<CTexture, CPosition, CRotation, CTransform>
+        : public System<CTexture, CPosition, CRotation, CTransformation>
     {
     public:
         void action(EntityId entityId)
@@ -27,10 +27,10 @@ namespace snd
 
             const auto& rotation{componentManager_.retrieveFrom<CRotation>(entityId)->getRotation()};
 
-            const auto& transform{componentManager_.retrieveFrom<CTransform>(entityId)->getTransform()};
+            const auto& transform{componentManager_.retrieveFrom<CTransformation>(entityId)->getTransform()};
 
             // Action
-            Vector2 tileSize{CONSTANTS::getInstance()->getTileSize()};
+            Vector2 tileSize{CONSTANTS::get().getTileSize()};
             Vector2 tileCenter{Vector2Scale(tileSize, 0.5)};
 
             Vector2 pixelCoordinates{
@@ -61,13 +61,13 @@ namespace snd
         }
 
         SRender(ComponentManager& componentManager)
-            : System<CTexture, CPosition, CRotation, CTransform>(componentManager)
+            : System<CTexture, CPosition, CRotation, CTransformation>(componentManager)
         {
         }
     };
 
     class SMouseControl
-        : public System<FMouseControlled, CPosition, CTransform>
+        : public System<FMouseControlled, CPosition, CTransformation>
     {
     public:
         void action(EntityId entityId)
@@ -75,14 +75,14 @@ namespace snd
             // Get components
             auto& position{componentManager_.retrieveFrom<CPosition>(entityId)->getPosition()};
 
-            const auto& transform{componentManager_.retrieveFrom<CTransform>(entityId)->getTransform()};
+            const auto& transform{componentManager_.retrieveFrom<CTransformation>(entityId)->getTransform()};
 
             // Action
             position = Vector2Add(pixelToTransformedTile(GetMousePosition()), transform);
         }
 
         SMouseControl(ComponentManager& componentManager)
-            : System<FMouseControlled, CPosition, CTransform>(componentManager)
+            : System<FMouseControlled, CPosition, CTransformation>(componentManager)
         {
         }
     };
@@ -125,7 +125,7 @@ namespace snd
     };
 
     class SMovement
-        : public System<FKeyControlled, CPosition, CRotation, CTransform>
+        : public System<FKeyControlled, CPosition, CRotation, CTransformation>
     {
     public:
         void action(EntityId entityId)
@@ -136,11 +136,14 @@ namespace snd
             // Get components
             auto& position{componentManager_.retrieveFrom<CPosition>(entityId)->getPosition()};
             auto& direction{componentManager_.retrieveFrom<CRotation>(entityId)->getDirection()};
-            auto* transforms{componentManager_.retrieveAll<CTransform>()};
+            auto* transforms{componentManager_.retrieveAll<CTransformation>()};
 
             // Action
-            // Move entity
-            position = Vector2Add(position, direction);
+            Vector2 newPosition{Vector2Add(position, direction)};
+
+            // Check for collision
+
+            position = newPosition;
 
             // Update all transforms
             for (auto& transform : *transforms)
@@ -150,7 +153,7 @@ namespace snd
         }
 
         SMovement(ComponentManager& componentManager)
-            : System<FKeyControlled, CPosition, CRotation, CTransform>(componentManager)
+            : System<FKeyControlled, CPosition, CRotation, CTransformation>(componentManager)
         {
         }
     };

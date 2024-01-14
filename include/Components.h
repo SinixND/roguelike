@@ -12,6 +12,27 @@ namespace snd
 {
     // Components
     //=================================
+    struct CPosition
+        : public Component<CPosition>
+    {
+    public:
+        Vector2& getPosition() { return position_; };
+        void setPosition(const Vector2& position) { position_ = position; };
+
+        CPosition(float x, float y)
+            : position_(x, y){};
+
+        CPosition(int x, int y)
+            : position_(static_cast<float>(x), static_cast<float>(y)){};
+
+        CPosition(Vector2 position = {0, 0})
+            : position_(position){};
+
+    private:
+        // Tile position
+        Vector2 position_;
+    };
+
     typedef enum
     {
         LEFT,
@@ -63,22 +84,26 @@ namespace snd
         float rotationDeg_;
     };
 
-    struct CPosition
-        : public Component<CPosition>
+    struct CTransformation
+        : public Component<CTransformation>
     {
     public:
-        Vector2& getPosition() { return position_; };
-        void setPosition(const Vector2& position) { position_ = position; };
+        Vector2& getTransform() { return transform_; };
+        void setTransform(const Vector2& position) { transform_ = position; };
 
-        CPosition(float x, float y)
-            : position_(x, y){};
+        CTransformation(Vector2 position = {0, 0})
+        {
+            transform_ = position;
+        };
 
-        CPosition(Vector2 position = {0, 0})
-            : position_(position){};
+        CTransformation(float positionX, float positionY)
+        {
+            transform_ = {positionX, positionY};
+        };
 
     private:
-        // Tile position
-        Vector2 position_;
+        // Offset from game tile position to screen tile position
+        Vector2 transform_;
     };
 
     struct CTexture
@@ -94,28 +119,6 @@ namespace snd
     private:
         Texture2D* texture_;
     };
-
-    struct CTransform
-        : public Component<CTransform>
-    {
-    public:
-        Vector2& getTransform() { return transform_; };
-        void setTransform(const Vector2& position) { transform_ = position; };
-
-        CTransform(Vector2 position = {0, 0})
-        {
-            transform_ = position;
-        };
-
-        CTransform(float positionX, float positionY)
-        {
-            transform_ = {positionX, positionY};
-        };
-
-    private:
-        // Offset from game tile position to screen tile position
-        Vector2 transform_;
-    };
     //=================================
 
     // Flags
@@ -127,6 +130,11 @@ namespace snd
 
     struct FKeyControlled
         : public Component<FKeyControlled>
+    {
+    };
+
+    struct FCollision
+        : public Component<FCollision>
     {
     };
     //=================================

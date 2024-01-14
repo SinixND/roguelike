@@ -7,14 +7,10 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] realize viewport system (render relative to window -> update Rendersystem: pos 0,0 & transform 0, 0 == center of screen)
-
-[1] adjust texture to default direction right
+[0] Add collision system
 
 # Shortterm
-[1] map generation
-
-[2] implement viewport
+[1] Map generation
 
 # Longterm 
 
@@ -59,4 +55,9 @@ Maptypes:
 [x] compile for linux & windows !
 
 [x] Render sprites/textures
+
 [x] make ECS
+
+[x] realize viewport system (render relative to window -> update Rendersystem: pos 0,0 & transform 0, 0 == center of screen)
+
+[x] adjust texture to default direction right

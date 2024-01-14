@@ -11,12 +11,12 @@ namespace snd
 
         BeginDrawing();
 
-        ClearBackground(CONSTANTS::getInstance()->getBackgroundColor());
+        ClearBackground(CONSTANTS::get().getBackgroundColor());
 
         // Draw simple frame
         DrawRectangleLinesEx(Rectangle{0, 0, static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())}, BORDER_WEIGHT, BORDER_COLOR);
 
-        if (CONFIGS::getInstance()->getDebugMode() == true)
+        if (CONFIGS::get().getDebugMode())
         {
             DrawFPS(0, 0);
         }

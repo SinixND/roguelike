@@ -3,6 +3,8 @@
 #include "CONFIGS.h"
 #include "Components.h"
 #include "ECS.h"
+#include "EntityId.h"
+#include "Map.h"
 #include "MapGenerator.h"
 #include "Systems.h"
 #include "TEXTURE_MANAGER.h"
@@ -34,6 +36,7 @@ namespace snd
     // Game variables
     //=================================
     MapGenerator mapGenerator;
+    Map map;
     int level{0};
     //=================================
 
@@ -42,21 +45,46 @@ namespace snd
         // Assign components
         //=============================
         ecs.assignComponent<CPosition>(player);
-        ecs.assignComponent<CTexture>(player, TEXTURE_MANAGER::getInstance()->retrieveTexture(PLAYER));
+        ecs.assignComponent<CTexture>(player, TEXTURE_MANAGER::get().retrieveTexture(PLAYER_TEXTURE));
         ecs.assignComponent<CRotation>(player);
-        ecs.assignComponent<CTransform>(player, ecs.retrieveComponent<CPosition>(player)->getPosition());
+        ecs.assignComponent<CTransformation>(player, ecs.retrieveComponent<CPosition>(player)->getPosition());
         ecs.assignComponent<FKeyControlled>(player);
 
         ecs.assignComponent<CPosition>(cursor);
-        ecs.assignComponent<CTexture>(cursor, TEXTURE_MANAGER::getInstance()->retrieveTexture(CURSOR));
+        ecs.assignComponent<CTexture>(cursor, TEXTURE_MANAGER::get().retrieveTexture(CURSOR_TEXTURE));
         ecs.assignComponent<CRotation>(cursor);
-        ecs.assignComponent<CTransform>(cursor, ecs.retrieveComponent<CPosition>(player)->getPosition());
+        ecs.assignComponent<CTransformation>(cursor, ecs.retrieveComponent<CPosition>(player)->getPosition());
         ecs.assignComponent<FMouseControlled>(cursor);
         //=============================
 
-        // Get map
+        // Create map
         //=============================
-        mapGenerator.generateMap(level);
+        map = mapGenerator.generateMap(level);
+        auto tiles{map.getTiles()};
+
+        for (auto tilePosition : *tiles->getAllKeys())
+        {
+            EntityId tileEntity{map.addEntity(ecs.createEntity())};
+
+            ecs.assignComponent<CPosition>(tileEntity, tilePosition.first, tilePosition.second);
+            ecs.assignComponent<CRotation>(tileEntity);
+            ecs.assignComponent<CTransformation>(tileEntity, ecs.retrieveComponent<CPosition>(player)->getPosition());
+
+            switch (*tiles->get(tilePosition))
+            {
+
+            case WALL_TILE:
+                ecs.assignComponent<CTexture>(tileEntity, TEXTURE_MANAGER::get().retrieveTexture(WALL_TEXTURE));
+                break;
+
+            case FLOOR_TILE:
+                ecs.assignComponent<CTexture>(tileEntity, TEXTURE_MANAGER::get().retrieveTexture(FLOOR_TEXTURE));
+                break;
+
+            default:
+                break;
+            }
+        }
         //=============================
     };
 
@@ -84,7 +112,7 @@ namespace snd
         //=============================
 
         // Call app termination
-        //* CONFIGS::getInstance()->closeApp();
+        //* CONFIGS::get().closeApp();
     };
 
     void GameScene::deinitialize()

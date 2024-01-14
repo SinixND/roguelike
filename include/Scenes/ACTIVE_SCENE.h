@@ -2,9 +2,6 @@
 #define CURRENTSCENE_H_20231203203224
 
 #include "Scene.h"
-#ifndef __EMSCRIPTEN__
-#include <mutex>
-#endif
 #include <type_traits>
 
 // Included as an example of a parameterized macro
@@ -27,36 +24,15 @@ namespace snd
         //=================================
     public:
         // Get Singleton instance
-        static inline ACTIVE_SCENE* getInstance()
+        static inline ACTIVE_SCENE& get()
         {
-#ifndef __EMSCRIPTEN__
-            std::lock_guard<std::mutex> lock(mutex_);
-#endif
-
-            if (singleton_ == nullptr)
-            {
-                singleton_ = new ACTIVE_SCENE();
-            }
-
-            return singleton_;
-        };
-
-        // Delete Singleton instance
-        static inline void deleteInstance()
-        {
-            delete singleton_;
+            static ACTIVE_SCENE singleton;
+            return singleton;
         };
 
     private:
-        static inline ACTIVE_SCENE* singleton_{nullptr};
-#ifndef __EMSCRIPTEN__
-        static inline std::mutex mutex_{};
-#endif
-
-        // Make ctor private
-        ACTIVE_SCENE(){};
-        // Make dtor private
-        ~ACTIVE_SCENE(){};
+        ACTIVE_SCENE() = default;
+        ~ACTIVE_SCENE() = default;
 
         DISALLOW_COPY_AND_ASSIGN(ACTIVE_SCENE)
         //=================================

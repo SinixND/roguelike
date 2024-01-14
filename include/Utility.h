@@ -19,7 +19,7 @@ namespace snd
             screenSize = {static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
         }
 
-        Vector2 tileSize{CONSTANTS::getInstance()->getTileSize()};
+        Vector2 tileSize{CONSTANTS::get().getTileSize()};
 
         // convert pixel coordinate to transformed tile coordinate (center of screen is tile (0,0))
         return Vector2{
@@ -36,12 +36,12 @@ namespace snd
             screenSize = {static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
         }
 
-        Vector2 tileSize{CONSTANTS::getInstance()->getTileSize()};
+        Vector2 tileSize{CONSTANTS::get().getTileSize()};
 
         // convert transformed tile coordinate to pixel coordinate [ tile (0,0) is center of screen]
         return Vector2{
-            (tileCoordinates.x * tileSize.x) + (screenSize.x / 2) + (tileSize.x / 2),
-            (tileCoordinates.y * tileSize.y) + (screenSize.y / 2) + (tileSize.y / 2)};
+            (tileCoordinates.x * tileSize.x) + (screenSize.x / 2) + (tileSize.x),
+            (tileCoordinates.y * tileSize.y) + (screenSize.y / 2) + (tileSize.y)};
     }
 
 }

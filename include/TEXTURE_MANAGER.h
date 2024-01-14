@@ -1,9 +1,6 @@
 #ifndef TEXTUREMANAGER_H_20231217234438
 #define TEXTUREMANAGER_H_20231217234438
 
-#ifndef __EMSCRIPTEN__
-#include <mutex>
-#endif
 #include "raylib.h"
 #include <string>
 #include <unordered_map>
@@ -14,10 +11,10 @@
 
 typedef enum
 {
-    PLAYER,
-    CURSOR,
-    WALL,
-    FLOOR,
+    PLAYER_TEXTURE,
+    CURSOR_TEXTURE,
+    WALL_TEXTURE,
+    FLOOR_TEXTURE,
 } TextureId;
 
 namespace snd
@@ -53,39 +50,19 @@ namespace snd
         //=================================
     public:
         // Get Singleton instance
-        static inline TEXTURE_MANAGER* getInstance()
+        static inline TEXTURE_MANAGER& get()
         {
-#ifndef __EMSCRIPTEN__
-            std::lock_guard<std::mutex> lock(mutex_);
-#endif
-
-            if (singleton_ == nullptr)
-            {
-                singleton_ = new TEXTURE_MANAGER();
-            }
-
-            return singleton_;
-        };
-
-        // Delete Singleton instance
-        static inline void deleteInstance()
-        {
-            delete singleton_;
+            static TEXTURE_MANAGER singleton;
+            return singleton;
         };
 
     private:
-        static inline TEXTURE_MANAGER* singleton_{nullptr};
-#ifndef __EMSCRIPTEN__
-        static inline std::mutex mutex_{};
-#endif
-
-        TEXTURE_MANAGER(){};
-        ~TEXTURE_MANAGER(){};
+        TEXTURE_MANAGER() = default;
+        ~TEXTURE_MANAGER() = default;
 
         DISALLOW_COPY_AND_ASSIGN(TEXTURE_MANAGER)
         //=================================
     };
-
 }
 
 #endif

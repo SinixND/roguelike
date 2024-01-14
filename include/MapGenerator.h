@@ -64,17 +64,21 @@ namespace snd
     private:
         void addRoom(Map& map, const Room& room)
         {
-            for (auto x{room.position.x}; x < room.dimensions.x; ++x)
+            Vector2 roomCorner{
+                (room.position.x + room.dimensions.x),
+                (room.position.y + room.dimensions.y)};
+
+            for (auto x{room.position.x}; x < roomCorner.x; ++x)
             {
-                for (auto y{room.position.y}; y < room.dimensions.y; ++y)
+                for (auto y{room.position.y}; y < roomCorner.y; ++y)
                 {
-                    if (((x == room.position.x) || (x == room.position.y)) && ((y == room.dimensions.x) || (y == room.dimensions.y)))
+                    if ((x == room.position.x) || (x == (roomCorner.y - 1)) || (y == room.position.y) || (y == (roomCorner.y - 1)))
                     {
-                        map.setTile({x, y}, WALL);
+                        map.setTile({x, y}, WALL_TILE);
                         continue;
                     }
 
-                    map.setTile({x, y}, FLOOR);
+                    map.setTile({x, y}, FLOOR_TILE);
                 }
             }
         }

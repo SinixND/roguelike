@@ -54,17 +54,17 @@ int main(/* int argc, char **argv */)
     //=================================
 
     // Load textures
-    snd::TEXTURE_MANAGER::getInstance()->loadTexture(PLAYER, "Player.png");
-    snd::TEXTURE_MANAGER::getInstance()->loadTexture(CURSOR, "Cursor.png");
-    snd::TEXTURE_MANAGER::getInstance()->loadTexture(CURSOR, "Wall.png");
-    snd::TEXTURE_MANAGER::getInstance()->loadTexture(CURSOR, "Floor.png");
+    snd::TEXTURE_MANAGER::get().loadTexture(PLAYER_TEXTURE, "Player.png");
+    snd::TEXTURE_MANAGER::get().loadTexture(CURSOR_TEXTURE, "Cursor.png");
+    snd::TEXTURE_MANAGER::get().loadTexture(WALL_TEXTURE, "Wall.png");
+    snd::TEXTURE_MANAGER::get().loadTexture(FLOOR_TEXTURE, "Floor.png");
 
     // Define scenes
     snd::GameScene game{};
     game.initialize();
 
     // Set default scene
-    snd::ACTIVE_SCENE::getInstance()->setScene(game);
+    snd::ACTIVE_SCENE::get().setScene(game);
     //=================================
 
     // Main app loop
@@ -72,7 +72,7 @@ int main(/* int argc, char **argv */)
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(updateGameLoop, 145, 1);
 #else
-    while (!WindowShouldClose() && !snd::CONFIGS::getInstance()->shouldAppClose())
+    while (!WindowShouldClose() && !snd::CONFIGS::get().shouldAppClose())
     {
         updateGameLoop();
         std::cout << "\n";
@@ -83,16 +83,10 @@ int main(/* int argc, char **argv */)
     // De-Initialization
     //=================================
     // Unlaod textures
-    snd::TEXTURE_MANAGER::getInstance()->unloadAllTextures();
+    snd::TEXTURE_MANAGER::get().unloadAllTextures();
 
     // Deinitialize scenes
     game.deinitialize();
-
-    // Delete Singletons
-    snd::ACTIVE_SCENE::deleteInstance();
-    snd::TEXTURE_MANAGER::deleteInstance();
-    snd::CONFIGS::deleteInstance();
-    snd::CONSTANTS::deleteInstance();
 
     CloseWindow(); // Close window and OpenGL context
     //=================================
@@ -102,5 +96,5 @@ int main(/* int argc, char **argv */)
 
 void updateGameLoop()
 {
-    snd::ACTIVE_SCENE::getInstance()->getScene().update();
+    snd::ACTIVE_SCENE::get().getScene().update();
 }

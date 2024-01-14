@@ -2,6 +2,7 @@
 #define MAP_H_20240110231207
 
 #include "ContiguousMap.h"
+#include "EntityId.h"
 #include "raylib.h"
 #include <vector>
 
@@ -21,8 +22,8 @@ namespace snd
 {
     typedef enum
     {
-        FLOOR,
-        WALL,
+        FLOOR_TILE,
+        WALL_TILE,
     } TileType;
 
     struct Map
@@ -37,8 +38,17 @@ namespace snd
             return *tiles_.get(position);
         }
 
+        ContiguousMap<Position, TileType>* getTiles() { return &tiles_; };
+
+        EntityId addEntity(EntityId entityId)
+        {
+            entities_.push_back(entityId);
+            return entityId;
+        }
+
     private:
         ContiguousMap<Position, TileType> tiles_;
+        std::vector<EntityId> entities_;
     };
 }
 
