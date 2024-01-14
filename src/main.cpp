@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "Scene.h"
 #include "TEXTURE_MANAGER.h"
+#include <iostream>
 #define RAYGUI_IMPLEMENTATION // Only define once
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
 #include "../resources/iconset/iconset.rgi.h"
@@ -31,7 +32,6 @@ int main(/* int argc, char **argv */)
 #endif
 
     SetConfigFlags(FLAG_WINDOW_HIGHDPI);
-    SetConfigFlags(FLAG_WINDOW_TRANSPARENT);
 
 #ifndef __EMSCRIPTEN__
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -56,6 +56,8 @@ int main(/* int argc, char **argv */)
     // Load textures
     snd::TEXTURE_MANAGER::getInstance()->loadTexture(PLAYER, "Player.png");
     snd::TEXTURE_MANAGER::getInstance()->loadTexture(CURSOR, "Cursor.png");
+    snd::TEXTURE_MANAGER::getInstance()->loadTexture(CURSOR, "Wall.png");
+    snd::TEXTURE_MANAGER::getInstance()->loadTexture(CURSOR, "Floor.png");
 
     // Define scenes
     snd::GameScene game{};
@@ -73,6 +75,7 @@ int main(/* int argc, char **argv */)
     while (!WindowShouldClose() && !snd::CONFIGS::getInstance()->shouldAppClose())
     {
         updateGameLoop();
+        std::cout << "\n";
     }
 #endif
     //=================================

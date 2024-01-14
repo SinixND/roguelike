@@ -14,29 +14,34 @@
 
 namespace snd
 {
-    class RenderSystem
-        : public System<TextureComponent, PositionComponent, RotationComponent, TransformComponent>
+    class SRender
+        : public System<CTexture, CPosition, CRotation, CTransform>
     {
     public:
         void action(EntityId entityId)
         {
             // Get components
-            const auto& texture{componentManager_.retrieveFrom<TextureComponent>(entityId)->texture_};
+            const auto& texture{componentManager_.retrieveFrom<CTexture>(entityId)->getTexture()};
 
-            const auto& position{componentManager_.retrieveFrom<PositionComponent>(entityId)->position_};
+            const auto& position{componentManager_.retrieveFrom<CPosition>(entityId)->getPosition()};
 
-            const auto& rotation{componentManager_.retrieveFrom<RotationComponent>(entityId)->rotationDeg_};
+            const auto& rotation{componentManager_.retrieveFrom<CRotation>(entityId)->getRotation()};
 
-            const auto& transform{componentManager_.retrieveFrom<TransformComponent>(entityId)->transform_};
+            const auto& transform{componentManager_.retrieveFrom<CTransform>(entityId)->getTransform()};
 
             // Action
-            Vector2 pixelPosition{
+            Vector2 tileSize{CONSTANTS::getInstance()->getTileSize()};
+            Vector2 tileCenter{Vector2Scale(tileSize, 0.5)};
+
+            Vector2 pixelCoordinates{
                 Vector2Subtract(
                     transformedTileToPixel(
                         Vector2Subtract(
                             position,
                             transform)),
-                    CONSTANTS::getInstance()->getTileSize())};
+                    tileSize)};
+
+            std::cout << "Render " << entityId << ", Pos(" << position.x << ", " << position.y << ")\n";
 
             DrawTexturePro(
                 *texture,
@@ -46,66 +51,106 @@ namespace snd
                     float(texture->width),
                     float(texture->height)},
                 Rectangle{
-                    pixelPosition.x,
-                    pixelPosition.y,
-                    CONSTANTS::getInstance()->getTileSize().x,
-                    CONSTANTS::getInstance()->getTileSize().y},
-                Vector2{
-                    0,
-                    0},
+                    pixelCoordinates.x,
+                    pixelCoordinates.y,
+                    tileSize.x,
+                    tileSize.y},
+                tileCenter,
                 rotation,
                 WHITE);
         }
 
-        RenderSystem(ComponentManager& componentManager)
-            : System<TextureComponent, PositionComponent, RotationComponent, TransformComponent>(componentManager)
+        SRender(ComponentManager& componentManager)
+            : System<CTexture, CPosition, CRotation, CTransform>(componentManager)
         {
         }
     };
 
-    class MouseCursorSystem
-        : public System<MouseControlFlag, PositionComponent, TransformComponent>
+    class SMouseControl
+        : public System<FMouseControlled, CPosition, CTransform>
     {
     public:
         void action(EntityId entityId)
         {
             // Get components
-            auto& position{componentManager_.retrieveFrom<PositionComponent>(entityId)->position_};
+            auto& position{componentManager_.retrieveFrom<CPosition>(entityId)->getPosition()};
 
-            const auto& transform{componentManager_.retrieveFrom<TransformComponent>(entityId)->transform_};
+            const auto& transform{componentManager_.retrieveFrom<CTransform>(entityId)->getTransform()};
 
             // Action
-            position = Vector2Subtract(pixelToTransformedTile(GetMousePosition()), transform);
+            position = Vector2Add(pixelToTransformedTile(GetMousePosition()), transform);
         }
 
-        MouseCursorSystem(ComponentManager& componentManager)
-            : System<MouseControlFlag, PositionComponent, TransformComponent>(componentManager)
+        SMouseControl(ComponentManager& componentManager)
+            : System<FMouseControlled, CPosition, CTransform>(componentManager)
         {
         }
     };
 
-    class ControlSystem
-        : public System<ControlFlag, PositionComponent, TransformComponent>
+    class SRotation
+        : public System<FKeyControlled, CRotation>
     {
     public:
-        //* void action(EntityId entityId)
-        //* {
-        //* // Get components
-        //* auto& position{componentManager_.retrieveFrom<PositionComponent>(entityId)->position_};
-        //* auto* transforms{componentManager_.retrieveAll<SharedTransformComponent>()};
+        void action(EntityId entityId)
+        {
+            if (!IsKeyPressed(KEY_W) && !IsKeyPressed(KEY_A) && !IsKeyPressed(KEY_S) && !IsKeyPressed(KEY_D))
+                return;
 
-        //* // Action
-        //* // Move entity
+            // Get components
+            auto rotation{componentManager_.retrieveFrom<CRotation>(entityId)};
 
-        //* // Update all transforms
-        //* for (const auto& transform : *transforms)
-        //* {
-        //* transform.transform_ = {offset.x, offset.y};
-        //* }
-        //* }
+            // Action
+            // Rotate entity
+            switch (GetKeyPressed())
+            {
+            case KEY_W:
+                rotation->setDirection(UP);
+                break;
+            case KEY_A:
+                rotation->setDirection(LEFT);
+                break;
+            case KEY_S:
+                rotation->setDirection(DOWN);
+                break;
+            case KEY_D:
+                rotation->setDirection(RIGHT);
+                break;
+            }
+        }
 
-        ControlSystem(ComponentManager& componentManager)
-            : System<ControlFlag, PositionComponent, TransformComponent>(componentManager)
+        SRotation(ComponentManager& componentManager)
+            : System<FKeyControlled, CRotation>(componentManager)
+        {
+        }
+    };
+
+    class SMovement
+        : public System<FKeyControlled, CPosition, CRotation, CTransform>
+    {
+    public:
+        void action(EntityId entityId)
+        {
+            if (!IsKeyPressed(KEY_SPACE))
+                return;
+
+            // Get components
+            auto& position{componentManager_.retrieveFrom<CPosition>(entityId)->getPosition()};
+            auto& direction{componentManager_.retrieveFrom<CRotation>(entityId)->getDirection()};
+            auto* transforms{componentManager_.retrieveAll<CTransform>()};
+
+            // Action
+            // Move entity
+            position = Vector2Add(position, direction);
+
+            // Update all transforms
+            for (auto& transform : *transforms)
+            {
+                transform.setTransform(position);
+            }
+        }
+
+        SMovement(ComponentManager& componentManager)
+            : System<FKeyControlled, CPosition, CRotation, CTransform>(componentManager)
         {
         }
     };

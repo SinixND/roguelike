@@ -8,15 +8,17 @@ typedef size_t Index;
 
 namespace snd
 {
+    template <typename Key>
     class BaseContiguousMap
     {
     public:
-        virtual ~BaseContiguousMap() = default;
+        virtual void erase(const Key& key) = 0;
+        virtual bool test(const Key& key) = 0;
     };
 
     template <typename Key, typename Type>
     class ContiguousMap
-        : public BaseContiguousMap
+        : public BaseContiguousMap<Key>
     {
     public:
         void insert(const Key& key, const Type& element)
@@ -40,7 +42,7 @@ namespace snd
             indexToKey_.insert(std::make_pair(elementIndex, key));
         };
 
-        void erase(const Key& key)
+        void erase(const Key& key) override
         {
             if (test(key))
             {
@@ -76,7 +78,7 @@ namespace snd
             elements_.pop_back();
         };
 
-        bool test(const Key& key)
+        bool test(const Key& key) override
         {
             return keyToIndex_.count(key);
         };
@@ -92,7 +94,7 @@ namespace snd
 
         std::vector<Type>* getAll()
         {
-            return elements_;
+            return &elements_;
         };
 
     private:

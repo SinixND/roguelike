@@ -7,59 +7,84 @@
 #include <unordered_set>
 #include <utility>
 
-using Position = std::pair<int, int>;
-using Room = Vector4;
-
-// make position pair usable in unordered container
-template <>
-struct std::hash<Position>
-{
-    std::size_t operator()(const Position& position) const noexcept
-    {
-        return position.first + 10 * position.second;
-    }
-};
-
 namespace snd
 {
+    struct Room
+    {
+        Vector2 position;
+        Vector2 dimensions;
+    };
+
     class MapGenerator
     {
     public:
         Map generateMap(int level)
         {
-            // create random adjacent room positions
-            int maxRooms{9 + level};
-
-            for (int i{0}; i < maxRooms; ++i)
+            if (level == 0)
             {
+                return getStartRoom();
             }
 
-            int roomSize{15};
+            /*TEMPORARY*/ return getStartRoom();
 
-            /*
-            X X X X X X . . . X X X X X X
-            X . . . . . . . . . . . . . X
-            X . . . . . . . . . . . . . X
-            X . . . . . . . . . . . . . X
-            X . . . . . . . . . . . . . X
-            X . . . . . . . . . . . . . X
-            . . . . . . . . . . . . . . .
-            . . . . . . . S . . . . . . .
-            . . . . . . . . . . . . . . .
-            X . . . . . . . . . . . . . X
-            X . . . . . . . . . . . . . X
-            X . . . . . . . . . . . . . X
-            X . . . . . . . . . . . . . X
-            X . . . . . . . . . . . . . X
-            X X X X X X . . . X X X X X X
-            */
+            // create random adjacent room positions
+            //* int maxRooms{9 + level};
 
-            return map_;
+            //* for (int i{0}; i < maxRooms; ++i)
+            //* {
+            //* }
+
+            //* int roomSize{15};
+
+            //* /*
+            //* X X X X X X . . . X X X X X X
+            //* X . . . . . . . . . . . . . X
+            //* X . . . . . . . . . . . . . X
+            //* X . . . . . . . . . . . . . X
+            //* X . . . . . . . . . . . . . X
+            //* X . . . . . . . . . . . . . X
+            //* . . . . . . . . . . . . . . .
+            //* . . . . . . . S . . . . . . .
+            //* . . . . . . . . . . . . . . .
+            //* X . . . . . . . . . . . . . X
+            //* X . . . . . . . . . . . . . X
+            //* X . . . . . . . . . . . . . X
+            //* X . . . . . . . . . . . . . X
+            //* X . . . . . . . . . . . . . X
+            //* X X X X X X . . . X X X X X X
+            //* */
+
+            //* return map_;
         };
 
     private:
         Map map_;
         std::unordered_set<Position> roomPositions_{{0, 0}};
+
+    private:
+        void addRoom(Map& map, const Room& room)
+        {
+            for (auto x{room.position.x}; x < room.dimensions.x; ++x)
+            {
+                for (auto y{room.position.y}; y < room.dimensions.y; ++y)
+                {
+                    if (((x == room.position.x) || (x == room.position.y)) && ((y == room.dimensions.x) || (y == room.dimensions.y)))
+                    {
+                        map.setTile({x, y}, WALL);
+                        continue;
+                    }
+
+                    map.setTile({x, y}, FLOOR);
+                }
+            }
+        }
+
+        Map getStartRoom()
+        {
+            Map map;
+            addRoom(map, Room{{-7, -7}, {15, 15}});
+            return map;
+        }
     };
 }
 

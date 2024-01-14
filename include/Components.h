@@ -18,17 +18,17 @@ namespace snd
         RIGHT,
         UP,
         DOWN,
-    } Rotation;
+    } Direction;
 
-    struct RotationComponent
-        : public Component<RotationComponent>
+    struct CRotation
+        : public Component<CRotation>
     {
-        Vector2 directionVector_;
-        float rotationDeg_;
-
-        RotationComponent(Rotation rotation = UP)
+    public:
+        Vector2& getDirection() { return directionVector_; }
+        float& getRotation() { return rotationDeg_; }
+        void setDirection(Direction direction)
         {
-            switch (rotation)
+            switch (direction)
             {
             case RIGHT:
                 directionVector_ = {1, 0};
@@ -52,57 +52,81 @@ namespace snd
                 break;
             }
         }
+
+        CRotation(Direction direction = UP)
+        {
+            setDirection(direction);
+        }
+
+    private:
+        Vector2 directionVector_;
+        float rotationDeg_;
     };
 
-    struct PositionComponent
-        : public Component<PositionComponent>
+    struct CPosition
+        : public Component<CPosition>
     {
-        // Tile position
-        Vector2 position_;
+    public:
+        Vector2& getPosition() { return position_; };
+        void setPosition(const Vector2& position) { position_ = position; };
 
-        PositionComponent(float x, float y)
+        CPosition(float x, float y)
             : position_(x, y){};
 
-        PositionComponent(Vector2 position = {0, 0})
+        CPosition(Vector2 position = {0, 0})
             : position_(position){};
+
+    private:
+        // Tile position
+        Vector2 position_;
     };
 
-    struct TextureComponent
-        : public Component<TextureComponent>
+    struct CTexture
+        : public Component<CTexture>
     {
-        Texture2D* texture_;
+    public:
+        Texture2D* getTexture() { return texture_; };
+        void setTexture(Texture2D* texture) { texture_ = texture; };
 
-        TextureComponent(Texture2D* texture)
+        CTexture(Texture2D* texture)
             : texture_(texture){};
+
+    private:
+        Texture2D* texture_;
     };
 
-    struct TransformComponent
-        : public Component<TransformComponent>
+    struct CTransform
+        : public Component<CTransform>
     {
-        // Offset from game tile position to screen tile position
-        static inline Vector2 transform_;
+    public:
+        Vector2& getTransform() { return transform_; };
+        void setTransform(const Vector2& position) { transform_ = position; };
 
-        TransformComponent(Vector2 position = {0, 0})
+        CTransform(Vector2 position = {0, 0})
         {
             transform_ = position;
         };
 
-        TransformComponent(float positionX, float positionY)
+        CTransform(float positionX, float positionY)
         {
             transform_ = {positionX, positionY};
         };
+
+    private:
+        // Offset from game tile position to screen tile position
+        Vector2 transform_;
     };
     //=================================
 
     // Flags
     //=================================
-    struct MouseControlFlag
-        : public Component<MouseControlFlag>
+    struct FMouseControlled
+        : public Component<FMouseControlled>
     {
     };
 
-    struct ControlFlag
-        : public Component<ControlFlag>
+    struct FKeyControlled
+        : public Component<FKeyControlled>
     {
     };
     //=================================

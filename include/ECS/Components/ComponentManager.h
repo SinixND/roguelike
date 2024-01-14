@@ -62,8 +62,10 @@ namespace snd
             return getComponentContainer<ComponentType>()->getAll();
         }
 
+        std::unordered_map<ComponentTypeId, std::shared_ptr<BaseContiguousMap<EntityId>>>* retrieveAllContainers() { return &componentContainersByTypeId_; };
+
     private:
-        std::unordered_map<ComponentTypeId, std::shared_ptr<BaseContiguousMap>> componentContainersByTypeId_{};
+        std::unordered_map<ComponentTypeId, std::shared_ptr<BaseContiguousMap<EntityId>>> componentContainersByTypeId_{};
 
     private:
         // Check if entity exists in container
@@ -73,6 +75,12 @@ namespace snd
             if (!testContainer<ComponentType>()) return false;
 
             return getComponentContainer<ComponentType>()->test(entityId);
+        }
+
+        // Check if entity exists in container
+        bool testEntity(std::shared_ptr<BaseContiguousMap<EntityId>> container, EntityId entityId)
+        {
+            return container->test(entityId);
         }
 
         // Check if container exists

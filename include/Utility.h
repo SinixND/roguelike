@@ -3,6 +3,7 @@
 
 #include "CONSTANTS.h"
 #include "raylib.h"
+#include "raymath.h"
 #include <cmath>
 #include <iostream>
 #include <string>

@@ -3,6 +3,7 @@
 #include "CONFIGS.h"
 #include "Components.h"
 #include "ECS.h"
+#include "MapGenerator.h"
 #include "Systems.h"
 #include "TEXTURE_MANAGER.h"
 #include "raylib.h"
@@ -19,30 +20,43 @@ namespace snd
     // Initialize entities
     //=================================
     auto player{ecs.createEntity()};
-
     auto cursor{ecs.createEntity()};
     //=================================
 
     // Initialize systems
     //=================================
-    auto renderSystem{ecs.registerSystem<RenderSystem>()};
-    auto controlSystem{ecs.registerSystem<MouseCursorSystem>()};
+    auto renderSystem{ecs.registerSystem<SRender>()};
+    auto mouseControlSystem{ecs.registerSystem<SMouseControl>()};
+    auto rotationSystem{ecs.registerSystem<SRotation>()};
+    auto movementSystem{ecs.registerSystem<SMovement>()};
+    //=================================
+
+    // Game variables
+    //=================================
+    MapGenerator mapGenerator;
+    int level{0};
     //=================================
 
     void GameScene::initialize()
     {
         // Assign components
         //=============================
-        ecs.assignComponent<PositionComponent>(player);
-        ecs.assignComponent<TextureComponent>(player, TEXTURE_MANAGER::getInstance()->retrieveTexture(PLAYER));
-        ecs.assignComponent<RotationComponent>(player);
-        ecs.assignComponent<TransformComponent>(player, ecs.retrieveComponent<PositionComponent>(player)->position_);
+        ecs.assignComponent<CPosition>(player);
+        ecs.assignComponent<CTexture>(player, TEXTURE_MANAGER::getInstance()->retrieveTexture(PLAYER));
+        ecs.assignComponent<CRotation>(player);
+        ecs.assignComponent<CTransform>(player, ecs.retrieveComponent<CPosition>(player)->getPosition());
+        ecs.assignComponent<FKeyControlled>(player);
 
-        ecs.assignComponent<PositionComponent>(cursor);
-        ecs.assignComponent<TextureComponent>(cursor, TEXTURE_MANAGER::getInstance()->retrieveTexture(CURSOR));
-        ecs.assignComponent<RotationComponent>(cursor);
-        ecs.assignComponent<MouseControlFlag>(cursor);
-        ecs.assignComponent<TransformComponent>(cursor, ecs.retrieveComponent<PositionComponent>(player)->position_);
+        ecs.assignComponent<CPosition>(cursor);
+        ecs.assignComponent<CTexture>(cursor, TEXTURE_MANAGER::getInstance()->retrieveTexture(CURSOR));
+        ecs.assignComponent<CRotation>(cursor);
+        ecs.assignComponent<CTransform>(cursor, ecs.retrieveComponent<CPosition>(player)->getPosition());
+        ecs.assignComponent<FMouseControlled>(cursor);
+        //=============================
+
+        // Get map
+        //=============================
+        mapGenerator.generateMap(level);
         //=============================
     };
 
@@ -50,11 +64,17 @@ namespace snd
     {
         // Execute systems
         //=============================
-        controlSystem->execute();
+        mouseControlSystem->execute();
+        rotationSystem->execute();
+        movementSystem->execute();
         //=============================
     };
 
-    void GameScene::updateState(){};
+    void GameScene::updateState(){
+        // Execute systems
+        //=============================
+        //=============================
+    };
 
     void GameScene::renderOutput()
     {
@@ -71,8 +91,8 @@ namespace snd
     {
         // Remove component
         //=============================
-        ecs.removeComponent<PositionComponent>(player);
-        ecs.removeComponent<TextureComponent>(player);
+        ecs.removeComponent<CPosition>(player);
+        ecs.removeComponent<CTexture>(player);
         //=============================
     };
 }

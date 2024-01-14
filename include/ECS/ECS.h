@@ -27,6 +27,7 @@ namespace snd
 
         void removeEntity(EntityId entityId)
         {
+            removeAllComponents(entityId);
             entityManager_.remove(entityId);
         }
 
@@ -69,6 +70,27 @@ namespace snd
 
             // Update entity signature
             entityManager_.resetComponent(entityId, componentTypeId);
+        }
+
+        void removeAllComponents(EntityId entityId)
+        {
+            // Get containers
+            auto containers{componentManager_.retrieveAllContainers()};
+
+            for (auto& [componentTypeId, container] : *containers)
+            {
+                // Remove component from entity
+                container->erase(entityId);
+
+                // Get component type id
+                ComponentTypeId typeId{componentTypeId};
+
+                // Notify systems about removed component
+                notifyRemove(entityId, typeId);
+
+                // Update entity signature
+                entityManager_.resetComponent(entityId, typeId);
+            }
         }
 
         template <typename ComponentType>
