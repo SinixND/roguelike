@@ -234,9 +234,13 @@ web:
 windows: $(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT) 
 
 $(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT): $(WIN_OBJS)
+	$(info )
+	$(info === Link windows ===)
 	$(WIN_CXX) -o $@ $^ $(WIN_LD_FLAGS) $(WIN_LIB_FLAGS) -L$(WIN_RAYLIB_DIR) $(WIN_LD_FLAGS) -static -static-libgcc -static-libstdc++
 
 $(OBJ_DIR)/%.$(WIN_OBJ_EXT): %.$(SRC_EXT)
+	$(info )
+	$(info === Compile windows ===)
 	$(WIN_CXX) -o $@ -c $< $(CXX_FLAGS) $(WIN_INC_FLAGS) -I$(RAYLIB_DIR)
 
 

@@ -1,6 +1,8 @@
 #include "Scene.h"
+
+#include "CONFIGS.h"
 #include "CONSTANTS.h"
-#include "raylib.h"
+#include <raylib.h>
 
 namespace snd
 {

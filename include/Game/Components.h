@@ -102,7 +102,7 @@ namespace snd
         };
 
     private:
-        // Offset from game tile position to screen tile position
+        // Offset from root position
         Vector2 transform_;
     };
 

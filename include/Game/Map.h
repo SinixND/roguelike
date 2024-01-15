@@ -3,7 +3,7 @@
 
 #include "ContiguousMap.h"
 #include "EntityId.h"
-#include "raylib.h"
+#include <raylib.h>
 #include <vector>
 
 using Position = std::pair<int, int>;

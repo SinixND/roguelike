@@ -1,13 +1,9 @@
 #ifndef SYSTEM_H_20231226184152
 #define SYSTEM_H_20231226184152
 
-#include "Component.h"
 #include "ComponentManager.h"
 #include "EntityId.h"
 #include "Signature.h"
-#include "SystemId.h"
-#include <iostream>
-#include <set>
 #include <unordered_set>
 
 class ECS;

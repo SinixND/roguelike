@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H_20240105182421
 #define CONSTANTS_H_20240105182421
 
-#include "raylib.h"
+#include <raylib.h>
 
 #define DISALLOW_COPY_AND_ASSIGN(T) \
     T(const T&) = delete;           \

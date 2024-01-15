@@ -7,10 +7,13 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Add collision system
+[0] Split files in game folder
+
+[1] Order of rendering
 
 # Shortterm
-[1] Map generation
+[1] Add collision system
+[2] Map generation
 
 # Longterm 
 

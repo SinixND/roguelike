@@ -1,9 +1,8 @@
 #ifndef MAPGENERATOR_H_20240110224943
 #define MAPGENERATOR_H_20240110224943
 
-#include "Components.h"
 #include "Map.h"
-#include "raylib.h"
+#include <raylib.h>
 #include <unordered_set>
 #include <utility>
 

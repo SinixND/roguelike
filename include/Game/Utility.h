@@ -2,10 +2,10 @@
 #define UTILITY_H_20240106173048
 
 #include "CONSTANTS.h"
-#include "raylib.h"
-#include "raymath.h"
 #include <cmath>
 #include <iostream>
+#include <raylib.h>
+#include <raymath.h>
 #include <string>
 
 namespace snd

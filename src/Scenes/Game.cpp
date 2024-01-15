@@ -8,9 +8,9 @@
 #include "MapGenerator.h"
 #include "Systems.h"
 #include "TEXTURE_MANAGER.h"
-#include "raylib.h"
 #include <iostream>
 #include <memory>
+#include <raylib.h>
 
 namespace snd
 {
