@@ -7,13 +7,20 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Split files in game folder
+[0] Rename Utility functions to "convert..." and move to Systems.h
+
+[0] Split files (esp. game folder)
 
 [1] Order of rendering
 
+
 # Shortterm
-[1] Add collision system
+[1] Input system assigns components on key/mouse controlled
+
+[1.2] Add collision system
+
 [2] Map generation
+
 
 # Longterm 
 

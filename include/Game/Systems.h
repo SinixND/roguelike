@@ -2,7 +2,7 @@
 #define SYSTEMS_H_20240110222501
 
 #include "CONSTANTS.h"
-#include "ComponentManager.h"
+#include "ECS.h"
 #include "Components.h"
 #include "EntityId.h"
 #include "System.h"
@@ -21,13 +21,13 @@ namespace snd
         void action(EntityId entityId)
         {
             // Get components
-            const auto& texture{componentManager_.retrieveFrom<CTexture>(entityId)->getTexture()};
+            const auto& texture{ecs_->retrieveComponent<CTexture>(entityId)->getTexture()};
 
-            const auto& position{componentManager_.retrieveFrom<CPosition>(entityId)->getPosition()};
+            const auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
 
-            const auto& rotation{componentManager_.retrieveFrom<CRotation>(entityId)->getRotation()};
+            const auto& rotation{ecs_->retrieveComponent<CRotation>(entityId)->getRotation()};
 
-            const auto& transform{componentManager_.retrieveFrom<CTransformation>(entityId)->getTransform()};
+            const auto& transform{ecs_->retrieveComponent<CTransformation>(entityId)->getTransform()};
 
             // Action
             Vector2 tileSize{CONSTANTS::get().getTileSize()};
@@ -60,8 +60,8 @@ namespace snd
                 WHITE);
         }
 
-        SRender(ComponentManager& componentManager)
-            : System<CTexture, CPosition, CRotation, CTransformation>(componentManager)
+        SRender(ECS* ecs)
+            : System<CTexture, CPosition, CRotation, CTransformation>(ecs)
         {
         }
     };
@@ -73,16 +73,16 @@ namespace snd
         void action(EntityId entityId)
         {
             // Get components
-            auto& position{componentManager_.retrieveFrom<CPosition>(entityId)->getPosition()};
+            auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
 
-            const auto& transform{componentManager_.retrieveFrom<CTransformation>(entityId)->getTransform()};
+            const auto& transform{ecs_->retrieveComponent<CTransformation>(entityId)->getTransform()};
 
             // Action
             position = Vector2Add(pixelToTransformedTile(GetMousePosition()), transform);
         }
 
-        SMouseControl(ComponentManager& componentManager)
-            : System<FMouseControlled, CPosition, CTransformation>(componentManager)
+        SMouseControl(ECS* ecs)
+            : System<FMouseControlled, CPosition, CTransformation>(ecs)
         {
         }
     };
@@ -97,7 +97,7 @@ namespace snd
                 return;
 
             // Get components
-            auto rotation{componentManager_.retrieveFrom<CRotation>(entityId)};
+            auto rotation{ecs_->retrieveComponent<CRotation>(entityId)};
 
             // Action
             // Rotate entity
@@ -118,8 +118,8 @@ namespace snd
             }
         }
 
-        SRotation(ComponentManager& componentManager)
-            : System<FKeyControlled, CRotation>(componentManager)
+        SRotation(ECS* ecs)
+            : System<FKeyControlled, CRotation>(ecs)
         {
         }
     };
@@ -134,9 +134,9 @@ namespace snd
                 return;
 
             // Get components
-            auto& position{componentManager_.retrieveFrom<CPosition>(entityId)->getPosition()};
-            auto& direction{componentManager_.retrieveFrom<CRotation>(entityId)->getDirection()};
-            auto* transforms{componentManager_.retrieveAll<CTransformation>()};
+            auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
+            auto& direction{ecs_->retrieveComponent<CRotation>(entityId)->getDirection()};
+            auto* transforms{ecs_->retrieveAllComponents<CTransformation>()};
 
             // Action
             Vector2 newPosition{Vector2Add(position, direction)};
@@ -152,8 +152,8 @@ namespace snd
             }
         }
 
-        SMovement(ComponentManager& componentManager)
-            : System<FKeyControlled, CPosition, CRotation, CTransformation>(componentManager)
+        SMovement(ECS* ecs)
+            : System<FKeyControlled, CPosition, CRotation, CTransformation>(ecs)
         {
         }
     };
@@ -167,13 +167,13 @@ namespace snd
             void action(EntityId entityId)
             {
                 // Get components
-                // auto& component{componentManager_.retrieveFrom<ComponentType>(entityId)->component_};
+                // auto& component{ecs_->retrieveComponent<ComponentType>(entityId)->component_};
 
                 // Action
 
             }
-            CustomSystem(ComponentManager& componentManager)
-                : System<ComponentTypes>(componentManager)
+            CustomSystem(ECS* ecs)
+                : System<ComponentTypes>(ecs)
             {
             }
         }

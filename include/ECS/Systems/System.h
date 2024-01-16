@@ -1,15 +1,15 @@
 #ifndef SYSTEM_H_20231226184152
 #define SYSTEM_H_20231226184152
 
-#include "ComponentManager.h"
 #include "EntityId.h"
 #include "Signature.h"
 #include <unordered_set>
 
-class ECS;
 
 namespace snd
 {
+class ECS;
+
     class BaseSystem
     {
     public:
@@ -52,14 +52,14 @@ namespace snd
     public:
         virtual void action(EntityId) = 0;
 
-        System(ComponentManager& componentManager)
-            : componentManager_(componentManager)
+        System(ECS* ecs)
+            : ecs_(ecs)
         {
             registerComponentTypes<ComponentType, ComponentTypes...>();
         }
 
     protected:
-        ComponentManager& componentManager_;
+        ECS* ecs_;
 
     protected:
         template <typename LastType>

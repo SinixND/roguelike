@@ -13,9 +13,9 @@ namespace snd
     {
     public:
         template <typename SystemType>
-        SystemType* registerSystem(ComponentManager& componentManager)
+        SystemType* registerSystem(ECS* ecs)
         {
-            auto system{std::make_unique<SystemType>(componentManager)};
+            auto system{std::make_unique<SystemType>(ecs)};
 
             systems_.push_back(system);
             return &system;

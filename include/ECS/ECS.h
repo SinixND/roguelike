@@ -112,7 +112,7 @@ namespace snd
         template <typename SystemType>
         auto registerSystem()
         {
-            auto system{std::make_shared<SystemType>(componentManager_)};
+            auto system{std::make_shared<SystemType>(this)};
 
             systems_.push_back(system);
             return system;
