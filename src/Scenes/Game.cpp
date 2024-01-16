@@ -7,8 +7,7 @@
 #include "Map.h"
 #include "MapGenerator.h"
 #include "Systems.h"
-#include "TEXTURE_MANAGER.h"
-#include <iostream>
+#include "TEXTURES.h"
 #include <memory>
 #include <raylib.h>
 
@@ -45,15 +44,15 @@ namespace snd
         // Assign components
         //=============================
         ecs.assignComponent<CPosition>(player);
-        ecs.assignComponent<CTexture>(player, TEXTURE_MANAGER::get().retrieveTexture(PLAYER_TEXTURE));
-        ecs.assignComponent<CRotation>(player);
+        ecs.assignComponent<CTexture>(player, TEXTURES::get().retrieve(PLAYER_TEXTURE));
+        ecs.assignComponent<COrientation>(player);
         ecs.assignComponent<CTransformation>(player, ecs.retrieveComponent<CPosition>(player)->getPosition());
         ecs.assignComponent<FKeyControlled>(player);
 
         ecs.assignComponent<CPosition>(cursor);
-        ecs.assignComponent<CTexture>(cursor, TEXTURE_MANAGER::get().retrieveTexture(CURSOR_TEXTURE));
-        ecs.assignComponent<CRotation>(cursor);
-        ecs.assignComponent<CTransformation>(cursor, ecs.retrieveComponent<CPosition>(player)->getPosition());
+        ecs.assignComponent<CTexture>(cursor, TEXTURES::get().retrieve(CURSOR_TEXTURE));
+        ecs.assignComponent<COrientation>(cursor);
+        ecs.assignComponent<CTransformation>(cursor);
         ecs.assignComponent<FMouseControlled>(cursor);
         //=============================
 
@@ -67,18 +66,18 @@ namespace snd
             EntityId tileEntity{map.addEntity(ecs.createEntity())};
 
             ecs.assignComponent<CPosition>(tileEntity, tilePosition.first, tilePosition.second);
-            ecs.assignComponent<CRotation>(tileEntity);
-            ecs.assignComponent<CTransformation>(tileEntity, ecs.retrieveComponent<CPosition>(player)->getPosition());
+            ecs.assignComponent<COrientation>(tileEntity);
+            ecs.assignComponent<CTransformation>(tileEntity);
 
             switch (*tiles->get(tilePosition))
             {
 
             case WALL_TILE:
-                ecs.assignComponent<CTexture>(tileEntity, TEXTURE_MANAGER::get().retrieveTexture(WALL_TEXTURE));
+                ecs.assignComponent<CTexture>(tileEntity, TEXTURES::get().retrieve(WALL_TEXTURE));
                 break;
 
             case FLOOR_TILE:
-                ecs.assignComponent<CTexture>(tileEntity, TEXTURE_MANAGER::get().retrieveTexture(FLOOR_TEXTURE));
+                ecs.assignComponent<CTexture>(tileEntity, TEXTURES::get().retrieve(FLOOR_TEXTURE));
                 break;
 
             default:

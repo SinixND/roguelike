@@ -10,7 +10,6 @@
 #include "Signature.h"
 #include "System.h"
 #include "SystemManager.h"
-#include <iostream>
 #include <memory>
 
 namespace snd

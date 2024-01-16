@@ -3,13 +3,12 @@
 #include "CONSTANTS.h"
 #include "Game.h"
 #include "Scene.h"
-#include "TEXTURE_MANAGER.h"
-#include <iostream>
+#include "TEXTURES.h"
 #define RAYGUI_IMPLEMENTATION // Only define once
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
 #include "../resources/iconset/iconset.rgi.h"
-#include "raygui.h"
-#include "raylib.h"
+#include <raygui.h>
+#include <raylib.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
@@ -26,7 +25,6 @@ int main(/* int argc, char **argv */)
     constexpr int screenWidth{0};
     constexpr int screenHeight{0};
 #else
-    std::cout << "SET EMSCRIPTEN WINDOW SIZE 500, 500\n";
     constexpr int screenWidth{500};
     constexpr int screenHeight{500};
 #endif
@@ -43,7 +41,7 @@ int main(/* int argc, char **argv */)
     SetWindowSize(GetRenderWidth() - 50, GetRenderHeight() - 50);
 #endif
 
-    //* HideCursor();
+    HideCursor();
 
     //  SetExitKey(0); // Deactivate exit on ESC
     SetTargetFPS(145);
@@ -54,10 +52,10 @@ int main(/* int argc, char **argv */)
     //=================================
 
     // Load textures
-    snd::TEXTURE_MANAGER::get().loadTexture(PLAYER_TEXTURE, "Player.png");
-    snd::TEXTURE_MANAGER::get().loadTexture(CURSOR_TEXTURE, "Cursor.png");
-    snd::TEXTURE_MANAGER::get().loadTexture(WALL_TEXTURE, "Wall.png");
-    snd::TEXTURE_MANAGER::get().loadTexture(FLOOR_TEXTURE, "Floor.png");
+    snd::TEXTURES::get().load(PLAYER_TEXTURE, "Player.png");
+    snd::TEXTURES::get().load(CURSOR_TEXTURE, "Cursor.png");
+    snd::TEXTURES::get().load(WALL_TEXTURE, "Wall.png");
+    snd::TEXTURES::get().load(FLOOR_TEXTURE, "Floor.png");
 
     // Define scenes
     snd::GameScene game{};
@@ -75,7 +73,6 @@ int main(/* int argc, char **argv */)
     while (!WindowShouldClose() && !snd::CONFIGS::get().shouldAppClose())
     {
         updateGameLoop();
-        std::cout << "\n";
     }
 #endif
     //=================================
@@ -83,7 +80,7 @@ int main(/* int argc, char **argv */)
     // De-Initialization
     //=================================
     // Unlaod textures
-    snd::TEXTURE_MANAGER::get().unloadAllTextures();
+    snd::TEXTURES::get().unloadAll();
 
     // Deinitialize scenes
     game.deinitialize();

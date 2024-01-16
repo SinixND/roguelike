@@ -19,20 +19,20 @@ typedef enum
 
 namespace snd
 {
-    class TEXTURE_MANAGER
+    class TEXTURES
     {
     public:
-        static inline void loadTexture(TextureId textureId, std::string filename)
+        static inline void load(TextureId textureId, std::string filename)
         {
             textures_.insert(std::make_pair(textureId, LoadTexture((texturePath + filename).c_str())));
         };
 
-        static inline Texture2D* retrieveTexture(TextureId textureId)
+        static inline Texture2D* retrieve(TextureId textureId)
         {
             return &textures_.at(textureId);
         };
 
-        static inline void unloadAllTextures()
+        static inline void unloadAll()
         {
             for (const auto& texture : textures_)
             {
@@ -50,17 +50,17 @@ namespace snd
         //=================================
     public:
         // Get Singleton instance
-        static inline TEXTURE_MANAGER& get()
+        static inline TEXTURES& get()
         {
-            static TEXTURE_MANAGER singleton;
+            static TEXTURES singleton;
             return singleton;
         };
 
     private:
-        TEXTURE_MANAGER() = default;
-        ~TEXTURE_MANAGER() = default;
+        TEXTURES() = default;
+        ~TEXTURES() = default;
 
-        DISALLOW_COPY_AND_ASSIGN(TEXTURE_MANAGER)
+        DISALLOW_COPY_AND_ASSIGN(TEXTURES)
         //=================================
     };
 }

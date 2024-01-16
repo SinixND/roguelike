@@ -2,7 +2,6 @@
 #define SIGNATURE_H_20231220225930
 
 #include "Id.h"
-#include <iostream>
 #include <string_view>
 
 // Define signature implementation type

@@ -3,10 +3,10 @@
 
 #include "Component.h"
 #include "Utility.h"
-#include "raylib.h"
-#include "raymath.h"
 #include <functional>
 #include <memory_resource>
+#include <raylib.h>
+#include <raymath.h>
 
 namespace snd
 {
@@ -41,8 +41,8 @@ namespace snd
         DOWN,
     } Direction;
 
-    struct CRotation
-        : public Component<CRotation>
+    struct COrientation
+        : public Component<COrientation>
     {
     public:
         Vector2& getDirection() { return directionVector_; }
@@ -74,7 +74,7 @@ namespace snd
             }
         }
 
-        CRotation(Direction direction = UP)
+        COrientation(Direction direction = UP)
         {
             setDirection(direction);
         }
@@ -89,9 +89,11 @@ namespace snd
     {
     public:
         Vector2& getTransform() { return transform_; };
-        void setTransform(const Vector2& position) { transform_ = position; };
+        static void setTransform(const Vector2& position) { transform_ = position; };
 
-        CTransformation(Vector2 position = {0, 0})
+        CTransformation(){};
+
+        CTransformation(Vector2 position)
         {
             transform_ = position;
         };
@@ -103,7 +105,7 @@ namespace snd
 
     private:
         // Offset from root position
-        Vector2 transform_;
+        static inline Vector2 transform_{0, 0};
     };
 
     struct CTexture
