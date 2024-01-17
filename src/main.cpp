@@ -1,9 +1,6 @@
-#include "ACTIVE_SCENE.h"
-#include "CONFIGS.h"
-#include "CONSTANTS.h"
+#include "RuntimeDatabase.h"
 #include "Game.h"
 #include "Scene.h"
-#include "TEXTURES.h"
 #define RAYGUI_IMPLEMENTATION // Only define once
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
 #include "../resources/iconset/iconset.rgi.h"
@@ -52,17 +49,17 @@ int main(/* int argc, char **argv */)
     //=================================
 
     // Load textures
-    snd::TEXTURES::get().load(PLAYER_TEXTURE, "Player.png");
-    snd::TEXTURES::get().load(CURSOR_TEXTURE, "Cursor.png");
-    snd::TEXTURES::get().load(WALL_TEXTURE, "Wall.png");
-    snd::TEXTURES::get().load(FLOOR_TEXTURE, "Floor.png");
+    snd::dtb::Textures::load(snd::PLAYER_TEXTURE, "Player.png");
+    snd::dtb::Textures::load(snd::CURSOR_TEXTURE, "Cursor.png");
+    snd::dtb::Textures::load(snd::WALL_TEXTURE, "Wall.png");
+    snd::dtb::Textures::load(snd::FLOOR_TEXTURE, "Floor.png");
 
     // Define scenes
     snd::GameScene game{};
     game.initialize();
 
     // Set default scene
-    snd::ACTIVE_SCENE::get().setScene(game);
+    snd::dtb::ActiveScene::setScene(game);
     //=================================
 
     // Main app loop
@@ -70,7 +67,7 @@ int main(/* int argc, char **argv */)
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(updateGameLoop, 145, 1);
 #else
-    while (!WindowShouldClose() && !snd::CONFIGS::get().shouldAppClose())
+    while (!WindowShouldClose() && !snd::dtb::Configs::shouldAppClose())
     {
         updateGameLoop();
     }
@@ -80,7 +77,7 @@ int main(/* int argc, char **argv */)
     // De-Initialization
     //=================================
     // Unlaod textures
-    snd::TEXTURES::get().unloadAll();
+    snd::dtb::Textures::unloadAll();
 
     // Deinitialize scenes
     game.deinitialize();
@@ -93,5 +90,5 @@ int main(/* int argc, char **argv */)
 
 void updateGameLoop()
 {
-    snd::ACTIVE_SCENE::get().getScene().update();
+    snd::dtb::ActiveScene::getScene().update();
 }

@@ -1,13 +1,12 @@
 #include "Game.h"
 
-#include "CONFIGS.h"
+#include "RuntimeDatabase.h"
 #include "Components.h"
 #include "ECS.h"
 #include "EntityId.h"
 #include "Map.h"
 #include "MapGenerator.h"
 #include "Systems.h"
-#include "TEXTURES.h"
 #include <memory>
 #include <raylib.h>
 
@@ -44,13 +43,13 @@ namespace snd
         // Assign components
         //=============================
         ecs.assignComponent<CPosition>(player);
-        ecs.assignComponent<CTexture>(player, TEXTURES::get().retrieve(PLAYER_TEXTURE));
+        ecs.assignComponent<CTexture>(player, dtb::Textures::retrieve(PLAYER_TEXTURE));
         ecs.assignComponent<COrientation>(player);
         ecs.assignComponent<CTransformation>(player, ecs.retrieveComponent<CPosition>(player)->getPosition());
         ecs.assignComponent<FKeyControlled>(player);
 
         ecs.assignComponent<CPosition>(cursor);
-        ecs.assignComponent<CTexture>(cursor, TEXTURES::get().retrieve(CURSOR_TEXTURE));
+        ecs.assignComponent<CTexture>(cursor, dtb::Textures::retrieve(CURSOR_TEXTURE));
         ecs.assignComponent<COrientation>(cursor);
         ecs.assignComponent<CTransformation>(cursor);
         ecs.assignComponent<FMouseControlled>(cursor);
@@ -73,11 +72,11 @@ namespace snd
             {
 
             case WALL_TILE:
-                ecs.assignComponent<CTexture>(tileEntity, TEXTURES::get().retrieve(WALL_TEXTURE));
+                ecs.assignComponent<CTexture>(tileEntity, dtb::Textures::retrieve(WALL_TEXTURE));
                 break;
 
             case FLOOR_TILE:
-                ecs.assignComponent<CTexture>(tileEntity, TEXTURES::get().retrieve(FLOOR_TEXTURE));
+                ecs.assignComponent<CTexture>(tileEntity, dtb::Textures::retrieve(FLOOR_TEXTURE));
                 break;
 
             default:
@@ -109,9 +108,6 @@ namespace snd
         //=============================
         renderSystem->execute();
         //=============================
-
-        // Call app termination
-        //* CONFIGS::get().closeApp();
     };
 
     void GameScene::deinitialize()

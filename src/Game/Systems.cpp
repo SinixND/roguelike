@@ -1,6 +1,6 @@
 #include "Systems.h"
 
-#include "CONSTANTS.h"
+#include "RuntimeDatabase.h"
 #include "ECS.h"
 #include "Utility.h"
 
@@ -15,7 +15,7 @@ namespace snd
         const auto& transform{ecs_->retrieveComponent<CTransformation>(entityId)->getTransform()};
 
         // Action
-        Vector2 tileSize{CONSTANTS::get().getTileSize()};
+        Vector2 tileSize{dtb::Constants::tileSize_};
         Vector2 tileCenter{Vector2Scale(tileSize, 0.5)};
 
         Vector2 pixelCoordinates{

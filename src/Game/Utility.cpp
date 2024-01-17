@@ -1,6 +1,6 @@
 #include "Utility.h"
 
-#include "CONSTANTS.h"
+#include "RuntimeDatabase.h"
 #include <cmath>
 
 namespace snd
@@ -14,7 +14,7 @@ namespace snd
             screenSize = {static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
         }
 
-        Vector2 tileSize{CONSTANTS::get().getTileSize()};
+        Vector2 tileSize{dtb::Constants::tileSize_};
 
         // convert pixel coordinate to transformed tile coordinate (center of screen is tile (0,0))
         return Vector2{
@@ -31,7 +31,7 @@ namespace snd
             screenSize = {static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
         }
 
-        Vector2 tileSize{CONSTANTS::get().getTileSize()};
+        Vector2 tileSize{dtb::Constants::tileSize_};
 
         // convert transformed tile coordinate to pixel coordinate [ tile (0,0) is center of screen]
         return Vector2{
