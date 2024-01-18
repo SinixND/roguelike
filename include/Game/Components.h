@@ -12,27 +12,6 @@ namespace snd
 {
     // Components
     //=================================
-    struct CPosition
-        : public Component<CPosition>
-    {
-    public:
-        Vector2& getPosition() { return position_; };
-        void setPosition(const Vector2& position) { position_ = position; };
-
-        CPosition(float x, float y)
-            : position_(x, y){};
-
-        CPosition(int x, int y)
-            : position_(static_cast<float>(x), static_cast<float>(y)){};
-
-        CPosition(Vector2 position = {0, 0})
-            : position_(position){};
-
-    private:
-        // Tile position
-        Vector2 position_;
-    };
-
     typedef enum
     {
         LEFT,
@@ -84,6 +63,41 @@ namespace snd
         float rotationDeg_;
     };
 
+    struct CPosition
+        : public Component<CPosition>
+    {
+    public:
+        Vector2& getPosition() { return position_; };
+        void setPosition(const Vector2& position) { position_ = position; };
+
+        CPosition(float x, float y)
+            : position_(x, y){};
+
+        CPosition(int x, int y)
+            : position_(static_cast<float>(x), static_cast<float>(y)){};
+
+        CPosition(Vector2 position = {0, 0})
+            : position_(position){};
+
+    private:
+        // Tile position
+        Vector2 position_;
+    };
+
+    struct CTexture
+        : public Component<CTexture>
+    {
+    public:
+        Texture2D* getTexture() { return texture_; };
+        void setTexture(Texture2D* texture) { texture_ = texture; };
+
+        CTexture(Texture2D* texture)
+            : texture_(texture){};
+
+    private:
+        Texture2D* texture_;
+    };
+
     struct CTransformation
         : public Component<CTransformation>
     {
@@ -108,37 +122,40 @@ namespace snd
         static inline Vector2 transform_{0, 0};
     };
 
-    struct CTexture
-        : public Component<CTexture>
-    {
-    public:
-        Texture2D* getTexture() { return texture_; };
-        void setTexture(Texture2D* texture) { texture_ = texture; };
-
-        CTexture(Texture2D* texture)
-            : texture_(texture){};
-
-    private:
-        Texture2D* texture_;
-    };
     //=================================
 
-    // Flags
+    // Tags
     //=================================
-    struct FMouseControlled
-        : public Component<FMouseControlled>
+    struct TCollision
+        : public Component<TCollision>
     {
     };
 
-    struct FKeyControlled
-        : public Component<FKeyControlled>
+    struct TKeyControlled
+        : public Component<TKeyControlled>
     {
     };
 
-    struct FCollision
-        : public Component<FCollision>
+    struct TMouseControlled
+        : public Component<TMouseControlled>
     {
     };
+
+    struct TRenderMap
+        : public Component<TRenderMap>
+    {
+    };
+
+    struct TRenderObject
+        : public Component<TRenderObject>
+    {
+    };
+
+    struct TRenderUI
+        : public Component<TRenderUI>
+    {
+    };
+
     //=================================
 }
 

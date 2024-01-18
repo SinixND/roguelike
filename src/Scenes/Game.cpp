@@ -1,11 +1,11 @@
 #include "Game.h"
 
-#include "RuntimeDatabase.h"
 #include "Components.h"
 #include "ECS.h"
 #include "EntityId.h"
 #include "Map.h"
 #include "MapGenerator.h"
+#include "RuntimeDatabase.h"
 #include "Systems.h"
 #include <memory>
 #include <raylib.h>
@@ -19,16 +19,18 @@ namespace snd
 
     // Initialize entities
     //=================================
-    auto player{ecs.createEntity()};
     auto cursor{ecs.createEntity()};
+    auto player{ecs.createEntity()};
     //=================================
 
     // Initialize systems
     //=================================
-    auto renderSystem{ecs.registerSystem<SRender>()};
     auto mouseControlSystem{ecs.registerSystem<SMouseControl>()};
-    auto rotationSystem{ecs.registerSystem<SRotation>()};
     auto movementSystem{ecs.registerSystem<SMovement>()};
+    auto mapRenderSystem{ecs.registerSystem<SRenderMap>()};
+    auto objectRenderSystem{ecs.registerSystem<SRenderObjects>()};
+    auto UIRenderSystem{ecs.registerSystem<SRenderUI>()};
+    auto rotationSystem{ecs.registerSystem<SRotation>()};
     //=================================
 
     // Game variables
@@ -46,13 +48,15 @@ namespace snd
         ecs.assignComponent<CTexture>(player, dtb::Textures::retrieve(PLAYER_TEXTURE));
         ecs.assignComponent<COrientation>(player);
         ecs.assignComponent<CTransformation>(player, ecs.retrieveComponent<CPosition>(player)->getPosition());
-        ecs.assignComponent<FKeyControlled>(player);
+        ecs.assignComponent<TKeyControlled>(player);
+        ecs.assignComponent<TRenderObject>(player);
 
         ecs.assignComponent<CPosition>(cursor);
         ecs.assignComponent<CTexture>(cursor, dtb::Textures::retrieve(CURSOR_TEXTURE));
         ecs.assignComponent<COrientation>(cursor);
         ecs.assignComponent<CTransformation>(cursor);
-        ecs.assignComponent<FMouseControlled>(cursor);
+        ecs.assignComponent<TMouseControlled>(cursor);
+        ecs.assignComponent<TRenderUI>(cursor);
         //=============================
 
         // Create map
@@ -67,6 +71,7 @@ namespace snd
             ecs.assignComponent<CPosition>(tileEntity, tilePosition.first, tilePosition.second);
             ecs.assignComponent<COrientation>(tileEntity);
             ecs.assignComponent<CTransformation>(tileEntity);
+            ecs.assignComponent<TRenderMap>(tileEntity);
 
             switch (*tiles->get(tilePosition))
             {
@@ -106,7 +111,9 @@ namespace snd
     {
         // Execute systems
         //=============================
-        renderSystem->execute();
+        mapRenderSystem->execute();
+        objectRenderSystem->execute();
+        UIRenderSystem->execute();
         //=============================
     };
 

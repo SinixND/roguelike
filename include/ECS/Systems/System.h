@@ -1,14 +1,14 @@
 #ifndef SYSTEM_H_20231226184152
 #define SYSTEM_H_20231226184152
 
+#include "Component.h"
 #include "EntityId.h"
 #include "Signature.h"
 #include <unordered_set>
 
-
 namespace snd
 {
-class ECS;
+    class ECS;
 
     class BaseSystem
     {

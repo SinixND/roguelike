@@ -7,14 +7,11 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Order of rendering -> multiple systems
-
-
-# Shortterm
 [1] Input system assigns components on key/mouse controlled
 
 [1] Transform (S) relative to **selected** (C) (Cursor if unselected)
 
+# Shortterm
 [1] Add collision system
 
 [2] Map generation

@@ -1,19 +1,14 @@
 #include "Systems.h"
 
-#include "RuntimeDatabase.h"
 #include "ECS.h"
+#include "RuntimeDatabase.h"
 #include "Utility.h"
+#include <raylib.h>
 
 namespace snd
 {
-    void SRender::action(EntityId entityId)
+    void renderAction(const Texture2D* texture, const Vector2& position, const float& rotation, const Vector2& transform)
     {
-        // Get components
-        const auto& texture{ecs_->retrieveComponent<CTexture>(entityId)->getTexture()};
-        const auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
-        const auto& rotation{ecs_->retrieveComponent<COrientation>(entityId)->getRotation()};
-        const auto& transform{ecs_->retrieveComponent<CTransformation>(entityId)->getTransform()};
-
         // Action
         Vector2 tileSize{dtb::Constants::tileSize_};
         Vector2 tileCenter{Vector2Scale(tileSize, 0.5)};
@@ -41,6 +36,39 @@ namespace snd
             tileCenter,
             rotation,
             WHITE);
+    }
+
+    void SRenderMap::action(EntityId entityId)
+    {
+        // Get components
+        const auto* texture{ecs_->retrieveComponent<CTexture>(entityId)->getTexture()};
+        const auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
+        const auto& rotation{ecs_->retrieveComponent<COrientation>(entityId)->getRotation()};
+        const auto& transform{ecs_->retrieveComponent<CTransformation>(entityId)->getTransform()};
+
+        renderAction(texture, position, rotation, transform);
+    }
+
+    void SRenderObjects::action(EntityId entityId)
+    {
+        // Get components
+        const auto* texture{ecs_->retrieveComponent<CTexture>(entityId)->getTexture()};
+        const auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
+        const auto& rotation{ecs_->retrieveComponent<COrientation>(entityId)->getRotation()};
+        const auto& transform{ecs_->retrieveComponent<CTransformation>(entityId)->getTransform()};
+
+        renderAction(texture, position, rotation, transform);
+    }
+
+    void SRenderUI::action(EntityId entityId)
+    {
+        // Get components
+        const auto* texture{ecs_->retrieveComponent<CTexture>(entityId)->getTexture()};
+        const auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
+        const auto& rotation{ecs_->retrieveComponent<COrientation>(entityId)->getRotation()};
+        const auto& transform{ecs_->retrieveComponent<CTransformation>(entityId)->getTransform()};
+
+        renderAction(texture, position, rotation, transform);
     }
 
     void SMouseControl::action(EntityId entityId)
