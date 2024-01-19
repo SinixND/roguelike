@@ -8,69 +8,57 @@
 namespace snd
 {
     class SMouseControl
-        : public System<TMouseControlled, CPosition, CTransformation>
+        : public System<CPosition, CRenderOffset, TMouseControlled>
     {
     public:
         void action(EntityId entityId);
 
         SMouseControl(ECS* ecs)
-            : System<TMouseControlled, CPosition, CTransformation>(ecs)
+            : System<CPosition, CRenderOffset, TMouseControlled>(ecs)
         {
         }
     };
 
     class SMovement
-        : public System<TKeyControlled, CPosition, COrientation, CTransformation>
+        : public System<CPosition, CDirection, CRenderOffset, TKeyControlled>
     {
     public:
         void action(EntityId entityId);
 
         SMovement(ECS* ecs)
-            : System<TKeyControlled, CPosition, COrientation, CTransformation>(ecs)
+            : System<CPosition, CDirection, CRenderOffset, TKeyControlled>(ecs)
         {
         }
     };
 
     class SRenderMap
-        : public System<TRenderMap, CTexture, CPosition, COrientation, CTransformation>
+        : public System<CTexture, CPosition, CRenderOffset, TRenderMap>
     {
     public:
         void action(EntityId entityId);
 
         SRenderMap(ECS* ecs)
-            : System<TRenderMap, CTexture, CPosition, COrientation, CTransformation>(ecs){};
+            : System<CTexture, CPosition, CRenderOffset, TRenderMap>(ecs){};
     };
 
     class SRenderObjects
-        : public System<TRenderObject, CTexture, CPosition, COrientation, CTransformation>
+        : public System<CTexture, CPosition, CRenderOffset, TRenderObject>
     {
     public:
         void action(EntityId entityId);
 
         SRenderObjects(ECS* ecs)
-            : System<TRenderObject, CTexture, CPosition, COrientation, CTransformation>(ecs){};
+            : System<CTexture, CPosition, CRenderOffset, TRenderObject>(ecs){};
     };
 
     class SRenderUI
-        : public System<TRenderUI, CTexture, CPosition, COrientation, CTransformation>
+        : public System<CTexture, CPosition, CRenderOffset, TRenderUI>
     {
     public:
         void action(EntityId entityId);
 
         SRenderUI(ECS* ecs)
-            : System<TRenderUI, CTexture, CPosition, COrientation, CTransformation>(ecs){};
-    };
-
-    class SRotation
-        : public System<TKeyControlled, COrientation>
-    {
-    public:
-        void action(EntityId entityId);
-
-        SRotation(ECS* ecs)
-            : System<TKeyControlled, COrientation>(ecs)
-        {
-        }
+            : System<CTexture, CPosition, CRenderOffset, TRenderUI>(ecs){};
     };
 
     // System template

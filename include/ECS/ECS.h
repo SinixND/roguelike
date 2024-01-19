@@ -58,11 +58,11 @@ namespace snd
         template <typename ComponentType>
         void removeComponent(EntityId entityId)
         {
-            // Remove component from entity
-            componentManager_.removeFrom<ComponentType>(entityId);
-
             // get component type id
             ComponentTypeId componentTypeId{Component<ComponentType>::getId()};
+
+            // Remove component from entity
+            componentManager_.removeFrom<ComponentType>(entityId);
 
             // notify systems about removed component
             notifyRemove(entityId, componentTypeId);
@@ -97,6 +97,20 @@ namespace snd
         {
             // Return component
             return componentManager_.retrieveFrom<ComponentType>(entityId);
+        }
+
+        template <typename ComponentType>
+        void toggleComponent(EntityId entityId)
+        {
+            [[maybe_unused]] auto dbg{typeid(ComponentType).name()};
+            if (retrieveComponent<ComponentType>(entityId))
+            {
+                removeComponent<ComponentType>(entityId);
+            }
+            else
+            {
+                assignComponent<ComponentType>(entityId);
+            }
         }
 
         template <typename ComponentType>

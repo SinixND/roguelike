@@ -30,7 +30,6 @@ namespace snd
     auto mapRenderSystem{ecs.registerSystem<SRenderMap>()};
     auto objectRenderSystem{ecs.registerSystem<SRenderObjects>()};
     auto UIRenderSystem{ecs.registerSystem<SRenderUI>()};
-    auto rotationSystem{ecs.registerSystem<SRotation>()};
     //=================================
 
     // Game variables
@@ -46,15 +45,13 @@ namespace snd
         //=============================
         ecs.assignComponent<CPosition>(player);
         ecs.assignComponent<CTexture>(player, dtb::Textures::retrieve(PLAYER_TEXTURE));
-        ecs.assignComponent<COrientation>(player);
-        ecs.assignComponent<CTransformation>(player, ecs.retrieveComponent<CPosition>(player)->getPosition());
+        ecs.assignComponent<CRenderOffset>(player, ecs.retrieveComponent<CPosition>(player)->getPosition());
         ecs.assignComponent<TKeyControlled>(player);
         ecs.assignComponent<TRenderObject>(player);
 
         ecs.assignComponent<CPosition>(cursor);
         ecs.assignComponent<CTexture>(cursor, dtb::Textures::retrieve(CURSOR_TEXTURE));
-        ecs.assignComponent<COrientation>(cursor);
-        ecs.assignComponent<CTransformation>(cursor);
+        ecs.assignComponent<CRenderOffset>(cursor);
         ecs.assignComponent<TMouseControlled>(cursor);
         ecs.assignComponent<TRenderUI>(cursor);
         //=============================
@@ -69,8 +66,8 @@ namespace snd
             EntityId tileEntity{map.addEntity(ecs.createEntity())};
 
             ecs.assignComponent<CPosition>(tileEntity, tilePosition.first, tilePosition.second);
-            ecs.assignComponent<COrientation>(tileEntity);
-            ecs.assignComponent<CTransformation>(tileEntity);
+            ecs.assignComponent<CDirection>(tileEntity);
+            ecs.assignComponent<CRenderOffset>(tileEntity);
             ecs.assignComponent<TRenderMap>(tileEntity);
 
             switch (*tiles->get(tilePosition))
@@ -93,17 +90,26 @@ namespace snd
 
     void GameScene::processInput()
     {
+        // Toggle mouse control for cursor
+        //=============================
+        if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+        {
+            ecs.toggleComponent<TMouseControlled>(cursor);
+        }
+
+        //=============================
+
         // Execute systems
         //=============================
         mouseControlSystem->execute();
-        rotationSystem->execute();
-        movementSystem->execute();
         //=============================
     };
 
-    void GameScene::updateState(){
+    void GameScene::updateState()
+    {
         // Execute systems
         //=============================
+        movementSystem->execute();
         //=============================
     };
 
@@ -117,12 +123,5 @@ namespace snd
         //=============================
     };
 
-    void GameScene::deinitialize()
-    {
-        // Remove component
-        //=============================
-        ecs.removeComponent<CPosition>(player);
-        ecs.removeComponent<CTexture>(player);
-        //=============================
-    };
+    void GameScene::deinitialize(){};
 }
