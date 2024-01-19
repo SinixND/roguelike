@@ -49,7 +49,7 @@ namespace snd
 
         void erase(const Key& key) override
         {
-            if (test(key))
+            if (!test(key))
             {
                 return;
             };
@@ -88,6 +88,7 @@ namespace snd
 
         bool test(const Key& key) override
         {
+            [[maybe_unused]] auto dbg{keys_.contains(key)};
             return keys_.contains(key);
         };
 

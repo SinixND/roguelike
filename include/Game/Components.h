@@ -20,47 +20,41 @@ namespace snd
         DOWN,
     } Direction;
 
-    struct COrientation
-        : public Component<COrientation>
+    struct CDirection
+        : public Component<CDirection>
     {
     public:
         Vector2& getDirection() { return directionVector_; }
-        float& getRotation() { return rotationDeg_; }
         void setDirection(Direction direction)
         {
             switch (direction)
             {
             case RIGHT:
                 directionVector_ = {1, 0};
-                rotationDeg_ = 90;
                 break;
 
             case LEFT:
                 directionVector_ = {-1, 0};
-                rotationDeg_ = -90;
                 break;
 
             default:
             case UP:
                 directionVector_ = {0, -1};
-                rotationDeg_ = 0;
                 break;
 
             case DOWN:
                 directionVector_ = {0, 1};
-                rotationDeg_ = 180;
                 break;
             }
         }
 
-        COrientation(Direction direction = UP)
+        CDirection(Direction direction = UP)
         {
             setDirection(direction);
         }
 
     private:
         Vector2 directionVector_;
-        float rotationDeg_;
     };
 
     struct CPosition
@@ -84,6 +78,30 @@ namespace snd
         Vector2 position_;
     };
 
+    struct CRenderOffset
+        : public Component<CRenderOffset>
+    {
+    public:
+        Vector2& getTransform() { return renderOffset_; };
+        static void setTransform(const Vector2& position) { renderOffset_ = position; };
+
+        CRenderOffset(){};
+
+        CRenderOffset(Vector2 position)
+        {
+            renderOffset_ = position;
+        };
+
+        CRenderOffset(float positionX, float positionY)
+        {
+            renderOffset_ = {positionX, positionY};
+        };
+
+    private:
+        // Offset from root position
+        static inline Vector2 renderOffset_{0, 0};
+    };
+
     struct CTexture
         : public Component<CTexture>
     {
@@ -98,39 +116,10 @@ namespace snd
         Texture2D* texture_;
     };
 
-    struct CTransformation
-        : public Component<CTransformation>
-    {
-    public:
-        Vector2& getTransform() { return transform_; };
-        static void setTransform(const Vector2& position) { transform_ = position; };
-
-        CTransformation(){};
-
-        CTransformation(Vector2 position)
-        {
-            transform_ = position;
-        };
-
-        CTransformation(float positionX, float positionY)
-        {
-            transform_ = {positionX, positionY};
-        };
-
-    private:
-        // Offset from root position
-        static inline Vector2 transform_{0, 0};
-    };
-
     //=================================
 
     // Tags
     //=================================
-    struct TCollision
-        : public Component<TCollision>
-    {
-    };
-
     struct TKeyControlled
         : public Component<TKeyControlled>
     {

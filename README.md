@@ -7,6 +7,8 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
+[0] Refactor name of MouseControlSystem
+
 [1] Input system assigns components on key/mouse controlled
 
 [1] Transform (S) relative to **selected** (C) (Cursor if unselected)
