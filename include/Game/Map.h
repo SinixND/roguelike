@@ -18,38 +18,35 @@ struct std::hash<Position>
     }
 };
 
-namespace snd
+typedef enum
 {
-    typedef enum
+    FLOOR_TILE,
+    WALL_TILE,
+} TileType;
+
+struct Map
+{
+    void setTile(Position position, TileType tile)
     {
-        FLOOR_TILE,
-        WALL_TILE,
-    } TileType;
+        tiles_.insert(position, tile);
+    }
 
-    struct Map
+    TileType getTile(Position position)
     {
-        void setTile(Position position, TileType tile)
-        {
-            tiles_.insert(position, tile);
-        }
+        return *tiles_.get(position);
+    }
 
-        TileType getTile(Position position)
-        {
-            return *tiles_.get(position);
-        }
+    snd::ContiguousMap<Position, TileType>* getTiles() { return &tiles_; };
 
-        ContiguousMap<Position, TileType>* getTiles() { return &tiles_; };
+    snd::EntityId addEntity(snd::EntityId entityId)
+    {
+        entities_.push_back(entityId);
+        return entityId;
+    }
 
-        EntityId addEntity(EntityId entityId)
-        {
-            entities_.push_back(entityId);
-            return entityId;
-        }
-
-    private:
-        ContiguousMap<Position, TileType> tiles_;
-        std::vector<EntityId> entities_;
-    };
-}
+private:
+    snd::ContiguousMap<Position, TileType> tiles_;
+    std::vector<snd::EntityId> entities_;
+};
 
 #endif

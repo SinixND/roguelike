@@ -3,10 +3,7 @@
 
 #include <raylib.h>
 
-namespace snd
-{
-    const Vector2 convertToTile(const Vector2& pixelCoordinates);
-    const Vector2 convertToPixel(const Vector2& tileCoordinates);
-}
+const Vector2 convertToTile(const Vector2& pixelCoordinates);
+const Vector2 convertToPixel(const Vector2& tileCoordinates);
 
 #endif

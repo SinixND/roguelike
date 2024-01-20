@@ -5,10 +5,10 @@
 #include <unordered_set>
 #include <vector>
 
-typedef size_t Index;
-
 namespace snd
 {
+    typedef size_t Index;
+
     template <typename Key>
     class BaseContiguousMap
     {

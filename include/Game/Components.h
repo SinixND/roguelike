@@ -8,139 +8,136 @@
 #include <raylib.h>
 #include <raymath.h>
 
-namespace snd
+// Components
+//=================================
+typedef enum
 {
-    // Components
-    //=================================
-    typedef enum
-    {
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN,
-    } Direction;
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN,
+} Direction;
 
-    struct CDirection
-        : public Component<CDirection>
+struct CDirection
+    : public snd::Component<CDirection>
+{
+public:
+    Vector2& getDirection() { return directionVector_; }
+    void setDirection(Direction direction)
     {
-    public:
-        Vector2& getDirection() { return directionVector_; }
-        void setDirection(Direction direction)
+        switch (direction)
         {
-            switch (direction)
-            {
-            case RIGHT:
-                directionVector_ = {1, 0};
-                break;
+        case RIGHT:
+            directionVector_ = {1, 0};
+            break;
 
-            case LEFT:
-                directionVector_ = {-1, 0};
-                break;
+        case LEFT:
+            directionVector_ = {-1, 0};
+            break;
 
-            default:
-            case UP:
-                directionVector_ = {0, -1};
-                break;
+        default:
+        case UP:
+            directionVector_ = {0, -1};
+            break;
 
-            case DOWN:
-                directionVector_ = {0, 1};
-                break;
-            }
+        case DOWN:
+            directionVector_ = {0, 1};
+            break;
         }
+    }
 
-        CDirection(Direction direction = UP)
-        {
-            setDirection(direction);
-        }
-
-    private:
-        Vector2 directionVector_;
-    };
-
-    struct CPosition
-        : public Component<CPosition>
+    CDirection(Direction direction = UP)
     {
-    public:
-        Vector2& getPosition() { return position_; };
-        void setPosition(const Vector2& position) { position_ = position; };
+        setDirection(direction);
+    }
 
-        CPosition(float x, float y)
-            : position_(x, y){};
+private:
+    Vector2 directionVector_;
+};
 
-        CPosition(int x, int y)
-            : position_(static_cast<float>(x), static_cast<float>(y)){};
+struct CPosition
+    : public snd::Component<CPosition>
+{
+public:
+    Vector2& getPosition() { return position_; };
+    void setPosition(const Vector2& position) { position_ = position; };
 
-        CPosition(Vector2 position = {0, 0})
-            : position_(position){};
+    CPosition(float x, float y)
+        : position_(x, y){};
 
-    private:
-        // Tile position
-        Vector2 position_;
-    };
+    CPosition(int x, int y)
+        : position_(static_cast<float>(x), static_cast<float>(y)){};
 
-    struct CRenderOffset
-        : public Component<CRenderOffset>
+    CPosition(Vector2 position = {0, 0})
+        : position_(position){};
+
+private:
+    // Tile position
+    Vector2 position_;
+};
+
+struct CRenderOffset
+    : public snd::Component<CRenderOffset>
+{
+public:
+    Vector2& getTransform() { return renderOffset_; };
+    static void setTransform(const Vector2& position) { renderOffset_ = position; };
+
+    CRenderOffset(){};
+
+    CRenderOffset(Vector2 position)
     {
-    public:
-        Vector2& getTransform() { return renderOffset_; };
-        static void setTransform(const Vector2& position) { renderOffset_ = position; };
-
-        CRenderOffset(){};
-
-        CRenderOffset(Vector2 position)
-        {
-            renderOffset_ = position;
-        };
-
-        CRenderOffset(float positionX, float positionY)
-        {
-            renderOffset_ = {positionX, positionY};
-        };
-
-    private:
-        // Offset from root position
-        static inline Vector2 renderOffset_{0, 0};
+        renderOffset_ = position;
     };
 
-    struct CTexture
-        : public Component<CTexture>
+    CRenderOffset(float positionX, float positionY)
     {
-    public:
-        Texture2D* getTexture() { return texture_; };
-        void setTexture(Texture2D* texture) { texture_ = texture; };
-
-        CTexture(Texture2D* texture)
-            : texture_(texture){};
-
-    private:
-        Texture2D* texture_;
+        renderOffset_ = {positionX, positionY};
     };
 
-    //=================================
+private:
+    // Offset from root position
+    static inline Vector2 renderOffset_{0, 0};
+};
 
-    // Tags
-    //=================================
-    struct TControlled
-        : public Component<TControlled>
-    {
-    };
+struct CTexture
+    : public snd::Component<CTexture>
+{
+public:
+    Texture2D* getTexture() { return texture_; };
+    void setTexture(Texture2D* texture) { texture_ = texture; };
 
-    struct TRenderMap
-        : public Component<TRenderMap>
-    {
-    };
+    CTexture(Texture2D* texture)
+        : texture_(texture){};
 
-    struct TRenderObject
-        : public Component<TRenderObject>
-    {
-    };
+private:
+    Texture2D* texture_;
+};
 
-    struct TRenderUI
-        : public Component<TRenderUI>
-    {
-    };
+//=================================
 
-    //=================================
-}
+// Tags
+//=================================
+struct TControlled
+    : public snd::Component<TControlled>
+{
+};
+
+struct TRenderMap
+    : public snd::Component<TRenderMap>
+{
+};
+
+struct TRenderObject
+    : public snd::Component<TRenderObject>
+{
+};
+
+struct TRenderUI
+    : public snd::Component<TRenderUI>
+{
+};
+
+//=================================
 
 #endif

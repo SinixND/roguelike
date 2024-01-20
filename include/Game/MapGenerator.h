@@ -5,24 +5,21 @@
 #include <raylib.h>
 #include <unordered_set>
 
-namespace snd
+struct Room;
+
+class MapGenerator
 {
-    struct Room;
+public:
+    Map generateMap(int level);
 
-    class MapGenerator
-    {
-    public:
-        Map generateMap(int level);
+private:
+    Map map_{};
+    std::unordered_set<Position> roomPositions_{{0, 0}};
 
-    private:
-        Map map_{};
-        std::unordered_set<Position> roomPositions_{{0, 0}};
+private:
+    void addRoom(Map& map, const Room& room);
 
-    private:
-        void addRoom(Map& map, const Room& room);
-
-        Map getStartRoom();
-    };
-}
+    Map getStartRoom();
+};
 
 #endif

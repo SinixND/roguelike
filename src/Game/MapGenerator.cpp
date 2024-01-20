@@ -4,49 +4,46 @@
 #include <raylib.h>
 #include <unordered_set>
 
-namespace snd
+struct Room
 {
-    struct Room
-    {
-        Vector2 position;
-        Vector2 dimensions;
-    };
+    Vector2 position;
+    Vector2 dimensions;
+};
 
-    Map MapGenerator::generateMap(int level)
+Map MapGenerator::generateMap(int level)
+{
+    if (level == 0)
     {
-        if (level == 0)
-        {
-            return getStartRoom();
-        }
-
-        /*TEMPORARY*/ return getStartRoom();
+        return getStartRoom();
     }
 
-    void MapGenerator::addRoom(Map& map, const Room& room)
-    {
-        Vector2 roomCorner{
-            (room.position.x + room.dimensions.x),
-            (room.position.y + room.dimensions.y)};
+    /*TEMPORARY*/ return getStartRoom();
+}
 
-        for (auto x{room.position.x}; x < roomCorner.x; ++x)
+void MapGenerator::addRoom(Map& map, const Room& room)
+{
+    Vector2 roomCorner{
+        (room.position.x + room.dimensions.x),
+        (room.position.y + room.dimensions.y)};
+
+    for (auto x{room.position.x}; x < roomCorner.x; ++x)
+    {
+        for (auto y{room.position.y}; y < roomCorner.y; ++y)
         {
-            for (auto y{room.position.y}; y < roomCorner.y; ++y)
+            if ((x == room.position.x) || (x == (roomCorner.y - 1)) || (y == room.position.y) || (y == (roomCorner.y - 1)))
             {
-                if ((x == room.position.x) || (x == (roomCorner.y - 1)) || (y == room.position.y) || (y == (roomCorner.y - 1)))
-                {
-                    map.setTile({x, y}, WALL_TILE);
-                    continue;
-                }
-
-                map.setTile({x, y}, FLOOR_TILE);
+                map.setTile({x, y}, WALL_TILE);
+                continue;
             }
+
+            map.setTile({x, y}, FLOOR_TILE);
         }
     }
+}
 
-    Map MapGenerator::getStartRoom()
-    {
-        Map map;
-        addRoom(map, Room{{-7, -7}, {15, 15}});
-        return map;
-    }
+Map MapGenerator::getStartRoom()
+{
+    Map map;
+    addRoom(map, Room{{-7, -7}, {15, 15}});
+    return map;
 }
