@@ -7,7 +7,7 @@
 
 namespace snd
 {
-    void SMouseControl::action(EntityId entityId)
+    void SControl::action(EntityId entityId)
     {
         // Get components
         auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
@@ -16,26 +16,6 @@ namespace snd
 
         // Action
         position = Vector2Add(convertToTile(GetMousePosition()), transform);
-    }
-
-    void SMovement::action(EntityId entityId)
-    {
-        if (!IsKeyPressed(KEY_SPACE))
-            return;
-
-        // Get components
-        auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
-        auto& direction{ecs_->retrieveComponent<CDirection>(entityId)->getDirection()};
-
-        // Action
-        Vector2 newPosition{Vector2Add(position, direction)};
-
-        // Check for collision
-
-        position = newPosition;
-
-        // Update all transforms
-        CRenderOffset::setTransform(position);
     }
 
     void renderAction(const Texture2D* texture, const Vector2& position, const Vector2& transform)

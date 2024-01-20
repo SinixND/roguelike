@@ -120,13 +120,8 @@ namespace snd
 
     // Tags
     //=================================
-    struct TKeyControlled
-        : public Component<TKeyControlled>
-    {
-    };
-
-    struct TMouseControlled
-        : public Component<TMouseControlled>
+    struct TControlled
+        : public Component<TControlled>
     {
     };
 

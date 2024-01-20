@@ -7,26 +7,14 @@
 
 namespace snd
 {
-    class SMouseControl
-        : public System<CPosition, CRenderOffset, TMouseControlled>
+    class SControl
+        : public System<CPosition, CRenderOffset, TControlled>
     {
     public:
         void action(EntityId entityId);
 
-        SMouseControl(ECS* ecs)
-            : System<CPosition, CRenderOffset, TMouseControlled>(ecs)
-        {
-        }
-    };
-
-    class SMovement
-        : public System<CPosition, CDirection, CRenderOffset, TKeyControlled>
-    {
-    public:
-        void action(EntityId entityId);
-
-        SMovement(ECS* ecs)
-            : System<CPosition, CDirection, CRenderOffset, TKeyControlled>(ecs)
+        SControl(ECS* ecs)
+            : System<CPosition, CRenderOffset, TControlled>(ecs)
         {
         }
     };

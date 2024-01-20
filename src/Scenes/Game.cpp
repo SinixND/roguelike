@@ -25,8 +25,7 @@ namespace snd
 
     // Initialize systems
     //=================================
-    auto mouseControlSystem{ecs.registerSystem<SMouseControl>()};
-    auto movementSystem{ecs.registerSystem<SMovement>()};
+    auto controlSystem{ecs.registerSystem<SControl>()};
     auto mapRenderSystem{ecs.registerSystem<SRenderMap>()};
     auto objectRenderSystem{ecs.registerSystem<SRenderObjects>()};
     auto UIRenderSystem{ecs.registerSystem<SRenderUI>()};
@@ -46,14 +45,13 @@ namespace snd
         ecs.assignComponent<CPosition>(player);
         ecs.assignComponent<CTexture>(player, dtb::Textures::retrieve(PLAYER_TEXTURE));
         ecs.assignComponent<CRenderOffset>(player, ecs.retrieveComponent<CPosition>(player)->getPosition());
-        ecs.assignComponent<TKeyControlled>(player);
         ecs.assignComponent<TRenderObject>(player);
 
         ecs.assignComponent<CPosition>(cursor);
         ecs.assignComponent<CTexture>(cursor, dtb::Textures::retrieve(CURSOR_TEXTURE));
         ecs.assignComponent<CRenderOffset>(cursor);
-        ecs.assignComponent<TMouseControlled>(cursor);
         ecs.assignComponent<TRenderUI>(cursor);
+        ecs.assignComponent<TControlled>(cursor);
         //=============================
 
         // Create map
@@ -94,22 +92,20 @@ namespace snd
         //=============================
         if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
         {
-            ecs.toggleComponent<TMouseControlled>(cursor);
+            ecs.toggleComponent<TControlled>(cursor);
         }
 
         //=============================
 
         // Execute systems
         //=============================
-        mouseControlSystem->execute();
+        controlSystem->execute();
         //=============================
     };
 
-    void GameScene::updateState()
-    {
+    void GameScene::updateState(){
         // Execute systems
         //=============================
-        movementSystem->execute();
         //=============================
     };
 
