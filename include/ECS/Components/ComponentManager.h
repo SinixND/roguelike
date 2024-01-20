@@ -7,6 +7,7 @@
 #include "EntityId.h"
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
 
 namespace snd
 {
@@ -41,7 +42,7 @@ namespace snd
 
         // Access a component from a specific entity
         template <typename ComponentType>
-        ComponentType* retrieveFrom(EntityId entityId)
+        ComponentType* getFrom(EntityId entityId)
         {
             // Check if entity exists
             if (!testEntity<ComponentType>(entityId))
@@ -53,7 +54,7 @@ namespace snd
 
         // Access all components
         template <typename ComponentType>
-        std::vector<ComponentType>* retrieveAll()
+        std::vector<ComponentType>* getAllComponents()
         {
             // Check if container exists
             if (!testContainer<ComponentType>()) return nullptr;
@@ -62,7 +63,28 @@ namespace snd
             return getComponentContainer<ComponentType>()->getAllElements();
         }
 
-        std::unordered_map<ComponentTypeId, std::shared_ptr<BaseContiguousMap<EntityId>>>* retrieveAllContainers() { return &componentContainersByTypeId_; };
+        std::unordered_map<ComponentTypeId, std::shared_ptr<BaseContiguousMap<EntityId>>>* getAllContainers() { return &componentContainersByTypeId_; };
+
+        // Get unique entity
+        template <typename ComponentType>
+        EntityId getEntity()
+        {
+            // Check if container exists
+            if (!testContainer<ComponentType>()) return 0;
+
+            // Return entity
+            return getComponentContainer<ComponentType>()->getKey();
+        }
+        // Get all entities
+        template <typename ComponentType>
+        std::unordered_set<EntityId>* getAllEntities()
+        {
+            // Check if container exists
+            if (!testContainer<ComponentType>()) return nullptr;
+
+            // Return set of entities
+            return getComponentContainer<ComponentType>()->getAllKeys();
+        }
 
     private:
         std::unordered_map<ComponentTypeId, std::shared_ptr<BaseContiguousMap<EntityId>>> componentContainersByTypeId_{};

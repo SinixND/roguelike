@@ -6,24 +6,25 @@
 #include "RuntimeDatabase.h"
 #include "Utility.h"
 #include <raylib.h>
+#include <raymath.h>
 
-class SControl
-    : public snd::System<CPosition, CRenderOffset, TControlled>
+class SFollowMouse
+    : public snd::System<CPosition, CRenderOffset, TMouseControlled>
 {
 public:
     void action(snd::EntityId entityId)
     {
         // Get components
-        auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
+        auto& position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
 
-        const auto& transform{ecs_->retrieveComponent<CRenderOffset>(entityId)->getTransform()};
+        const auto& transform{ecs_->getComponent<CRenderOffset>(entityId)->getTransform()};
 
         // Action
         position = Vector2Add(convertToTile(GetMousePosition()), transform);
     }
 
-    SControl(snd::ECS* ecs)
-        : snd::System<CPosition, CRenderOffset, TControlled>(ecs)
+    SFollowMouse(snd::ECS* ecs)
+        : snd::System<CPosition, CRenderOffset, TMouseControlled>(ecs)
     {
     }
 };
@@ -60,57 +61,102 @@ inline void renderAction(const Texture2D* texture, const Vector2& position, cons
 }
 
 class SRenderMap
-    : public snd::System<CTexture, CPosition, CRenderOffset, TRenderMap>
+    : public snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsMap>
 {
 public:
     void action(snd::EntityId entityId)
     {
         // Get components
-        const auto* texture{ecs_->retrieveComponent<CTexture>(entityId)->getTexture()};
-        const auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
-        const auto& transform{ecs_->retrieveComponent<CRenderOffset>(entityId)->getTransform()};
+        const auto* texture{ecs_->getComponent<CTexture>(entityId)->getTexture()};
+        const auto& position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
+        const auto& transform{ecs_->getComponent<CRenderOffset>(entityId)->getTransform()};
 
         renderAction(texture, position, transform);
     }
 
     SRenderMap(snd::ECS* ecs)
-        : snd::System<CTexture, CPosition, CRenderOffset, TRenderMap>(ecs){};
+        : snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsMap>(ecs){};
 };
 
 class SRenderObjects
-    : public snd::System<CTexture, CPosition, CRenderOffset, TRenderObject>
+    : public snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsObject>
 {
 public:
     void action(snd::EntityId entityId)
     {
         // Get components
-        const auto* texture{ecs_->retrieveComponent<CTexture>(entityId)->getTexture()};
-        const auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
-        const auto& transform{ecs_->retrieveComponent<CRenderOffset>(entityId)->getTransform()};
+        const auto* texture{ecs_->getComponent<CTexture>(entityId)->getTexture()};
+        const auto& position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
+        const auto& transform{ecs_->getComponent<CRenderOffset>(entityId)->getTransform()};
 
         renderAction(texture, position, transform);
     }
 
     SRenderObjects(snd::ECS* ecs)
-        : snd::System<CTexture, CPosition, CRenderOffset, TRenderObject>(ecs){};
+        : snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsObject>(ecs){};
 };
 
 class SRenderUI
-    : public snd::System<CTexture, CPosition, CRenderOffset, TRenderUI>
+    : public snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsUI>
 {
 public:
     void action(snd::EntityId entityId)
     {
         // Get components
-        const auto* texture{ecs_->retrieveComponent<CTexture>(entityId)->getTexture()};
-        const auto& position{ecs_->retrieveComponent<CPosition>(entityId)->getPosition()};
-        const auto& transform{ecs_->retrieveComponent<CRenderOffset>(entityId)->getTransform()};
+        const auto* texture{ecs_->getComponent<CTexture>(entityId)->getTexture()};
+        const auto& position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
+        const auto& transform{ecs_->getComponent<CRenderOffset>(entityId)->getTransform()};
 
         renderAction(texture, position, transform);
     }
 
     SRenderUI(snd::ECS* ecs)
-        : snd::System<CTexture, CPosition, CRenderOffset, TRenderUI>(ecs){};
+        : snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsUI>(ecs){};
+};
+
+class STagUnderCursor
+    : public snd::System<CPosition, TIsHoverable>
+{
+public:
+    void action(snd::EntityId entityId)
+    {
+        // Get entity
+        snd::EntityId cursor{ecs_->getEntityWith<TIsCursor>()};
+
+        // Get components
+        auto& cursorPosition{ecs_->getComponent<CPosition>(cursor)->getPosition()};
+
+        // Action
+        if (Vector2Equals(ecs_->getComponent<CPosition>(entityId)->getPosition(), cursorPosition))
+        {
+            ecs_->assignComponent<TIsUnderCursor>(entityId);
+        }
+        else
+        {
+            ecs_->removeComponent<TIsUnderCursor>(entityId);
+        }
+    }
+
+    STagUnderCursor(snd::ECS* ecs)
+        : snd::System<CPosition, TIsHoverable>(ecs){};
+};
+
+class SSelection
+    : public snd::System<TIsUnderCursor, TIsSelectable>
+{
+public:
+    void action(snd::EntityId entityId)
+    {
+        // Action
+        if (IsKeyPressed(KEY_SPACE) || IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            ecs_->toggleComponent<TIsSelected>(entityId);
+        }
+    }
+    SSelection(snd::ECS* ecs)
+        : snd::System<TIsUnderCursor, TIsSelectable>(ecs)
+    {
+    }
 };
 
 // snd::System template
@@ -122,7 +168,7 @@ public:
         void action(snd::EntityId entityId)
         {
             // Get components
-            // auto& component{ecs_->retrieveComponent<ComponentType>(entityId)->component_};
+            auto* component{ecs_->getComponent<ComponentType>(entityId)};
 
             // Action
 
@@ -131,7 +177,8 @@ public:
             : snd::System<ComponentTypes>(ecs)
         {
         }
-    }
+    };
+
 */
 
 #endif

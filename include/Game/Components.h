@@ -118,23 +118,44 @@ private:
 
 // Tags
 //=================================
-struct TControlled
-    : public snd::Component<TControlled>
+
+struct TIsCursor : public snd::Component<TIsCursor>
 {
 };
 
-struct TRenderMap
-    : public snd::Component<TRenderMap>
+struct TIsHoverable : public snd::Component<TIsHoverable>
 {
 };
 
-struct TRenderObject
-    : public snd::Component<TRenderObject>
+struct TIsSelectable : public snd::Component<TIsSelectable>
 {
 };
 
-struct TRenderUI
-    : public snd::Component<TRenderUI>
+struct TIsSelected : public snd::Component<TIsSelected>
+{
+};
+
+struct TIsUnderCursor : public snd::Component<TIsUnderCursor>
+{
+};
+
+struct TKeyControlled : public snd::Component<TKeyControlled>
+{
+};
+
+struct TMouseControlled : public snd::Component<TMouseControlled>
+{
+};
+
+struct TRenderedAsMap : public snd::Component<TRenderedAsMap>
+{
+};
+
+struct TRenderedAsObject : public snd::Component<TRenderedAsObject>
+{
+};
+
+struct TRenderedAsUI : public snd::Component<TRenderedAsUI>
 {
 };
 

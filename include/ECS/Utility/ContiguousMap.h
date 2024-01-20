@@ -106,10 +106,17 @@ namespace snd
             return &elements_;
         };
 
+        Key getKey()
+        {
+            [[maybe_unused]] auto x{*begin(keys_)};
+
+            return *keys_.begin();
+        };
+
         std::unordered_set<Key>* getAllKeys()
         {
             return &keys_;
-        }
+        };
 
     private:
         std::vector<Type> elements_{};                // Vector index is used as element key

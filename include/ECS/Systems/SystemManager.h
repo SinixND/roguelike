@@ -21,7 +21,7 @@ namespace snd
             return &system;
         }
 
-        std::vector<std::shared_ptr<BaseSystem>>* retrieveSystems()
+        std::vector<std::shared_ptr<BaseSystem>>* getSystems()
         {
             return &systems_;
         }

@@ -88,7 +88,7 @@ namespace dtb
             getInstance().textures_.insert(std::make_pair(textureId, LoadTexture((texturePath + filename).c_str())));
         };
 
-        static inline Texture2D* retrieve(TextureId textureId)
+        static inline Texture2D* get(TextureId textureId)
         {
             return &getInstance().textures_.at(textureId);
         };

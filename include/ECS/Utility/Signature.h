@@ -20,7 +20,7 @@ namespace snd
     // Set signature type
     //=================================
 #ifdef BITSET
-    const Id MAX_COMPONENTS = 10;
+    const Id MAX_COMPONENTS = 20;
     using Signature = std::bitset<MAX_COMPONENTS>;
 #endif
     //=================================
@@ -42,7 +42,7 @@ namespace snd
     #endif
             };
 
-            SignatureType& retrieve()
+            SignatureType& get()
             {
     #ifdef BITSET
                 return signature_;
@@ -66,7 +66,7 @@ namespace snd
             bool isSubsetOf(Signature& signature)
             {
     #ifdef BITSET
-                return (signature_ & signature.retrieve()) == signature_;
+                return (signature_ & signature.get()) == signature_;
     #endif
             };
 

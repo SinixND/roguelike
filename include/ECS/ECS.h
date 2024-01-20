@@ -34,6 +34,18 @@ namespace snd
         {
             return entityManager_.getSignature(entityId);
         }
+
+        template <typename ComponentType>
+        EntityId getEntityWith()
+        {
+            return componentManager_.getEntity<ComponentType>();
+        }
+
+        template <typename ComponentType>
+        std::unordered_set<EntityId>* getEntitiesWith()
+        {
+            return componentManager_.getAllEntities<ComponentType>();
+        }
         // ============================
 
         // Components
@@ -74,7 +86,7 @@ namespace snd
         void removeAllComponents(EntityId entityId)
         {
             // Get containers
-            auto containers{componentManager_.retrieveAllContainers()};
+            auto containers{componentManager_.getAllContainers()};
 
             for (auto& [componentTypeId, container] : *containers)
             {
@@ -93,17 +105,17 @@ namespace snd
         }
 
         template <typename ComponentType>
-        ComponentType* retrieveComponent(EntityId entityId)
+        ComponentType* getComponent(EntityId entityId)
         {
             // Return component
-            return componentManager_.retrieveFrom<ComponentType>(entityId);
+            return componentManager_.getFrom<ComponentType>(entityId);
         }
 
         template <typename ComponentType>
         void toggleComponent(EntityId entityId)
         {
             [[maybe_unused]] auto dbg{typeid(ComponentType).name()};
-            if (retrieveComponent<ComponentType>(entityId))
+            if (getComponent<ComponentType>(entityId))
             {
                 removeComponent<ComponentType>(entityId);
             }
@@ -114,9 +126,9 @@ namespace snd
         }
 
         template <typename ComponentType>
-        std::vector<ComponentType>* retrieveAllComponents()
+        std::vector<ComponentType>* getAllComponents()
         {
-            return componentManager_.retrieveAll<ComponentType>();
+            return componentManager_.getAllComponents<ComponentType>();
         }
         // ============================
 

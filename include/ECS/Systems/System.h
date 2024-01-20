@@ -51,6 +51,7 @@ namespace snd
     {
     public:
         virtual void action(EntityId) = 0;
+        void cleanup();
 
         System(ECS* ecs)
             : ecs_(ecs)
