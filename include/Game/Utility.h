@@ -1,9 +1,11 @@
 #ifndef UTILITY_H_20240106173048
 #define UTILITY_H_20240106173048
 
+#include "ECS.h"
 #include <cstddef>
 #include <raylib.h>
 #include <raymath.h>
+#include <vector>
 
 typedef enum
 {
@@ -22,6 +24,7 @@ const Vector2 VDOWN{0, 1};
 
 const Vector2 convertToTile(const Vector2& pixelCoordinates);
 const Vector2 convertToPixel(const Vector2& tileCoordinates);
-bool isInReach(const Vector2& target, const Vector2& from, size_t range = 0);
+
+std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, size_t range);
 
 #endif

@@ -205,8 +205,6 @@ public:
                 if ((abs(x) + abs(y)) > moveRange)
                     continue;
 
-                auto newMoveableTile{ecs_->createEntity()};
-
                 Vector2 newTilePosition{
                     Vector2Add(
                         position,
@@ -214,12 +212,16 @@ public:
                             static_cast<float>(x),
                             static_cast<float>(y)})};
 
+                auto path{findPath(ecs_, position, newTilePosition, moveRange)};
+
+                auto newMoveableTile{ecs_->createEntity()};
+
                 ecs_->assignComponent<CPosition>(
                     newMoveableTile,
                     newTilePosition);
                 ecs_->assignComponent<CTexture>(newMoveableTile, dtb::Textures::get(REACHABLE_TILE));
                 ecs_->assignComponent<CRenderOffset>(newMoveableTile);
-                ecs_->assignComponent<TIsReachableTile>(newMoveableTile);
+                ecs_->assignComponent<TIsReachable>(newMoveableTile);
                 ecs_->assignComponent<TRenderedAsMapOverlay>(newMoveableTile);
             }
         }
@@ -231,16 +233,15 @@ public:
 };
 
 class SRemoveReachableTiles
-    : public snd::System<TIsReachableTile>
+    : public snd::System<TIsReachable>
 {
 public:
     void action(snd::EntityId entityId)
     {
-        [[maybe_unused]] auto* dbg{ecs_->getAllEntitiesWith<TIsSelected>()};
         if (ecs_->getAllEntitiesWith<TIsSelected>()->size())
             return;
 
-        if (!ecs_->getAllEntitiesWith<TIsReachableTile>())
+        if (!ecs_->getAllEntitiesWith<TIsReachable>()->size())
             return;
 
         tilesShown = false;
@@ -249,7 +250,7 @@ public:
         ecs_->removeEntity(entityId);
     }
     SRemoveReachableTiles(snd::ECS* ecs)
-        : snd::System<TIsReachableTile>(ecs)
+        : snd::System<TIsReachable>(ecs)
     {
     }
 };

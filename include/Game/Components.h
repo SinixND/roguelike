@@ -134,7 +134,11 @@ struct TIsHoverable : public snd::Component<TIsHoverable>
 {
 };
 
-struct TIsInReach : public snd::Component<TIsInReach>
+struct TIsImpassable : public snd::Component<TIsImpassable>
+{
+};
+
+struct TIsPassable : public snd::Component<TIsPassable>
 {
 };
 
@@ -146,7 +150,7 @@ struct TIsSelected : public snd::Component<TIsSelected>
 {
 };
 
-struct TIsReachableTile : public snd::Component<TIsReachableTile>
+struct TIsReachable : public snd::Component<TIsReachable>
 {
 };
 
@@ -177,11 +181,6 @@ struct TRenderedAsObject : public snd::Component<TRenderedAsObject>
 struct TRenderedAsUI : public snd::Component<TRenderedAsUI>
 {
 };
-
-struct TRigid : public snd::Component<TRigid>
-{
-};
-
 //=================================
 
 #endif
