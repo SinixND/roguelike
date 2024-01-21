@@ -33,6 +33,9 @@ typedef enum
     CURSOR_TEXTURE,
     WALL_TEXTURE,
     FLOOR_TEXTURE,
+    REACHABLE_TILE,
+    ATTACKABLE_TILE,
+    SUPPORTABLE_TILE,
 } TextureId;
 
 namespace dtb

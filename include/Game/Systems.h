@@ -3,8 +3,11 @@
 
 #include "Components.h"
 #include "ECS.h"
+#include "EntityId.h"
 #include "RuntimeDatabase.h"
+#include "System.h"
 #include "Utility.h"
+#include <cstdlib>
 #include <raylib.h>
 #include <raymath.h>
 
@@ -76,6 +79,24 @@ public:
 
     SRenderMap(snd::ECS* ecs)
         : snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsMap>(ecs){};
+};
+
+class SRenderMapOverlay
+    : public snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsMapOverlay>
+{
+public:
+    void action(snd::EntityId entityId)
+    {
+        // Get components
+        const auto* texture{ecs_->getComponent<CTexture>(entityId)->getTexture()};
+        const auto& position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
+        const auto& transform{ecs_->getComponent<CRenderOffset>(entityId)->getTransform()};
+
+        renderAction(texture, position, transform);
+    }
+
+    SRenderMapOverlay(snd::ECS* ecs)
+        : snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsMapOverlay>(ecs){};
 };
 
 class SRenderObjects
@@ -155,6 +176,80 @@ public:
     }
     SSelection(snd::ECS* ecs)
         : snd::System<TIsUnderCursor, TIsSelectable>(ecs)
+    {
+    }
+};
+
+static bool tilesShown{false};
+
+class SShowReachableTiles
+    : public snd::System<TIsSelected, CPosition, CRangeMovement>
+{
+public:
+    void action(snd::EntityId entityId)
+    {
+        if (tilesShown)
+            return;
+
+        tilesShown = true;
+
+        // Get components
+        auto position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
+        auto moveRange{ecs_->getComponent<CRangeMovement>(entityId)->getMovementRange()};
+
+        // Action
+        for (int x{-moveRange}; x <= moveRange; ++x)
+        {
+            for (int y{-moveRange}; y <= moveRange; ++y)
+            {
+                if ((abs(x) + abs(y)) > moveRange)
+                    continue;
+
+                auto newMoveableTile{ecs_->createEntity()};
+
+                Vector2 newTilePosition{
+                    Vector2Add(
+                        position,
+                        Vector2{
+                            static_cast<float>(x),
+                            static_cast<float>(y)})};
+
+                ecs_->assignComponent<CPosition>(
+                    newMoveableTile,
+                    newTilePosition);
+                ecs_->assignComponent<CTexture>(newMoveableTile, dtb::Textures::get(REACHABLE_TILE));
+                ecs_->assignComponent<CRenderOffset>(newMoveableTile);
+                ecs_->assignComponent<TIsReachableTile>(newMoveableTile);
+                ecs_->assignComponent<TRenderedAsMapOverlay>(newMoveableTile);
+            }
+        }
+    }
+    SShowReachableTiles(snd::ECS* ecs)
+        : snd::System<TIsSelected, CPosition, CRangeMovement>(ecs)
+    {
+    }
+};
+
+class SRemoveReachableTiles
+    : public snd::System<TIsReachableTile>
+{
+public:
+    void action(snd::EntityId entityId)
+    {
+        [[maybe_unused]] auto* dbg{ecs_->getAllEntitiesWith<TIsSelected>()};
+        if (ecs_->getAllEntitiesWith<TIsSelected>()->size())
+            return;
+
+        if (!ecs_->getAllEntitiesWith<TIsReachableTile>())
+            return;
+
+        tilesShown = false;
+
+        // Action
+        ecs_->removeEntity(entityId);
+    }
+    SRemoveReachableTiles(snd::ECS* ecs)
+        : snd::System<TIsReachableTile>(ecs)
     {
     }
 };

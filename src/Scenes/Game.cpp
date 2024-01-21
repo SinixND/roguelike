@@ -27,10 +27,14 @@ namespace snd
     //=================================
     auto controlSystem{ecs.registerSystem<SFollowMouse>()};
     auto mapRenderSystem{ecs.registerSystem<SRenderMap>()};
+    auto mapOverlayRenderSystem{ecs.registerSystem<SRenderMapOverlay>()};
     auto objectRenderSystem{ecs.registerSystem<SRenderObjects>()};
     auto UIRenderSystem{ecs.registerSystem<SRenderUI>()};
     auto tagUnderCursorSystem{ecs.registerSystem<STagUnderCursor>()};
     auto selectionSystem{ecs.registerSystem<SSelection>()};
+    auto rangesRenderSystem{ecs.registerSystem<SRenderMapOverlay>()};
+    auto showReachableTiles{ecs.registerSystem<SShowReachableTiles>()};
+    auto removeReachableTiles{ecs.registerSystem<SRemoveReachableTiles>()};
     //=================================
 
     // Game variables
@@ -44,13 +48,16 @@ namespace snd
     {
         // Assign components
         //=============================
+        // Player
         ecs.assignComponent<CPosition>(player);
         ecs.assignComponent<CTexture>(player, dtb::Textures::get(PLAYER_TEXTURE));
-        ecs.assignComponent<CRenderOffset>(player, ecs.getComponent<CPosition>(player)->getPosition());
+        ecs.assignComponent<CRenderOffset>(player);
+        ecs.assignComponent<CRangeMovement>(player, 5);
         ecs.assignComponent<TRenderedAsObject>(player);
         ecs.assignComponent<TIsHoverable>(player);
         ecs.assignComponent<TIsSelectable>(player);
 
+        // Cursor
         ecs.assignComponent<CPosition>(cursor);
         ecs.assignComponent<CTexture>(cursor, dtb::Textures::get(CURSOR_TEXTURE));
         ecs.assignComponent<CRenderOffset>(cursor);
@@ -78,10 +85,12 @@ namespace snd
 
             case WALL_TILE:
                 ecs.assignComponent<CTexture>(tileEntity, dtb::Textures::get(WALL_TEXTURE));
+                // ecs.assignComponent<TRigid>(tileEntity);
                 break;
 
             case FLOOR_TILE:
                 ecs.assignComponent<CTexture>(tileEntity, dtb::Textures::get(FLOOR_TEXTURE));
+                // ecs.assignComponent<TIsPassableTile>(tileEntity);
                 break;
 
             default:
@@ -110,9 +119,12 @@ namespace snd
         //=============================
     };
 
-    void GameScene::updateState(){
+    void GameScene::updateState()
+    {
         // Execute systems
         //=============================
+        showReachableTiles->execute();
+        removeReachableTiles->execute();
         //=============================
     };
 
@@ -121,6 +133,8 @@ namespace snd
         // Execute systems
         //=============================
         mapRenderSystem->execute();
+        mapOverlayRenderSystem->execute();
+        rangesRenderSystem->execute();
         objectRenderSystem->execute();
         UIRenderSystem->execute();
         //=============================

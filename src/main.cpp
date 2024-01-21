@@ -51,8 +51,11 @@ int main(/* int argc, char **argv */)
     // Load textures
     dtb::Textures::load(PLAYER_TEXTURE, "Player.png");
     dtb::Textures::load(CURSOR_TEXTURE, "Cursor.png");
-    dtb::Textures::load(WALL_TEXTURE, "Wall.png");
-    dtb::Textures::load(FLOOR_TEXTURE, "Floor.png");
+    dtb::Textures::load(WALL_TEXTURE, "TileWall.png");
+    dtb::Textures::load(FLOOR_TEXTURE, "TileFloor.png");
+    dtb::Textures::load(REACHABLE_TILE, "TileReachable.png");
+    dtb::Textures::load(ATTACKABLE_TILE, "TileAttackable.png");
+    dtb::Textures::load(SUPPORTABLE_TILE, "TileSupportable.png");
 
     // Define scenes
     snd::GameScene game{};

@@ -42,7 +42,7 @@ namespace snd
         }
 
         template <typename ComponentType>
-        std::unordered_set<EntityId>* getEntitiesWith()
+        std::unordered_set<EntityId>* getAllEntitiesWith()
         {
             return componentManager_.getAllEntities<ComponentType>();
         }
@@ -114,7 +114,6 @@ namespace snd
         template <typename ComponentType>
         void toggleComponent(EntityId entityId)
         {
-            [[maybe_unused]] auto dbg{typeid(ComponentType).name()};
             if (getComponent<ComponentType>(entityId))
             {
                 removeComponent<ComponentType>(entityId);

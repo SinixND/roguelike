@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "Utility.h"
+#include <bits/ranges_base.h>
 #include <functional>
 #include <memory_resource>
 #include <raylib.h>
@@ -10,14 +11,6 @@
 
 // Components
 //=================================
-typedef enum
-{
-    LEFT,
-    RIGHT,
-    UP,
-    DOWN,
-} Direction;
-
 struct CDirection
     : public snd::Component<CDirection>
 {
@@ -28,20 +21,20 @@ public:
         switch (direction)
         {
         case RIGHT:
-            directionVector_ = {1, 0};
+            directionVector_ = VRIGHT;
             break;
 
         case LEFT:
-            directionVector_ = {-1, 0};
+            directionVector_ = VLEFT;
             break;
 
         default:
         case UP:
-            directionVector_ = {0, -1};
+            directionVector_ = VUP;
             break;
 
         case DOWN:
-            directionVector_ = {0, 1};
+            directionVector_ = VDOWN;
             break;
         }
     }
@@ -74,6 +67,20 @@ public:
 private:
     // Tile position
     Vector2 position_;
+};
+
+struct CRangeMovement
+    : public snd::Component<CRangeMovement>
+{
+public:
+    int getMovementRange() { return movementRange_; };
+    void setMovementRange(int movementRange) { movementRange_ = movementRange; };
+
+    CRangeMovement(int range)
+        : movementRange_(range){};
+
+private:
+    int movementRange_;
 };
 
 struct CRenderOffset
@@ -127,11 +134,19 @@ struct TIsHoverable : public snd::Component<TIsHoverable>
 {
 };
 
+struct TIsInReach : public snd::Component<TIsInReach>
+{
+};
+
 struct TIsSelectable : public snd::Component<TIsSelectable>
 {
 };
 
 struct TIsSelected : public snd::Component<TIsSelected>
+{
+};
+
+struct TIsReachableTile : public snd::Component<TIsReachableTile>
 {
 };
 
@@ -151,11 +166,19 @@ struct TRenderedAsMap : public snd::Component<TRenderedAsMap>
 {
 };
 
+struct TRenderedAsMapOverlay : public snd::Component<TRenderedAsMapOverlay>
+{
+};
+
 struct TRenderedAsObject : public snd::Component<TRenderedAsObject>
 {
 };
 
 struct TRenderedAsUI : public snd::Component<TRenderedAsUI>
+{
+};
+
+struct TRigid : public snd::Component<TRigid>
 {
 };
 

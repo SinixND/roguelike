@@ -88,7 +88,6 @@ namespace snd
 
         bool test(const Key& key) override
         {
-            [[maybe_unused]] auto dbg{keys_.contains(key)};
             return keys_.contains(key);
         };
 
@@ -108,8 +107,6 @@ namespace snd
 
         Key getKey()
         {
-            [[maybe_unused]] auto x{*begin(keys_)};
-
             return *keys_.begin();
         };
 
