@@ -85,12 +85,12 @@ namespace snd
 
             case WALL_TILE:
                 ecs.assignComponent<CTexture>(tileEntity, dtb::Textures::get(WALL_TEXTURE));
-                // ecs.assignComponent<TRigid>(tileEntity);
+                ecs.assignComponent<TIsImpassable>(tileEntity);
                 break;
 
             case FLOOR_TILE:
                 ecs.assignComponent<CTexture>(tileEntity, dtb::Textures::get(FLOOR_TEXTURE));
-                // ecs.assignComponent<TIsPassableTile>(tileEntity);
+                ecs.assignComponent<TIsPassable>(tileEntity);
                 break;
 
             default:
