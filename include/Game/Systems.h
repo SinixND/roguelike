@@ -226,6 +226,7 @@ public:
             }
         }
     }
+
     SShowReachableTiles(snd::ECS* ecs)
         : snd::System<TIsSelected, CPosition, CRangeMovement>(ecs)
     {

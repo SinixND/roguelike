@@ -3,11 +3,7 @@
 
 #include "Component.h"
 #include "Utility.h"
-#include <bits/ranges_base.h>
-#include <functional>
-#include <memory_resource>
 #include <raylib.h>
-#include <raymath.h>
 
 // Components
 //=================================
