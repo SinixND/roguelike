@@ -1,6 +1,7 @@
 #ifndef RAYLIBEXTENTION_H_20240122021744
 #define RAYLIBEXTENTION_H_20240122021744
 
+
 #include <raylib.h>
 
 typedef struct
@@ -12,6 +13,7 @@ typedef struct
 inline Vector2 intifyVector2(Vector2 V)
 {
     return Vector2(static_cast<int>(V.x) * 1.0f, static_cast<int>(V.y) * 1.0f);
+
 }
 
 inline Vector2 Vector2MatrixMultiply(const Vector2& V, const Matrix2x2& M)

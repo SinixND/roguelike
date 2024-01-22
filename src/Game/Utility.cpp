@@ -187,6 +187,10 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
             // If its not last tile of quarter (aka. remainder is not 0)
             if (n % ((previousTilesCount - 1) / 4))
                 continue;
+            }
+
+            // Add stepped tile to container
+            steppedTiles[1].push_back(std::make_pair(nextTilePosition, dir));
 
             // Break if path found
             if (pathFound) break;
@@ -262,6 +266,7 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
     // Add foundPath to path
     for (auto element : foundPath)
     {
+
         path.push_back(element);
     }
 
