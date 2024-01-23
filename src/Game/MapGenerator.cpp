@@ -4,10 +4,10 @@
 #include <raylib.h>
 #include <unordered_set>
 
-struct Room
+struct Area
 {
-    Vector2 position;
-    Vector2 dimensions;
+    Vector2 cornerTopLeft;
+    Vector2 cornerBottomRight;
 };
 
 Map MapGenerator::generateMap(int level)
@@ -20,17 +20,13 @@ Map MapGenerator::generateMap(int level)
     /*TEMPORARY*/ return getStartRoom();
 }
 
-void MapGenerator::addRoom(Map& map, const Room& room)
+void MapGenerator::addRoom(Map& map, const Area& room)
 {
-    Vector2 roomCorner{
-        (room.position.x + room.dimensions.x),
-        (room.position.y + room.dimensions.y)};
-
-    for (auto x{room.position.x}; x < roomCorner.x; ++x)
+    for (auto x{room.cornerTopLeft.x}; x <= room.cornerBottomRight.x; ++x)
     {
-        for (auto y{room.position.y}; y < roomCorner.y; ++y)
+        for (auto y{room.cornerTopLeft.y}; y <= room.cornerBottomRight.y; ++y)
         {
-            if ((x == room.position.x) || (x == (roomCorner.y - 1)) || (y == room.position.y) || (y == (roomCorner.y - 1)))
+            if ((x == room.cornerTopLeft.x) || (x == (room.cornerBottomRight.y)) || (y == room.cornerTopLeft.y) || (y == (room.cornerBottomRight.y)))
             {
                 map.setTile({x, y}, WALL_TILE);
                 continue;
@@ -41,9 +37,22 @@ void MapGenerator::addRoom(Map& map, const Room& room)
     }
 }
 
+void MapGenerator::set(Map& map, const Area& area, TileType tileType)
+{
+    for (auto x{area.cornerTopLeft.x}; x <= area.cornerBottomRight.x; ++x)
+    {
+        for (auto y{area.cornerTopLeft.y}; y <= area.cornerBottomRight.y; ++y)
+        {
+            map.setTile({x, y}, tileType);
+        };
+    }
+}
+
 Map MapGenerator::getStartRoom()
 {
     Map map;
-    addRoom(map, Room{{-7, -7}, {15, 15}});
+    addRoom(map, Area{{-7, -7}, {7, 7}});
+    set(map, Area{{-1, -1}, {1, -1}}, WALL_TILE);
+    set(map, Area{{-1, -7}, {1, -7}}, FLOOR_TILE);
     return map;
 }

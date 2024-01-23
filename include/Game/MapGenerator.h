@@ -5,7 +5,7 @@
 #include <raylib.h>
 #include <unordered_set>
 
-struct Room;
+struct Area;
 
 class MapGenerator
 {
@@ -17,7 +17,8 @@ private:
     std::unordered_set<Position> roomPositions_{{0, 0}};
 
 private:
-    void addRoom(Map& map, const Room& room);
+    void addRoom(Map& map, const Area& room);
+    void set(Map& map, const Area& area, TileType tileType);
 
     Map getStartRoom();
 };

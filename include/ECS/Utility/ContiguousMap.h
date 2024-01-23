@@ -28,6 +28,7 @@ namespace snd
 
             if (test(key))
             {
+                elements_[keyToIndex_[key]] = element;
                 return;
             }
 

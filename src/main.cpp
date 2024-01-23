@@ -38,7 +38,7 @@ int main(/* int argc, char **argv */)
     SetWindowSize(GetRenderWidth() - 50, GetRenderHeight() - 50);
 #endif
 
-    HideCursor();
+    //* HideCursor();
 
     //  SetExitKey(0); // Deactivate exit on ESC
     SetTargetFPS(145);

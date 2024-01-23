@@ -88,27 +88,40 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
     // Start finding steps for path
     bool pathFound = false;
 
-    using stepTile = std::pair<Vector2, Vector2>;
+    using StepTile = std::pair<Vector2, Vector2>;
 
-    std::vector<std::vector<stepTile>> steppedTiles{1, std::vector<stepTile>(1)};
-    stepTile root{from, NODIR};
-    steppedTiles[0][0] = root;
+    std::vector<std::vector<StepTile>> steppedTiles{};
+
+    // Step 0
+    // Extend vector by one additional step level
+    steppedTiles.push_back(std::vector<StepTile>());
+    // Add starting position
+    steppedTiles[0].push_back(StepTile(from, NODIR));
 
     // Step 1
-    // Extend vector
-    steppedTiles.push_back(std::vector<stepTile>(1));
+    // Extend vector by one additional step level
+    steppedTiles.push_back(std::vector<StepTile>());
 
     auto* passableTiles{ecs->getAllEntitiesWith<TIsPassable>()};
 
     // Test all four directions for first step
-    for (auto dir : {VLEFT, VRIGHT, VUP, VDOWN})
+    for (auto dir : {
+             VRIGHT,
+             VDOWN,
+             VLEFT,
+             VUP,
+         })
     {
+        if (pathFound) break;
+
         // Set next stepped tile position
         auto nextTilePosition{Vector2Add(from, dir)};
 
         // Check if next tile is passable
         for (auto passableTile : *passableTiles)
         {
+            if (pathFound) break;
+
             auto passableTilePosition{ecs->getComponent<CPosition>(passableTile)->getPosition()};
 
             // If positions dont match: continue
@@ -128,31 +141,31 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
                     target))
             {
                 pathFound = true;
-                path.push_back(steppedTiles[1].end()->first);
-                break;
+                path.push_back(steppedTiles[1].back().first);
             }
-            break;
         }
     }
 
     // Stop if range is 1
     if (range == 1) return path;
 
-    // Remaining steps
+    // Step 2+
     for (size_t stepLevel{2}; stepLevel <= range; ++stepLevel)
     {
-        // Extend vector
-        steppedTiles.push_back(std::vector<stepTile>(1));
-
-        // Break if path found
         if (pathFound) break;
+
+        // Extend vector by one additional step level
+        steppedTiles.push_back(std::vector<StepTile>());
 
         size_t previousStepLevel{stepLevel - 1};
         size_t previousTilesCount{steppedTiles[previousStepLevel].size()};
 
-        for (size_t n{1}; n < previousTilesCount; ++n)
+        // Step one further from previous stepped tiles
+        for (size_t tileIndex{0}; tileIndex < previousTilesCount; ++tileIndex)
         {
-            stepTile steppedTile{steppedTiles[previousStepLevel][n]};
+            if (pathFound) break;
+
+            StepTile steppedTile{steppedTiles[previousStepLevel][tileIndex]};
 
             // Check straight neighbours for all previously stepped tiles
             // Set next stepped tile position
@@ -161,6 +174,8 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
             // Check if next tile is passable
             for (auto passableTile : *passableTiles)
             {
+                if (pathFound) break;
+
                 auto passableTilePosition{ecs->getComponent<CPosition>(passableTile)->getPosition()};
 
                 // If not passable continue
@@ -178,22 +193,16 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
                         target))
                 {
                     pathFound = true;
-                    break;
                 }
             }
 
-            // Check orthogonal-right neighbour only for the last stepped tile of each quarter
-
-            // If its not last tile of quarter (aka. remainder is not 0)
-            if (n % ((previousTilesCount - 1) / 4))
-                continue;
-            }
-
-            // Add stepped tile to container
-            steppedTiles[1].push_back(std::make_pair(nextTilePosition, dir));
-
             // Break if path found
             if (pathFound) break;
+
+            // Check orthogonal-right neighbour only for the last stepped tile of each quarter
+            // If its not last tile of quarter (aka. remainder for tileNumber{tileIndex + 1} is not 0)
+            if ((tileIndex + 1) % (previousTilesCount / 4))
+                continue;
 
             // Get orthogonal-right direction by rotating passed direction by 90 degrees
             Vector2 orthogonalRight{Vector2MatrixMultiply(steppedTile.second, Matrix2x2{0, -1, 1, 0})};
@@ -205,6 +214,8 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
             // Check if next tile is passable
             for (auto passableTile : *passableTiles)
             {
+                if (pathFound) break;
+
                 auto passableTilePosition{ecs->getComponent<CPosition>(passableTile)->getPosition()};
 
                 // If not passable continue
@@ -222,7 +233,6 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
                         target))
                 {
                     pathFound = true;
-                    break;
                 }
             }
         }
@@ -232,42 +242,29 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
     if (!pathFound) return path;
 
     // Reconstruct path from steps
-    std::vector<Vector2> invertedPath;
-    size_t stepsNeeded{steppedTiles.size()};
-    Vector2 foundTarget{steppedTiles.end()->end()->first};
+    size_t stepsNeeded{steppedTiles.size() - 1};
+    // Set found target tile
+    Vector2 currentStepLevelTile{steppedTiles.back().back().first};
 
-    // Add final position to invertedPath
-    invertedPath.push_back(foundTarget);
+    // Replace dummy null position with final position to path
+    path[0] = currentStepLevelTile;
 
-    Vector2 currentStepLevelTile = foundTarget;
-
-    // Add tile from previous step level if its neighbour to current step level tile (initialy this is the target)
-    for (auto stepLevel{stepsNeeded - 2}; stepLevel > 0; --stepLevel)
+    // Insert tile from previous step level to the front of path if its neighbour to current step level tile (initialy this is the target)
+    for (auto stepLevel{stepsNeeded - 1}; stepLevel > 0; --stepLevel)
     {
         // Check tiles from previous step level if its neighbour to current step level tile
         for (auto tile : steppedTiles[stepLevel])
         {
             Vector2 checkVector{Vector2Subtract(tile.first, currentStepLevelTile)};
-            auto checkValue{abs(checkVector.x + checkVector.y)};
+            auto checkValue{abs(checkVector.x) + abs(checkVector.y)};
 
             // If subtracted Vectors have one coordinate 0 and the other +/- 1 then they are neighbours
             if (checkValue == 1)
             {
-                invertedPath.push_back(tile.first);
+                path.insert(path.begin(), tile.first);
                 currentStepLevelTile = tile.first;
             }
         }
-    }
-
-    std::vector<Vector2> foundPath{invertedPath};
-    // Reverse foundPath to get correct order
-    std::reverse(foundPath.begin(), foundPath.end());
-
-    // Add foundPath to path
-    for (auto element : foundPath)
-    {
-
-        path.push_back(element);
     }
 
     // Return path (has only one element if no path found)
