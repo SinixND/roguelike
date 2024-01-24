@@ -2,12 +2,14 @@
 
 #include "Components.h"
 #include "ECS.h"
+#include "EntityId.h"
 #include "RuntimeDatabase.h"
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <raylib.h>
 #include <raymath.h>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -52,23 +54,24 @@ inline Vector2 Vector2MatrixMultiply(const Matrix2x2& M, const Vector2& V)
 }
 
 // Pathfinder returns vector of positions to target
-using StepTile = std::pair<Vector2, Vector2>;
+// StepTile{position, direction_it_was_accessed_from}
+using SteppedTile = std::pair<Vector2, Vector2>;
 
-std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, size_t range)
+std::vector<Vector2> findPath(const Vector2& origin, const Vector2& target, size_t range, snd::ECS* ecs)
 {
-    std::vector<Vector2> path{from};
+    std::vector<Vector2> path{origin};
 
     // Check if target equals root position
-    if (Vector2Equals(target, from))
+    if (Vector2Equals(target, origin))
         return path;
 
     // Check if range is 0
     if (!range)
         return path;
 
-    // Check if target is impassable
-    auto* impassableTiles{ecs->getAllEntitiesWith<TIsImpassable>()};
+    auto* impassableTiles{ecs->getAllEntitiesWith<TIsSolid>()};
 
+    // Check if target is impassable
     for (auto impassableTile : *impassableTiles)
     {
         if (Vector2Equals(target, ecs->getComponent<CPosition>(impassableTile)->getPosition()))
@@ -78,19 +81,17 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
     // Start finding steps for path
     bool pathFound = false;
 
-    std::vector<std::vector<StepTile>> steppedTiles{};
+    std::vector<std::vector<SteppedTile>> steppedTiles{};
 
     // Step 0
     // Extend vector by one additional step level
-    steppedTiles.push_back(std::vector<StepTile>());
+    steppedTiles.push_back(std::vector<SteppedTile>());
     // Add starting position
-    steppedTiles[0].push_back(StepTile(from, NODIR));
+    steppedTiles[0].push_back(SteppedTile(origin, NODIR));
 
     // Step 1
     // Extend vector by one additional step level
-    steppedTiles.push_back(std::vector<StepTile>());
-
-    auto* passableTiles{ecs->getAllEntitiesWith<TIsPassable>()};
+    steppedTiles.push_back(std::vector<SteppedTile>());
 
     // Test all four directions for first step
     for (Vector2 direction : {
@@ -103,33 +104,21 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
         if (pathFound) break;
 
         // Set next stepped tile position
-        auto nextTilePosition{Vector2Add(from, direction)};
+        auto nextTilePosition{Vector2Add(origin, direction)};
 
         // Check if next tile is passable
-        for (auto passableTile : *passableTiles)
+        if (!isTilePassable(nextTilePosition, impassableTiles, ecs))
+            continue;
+
+        // Add stepped tile to container
+        steppedTiles[1].push_back(std::make_pair(nextTilePosition, direction));
+
+        // Check if stepped tile is equal to target
+        if (Vector2Equals(
+                nextTilePosition,
+                target))
         {
-            if (pathFound) break;
-
-            auto passableTilePosition{ecs->getComponent<CPosition>(passableTile)->getPosition()};
-
-            // If positions dont match: continue
-            if (!Vector2Equals(
-                    nextTilePosition,
-                    passableTilePosition))
-            {
-                continue;
-            }
-
-            // Add stepped tile to container
-            steppedTiles[1].push_back(std::make_pair(nextTilePosition, direction));
-
-            // Check if stepped tile is equal to target
-            if (Vector2Equals(
-                    nextTilePosition,
-                    target))
-            {
-                pathFound = true;
-            }
+            pathFound = true;
         }
     }
 
@@ -139,7 +128,7 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
         if (pathFound) break;
 
         // Extend vector by one additional step level
-        steppedTiles.push_back(std::vector<StepTile>());
+        steppedTiles.push_back(std::vector<SteppedTile>());
 
         size_t previousStepLevel{stepLevel - 1};
         size_t previousTilesCount{steppedTiles[previousStepLevel].size()};
@@ -149,7 +138,7 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
         {
             if (pathFound) break;
 
-            StepTile steppedTile{steppedTiles[previousStepLevel][tileIndex]};
+            SteppedTile steppedTile{steppedTiles[previousStepLevel][tileIndex]};
 
             // Check the 3 neighbours it was not stepped from
             for (Matrix2x2 R : {
@@ -160,16 +149,7 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
                 if (pathFound) break;
 
                 // Set next stepped tile position
-                auto nextTilePosition{Vector2Add(steppedTile.first, Vector2MatrixMultiply(R, steppedTile.second))};
-
-                //* DEBUG START
-                if (
-                    (target.x == -1 && target.y == -2) &&
-                    (steppedTile.first.x == -2 && steppedTile.first.y == -2))
-                {
-                    [[maybe_unused]] auto dbg{0};
-                }
-                //* DEBUG END
+                Vector2 nextTilePosition{Vector2Add(steppedTile.first, Vector2MatrixMultiply(R, steppedTile.second))};
 
                 // Check if tile is already known
                 bool tileKnown{false};
@@ -185,29 +165,19 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
 
                 if (tileKnown) continue;
 
-                // Check if next tile is passable
-                for (auto passableTile : *passableTiles)
+                // Check if next tile is impassable
+                if (!isTilePassable(nextTilePosition, impassableTiles, ecs))
+                    continue;
+
+                // Add passable tile to stepped tiles
+                steppedTiles[stepLevel].push_back(std::make_pair(nextTilePosition, Vector2MatrixMultiply(R, steppedTile.second)));
+
+                // Check if stepped tile is equal to target
+                if (Vector2Equals(
+                        nextTilePosition,
+                        target))
                 {
-                    if (pathFound) break;
-
-                    auto passableTilePosition{ecs->getComponent<CPosition>(passableTile)->getPosition()};
-
-                    // If not part of passable tiles continue
-                    if (!Vector2Equals(
-                            nextTilePosition,
-                            passableTilePosition))
-                        continue;
-
-                    // Add passable tile to stepped tiles
-                    steppedTiles[stepLevel].push_back(std::make_pair(nextTilePosition, Vector2MatrixMultiply(R, steppedTile.second)));
-
-                    // Check if stepped tile is equal to target
-                    if (Vector2Equals(
-                            nextTilePosition,
-                            target))
-                    {
-                        pathFound = true;
-                    }
+                    pathFound = true;
                 }
             }
         }
@@ -244,4 +214,19 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
 
     // Return path (has only one element if no path found)
     return path;
+}
+
+bool isTilePassable(const Vector2& tile, const std::unordered_set<snd::EntityId>* impassableTiles, snd::ECS* ecs)
+{
+    for (auto impassableTile : *impassableTiles)
+    {
+        auto impassableTilePosition{ecs->getComponent<CPosition>(impassableTile)->getPosition()};
+
+        // If positions match aka. is impassable: continue
+        if (Vector2Equals(
+                tile,
+                impassableTilePosition))
+            return false;
+    }
+    return true;
 }

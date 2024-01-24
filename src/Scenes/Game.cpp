@@ -3,8 +3,8 @@
 #include "Components.h"
 #include "ECS.h"
 #include "EntityId.h"
-#include "Map.h"
-#include "MapGenerator.h"
+//* #include "Map.h"
+//* #include "MapGenerator.h"
 #include "RuntimeDatabase.h"
 #include "Systems.h"
 #include <memory>
@@ -21,6 +21,7 @@ namespace snd
     //=================================
     auto cursor{ecs.createEntity()};
     auto player{ecs.createEntity()};
+    auto map{ecs.createEntity()};
     //=================================
 
     // Initialize systems
@@ -35,13 +36,14 @@ namespace snd
     auto rangesRenderSystem{ecs.registerSystem<SRenderMapOverlay>()};
     auto showReachableTiles{ecs.registerSystem<SShowReachableTiles>()};
     auto removeReachableTiles{ecs.registerSystem<SRemoveReachableTiles>()};
+    auto generateMap{ecs.registerSystem<SGenerateMap>()};
     //=================================
 
     // Game variables
     //=================================
-    MapGenerator mapGenerator;
-    Map map;
-    int level{0};
+    //* MapGenerator mapGenerator;
+    //* Map map;
+    int& level{dtb::Configs::getCurrentLevel()};
     //=================================
 
     void GameScene::initialize()
@@ -51,52 +53,53 @@ namespace snd
         // Player
         ecs.assignComponent<CPosition>(player);
         ecs.assignComponent<CTexture>(player, dtb::Textures::get(PLAYER_TEXTURE));
-        ecs.assignComponent<CRenderOffset>(player);
+        ecs.assignComponent<CTransform>(player);
         ecs.assignComponent<CRangeMovement>(player, 5);
         ecs.assignComponent<TRenderedAsObject>(player);
-        ecs.assignComponent<TIsHoverable>(player);
-        ecs.assignComponent<TIsSelectable>(player);
+        ecs.assignComponent<THoverable>(player);
+        ecs.assignComponent<TSelectable>(player);
+        ecs.assignComponent<TIsSolid>(player);
 
         // Cursor
         ecs.assignComponent<CPosition>(cursor);
         ecs.assignComponent<CTexture>(cursor, dtb::Textures::get(CURSOR_TEXTURE));
-        ecs.assignComponent<CRenderOffset>(cursor);
+        ecs.assignComponent<CTransform>(cursor);
         ecs.assignComponent<TRenderedAsUI>(cursor);
         ecs.assignComponent<TMouseControlled>(cursor);
         ecs.assignComponent<TIsCursor>(cursor);
+
+        // Map
+        ecs.assignComponent<TIsMap>(map);
+        ecs.assignComponent<CTileMap>(map);
         //=============================
 
         // Create map
         //=============================
-        map = mapGenerator.generateMap(level);
-        auto tiles{map.getTiles()};
+        //* map = mapGenerator.generateMap(level);
+        //* auto tiles{map.getTiles()};
 
-        for (auto tilePosition : *tiles->getAllKeys())
-        {
-            EntityId tileEntity{map.addEntity(ecs.createEntity())};
+        //* for (auto tilePosition : *tiles->getAllKeys())
+        //* {
+        //* EntityId tileEntity{map.addEntity(ecs.createEntity())};
 
-            ecs.assignComponent<CPosition>(tileEntity, tilePosition.first, tilePosition.second);
-            ecs.assignComponent<CDirection>(tileEntity);
-            ecs.assignComponent<CRenderOffset>(tileEntity);
-            ecs.assignComponent<TRenderedAsMap>(tileEntity);
+        //* ecs.assignComponent<CPosition>(tileEntity, tilePosition.x, tilePosition.y);
+        //* ecs.assignComponent<CTransform>(tileEntity);
+        //* ecs.assignComponent<TRenderedAsMap>(tileEntity);
 
-            switch (*tiles->get(tilePosition))
-            {
+        //* switch (*tiles->get(tilePosition))
+        //* {
 
-            case WALL_TILE:
-                ecs.assignComponent<CTexture>(tileEntity, dtb::Textures::get(WALL_TEXTURE));
-                ecs.assignComponent<TIsImpassable>(tileEntity);
-                break;
+        //* case WALL_TILE:
+        //* ecs.assignComponent<CTexture>(tileEntity, dtb::Textures::get(WALL_TEXTURE));
+        //* ecs.assignComponent<TIsSolid>(tileEntity);
+        //* break;
 
-            case FLOOR_TILE:
-                ecs.assignComponent<CTexture>(tileEntity, dtb::Textures::get(FLOOR_TEXTURE));
-                ecs.assignComponent<TIsPassable>(tileEntity);
-                break;
-
-            default:
-                break;
-            }
-        }
+        //* case FLOOR_TILE:
+        //* default:
+        //* ecs.assignComponent<CTexture>(tileEntity, dtb::Textures::get(FLOOR_TEXTURE));
+        //* break;
+        //* }
+        //* }
         //=============================
     };
 
@@ -104,11 +107,11 @@ namespace snd
     {
         // Toggle between mouse or key control for cursor
         //=============================
-        //* if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
-        //* {
-        //* ecs.toggleComponent<TMouseControlled>(cursor);
-        //* ecs.toggleComponent<TKeyControlled>(cursor);
-        //* }
+        if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+        {
+            ecs.toggleComponent<TMouseControlled>(cursor);
+            ecs.toggleComponent<TKeyControlled>(cursor);
+        }
         //=============================
 
         // Execute systems
@@ -123,6 +126,7 @@ namespace snd
     {
         // Execute systems
         //=============================
+        generateMap->execute();
         showReachableTiles->execute();
         removeReachableTiles->execute();
         //=============================

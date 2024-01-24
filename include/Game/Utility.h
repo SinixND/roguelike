@@ -7,6 +7,22 @@
 #include <raymath.h>
 #include <vector>
 
+template <>
+struct std::hash<Vector2>
+{
+    size_t operator()(const Vector2& V) const noexcept
+    {
+        size_t h1 = std::hash<double>()(V.x);
+        size_t h2 = std::hash<double>()(V.y);
+        return (h1 ^ (h2 << 1));
+    }
+};
+
+inline bool operator==(const Vector2& lhs, const Vector2& rhs)
+{
+    return Vector2Equals(lhs, rhs);
+};
+
 typedef enum
 {
     NODIR = 0,
@@ -21,6 +37,18 @@ typedef struct
     int m11, m12;
     int m21, m22;
 } Matrix2x2;
+
+typedef struct
+{
+    Vector2 position;
+    Vector2 dimension;
+} Area;
+
+typedef enum
+{
+    FLOOR_TILE,
+    WALL_TILE,
+} TileType;
 
 const Vector2 V_NODIR{0, 0};
 const Vector2 V_LEFT{-1, 0};
@@ -38,6 +66,7 @@ const Vector2 convertToPixel(const Vector2& tileCoordinates);
 // X is right-positive, Y is down-positive
 inline Vector2 Vector2MatrixMultiply(const Matrix2x2& M, const Vector2& V);
 
-std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, size_t range);
+std::vector<Vector2> findPath(const Vector2& from, const Vector2& target, size_t range, snd::ECS* ecs);
+bool isTilePassable(const Vector2& tile, const std::unordered_set<snd::EntityId>* impassableTiles, snd::ECS* ecs);
 
 #endif

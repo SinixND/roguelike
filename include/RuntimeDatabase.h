@@ -58,13 +58,16 @@ namespace dtb
     class Configs : public Singleton<Configs>
     {
     public:
-        static inline bool getDebugMode() { return getInstance().debugMode_; };
-        static inline bool shouldAppClose() { return getInstance().appShouldClose_; };
+        static inline bool& getDebugMode() { return getInstance().debugMode_; };
+        static inline bool& shouldAppClose() { return getInstance().appShouldClose_; };
         static inline void closeApp() { getInstance().appShouldClose_ = true; };
+        static inline void increaseLevel() { getInstance().currentLevel_++; }
+        static inline int& getCurrentLevel() { return getInstance().currentLevel_; }
 
     private:
         static inline bool debugMode_{true};
         static inline bool appShouldClose_{false};
+        static inline int currentLevel_{0};
     };
     //=================================
 

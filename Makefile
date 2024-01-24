@@ -138,7 +138,7 @@ DEPS 				:= $(patsubst $(OBJ_DIR)/%.$(OBJ_EXT),$(OBJ_DIR)/%.$(DEP_EXT),$(OBJS))
 WIN_DEPS 			:= $(patsubst $(OBJ_DIR)/%.$(WIN_OBJ_EXT),$(OBJ_DIR)/%.$(WIN_DEP_EXT),$(WIN_OBJS))
 
 ### Non-file (.phony)targets (or rules)
-.PHONY: all debug release web windows build rebuild run clean
+.PHONY: all debug release publish web windows build rebuild run clean
 ifndef TERMUX_VERSION
 .PHONY: bear test benchmark
 endif
@@ -170,7 +170,9 @@ benchmark: $(BIN_DIR)/benchmark.$(BINARY_EXT)
 
 ### rule for release build process with binary as prerequisite
 release: CXX_FLAGS += -O2
-release: build web windows 
+release: build 
+
+publish: web windows 
 
 ### rule for native build process with binary as prerequisite
 build: $(BIN_DIR)/$(BINARY).$(BINARY_EXT) 

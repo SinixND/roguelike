@@ -1,18 +1,10 @@
 #ifndef SYSTEMS_H_20240110222501
 #define SYSTEMS_H_20240110222501
 
-#include "Components.h"
-#include "ECS.h"
-#include "EntityId.h"
-#include "RuntimeDatabase.h"
 #include "System.h"
-#include "Utility.h"
-#include <cstdlib>
-#include <raylib.h>
-#include <raymath.h>
 
 class SFollowMouse
-    : public snd::System<CPosition, CRenderOffset, TMouseControlled>
+    : public snd::System<CPosition, CTransform, TMouseControlled>
 {
 public:
     void action(snd::EntityId entityId)
@@ -20,16 +12,44 @@ public:
         // Get components
         auto& position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
 
-        const auto& transform{ecs_->getComponent<CRenderOffset>(entityId)->getTransform()};
+        const auto& transform{ecs_->getComponent<CTransform>(entityId)->getTransform()};
 
         // Action
         position = Vector2Add(convertToTile(GetMousePosition()), transform);
     }
 
     SFollowMouse(snd::ECS* ecs)
-        : snd::System<CPosition, CRenderOffset, TMouseControlled>(ecs)
+        : snd::System<CPosition, CTransform, TMouseControlled>(ecs)
     {
     }
+};
+
+class SGenerateMap
+    : public snd::System<TIsMap>
+{
+public:
+    void action(snd::EntityId entityId)
+    {
+        if (currentLevel_ == dtb::Configs::getCurrentLevel())
+            return;
+
+        ++currentLevel_;
+
+        auto* tileMap{ecs_->getComponent<CTileMap>(entityId)->getTileMap()};
+
+        if (currentLevel_ == 0)
+        {
+            setStartRoom(tileMap);
+        }
+    }
+
+    SGenerateMap(snd::ECS* ecs)
+        : snd::System<TIsMap>(ecs)
+    {
+    }
+
+private:
+    static inline int currentLevel_{-1};
 };
 
 inline void renderAction(const Texture2D* texture, const Vector2& position, const Vector2& transform)
@@ -64,7 +84,7 @@ inline void renderAction(const Texture2D* texture, const Vector2& position, cons
 }
 
 class SRenderMap
-    : public snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsMap>
+    : public snd::System<CTexture, CPosition, CTransform, TRenderedAsMap>
 {
 public:
     void action(snd::EntityId entityId)
@@ -72,17 +92,17 @@ public:
         // Get components
         const auto* texture{ecs_->getComponent<CTexture>(entityId)->getTexture()};
         const auto& position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
-        const auto& transform{ecs_->getComponent<CRenderOffset>(entityId)->getTransform()};
+        const auto& transform{ecs_->getComponent<CTransform>(entityId)->getTransform()};
 
         renderAction(texture, position, transform);
     }
 
     SRenderMap(snd::ECS* ecs)
-        : snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsMap>(ecs){};
+        : snd::System<CTexture, CPosition, CTransform, TRenderedAsMap>(ecs){};
 };
 
 class SRenderMapOverlay
-    : public snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsMapOverlay>
+    : public snd::System<CTexture, CPosition, CTransform, TRenderedAsMapOverlay>
 {
 public:
     void action(snd::EntityId entityId)
@@ -90,17 +110,17 @@ public:
         // Get components
         const auto* texture{ecs_->getComponent<CTexture>(entityId)->getTexture()};
         const auto& position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
-        const auto& transform{ecs_->getComponent<CRenderOffset>(entityId)->getTransform()};
+        const auto& transform{ecs_->getComponent<CTransform>(entityId)->getTransform()};
 
         renderAction(texture, position, transform);
     }
 
     SRenderMapOverlay(snd::ECS* ecs)
-        : snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsMapOverlay>(ecs){};
+        : snd::System<CTexture, CPosition, CTransform, TRenderedAsMapOverlay>(ecs){};
 };
 
 class SRenderObjects
-    : public snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsObject>
+    : public snd::System<CTexture, CPosition, CTransform, TRenderedAsObject>
 {
 public:
     void action(snd::EntityId entityId)
@@ -108,17 +128,17 @@ public:
         // Get components
         const auto* texture{ecs_->getComponent<CTexture>(entityId)->getTexture()};
         const auto& position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
-        const auto& transform{ecs_->getComponent<CRenderOffset>(entityId)->getTransform()};
+        const auto& transform{ecs_->getComponent<CTransform>(entityId)->getTransform()};
 
         renderAction(texture, position, transform);
     }
 
     SRenderObjects(snd::ECS* ecs)
-        : snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsObject>(ecs){};
+        : snd::System<CTexture, CPosition, CTransform, TRenderedAsObject>(ecs){};
 };
 
 class SRenderUI
-    : public snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsUI>
+    : public snd::System<CTexture, CPosition, CTransform, TRenderedAsUI>
 {
 public:
     void action(snd::EntityId entityId)
@@ -126,17 +146,17 @@ public:
         // Get components
         const auto* texture{ecs_->getComponent<CTexture>(entityId)->getTexture()};
         const auto& position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
-        const auto& transform{ecs_->getComponent<CRenderOffset>(entityId)->getTransform()};
+        const auto& transform{ecs_->getComponent<CTransform>(entityId)->getTransform()};
 
         renderAction(texture, position, transform);
     }
 
     SRenderUI(snd::ECS* ecs)
-        : snd::System<CTexture, CPosition, CRenderOffset, TRenderedAsUI>(ecs){};
+        : snd::System<CTexture, CPosition, CTransform, TRenderedAsUI>(ecs){};
 };
 
 class STagUnderCursor
-    : public snd::System<CPosition, TIsHoverable>
+    : public snd::System<CPosition, THoverable>
 {
 public:
     void action(snd::EntityId entityId)
@@ -159,11 +179,11 @@ public:
     }
 
     STagUnderCursor(snd::ECS* ecs)
-        : snd::System<CPosition, TIsHoverable>(ecs){};
+        : snd::System<CPosition, THoverable>(ecs){};
 };
 
 class SSelection
-    : public snd::System<TIsUnderCursor, TIsSelectable>
+    : public snd::System<TIsUnderCursor, TSelectable>
 {
 public:
     void action(snd::EntityId entityId)
@@ -171,11 +191,11 @@ public:
         // Action
         if (IsKeyPressed(KEY_SPACE) || IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            ecs_->toggleComponent<TIsSelected>(entityId);
+            ecs_->toggleComponent<TSelected>(entityId);
         }
     }
     SSelection(snd::ECS* ecs)
-        : snd::System<TIsUnderCursor, TIsSelectable>(ecs)
+        : snd::System<TIsUnderCursor, TSelectable>(ecs)
     {
     }
 };
@@ -183,7 +203,7 @@ public:
 static bool tilesShown{false};
 
 class SShowReachableTiles
-    : public snd::System<TIsSelected, CPosition, CRangeMovement>
+    : public snd::System<TSelected, CPosition, CRangeMovement>
 {
 public:
     void action(snd::EntityId entityId)
@@ -212,14 +232,7 @@ public:
                             static_cast<float>(x),
                             static_cast<float>(y)})};
 
-                //* DEBUG START
-                if (newTilePosition.x == -1 && newTilePosition.y == -2)
-                {
-                    [[maybe_unused]] auto dbg{0};
-                }
-                //* DEBUG END
-
-                auto path{findPath(ecs_, position, newTilePosition, moveRange)};
+                auto path{findPath(position, newTilePosition, moveRange, ecs_)};
 
                 if (path.size() < 2)
                     continue;
@@ -228,29 +241,29 @@ public:
 
                 ecs_->assignComponent<CPosition>(newMoveableTile, newTilePosition);
                 ecs_->assignComponent<CTexture>(newMoveableTile, dtb::Textures::get(REACHABLE_TILE));
-                ecs_->assignComponent<CRenderOffset>(newMoveableTile);
-                ecs_->assignComponent<TIsReachable>(newMoveableTile);
+                ecs_->assignComponent<CTransform>(newMoveableTile);
+                ecs_->assignComponent<TReachable>(newMoveableTile);
                 ecs_->assignComponent<TRenderedAsMapOverlay>(newMoveableTile);
             }
         }
     }
 
     SShowReachableTiles(snd::ECS* ecs)
-        : snd::System<TIsSelected, CPosition, CRangeMovement>(ecs)
+        : snd::System<TSelected, CPosition, CRangeMovement>(ecs)
     {
     }
 };
 
 class SRemoveReachableTiles
-    : public snd::System<TIsReachable>
+    : public snd::System<TReachable>
 {
 public:
     void action(snd::EntityId entityId)
     {
-        if (ecs_->getAllEntitiesWith<TIsSelected>()->size())
+        if (ecs_->getAllEntitiesWith<TSelected>()->size())
             return;
 
-        if (!ecs_->getAllEntitiesWith<TIsReachable>()->size())
+        if (!ecs_->getAllEntitiesWith<TReachable>()->size())
             return;
 
         tilesShown = false;
@@ -259,7 +272,7 @@ public:
         ecs_->removeEntity(entityId);
     }
     SRemoveReachableTiles(snd::ECS* ecs)
-        : snd::System<TIsReachable>(ecs)
+        : snd::System<TReachable>(ecs)
     {
     }
 };
