@@ -19,7 +19,7 @@ endif
 CXX_FLAGS		:= -std=c++2a
 debug: CXX_FLAGS 	+= -g -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -MMD -O0 #-fsanitize=address 
 ifndef TERMUX_VERSION
-debug: CXX_FLAGS 	+=
+debug: CXX_FLAGS 	+= -pg
 endif
 
 ### set the projects label, used for the binary (eg. main.exe, root .cpp file needs same name)

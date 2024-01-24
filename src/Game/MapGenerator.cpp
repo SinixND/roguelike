@@ -53,6 +53,5 @@ Map MapGenerator::getStartRoom()
     Map map;
     addRoom(map, Area{{-7, -7}, {7, 7}});
     set(map, Area{{-1, -1}, {1, -1}}, WALL_TILE);
-    set(map, Area{{-1, -7}, {1, -7}}, FLOOR_TILE);
     return map;
 }

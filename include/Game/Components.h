@@ -17,20 +17,20 @@ public:
         switch (direction)
         {
         case RIGHT:
-            directionVector_ = VRIGHT;
+            directionVector_ = V_RIGHT;
             break;
 
         case LEFT:
-            directionVector_ = VLEFT;
+            directionVector_ = V_LEFT;
             break;
 
         default:
         case UP:
-            directionVector_ = VUP;
+            directionVector_ = V_UP;
             break;
 
         case DOWN:
-            directionVector_ = VDOWN;
+            directionVector_ = V_DOWN;
             break;
         }
     }

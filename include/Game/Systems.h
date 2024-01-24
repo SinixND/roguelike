@@ -212,13 +212,21 @@ public:
                             static_cast<float>(x),
                             static_cast<float>(y)})};
 
+                //* DEBUG START
+                if (newTilePosition.x == -1 && newTilePosition.y == -2)
+                {
+                    [[maybe_unused]] auto dbg{0};
+                }
+                //* DEBUG END
+
                 auto path{findPath(ecs_, position, newTilePosition, moveRange)};
+
+                if (path.size() < 2)
+                    continue;
 
                 auto newMoveableTile{ecs_->createEntity()};
 
-                ecs_->assignComponent<CPosition>(
-                    newMoveableTile,
-                    newTilePosition);
+                ecs_->assignComponent<CPosition>(newMoveableTile, newTilePosition);
                 ecs_->assignComponent<CTexture>(newMoveableTile, dtb::Textures::get(REACHABLE_TILE));
                 ecs_->assignComponent<CRenderOffset>(newMoveableTile);
                 ecs_->assignComponent<TIsReachable>(newMoveableTile);

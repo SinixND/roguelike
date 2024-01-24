@@ -2,7 +2,6 @@
 
 #include "Components.h"
 #include "ECS.h"
-#include "RaylibExtention.h"
 #include "RuntimeDatabase.h"
 #include <algorithm>
 #include <cmath>
@@ -46,28 +45,19 @@ const Vector2 convertToPixel(const Vector2& tileCoordinates)
         (tileCoordinates.y * tileSize.y) + (screenSize.y / 2) + (tileSize.y)};
 }
 
+// X is right-positive, Y is down-positive
+inline Vector2 Vector2MatrixMultiply(const Matrix2x2& M, const Vector2& V)
+{
+    return Vector2{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
+}
+
 // Pathfinder returns vector of positions to target
+using StepTile = std::pair<Vector2, Vector2>;
+
 std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, size_t range)
 {
-    /*  directions in "**" are passed
-        Every cell from 1+ checks the passed direction and only last (y = 0) checks its right direction
-        Example shown for range of 3
-
-    6   5   4   3   4   5   6
-               *^*
-    5   4   3   2   3   4   5
-            ^  *^* *^*
-    4   3*<*2   1 > 2 > 3   4
-            ^   ^
-    3*<*2*<*1 < F   1   2   3
-
-    4   3   2   1   2   3   4
-
-    5   4   3   2   3   4   5
-
-    6   5   4   3   4   5   6
-    */
     std::vector<Vector2> path{from};
+
     // Check if target equals root position
     if (Vector2Equals(target, from))
         return path;
@@ -88,8 +78,6 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
     // Start finding steps for path
     bool pathFound = false;
 
-    using StepTile = std::pair<Vector2, Vector2>;
-
     std::vector<std::vector<StepTile>> steppedTiles{};
 
     // Step 0
@@ -105,17 +93,17 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
     auto* passableTiles{ecs->getAllEntitiesWith<TIsPassable>()};
 
     // Test all four directions for first step
-    for (auto dir : {
-             VRIGHT,
-             VDOWN,
-             VLEFT,
-             VUP,
+    for (Vector2 direction : {
+             V_RIGHT,
+             V_DOWN,
+             V_LEFT,
+             V_UP,
          })
     {
         if (pathFound) break;
 
         // Set next stepped tile position
-        auto nextTilePosition{Vector2Add(from, dir)};
+        auto nextTilePosition{Vector2Add(from, direction)};
 
         // Check if next tile is passable
         for (auto passableTile : *passableTiles)
@@ -133,7 +121,7 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
             }
 
             // Add stepped tile to container
-            steppedTiles[1].push_back(std::make_pair(nextTilePosition, dir));
+            steppedTiles[1].push_back(std::make_pair(nextTilePosition, direction));
 
             // Check if stepped tile is equal to target
             if (Vector2Equals(
@@ -141,13 +129,9 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
                     target))
             {
                 pathFound = true;
-                path.push_back(steppedTiles[1].back().first);
             }
         }
     }
-
-    // Stop if range is 1
-    if (range == 1) return path;
 
     // Step 2+
     for (size_t stepLevel{2}; stepLevel <= range; ++stepLevel)
@@ -160,79 +144,70 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
         size_t previousStepLevel{stepLevel - 1};
         size_t previousTilesCount{steppedTiles[previousStepLevel].size()};
 
-        // Step one further from previous stepped tiles
+        // Iterate previous stepped tiles to step one further from
         for (size_t tileIndex{0}; tileIndex < previousTilesCount; ++tileIndex)
         {
             if (pathFound) break;
 
             StepTile steppedTile{steppedTiles[previousStepLevel][tileIndex]};
 
-            // Check straight neighbours for all previously stepped tiles
-            // Set next stepped tile position
-            auto nextTilePosition{Vector2Add(steppedTile.first, steppedTile.second)};
-
-            // Check if next tile is passable
-            for (auto passableTile : *passableTiles)
+            // Check the 3 neighbours it was not stepped from
+            for (Matrix2x2 R : {
+                     M_ROTATE_NONE,
+                     M_ROTATE_LEFT,
+                     M_ROTATE_RIGHT})
             {
                 if (pathFound) break;
 
-                auto passableTilePosition{ecs->getComponent<CPosition>(passableTile)->getPosition()};
+                // Set next stepped tile position
+                auto nextTilePosition{Vector2Add(steppedTile.first, Vector2MatrixMultiply(R, steppedTile.second))};
 
-                // If not passable continue
-                if (!Vector2Equals(
-                        nextTilePosition,
-                        passableTilePosition))
-                    continue;
-
-                // Add passable tile to stepped tiles
-                steppedTiles[stepLevel].push_back(std::make_pair(nextTilePosition, steppedTile.second));
-
-                // Check if stepped tile is equal to target
-                if (Vector2Equals(
-                        nextTilePosition,
-                        target))
+                //* DEBUG START
+                if (
+                    (target.x == -1 && target.y == -2) &&
+                    (steppedTile.first.x == -2 && steppedTile.first.y == -2))
                 {
-                    pathFound = true;
+                    [[maybe_unused]] auto dbg{0};
                 }
-            }
+                //* DEBUG END
 
-            // Break if path found
-            if (pathFound) break;
+                // Check if tile is already known
+                bool tileKnown{false};
 
-            // Check orthogonal-right neighbour only for the last stepped tile of each quarter
-            // If its not last tile of quarter (aka. remainder for tileNumber{tileIndex + 1} is not 0)
-            if ((tileIndex + 1) % (previousTilesCount / 4))
-                continue;
-
-            // Get orthogonal-right direction by rotating passed direction by 90 degrees
-            Vector2 orthogonalRight{Vector2MatrixMultiply(steppedTile.second, Matrix2x2{0, -1, 1, 0})};
-            intifyVector2(orthogonalRight);
-
-            // Set next stepped tile position
-            auto nextOrthogonalTilePosition{Vector2Add(steppedTile.first, orthogonalRight)};
-
-            // Check if next tile is passable
-            for (auto passableTile : *passableTiles)
-            {
-                if (pathFound) break;
-
-                auto passableTilePosition{ecs->getComponent<CPosition>(passableTile)->getPosition()};
-
-                // If not passable continue
-                if (!Vector2Equals(
-                        nextOrthogonalTilePosition,
-                        passableTilePosition))
-                    continue;
-
-                // Add passable tile to stepped tiles
-                steppedTiles[stepLevel].push_back(std::make_pair(nextOrthogonalTilePosition, steppedTile.second));
-
-                // Check if stepped tile is equal to target
-                if (Vector2Equals(
-                        nextTilePosition,
-                        target))
+                for (auto tile : steppedTiles[stepLevel])
                 {
-                    pathFound = true;
+                    if (!Vector2Equals(tile.first, nextTilePosition))
+                        continue;
+
+                    tileKnown = true;
+                    break;
+                }
+
+                if (tileKnown) continue;
+
+                // Check if next tile is passable
+                for (auto passableTile : *passableTiles)
+                {
+                    if (pathFound) break;
+
+                    auto passableTilePosition{ecs->getComponent<CPosition>(passableTile)->getPosition()};
+
+                    // If not part of passable tiles continue
+                    if (!Vector2Equals(
+                            nextTilePosition,
+                            passableTilePosition))
+                        continue;
+
+                    // Add passable tile to stepped tiles
+                    steppedTiles[stepLevel].push_back(std::make_pair(nextTilePosition, Vector2MatrixMultiply(R, steppedTile.second)));
+
+                    // Check if stepped tile is equal to target
+                    if (Vector2Equals(
+                            nextTilePosition,
+                            target))
+                    {
+                        pathFound = true;
+                    }
                 }
             }
         }
@@ -247,7 +222,7 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
     Vector2 currentStepLevelTile{steppedTiles.back().back().first};
 
     // Replace dummy null position with final position to path
-    path[0] = currentStepLevelTile;
+    path.insert(path.begin()++, currentStepLevelTile);
 
     // Insert tile from previous step level to the front of path if its neighbour to current step level tile (initialy this is the target)
     for (auto stepLevel{stepsNeeded - 1}; stepLevel > 0; --stepLevel)
@@ -261,7 +236,7 @@ std::vector<Vector2> findPath(snd::ECS* ecs, Vector2& from, Vector2& target, siz
             // If subtracted Vectors have one coordinate 0 and the other +/- 1 then they are neighbours
             if (checkValue == 1)
             {
-                path.insert(path.begin(), tile.first);
+                path.insert(path.begin()++, tile.first);
                 currentStepLevelTile = tile.first;
             }
         }
