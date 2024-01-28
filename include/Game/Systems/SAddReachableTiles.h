@@ -32,6 +32,8 @@ public:
         auto moveRange{ecs_->getComponent<CRangeMovement>(entityId)->getMovementRange()};
 
         // Action
+        auto reachablePositions{filterTilesReachable(position, moveRange, ecs_)};
+
         for (int x{-moveRange}; x <= moveRange; ++x)
         {
             for (int y{-moveRange}; y <= moveRange; ++y)
@@ -46,9 +48,7 @@ public:
                             static_cast<float>(x),
                             static_cast<float>(y)})};
 
-                auto path{findPath(position, newTilePosition, moveRange, ecs_)};
-
-                if (path.size() < 2)
+                if (!isPositionInList(newTilePosition, reachablePositions))
                     continue;
 
                 auto newMoveableTile{ecs_->createEntity()};

@@ -14,7 +14,7 @@
 #include <utility>
 #include <vector>
 
-const Vector2 convertToTile(const Vector2& pixelCoordinates)
+Vector2 convertToTile(const Vector2& pixelCoordinates)
 {
     static Vector2 screenSize{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
 
@@ -31,7 +31,7 @@ const Vector2 convertToTile(const Vector2& pixelCoordinates)
         (std::floor((pixelCoordinates.y - ((screenSize.y / 2) - (tileSize.y / 2))) / tileSize.y))};
 }
 
-const Vector2 convertToPixel(const Vector2& tileCoordinates)
+Vector2 convertToPixel(const Vector2& tileCoordinates)
 {
     static Vector2 screenSize{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
 
@@ -46,10 +46,4 @@ const Vector2 convertToPixel(const Vector2& tileCoordinates)
     return Vector2{
         (tileCoordinates.x * tileSize.x) + (screenSize.x / 2) + (tileSize.x),
         (tileCoordinates.y * tileSize.y) + (screenSize.y / 2) + (tileSize.y)};
-}
-
-// X is right-positive, Y is down-positive
-Vector2 Vector2MatrixMultiply(const Matrix2x2& M, const Vector2& V)
-{
-    return Vector2{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
 }

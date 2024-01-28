@@ -58,6 +58,10 @@ namespace dtb
     class Configs : public Singleton<Configs>
     {
     public:
+        // Global debug flag
+        static inline bool dbg{false};
+
+    public:
         static inline bool& getDebugMode() { return getInstance().debugMode_; };
 
         static inline bool& shouldAppClose() { return getInstance().appShouldClose_; };

@@ -53,7 +53,7 @@ void GameScene::initialize()
     ECS.assignComponent<CPosition>(player);
     ECS.assignComponent<CTexture>(player, dtb::Textures::get(PLAYER_TEXTURE));
     ECS.assignComponent<CTransform>(player);
-    ECS.assignComponent<CRangeMovement>(player, 5);
+    ECS.assignComponent<CRangeMovement>(player, 15);
     ECS.assignComponent<TRenderedAsObject>(player);
     ECS.assignComponent<THoverable>(player);
     ECS.assignComponent<TSelectable>(player);
@@ -106,7 +106,9 @@ void GameScene::renderOutput()
     // Execute systems
     //=============================
     mapRenderSystem->execute();
+    dtb::Configs::dbg = true;
     mapOverlayRenderSystem->execute();
+    dtb::Configs::dbg = false;
     objectRenderSystem->execute();
     UIRenderSystem->execute();
     //=============================

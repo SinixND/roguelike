@@ -60,10 +60,18 @@ const Matrix2x2 M_ROTATE_NONE{1, 0, 0, 1};
 const Matrix2x2 M_ROTATE_RIGHT{0, -1, 1, 0};
 const Matrix2x2 M_ROTATE_LEFT{0, 1, -1, 0};
 
-const Vector2 convertToTile(const Vector2& pixelCoordinates);
-const Vector2 convertToPixel(const Vector2& tileCoordinates);
+Vector2 convertToTile(const Vector2& pixelCoordinates);
+Vector2 convertToPixel(const Vector2& tileCoordinates);
 
 // X is right-positive, Y is down-positive
-Vector2 Vector2MatrixMultiply(const Matrix2x2& M, const Vector2& V);
+inline Vector2 Vector2MatrixMultiply(const Matrix2x2& M, const Vector2& V)
+{
+    return Vector2{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
+}
+
+inline size_t Vector2LengthTiled(const Vector2& V)
+{
+    return abs(V.x) + abs(V.y);
+}
 
 #endif

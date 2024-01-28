@@ -7,22 +7,19 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] make filterAccessible() utility function that uses **TIsSolid** to return list of tiles
-
+[0] Debug missing tiles 3rd time (entity == 310 && texture->id == 7 && position.x == 6 && position.y == 0)
 
 # Shortterm
-[0] make filterInRange() utitliy function that return a list of tiles
+[0] Implement movment
 
-[1] make filterReachable() utitliy function that uses isInRange() to return a list of tiles
+[1] Show path
 
-[2] use filterReachable() to filter considered tiles in findPath()
-
+[2] Transform (S) relative to **selected** (C) (Cursor if unselected)
 
 
 # Longterm 
-[1] Transform (S) relative to **selected** (C) (Cursor if unselected)
-
 [1] Map generation
+
 
 # Continuous
 
