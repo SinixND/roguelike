@@ -5,9 +5,9 @@
 
 namespace snd
 {
-    struct BaseComponent
+    struct IComponent
     {
-        virtual ~BaseComponent() = default;
+        virtual ~IComponent() = default;
 
     protected:
         static inline ComponentTypeId componentTypeId_{0};
@@ -15,7 +15,7 @@ namespace snd
 
     template <typename ComponentType>
     class Component
-        : public BaseComponent
+        : public IComponent
     {
     public:
         static inline ComponentTypeId getId()

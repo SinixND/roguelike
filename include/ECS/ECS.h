@@ -4,10 +4,10 @@
 #include "Component.h"
 #include "ComponentManager.h"
 #include "ComponentTypeId.h"
-#include "ContiguousMap.h"
 #include "EntityId.h"
 #include "EntityManager.h"
 #include "Signature.h"
+#include "SparseSet.h"
 #include "System.h"
 #include "SystemManager.h"
 #include <memory>
@@ -36,9 +36,9 @@ namespace snd
         }
 
         template <typename ComponentType>
-        EntityId getEntityWith()
+        EntityId getFirstEntityWith()
         {
-            return componentManager_.getEntity<ComponentType>();
+            return componentManager_.getFirstEntity<ComponentType>();
         }
 
         template <typename ComponentType>
@@ -146,7 +146,7 @@ namespace snd
     private:
         EntityManager entityManager_;
         ComponentManager componentManager_;
-        std::vector<std::shared_ptr<BaseSystem>> systems_;
+        std::vector<std::shared_ptr<ISystem>> systems_;
 
     private:
         // Systems

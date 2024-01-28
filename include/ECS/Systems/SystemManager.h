@@ -21,13 +21,13 @@ namespace snd
             return &system;
         }
 
-        std::vector<std::shared_ptr<BaseSystem>>* getSystems()
+        std::vector<std::shared_ptr<ISystem>>* getSystems()
         {
             return &systems_;
         }
 
     private:
-        std::vector<std::shared_ptr<BaseSystem>> systems_;
+        std::vector<std::shared_ptr<ISystem>> systems_;
     };
 }
 

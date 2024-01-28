@@ -10,7 +10,7 @@ namespace snd
 {
     class ECS;
 
-    class BaseSystem
+    class ISystem
     {
     public:
         virtual void action(EntityId) = 0;
@@ -39,7 +39,7 @@ namespace snd
             return signature_;
         }
 
-        virtual ~BaseSystem() = default;
+        virtual ~ISystem() = default;
 
     protected:
         std::unordered_set<EntityId> entities_;
@@ -48,7 +48,7 @@ namespace snd
 
     template <typename ComponentType, typename... ComponentTypes>
     class System
-        : public BaseSystem
+        : public ISystem
     {
     public:
         virtual void action(EntityId) = 0;

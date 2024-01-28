@@ -3,8 +3,8 @@
 
 #include "Component.h"
 #include "ComponentTypeId.h"
-#include "ContiguousMap.h"
 #include "EntityId.h"
+#include "SparseSet.h"
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
@@ -63,17 +63,20 @@ namespace snd
             return getComponentContainer<ComponentType>()->getAllElements();
         }
 
-        std::unordered_map<ComponentTypeId, std::shared_ptr<BaseContiguousMap<EntityId>>>* getAllContainers() { return &componentContainersByTypeId_; };
+        std::unordered_map<ComponentTypeId, std::shared_ptr<ISparseSet<EntityId>>>* getAllContainers()
+        {
+            return &componentContainersByTypeId_;
+        }
 
         // Get unique entity
         template <typename ComponentType>
-        EntityId getEntity()
+        EntityId getFirstEntity()
         {
             // Check if container exists
             if (!testContainer<ComponentType>()) return 0;
 
             // Return entity
-            return getComponentContainer<ComponentType>()->getKey();
+            return getComponentContainer<ComponentType>()->getFirstKey();
         }
         // Get all entities
         template <typename ComponentType>
@@ -87,7 +90,7 @@ namespace snd
         }
 
     private:
-        std::unordered_map<ComponentTypeId, std::shared_ptr<BaseContiguousMap<EntityId>>> componentContainersByTypeId_{};
+        std::unordered_map<ComponentTypeId, std::shared_ptr<ISparseSet<EntityId>>> componentContainersByTypeId_{};
 
     private:
         // Check if entity exists in container
@@ -100,7 +103,7 @@ namespace snd
         }
 
         // Check if entity exists in container
-        bool testEntity(std::shared_ptr<BaseContiguousMap<EntityId>> container, EntityId entityId)
+        bool testEntity(std::shared_ptr<ISparseSet<EntityId>> container, EntityId entityId)
         {
             return container->test(entityId);
         }
@@ -120,14 +123,14 @@ namespace snd
         template <typename ComponentType>
         void registerComponentType()
         {
-            componentContainersByTypeId_[getId<ComponentType>()] = std::make_shared<ContiguousMap<EntityId, ComponentType>>();
+            componentContainersByTypeId_[getId<ComponentType>()] = std::make_shared<SparseSet<EntityId, ComponentType>>();
         }
 
         // Return specialized container pointer
         template <typename ComponentType>
-        std::shared_ptr<ContiguousMap<EntityId, ComponentType>> getComponentContainer()
+        std::shared_ptr<SparseSet<EntityId, ComponentType>> getComponentContainer()
         {
-            return std::static_pointer_cast<ContiguousMap<EntityId, ComponentType>>(componentContainersByTypeId_[getId<ComponentType>()]);
+            return std::static_pointer_cast<SparseSet<EntityId, ComponentType>>(componentContainersByTypeId_[getId<ComponentType>()]);
         }
     };
 }

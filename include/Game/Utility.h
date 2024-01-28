@@ -64,9 +64,6 @@ const Vector2 convertToTile(const Vector2& pixelCoordinates);
 const Vector2 convertToPixel(const Vector2& tileCoordinates);
 
 // X is right-positive, Y is down-positive
-inline Vector2 Vector2MatrixMultiply(const Matrix2x2& M, const Vector2& V);
-
-std::vector<Vector2> findPath(const Vector2& from, const Vector2& target, size_t range, snd::ECS* ecs);
-bool isTilePassable(const Vector2& tile, const std::unordered_set<snd::EntityId>* impassableTiles, snd::ECS* ecs);
+Vector2 Vector2MatrixMultiply(const Matrix2x2& M, const Vector2& V);
 
 #endif

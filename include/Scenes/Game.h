@@ -3,19 +3,16 @@
 
 #include "Scene.h"
 
-namespace snd
+class GameScene
+    : public snd::Scene
 {
-    class GameScene
-        : public Scene
-    {
-    public:
-        void initialize() override;
-        void deinitialize() override;
+public:
+    void initialize() override;
+    void deinitialize() override;
 
-    private:
-        void processInput() override;
-        void updateState() override;
-        void renderOutput() override;
-    };
-}
+private:
+    void processInput() override;
+    void updateState() override;
+    void renderOutput() override;
+};
 #endif

@@ -1,148 +1,115 @@
 #include "Game.h"
 
-#include "Components.h"
 #include "ECS.h"
-#include "EntityId.h"
-//* #include "Map.h"
-//* #include "MapGenerator.h"
 #include "RuntimeDatabase.h"
-#include "Systems.h"
 #include <memory>
 #include <raylib.h>
 
-namespace snd
+// Systems
+//=================================
+#include "SAddReachableTiles.h"
+#include "SFollowMouse.h"
+#include "SGenerateMap.h"
+#include "SRemoveReachableTiles.h"
+#include "SRenderMap.h"
+#include "SRenderMapOverlay.h"
+#include "SRenderObjects.h"
+#include "SRenderUI.h"
+#include "SSelection.h"
+#include "STagUnderCursor.h"
+//=================================
+
+// Initialize ECS
+//=================================
+snd::ECS ECS;
+//=================================
+
+// Initialize entities
+//=================================
+auto cursor{ECS.createEntity()};
+auto player{ECS.createEntity()};
+auto tileMap{ECS.createEntity()};
+//=================================
+
+// Initialize systems
+//=================================
+auto controlSystem{ECS.registerSystem<SFollowMouse>()};
+auto mapRenderSystem{ECS.registerSystem<SRenderMap>()};
+auto mapOverlayRenderSystem{ECS.registerSystem<SRenderMapOverlay>()};
+auto objectRenderSystem{ECS.registerSystem<SRenderObjects>()};
+auto UIRenderSystem{ECS.registerSystem<SRenderUI>()};
+auto tagUnderCursorSystem{ECS.registerSystem<STagUnderCursor>()};
+auto selectionSystem{ECS.registerSystem<SSelection>()};
+auto addReachableTiles{ECS.registerSystem<SAddReachableTiles>()};
+auto removeReachableTiles{ECS.registerSystem<SRemoveReachableTiles>()};
+auto generateMap{ECS.registerSystem<SGenerateMap>()};
+//=================================
+
+void GameScene::initialize()
 {
-    // Initialize ECS
-    //=================================
-    ECS ecs;
-    //=================================
+    // Assign components
+    //=============================
+    // Player
+    ECS.assignComponent<CPosition>(player);
+    ECS.assignComponent<CTexture>(player, dtb::Textures::get(PLAYER_TEXTURE));
+    ECS.assignComponent<CTransform>(player);
+    ECS.assignComponent<CRangeMovement>(player, 5);
+    ECS.assignComponent<TRenderedAsObject>(player);
+    ECS.assignComponent<THoverable>(player);
+    ECS.assignComponent<TSelectable>(player);
+    //* ecs.assignComponent<TIsSolid>(player);
 
-    // Initialize entities
-    //=================================
-    auto cursor{ecs.createEntity()};
-    auto player{ecs.createEntity()};
-    auto map{ecs.createEntity()};
-    //=================================
+    // Cursor
+    ECS.assignComponent<CPosition>(cursor);
+    ECS.assignComponent<CTexture>(cursor, dtb::Textures::get(CURSOR_TEXTURE));
+    ECS.assignComponent<CTransform>(cursor);
+    ECS.assignComponent<TRenderedAsUI>(cursor);
+    ECS.assignComponent<TMouseControlled>(cursor);
+    ECS.assignComponent<TIsCursor>(cursor);
 
-    // Initialize systems
-    //=================================
-    auto controlSystem{ecs.registerSystem<SFollowMouse>()};
-    auto mapRenderSystem{ecs.registerSystem<SRenderMap>()};
-    auto mapOverlayRenderSystem{ecs.registerSystem<SRenderMapOverlay>()};
-    auto objectRenderSystem{ecs.registerSystem<SRenderObjects>()};
-    auto UIRenderSystem{ecs.registerSystem<SRenderUI>()};
-    auto tagUnderCursorSystem{ecs.registerSystem<STagUnderCursor>()};
-    auto selectionSystem{ecs.registerSystem<SSelection>()};
-    auto rangesRenderSystem{ecs.registerSystem<SRenderMapOverlay>()};
-    auto showReachableTiles{ecs.registerSystem<SShowReachableTiles>()};
-    auto removeReachableTiles{ecs.registerSystem<SRemoveReachableTiles>()};
-    auto generateMap{ecs.registerSystem<SGenerateMap>()};
-    //=================================
+    // Map
+    ECS.assignComponent<CTileMap>(tileMap);
+    //=============================
+};
 
-    // Game variables
-    //=================================
-    //* MapGenerator mapGenerator;
-    //* Map map;
-    int& level{dtb::Configs::getCurrentLevel()};
-    //=================================
-
-    void GameScene::initialize()
+void GameScene::processInput()
+{
+    // Toggle between mouse or key control for cursor
+    //=============================
+    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
     {
-        // Assign components
-        //=============================
-        // Player
-        ecs.assignComponent<CPosition>(player);
-        ecs.assignComponent<CTexture>(player, dtb::Textures::get(PLAYER_TEXTURE));
-        ecs.assignComponent<CTransform>(player);
-        ecs.assignComponent<CRangeMovement>(player, 5);
-        ecs.assignComponent<TRenderedAsObject>(player);
-        ecs.assignComponent<THoverable>(player);
-        ecs.assignComponent<TSelectable>(player);
-        ecs.assignComponent<TIsSolid>(player);
+        ECS.toggleComponent<TMouseControlled>(cursor);
+        //* ecs.toggleComponent<TKeyControlled>(cursor);
+    }
+    //=============================
 
-        // Cursor
-        ecs.assignComponent<CPosition>(cursor);
-        ecs.assignComponent<CTexture>(cursor, dtb::Textures::get(CURSOR_TEXTURE));
-        ecs.assignComponent<CTransform>(cursor);
-        ecs.assignComponent<TRenderedAsUI>(cursor);
-        ecs.assignComponent<TMouseControlled>(cursor);
-        ecs.assignComponent<TIsCursor>(cursor);
+    // Execute systems
+    //=============================
+    tagUnderCursorSystem->execute();
+    selectionSystem->execute();
+    controlSystem->execute();
+    //=============================
+};
 
-        // Map
-        ecs.assignComponent<TIsMap>(map);
-        ecs.assignComponent<CTileMap>(map);
-        //=============================
+void GameScene::updateState()
+{
+    // Execute systems
+    //=============================
+    generateMap->execute();
+    addReachableTiles->execute();
+    removeReachableTiles->execute();
+    //=============================
+};
 
-        // Create map
-        //=============================
-        //* map = mapGenerator.generateMap(level);
-        //* auto tiles{map.getTiles()};
+void GameScene::renderOutput()
+{
+    // Execute systems
+    //=============================
+    mapRenderSystem->execute();
+    mapOverlayRenderSystem->execute();
+    objectRenderSystem->execute();
+    UIRenderSystem->execute();
+    //=============================
+};
 
-        //* for (auto tilePosition : *tiles->getAllKeys())
-        //* {
-        //* EntityId tileEntity{map.addEntity(ecs.createEntity())};
-
-        //* ecs.assignComponent<CPosition>(tileEntity, tilePosition.x, tilePosition.y);
-        //* ecs.assignComponent<CTransform>(tileEntity);
-        //* ecs.assignComponent<TRenderedAsMap>(tileEntity);
-
-        //* switch (*tiles->get(tilePosition))
-        //* {
-
-        //* case WALL_TILE:
-        //* ecs.assignComponent<CTexture>(tileEntity, dtb::Textures::get(WALL_TEXTURE));
-        //* ecs.assignComponent<TIsSolid>(tileEntity);
-        //* break;
-
-        //* case FLOOR_TILE:
-        //* default:
-        //* ecs.assignComponent<CTexture>(tileEntity, dtb::Textures::get(FLOOR_TEXTURE));
-        //* break;
-        //* }
-        //* }
-        //=============================
-    };
-
-    void GameScene::processInput()
-    {
-        // Toggle between mouse or key control for cursor
-        //=============================
-        if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
-        {
-            ecs.toggleComponent<TMouseControlled>(cursor);
-            ecs.toggleComponent<TKeyControlled>(cursor);
-        }
-        //=============================
-
-        // Execute systems
-        //=============================
-        tagUnderCursorSystem->execute();
-        selectionSystem->execute();
-        controlSystem->execute();
-        //=============================
-    };
-
-    void GameScene::updateState()
-    {
-        // Execute systems
-        //=============================
-        generateMap->execute();
-        showReachableTiles->execute();
-        removeReachableTiles->execute();
-        //=============================
-    };
-
-    void GameScene::renderOutput()
-    {
-        // Execute systems
-        //=============================
-        mapRenderSystem->execute();
-        mapOverlayRenderSystem->execute();
-        rangesRenderSystem->execute();
-        objectRenderSystem->execute();
-        UIRenderSystem->execute();
-        //=============================
-    };
-
-    void GameScene::deinitialize(){};
-}
+void GameScene::deinitialize(){};

@@ -59,14 +59,21 @@ namespace dtb
     {
     public:
         static inline bool& getDebugMode() { return getInstance().debugMode_; };
+
         static inline bool& shouldAppClose() { return getInstance().appShouldClose_; };
         static inline void closeApp() { getInstance().appShouldClose_ = true; };
+
+        static inline bool& areTilesShown() { return getInstance().tilesShown_; };
+        static inline void showTiles() { getInstance().tilesShown_ = true; };
+        static inline void hideTiles() { getInstance().tilesShown_ = false; };
+
         static inline void increaseLevel() { getInstance().currentLevel_++; }
         static inline int& getCurrentLevel() { return getInstance().currentLevel_; }
 
     private:
         static inline bool debugMode_{true};
         static inline bool appShouldClose_{false};
+        static inline bool tilesShown_{false};
         static inline int currentLevel_{0};
     };
     //=================================

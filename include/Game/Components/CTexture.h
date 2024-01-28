@@ -8,7 +8,7 @@ struct CTexture
     : public snd::Component<CTexture>
 {
 public:
-    Texture2D* getTexture() { return texture_; };
+    Texture2D* get() { return texture_; };
     void setTexture(Texture2D* texture) { texture_ = texture; };
 
     CTexture(Texture2D* texture)

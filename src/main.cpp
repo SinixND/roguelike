@@ -58,7 +58,7 @@ int main(/* int argc, char **argv */)
     dtb::Textures::load(SUPPORTABLE_TILE, "TileSupportable.png");
 
     // Define scenes
-    snd::GameScene game{};
+    GameScene game{};
     game.initialize();
 
     // Set default scene

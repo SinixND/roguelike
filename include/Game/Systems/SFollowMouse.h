@@ -2,6 +2,15 @@
 #define SFOLLOWMOUSE_H_20240128160349
 
 #include "System.h"
+
+#include "CPosition.h"
+#include "CTransform.h"
+#include "ECS.h"
+#include "TMouseControlled.h"
+#include "Utility.h"
+#include <raylib.h>
+#include <raymath.h>
+
 class SFollowMouse
     : public snd::System<CPosition, CTransform, TMouseControlled>
 {

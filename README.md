@@ -7,12 +7,10 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Refactor Map as Entity that has (Tile)Entities-Component which holds ar array of entities, created by SMapSystem that holds internally a static level info, creates map if level is not equal Configs entry (game state)
+[0] make filterAccessible() utility function that uses **TIsSolid** to return list of tiles
 
 
 # Shortterm
-[0] make filterAccessible() utility function that uses **TIsSolid** to return list of tiles
-
 [0] make filterInRange() utitliy function that return a list of tiles
 
 [1] make filterReachable() utitliy function that uses isInRange() to return a list of tiles
@@ -54,3 +52,5 @@ Maptypes:
 [x] realize viewport system (render relative to window -> update Rendersystem: pos 0,0 & transform 0, 0 == center of screen)
 
 [x] adjust texture to default direction right
+
+[x] Refactor Map as Entity that has (Tile)Entities-Component which holds ar array of entities, created by SMapSystem that holds internally a static level info, creates map if level is not equal Configs entry (game state)

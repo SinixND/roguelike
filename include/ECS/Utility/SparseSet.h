@@ -1,5 +1,5 @@
-#ifndef CONTIGUOUSMAP_H_20231231160415
-#define CONTIGUOUSMAP_H_20231231160415
+#ifndef SPARSESET_H_20240128195657
+#define SPARSESET_H_20240128195657
 
 #include <unordered_map>
 #include <unordered_set>
@@ -10,22 +10,24 @@ namespace snd
     typedef size_t Index;
 
     template <typename Key>
-    class BaseContiguousMap
+    class ISparseSet
     {
     public:
         virtual void erase(const Key& key) = 0;
+        virtual void eraseAll() = 0;
         virtual bool test(const Key& key) = 0;
-        virtual ~BaseContiguousMap() = default;
+        virtual std::unordered_set<Key>* getAllKeys() = 0;
+        virtual ~ISparseSet() = default;
     };
 
     template <typename Key, typename Type>
-    class ContiguousMap
-        : public BaseContiguousMap<Key>
+    class SparseSet
+        : public ISparseSet<Key>
     {
     public:
+        // Create non-existing, update existing
         void insert(const Key& key, const Type& element)
         {
-
             if (test(key))
             {
                 elements_[keyToIndex_[key]] = element;
@@ -87,6 +89,14 @@ namespace snd
             keys_.erase(key);
         };
 
+        void eraseAll() override
+        {
+            for (const auto& key : keys_)
+            {
+                erase(key);
+            }
+        };
+
         bool test(const Key& key) override
         {
             return keys_.contains(key);
@@ -106,12 +116,12 @@ namespace snd
             return &elements_;
         };
 
-        Key getKey()
+        Key getFirstKey()
         {
             return *keys_.begin();
         };
 
-        std::unordered_set<Key>* getAllKeys()
+        std::unordered_set<Key>* getAllKeys() override
         {
             return &keys_;
         };
