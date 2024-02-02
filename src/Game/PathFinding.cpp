@@ -12,7 +12,13 @@
 #include <raymath.h>
 
 // StepTile{position, direction_it_was_accessed_from}
-using SteppedTile = std::pair<Vector2, Vector2>;
+//* using SteppedTile = std::pair<Vector2, Vector2>;
+struct SteppedTile
+{
+    Vector2 position;
+    Vector2 direction = V_NODIR; // in which it was accessed
+    size_t steps = 0;            // needed to reach
+};
 
 bool isPositionInList(const Vector2& target, const std::vector<Vector2>& positions)
 {
@@ -50,7 +56,7 @@ bool isTileAccessible(const Vector2& target, snd::ECS* ecs)
 
 std::vector<Vector2> filterTilesInRange(const Vector2& origin, size_t range, const std::vector<Vector2>& accessiblePositions)
 {
-    std::vector<Vector2> inRangePositions{origin};
+    std::vector<Vector2> inRangePositions{};
 
     // Check if range is 0
     if (!range)
@@ -79,9 +85,9 @@ bool isTileInRange(const Vector2& origin, const Vector2& target, size_t range, s
     return isPositionInList(target, filterTilesInRange(origin, range, ecs));
 }
 
-std::vector<Vector2> filterTilesReachable(const Vector2& origin, size_t range, const std::vector<Vector2>& inRangePositions)
+std::vector<std::vector<Vector2>> filterTilesReachable(const Vector2& origin, size_t range, const std::vector<Vector2>& inRangePositions)
 {
-    std::vector<Vector2> reachablePositions{origin};
+    std::vector<std::vector<Vector2>> reachablePositions{std::vector{std::vector{origin}}};
 
     // Check if range is 0
     if (!range)
@@ -95,7 +101,7 @@ std::vector<Vector2> filterTilesReachable(const Vector2& origin, size_t range, c
     steppedTiles.push_back(std::vector<SteppedTile>());
 
     // Add starting position
-    steppedTiles[0].push_back(SteppedTile(origin, NODIR));
+    steppedTiles[0].push_back(SteppedTile(origin));
 
     // Step 1
 
@@ -118,7 +124,7 @@ std::vector<Vector2> filterTilesReachable(const Vector2& origin, size_t range, c
             continue;
 
         // Add stepped tile to stepped tiles
-        steppedTiles[1].push_back(std::make_pair(nextTilePosition, direction));
+        steppedTiles[1].push_back(SteppedTile(nextTilePosition, direction));
 
         reachablePositions.push_back(nextTilePosition);
     }
@@ -145,14 +151,14 @@ std::vector<Vector2> filterTilesReachable(const Vector2& origin, size_t range, c
                      M_ROTATE_RIGHT})
             {
                 // Set next stepped tile position
-                Vector2 nextTilePosition{Vector2Add(steppedTile.first, Vector2MatrixMultiply(R, steppedTile.second))};
+                Vector2 nextTilePosition{Vector2Add(steppedTile.position, Vector2MatrixMultiply(R, steppedTile.direction))};
 
                 // Check if tile is already known
                 bool tileKnown{false};
 
-                for (auto tile : steppedTiles[stepLevel])
+                for (auto tile : steppedTiles[previousStepLevel])
                 {
-                    if (!Vector2Equals(tile.first, nextTilePosition))
+                    if (!Vector2Equals(tile.position, nextTilePosition))
                         continue;
 
                     tileKnown = true;
@@ -166,7 +172,7 @@ std::vector<Vector2> filterTilesReachable(const Vector2& origin, size_t range, c
                     continue;
 
                 // Add passable tile to stepped tiles
-                steppedTiles[stepLevel].push_back(std::make_pair(nextTilePosition, Vector2MatrixMultiply(R, steppedTile.second)));
+                steppedTiles[stepLevel].push_back(SteppedTile(nextTilePosition, Vector2MatrixMultiply(R, steppedTile.direction)));
 
                 reachablePositions.push_back(nextTilePosition);
             }
@@ -215,7 +221,7 @@ std::vector<Vector2> findPath(const Vector2& origin, const Vector2& target, size
     steppedTiles.push_back(std::vector<SteppedTile>());
 
     // Add starting position
-    steppedTiles[0].push_back(SteppedTile(origin, NODIR));
+    steppedTiles[0].push_back(SteppedTile(origin));
 
     // Step 1
 

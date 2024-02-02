@@ -49,7 +49,7 @@ namespace dtb
         static inline const Color backgroundColor_{BLACK};
 
         // Geometrics
-        static inline const Vector2 tileSize_{25, 25};
+        static inline const Vector2 tileSize_{55, 55};
     };
     //=================================
 

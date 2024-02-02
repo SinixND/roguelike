@@ -17,9 +17,9 @@ namespace snd
 
         void execute()
         {
-            for (auto entityId : entities_)
+            for (auto it{entities_.begin()}; it != entities_.end();)
             {
-                action(entityId);
+                action(*it++);
             }
         }
 

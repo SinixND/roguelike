@@ -7,7 +7,9 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Debug missing tiles 3rd time (entity == 310 && texture->id == 7 && position.x == 6 && position.y == 0)
+[0] Rework pathfinding
+
+[1] Debug missing tiles 3rd time (entity == 310 && texture->id == 7 && position.x == 6 && position.y == 0)
 
 # Shortterm
 [0] Implement movment
