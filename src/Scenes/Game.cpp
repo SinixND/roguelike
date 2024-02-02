@@ -106,9 +106,7 @@ void GameScene::renderOutput()
     // Execute systems
     //=============================
     mapRenderSystem->execute();
-    dtb::Configs::dbg = true;
     mapOverlayRenderSystem->execute();
-    dtb::Configs::dbg = false;
     objectRenderSystem->execute();
     UIRenderSystem->execute();
     //=============================

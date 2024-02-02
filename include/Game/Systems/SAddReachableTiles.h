@@ -28,27 +28,28 @@ public:
         dtb::Configs::showTiles();
 
         // Get components
-        auto position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
+        auto entityPosition{ecs_->getComponent<CPosition>(entityId)->getPosition()};
         auto moveRange{ecs_->getComponent<CRangeMovement>(entityId)->getMovementRange()};
 
         // Action
-        auto reachablePositions{filterTilesReachable(position, moveRange, ecs_)};
+        std::vector<std::vector<SteppedTile>> reachablePositions{filterTilesReachable(entityPosition, moveRange, ecs_)};
 
         for (int x{-moveRange}; x <= moveRange; ++x)
         {
             for (int y{-moveRange}; y <= moveRange; ++y)
             {
-                if ((abs(x) + abs(y)) > moveRange)
+                auto absSum{(abs(x) + abs(y))};
+                if ((absSum > moveRange) || absSum == 0)
                     continue;
 
                 Vector2 newTilePosition{
                     Vector2Add(
-                        position,
+                        entityPosition,
                         Vector2{
                             static_cast<float>(x),
                             static_cast<float>(y)})};
 
-                if (!isPositionInList(newTilePosition, reachablePositions))
+                if (!isPositionInSteppedTiles(newTilePosition, reachablePositions))
                     continue;
 
                 auto newMoveableTile{ecs_->createEntity()};

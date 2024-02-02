@@ -14,16 +14,19 @@ class SRemoveReachableTiles
 public:
     void action(snd::EntityId entityId)
     {
-        if (ecs_->getAllEntitiesWith<TSelected>()->size())
+        // Skip if something is selected
+        if (!ecs_->getAllEntitiesWith<TSelected>()->empty())
             return;
 
-        if (!ecs_->getAllEntitiesWith<TReachable>()->size())
+        // Skip if no entities tagged TReachable
+        if (ecs_->getAllEntitiesWith<TReachable>()->empty())
             return;
 
         dtb::Configs::hideTiles();
 
         // Action
         ecs_->removeEntity(entityId);
+        entities_.erase(entityId);
     }
     SRemoveReachableTiles(snd::ECS* ecs)
         : snd::System<TReachable>(ecs)
