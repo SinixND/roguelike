@@ -43,6 +43,8 @@ namespace snd
             // Add new element to list
             elements_.push_back(element);
 
+            [[maybe_unused]] auto dbg{&elements_[elementIndex]};
+
             // Add key to elementIndex mapping
             keyToIndex_.insert(std::make_pair(key, elementIndex));
 
@@ -58,32 +60,39 @@ namespace snd
             };
 
             // Get list index of removed element
-            Index removedelementIndex = keyToIndex_[key];
+            Index removedElementIndex{keyToIndex_[key]};
+            Index keptElementIndex{};
 
-            // Replace with last element before popping (if more than one element exists) to keep elements contiguous
+            // Replace removed element with last element before popping (if more than one element exists) to keep elements contiguous
             if (elements_.size() > 1)
             {
-                // Get list index of (kept) last element that replaces removed element
-                Index lastelementIndex = elements_.size() - 1;
+                // Get index of (kept) last element that replaces removed element
+                keptElementIndex = elements_.size() - 1;
 
                 // Get key of replacing/kept element
-                Key keptkey = indexToKey_[lastelementIndex];
+                Key keptkey = indexToKey_[keptElementIndex];
 
-                // Replace (removed) element with kept element (by index) so last entry (duplicate) can be popped
-                elements_[removedelementIndex] = elements_[lastelementIndex];
+                // Replace (removed) element with kept element (by index) so last entry (duplicate) can be popped (becomes new removed)
+                elements_[removedElementIndex] = elements_[keptElementIndex];
+
+                // Update element index after replacement
+                keptElementIndex = removedElementIndex;
 
                 // Update key to elementIndex mapping for kept key
-                keyToIndex_[keptkey] = removedelementIndex;
+                keyToIndex_[keptkey] = keptElementIndex;
+
+                // Update index to key mapping for kept key
+                indexToKey_[keptElementIndex] = keptkey;
             }
 
             // Remove removed key from mapping
             keyToIndex_.erase(key);
 
-            // Remove removed element from mapping
-            indexToKey_.erase(removedelementIndex);
-
             // Remove (duplicate) last element
             elements_.pop_back();
+
+            // Remove removed element from mapping
+            indexToKey_.erase(elements_.size());
 
             // Remove key from used keys
             keys_.erase(key);

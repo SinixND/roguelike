@@ -93,14 +93,11 @@ namespace snd
                 // Remove component from entity
                 container->erase(entityId);
 
-                // Get component type id
-                ComponentTypeId typeId{componentTypeId};
-
                 // Notify systems about removed component
-                notifyRemove(entityId, typeId);
+                notifyRemove(entityId, componentTypeId);
 
                 // Update entity signature
-                entityManager_.resetComponent(entityId, typeId);
+                entityManager_.resetComponent(entityId, componentTypeId);
             }
         }
 

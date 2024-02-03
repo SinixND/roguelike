@@ -26,7 +26,6 @@ public:
 
         // Action
         ecs_->removeEntity(entityId);
-        entities_.erase(entityId);
     }
     SRemoveReachableTiles(snd::ECS* ecs)
         : snd::System<TReachable>(ecs)

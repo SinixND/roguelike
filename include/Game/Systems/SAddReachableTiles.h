@@ -54,7 +54,11 @@ public:
 
                 auto newMoveableTile{ecs_->createEntity()};
 
+                [[maybe_unused]] auto dbgX1{&ecs_->getComponent<CPosition>(newMoveableTile)->getPosition().x};
+                [[maybe_unused]] auto dbgY1{&ecs_->getComponent<CPosition>(newMoveableTile)->getPosition().y};
                 ecs_->assignComponent<CPosition>(newMoveableTile, newTilePosition);
+                [[maybe_unused]] auto dbgX2{ecs_->getComponent<CPosition>(newMoveableTile)->getPosition().x};
+                [[maybe_unused]] auto dbgY2{ecs_->getComponent<CPosition>(newMoveableTile)->getPosition().y};
                 ecs_->assignComponent<CTexture>(newMoveableTile, dtb::Textures::get(REACHABLE_TILE));
                 ecs_->assignComponent<CTransform>(newMoveableTile);
                 ecs_->assignComponent<TReachable>(newMoveableTile);
