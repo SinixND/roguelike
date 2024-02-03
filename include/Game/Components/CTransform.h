@@ -2,30 +2,30 @@
 #define CTRANSFORM_H_20240128153451
 
 #include "Component.h"
-#include <raylib.h>
+#include <raylibEx.h>
 
 struct CTransform
     : public snd::Component<CTransform>
 {
 public:
-    Vector2& getTransform() { return transform_; };
-    static void setTransform(const Vector2& position) { transform_ = position; };
+    Vector2Int& getTransform() { return transform_; };
+    static void setTransform(const Vector2Int& position) { transform_ = position; };
 
     CTransform(){};
 
-    CTransform(Vector2 position)
+    CTransform(Vector2Int position)
     {
         transform_ = position;
     };
 
-    CTransform(float positionX, float positionY)
+    CTransform(int positionX, int positionY)
     {
         transform_ = {positionX, positionY};
     };
 
 private:
     // Offset from root position
-    static inline Vector2 transform_{0, 0};
+    static inline Vector2Int transform_{0, 0};
 };
 
 #endif

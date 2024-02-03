@@ -1,7 +1,7 @@
 #ifndef SCENE_H_20231201203725
 #define SCENE_H_20231201203725
 
-#include <raylib.h>
+#include <raylibEx.h>
 
 namespace snd
 {

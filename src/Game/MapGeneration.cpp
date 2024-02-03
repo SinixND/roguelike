@@ -8,18 +8,18 @@
 #include "TIsSolid.h"
 #include "TIsTile.h"
 #include "TRenderedAsMap.h"
-#include <raylib.h>
+#include <raylibEx.h>
 #include <raymath.h>
 
-void addRoom(snd::SparseSet<Vector2, snd::EntityId>* tileMap, const Area& room, snd::ECS* ecs)
+void addRoom(snd::SparseSet<Vector2Int, snd::EntityId>* tileMap, const Area& room, snd::ECS* ecs)
 {
-    Vector2 bottomRightCorner{Vector2Add(room.position, room.dimension)};
+    Vector2Int bottomRightCorner{Vector2Add(room.position, room.dimension)};
 
     for (auto x{room.position.x}; x < bottomRightCorner.x; ++x)
     {
         for (auto y{room.position.y}; y < bottomRightCorner.y; ++y)
         {
-            Vector2 position{x, y};
+            Vector2Int position{x, y};
 
             snd::EntityId newTileEntity{createNewMapTileEntitiy(position, ecs)};
 
@@ -39,15 +39,15 @@ void addRoom(snd::SparseSet<Vector2, snd::EntityId>* tileMap, const Area& room, 
     }
 };
 
-void setTiles(snd::SparseSet<Vector2, snd::EntityId>* tileMap, const Area& area, TileType tileType, snd::ECS* ecs)
+void setTiles(snd::SparseSet<Vector2Int, snd::EntityId>* tileMap, const Area& area, TileType tileType, snd::ECS* ecs)
 {
-    Vector2 bottomRightCorner{Vector2Add(area.position, area.dimension)};
+    Vector2Int bottomRightCorner{Vector2Add(area.position, area.dimension)};
 
     for (auto x{area.position.x}; x < bottomRightCorner.x; ++x)
     {
         for (auto y{area.position.y}; y < bottomRightCorner.y; ++y)
         {
-            Vector2 position{x, y};
+            Vector2Int position{x, y};
 
             snd::EntityId tileEntity{};
 
@@ -78,7 +78,7 @@ void setTiles(snd::SparseSet<Vector2, snd::EntityId>* tileMap, const Area& area,
     }
 };
 
-snd::EntityId createNewMapTileEntitiy(Vector2 position, snd::ECS* ecs)
+snd::EntityId createNewMapTileEntitiy(Vector2Int position, snd::ECS* ecs)
 {
     // Make new tile entity
     snd::EntityId newTileEntity{ecs->createEntity()};
@@ -92,7 +92,7 @@ snd::EntityId createNewMapTileEntitiy(Vector2 position, snd::ECS* ecs)
     return newTileEntity;
 }
 
-void setStartRoom(snd::SparseSet<Vector2, snd::EntityId>* tileMap, snd::ECS* ecs)
+void setStartRoom(snd::SparseSet<Vector2Int, snd::EntityId>* tileMap, snd::ECS* ecs)
 {
     addRoom(tileMap, Area{{-7, -7}, {15, 15}}, ecs);
     setTiles(tileMap, Area{{-1, -1}, {3, 1}}, WALL_TILE, ecs);

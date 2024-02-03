@@ -39,6 +39,7 @@ Maptypes:
 - Extend side -> new room wall
 - Random border match
 
+Window-sensitive rendering: https://www.raylib.com/examples/core/loader.html?name=core_window_letterbox
 
 
 # Done

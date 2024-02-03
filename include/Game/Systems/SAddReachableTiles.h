@@ -42,12 +42,12 @@ public:
                 if ((absSum > moveRange) || absSum == 0)
                     continue;
 
-                Vector2 newTilePosition{
+                Vector2Int newTilePosition{
                     Vector2Add(
                         entityPosition,
-                        Vector2{
-                            static_cast<float>(x),
-                            static_cast<float>(y)})};
+                        Vector2Int{
+                            x,
+                            y})};
 
                 if (!isPositionInSteppedTiles(newTilePosition, reachablePositions))
                     continue;

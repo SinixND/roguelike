@@ -9,7 +9,7 @@
 #include "ECS.h"
 #include "MapGeneration.h"
 #include "RuntimeDatabase.h"
-#include <raylib.h>
+#include <raylibEx.h>
 
 class SGenerateMap
     : public snd::System<CTileMap>
@@ -22,7 +22,7 @@ public:
 
         ++currentLevel_;
 
-        snd::SparseSet<Vector2, snd::EntityId>* tileMap{ecs_->getComponent<CTileMap>(entityId)->getTileMap()};
+        snd::SparseSet<Vector2Int, snd::EntityId>* tileMap{ecs_->getComponent<CTileMap>(entityId)->getTileMap()};
 
         if (currentLevel_ == 0)
         {

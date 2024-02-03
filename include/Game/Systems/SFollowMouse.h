@@ -8,7 +8,7 @@
 #include "ECS.h"
 #include "TMouseControlled.h"
 #include "Utility.h"
-#include <raylib.h>
+#include <raylibEx.h>
 #include <raymath.h>
 
 class SFollowMouse

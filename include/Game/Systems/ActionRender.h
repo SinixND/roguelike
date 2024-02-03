@@ -3,10 +3,10 @@
 
 #include "RuntimeDatabase.h"
 #include "Utility.h"
-#include <raylib.h>
+#include <raylibEx.h>
 #include <raymath.h>
 
-inline void renderAction(const Texture2D* texture, const Vector2& position, const Vector2& transform)
+inline void renderAction(const Texture2D* texture, const Vector2Int& position, const Vector2Int& transform)
 {
     // Action
     Vector2 tileSize{dtb::Constants::tileSize_};

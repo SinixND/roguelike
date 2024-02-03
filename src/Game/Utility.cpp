@@ -9,12 +9,13 @@
 #include <cmath>
 #include <cstddef>
 #include <raylib.h>
+#include <raylibEx.h>
 #include <raymath.h>
 #include <unordered_set>
 #include <utility>
 #include <vector>
 
-Vector2 convertToTile(const Vector2& pixelCoordinates)
+Vector2Int convertToTile(const Vector2& pixelCoordinates)
 {
     static Vector2 screenSize{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
 
@@ -26,12 +27,12 @@ Vector2 convertToTile(const Vector2& pixelCoordinates)
     Vector2 tileSize{dtb::Constants::tileSize_};
 
     // convert pixel coordinate to transformed tile coordinate (center of screen is tile (0,0))
-    return Vector2{
-        (std::floor((pixelCoordinates.x - ((screenSize.x / 2) - (tileSize.x / 2))) / tileSize.x)),
-        (std::floor((pixelCoordinates.y - ((screenSize.y / 2) - (tileSize.y / 2))) / tileSize.y))};
+    return Vector2Int{
+        static_cast<int>(std::floor((pixelCoordinates.x - ((screenSize.x / 2) - (tileSize.x / 2.0f))) / tileSize.x)),
+        static_cast<int>(std::floor((pixelCoordinates.y - ((screenSize.y / 2) - (tileSize.y / 2.0f))) / tileSize.y))};
 }
 
-Vector2 convertToPixel(const Vector2& tileCoordinates)
+Vector2 convertToPixel(const Vector2Int& tileCoordinates)
 {
     static Vector2 screenSize{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
 

@@ -17,7 +17,7 @@ public:
     void action(snd::EntityId entityId)
     {
         // Get components
-        const auto* texture{ecs_->getComponent<CTexture>(entityId)->get()};
+        const auto* texture{ecs_->getComponent<CTexture>(entityId)->getTexture()};
         const auto& position{ecs_->getComponent<CPosition>(entityId)->getPosition()};
         const auto& transform{ecs_->getComponent<CTransform>(entityId)->getTransform()};
 

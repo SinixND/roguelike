@@ -5,7 +5,7 @@
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
 #include "../resources/iconset/iconset.rgi.h"
 #include <raygui.h>
-#include <raylib.h>
+#include <raylibEx.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
@@ -14,35 +14,24 @@
 void updateGameLoop();
 int main(/* int argc, char **argv */)
 {
-    // General Initialization
-    //=================================
+// General Initialization
+//=================================
 
-    // Raylib
+// Raylib
 #ifndef __EMSCRIPTEN__
-    constexpr int screenWidth{0};
-    constexpr int screenHeight{0};
+    constexpr int windowWidth{0};
+    constexpr int windowHeight{0};
 #else
-    constexpr int screenWidth{500};
-    constexpr int screenHeight{500};
+    constexpr int windowWidth{800};
+    constexpr int windowHeight{450};
 #endif
 
-    SetConfigFlags(FLAG_WINDOW_HIGHDPI);
+    SetConfigFlags(FLAG_VSYNC_HINT);
 
-#ifndef __EMSCRIPTEN__
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-#endif
 
-    InitWindow(screenWidth, screenHeight, "Roguelike");
-
-#ifdef __EMSCRIPTEN__
-    SetWindowSize(GetRenderWidth() - 50, GetRenderHeight() - 50);
-#endif
-
-    //* HideCursor();
-
-    //  SetExitKey(0); // Deactivate exit on ESC
-    SetTargetFPS(145);
-    // SetConfigFlags(FLAG_VSYNC_HINT); // Used instead of SetTargetFPS()
+    InitWindow(windowWidth, windowHeight, "Roguelike");
+    SetWindowMinSize(320, 240);
     //=================================
 
     // Application Initialization
@@ -72,6 +61,7 @@ int main(/* int argc, char **argv */)
 #else
     while (!WindowShouldClose() && !dtb::Configs::shouldAppClose())
     {
+        // Call update function for emscripten compatibility
         updateGameLoop();
     }
 #endif
