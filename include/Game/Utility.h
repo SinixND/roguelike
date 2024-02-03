@@ -17,8 +17,8 @@ typedef enum
 
 typedef enum
 {
-    FLOOR_TILE,
-    WALL_TILE,
+    FLOOR,
+    WALL,
 } TileType;
 
 // X is right-positive, Y is down-positive

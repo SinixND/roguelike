@@ -76,7 +76,7 @@ namespace snd
             if (!testContainer<ComponentType>()) return 0;
 
             // Return entity
-            return getComponentContainer<ComponentType>()->getFirstKey();
+            return *getComponentContainer<ComponentType>()->getFirstKey();
         }
         // Get all entities
         template <typename ComponentType>

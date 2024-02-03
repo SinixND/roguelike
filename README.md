@@ -7,14 +7,10 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Rework pathfinding
-
-[1] Debug doubled tiles 3rd time (entity == 305 & 385 && texture->id == 7 && position.x == -1 && position.y == 6)
+[1] Show path
 
 # Shortterm
 [0] Implement movment
-
-[1] Show path
 
 [2] Transform (S) relative to **selected** (C) (Cursor if unselected)
 
@@ -38,8 +34,6 @@ Maptypes:
 - Square rooms grid
 - Extend side -> new room wall
 - Random border match
-
-Window-sensitive rendering: https://www.raylib.com/examples/core/loader.html?name=core_window_letterbox
 
 
 # Done

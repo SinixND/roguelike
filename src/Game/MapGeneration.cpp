@@ -28,13 +28,13 @@ void addRoom(snd::SparseSet<Vector2Int, snd::EntityId>* tileMap, const Area& roo
             // Assign wall components
             if ((x == room.position.x) || (x == (bottomRightCorner.y - 1)) || (y == room.position.y) || (y == (bottomRightCorner.y - 1)))
             {
-                ecs->assignComponent<CTexture>(newTileEntity, dtb::Textures::get(WALL_TEXTURE));
+                ecs->assignComponent<CTexture>(newTileEntity, dtb::Textures::get(WALL_TILE));
                 ecs->assignComponent<TIsSolid>(newTileEntity);
                 continue;
             }
 
             // Assign floor components
-            ecs->assignComponent<CTexture>(newTileEntity, dtb::Textures::get(FLOOR_TEXTURE));
+            ecs->assignComponent<CTexture>(newTileEntity, dtb::Textures::get(FLOOR_TILE));
         }
     }
 };
@@ -64,14 +64,14 @@ void setTiles(snd::SparseSet<Vector2Int, snd::EntityId>* tileMap, const Area& ar
             // Assign wall components
             switch (tileType)
             {
-            case WALL_TILE:
-                ecs->assignComponent<CTexture>(tileEntity, dtb::Textures::get(WALL_TEXTURE));
+            case WALL:
+                ecs->assignComponent<CTexture>(tileEntity, dtb::Textures::get(WALL_TILE));
                 ecs->assignComponent<TIsSolid>(tileEntity);
                 break;
 
-            case FLOOR_TILE:
+            case FLOOR:
             default:
-                ecs->assignComponent<CTexture>(tileEntity, dtb::Textures::get(FLOOR_TEXTURE));
+                ecs->assignComponent<CTexture>(tileEntity, dtb::Textures::get(FLOOR_TILE));
                 break;
             }
         };
@@ -95,5 +95,5 @@ snd::EntityId createNewMapTileEntitiy(Vector2Int position, snd::ECS* ecs)
 void setStartRoom(snd::SparseSet<Vector2Int, snd::EntityId>* tileMap, snd::ECS* ecs)
 {
     addRoom(tileMap, Area{{-7, -7}, {15, 15}}, ecs);
-    setTiles(tileMap, Area{{-1, -1}, {3, 1}}, WALL_TILE, ecs);
+    setTiles(tileMap, Area{{-1, -1}, {3, 1}}, WALL, ecs);
 }

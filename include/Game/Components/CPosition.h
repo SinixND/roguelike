@@ -15,22 +15,13 @@ public:
     };
 
     CPosition(float x, float y)
-    //* : position_(x, y)
-    {
-        setPosition({static_cast<int>(x), static_cast<int>(y)});
-    };
+        : position_(static_cast<int>(x), static_cast<int>(y)){};
 
     CPosition(int x, int y)
-    //* : position_(static_cast<float>(x), static_cast<float>(y))
-    {
-        setPosition({x, y});
-    };
+        : position_(x, y){};
 
     CPosition(Vector2Int position = {0, 0})
-    //* : position_(position)
-    {
-        setPosition(position);
-    };
+        : position_(position){};
 
 private:
     Vector2Int position_;

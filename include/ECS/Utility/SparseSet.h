@@ -43,8 +43,6 @@ namespace snd
             // Add new element to list
             elements_.push_back(element);
 
-            [[maybe_unused]] auto dbg{&elements_[elementIndex]};
-
             // Add key to elementIndex mapping
             keyToIndex_.insert(std::make_pair(key, elementIndex));
 
@@ -113,7 +111,6 @@ namespace snd
 
         Type* get(const Key& key)
         {
-
             if (!test(key))
                 return nullptr;
 
@@ -125,9 +122,12 @@ namespace snd
             return &elements_;
         };
 
-        Key getFirstKey()
+        const Key* getFirstKey()
         {
-            return *keys_.begin();
+            if (keys_.empty())
+                return nullptr;
+
+            return &(*keys_.begin());
         };
 
         std::unordered_set<Key>* getAllKeys() override

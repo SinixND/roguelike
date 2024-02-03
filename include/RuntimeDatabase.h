@@ -2,6 +2,7 @@
 #define DATABASE_H_20240117233028
 
 #include "Scene.h"
+#include <raylib.h>
 #include <string>
 #include <unordered_map>
 
@@ -29,30 +30,18 @@ protected:
 
 typedef enum
 {
-    PLAYER_TEXTURE,
-    CURSOR_TEXTURE,
-    WALL_TEXTURE,
-    FLOOR_TEXTURE,
+    PLAYER,
+    CURSOR,
+    WALL_TILE,
+    FLOOR_TILE,
     REACHABLE_TILE,
+    PATH_TILE,
     ATTACKABLE_TILE,
     SUPPORTABLE_TILE,
 } TextureId;
 
 namespace dtb
 {
-    // Constants
-    //=================================
-    struct Constants : public Singleton<Constants>
-    {
-        // Visuals
-        static inline const Color foregroundColor_{WHITE};
-        static inline const Color backgroundColor_{BLACK};
-
-        // Geometrics
-        static inline const Vector2 tileSize_{25, 25};
-    };
-    //=================================
-
     // Configs / Settings
     //=================================
     class Configs : public Singleton<Configs>
@@ -71,14 +60,48 @@ namespace dtb
         static inline void showTiles() { getInstance().tilesShown_ = true; };
         static inline void hideTiles() { getInstance().tilesShown_ = false; };
 
-        static inline void increaseLevel() { getInstance().currentLevel_++; }
+        static inline bool& isPathShown() { return getInstance().pathShown_; };
+        static inline void showPath() { getInstance().pathShown_ = true; };
+        static inline void hidePath() { getInstance().pathShown_ = false; };
+
         static inline int& getCurrentLevel() { return getInstance().currentLevel_; }
+        static inline void increaseLevel() { getInstance().currentLevel_++; }
+
+        static inline bool isMouseActivated() { return mouseActivated_; }
+        static inline void toggleMouseActivated()
+        {
+            mouseActivated_ = !mouseActivated_;
+
+            if (mouseActivated_)
+            {
+                ShowCursor();
+            }
+            else
+            {
+                HideCursor();
+            }
+        }
 
     private:
         static inline bool debugMode_{true};
         static inline bool appShouldClose_{false};
         static inline bool tilesShown_{false};
+        static inline bool pathShown_{false};
         static inline int currentLevel_{0};
+        static inline bool mouseActivated_{true};
+    };
+    //=================================
+
+    // Constants
+    //=================================
+    struct Constants : public Singleton<Constants>
+    {
+        // Visuals
+        static inline const Color foregroundColor_{WHITE};
+        static inline const Color backgroundColor_{BLACK};
+
+        // Geometrics
+        static inline const Vector2 tileSize_{25, 25};
     };
     //=================================
 
@@ -127,5 +150,4 @@ namespace dtb
     //=================================
     //
 }
-
 #endif

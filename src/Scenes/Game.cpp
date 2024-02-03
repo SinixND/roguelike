@@ -8,6 +8,7 @@
 // Systems
 //=================================
 #include "SAddReachableTiles.h"
+#include "SControl.h"
 #include "SFollowMouse.h"
 #include "SGenerateMap.h"
 #include "SRemoveReachableTiles.h"
@@ -17,6 +18,7 @@
 #include "SRenderUI.h"
 #include "SSelection.h"
 #include "STagUnderCursor.h"
+#include "TKeyControlled.h"
 //=================================
 
 // Initialize ECS
@@ -33,16 +35,17 @@ auto tileMap{ECS.createEntity()};
 
 // Initialize systems
 //=================================
-auto controlSystem{ECS.registerSystem<SFollowMouse>()};
-auto mapRenderSystem{ECS.registerSystem<SRenderMap>()};
-auto mapOverlayRenderSystem{ECS.registerSystem<SRenderMapOverlay>()};
-auto objectRenderSystem{ECS.registerSystem<SRenderObjects>()};
-auto UIRenderSystem{ECS.registerSystem<SRenderUI>()};
-auto tagUnderCursorSystem{ECS.registerSystem<STagUnderCursor>()};
-auto selectionSystem{ECS.registerSystem<SSelection>()};
-auto addReachableTiles{ECS.registerSystem<SAddReachableTiles>()};
-auto removeReachableTiles{ECS.registerSystem<SRemoveReachableTiles>()};
-auto generateMap{ECS.registerSystem<SGenerateMap>()};
+auto sFollowMouse{ECS.registerSystem<SFollowMouse>()};
+auto sRenderMap{ECS.registerSystem<SRenderMap>()};
+auto sRenderMapOverlay{ECS.registerSystem<SRenderMapOverlay>()};
+auto sRenderObjects{ECS.registerSystem<SRenderObjects>()};
+auto sRenderUI{ECS.registerSystem<SRenderUI>()};
+auto sTagUnderCursor{ECS.registerSystem<STagUnderCursor>()};
+auto sSelection{ECS.registerSystem<SSelection>()};
+auto sAddReachableTiles{ECS.registerSystem<SAddReachableTiles>()};
+auto sRemoveReachableTiles{ECS.registerSystem<SRemoveReachableTiles>()};
+auto sGenerateMap{ECS.registerSystem<SGenerateMap>()};
+auto sControl{ECS.registerSystem<SControl>()};
 //=================================
 
 void GameScene::initialize()
@@ -51,21 +54,20 @@ void GameScene::initialize()
     //=============================
     // Player
     ECS.assignComponent<CPosition>(player);
-    ECS.assignComponent<CTexture>(player, dtb::Textures::get(PLAYER_TEXTURE));
+    ECS.assignComponent<CTexture>(player, dtb::Textures::get(PLAYER));
     ECS.assignComponent<CTransform>(player);
-    ECS.assignComponent<CRangeMovement>(player, 15);
+    ECS.assignComponent<CRangeMovement>(player, 5);
     ECS.assignComponent<TRenderedAsObject>(player);
     ECS.assignComponent<THoverable>(player);
     ECS.assignComponent<TSelectable>(player);
-    //* ecs.assignComponent<TIsSolid>(player);
 
     // Cursor
     ECS.assignComponent<CPosition>(cursor);
-    ECS.assignComponent<CTexture>(cursor, dtb::Textures::get(CURSOR_TEXTURE));
+    ECS.assignComponent<CTexture>(cursor, dtb::Textures::get(CURSOR));
     ECS.assignComponent<CTransform>(cursor);
     ECS.assignComponent<TRenderedAsUI>(cursor);
-    ECS.assignComponent<TMouseControlled>(cursor);
     ECS.assignComponent<TIsCursor>(cursor);
+    ECS.assignComponent<TMouseControlled>(cursor);
 
     // Map
     ECS.assignComponent<CTileMap>(tileMap);
@@ -78,16 +80,18 @@ void GameScene::processInput()
     //=============================
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
     {
+        dtb::Configs::toggleMouseActivated();
         ECS.toggleComponent<TMouseControlled>(cursor);
-        //* ecs.toggleComponent<TKeyControlled>(cursor);
+        ECS.toggleComponent<TKeyControlled>(cursor);
     }
     //=============================
 
     // Execute systems
     //=============================
-    tagUnderCursorSystem->execute();
-    selectionSystem->execute();
-    controlSystem->execute();
+    sTagUnderCursor->execute();
+    sSelection->execute();
+    sFollowMouse->execute();
+    sControl->execute();
     //=============================
 };
 
@@ -95,9 +99,9 @@ void GameScene::updateState()
 {
     // Execute systems
     //=============================
-    generateMap->execute();
-    addReachableTiles->execute();
-    removeReachableTiles->execute();
+    sGenerateMap->execute();
+    sAddReachableTiles->execute();
+    sRemoveReachableTiles->execute();
     //=============================
 };
 
@@ -105,10 +109,10 @@ void GameScene::renderOutput()
 {
     // Execute systems
     //=============================
-    mapRenderSystem->execute();
-    mapOverlayRenderSystem->execute();
-    objectRenderSystem->execute();
-    UIRenderSystem->execute();
+    sRenderMap->execute();
+    sRenderMapOverlay->execute();
+    sRenderObjects->execute();
+    sRenderUI->execute();
     //=============================
 };
 

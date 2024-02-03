@@ -20,7 +20,7 @@ namespace snd
     // Set signature type
     //=================================
 #ifdef BITSET
-    const Id MAX_COMPONENTS = 20;
+    const Id MAX_COMPONENTS = 40;
     using Signature = std::bitset<MAX_COMPONENTS>;
 #endif
     //=================================

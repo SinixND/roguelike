@@ -38,11 +38,12 @@ int main(/* int argc, char **argv */)
     //=================================
 
     // Load textures
-    dtb::Textures::load(PLAYER_TEXTURE, "Player.png");
-    dtb::Textures::load(CURSOR_TEXTURE, "Cursor.png");
-    dtb::Textures::load(WALL_TEXTURE, "TileWall.png");
-    dtb::Textures::load(FLOOR_TEXTURE, "TileFloor.png");
+    dtb::Textures::load(PLAYER, "Player.png");
+    dtb::Textures::load(CURSOR, "Cursor.png");
+    dtb::Textures::load(WALL_TILE, "TileWall.png");
+    dtb::Textures::load(FLOOR_TILE, "TileFloor.png");
     dtb::Textures::load(REACHABLE_TILE, "TileReachable.png");
+    dtb::Textures::load(PATH_TILE, "TilePath.png");
     dtb::Textures::load(ATTACKABLE_TILE, "TileAttackable.png");
     dtb::Textures::load(SUPPORTABLE_TILE, "TileSupportable.png");
 
