@@ -17,7 +17,7 @@ class SGenerateMap
 public:
     void action(snd::EntityId entityId)
     {
-        if (currentLevel_ == dtb::Configs::getCurrentLevel())
+        if (currentLevel_ == dtb::State::getCurrentLevel())
             return;
 
         ++currentLevel_;

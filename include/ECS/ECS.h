@@ -50,6 +50,12 @@ namespace snd
 
         // Components
         // ============================
+        //* template <typename ComponentType>
+        //* void registerComponent()
+        //* {
+        //* componentManager_.register();
+        //* }
+
         template <typename ComponentType, typename... Args>
         void assignComponent(EntityId entityId, Args&&... args)
         {
@@ -131,7 +137,7 @@ namespace snd
         // Systems
         // ============================
         template <typename SystemType>
-        auto registerSystem()
+        std::shared_ptr<SystemType> registerSystem()
         {
             auto system{std::make_shared<SystemType>(this)};
 

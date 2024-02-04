@@ -1,6 +1,7 @@
 #ifndef DATABASE_H_20240117233028
 #define DATABASE_H_20240117233028
 
+#include "PathFinding.h"
 #include "Scene.h"
 #include <raylib.h>
 #include <string>
@@ -42,17 +43,11 @@ typedef enum
 
 namespace dtb
 {
-    // Configs / Settings
+    // Application state
     //=================================
-    class Configs : public Singleton<Configs>
+    class State : public Singleton<State>
     {
     public:
-        // Global debug flag
-        static inline bool dbg{false};
-
-    public:
-        static inline bool& getDebugMode() { return getInstance().debugMode_; };
-
         static inline bool& shouldAppClose() { return getInstance().appShouldClose_; };
         static inline void closeApp() { getInstance().appShouldClose_ = true; };
 
@@ -67,12 +62,12 @@ namespace dtb
         static inline int& getCurrentLevel() { return getInstance().currentLevel_; }
         static inline void increaseLevel() { getInstance().currentLevel_++; }
 
-        static inline bool isMouseActivated() { return mouseActivated_; }
+        static inline bool isMouseActivated() { return getInstance().mouseActivated_; }
         static inline void toggleMouseActivated()
         {
-            mouseActivated_ = !mouseActivated_;
+            getInstance().mouseActivated_ = !getInstance().mouseActivated_;
 
-            if (mouseActivated_)
+            if (getInstance().mouseActivated_)
             {
                 ShowCursor();
             }
@@ -82,13 +77,31 @@ namespace dtb
             }
         }
 
+        static inline std::vector<SteppedTile>& getFoundPath() { return getInstance().foundPath_; }
+        static inline void setFoundPath(const std::vector<SteppedTile>& path) { getInstance().foundPath_ = path; }
+        static inline void clearFoundPath() { getInstance().foundPath_.clear(); }
+
     private:
-        static inline bool debugMode_{true};
         static inline bool appShouldClose_{false};
         static inline bool tilesShown_{false};
         static inline bool pathShown_{false};
         static inline int currentLevel_{0};
         static inline bool mouseActivated_{true};
+        static inline std::vector<SteppedTile> foundPath_{};
+    };
+    //=================================
+
+    // Configs / Settings
+    //=================================
+    class Configs : public Singleton<Configs>
+    {
+    public:
+        static inline bool& getDebugMode() { return getInstance().debugMode_; };
+        static inline bool& getVSyncMode() { return getInstance().vSyncMode_; };
+
+    private:
+        static inline bool debugMode_{true};
+        static inline bool vSyncMode_{false};
     };
     //=================================
 

@@ -18,11 +18,7 @@ public:
         if (!ecs_->getAllEntitiesWith<TSelected>()->empty())
             return;
 
-        //* // Skip if no entities tagged TReachable
-        //* if (ecs_->getAllEntitiesWith<TReachable>()->empty())
-        //* return;
-
-        dtb::Configs::hideTiles();
+        dtb::State::hideTiles();
 
         // Action
         ecs_->removeEntity(entityId);

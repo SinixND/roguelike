@@ -5,9 +5,11 @@
 
 #include "CPosition.h"
 #include "ECS.h"
+#include "EntityId.h"
 #include "THoverable.h"
 #include "TIsCursor.h"
-#include "TIsUnderCursor.h"
+#include "TReachable.h"
+#include "TUnderCursor.h"
 #include <raymath.h>
 
 class STagUnderCursor
@@ -25,11 +27,11 @@ public:
         // Action
         if (Vector2Equals(ecs_->getComponent<CPosition>(entityId)->getPosition(), cursorPosition))
         {
-            ecs_->assignComponent<TIsUnderCursor>(entityId);
+            ecs_->assignComponent<TUnderCursor>(entityId);
         }
         else
         {
-            ecs_->removeComponent<TIsUnderCursor>(entityId);
+            ecs_->removeComponent<TUnderCursor>(entityId);
         }
     }
 

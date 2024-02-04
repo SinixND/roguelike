@@ -122,12 +122,12 @@ namespace snd
             return &elements_;
         };
 
-        const Key* getFirstKey()
+        Key getFirstKey()
         {
             if (keys_.empty())
-                return nullptr;
+                return Key();
 
-            return &(*keys_.begin());
+            return *keys_.begin();
         };
 
         std::unordered_set<Key>* getAllKeys() override

@@ -9,6 +9,7 @@
 //=================================
 #include "SAddReachableTiles.h"
 #include "SControl.h"
+#include "SDeSelect.h"
 #include "SFollowMouse.h"
 #include "SGenerateMap.h"
 #include "SRemoveReachableTiles.h"
@@ -16,7 +17,9 @@
 #include "SRenderMapOverlay.h"
 #include "SRenderObjects.h"
 #include "SRenderUI.h"
-#include "SSelection.h"
+#include "SSelect.h"
+#include "STagPathTarget.h"
+#include "STagPathTiles.h"
 #include "STagUnderCursor.h"
 #include "TKeyControlled.h"
 //=================================
@@ -35,17 +38,20 @@ auto tileMap{ECS.createEntity()};
 
 // Initialize systems
 //=================================
+auto sAddReachableTiles{ECS.registerSystem<SAddReachableTiles>()};
+auto sControl{ECS.registerSystem<SControl>()};
+auto sDeSelect{ECS.registerSystem<SDeSelect>()};
 auto sFollowMouse{ECS.registerSystem<SFollowMouse>()};
+auto sGenerateMap{ECS.registerSystem<SGenerateMap>()};
+auto sRemoveReachableTiles{ECS.registerSystem<SRemoveReachableTiles>()};
 auto sRenderMap{ECS.registerSystem<SRenderMap>()};
 auto sRenderMapOverlay{ECS.registerSystem<SRenderMapOverlay>()};
 auto sRenderObjects{ECS.registerSystem<SRenderObjects>()};
 auto sRenderUI{ECS.registerSystem<SRenderUI>()};
+auto sSelect{ECS.registerSystem<SSelect>()};
+auto sTagPathTarget{ECS.registerSystem<STagPathTarget>()};
+auto sTagPathTiles{ECS.registerSystem<STagPathTiles>()};
 auto sTagUnderCursor{ECS.registerSystem<STagUnderCursor>()};
-auto sSelection{ECS.registerSystem<SSelection>()};
-auto sAddReachableTiles{ECS.registerSystem<SAddReachableTiles>()};
-auto sRemoveReachableTiles{ECS.registerSystem<SRemoveReachableTiles>()};
-auto sGenerateMap{ECS.registerSystem<SGenerateMap>()};
-auto sControl{ECS.registerSystem<SControl>()};
 //=================================
 
 void GameScene::initialize()
@@ -80,7 +86,7 @@ void GameScene::processInput()
     //=============================
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
     {
-        dtb::Configs::toggleMouseActivated();
+        dtb::State::toggleMouseActivated();
         ECS.toggleComponent<TMouseControlled>(cursor);
         ECS.toggleComponent<TKeyControlled>(cursor);
     }
@@ -89,7 +95,8 @@ void GameScene::processInput()
     // Execute systems
     //=============================
     sTagUnderCursor->execute();
-    sSelection->execute();
+    sSelect->execute();
+    sDeSelect->execute();
     sFollowMouse->execute();
     sControl->execute();
     //=============================
@@ -101,6 +108,8 @@ void GameScene::updateState()
     //=============================
     sGenerateMap->execute();
     sAddReachableTiles->execute();
+    sTagPathTarget->execute();
+    sTagPathTiles->execute();
     sRemoveReachableTiles->execute();
     //=============================
 };

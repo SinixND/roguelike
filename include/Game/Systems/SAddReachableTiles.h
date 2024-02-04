@@ -11,6 +11,7 @@
 #include "PathFinding.h"
 #include "RuntimeDatabase.h"
 #include "THoverable.h"
+#include "TPathTarget.h"
 #include "TReachable.h"
 #include "TRenderedAsMapOverlay.h"
 #include "TSelected.h"
@@ -23,10 +24,10 @@ class SAddReachableTiles
 public:
     void action(snd::EntityId entityId)
     {
-        if (dtb::Configs::areTilesShown())
+        if (dtb::State::areTilesShown())
             return;
 
-        dtb::Configs::showTiles();
+        dtb::State::showTiles();
 
         // Get components
         auto entityPosition{ecs_->getComponent<CPosition>(entityId)->getPosition()};

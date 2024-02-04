@@ -12,13 +12,23 @@
 #include <raymath.h>
 
 // StepTile{position, direction_it_was_accessed_from}
-bool isPositionInList(const Vector2Int& target, const std::vector<Vector2Int>& positions)
+bool isPositionInPositions(const Vector2Int& target, const std::vector<Vector2Int>& positions)
 {
     for (auto position : positions)
     {
         if (Vector2Equals(
                 target,
                 position))
+            return true;
+    }
+    return false;
+}
+
+bool isInTileList(const Vector2Int& target, const std::vector<SteppedTile>& tiles)
+{
+    for (const auto& tile : tiles)
+    {
+        if (Vector2Equals(target, tile.position))
             return true;
     }
     return false;
@@ -58,7 +68,7 @@ std::vector<Vector2Int> filterTilesAccessible(snd::ECS* ecs)
 
 bool isTileAccessible(const Vector2Int& target, snd::ECS* ecs)
 {
-    return isPositionInList(target, filterTilesAccessible(ecs));
+    return isPositionInPositions(target, filterTilesAccessible(ecs));
 }
 
 std::vector<Vector2Int> filterTilesInRange(const Vector2Int& origin, size_t range, const std::vector<Vector2Int>& accessiblePositions)
@@ -89,7 +99,7 @@ std::vector<Vector2Int> filterTilesInRange(const Vector2Int& origin, size_t rang
 
 bool isTileInRange(const Vector2Int& origin, const Vector2Int& target, size_t range, snd::ECS* ecs)
 {
-    return isPositionInList(target, filterTilesInRange(origin, range, ecs));
+    return isPositionInPositions(target, filterTilesInRange(origin, range, ecs));
 }
 
 std::vector<std::vector<SteppedTile>> filterTilesReachable(const Vector2Int& origin, size_t range, const std::vector<Vector2Int>& inRangePositions)
@@ -126,7 +136,7 @@ std::vector<std::vector<SteppedTile>> filterTilesReachable(const Vector2Int& ori
         auto nextTilePosition{Vector2Add(origin, direction)};
 
         // Check if next tile is in range
-        if (!isPositionInList(nextTilePosition, inRangePositions))
+        if (!isPositionInPositions(nextTilePosition, inRangePositions))
             continue;
 
         // Add stepped tile to stepped tiles
@@ -175,7 +185,7 @@ std::vector<std::vector<SteppedTile>> filterTilesReachable(const Vector2Int& ori
                 if (tileKnown) continue;
 
                 // Check if next tile is in range
-                if (!isPositionInList(nextTilePosition, inRangePositions))
+                if (!isPositionInPositions(nextTilePosition, inRangePositions))
                     continue;
 
                 // Add passable tile to stepped tiles
@@ -203,12 +213,12 @@ bool isTileReachable(const Vector2Int& origin, const Vector2Int& target, size_t 
 }
 
 // Pathfinder returns vector of positions from target to origin (excluded) if target is reachable
-std::vector<Vector2Int> findPath(const Vector2Int& origin, const Vector2Int& target, size_t range, const std::vector<std::vector<SteppedTile>>& reachablePositions)
+std::vector<SteppedTile> findPath(const Vector2Int& origin, const Vector2Int& target, size_t range, const std::vector<std::vector<SteppedTile>>& reachableTiles)
 {
-    std::vector<Vector2Int> path{};
+    std::vector<SteppedTile> path{};
 
     // Check if target is reachable
-    if (!isPositionInSteppedTiles(target, reachablePositions))
+    if (!isPositionInSteppedTiles(target, reachableTiles))
         return path;
 
     // Check if target equals root position
@@ -219,19 +229,20 @@ std::vector<Vector2Int> findPath(const Vector2Int& origin, const Vector2Int& tar
     if (!range)
         return path;
 
-    // Start finding target position and steps needed
-    Vector2Int currentStepLevelPosition{};
+    // Find tiles in reachable positions, and recursively find neighbour until origin in next lower step level
+    SteppedTile currentStepLevelTile{};
     size_t stepsNeeded{};
+    auto reachableTilesSize{reachableTiles.size()};
 
-    auto reachablePositionsSize{reachablePositions.size()};
-    for (size_t stepLevel{0}; stepLevel < reachablePositionsSize; ++stepLevel)
+    // Find target tile in reachable positions
+    for (size_t stepLevel{0}; stepLevel < reachableTilesSize; ++stepLevel)
     {
-        for (const auto& tile : reachablePositions[stepLevel])
+        for (const auto& tile : reachableTiles[stepLevel])
         {
             if (!Vector2Equals(tile.position, target))
                 continue;
 
-            currentStepLevelPosition = tile.position;
+            currentStepLevelTile = tile;
             stepsNeeded = stepLevel;
         }
     }
@@ -239,16 +250,19 @@ std::vector<Vector2Int> findPath(const Vector2Int& origin, const Vector2Int& tar
     // Reconstruct path from steps
 
     // Add final position to path
-    path.push_back(currentStepLevelPosition);
+    currentStepLevelTile.direction = V_NODIR;
+    path.push_back(currentStepLevelTile);
 
     // Push back position from previous step level to the path if it is a neighbour to current step level tile (which is the target initially)
+    // Iterate all tiles that need one step less aka. are in previous step level
     for (auto stepLevel{stepsNeeded - 1}; stepLevel > 0; --stepLevel)
     {
         // Check tiles from previous step level if its neighbour to current step level tile
-        for (auto tile : reachablePositions[stepLevel])
+        for (auto tile : reachableTiles[stepLevel])
         {
             // CheckVector is delta between checked tiles position and current step level position
-            Vector2Int checkVector{Vector2Subtract(tile.position, currentStepLevelPosition)};
+            // CheckVector also is used to store the direction to next path tile
+            Vector2Int checkVector{Vector2Subtract(currentStepLevelTile.position, tile.position)};
 
             // Tiled length of checkVector needs to be 1 (then it is a neighbour)
             auto checkValue{Vector2LengthTiled(checkVector)};
@@ -256,8 +270,10 @@ std::vector<Vector2Int> findPath(const Vector2Int& origin, const Vector2Int& tar
             // Check if tile is neighbour
             if (checkValue == 1)
             {
-                path.insert(path.begin(), tile.position);
-                currentStepLevelPosition = tile.position;
+                // Add direction to next path tile to found tile
+                tile.direction = checkVector;
+                path.insert(path.begin(), tile);
+                currentStepLevelTile = tile;
             }
         }
     }
@@ -265,7 +281,7 @@ std::vector<Vector2Int> findPath(const Vector2Int& origin, const Vector2Int& tar
     return path;
 }
 
-std::vector<Vector2Int> findPath(const Vector2Int& origin, const Vector2Int& target, size_t range, snd::ECS* ecs)
+std::vector<SteppedTile> findPath(const Vector2Int& origin, const Vector2Int& target, size_t range, snd::ECS* ecs)
 {
     return findPath(origin, target, range, filterTilesReachable(origin, range, ecs));
 }

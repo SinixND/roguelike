@@ -5,6 +5,7 @@
 #include "ComponentTypeId.h"
 #include "EntityId.h"
 #include "SparseSet.h"
+#include <cstddef>
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
@@ -14,6 +15,8 @@ namespace snd
     class ComponentManager
     {
     public:
+        //* Register component to avoid Segmentation fault
+
         // Add component to entity
         template <typename ComponentType>
         void assignTo(EntityId entityId, const ComponentType& component)
@@ -76,7 +79,7 @@ namespace snd
             if (!testContainer<ComponentType>()) return 0;
 
             // Return entity
-            return *getComponentContainer<ComponentType>()->getFirstKey();
+            return getComponentContainer<ComponentType>()->getFirstKey();
         }
         // Get all entities
         template <typename ComponentType>
@@ -112,6 +115,7 @@ namespace snd
         template <typename ComponentType>
         bool testContainer()
         {
+            [[maybe_unused]] auto dbg{getId<ComponentType>()};
             return componentContainersByTypeId_.contains(getId<ComponentType>());
         }
 

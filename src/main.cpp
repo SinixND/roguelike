@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "RuntimeDatabase.h"
 #include "Scene.h"
+#include <raylib.h>
 #define RAYGUI_IMPLEMENTATION // Only define once
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
 #include "../resources/iconset/iconset.rgi.h"
@@ -26,12 +27,20 @@ int main(/* int argc, char **argv */)
     constexpr int windowHeight{450};
 #endif
 
-    SetConfigFlags(FLAG_VSYNC_HINT);
+    if (dtb::Configs::getVSyncMode())
+    {
+        SetConfigFlags(FLAG_VSYNC_HINT);
+    }
+    else
+    {
+        SetTargetFPS(145);
+    }
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
     InitWindow(windowWidth, windowHeight, "Roguelike");
     SetWindowMinSize(320, 240);
+    SetExitKey(KEY_F4);
     //=================================
 
     // Application Initialization
@@ -60,7 +69,8 @@ int main(/* int argc, char **argv */)
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(updateGameLoop, 145, 1);
 #else
-    while (!WindowShouldClose() && !dtb::Configs::shouldAppClose())
+
+    while (!WindowShouldClose() && !dtb::State::shouldAppClose())
     {
         // Call update function for emscripten compatibility
         updateGameLoop();
