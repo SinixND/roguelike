@@ -8,36 +8,45 @@
 
 // Typedefs
 //=====================================
-typedef struct Vector2Int
+struct Vector2Int
 {
     int x;
     int y;
-} Vector2Int;
+};
 
 // Rectangle, 4 components
-typedef struct RectangleInt
+struct RectangleInt
 {
     int x;      // Rectangle top-left corner position x
     int y;      // Rectangle top-left corner position y
     int width;  // Rectangle width
     int height; // Rectangle height
-} RectangleInt;
+};
 
-typedef struct Matrix2x2Int
+struct Matrix2x2Int
 {
     int m11, m12;
     int m21, m22;
-} Matrix2x2Int;
+};
 
-typedef struct Area
+struct Area
 {
     Vector2Int position;
     Vector2Int dimension;
-} Area;
+};
 //=====================================
 
 // Functions
 //=====================================
+// in fullscreen mode we can't use GetScreenWidth/Height, so make a function that gets the right data for each mode
+inline Vector2 GetDisplaySize()
+{
+    if (IsWindowFullscreen())
+        return Vector2{static_cast<float>(GetMonitorWidth(GetCurrentMonitor())), static_cast<float>(GetMonitorHeight(GetCurrentMonitor()))};
+    else
+        return Vector2{static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())};
+}
+
 inline Vector2Int Vector2MatrixMultiply(const Matrix2x2Int& M, const Vector2Int& V)
 {
     return Vector2Int{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};

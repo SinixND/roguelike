@@ -13,6 +13,6 @@ public:
 private:
     void processInput() override;
     void updateState() override;
-    void renderOutput() override;
+    void renderOutput(Camera2D& camera) override;
 };
 #endif

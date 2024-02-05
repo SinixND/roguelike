@@ -1,24 +1,22 @@
 #include "Game.h"
 #include "RuntimeDatabase.h"
 #include "Scene.h"
+#include "Utility.h"
 #include <raylib.h>
+#include <raylibEx.h>
 #define RAYGUI_IMPLEMENTATION // Only define once
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
 #include "../resources/iconset/iconset.rgi.h"
-#include <raygui.h>
-#include <raylibEx.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #endif
 
-void updateGameLoop();
+void applicationLoop(Camera2D camera = {});
 int main(/* int argc, char **argv */)
 {
-// General Initialization
-//=================================
-
-// Raylib
+    // Setup the window
+    //=====================================
 #ifndef __EMSCRIPTEN__
     constexpr int windowWidth{0};
     constexpr int windowHeight{0};
@@ -27,25 +25,23 @@ int main(/* int argc, char **argv */)
     constexpr int windowHeight{450};
 #endif
 
-    if (dtb::Configs::getVSyncMode())
-    {
-        SetConfigFlags(FLAG_VSYNC_HINT);
-    }
-    else
-    {
-        SetTargetFPS(145);
-    }
-
+    // Flags
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    if (dtb::Configs::getVSyncMode())
+        SetConfigFlags(FLAG_VSYNC_HINT);
 
     InitWindow(windowWidth, windowHeight, "Roguelike");
+
+    // Settings
+    Image favicon{LoadImage("resources/favicon/favicon.png")};
+    SetWindowIcon(favicon);
     SetWindowMinSize(320, 240);
     SetExitKey(KEY_F4);
-    //=================================
+    SetTargetFPS(245);
+    //=====================================
 
     // Application Initialization
     //=================================
-
     // Load textures
     dtb::Textures::load(PLAYER, "Player.png");
     dtb::Textures::load(CURSOR, "Cursor.png");
@@ -62,18 +58,20 @@ int main(/* int argc, char **argv */)
 
     // Set default scene
     dtb::ActiveScene::setScene(game);
+
+    // Setup Camera2D
+    Camera2D camera{Vector2Scale(GetDisplaySize(), 0.5f), V_NULL, 0.0f, 1.0f};
     //=================================
 
     // Main app loop
     //=================================
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(updateGameLoop, 145, 1);
+    emscripten_set_main_loop(updateGameLoop, 245, 1);
 #else
-
     while (!WindowShouldClose() && !dtb::State::shouldAppClose())
     {
         // Call update function for emscripten compatibility
-        updateGameLoop();
+        applicationLoop(camera);
     }
 #endif
     //=================================
@@ -92,7 +90,7 @@ int main(/* int argc, char **argv */)
     return 0;
 }
 
-void updateGameLoop()
+void applicationLoop(Camera2D camera)
 {
-    dtb::ActiveScene::getScene().update();
+    dtb::ActiveScene::getScene().update(camera);
 }

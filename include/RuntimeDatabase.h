@@ -1,11 +1,9 @@
 #ifndef DATABASE_H_20240117233028
 #define DATABASE_H_20240117233028
 
-#include "PathFinding.h"
 #include "Scene.h"
-#include <raylib.h>
+#include <raylibEx.h>
 #include <string>
-#include <unordered_map>
 
 // Included as an example of a parameterized macro
 #define DISALLOW_COPY_AND_ASSIGN(T) \
@@ -29,7 +27,7 @@ protected:
     DISALLOW_COPY_AND_ASSIGN(Singleton)
 };
 
-typedef enum
+enum RenderId
 {
     PLAYER,
     CURSOR,
@@ -39,7 +37,7 @@ typedef enum
     PATH_TILE,
     ATTACKABLE_TILE,
     SUPPORTABLE_TILE,
-} TextureId;
+};
 
 namespace dtb
 {
@@ -50,17 +48,6 @@ namespace dtb
     public:
         static inline bool& shouldAppClose() { return getInstance().appShouldClose_; };
         static inline void closeApp() { getInstance().appShouldClose_ = true; };
-
-        static inline bool& areTilesShown() { return getInstance().tilesShown_; };
-        static inline void showTiles() { getInstance().tilesShown_ = true; };
-        static inline void hideTiles() { getInstance().tilesShown_ = false; };
-
-        static inline bool& isPathShown() { return getInstance().pathShown_; };
-        static inline void showPath() { getInstance().pathShown_ = true; };
-        static inline void hidePath() { getInstance().pathShown_ = false; };
-
-        static inline int& getCurrentLevel() { return getInstance().currentLevel_; }
-        static inline void increaseLevel() { getInstance().currentLevel_++; }
 
         static inline bool isMouseActivated() { return getInstance().mouseActivated_; }
         static inline void toggleMouseActivated()
@@ -77,17 +64,9 @@ namespace dtb
             }
         }
 
-        static inline std::vector<SteppedTile>& getFoundPath() { return getInstance().foundPath_; }
-        static inline void setFoundPath(const std::vector<SteppedTile>& path) { getInstance().foundPath_ = path; }
-        static inline void clearFoundPath() { getInstance().foundPath_.clear(); }
-
     private:
         static inline bool appShouldClose_{false};
-        static inline bool tilesShown_{false};
-        static inline bool pathShown_{false};
-        static inline int currentLevel_{0};
         static inline bool mouseActivated_{true};
-        static inline std::vector<SteppedTile> foundPath_{};
     };
     //=================================
 
@@ -136,12 +115,12 @@ namespace dtb
     class Textures : public Singleton<Textures>
     {
     public:
-        static inline void load(TextureId textureId, std::string filename)
+        static inline void load(RenderId textureId, std::string filename)
         {
             getInstance().textures_.insert(std::make_pair(textureId, LoadTexture((texturePath + filename).c_str())));
         };
 
-        static inline Texture2D* get(TextureId textureId)
+        static inline Texture2D* get(RenderId textureId)
         {
             return &getInstance().textures_.at(textureId);
         };
@@ -158,7 +137,7 @@ namespace dtb
 
     private:
         static const inline std::string texturePath{"resources/textures/"};
-        static inline std::unordered_map<TextureId, Texture2D> textures_{};
+        static inline std::unordered_map<RenderId, Texture2D> textures_{};
     };
     //=================================
     //

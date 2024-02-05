@@ -11,7 +11,7 @@ namespace snd
     class Scene
     {
     public:
-        virtual void update();
+        virtual void update(Camera2D& camera);
 
         virtual void initialize(){};
         virtual void deinitialize(){};
@@ -21,7 +21,7 @@ namespace snd
     protected:
         virtual void processInput(){};
         virtual void updateState(){};
-        virtual void renderOutput(){};
+        virtual void renderOutput([[maybe_unused]] Camera2D& camera){};
     };
     //=====================================
 }
