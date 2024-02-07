@@ -6,23 +6,27 @@
 
 namespace snd
 {
-    void Scene::update(Camera2D& camera)
+    constexpr float BORDER_WEIGHT{1};
+    constexpr Color BORDER_COLOR{GRAY};
+    constexpr Color BACKGROUND_COLOR{BLACK};
+
+    void Scene::update()
     {
         processInput();
         updateState();
 
         BeginDrawing();
 
-        ClearBackground(dtb::Constants::backgroundColor_);
+        ClearBackground(BACKGROUND_COLOR);
 
         if (dtb::Configs::getDebugMode())
         {
             DrawFPS(0, 0);
         }
 
-        BeginMode2D(camera);
+        BeginMode2D(dtb::Globals::getCamera());
 
-        renderOutput(camera);
+        renderOutput();
 
         EndMode2D();
 

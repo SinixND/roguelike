@@ -2,6 +2,7 @@
 #include "RuntimeDatabase.h"
 #include "Scene.h"
 #include "Utility.h"
+#include <iostream>
 #include <raylib.h>
 #include <raylibEx.h>
 #define RAYGUI_IMPLEMENTATION // Only define once
@@ -12,25 +13,25 @@
 #include <emscripten/emscripten.h>
 #endif
 
-void applicationLoop(Camera2D camera = {});
+#ifndef __EMSCRIPTEN__
+constexpr int WINDOW_WIDTH{800};
+constexpr int WINDOW_HEIGHT{450};
+#else
+constexpr int windowWidth{800};
+constexpr int windowHeight{450};
+#endif
+
+void applicationLoop();
 int main(/* int argc, char **argv */)
 {
     // Setup the window
     //=====================================
-#ifndef __EMSCRIPTEN__
-    constexpr int windowWidth{0};
-    constexpr int windowHeight{0};
-#else
-    constexpr int windowWidth{800};
-    constexpr int windowHeight{450};
-#endif
-
     // Flags
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     if (dtb::Configs::getVSyncMode())
         SetConfigFlags(FLAG_VSYNC_HINT);
 
-    InitWindow(windowWidth, windowHeight, "Roguelike");
+    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Roguelike");
 
     // Settings
     Image favicon{LoadImage("resources/favicon/favicon.png")};
@@ -60,7 +61,10 @@ int main(/* int argc, char **argv */)
     dtb::ActiveScene::setScene(game);
 
     // Setup Camera2D
-    Camera2D camera{Vector2Scale(GetDisplaySize(), 0.5f), V_NULL, 0.0f, 1.0f};
+    dtb::Globals::setCamera({Vector2Scale(GetDisplaySize(), 0.5f),
+                             V_NULL,
+                             0.0f,
+                             1.0f});
     //=================================
 
     // Main app loop
@@ -68,10 +72,10 @@ int main(/* int argc, char **argv */)
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(updateGameLoop, 245, 1);
 #else
-    while (!WindowShouldClose() && !dtb::State::shouldAppClose())
+    while (!WindowShouldClose() && !dtb::Globals::shouldAppClose())
     {
         // Call update function for emscripten compatibility
-        applicationLoop(camera);
+        applicationLoop();
     }
 #endif
     //=================================
@@ -90,7 +94,26 @@ int main(/* int argc, char **argv */)
     return 0;
 }
 
-void applicationLoop(Camera2D camera)
+void applicationLoop()
 {
-    dtb::ActiveScene::getScene().update(camera);
+    dtb::Globals::setCameraOffset({GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f});
+
+#ifndef __EMSCRIPTEN__
+    // Toggle fullscreen
+    //=================================
+    if (IsKeyPressed(KEY_F11))
+    {
+        if (IsWindowMaximized())
+        {
+            RestoreWindow();
+        }
+        else
+        {
+            MaximizeWindow();
+        }
+    }
+#endif
+    //=================================
+
+    dtb::ActiveScene::getScene().update();
 }

@@ -2,6 +2,8 @@
 #define DATABASE_H_20240117233028
 
 #include "Scene.h"
+#include "Utility.h"
+#include <raylib.h>
 #include <raylibEx.h>
 #include <string>
 
@@ -43,7 +45,7 @@ namespace dtb
 {
     // Application state
     //=================================
-    class State : public Singleton<State>
+    class Globals : public Singleton<Globals>
     {
     public:
         static inline bool& shouldAppClose() { return getInstance().appShouldClose_; };
@@ -64,9 +66,18 @@ namespace dtb
             }
         }
 
+        static inline Camera2D& getCamera() { return getInstance().camera_; };
+        static inline void setCamera(Camera2D camera) { getInstance().camera_ = camera; };
+        static inline void setCameraOffset(Vector2 offset) { getInstance().camera_.offset = offset; };
+        static inline void setCameraTarget(Vector2 target) { getInstance().camera_.target = target; };
+        static inline void setCameraZoom(float zoom) { getInstance().camera_.zoom = zoom; };
+
     private:
         static inline bool appShouldClose_{false};
         static inline bool mouseActivated_{true};
+
+        // Setup Camera2D
+        static inline Camera2D camera_{};
     };
     //=================================
 
@@ -76,7 +87,10 @@ namespace dtb
     {
     public:
         static inline bool& getDebugMode() { return getInstance().debugMode_; };
+        static inline void setDebugMode(bool status) { debugMode_ = status; };
+
         static inline bool& getVSyncMode() { return getInstance().vSyncMode_; };
+        static inline void setVSyncMode(bool status) { vSyncMode_ = status; };
 
     private:
         static inline bool debugMode_{true};
@@ -86,13 +100,12 @@ namespace dtb
 
     // Constants
     //=================================
-    struct Constants : public Singleton<Constants>
+    class Constants : public Singleton<Constants>
     {
-        // Visuals
-        static inline const Color foregroundColor_{WHITE};
-        static inline const Color backgroundColor_{BLACK};
+    public:
+        static inline const Vector2& getTileSize() { return tileSize_; };
 
-        // Geometrics
+    private:
         static inline const Vector2 tileSize_{25, 25};
     };
     //=================================

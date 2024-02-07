@@ -52,7 +52,7 @@ VPATH 				:= $(shell find . -type d)
 ### here go all source files (with the $(SRC_EXT) extension)
 SRC_DIRS 			:= ./src
 ### here go local include files
-LOC_INC_DIR 		:= ./include #deprecated
+LOC_INC_DIR 		:= ./include 
 ### here go external include files
 EXT_INC_DIR 		:= ./include/external
 ### here go local library files

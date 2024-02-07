@@ -5,13 +5,10 @@
 
 namespace snd
 {
-    constexpr float BORDER_WEIGHT{1};
-    constexpr Color BORDER_COLOR{GRAY};
-
     class Scene
     {
     public:
-        virtual void update(Camera2D& camera);
+        virtual void update();
 
         virtual void initialize(){};
         virtual void deinitialize(){};
@@ -21,7 +18,7 @@ namespace snd
     protected:
         virtual void processInput(){};
         virtual void updateState(){};
-        virtual void renderOutput([[maybe_unused]] Camera2D& camera){};
+        virtual void renderOutput(){};
     };
     //=====================================
 }
