@@ -19,7 +19,7 @@ namespace snd
 
         // Add component to entity
         template <typename ComponentType>
-        void assignTo(EntityId entityId, const ComponentType& component)
+        ComponentType* assignTo(EntityId entityId, const ComponentType& newComponent)
         {
             // Check if container exists
             if (!componentContainersByTypeId_.contains(getId<ComponentType>()))
@@ -28,7 +28,9 @@ namespace snd
             }
 
             // Add component
-            getComponentContainer<ComponentType>()->insert(entityId, component);
+            ComponentType* component{getComponentContainer<ComponentType>()->insert(entityId, newComponent)};
+
+            return component;
         }
 
         // Remove a component from an entity

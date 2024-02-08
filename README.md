@@ -7,7 +7,7 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Render character on screen
+[0] Catch up to backup branch
 
 # Shortterm
 

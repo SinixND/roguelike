@@ -19,10 +19,7 @@ namespace snd
     public:
         // Entities
         // ============================
-        EntityId createEntity()
-        {
-            return entityManager_.request();
-        }
+        EntityId createEntity() { return entityManager_.request(); }
 
         void removeEntity(EntityId entityId)
         {
@@ -57,11 +54,11 @@ namespace snd
         //* }
 
         template <typename ComponentType, typename... Args>
-        void assignComponent(EntityId entityId, Args&&... args)
+        ComponentType* assignComponent(EntityId entityId, Args&&... args)
         {
             // Assign component to entity
-            ComponentType component{std::forward<Args>(args)...};
-            componentManager_.assignTo(entityId, component);
+            ComponentType newComponent{std::forward<Args>(args)...};
+            ComponentType* component{componentManager_.assignTo(entityId, newComponent)};
 
             // get component type id
             ComponentTypeId componentTypeId{Component<ComponentType>::getId()};
@@ -71,6 +68,8 @@ namespace snd
 
             // notify systems about added component
             notifyAdd(entityId, componentTypeId);
+
+            return component;
         }
 
         template <typename ComponentType>
@@ -147,9 +146,9 @@ namespace snd
         // ============================
 
     private:
-        EntityManager entityManager_;
-        ComponentManager componentManager_;
-        std::vector<std::shared_ptr<ISystem>> systems_;
+        EntityManager entityManager_{};
+        ComponentManager componentManager_{};
+        std::vector<std::shared_ptr<ISystem>> systems_{};
 
     private:
         // Systems
@@ -162,10 +161,13 @@ namespace snd
                 auto systemSignature{system->getSignature()};
 
                 // check if component type is relevant to system
-                if (!systemSignature.test(componentTypeId)) continue;
+                if (!systemSignature.test(componentTypeId))
+                    continue;
 
                 // check if entity signature is relevant to system
-                if ((entityManager_.getSignature(entityId) & systemSignature) != systemSignature) continue;
+                if ((entityManager_.getSignature(entityId) & systemSignature) !=
+                    systemSignature)
+                    continue;
 
                 // register entity
                 system->registerEntity(entityId);
@@ -180,10 +182,13 @@ namespace snd
                 auto systemSignature{system->getSignature()};
 
                 // check if component type is relevant to system
-                if (!systemSignature.test(componentTypeId)) continue;
+                if (!systemSignature.test(componentTypeId))
+                    continue;
 
                 // check if entity signature is relevant to system
-                if ((entityManager_.getSignature(entityId) & systemSignature) != systemSignature) continue;
+                if ((entityManager_.getSignature(entityId) & systemSignature) !=
+                    systemSignature)
+                    continue;
 
                 // deregister entity
                 system->deregisterEntity(entityId);
@@ -191,6 +196,6 @@ namespace snd
         }
         // ============================
     };
-}
+} // namespace snd
 
 #endif

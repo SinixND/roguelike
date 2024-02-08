@@ -5,9 +5,6 @@
 
 #include <cstddef> // Size_t
 
-namespace snd
-{
-    using Id = std::size_t;
-}
+using Id = std::size_t;
 
 #endif

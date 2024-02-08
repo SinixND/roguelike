@@ -26,11 +26,11 @@ namespace snd
     {
     public:
         // Create non-existing, update existing
-        void insert(const Key& key, const Type& element)
+        Type* insert(const Key& key, const Type& newElement)
         {
             if (test(key))
             {
-                elements_[keyToIndex_[key]] = element;
+                elements_[keyToIndex_[key]] = newElement;
                 return;
             }
 
@@ -41,13 +41,17 @@ namespace snd
             Index elementIndex = elements_.size();
 
             // Add new element to list
-            elements_.push_back(element);
+            elements_.push_back(newElement);
+
+            Type* element{&elements_.back()};
 
             // Add key to elementIndex mapping
             keyToIndex_.insert(std::make_pair(key, elementIndex));
 
             // Add elementIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.insert(std::make_pair(elementIndex, key));
+
+            return element;
         };
 
         void erase(const Key& key) override

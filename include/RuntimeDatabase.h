@@ -29,7 +29,7 @@ protected:
     DISALLOW_COPY_AND_ASSIGN(Singleton)
 };
 
-enum RenderId
+enum RenderType
 {
     PLAYER,
     CURSOR,
@@ -128,12 +128,12 @@ namespace dtb
     class Textures : public Singleton<Textures>
     {
     public:
-        static inline void load(RenderId textureId, std::string filename)
+        static inline void load(RenderType textureId, std::string filename)
         {
             getInstance().textures_.insert(std::make_pair(textureId, LoadTexture((texturePath + filename).c_str())));
         };
 
-        static inline Texture2D* get(RenderId textureId)
+        static inline Texture2D* get(RenderType textureId)
         {
             return &getInstance().textures_.at(textureId);
         };
@@ -150,7 +150,7 @@ namespace dtb
 
     private:
         static const inline std::string texturePath{"resources/textures/"};
-        static inline std::unordered_map<RenderId, Texture2D> textures_{};
+        static inline std::unordered_map<RenderType, Texture2D> textures_{};
     };
     //=================================
     //
