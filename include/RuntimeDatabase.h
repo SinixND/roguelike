@@ -1,6 +1,7 @@
 #ifndef DATABASE_H_20240117233028
 #define DATABASE_H_20240117233028
 
+#include "Attributes/RenderId.h"
 #include "Scene.h"
 #include "Utility.h"
 #include <raylib.h>
@@ -27,18 +28,6 @@ protected:
     ~Singleton() = default;
 
     DISALLOW_COPY_AND_ASSIGN(Singleton)
-};
-
-enum RenderType
-{
-    PLAYER,
-    CURSOR,
-    WALL_TILE,
-    FLOOR_TILE,
-    REACHABLE_TILE,
-    PATH_TILE,
-    ATTACKABLE_TILE,
-    SUPPORTABLE_TILE,
 };
 
 namespace dtb
@@ -103,10 +92,11 @@ namespace dtb
     class Constants : public Singleton<Constants>
     {
     public:
-        static inline const Vector2& getTileSize() { return tileSize_; };
+        static inline float getTileSize() { return tileSize_; };
+        static inline Vector2 getTileDimensions() { return Vector2{tileSize_, tileSize_}; };
 
     private:
-        static inline const Vector2 tileSize_{25, 25};
+        static inline const float tileSize_{25};
     };
     //=================================
 
@@ -128,12 +118,12 @@ namespace dtb
     class Textures : public Singleton<Textures>
     {
     public:
-        static inline void load(RenderType textureId, std::string filename)
+        static inline void load(RenderId textureId, std::string filename)
         {
             getInstance().textures_.insert(std::make_pair(textureId, LoadTexture((texturePath + filename).c_str())));
         };
 
-        static inline Texture2D* get(RenderType textureId)
+        static inline Texture2D* get(RenderId textureId)
         {
             return &getInstance().textures_.at(textureId);
         };
@@ -150,9 +140,8 @@ namespace dtb
 
     private:
         static const inline std::string texturePath{"resources/textures/"};
-        static inline std::unordered_map<RenderType, Texture2D> textures_{};
+        static inline std::unordered_map<RenderId, Texture2D> textures_{};
     };
     //=================================
-    //
 }
 #endif

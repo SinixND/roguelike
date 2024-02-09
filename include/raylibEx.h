@@ -44,7 +44,7 @@ inline Vector2 GetDisplaySize()
     if (IsWindowFullscreen())
         return Vector2{static_cast<float>(GetMonitorWidth(GetCurrentMonitor())), static_cast<float>(GetMonitorHeight(GetCurrentMonitor()))};
     else
-        return Vector2{static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())};
+        return Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
 }
 
 inline Vector2Int Vector2MatrixMultiply(const Matrix2x2Int& M, const Vector2Int& V)
