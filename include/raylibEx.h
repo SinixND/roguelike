@@ -1,6 +1,7 @@
-#ifndef RAYLIBEX_H_20240203171045
-#define RAYLIBEX_H_20240203171045
+#ifndef _20240203171045
+#define _20240203171045
 
+#include <cstddef>
 #include <raylib.h>
 #include <raymath.h>
 
@@ -10,29 +11,33 @@
 //=====================================
 struct Vector2Int
 {
-    int x;
-    int y;
-};
-
-// Rectangle, 4 components
-struct RectangleInt
-{
-    int x;      // Rectangle top-left corner position x
-    int y;      // Rectangle top-left corner position y
-    int width;  // Rectangle width
-    int height; // Rectangle height
+    int x{};
+    int y{};
 };
 
 struct Matrix2x2Int
 {
-    int m11, m12;
-    int m21, m22;
+    int m11{}, m12{};
+    int m21{}, m22{};
 };
 
-struct Area
+struct Box
 {
-    Vector2Int position;
-    Vector2Int dimension;
+    int left{};   // Rectangle top-left corner position x
+    int top{};    // Rectangle top-left corner position y
+    int width{};  // Rectangle width
+    int height{}; // Rectangle height
+
+    int right{};
+    int bottom{};
+
+    Box(int leftX, int topY, int widthX, int heightY)
+        : left(leftX)
+        , top(topY)
+        , width(widthX)
+        , height(heightY)
+        , right(leftX + widthX - 1)
+        , bottom(topY + heightY - 1){};
 };
 //=====================================
 

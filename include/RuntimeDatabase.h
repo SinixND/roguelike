@@ -1,11 +1,10 @@
-#ifndef DATABASE_H_20240117233028
-#define DATABASE_H_20240117233028
+#ifndef _20240117233028
+#define _20240117233028
 
 #include "Attributes/RenderId.h"
 #include "Scene.h"
 #include "Utility.h"
 #include <raylib.h>
-#include <raylibEx.h>
 #include <string>
 
 // Included as an example of a parameterized macro
@@ -92,11 +91,16 @@ namespace dtb
     class Constants : public Singleton<Constants>
     {
     public:
-        static inline float getTileSize() { return tileSize_; };
-        static inline Vector2 getTileDimensions() { return Vector2{tileSize_, tileSize_}; };
+        static inline float getTileSize() { return getInstance().tileSize_; };
+        static inline Vector2 getTileDimensions() { return Vector2{getInstance().tileSize_, getInstance().tileSize_}; };
+
+        static inline void loadFont(const char* fileName) { getInstance().font_ = LoadFont(fileName); };
+        static inline void unloadFont() { UnloadFont(getInstance().font_); };
+        static inline Font& getFont() { return getInstance().font_; };
 
     private:
         static inline const float tileSize_{25};
+        static inline Font font_{};
     };
     //=================================
 

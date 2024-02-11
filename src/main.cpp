@@ -3,11 +3,13 @@
 #include "Scene.h"
 #include "Utility.h"
 #include <iostream>
-#include <raylib.h>
-#include <raylibEx.h>
+
 #define RAYGUI_IMPLEMENTATION // Only define once
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
 #include "../resources/iconset/iconset.rgi.h"
+
+#include <raygui.h>
+#include <raylib.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
@@ -39,12 +41,16 @@ int main(/* int argc, char **argv */)
     SetWindowMinSize(320, 240);
     SetExitKey(KEY_F4);
     SetTargetFPS(245);
+
+    // Fonts
+    dtb::Constants::loadFont("resources/fonts/JuliaMono-RegularLatin.ttf");
+    GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
     //=====================================
 
     // Application Initialization
     //=================================
     // Load textures
-    dtb::Textures::load(PLAYER, "Player.png");
+    dtb::Textures::load(HERO, "Hero.png");
     dtb::Textures::load(CURSOR, "Cursor.png");
     dtb::Textures::load(WALL_TILE, "TileWall.png");
     dtb::Textures::load(FLOOR_TILE, "TileFloor.png");
@@ -65,10 +71,10 @@ int main(/* int argc, char **argv */)
                              V_NULL,
                              0.0f,
                              1.0f});
-    //=================================
+//=================================
 
-    // Main app loop
-    //=================================
+// Main app loop
+//=================================
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(updateGameLoop, 245, 1);
 #else
@@ -82,6 +88,9 @@ int main(/* int argc, char **argv */)
 
     // De-Initialization
     //=================================
+    // Unload fonts
+    dtb::Constants::unloadFont();
+
     // Unlaod textures
     dtb::Textures::unloadAll();
 

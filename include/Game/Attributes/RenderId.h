@@ -1,10 +1,10 @@
-#ifndef RENDERID_H_20240209175845
-#define RENDERID_H_20240209175845
+#ifndef _20240209175845
+#define _20240209175845
 
 enum RenderId
 {
-    NONE,
-    PLAYER,
+    NONE = 0,
+    HERO,
     CURSOR,
     WALL_TILE,
     FLOOR_TILE,

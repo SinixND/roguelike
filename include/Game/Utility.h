@@ -1,6 +1,7 @@
-#ifndef UTILITY_H_20240106173048
-#define UTILITY_H_20240106173048
+#ifndef _20240106173048
+#define _20240106173048
 
+#include "raylib.h"
 #include "raylibEx.h"
 
 typedef enum
@@ -25,6 +26,8 @@ const Matrix2x2Int M_ROTATE_RIGHT{0, -1, 1, 0};
 const Matrix2x2Int M_ROTATE_LEFT{0, 1, -1, 0};
 
 Vector2Int getScreenToTile(const Vector2& pixel);
-Vector2 getTileToScreen(const Vector2Int& position);
+Vector2 getTileToWorld(const Vector2Int& position);
+
+void setMouseTile(Vector2Int& position);
 
 #endif

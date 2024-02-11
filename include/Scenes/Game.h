@@ -1,5 +1,5 @@
-#ifndef GAME_H_20231203204745
-#define GAME_H_20231203204745
+#ifndef _20231203204745
+#define _20231203204745
 
 #include "Scene.h"
 
@@ -14,5 +14,6 @@ private:
     void processInput() override;
     void updateState() override;
     void renderOutput() override;
+    void renderOutputWorld();
 };
 #endif

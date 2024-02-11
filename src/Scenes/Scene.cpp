@@ -2,7 +2,6 @@
 
 #include "RuntimeDatabase.h"
 #include <raylib.h>
-#include <raylibEx.h>
 
 namespace snd
 {
@@ -24,11 +23,7 @@ namespace snd
             DrawFPS(0, 0);
         }
 
-        BeginMode2D(dtb::Globals::getCamera());
-
         renderOutput();
-
-        EndMode2D();
 
         // Draw simple frame
         DrawRectangleLinesEx(Rectangle{0, 0, static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())}, BORDER_WEIGHT, BORDER_COLOR);
