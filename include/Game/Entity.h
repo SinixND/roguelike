@@ -1,14 +1,14 @@
 #ifndef _20240211172120
 #define _20240211172120
 
-#include "Attributes/RenderId.h"
-#include "raylib.h"
+#include "RenderData.h"
 #include "raylibEx.h"
 
-struct Entity
+class Entity
 {
+public:
     Vector2Int position_{};
-    RenderId renderId_{};
+    RenderData renderData{};
 };
 
 #endif

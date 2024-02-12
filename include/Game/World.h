@@ -1,7 +1,7 @@
 #ifndef _20240211205246
 #define _20240211205246
 
-#include "MapGenerator.h"
+#include "TileGenerator.h"
 #include "TileMap.h"
 #include <cstddef>
 
@@ -17,7 +17,7 @@ private:
     size_t maxLevel_{};
     size_t currentLevel_{};
 
-    MapGenerator generator_{};
+    TileGenerator generator_{};
 
     std::vector<TileMap> maps_{generator_.createNewMap(maxLevel_)};
     TileMap& currentMap_{maps_.back()};

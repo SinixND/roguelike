@@ -1,11 +1,12 @@
-#include "MapGenerator.h"
+#include "TileGenerator.h"
 
-#include "Attributes/RenderId.h"
 #include "Entity.h"
+#include "LayerId.h"
+#include "RenderId.h"
 #include "raylib.h"
 #include <cstddef>
 
-TileMap MapGenerator::createNewMap(size_t level)
+TileMap TileGenerator::createNewMap(size_t level)
 {
     TileMap newMap{};
 
@@ -15,7 +16,7 @@ TileMap MapGenerator::createNewMap(size_t level)
     return newMap;
 }
 
-void MapGenerator::updateTiles(TileMap& tileMap, const Box& area, RenderId tileId)
+void TileGenerator::updateTiles(TileMap& tileMap, const Box& area, RenderId renderId, LayerId layerId, bool isSolid)
 {
     for (int x{0}; x < area.width; ++x)
     {
@@ -23,12 +24,17 @@ void MapGenerator::updateTiles(TileMap& tileMap, const Box& area, RenderId tileI
         {
             Vector2Int position{(area.left + x), (area.top + y)};
 
-            tileMap.update(position, Entity{position, tileId});
+            tileMap.update(
+                position,
+                Tile{
+                    {position,
+                     {renderId, layerId}},
+                    isSolid});
         };
     }
 }
 
-void MapGenerator::addRoom(TileMap& tileMap, const Box& room)
+void TileGenerator::addRoom(TileMap& tileMap, const Box& room)
 {
     // Top wall
     updateTiles(
@@ -38,7 +44,9 @@ void MapGenerator::addRoom(TileMap& tileMap, const Box& room)
             room.top,
             room.width - 1,
             1},
-        WALL_TILE);
+        RENDER_WALL_TILE,
+        LAYER_MAP,
+        true);
 
     // Right wall
     updateTiles(
@@ -48,7 +56,9 @@ void MapGenerator::addRoom(TileMap& tileMap, const Box& room)
             room.top,
             1,
             room.height - 1},
-        WALL_TILE);
+        RENDER_WALL_TILE,
+        LAYER_MAP,
+        true);
 
     // Bottom wall
     updateTiles(
@@ -58,7 +68,9 @@ void MapGenerator::addRoom(TileMap& tileMap, const Box& room)
             room.bottom,
             room.width - 1,
             1},
-        WALL_TILE);
+        RENDER_WALL_TILE,
+        LAYER_MAP,
+        true);
 
     // Left wall
     updateTiles(
@@ -68,7 +80,9 @@ void MapGenerator::addRoom(TileMap& tileMap, const Box& room)
             room.top + 1,
             1,
             room.height - 1},
-        WALL_TILE);
+        RENDER_WALL_TILE,
+        LAYER_MAP,
+        true);
 
     // Floor
     updateTiles(
@@ -78,10 +92,12 @@ void MapGenerator::addRoom(TileMap& tileMap, const Box& room)
             room.top + 1,
             room.width - 2,
             room.height - 2},
-        FLOOR_TILE);
+        RENDER_FLOOR_TILE,
+        LAYER_MAP,
+        false);
 }
 
-void MapGenerator::addStartRoom(TileMap& tileMap)
+void TileGenerator::addStartRoom(TileMap& tileMap)
 {
     addRoom(
         tileMap,
@@ -97,5 +113,7 @@ void MapGenerator::addStartRoom(TileMap& tileMap)
             -1,
             3,
             1},
-        WALL_TILE);
+        RENDER_WALL_TILE,
+        LAYER_MAP,
+        true);
 }

@@ -1,10 +1,13 @@
 #include "Game.h"
 
 #include "Entity.h"
-#include "MapGenerator.h"
+#include "Invoker.h"
+#include "LayerId.h"
+#include "Render.h"
 #include "RenderId.h"
 #include "RuntimeDatabase.h"
 #include "Services/Renderer.h"
+#include "TileGenerator.h"
 #include "TileMap.h"
 #include "Unit.h"
 #include "Utility.h"
@@ -18,11 +21,19 @@ World world{};
 Entity cursor{};
 Unit hero{5};
 
+// Command invokers
+Invoker renderMapCommands{};
+Invoker renderMapOverlayCommands{};
+
 void GameScene::initialize()
 {
-    cursor.renderId_ = CURSOR;
+    cursor.renderData = {
+        RENDER_CURSOR,
+        LAYER_UI};
 
-    hero.renderId_ = HERO;
+    hero.renderData = {
+        RENDER_HERO,
+        LAYER_OBJECT};
 }
 
 void GameScene::processInput()
@@ -47,14 +58,34 @@ void GameScene::renderOutputWorld()
     // Layer Map
     for (const auto& tile : world.getCurrentMap().getValues())
     {
-        renderer.render(tile.renderId_, tile.position_.x, tile.position_.y);
+        Render render{renderer, tile.renderData.renderId_, tile.position_.x, tile.position_.y};
+
+        switch (tile.renderData.layerId_)
+        {
+        case LAYER_MAP:
+            renderMapCommands.queueCommand(render);
+            break;
+
+        case LAYER_MAP_OVERLAY:
+            renderMapOverlayCommands.queueCommand(render);
+            break;
+
+        default:
+            break;
+        }
+
+        renderer.render(tile.renderData.renderId_, tile.position_.x, tile.position_.y);
     }
 
     // Layer Units
-    renderer.render(hero.renderId_, hero.position_.x, hero.position_.y);
+    renderer.render(hero.renderData.renderId_, hero.position_.x, hero.position_.y);
 
     // Layer UI
-    renderer.render(cursor.renderId_, cursor.position_.x, cursor.position_.y);
+    renderer.render(cursor.renderData.renderId_, cursor.position_.x, cursor.position_.y);
+
+    // Call command invokers
+    renderMapCommands.executeQueue();
+    renderMapOverlayCommands.executeQueue();
 
     EndMode2D();
 }

@@ -50,14 +50,14 @@ int main(/* int argc, char **argv */)
     // Application Initialization
     //=================================
     // Load textures
-    dtb::Textures::load(HERO, "Hero.png");
-    dtb::Textures::load(CURSOR, "Cursor.png");
-    dtb::Textures::load(WALL_TILE, "TileWall.png");
-    dtb::Textures::load(FLOOR_TILE, "TileFloor.png");
-    dtb::Textures::load(REACHABLE_TILE, "TileReachable.png");
-    dtb::Textures::load(PATH_TILE, "TilePath.png");
-    dtb::Textures::load(ATTACKABLE_TILE, "TileAttackable.png");
-    dtb::Textures::load(SUPPORTABLE_TILE, "TileSupportable.png");
+    dtb::Textures::load(RENDER_HERO, "Hero.png");
+    dtb::Textures::load(RENDER_CURSOR, "Cursor.png");
+    dtb::Textures::load(RENDER_WALL_TILE, "TileWall.png");
+    dtb::Textures::load(RENDER_FLOOR_TILE, "TileFloor.png");
+    dtb::Textures::load(RENDER_REACHABLE_TILE, "TileReachable.png");
+    dtb::Textures::load(RENDER_PATH_TILE, "TilePath.png");
+    dtb::Textures::load(RENDER_ATTACKABLE_TILE, "TileAttackable.png");
+    dtb::Textures::load(RENDER_SUPPORTABLE_TILE, "TileSupportable.png");
 
     // Define scenes
     GameScene game{};
@@ -67,10 +67,11 @@ int main(/* int argc, char **argv */)
     dtb::ActiveScene::setScene(game);
 
     // Setup Camera2D
-    dtb::Globals::setCamera({Vector2Scale(GetDisplaySize(), 0.5f),
-                             V_NULL,
-                             0.0f,
-                             1.0f});
+    dtb::Globals::setCamera(
+        {Vector2Scale(GetDisplaySize(), 0.5f),
+         V_NULL,
+         0.0f,
+         1.0f});
 //=================================
 
 // Main app loop
