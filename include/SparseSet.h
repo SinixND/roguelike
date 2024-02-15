@@ -16,7 +16,7 @@ namespace snd
         virtual void erase(const Key& key) = 0;
         virtual void clear() = 0;
         virtual bool contains(const Key& key) = 0;
-        virtual std::vector<Key> getKeys() = 0;
+        virtual std::vector<Key> keys() = 0;
         virtual ~ISparseSet() = default;
     };
 
@@ -126,12 +126,12 @@ namespace snd
             return &values_[keyToIndex_[key]];
         };
 
-        std::vector<Type>& getValues()
+        std::vector<Type>& values()
         {
             return values_;
         };
 
-        std::vector<Key> getKeys() override
+        std::vector<Key> keys() override
         {
             std::vector<Key> keys{keys_.begin(), keys_.end()};
 

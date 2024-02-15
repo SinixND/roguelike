@@ -3,9 +3,9 @@
 
 #include "RenderId.h"
 #include "Scene.h"
-#include "Utility.h"
 #include <raylib.h>
 #include <string>
+#include <unordered_map>
 
 // Included as an example of a parameterized macro
 #define DISALLOW_COPY_AND_ASSIGN(T) \
@@ -16,7 +16,7 @@ template <typename Type>
 class Singleton
 {
 public:
-    static inline Type& getInstance()
+    static inline Type& instance()
     {
         static Type instance;
         return instance;
@@ -36,15 +36,15 @@ namespace dtb
     class Globals : public Singleton<Globals>
     {
     public:
-        static inline bool& shouldAppClose() { return getInstance().appShouldClose_; };
-        static inline void closeApp() { getInstance().appShouldClose_ = true; };
+        static inline bool& shouldAppClose() { return instance().appShouldClose_; };
+        static inline void closeApp() { instance().appShouldClose_ = true; };
 
-        static inline bool isMouseActivated() { return getInstance().mouseActivated_; }
+        static inline bool isMouseActivated() { return instance().mouseActivated_; }
         static inline void toggleMouseActivated()
         {
-            getInstance().mouseActivated_ = !getInstance().mouseActivated_;
+            instance().mouseActivated_ = !instance().mouseActivated_;
 
-            if (getInstance().mouseActivated_)
+            if (instance().mouseActivated_)
             {
                 ShowCursor();
             }
@@ -54,11 +54,11 @@ namespace dtb
             }
         }
 
-        static inline Camera2D& getCamera() { return getInstance().camera_; };
-        static inline void setCamera(Camera2D camera) { getInstance().camera_ = camera; };
-        static inline void setCameraOffset(Vector2 offset) { getInstance().camera_.offset = offset; };
-        static inline void setCameraTarget(Vector2 target) { getInstance().camera_.target = target; };
-        static inline void setCameraZoom(float zoom) { getInstance().camera_.zoom = zoom; };
+        static inline Camera2D& camera() { return instance().camera_; };
+        static inline void setCamera(Camera2D camera) { instance().camera_ = camera; };
+        static inline void setCameraOffset(Vector2 offset) { instance().camera_.offset = offset; };
+        static inline void setCameraTarget(Vector2 target) { instance().camera_.target = target; };
+        static inline void setCameraZoom(float zoom) { instance().camera_.zoom = zoom; };
 
     private:
         static inline bool appShouldClose_{false};
@@ -74,10 +74,10 @@ namespace dtb
     class Configs : public Singleton<Configs>
     {
     public:
-        static inline bool& getDebugMode() { return getInstance().debugMode_; };
+        static inline bool& debugMode() { return instance().debugMode_; };
         static inline void setDebugMode(bool status) { debugMode_ = status; };
 
-        static inline bool& getVSyncMode() { return getInstance().vSyncMode_; };
+        static inline bool& vSyncMode() { return instance().vSyncMode_; };
         static inline void setVSyncMode(bool status) { vSyncMode_ = status; };
 
     private:
@@ -91,12 +91,12 @@ namespace dtb
     class Constants : public Singleton<Constants>
     {
     public:
-        static inline float getTileSize() { return getInstance().tileSize_; };
-        static inline Vector2 getTileDimensions() { return Vector2{getInstance().tileSize_, getInstance().tileSize_}; };
+        static inline float tileSize() { return instance().tileSize_; };
+        static inline Vector2 tileDimensions() { return Vector2{instance().tileSize_, instance().tileSize_}; };
 
-        static inline void loadFont(const char* fileName) { getInstance().font_ = LoadFont(fileName); };
-        static inline void unloadFont() { UnloadFont(getInstance().font_); };
-        static inline Font& getFont() { return getInstance().font_; };
+        static inline void loadFont(const char* fileName) { instance().font_ = LoadFont(fileName); };
+        static inline void unloadFont() { UnloadFont(instance().font_); };
+        static inline Font& font() { return instance().font_; };
 
     private:
         static inline const float tileSize_{25};
@@ -109,8 +109,8 @@ namespace dtb
     class ActiveScene : public Singleton<ActiveScene>
     {
     public:
-        static inline snd::Scene& getScene() { return *getInstance().scene_; };
-        static inline void setScene(snd::Scene& scene) { getInstance().scene_ = &scene; };
+        static inline snd::Scene& scene() { return *instance().scene_; };
+        static inline void setScene(snd::Scene& scene) { instance().scene_ = &scene; };
 
     private:
         static inline snd::Scene* scene_{};
@@ -124,22 +124,22 @@ namespace dtb
     public:
         static inline void load(RenderId textureId, std::string filename)
         {
-            getInstance().textures_.insert(std::make_pair(textureId, LoadTexture((texturePath + filename).c_str())));
+            instance().textures_.insert(std::make_pair(textureId, LoadTexture((texturePath + filename).c_str())));
         };
 
         static inline Texture2D* get(RenderId textureId)
         {
-            return &getInstance().textures_.at(textureId);
+            return &instance().textures_.at(textureId);
         };
 
         static inline void unloadAll()
         {
-            for (const auto& texture : getInstance().textures_)
+            for (const auto& texture : instance().textures_)
             {
                 Texture2D tex = texture.second;
                 UnloadTexture(tex);
             }
-            getInstance().textures_.clear();
+            instance().textures_.clear();
         };
 
     private:

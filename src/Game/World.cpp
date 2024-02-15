@@ -1,9 +1,9 @@
 #include "World.h"
 
 // Public:
-TileMap& World::getCurrentMap() { return currentMap_; }
+TileMap& World::currentMap() { return currentMap_; }
 
-size_t World::getCurrentLevel() { return currentLevel_; }
+size_t World::currentLevel() { return currentLevel_; }
 
 void World::increaseLevel()
 {
@@ -29,7 +29,7 @@ void World::decreaseLevel()
 // Private:
 void World::addNewMap(size_t level)
 {
-    maps_.push_back(generator_.createNewMap(level));
+    maps_.push_back(mapHandler_.createNewMap(level));
 }
 
 void World::setMap(size_t level)

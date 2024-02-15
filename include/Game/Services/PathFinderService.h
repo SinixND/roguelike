@@ -1,8 +1,8 @@
 #ifndef _20240128183417
 #define _20240128183417
 
+#include "DirectionVector.h"
 #include "TileMap.h"
-#include "Utility.h"
 #include <cstddef>
 #include <raylibEx.h>
 #include <vector>

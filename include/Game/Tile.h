@@ -1,12 +1,21 @@
-#ifndef _20240212020856
-#define _20240212020856
+#ifndef _20240215012942
+#define _20240215012942
 
-#include "Entity.h"
+#include "IEntity.h"
+#include "Position.h"
+#include "RenderData.h"
 
-class Tile : public Entity
+class Tile : public IEntity
 {
 public:
+    Position position_{};
+    RenderData renderData_{};
     bool isSolid_{};
+
+    Tile(Position position, RenderData renderData, bool isSolid)
+        : position_(position)
+        , renderData_(renderData)
+        , isSolid_(isSolid){};
 };
 
 #endif

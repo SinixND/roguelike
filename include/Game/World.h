@@ -1,15 +1,15 @@
 #ifndef _20240211205246
 #define _20240211205246
 
-#include "TileGenerator.h"
+#include "MapHandleService.h"
 #include "TileMap.h"
 #include <cstddef>
 
 class World
 {
 public:
-    TileMap& getCurrentMap();
-    size_t getCurrentLevel();
+    TileMap& currentMap();
+    size_t currentLevel();
     void increaseLevel();
     void decreaseLevel();
 
@@ -17,9 +17,9 @@ private:
     size_t maxLevel_{};
     size_t currentLevel_{};
 
-    TileGenerator generator_{};
+    MapHandleService mapHandler_{};
 
-    std::vector<TileMap> maps_{generator_.createNewMap(maxLevel_)};
+    std::vector<TileMap> maps_{mapHandler_.createNewMap(maxLevel_)};
     TileMap& currentMap_{maps_.back()};
 
 private:

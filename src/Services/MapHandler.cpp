@@ -1,12 +1,14 @@
-#include "TileGenerator.h"
+#include "MapHandleService.h"
 
-#include "Entity.h"
 #include "LayerId.h"
+#include "RenderData.h"
 #include "RenderId.h"
-#include "raylib.h"
+#include "Tile.h"
+#include "TileMap.h"
+#include "raylibEx.h"
 #include <cstddef>
 
-TileMap TileGenerator::createNewMap(size_t level)
+TileMap MapHandleService::createNewMap(size_t level)
 {
     TileMap newMap{};
 
@@ -16,30 +18,25 @@ TileMap TileGenerator::createNewMap(size_t level)
     return newMap;
 }
 
-void TileGenerator::updateTiles(TileMap& tileMap, const Box& area, RenderId renderId, LayerId layerId, bool isSolid)
+void MapHandleService::updateTiles(TileMap& tileMap, const Area& area, RenderId renderId, LayerId layerId, bool isSolid)
 {
     for (int x{0}; x < area.width; ++x)
     {
         for (int y{0}; y < area.height; ++y)
         {
-            Vector2Int position{(area.left + x), (area.top + y)};
+            Position position{(area.left + x), (area.top + y)};
 
-            tileMap.update(
-                position,
-                Tile{
-                    {position,
-                     {renderId, layerId}},
-                    isSolid});
+            tileMap.update(position, Tile{position, {renderId, layerId}, isSolid});
         };
     }
 }
 
-void TileGenerator::addRoom(TileMap& tileMap, const Box& room)
+void MapHandleService::addRoom(TileMap& tileMap, const Area& room)
 {
     // Top wall
     updateTiles(
         tileMap,
-        Box{
+        Area{
             room.left,
             room.top,
             room.width - 1,
@@ -51,7 +48,7 @@ void TileGenerator::addRoom(TileMap& tileMap, const Box& room)
     // Right wall
     updateTiles(
         tileMap,
-        Box{
+        Area{
             room.right,
             room.top,
             1,
@@ -63,7 +60,7 @@ void TileGenerator::addRoom(TileMap& tileMap, const Box& room)
     // Bottom wall
     updateTiles(
         tileMap,
-        Box{
+        Area{
             room.left + 1,
             room.bottom,
             room.width - 1,
@@ -75,7 +72,7 @@ void TileGenerator::addRoom(TileMap& tileMap, const Box& room)
     // Left wall
     updateTiles(
         tileMap,
-        Box{
+        Area{
             room.left,
             room.top + 1,
             1,
@@ -87,7 +84,7 @@ void TileGenerator::addRoom(TileMap& tileMap, const Box& room)
     // Floor
     updateTiles(
         tileMap,
-        Box{
+        Area{
             room.left + 1,
             room.top + 1,
             room.width - 2,
@@ -97,18 +94,19 @@ void TileGenerator::addRoom(TileMap& tileMap, const Box& room)
         false);
 }
 
-void TileGenerator::addStartRoom(TileMap& tileMap)
+void MapHandleService::addStartRoom(TileMap& tileMap)
 {
     addRoom(
         tileMap,
-        Box{
+        Area{
             -7,
             -7,
             15,
             15});
+
     updateTiles(
         tileMap,
-        Box{
+        Area{
             -1,
             -1,
             3,

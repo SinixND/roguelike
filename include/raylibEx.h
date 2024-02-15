@@ -21,7 +21,7 @@ struct Matrix2x2Int
     int m21{}, m22{};
 };
 
-struct Box
+struct Area
 {
     int left{};   // Rectangle top-left corner position x
     int top{};    // Rectangle top-left corner position y
@@ -31,7 +31,7 @@ struct Box
     int right{};
     int bottom{};
 
-    Box(int leftX, int topY, int widthX, int heightY)
+    Area(int leftX, int topY, int widthX, int heightY)
         : left(leftX)
         , top(topY)
         , width(widthX)
@@ -91,11 +91,10 @@ RMAPI Vector2 Vector2Scale(Vector2Int v, float scale)
 }
 
 // Check whether two given vectors are almost equal
-RMAPI int Vector2Equals(Vector2Int p, Vector2Int q)
+RMAPI int Vector2Equals(Vector2Int v1, Vector2Int v2)
 {
-    return ((p.x == q.x) && (p.y == q.y));
+    return ((v1.x == v2.x) && (v1.y == v2.y));
 }
-
 //=====================================
 
 // Operator overloads

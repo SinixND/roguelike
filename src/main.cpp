@@ -1,7 +1,7 @@
+#include "DirectionVector.h"
 #include "Game.h"
 #include "RuntimeDatabase.h"
 #include "Scene.h"
-#include "Utility.h"
 #include <iostream>
 
 #define RAYGUI_IMPLEMENTATION // Only define once
@@ -9,7 +9,7 @@
 #include "../resources/iconset/iconset.rgi.h"
 
 #include <raygui.h>
-#include <raylib.h>
+#include <raylibEx.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
@@ -30,7 +30,7 @@ int main(/* int argc, char **argv */)
     //=====================================
     // Flags
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    if (dtb::Configs::getVSyncMode())
+    if (dtb::Configs::vSyncMode())
         SetConfigFlags(FLAG_VSYNC_HINT);
 
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Roguelike");
@@ -125,5 +125,5 @@ void applicationLoop()
 #endif
     //=================================
 
-    dtb::ActiveScene::getScene().update();
+    dtb::ActiveScene::scene().update();
 }

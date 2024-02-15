@@ -1,20 +1,20 @@
-#include "Renderer.h"
+#include "RenderService.h"
 
 #include "RenderId.h"
 #include "RuntimeDatabase.h"
-#include "Utility.h"
+#include "TilePositionConversion.h"
 #include <raylib.h>
 #include <raymath.h>
 
-void Renderer::render(RenderId renderId, int x, int y)
+void RenderService::render(RenderId renderId, int x, int y)
 {
     Texture2D* texture{dtb::Textures::get(renderId)};
 
-    Vector2 tileSize{dtb::Constants::getTileDimensions()};
+    Vector2 tileSize{dtb::Constants::tileDimensions()};
     Vector2 tileCenter{Vector2Scale(tileSize, 0.5f)};
 
     Vector2 pixelCoordinates{
-        getTileToWorld(
+        positionToWorld(
             {x, y})};
 
     DrawTexturePro(

@@ -3,14 +3,14 @@
 
 #include "ICommand.h"
 #include "RenderId.h"
-#include "Renderer.h"
+#include "RenderService.h"
 
-class Render : public ICommand
+class RenderCommand : public ICommand
 {
 public:
     void execute() const override { receiver_.render(renderId_, x_, y_); };
 
-    Render(Renderer& receiver, RenderId renderId, int x, int y)
+    RenderCommand(RenderService& receiver, RenderId renderId, int x, int y)
         : receiver_(receiver)
         , renderId_(renderId)
         , x_(x)
@@ -19,7 +19,7 @@ public:
     }
 
 private:
-    Renderer& receiver_;
+    RenderService& receiver_;
 
     RenderId renderId_{};
     int x_;

@@ -1,5 +1,6 @@
-#include "PathFinding.h"
+#include "PathFinderService.h"
 
+#include "RotationMatrices.h"
 #include "TileMap.h"
 #include <raylibEx.h>
 
@@ -46,7 +47,7 @@ std::vector<Vector2Int> filterNonSolidPositions(TileMap& tileMap)
 {
     std::vector<Vector2Int> accessiblePositions{};
 
-    for (const auto& tile : tileMap.getValues())
+    for (const auto& tile : tileMap.values())
     {
         if (tile.isSolid_)
             continue;
@@ -144,10 +145,7 @@ std::vector<std::vector<SteppedPosition>> filterReachable(const std::vector<Vect
             SteppedPosition steppedTile{steppedPositions[previousStepLevel][tileIndex]};
 
             // Check the 3 neighbours it was not stepped from
-            for (Matrix2x2Int R : {
-                     M_ROTATE_NONE,
-                     M_ROTATE_LEFT,
-                     M_ROTATE_RIGHT})
+            for (Matrix2x2Int R : {M_ROTATE_NONE, M_ROTATE_LEFT, M_ROTATE_RIGHT})
             {
                 // Set next stepped tile position
                 Vector2Int nextTilePosition{Vector2Add(steppedTile.position, Vector2MatrixMultiply(R, steppedTile.direction))};

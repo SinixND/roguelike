@@ -1,33 +1,33 @@
 #include "Game.h"
 
-#include "Entity.h"
-#include "Invoker.h"
+#include "CommandInvoker.h"
+#include "GameObject.h"
 #include "LayerId.h"
-#include "Render.h"
+#include "RenderCommand.h"
 #include "RenderId.h"
+#include "RenderService.h"
 #include "RuntimeDatabase.h"
-#include "Services/Renderer.h"
-#include "TileGenerator.h"
 #include "TileMap.h"
+#include "TilePositionConversion.h"
 #include "Unit.h"
-#include "Utility.h"
 #include "World.h"
 #include <iostream>
 #include <raygui.h>
 #include <raylib.h>
 
-Renderer renderer{};
+RenderService renderer{};
+
 World world{};
-Entity cursor{};
+GameObject cursor{};
 Unit hero{5};
 
 // Command invokers
-Invoker renderMapCommands{};
-Invoker renderMapOverlayCommands{};
+CommandInvoker renderMapCommands{};
+CommandInvoker renderMapOverlayCommands{};
 
 void GameScene::initialize()
 {
-    cursor.renderData = {
+    cursor.renderData_ = {
         RENDER_CURSOR,
         LAYER_UI};
 
@@ -41,26 +41,32 @@ void GameScene::processInput()
     setMouseTile(cursor.position_);
 
     // Toggle between mouse or key control for cursor
-    //=============================
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
     {
         dtb::Globals::toggleMouseActivated();
     }
-    //=============================
+
+    // Select unit
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
+    {
+    }
 }
 
-void GameScene::updateState() {}
+void GameScene::updateState()
+{
+    // Show range of selected unit
+}
 
 void GameScene::renderOutputWorld()
 {
-    BeginMode2D(dtb::Globals::getCamera());
+    BeginMode2D(dtb::Globals::camera());
 
     // Layer Map
-    for (const auto& tile : world.getCurrentMap().getValues())
+    for (const auto& tile : world.currentMap().values())
     {
-        Render render{renderer, tile.renderData.renderId_, tile.position_.x, tile.position_.y};
+        RenderCommand render{renderer, tile.renderData_.renderId_, tile.position_.x, tile.position_.y};
 
-        switch (tile.renderData.layerId_)
+        switch (tile.renderData_.layerId_)
         {
         case LAYER_MAP:
             renderMapCommands.queueCommand(render);
@@ -74,14 +80,14 @@ void GameScene::renderOutputWorld()
             break;
         }
 
-        renderer.render(tile.renderData.renderId_, tile.position_.x, tile.position_.y);
+        renderer.render(tile.renderData_.renderId_, tile.position_.x, tile.position_.y);
     }
 
     // Layer Units
     renderer.render(hero.renderData.renderId_, hero.position_.x, hero.position_.y);
 
     // Layer UI
-    renderer.render(cursor.renderData.renderId_, cursor.position_.x, cursor.position_.y);
+    renderer.render(cursor.renderData_.renderId_, cursor.position_.x, cursor.position_.y);
 
     // Call command invokers
     renderMapCommands.executeQueue();
@@ -94,9 +100,11 @@ void GameScene::renderOutput()
 {
     renderOutputWorld();
 
-    const char* currentLevel{TextFormat("Level %i", world.getCurrentLevel())};
+    // Draw text for current level
+    //=================================
+    const char* currentLevel{TextFormat("Level %i", world.currentLevel())};
 
-    Font& font{dtb::Constants::getFont()};
+    Font& font{dtb::Constants::font()};
     int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
     int fontSpacing{GuiGetStyle(DEFAULT, TEXT_SPACING)};
 
@@ -111,6 +119,7 @@ void GameScene::renderOutput()
         fontSize,
         GuiGetStyle(DEFAULT, TEXT_SPACING),
         RAYWHITE);
+    //=================================
 }
 
 void GameScene::deinitialize() {}

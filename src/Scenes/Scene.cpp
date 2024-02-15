@@ -18,7 +18,7 @@ namespace snd
 
         ClearBackground(BACKGROUND_COLOR);
 
-        if (dtb::Configs::getDebugMode())
+        if (dtb::Configs::debugMode())
         {
             DrawFPS(0, 0);
         }

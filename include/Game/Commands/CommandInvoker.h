@@ -4,7 +4,7 @@
 #include "ICommand.h"
 #include <vector>
 
-class Invoker
+class CommandInvoker
 {
 public:
     void executeCommand(ICommand& command)
@@ -29,7 +29,6 @@ public:
 
 private:
     std::vector<std::reference_wrapper<ICommand>> queue{};
-    //* std::vector<ICommand*> queue;
 };
 
 #endif
