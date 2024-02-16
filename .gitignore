@@ -11,3 +11,5 @@ bin
 *.out
 *.txt
 perf.*
+callgrind*
+vgcore*

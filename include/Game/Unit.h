@@ -1,22 +1,17 @@
 #ifndef _20240211230403
 #define _20240211230403
 
-#include "IEntity.h"
-#include "Position.h"
-#include "Range.h"
-#include "RenderData.h"
+#include "GameObject.h"
+#include <cstddef>
 
-class Unit : public IEntity
+class Unit : public GameObject
 {
 public:
-    Position position_{};
-    RenderData renderData{};
-    Range moveRange_{};
+    size_t moveRange() { return moveRange_; };
+    void setMoveRange(size_t moveRange) { moveRange_ = moveRange; };
 
-    Unit(Range moveRange)
-        : moveRange_(moveRange)
-    {
-    }
+private:
+    size_t moveRange_{};
 };
 
 #endif

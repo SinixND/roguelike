@@ -26,7 +26,12 @@ void MapHandleService::updateTiles(TileMap& tileMap, const Area& area, RenderId 
         {
             Position position{(area.left + x), (area.top + y)};
 
-            tileMap.update(position, Tile{position, {renderId, layerId}, isSolid});
+            Tile tile{};
+            tile.setPosition(position);
+            tile.setRenderData({renderId, layerId});
+            tile.setIsSolid(isSolid);
+
+            tileMap.update(position, tile);
         };
     }
 }

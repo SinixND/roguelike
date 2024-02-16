@@ -6,12 +6,12 @@
 
 static snd::IdManager idManager{};
 
-class IEntity
+class Entity
 {
 public:
     snd::Id id_{idManager.requestId()};
 
-    virtual ~IEntity() { idManager.suspendId(id_); }
+    virtual ~Entity() { idManager.suspendId(id_); }
 };
 
 #endif

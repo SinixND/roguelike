@@ -47,12 +47,12 @@ std::vector<Vector2Int> filterNonSolidPositions(TileMap& tileMap)
 {
     std::vector<Vector2Int> accessiblePositions{};
 
-    for (const auto& tile : tileMap.values())
+    for (auto& tile : tileMap.values())
     {
-        if (tile.isSolid_)
+        if (tile.isSolid())
             continue;
 
-        accessiblePositions.push_back(tile.position_);
+        accessiblePositions.push_back(tile.position());
     }
 
     return accessiblePositions;

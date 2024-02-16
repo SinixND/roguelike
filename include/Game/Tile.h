@@ -1,21 +1,17 @@
 #ifndef _20240215012942
 #define _20240215012942
 
-#include "IEntity.h"
+#include "GameObject.h"
 #include "Position.h"
 #include "RenderData.h"
 
-class Tile : public IEntity
+class Tile : public GameObject
 {
 public:
-    Position position_{};
-    RenderData renderData_{};
+    bool isSolid() { return isSolid_; };
+    void setIsSolid(bool isSolid) { isSolid_ = isSolid; };
+
+private:
     bool isSolid_{};
-
-    Tile(Position position, RenderData renderData, bool isSolid)
-        : position_(position)
-        , renderData_(renderData)
-        , isSolid_(isSolid){};
 };
-
 #endif

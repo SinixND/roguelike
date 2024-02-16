@@ -19,7 +19,7 @@ RenderService renderer{};
 
 World world{};
 GameObject cursor{};
-Unit hero{5};
+Unit hero{};
 
 // Command invokers
 CommandInvoker renderMapCommands{};
@@ -27,18 +27,17 @@ CommandInvoker renderMapOverlayCommands{};
 
 void GameScene::initialize()
 {
-    cursor.renderData_ = {
-        RENDER_CURSOR,
-        LAYER_UI};
+    cursor.setRenderData({RENDER_CURSOR,
+                          LAYER_UI});
 
-    hero.renderData = {
-        RENDER_HERO,
-        LAYER_OBJECT};
+    hero.setMoveRange(5);
+    hero.setRenderData({RENDER_HERO,
+                        LAYER_OBJECT});
 }
 
 void GameScene::processInput()
 {
-    setMouseTile(cursor.position_);
+    setMouseTile(cursor.position());
 
     // Toggle between mouse or key control for cursor
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
@@ -62,11 +61,11 @@ void GameScene::renderOutputWorld()
     BeginMode2D(dtb::Globals::camera());
 
     // Layer Map
-    for (const auto& tile : world.currentMap().values())
+    for (auto& tile : world.currentMap().values())
     {
-        RenderCommand render{renderer, tile.renderData_.renderId_, tile.position_.x, tile.position_.y};
+        RenderCommand render{renderer, tile.renderData().renderId_, tile.position().x, tile.position().y};
 
-        switch (tile.renderData_.layerId_)
+        switch (tile.renderData().layerId_)
         {
         case LAYER_MAP:
             renderMapCommands.queueCommand(render);
@@ -80,14 +79,14 @@ void GameScene::renderOutputWorld()
             break;
         }
 
-        renderer.render(tile.renderData_.renderId_, tile.position_.x, tile.position_.y);
+        renderer.render(tile.renderData().renderId_, tile.position().x, tile.position().y);
     }
 
     // Layer Units
-    renderer.render(hero.renderData.renderId_, hero.position_.x, hero.position_.y);
+    renderer.render(hero.renderData().renderId_, hero.position().x, hero.position().y);
 
     // Layer UI
-    renderer.render(cursor.renderData_.renderId_, cursor.position_.x, cursor.position_.y);
+    renderer.render(cursor.renderData().renderId_, cursor.position().x, cursor.position().y);
 
     // Call command invokers
     renderMapCommands.executeQueue();
