@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include "CommandInvoker.h"
+#include "DirectionVector.h"
 #include "GameObject.h"
 #include "LayerId.h"
 #include "RenderCommand.h"
@@ -11,6 +12,7 @@
 #include "TilePositionConversion.h"
 #include "Unit.h"
 #include "World.h"
+#include "raylibEx.h"
 #include <iostream>
 #include <raygui.h>
 #include <raylib.h>
@@ -27,27 +29,67 @@ CommandInvoker renderMapOverlayCommands{};
 
 void GameScene::initialize()
 {
-    cursor.setRenderData({RENDER_CURSOR,
-                          LAYER_UI});
+    cursor.setRenderData(
+        {RENDER_CURSOR,
+         LAYER_UI});
 
     hero.setMoveRange(5);
-    hero.setRenderData({RENDER_HERO,
-                        LAYER_OBJECT});
+    hero.setRenderData(
+        {RENDER_HERO,
+         LAYER_OBJECT});
 }
 
 void GameScene::processInput()
 {
-    setMouseTile(cursor.position());
-
     // Toggle between mouse or key control for cursor
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
     {
         dtb::Globals::toggleMouseActivated();
     }
 
+    if (dtb::Globals::isMouseActivated())
+    {
+        // Mouse controlled cursor
+        setMouseTile(cursor.position());
+    }
+    else
+    {
+        // Key controlled cursor
+        switch (GetKeyPressed())
+        {
+        case KEY_W:
+            cursor.setPosition(Vector2Add(cursor.position(), V_UP));
+            break;
+        case KEY_A:
+            cursor.setPosition(Vector2Add(cursor.position(), V_LEFT));
+            break;
+        case KEY_S:
+            cursor.setPosition(Vector2Add(cursor.position(), V_DOWN));
+            break;
+        case KEY_D:
+            cursor.setPosition(Vector2Add(cursor.position(), V_RIGHT));
+            break;
+
+        default:
+            break;
+        }
+    }
+
     // Select unit
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
     {
+        if (hero.position() == cursor.position())
+        {
+            hero.toggleSelected();
+            std::cout << "Hero selected: " << hero.selected() << "\n";
+        }
+    }
+
+    // Deselect unit
+    if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_CAPS_LOCK))
+    {
+        hero.setSelected(false);
+        std::cout << "Hero selected: " << hero.selected() << "\n";
     }
 }
 
