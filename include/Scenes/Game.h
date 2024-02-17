@@ -15,5 +15,6 @@ private:
     void updateState() override;
     void renderOutput() override;
     void renderOutputWorld();
+    void postOutput() override;
 };
 #endif

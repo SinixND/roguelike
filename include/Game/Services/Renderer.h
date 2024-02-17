@@ -3,7 +3,7 @@
 
 #include "RenderId.h"
 
-class RenderService
+class Renderer
 {
 public:
     void render(RenderId renderId, int x, int y);

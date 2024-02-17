@@ -10,15 +10,16 @@ namespace snd
     public:
         virtual void update();
 
-        virtual void initialize(){};
-        virtual void deinitialize(){};
+        virtual void initialize() = 0;
+        virtual void deinitialize() = 0;
 
         virtual ~Scene() = default;
 
     protected:
-        virtual void processInput(){};
-        virtual void updateState(){};
-        virtual void renderOutput(){};
+        virtual void processInput() = 0;
+        virtual void updateState() = 0;
+        virtual void renderOutput() = 0;
+        virtual void postOutput() = 0;
     };
     //=====================================
 }

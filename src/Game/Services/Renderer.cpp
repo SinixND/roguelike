@@ -1,4 +1,4 @@
-#include "RenderService.h"
+#include "Renderer.h"
 
 #include "RenderId.h"
 #include "RuntimeDatabase.h"
@@ -6,7 +6,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-void RenderService::render(RenderId renderId, int x, int y)
+void Renderer::render(RenderId renderId, int x, int y)
 {
     Texture2D* texture{dtb::Textures::get(renderId)};
 

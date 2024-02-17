@@ -29,5 +29,7 @@ namespace snd
         DrawRectangleLinesEx(Rectangle{0, 0, static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())}, BORDER_WEIGHT, BORDER_COLOR);
 
         EndDrawing();
+
+        postOutput();
     };
 }

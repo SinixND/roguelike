@@ -3,7 +3,7 @@
 
 #include "GameObject.h"
 #include "Position.h"
-#include "RenderData.h"
+#include "RenderId.h"
 
 class Tile : public GameObject
 {

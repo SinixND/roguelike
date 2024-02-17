@@ -1,22 +1,21 @@
 #ifndef _20240211172120
 #define _20240211172120
 
-#include "Entity.h"
 #include "Position.h"
-#include "RenderData.h"
+#include "RenderId.h"
 
-class GameObject : public Entity
+class GameObject
 {
 public:
     Position& position() { return position_; };
     void setPosition(Position position) { position_ = position; };
 
-    RenderData& renderData() { return renderData_; };
-    void setRenderData(RenderData renderData) { renderData_ = renderData; };
+    RenderId& renderId() { return renderId_; };
+    void setRenderId(RenderId renderId) { renderId_ = renderId; };
 
 private:
     Position position_{};
-    RenderData renderData_{};
+    RenderId renderId_{};
 };
 
 #endif

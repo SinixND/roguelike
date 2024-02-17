@@ -1,14 +1,12 @@
-#include "MapHandleService.h"
+#include "MapHandler.h"
 
-#include "LayerId.h"
-#include "RenderData.h"
 #include "RenderId.h"
 #include "Tile.h"
 #include "TileMap.h"
 #include "raylibEx.h"
 #include <cstddef>
 
-TileMap MapHandleService::createNewMap(size_t level)
+TileMap MapHandler::createNewMap(size_t level)
 {
     TileMap newMap{};
 
@@ -18,7 +16,7 @@ TileMap MapHandleService::createNewMap(size_t level)
     return newMap;
 }
 
-void MapHandleService::updateTiles(TileMap& tileMap, const Area& area, RenderId renderId, LayerId layerId, bool isSolid)
+void MapHandler::updateTiles(TileMap& tileMap, const Area& area, RenderId renderId, bool isSolid)
 {
     for (int x{0}; x < area.width; ++x)
     {
@@ -28,7 +26,7 @@ void MapHandleService::updateTiles(TileMap& tileMap, const Area& area, RenderId 
 
             Tile tile{};
             tile.setPosition(position);
-            tile.setRenderData({renderId, layerId});
+            tile.setRenderId(renderId);
             tile.setIsSolid(isSolid);
 
             tileMap.update(position, tile);
@@ -36,7 +34,7 @@ void MapHandleService::updateTiles(TileMap& tileMap, const Area& area, RenderId 
     }
 }
 
-void MapHandleService::addRoom(TileMap& tileMap, const Area& room)
+void MapHandler::addRoom(TileMap& tileMap, const Area& room)
 {
     // Top wall
     updateTiles(
@@ -47,7 +45,6 @@ void MapHandleService::addRoom(TileMap& tileMap, const Area& room)
             room.width - 1,
             1},
         RENDER_WALL_TILE,
-        LAYER_MAP,
         true);
 
     // Right wall
@@ -59,7 +56,6 @@ void MapHandleService::addRoom(TileMap& tileMap, const Area& room)
             1,
             room.height - 1},
         RENDER_WALL_TILE,
-        LAYER_MAP,
         true);
 
     // Bottom wall
@@ -71,7 +67,6 @@ void MapHandleService::addRoom(TileMap& tileMap, const Area& room)
             room.width - 1,
             1},
         RENDER_WALL_TILE,
-        LAYER_MAP,
         true);
 
     // Left wall
@@ -83,7 +78,6 @@ void MapHandleService::addRoom(TileMap& tileMap, const Area& room)
             1,
             room.height - 1},
         RENDER_WALL_TILE,
-        LAYER_MAP,
         true);
 
     // Floor
@@ -95,11 +89,10 @@ void MapHandleService::addRoom(TileMap& tileMap, const Area& room)
             room.width - 2,
             room.height - 2},
         RENDER_FLOOR_TILE,
-        LAYER_MAP,
         false);
 }
 
-void MapHandleService::addStartRoom(TileMap& tileMap)
+void MapHandler::addStartRoom(TileMap& tileMap)
 {
     addRoom(
         tileMap,
@@ -117,6 +110,5 @@ void MapHandleService::addStartRoom(TileMap& tileMap)
             3,
             1},
         RENDER_WALL_TILE,
-        LAYER_MAP,
         true);
 }

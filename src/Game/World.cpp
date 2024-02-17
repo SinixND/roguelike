@@ -26,6 +26,10 @@ void World::decreaseLevel()
     setMap(currentLevel_);
 }
 
+TileMap& World::mapOverlay() { return mapOverlay_; }
+
+TileMap& World::framedMapOverlay() { return framedMapOverlay_; }
+
 // Private:
 void World::addNewMap(size_t level)
 {

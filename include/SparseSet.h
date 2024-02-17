@@ -107,10 +107,10 @@ namespace snd
 
         void clear() override
         {
-            for (const auto& key : keys_)
-            {
-                erase(key);
-            }
+            values_.clear();
+            keyToIndex_.clear();
+            indexToKey_.clear();
+            keys_.clear();
         };
 
         bool contains(const Key& key) override
