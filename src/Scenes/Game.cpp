@@ -87,11 +87,11 @@ void GameScene::processInput()
 void GameScene::updateState()
 {
     // Show range of selected unit
-    static bool rangeShown{false};
+    static bool moveRangeShown{false};
 
-    if (hero.selected() && !rangeShown)
+    if (hero.selected() && !moveRangeShown)
     {
-        rangeShown = true;
+        moveRangeShown = true;
 
         // Filter relevant tiles
         for (auto& steppedPositions : filterReachable(world.currentMap(), hero.moveRange(), hero.position()))
@@ -113,14 +113,14 @@ void GameScene::updateState()
     }
 
     // Clear overlay if no unit selected
-    if (!hero.selected() && rangeShown)
+    if (!hero.selected() && moveRangeShown)
     {
         world.mapOverlay().clear();
-        rangeShown = false;
+        moveRangeShown = false;
     }
 
     // Show path
-    if (rangeShown)
+    if (moveRangeShown)
     {
         for (auto& steppedPosition : findPath(world.mapOverlay(), hero.position(), cursor.position(), hero.moveRange()))
         {

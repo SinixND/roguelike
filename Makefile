@@ -30,7 +30,7 @@ MAKEFLAGS 			:=
 
 #######################################
 ### set the used compiler to g++ or clang++
-CXX 				:= g++
+CXX 				:= clang++
 WIN_CXX 			:= /bin/x86_64-w64-mingw32-g++ 
 
 ### set the binary file extension
@@ -85,10 +85,13 @@ LOC_LIB_DIRS 		:= $(shell find $(LOC_LIB_DIR) -type d)
 
 ### set raylib and emscripten directory as needed
 RAYLIB_DIR 			:= /usr/lib/raylib/src
+EMSCRIPTEN_DIR		:= /usr/lib/emscripten/cache/sysroot/include
 WIN_RAYLIB_DIR 		:= /usr/x86_64-w64-mingw32/lib/raylib/src
 ifdef TERMUX_VERSION
 RAYLIB_DIR 			:= $(PREFIX)/lib/raylib/src
+EMSCRIPTEN_DIR 		:= $(PREFIX)/lib/emscripten/cache/sysroot/include
 endif
+
 
 ### set linker flags
 LD_FLAGS 			:= #-fsanitize=address
@@ -115,7 +118,7 @@ SYS_INC_FLAGS 		:= $(addprefix -I,$(SYS_INC_DIR))
 WIN_SYS_INC_FLAGS	:= $(addprefix -I,$(WIN_SYS_INC_DIR))
 LOC_INC_FLAGS 		:= $(addprefix -I,$(LOC_INC_DIRS))
 EXT_INC_FLAGS 		:= $(addprefix -isystem,$(EXT_INC_DIRS))
-SYS_INC_FLAGS 		:= $(addprefix -isystem,$(RAYLIB_DIR))
+SYS_INC_FLAGS 		+= $(addprefix -isystem,$(RAYLIB_DIR))
 
 INC_FLAGS 			:= $(SYS_INC_FLAGS) $(EXT_INC_FLAGS) $(LOC_INC_FLAGS)
 WIN_INC_FLAGS 		:= $(WIN_SYS_INC_FLAGS) $(EXT_INC_FLAGS) $(LOC_INC_FLAGS)
@@ -138,7 +141,7 @@ DEPS 				:= $(patsubst $(OBJ_DIR)/%.$(OBJ_EXT),$(OBJ_DIR)/%.$(DEP_EXT),$(OBJS))
 WIN_DEPS 			:= $(patsubst $(OBJ_DIR)/%.$(WIN_OBJ_EXT),$(OBJ_DIR)/%.$(WIN_DEP_EXT),$(WIN_OBJS))
 
 ### Non-file (.phony)targets (or rules)
-.PHONY: all debug release publish web windows build rebuild run clean
+.PHONY: all debug release web windows publish build rebuild run clean
 ifndef TERMUX_VERSION
 .PHONY: bear test benchmark
 endif
@@ -172,7 +175,7 @@ benchmark: $(BIN_DIR)/benchmark.$(BINARY_EXT)
 release: CXX_FLAGS += -O2
 release: build 
 
-publish: web windows 
+publish: clean release web windows 
 
 ### rule for native build process with binary as prerequisite
 build: $(BIN_DIR)/$(BINARY).$(BINARY_EXT) 

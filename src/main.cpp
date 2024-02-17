@@ -15,13 +15,8 @@
 #include <emscripten/emscripten.h>
 #endif
 
-#ifndef __EMSCRIPTEN__
 constexpr int WINDOW_WIDTH{800};
 constexpr int WINDOW_HEIGHT{450};
-#else
-constexpr int windowWidth{800};
-constexpr int windowHeight{450};
-#endif
 
 void applicationLoop();
 int main(/* int argc, char **argv */)
@@ -72,12 +67,12 @@ int main(/* int argc, char **argv */)
          V_NULL,
          0.0f,
          1.0f});
-//=================================
+    //=================================
 
-// Main app loop
-//=================================
+    // Main app loop
+    //=================================
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(updateGameLoop, 245, 1);
+    emscripten_set_main_loop(applicationLoop, 245, 1);
 #else
     while (!WindowShouldClose() && !dtb::Globals::shouldAppClose())
     {
