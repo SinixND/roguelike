@@ -5,7 +5,9 @@
 #include <raylibEx.h>
 
 // StepTile{position, direction_it_was_accessed_from}
-bool isInPositions(const Vector2Int& target, const std::vector<Vector2Int>& positions)
+bool isInPositions(
+    const Vector2Int& target,
+    const std::vector<Vector2Int>& positions)
 {
     for (auto position : positions)
     {
@@ -17,7 +19,9 @@ bool isInPositions(const Vector2Int& target, const std::vector<Vector2Int>& posi
     return false;
 }
 
-bool isInTiles(const Vector2Int& target, const std::vector<SteppedPosition>& tiles)
+bool isInTiles(
+    const Vector2Int& target,
+    const std::vector<SteppedPosition>& tiles)
 {
     for (const auto& tile : tiles)
     {
@@ -27,7 +31,9 @@ bool isInTiles(const Vector2Int& target, const std::vector<SteppedPosition>& til
     return false;
 }
 
-bool isInSteppedTiles(const Vector2Int& target, const std::vector<std::vector<SteppedPosition>>& steppedTiles)
+bool isInSteppedTiles(
+    const Vector2Int& target,
+    const ClassifiedPositions& steppedTiles)
 {
     for (const auto& tiles : steppedTiles)
     {
@@ -58,7 +64,10 @@ std::vector<Vector2Int> filterNonSolidPositions(TileMap& tileMap)
     return accessiblePositions;
 }
 
-std::vector<Vector2Int> filterInRange(const std::vector<Vector2Int>& nonSolidPositions, size_t range, const Vector2Int& origin)
+std::vector<Vector2Int> filterInRange(
+    const std::vector<Vector2Int>& nonSolidPositions,
+    size_t range,
+    const Vector2Int& origin)
 {
     std::vector<Vector2Int> inRangePositions{};
 
@@ -79,19 +88,29 @@ std::vector<Vector2Int> filterInRange(const std::vector<Vector2Int>& nonSolidPos
     return inRangePositions;
 }
 
-std::vector<Vector2Int> filterInRange(TileMap& tileMap, size_t range, const Vector2Int& origin)
+std::vector<Vector2Int> filterInRange(
+    TileMap& tileMap,
+    size_t range,
+    const Vector2Int& origin)
 {
     return filterInRange(filterNonSolidPositions(tileMap), range, origin);
 }
 
-bool isInRange(const Vector2Int& target, size_t range, const Vector2Int& origin, TileMap& tileMap)
+bool isInRange(
+    const Vector2Int& target,
+    size_t range,
+    const Vector2Int& origin,
+    TileMap& tileMap)
 {
     return isInPositions(target, filterInRange(tileMap, range, origin));
 }
 
-std::vector<std::vector<SteppedPosition>> filterReachable(const std::vector<Vector2Int>& inRangePositions, size_t range, const Vector2Int& origin)
+ClassifiedPositions filterReachable(
+    const std::vector<Vector2Int>& inRangePositions,
+    size_t range,
+    const Vector2Int& origin)
 {
-    std::vector<std::vector<SteppedPosition>> steppedPositions{};
+    ClassifiedPositions steppedPositions{};
 
     // Check if range is 0
     if (!range)
@@ -103,7 +122,7 @@ std::vector<std::vector<SteppedPosition>> filterReachable(const std::vector<Vect
     steppedPositions.push_back(std::vector<SteppedPosition>());
 
     // Add starting position
-    steppedPositions[0].push_back(SteppedPosition(origin));
+    steppedPositions.front().push_back(SteppedPosition(origin));
 
     // Step 1
 
@@ -126,7 +145,7 @@ std::vector<std::vector<SteppedPosition>> filterReachable(const std::vector<Vect
             continue;
 
         // Add stepped tile to stepped tiles
-        steppedPositions[1].push_back(SteppedPosition(nextTilePosition, direction));
+        steppedPositions.back().push_back(SteppedPosition(nextTilePosition, direction));
     }
 
     // Steps > 1
@@ -185,18 +204,27 @@ std::vector<std::vector<SteppedPosition>> filterReachable(const std::vector<Vect
     return steppedPositions;
 }
 
-std::vector<std::vector<SteppedPosition>> filterReachable(TileMap& tileMap, size_t range, const Vector2Int& origin)
+ClassifiedPositions filterReachable(
+    TileMap& tileMap,
+    size_t range,
+    const Vector2Int& origin)
 {
     return filterReachable(filterInRange(tileMap, range, origin), range, origin);
 }
 
-bool isReachable(const Vector2Int& target, size_t range, const Vector2Int& origin, TileMap& tileMap)
+bool isReachable(
+    const Vector2Int& target,
+    size_t range,
+    const Vector2Int& origin,
+    TileMap& tileMap)
 {
     return isInSteppedTiles(target, filterReachable(tileMap, range, origin));
 }
 
 // Pathfinder returns vector of positions from target to origin (excluded) if target is reachable
-std::vector<SteppedPosition> findPath(const std::vector<std::vector<SteppedPosition>>& reachableTiles, const Vector2Int& origin, const Vector2Int& target, size_t range)
+std::vector<SteppedPosition> findPath(
+    const ClassifiedPositions& reachableTiles,
+    const Vector2Int& target)
 {
     std::vector<SteppedPosition> path{};
 
@@ -204,21 +232,23 @@ std::vector<SteppedPosition> findPath(const std::vector<std::vector<SteppedPosit
     if (!isInSteppedTiles(target, reachableTiles))
         return path;
 
+    Vector2Int origin{reachableTiles.front().front().position};
+
     // Check if target equals root position
     if (Vector2IntEquals(target, origin))
-        return path;
-
-    // Check if range is 0
-    if (!range)
         return path;
 
     // Find tiles in reachable positions, and recursively find neighbour until origin in next lower step level
     SteppedPosition currentStepLevelTile{};
     size_t stepsNeeded{};
-    size_t reachableTilesSize{reachableTiles.size()};
+    size_t maxRange{reachableTiles.size()};
+
+    // Check if range is 0
+    if (!maxRange)
+        return path;
 
     // Find target tile in reachable positions
-    for (size_t stepLevel{0}; stepLevel < reachableTilesSize; ++stepLevel)
+    for (size_t stepLevel{0}; stepLevel < maxRange; ++stepLevel)
     {
         for (const auto& tile : reachableTiles[stepLevel])
         {
@@ -264,7 +294,11 @@ std::vector<SteppedPosition> findPath(const std::vector<std::vector<SteppedPosit
     return path;
 }
 
-std::vector<SteppedPosition> findPath(TileMap& tileMap, const Vector2Int& origin, const Vector2Int& target, size_t range)
+std::vector<SteppedPosition> findPath(
+    TileMap& tileMap,
+    const Vector2Int& origin,
+    const Vector2Int& target,
+    size_t range)
 {
-    return findPath(filterReachable(tileMap, range, origin), origin, target, range);
+    return findPath(filterReachable(tileMap, range, origin), target);
 }

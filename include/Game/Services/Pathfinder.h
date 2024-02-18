@@ -13,29 +13,63 @@ struct SteppedPosition
     Vector2Int direction = V_NODIR; // in which it was accessed
 };
 
-bool isInPositions(const Vector2Int& target, const std::vector<Vector2Int>& positions);
+using ClassifiedPositions = std::vector<std::vector<SteppedPosition>>;
 
-bool isInTiles(const Vector2Int& target, const std::vector<SteppedPosition>& tiles);
+bool isInPositions(
+    const Vector2Int& target,
+    const std::vector<Vector2Int>& positions);
 
-bool isInSteppedTiles(const Vector2Int& target, const std::vector<std::vector<SteppedPosition>>& steppedTiles);
+bool isInTiles(
+    const Vector2Int& target,
+    const std::vector<SteppedPosition>& tiles);
+
+bool isInSteppedTiles(
+    const Vector2Int& target,
+    const ClassifiedPositions& steppedTiles);
 
 std::vector<Vector2Int> filterNonSolidPositions(TileMap& tileMap);
 
-std::vector<Vector2Int> filterInRange(const std::vector<Vector2Int>& nonSolidPositions, size_t range, const Vector2Int& origin);
+std::vector<Vector2Int> filterInRange(
+    const std::vector<Vector2Int>& nonSolidPositions,
+    size_t range,
+    const Vector2Int& origin);
 
-std::vector<Vector2Int> filterInRange(TileMap& tileMap, size_t range, const Vector2Int& origin);
+std::vector<Vector2Int> filterInRange(
+    TileMap& tileMap,
+    size_t range,
+    const Vector2Int& origin);
 
-bool isInRange(const Vector2Int& target, size_t range, const Vector2Int& origin, TileMap& tileMap);
+bool isInRange(
+    const Vector2Int& target,
+    size_t range,
+    const Vector2Int& origin,
+    TileMap& tileMap);
 
-std::vector<std::vector<SteppedPosition>> filterReachable(const std::vector<Vector2Int>& inRangePositions, size_t range, const Vector2Int& origin);
+ClassifiedPositions filterReachable(
+    const std::vector<Vector2Int>& inRangePositions,
+    size_t range,
+    const Vector2Int& origin);
 
-std::vector<std::vector<SteppedPosition>> filterReachable(TileMap& tileMap, size_t range, const Vector2Int& origin);
+ClassifiedPositions filterReachable(
+    TileMap& tileMap,
+    size_t range,
+    const Vector2Int& origin);
 
-bool isReachable(const Vector2Int& target, size_t range, const Vector2Int& origin, TileMap& tileMap);
+bool isReachable(
+    const Vector2Int& target,
+    size_t range,
+    const Vector2Int& origin,
+    TileMap& tileMap);
 
 // Pathfinder returns vector of positions from target to origin (excluded) if target is reachable
-std::vector<SteppedPosition> findPath(const std::vector<std::vector<SteppedPosition>>& reachableTiles, const Vector2Int& origin, const Vector2Int& target, size_t range);
+std::vector<SteppedPosition> findPath(
+    const ClassifiedPositions& reachableTiles,
+    const Vector2Int& target);
 
-std::vector<SteppedPosition> findPath(TileMap& tileMap, const Vector2Int& origin, const Vector2Int& target, size_t range);
+std::vector<SteppedPosition> findPath(
+    TileMap& tileMap,
+    const Vector2Int& origin,
+    const Vector2Int& target,
+    size_t range);
 
 #endif

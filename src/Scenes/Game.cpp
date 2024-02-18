@@ -31,7 +31,7 @@ void GameScene::initialize()
 void GameScene::processInput()
 {
 
-    processEdgePan(cursor, hero);
+    processEdgePan(cursor.position(), hero.position());
 
     // Toggle between mouse or key control for cursor
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
@@ -144,7 +144,11 @@ void GameScene::updateState()
     // Show path
     if (moveRangeShown)
     {
-        for (auto& steppedPosition : findPath(world.mapOverlay(), hero.position(), cursor.position(), hero.moveRange()))
+        for (auto& steppedPosition : findPath(
+                 world.mapOverlay(),
+                 hero.position(),
+                 cursor.position(),
+                 hero.moveRange()))
         {
             Tile pathTile{};
             pathTile.setPosition(steppedPosition.position);

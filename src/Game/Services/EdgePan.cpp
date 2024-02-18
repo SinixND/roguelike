@@ -7,15 +7,16 @@
 #include "RuntimeDatabase.h"
 #include "TilePositionConversion.h"
 #include "Unit.h"
+#include "raylibEx.h"
 
-void processEdgePan(GameObject& cursor, Unit& hero)
+void processEdgePan(Vector2Int& cursorPosition, Vector2Int& keepInSightPosition)
 {
     static float dt{};
     dt += GetFrameTime();
 
     // Check if out of deadzone
-    auto screenCursor{positionToScreen(cursor.position())};
-    auto screenHero{positionToScreen(hero.position())};
+    auto screenCursor{positionToScreen(cursorPosition)};
+    auto screenReference{positionToScreen(keepInSightPosition)};
 
     if (!CheckCollisionPointRec(screenCursor, dtb::Constants::cursorDeadzone()))
     {
@@ -26,7 +27,7 @@ void processEdgePan(GameObject& cursor, Unit& hero)
 
         // Adjust cursor position relative to deadzone
         if (screenCursor.x < dtb::Constants::cursorDeadzone().x &&
-            screenHero.x < dtb::Constants::cursorDeadzone().x + dtb::Constants::cursorDeadzone().width)
+            screenReference.x < dtb::Constants::cursorDeadzone().x + dtb::Constants::cursorDeadzone().width)
         {
             dtb::Globals::moveCamera(
                 Vector2IntScale(
@@ -35,7 +36,7 @@ void processEdgePan(GameObject& cursor, Unit& hero)
         }
 
         if (screenCursor.x > (dtb::Constants::cursorDeadzone().x + dtb::Constants::cursorDeadzone().width) &&
-            screenHero.x > dtb::Constants::cursorDeadzone().x)
+            screenReference.x > dtb::Constants::cursorDeadzone().x)
         {
             dtb::Globals::moveCamera(
                 Vector2IntScale(
@@ -44,7 +45,7 @@ void processEdgePan(GameObject& cursor, Unit& hero)
         }
 
         if (screenCursor.y < dtb::Constants::cursorDeadzone().y &&
-            screenHero.y < dtb::Constants::cursorDeadzone().y + dtb::Constants::cursorDeadzone().height)
+            screenReference.y < dtb::Constants::cursorDeadzone().y + dtb::Constants::cursorDeadzone().height)
         {
             dtb::Globals::moveCamera(
                 Vector2IntScale(
@@ -53,7 +54,7 @@ void processEdgePan(GameObject& cursor, Unit& hero)
         }
 
         if (screenCursor.y > (dtb::Constants::cursorDeadzone().y + dtb::Constants::cursorDeadzone().height) &&
-            screenHero.y > dtb::Constants::cursorDeadzone().y)
+            screenReference.y > dtb::Constants::cursorDeadzone().y)
         {
             dtb::Globals::moveCamera(
                 Vector2IntScale(

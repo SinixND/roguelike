@@ -4,6 +4,6 @@
 #include "GameObject.h"
 #include "Unit.h"
 
-void processEdgePan(GameObject& cursor, Unit& hero);
+void processEdgePan(Vector2Int& cursorPosition, Vector2Int& keepInSightPosition);
 
 #endif
