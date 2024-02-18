@@ -68,8 +68,6 @@ namespace dtb
 
         // Setup Camera2D
         static inline Camera2D camera_{};
-
-        static inline float dt_{};
     };
     //=================================
 
@@ -99,12 +97,12 @@ namespace dtb
         static inline Font& font() { return instance().font_; };
         static inline void unloadFont() { UnloadFont(instance().font_); };
 
-        static inline Rectangle deadzone() { return instance().deadzone_; };
-        static inline void setDeadzone(const Rectangle& deadzone) { instance().deadzone_ = deadzone; };
+        static inline Rectangle cursorDeadzone() { return instance().cursorDeadzone_; };
+        static inline void setCursorDeadzone(const Rectangle& deadzone) { instance().cursorDeadzone_ = deadzone; };
 
     private:
         static inline Font font_{};
-        static inline Rectangle deadzone_{};
+        static inline Rectangle cursorDeadzone_{};
     };
     //=================================
 

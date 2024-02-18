@@ -107,8 +107,8 @@ void applicationLoop()
     // Set window dependent variables
     dtb::Globals::setCameraOffset({GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f});
 
-    dtb::Constants::setDeadzone(
-        getRectangle(
+    dtb::Constants::setCursorDeadzone(
+        GetRectangle(
             Vector2AddValue(
                 {0, 0},
                 DEADZONE_PIXELS),

@@ -29,24 +29,11 @@ void GameScene::initialize()
     hero.setRenderId(RENDER_HERO);
 }
 
+void processEdgePan();
 void GameScene::processInput()
 {
-    [[maybe_unused]] static float dt{};
-    dt += GetFrameTime();
 
-    // Update camera
-    std::cout << "\n";
-
-    auto cursorScreen{positionToScreen(cursor.position())};
-    std::cout << "Check pos: " << cursorScreen.x << ", " << dtb::Globals::camera().target.x << "\n";
-
-    auto check{cursorScreen.x + dtb::Globals::camera().target.x};
-    std::cout << "Check delta: " << check << "\n";
-
-    if (!CheckCollisionPointRec(positionToScreen(cursor.position()), dtb::Constants::deadzone()))
-    {
-        std::cout << "Out of deadzone\n";
-    }
+    processEdgePan();
 
     // Toggle between mouse or key control for cursor
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
@@ -63,24 +50,44 @@ void GameScene::processInput()
     else
     {
         // Key controlled cursor
+        Vector2Int dir{};
+
+        // Get direction
         switch (GetKeyPressed())
         {
         case KEY_W:
-            cursor.setPosition(Vector2IntAdd(cursor.position(), V_UP));
+        case KEY_UP:
+            if (positionToScreen(cursor.position()).y > 0)
+                dir = V_UP;
             break;
         case KEY_A:
-            cursor.setPosition(Vector2IntAdd(cursor.position(), V_LEFT));
+        case KEY_LEFT:
+            if (positionToScreen(cursor.position()).x > 0)
+                dir = V_LEFT;
             break;
         case KEY_S:
-            cursor.setPosition(Vector2IntAdd(cursor.position(), V_DOWN));
+        case KEY_DOWN:
+            if (positionToScreen(cursor.position()).y < GetRenderHeight())
+                dir = V_DOWN;
             break;
         case KEY_D:
-            cursor.setPosition(Vector2IntAdd(cursor.position(), V_RIGHT));
+        case KEY_RIGHT:
+            if (positionToScreen(cursor.position()).x < GetRenderWidth())
+                dir = V_RIGHT;
             break;
 
         default:
             break;
         }
+
+        // Jump when shift is pressed
+        int scale{1};
+        if (IsKeyDown(KEY_LEFT_SHIFT))
+            scale = 4;
+
+        cursor.setPosition(
+            {cursor.position().x + (dir.x * scale),
+             cursor.position().y + (dir.y * scale)});
     }
 
     // Select unit
@@ -98,6 +105,66 @@ void GameScene::processInput()
     {
         hero.setSelected(false);
         std::cout << "Hero selected: " << hero.selected() << "\n";
+    }
+}
+
+void processEdgePan()
+{
+    static float dt{};
+    dt += GetFrameTime();
+
+    // Update camera
+    std::cout << "Deltatime: " << dt << "\n";
+
+    // Check if out of deadzone
+    auto screenCursor{positionToScreen(cursor.position())};
+    auto screenHero{positionToScreen(hero.position())};
+
+    if (!CheckCollisionPointRec(screenCursor, dtb::Constants::cursorDeadzone()))
+    {
+        if (dtb::Globals::isMouseActivated() && dt < 0.1f)
+            return;
+
+        dt = 0;
+
+        // Adjust cursor position relative to deadzone
+        if (screenCursor.x < dtb::Constants::cursorDeadzone().x &&
+            screenHero.x < GetRenderWidth())
+        {
+            dtb::Globals::moveCamera(
+                Vector2IntScale(
+                    V_LEFT,
+                    TILE_SIZE));
+        }
+
+        if (screenCursor.x > (dtb::Constants::cursorDeadzone().x + dtb::Constants::cursorDeadzone().width) &&
+            screenHero.x > 0)
+        {
+            dtb::Globals::moveCamera(
+                Vector2IntScale(
+                    V_RIGHT,
+                    TILE_SIZE));
+        }
+
+        if (screenCursor.y < dtb::Constants::cursorDeadzone().y &&
+            screenHero.y < GetRenderHeight())
+        {
+            dtb::Globals::moveCamera(
+                Vector2IntScale(
+                    V_UP,
+                    TILE_SIZE));
+        }
+
+        if (screenCursor.y > (dtb::Constants::cursorDeadzone().y + dtb::Constants::cursorDeadzone().height) &&
+            screenHero.y > 0)
+        {
+            dtb::Globals::moveCamera(
+                Vector2IntScale(
+                    V_DOWN,
+                    TILE_SIZE));
+        }
+
+        std::cout << "Out of deadzone\n";
     }
 }
 
@@ -221,7 +288,7 @@ void GameScene::renderOutput()
     if (dtb::Configs::debugMode())
     {
         DrawRectangleLinesEx(
-            dtb::Constants::deadzone(),
+            dtb::Constants::cursorDeadzone(),
             1,
             RED);
 

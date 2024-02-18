@@ -62,7 +62,7 @@ inline size_t Vector2IntLength(const Vector2Int& V)
     return abs(V.x) + abs(V.y);
 }
 
-inline Rectangle getRectangle(Vector2 topLeft, Vector2 bottomRight)
+inline Rectangle GetRectangle(const Vector2& topLeft, const Vector2& bottomRight)
 {
     return Rectangle{
         topLeft.x,
@@ -70,41 +70,57 @@ inline Rectangle getRectangle(Vector2 topLeft, Vector2 bottomRight)
         bottomRight.x - topLeft.x,
         bottomRight.y - topLeft.y};
 }
+
+inline Vector2 GetMainDirection(const Vector2& from, const Vector2& to)
+{
+    Vector2 v{Vector2Subtract(to, from)};
+    abs(v.x) > abs(v.y) ? v.y = 0 : v.x = 0;
+    return Vector2Normalize(v);
+}
+
+inline Rectangle GetRenderRec()
+{
+    return Rectangle{
+        0,
+        0,
+        static_cast<float>(GetRenderWidth()),
+        static_cast<float>(GetRenderHeight())};
+}
 //=====================================
 
 // Function overloads
 //=====================================
 
 // Add two vectors (v1 + v2)
-RMAPI Vector2Int Vector2IntAdd(Vector2Int v1, Vector2Int v2)
+RMAPI Vector2Int Vector2IntAdd(const Vector2Int& v1, const Vector2Int& v2)
 {
     return Vector2Int{v1.x + v2.x, v1.y + v2.y};
 }
 
-RMAPI Vector2Int Vector2IntAddValue(Vector2Int v1, int value)
+RMAPI Vector2Int Vector2IntAddValue(const Vector2Int& v1, int value)
 {
     return Vector2Int{v1.x + value, v1.y + value};
 }
 
 // Subtract two vectors (v1 - v2)
-RMAPI Vector2Int Vector2IntSubtract(Vector2Int v1, Vector2Int v2)
+RMAPI Vector2Int Vector2IntSubtract(const Vector2Int& v1, const Vector2Int& v2)
 {
     return Vector2Int{v1.x - v2.x, v1.y - v2.y};
 }
 
-RMAPI Vector2Int Vector2IntSubtractValue(Vector2Int v1, int value)
+RMAPI Vector2Int Vector2IntSubtractValue(const Vector2Int& v1, int value)
 {
     return Vector2Int{v1.x - value, v1.y - value};
 }
 
 // Scale vector (multiply by value)
-RMAPI Vector2 Vector2IntScale(Vector2Int v, float scale)
+RMAPI Vector2 Vector2IntScale(const Vector2Int& v, float scale)
 {
     return Vector2{v.x * scale, v.y * scale};
 }
 
 // Check whether two given vectors are almost equal
-RMAPI int Vector2IntEquals(Vector2Int v1, Vector2Int v2)
+RMAPI int Vector2IntEquals(const Vector2Int& v1, const Vector2Int& v2)
 {
     return ((v1.x == v2.x) && (v1.y == v2.y));
 }
