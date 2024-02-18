@@ -6,7 +6,8 @@
 
 const float TILE_SIZE{25};
 const Vector2 TILE_DIMENSIONS{TILE_SIZE, TILE_SIZE};
-const float DEADZONE_PIXELS{3.5f * TILE_SIZE};
+const float DEADZONE_PIXELS{40};
+const float ZOOM_STEP{0.125f};
 
 enum DirectionId
 {

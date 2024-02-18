@@ -40,6 +40,28 @@ namespace dtb
         static inline bool& shouldAppClose() { return instance().appShouldClose_; };
         static inline void closeApp() { instance().appShouldClose_ = true; };
 
+        static inline Camera2D& camera() { return instance().camera_; };
+        static inline void moveCamera(Vector2 distance) { camera().target = Vector2Add(camera().target, distance); };
+
+    private:
+        static inline bool appShouldClose_{false};
+
+        // Setup Camera2D
+        static inline Camera2D camera_{};
+    };
+    //=================================
+
+    // Configs / Settings
+    //=================================
+    class Configs : public Singleton<Configs>
+    {
+    public:
+        static inline bool& debugMode() { return instance().debugMode_; };
+        static inline void setDebugMode(bool status) { debugMode_ = status; };
+
+        static inline bool& vSyncMode() { return instance().VSyncMode_; };
+        static inline void setVSyncMode(bool status) { VSyncMode_ = status; };
+
         static inline bool isMouseActivated() { return instance().mouseActivated_; }
         static inline void toggleMouseActivated()
         {
@@ -55,36 +77,10 @@ namespace dtb
             }
         }
 
-        static inline Camera2D& camera() { return instance().camera_; };
-        static inline void setCamera(Camera2D camera) { instance().camera_ = camera; };
-        static inline void setCameraOffset(Vector2 offset) { instance().camera_.offset = offset; };
-        static inline void setCameraTarget(Vector2 target) { instance().camera_.target = target; };
-        static inline void setCameraZoom(float zoom) { instance().camera_.zoom = zoom; };
-        static inline void moveCamera(Vector2 distance) { camera().target = Vector2Add(camera().target, distance); };
-
-    private:
-        static inline bool appShouldClose_{false};
-        static inline bool mouseActivated_{true};
-
-        // Setup Camera2D
-        static inline Camera2D camera_{};
-    };
-    //=================================
-
-    // Configs / Settings
-    //=================================
-    class Configs : public Singleton<Configs>
-    {
-    public:
-        static inline bool& debugMode() { return instance().debugMode_; };
-        static inline void setDebugMode(bool status) { debugMode_ = status; };
-
-        static inline bool& vSyncMode() { return instance().vSyncMode_; };
-        static inline void setVSyncMode(bool status) { vSyncMode_ = status; };
-
     private:
         static inline bool debugMode_{true};
-        static inline bool vSyncMode_{false};
+        static inline bool VSyncMode_{false};
+        static inline bool mouseActivated_{false};
     };
     //=================================
 

@@ -7,7 +7,7 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Refactor edge pan to use positions, not objects
+[0] Implement zoom
 
 [0] Implement movment
 
@@ -15,25 +15,54 @@ development of a (maybe) roguelike game with c++ and raylib
 # Shortterm
 [1] Map generation
 
-[1] Map progression
+[1] Map change
 
 
 # Longterm 
-[2] Add borders to tileMap to avoid unnecessary panning
+[0] Indicate select option (different cursor color on hover?)
+
+[0] (Hold) TAB to show map overview
+
+[0] Add touch support
 
 
 # Continuous
 
 
 # Notes
-Maptypes:
+
+## Controls
+
+### Mouse
+| Control     | Function                           |
+| ----------- | ---------------------------------- |
+| RMB         | Toggle cursor control (Mouse/Keys) |
+| LMB         | Click to toggle select             |
+| Mouse wheel | Zoom                               |
+
+
+### Keyboard
+| Control                           | Function            |
+| --------------------------------- | ------------------- |
+| WASD / Arrow keys                 | Cursor movement     |
+| L_SHIFT                           | Fast cursor movment |
+| CTRL + 0 (both numpad and normal) | Reset Zoom          |
+| ESCAPE / CAPS_LOCK                | Deselect            |
+
+
+### Touch
+Not implemented yet
+
+## Maptypes:
 - Cellular Automata (dungeon)
 - Rogue-like (rooms and tunnels)
 - Square rooms grid
 - Extend side -> new room wall
 - Random border match
 
+## Refactor Composition instead of Inheritance
 Refactor with (Interface) Composition when another version of the smae type (:interface) is needed:
+
 1) Old:
 ```cpp
 class ConcreteComponent {
@@ -90,3 +119,10 @@ private:
 
 
 # Done
+[x] compile for linux & windows
+
+[x] Render sprites/textures
+
+[x] make ECS (removed)
+
+[x] realize viewport/camera system

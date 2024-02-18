@@ -20,7 +20,7 @@ void processEdgePan(Vector2Int& cursorPosition, Vector2Int& keepInSightPosition)
 
     if (!CheckCollisionPointRec(screenCursor, dtb::Constants::cursorDeadzone()))
     {
-        if (dtb::Globals::isMouseActivated() && dt < 0.1f)
+        if (dtb::Configs::isMouseActivated() && dt < 0.1f)
             return;
 
         dt = 0;

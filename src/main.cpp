@@ -65,11 +65,11 @@ int main(/* int argc, char **argv */)
     dtb::ActiveScene::setScene(game);
 
     // Setup Camera2D
-    dtb::Globals::setCamera(
+    dtb::Globals::camera() =
         {Vector2Scale(GetDisplaySize(), 0.5f),
          V_NULL,
          0.0f,
-         1.0f});
+         1.0f};
     //=================================
 
     // Main app loop
@@ -105,7 +105,7 @@ int main(/* int argc, char **argv */)
 void applicationLoop()
 {
     // Set window dependent variables
-    dtb::Globals::setCameraOffset({GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f});
+    dtb::Globals::camera().offset = {GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f};
 
     dtb::Constants::setCursorDeadzone(
         GetRectangle(

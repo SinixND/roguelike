@@ -173,9 +173,9 @@ benchmark: $(BIN_DIR)/benchmark.$(BINARY_EXT)
 
 ### rule for release build process with binary as prerequisite
 release: CXX_FLAGS += -O2
-release: build 
+release: clean build 
 
-publish: clean release web windows 
+publish: release web windows 
 
 ### rule for native build process with binary as prerequisite
 build: $(BIN_DIR)/$(BINARY).$(BINARY_EXT) 
@@ -250,7 +250,7 @@ $(OBJ_DIR)/%.$(WIN_OBJ_EXT): %.$(SRC_EXT)
 
 
 ### clear dynamically created directories
-clean:
+clean: clean
 	rm -rf $(shell find . -type f -wholename "*.$(BINARY_EXT)") 
 	rm -rf $(shell find . -type f -wholename "*.$(OBJ_EXT)") 
 	rm -rf $(shell find . -type f -wholename "*.$(DEP_EXT)") 
