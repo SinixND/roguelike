@@ -3,6 +3,7 @@
 
 #include "RenderId.h"
 #include "Scene.h"
+#include "raylibEx.h"
 #include <raylib.h>
 #include <string>
 #include <unordered_map>
@@ -59,6 +60,7 @@ namespace dtb
         static inline void setCameraOffset(Vector2 offset) { instance().camera_.offset = offset; };
         static inline void setCameraTarget(Vector2 target) { instance().camera_.target = target; };
         static inline void setCameraZoom(float zoom) { instance().camera_.zoom = zoom; };
+        static inline void moveCamera(Vector2 distance) { camera().target = Vector2Add(camera().target, distance); };
 
     private:
         static inline bool appShouldClose_{false};
@@ -66,6 +68,8 @@ namespace dtb
 
         // Setup Camera2D
         static inline Camera2D camera_{};
+
+        static inline float dt_{};
     };
     //=================================
 
@@ -91,16 +95,16 @@ namespace dtb
     class Constants : public Singleton<Constants>
     {
     public:
-        static inline float tileSize() { return instance().tileSize_; };
-        static inline Vector2 tileDimensions() { return Vector2{instance().tileSize_, instance().tileSize_}; };
-
         static inline void loadFont(const char* fileName) { instance().font_ = LoadFont(fileName); };
-        static inline void unloadFont() { UnloadFont(instance().font_); };
         static inline Font& font() { return instance().font_; };
+        static inline void unloadFont() { UnloadFont(instance().font_); };
+
+        static inline Rectangle deadzone() { return instance().deadzone_; };
+        static inline void setDeadzone(const Rectangle& deadzone) { instance().deadzone_ = deadzone; };
 
     private:
-        static inline const float tileSize_{25};
         static inline Font font_{};
+        static inline Rectangle deadzone_{};
     };
     //=================================
 
@@ -109,11 +113,11 @@ namespace dtb
     class ActiveScene : public Singleton<ActiveScene>
     {
     public:
-        static inline snd::Scene& scene() { return *instance().scene_; };
-        static inline void setScene(snd::Scene& scene) { instance().scene_ = &scene; };
+        static inline snd::Scene& scene() { return *instance().activeScene_; };
+        static inline void setScene(snd::Scene& scene) { instance().activeScene_ = &scene; };
 
     private:
-        static inline snd::Scene* scene_{};
+        static inline snd::Scene* activeScene_{};
     };
     //=================================
 

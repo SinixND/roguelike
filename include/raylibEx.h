@@ -52,14 +52,23 @@ inline Vector2 GetDisplaySize()
         return Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
 }
 
-inline Vector2Int Vector2MatrixMultiply(const Matrix2x2Int& M, const Vector2Int& V)
+inline Vector2Int Vector2IntMatrixMultiply(const Matrix2x2Int& M, const Vector2Int& V)
 {
     return Vector2Int{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
 }
 
-inline size_t Vector2LengthTiled(const Vector2Int& V)
+inline size_t Vector2IntLength(const Vector2Int& V)
 {
     return abs(V.x) + abs(V.y);
+}
+
+inline Rectangle getRectangle(Vector2 topLeft, Vector2 bottomRight)
+{
+    return Rectangle{
+        topLeft.x,
+        topLeft.y,
+        bottomRight.x - topLeft.x,
+        bottomRight.y - topLeft.y};
 }
 //=====================================
 
@@ -67,31 +76,35 @@ inline size_t Vector2LengthTiled(const Vector2Int& V)
 //=====================================
 
 // Add two vectors (v1 + v2)
-RMAPI Vector2Int Vector2Add(Vector2Int v1, Vector2Int v2)
+RMAPI Vector2Int Vector2IntAdd(Vector2Int v1, Vector2Int v2)
 {
-    Vector2Int result = {v1.x + v2.x, v1.y + v2.y};
+    return Vector2Int{v1.x + v2.x, v1.y + v2.y};
+}
 
-    return result;
+RMAPI Vector2Int Vector2IntAddValue(Vector2Int v1, int value)
+{
+    return Vector2Int{v1.x + value, v1.y + value};
 }
 
 // Subtract two vectors (v1 - v2)
-RMAPI Vector2Int Vector2Subtract(Vector2Int v1, Vector2Int v2)
+RMAPI Vector2Int Vector2IntSubtract(Vector2Int v1, Vector2Int v2)
 {
-    Vector2Int result = {v1.x - v2.x, v1.y - v2.y};
+    return Vector2Int{v1.x - v2.x, v1.y - v2.y};
+}
 
-    return result;
+RMAPI Vector2Int Vector2IntSubtractValue(Vector2Int v1, int value)
+{
+    return Vector2Int{v1.x - value, v1.y - value};
 }
 
 // Scale vector (multiply by value)
-RMAPI Vector2 Vector2Scale(Vector2Int v, float scale)
+RMAPI Vector2 Vector2IntScale(Vector2Int v, float scale)
 {
-    Vector2 result = {v.x * scale, v.y * scale};
-
-    return result;
+    return Vector2{v.x * scale, v.y * scale};
 }
 
 // Check whether two given vectors are almost equal
-RMAPI int Vector2Equals(Vector2Int v1, Vector2Int v2)
+RMAPI int Vector2IntEquals(Vector2Int v1, Vector2Int v2)
 {
     return ((v1.x == v2.x) && (v1.y == v2.y));
 }
@@ -128,7 +141,7 @@ struct std::hash<Vector2Int>
 
 inline bool operator==(const Vector2Int& lhs, const Vector2Int& rhs)
 {
-    return Vector2Equals(lhs, rhs);
+    return Vector2IntEquals(lhs, rhs);
 };
 //=====================================
 

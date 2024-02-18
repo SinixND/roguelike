@@ -1,8 +1,11 @@
-#include "DirectionVector.h"
+#include "Constants.h"
 #include "Game.h"
 #include "RuntimeDatabase.h"
 #include "Scene.h"
+#include "TilePositionConversion.h"
 #include <iostream>
+#include <raylib.h>
+#include <raymath.h>
 
 #define RAYGUI_IMPLEMENTATION // Only define once
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
@@ -101,7 +104,17 @@ int main(/* int argc, char **argv */)
 
 void applicationLoop()
 {
+    // Set window dependent variables
     dtb::Globals::setCameraOffset({GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f});
+
+    dtb::Constants::setDeadzone(
+        getRectangle(
+            Vector2AddValue(
+                {0, 0},
+                DEADZONE_PIXELS),
+            Vector2SubtractValue(
+                {static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())},
+                DEADZONE_PIXELS)));
 
 #ifndef __EMSCRIPTEN__
     // Toggle fullscreen

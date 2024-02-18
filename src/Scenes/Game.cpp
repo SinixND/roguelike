@@ -1,6 +1,6 @@
 #include "Game.h"
 
-#include "DirectionVector.h"
+#include "Constants.h"
 #include "GameObject.h"
 #include "Pathfinder.h"
 #include "RenderId.h"
@@ -31,6 +31,23 @@ void GameScene::initialize()
 
 void GameScene::processInput()
 {
+    [[maybe_unused]] static float dt{};
+    dt += GetFrameTime();
+
+    // Update camera
+    std::cout << "\n";
+
+    auto cursorScreen{positionToScreen(cursor.position())};
+    std::cout << "Check pos: " << cursorScreen.x << ", " << dtb::Globals::camera().target.x << "\n";
+
+    auto check{cursorScreen.x + dtb::Globals::camera().target.x};
+    std::cout << "Check delta: " << check << "\n";
+
+    if (!CheckCollisionPointRec(positionToScreen(cursor.position()), dtb::Constants::deadzone()))
+    {
+        std::cout << "Out of deadzone\n";
+    }
+
     // Toggle between mouse or key control for cursor
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
     {
@@ -49,16 +66,16 @@ void GameScene::processInput()
         switch (GetKeyPressed())
         {
         case KEY_W:
-            cursor.setPosition(Vector2Add(cursor.position(), V_UP));
+            cursor.setPosition(Vector2IntAdd(cursor.position(), V_UP));
             break;
         case KEY_A:
-            cursor.setPosition(Vector2Add(cursor.position(), V_LEFT));
+            cursor.setPosition(Vector2IntAdd(cursor.position(), V_LEFT));
             break;
         case KEY_S:
-            cursor.setPosition(Vector2Add(cursor.position(), V_DOWN));
+            cursor.setPosition(Vector2IntAdd(cursor.position(), V_DOWN));
             break;
         case KEY_D:
-            cursor.setPosition(Vector2Add(cursor.position(), V_RIGHT));
+            cursor.setPosition(Vector2IntAdd(cursor.position(), V_RIGHT));
             break;
 
         default:
@@ -200,6 +217,24 @@ void GameScene::renderOutput()
         GuiGetStyle(DEFAULT, TEXT_SPACING),
         RAYWHITE);
     //=================================
+
+    if (dtb::Configs::debugMode())
+    {
+        DrawRectangleLinesEx(
+            dtb::Constants::deadzone(),
+            1,
+            RED);
+
+        DrawLineV(
+            {GetRenderWidth() / 2.0f, 0},
+            {GetRenderWidth() / 2.0f, static_cast<float>(GetRenderHeight())},
+            RED);
+
+        DrawLineV(
+            {0, GetRenderHeight() / 2.0f},
+            {static_cast<float>(GetRenderWidth()), GetRenderHeight() / 2.0f},
+            RED);
+    }
 }
 
 void GameScene::postOutput()

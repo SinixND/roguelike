@@ -1,5 +1,6 @@
 #include "Renderer.h"
 
+#include "Globals/Constants.h"
 #include "RenderId.h"
 #include "RuntimeDatabase.h"
 #include "TilePositionConversion.h"
@@ -10,7 +11,7 @@ void Renderer::render(RenderId renderId, int x, int y)
 {
     Texture2D* texture{dtb::Textures::get(renderId)};
 
-    Vector2 tileSize{dtb::Constants::tileDimensions()};
+    Vector2 tileSize{TILE_DIMENSIONS};
     Vector2 tileCenter{Vector2Scale(tileSize, 0.5f)};
 
     Vector2 pixelCoordinates{
