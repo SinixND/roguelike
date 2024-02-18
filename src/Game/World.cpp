@@ -1,4 +1,5 @@
 #include "World.h"
+#include "MapHandler.h"
 
 // Public:
 TileMap& World::currentMap() { return currentMap_; }
@@ -33,7 +34,7 @@ TileMap& World::framedMapOverlay() { return framedMapOverlay_; }
 // Private:
 void World::addNewMap(size_t level)
 {
-    maps_.push_back(mapHandler_.createNewMap(level));
+    maps_.push_back(createNewMap(level));
 }
 
 void World::setMap(size_t level)

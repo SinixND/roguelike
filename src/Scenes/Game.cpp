@@ -1,10 +1,11 @@
 #include "Game.h"
 
 #include "Constants.h"
+#include "EdgePan.h"
 #include "GameObject.h"
 #include "Pathfinder.h"
+#include "Render.h"
 #include "RenderId.h"
-#include "Renderer.h"
 #include "RuntimeDatabase.h"
 #include "TileMap.h"
 #include "TilePositionConversion.h"
@@ -14,8 +15,6 @@
 #include <iostream>
 #include <raygui.h>
 #include <raylib.h>
-
-Renderer renderer{};
 
 World world{};
 GameObject cursor{};
@@ -29,11 +28,10 @@ void GameScene::initialize()
     hero.setRenderId(RENDER_HERO);
 }
 
-void processEdgePan();
 void GameScene::processInput()
 {
 
-    processEdgePan();
+    processEdgePan(cursor, hero);
 
     // Toggle between mouse or key control for cursor
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
@@ -108,66 +106,6 @@ void GameScene::processInput()
     }
 }
 
-void processEdgePan()
-{
-    static float dt{};
-    dt += GetFrameTime();
-
-    // Update camera
-    std::cout << "Deltatime: " << dt << "\n";
-
-    // Check if out of deadzone
-    auto screenCursor{positionToScreen(cursor.position())};
-    auto screenHero{positionToScreen(hero.position())};
-
-    if (!CheckCollisionPointRec(screenCursor, dtb::Constants::cursorDeadzone()))
-    {
-        if (dtb::Globals::isMouseActivated() && dt < 0.1f)
-            return;
-
-        dt = 0;
-
-        // Adjust cursor position relative to deadzone
-        if (screenCursor.x < dtb::Constants::cursorDeadzone().x &&
-            screenHero.x < GetRenderWidth())
-        {
-            dtb::Globals::moveCamera(
-                Vector2IntScale(
-                    V_LEFT,
-                    TILE_SIZE));
-        }
-
-        if (screenCursor.x > (dtb::Constants::cursorDeadzone().x + dtb::Constants::cursorDeadzone().width) &&
-            screenHero.x > 0)
-        {
-            dtb::Globals::moveCamera(
-                Vector2IntScale(
-                    V_RIGHT,
-                    TILE_SIZE));
-        }
-
-        if (screenCursor.y < dtb::Constants::cursorDeadzone().y &&
-            screenHero.y < GetRenderHeight())
-        {
-            dtb::Globals::moveCamera(
-                Vector2IntScale(
-                    V_UP,
-                    TILE_SIZE));
-        }
-
-        if (screenCursor.y > (dtb::Constants::cursorDeadzone().y + dtb::Constants::cursorDeadzone().height) &&
-            screenHero.y > 0)
-        {
-            dtb::Globals::moveCamera(
-                Vector2IntScale(
-                    V_DOWN,
-                    TILE_SIZE));
-        }
-
-        std::cout << "Out of deadzone\n";
-    }
-}
-
 void GameScene::updateState()
 {
     // Show range of selected unit
@@ -227,7 +165,7 @@ void GameScene::renderOutputWorld()
     // Layer map
     for (auto& tile : world.currentMap().values())
     {
-        renderer.render(
+        render(
             tile.renderId(),
             tile.position().x,
             tile.position().y);
@@ -236,7 +174,7 @@ void GameScene::renderOutputWorld()
     // Layer map overlay
     for (auto& tile : world.mapOverlay().values())
     {
-        renderer.render(
+        render(
             tile.renderId(),
             tile.position().x,
             tile.position().y);
@@ -245,17 +183,17 @@ void GameScene::renderOutputWorld()
     // Layer framed map overlay
     for (auto& tile : world.framedMapOverlay().values())
     {
-        renderer.render(
+        render(
             tile.renderId(),
             tile.position().x,
             tile.position().y);
     }
 
     // Render object layer
-    renderer.render(hero.renderId(), hero.position().x, hero.position().y);
+    render(hero.renderId(), hero.position().x, hero.position().y);
 
     // Render UI layer
-    renderer.render(cursor.renderId(), cursor.position().x, cursor.position().y);
+    render(cursor.renderId(), cursor.position().x, cursor.position().y);
 
     EndMode2D();
 }

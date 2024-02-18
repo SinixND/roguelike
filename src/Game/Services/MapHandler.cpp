@@ -6,12 +6,12 @@
 #include "raylibEx.h"
 #include <cstddef>
 
-TileMap MapHandler::createNewMap(size_t level)
+TileMap createNewMap(size_t level)
 {
     TileMap newMap{};
 
     if (level == 0)
-        addStartRoom(newMap);
+        MapHandler::addStartRoom(newMap);
 
     return newMap;
 }

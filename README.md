@@ -7,14 +7,19 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Transform relative to Cursor
+[0] Refactor edge pan to use positions, not objects
+
+[0] Implement movment
+
 
 # Shortterm
-[1] Implement movment
+[1] Map generation
+
+[1] Map progression
 
 
 # Longterm 
-[1] Map generation
+[2] Add borders to tileMap to avoid unnecessary panning
 
 
 # Continuous

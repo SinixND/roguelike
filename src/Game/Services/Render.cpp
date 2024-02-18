@@ -1,13 +1,13 @@
-#include "Renderer.h"
+#include "Render.h"
 
-#include "Globals/Constants.h"
+#include "Constants.h"
 #include "RenderId.h"
 #include "RuntimeDatabase.h"
 #include "TilePositionConversion.h"
 #include <raylib.h>
 #include <raymath.h>
 
-void Renderer::render(RenderId renderId, int x, int y)
+void render(RenderId renderId, int x, int y)
 {
     Texture2D* texture{dtb::Textures::get(renderId)};
 

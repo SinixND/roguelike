@@ -2,7 +2,6 @@
 #define _20240211205246
 
 #include "MapHandler.h"
-#include "MapOverlayHandler.h"
 #include "TileMap.h"
 #include <cstddef>
 
@@ -22,9 +21,7 @@ private:
     size_t maxLevel_{};
     size_t currentLevel_{};
 
-    MapHandler mapHandler_{};
-
-    std::vector<TileMap> maps_{mapHandler_.createNewMap(maxLevel_)};
+    std::vector<TileMap> maps_{createNewMap(maxLevel_)};
     TileMap& currentMap_{maps_.back()};
 
     TileMap mapOverlay_{};

@@ -3,10 +3,6 @@
 
 #include "RenderId.h"
 
-class Renderer
-{
-public:
-    void render(RenderId renderId, int x, int y);
-};
+void render(RenderId renderId, int x, int y);
 
 #endif
