@@ -1,8 +1,8 @@
 #ifndef _20240218190121
 #define _20240218190121
 
-#include "Position.h"
+#include "raylibEx.h"
 
-void processCursorMovement(Position& cursorPosition);
+void processCursorMovement(Vector2Int& cursorPosition);
 
 #endif

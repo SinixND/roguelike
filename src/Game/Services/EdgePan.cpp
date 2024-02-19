@@ -3,20 +3,18 @@
 
 #include "EdgePan.h"
 
-#include "GameObject.h"
+#include "Constants.h"
 #include "RuntimeDatabase.h"
-#include "TilePositionConversion.h"
-#include "Unit.h"
-#include "raylibEx.h"
+#include <raylib.h>
 
-void processEdgePan(Vector2Int& cursorPosition, Vector2Int& keepInSightPosition)
+void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& referenceWorldPosition)
 {
     static float dt{};
     dt += GetFrameTime();
 
     // Check if out of deadzone
-    auto screenCursor{positionToScreen(cursorPosition)};
-    auto screenReference{positionToScreen(keepInSightPosition)};
+    auto screenCursor{GetWorldToScreen2D(cursorWorldPosition, dtb::Globals::camera())};
+    auto screenReference{GetWorldToScreen2D(referenceWorldPosition, dtb::Globals::camera())};
 
     if (!CheckCollisionPointRec(screenCursor, dtb::Constants::cursorDeadzone()))
     {

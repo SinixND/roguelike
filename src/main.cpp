@@ -3,7 +3,6 @@
 #include "RuntimeDatabase.h"
 #include "Scene.h"
 #include "TilePositionConversion.h"
-#include <iostream>
 #include <raylib.h>
 #include <raymath.h>
 
@@ -48,14 +47,15 @@ int main(/* int argc, char **argv */)
     // Application Initialization
     //=================================
     // Load textures
-    dtb::Textures::load(RENDER_HERO, "Hero.png");
-    dtb::Textures::load(RENDER_CURSOR, "Cursor.png");
-    dtb::Textures::load(RENDER_WALL_TILE, "TileWall.png");
-    dtb::Textures::load(RENDER_FLOOR_TILE, "TileFloor.png");
-    dtb::Textures::load(RENDER_REACHABLE_TILE, "TileReachable.png");
-    dtb::Textures::load(RENDER_PATH_TILE, "TilePath.png");
-    dtb::Textures::load(RENDER_ATTACKABLE_TILE, "TileAttackable.png");
-    dtb::Textures::load(RENDER_SUPPORTABLE_TILE, "TileSupportable.png");
+    dtb::Textures::load(RenderID::none, "Empty.png");
+    dtb::Textures::load(RenderID::hero, "Hero.png");
+    dtb::Textures::load(RenderID::cursor, "Cursor.png");
+    dtb::Textures::load(RenderID::wall, "TileWall.png");
+    dtb::Textures::load(RenderID::floor, "TileFloor.png");
+    dtb::Textures::load(RenderID::reachable, "TileReachable.png");
+    dtb::Textures::load(RenderID::path, "TilePath.png");
+    dtb::Textures::load(RenderID::attackable, "TileAttackable.png");
+    dtb::Textures::load(RenderID::supportable, "TileSupportable.png");
 
     // Define scenes
     GameScene game{};

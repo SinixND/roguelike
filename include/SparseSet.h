@@ -25,8 +25,7 @@ namespace snd
         : public ISparseSet<Key>
     {
     public:
-        // Create non-existing, update existing
-        Type* update(const Key& key, const Type& value)
+        Type* createOrUpdate(const Key& key, const Type& value = Type{})
         {
             if (contains(key))
             {
@@ -52,14 +51,13 @@ namespace snd
             return &values_[keyToIndex_[key]];
         };
 
-        // Create non-exisitng, skip exisitng
-        Type* insert(const Key& key, const Type& value)
-        {
-            if (contains(key))
-                return nullptr;
+        //* Type* createOrSkip(const Key& key, const Type& value)
+        //* {
+        //* if (contains(key))
+        //* return nullptr;
 
-            return update(key, value);
-        };
+        //* return createOrUpdate(key, value);
+        //* };
 
         void erase(const Key& key) override
         {

@@ -9,15 +9,6 @@ const Vector2 TILE_DIMENSIONS{TILE_SIZE, TILE_SIZE};
 const float DEADZONE_PIXELS{40};
 const float ZOOM_STEP{0.125f};
 
-enum DirectionId
-{
-    NODIR = 0,
-    LEFT,
-    RIGHT,
-    UP,
-    DOWN,
-};
-
 // Direction vectors
 // X is right-positive, Y is down-positive
 const Vector2 V_NULL{0, 0};

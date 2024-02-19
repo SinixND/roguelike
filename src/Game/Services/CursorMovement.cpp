@@ -1,11 +1,10 @@
 #include "CursorMovement.h"
-#include "Position.h"
 #include "RuntimeDatabase.h"
 #include "TilePositionConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
-void processCursorMovement(Position& cursorPosition)
+void processCursorMovement(Vector2Int& cursorPosition)
 {
     // Cursor control
     if (dtb::Configs::isMouseActivated())
@@ -46,15 +45,29 @@ void processCursorMovement(Position& cursorPosition)
             break;
         }
 
-        // Jump when shift is pressed
+        // Boost when shift is pressed
         int scale{1};
         if (IsKeyDown(KEY_LEFT_SHIFT))
             scale = 4;
 
+        // Check if cursor would go out of screen
         Vector2Int newCursorPosition{cursorPosition.x + (dir.x * scale),
                                      cursorPosition.y + (dir.y * scale)};
 
-        if (CheckCollisionPointRec(ConvertVector2(newCursorPosition), GetRenderRec()))
-            cursorPosition = newCursorPosition;
+        // If out of screen and boost applied
+        if (scale > 1 && !CheckCollisionPointRec(positionToScreen(newCursorPosition), GetRenderRec()))
+        {
+            // Check again without boost
+            scale = 1;
+
+            newCursorPosition = {cursorPosition.x + (dir.x * scale),
+                                 cursorPosition.y + (dir.y * scale)};
+
+            // If still out of screen
+            if (!CheckCollisionPointRec(positionToScreen(newCursorPosition), GetRenderRec()))
+                return;
+        }
+
+        cursorPosition = newCursorPosition;
     }
 };

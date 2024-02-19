@@ -1,18 +1,18 @@
 #include "Render.h"
 
 #include "Constants.h"
-#include "RenderId.h"
+#include "RenderID.h"
 #include "RuntimeDatabase.h"
 #include "TilePositionConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
 
-void render(RenderId renderId, int x, int y)
+void renderAction(RenderID renderID, const Vector2Int& position)
 {
     Vector2 positionPixel{
         positionToWorld(
-            {x, y})};
+            position)};
 
     if (!IsPixelOnScreenRender(
             {GetWorldToScreen2D(
@@ -21,7 +21,7 @@ void render(RenderId renderId, int x, int y)
             3 * TILE_SIZE))
         return;
 
-    Texture2D* texture{dtb::Textures::get(renderId)};
+    Texture2D* texture{dtb::Textures::get(renderID)};
 
     Vector2 tileSize{TILE_DIMENSIONS};
     Vector2 tileCenter{Vector2Scale(tileSize, 0.5f)};

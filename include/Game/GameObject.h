@@ -1,21 +1,23 @@
 #ifndef _20240211172120
 #define _20240211172120
 
-#include "Position.h"
-#include "RenderId.h"
+#include "Graphic.h"
+#include "raylibEx.h"
 
 class GameObject
 {
 public:
-    Position& position() { return position_; };
-    void setPosition(Position position) { position_ = position; };
+    Vector2Int& position() { return position_; };
+    void setPosition(const Vector2Int& position)
+    {
+        position_ = position;
+    };
 
-    RenderId& renderId() { return renderId_; };
-    void setRenderId(RenderId renderId) { renderId_ = renderId; };
+    Graphic& graphic() { return graphic_; };
 
 private:
-    Position position_{};
-    RenderId renderId_{};
+    Vector2Int position_{};
+    Graphic graphic_{};
 };
 
 #endif

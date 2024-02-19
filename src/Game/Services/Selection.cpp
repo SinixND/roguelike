@@ -1,8 +1,7 @@
 #include "Selection.h"
-#include "Position.h"
 #include <raylib.h>
 
-void processSelection(Unit& unit, const Position& cursorPosition)
+void processSelection(Unit& unit, const Vector2Int& cursorPosition)
 {
     // Select unit
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))

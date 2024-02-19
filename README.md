@@ -7,12 +7,14 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Implement zoom
+[0] Refactor globals (Runtime database) as arguments
 
-[0] Implement movment
+[1] Check class design (see notes); make diagram to track classes
 
 
 # Shortterm
+[1] Implement movment
+
 [1] Map generation
 
 [1] Map change
@@ -59,6 +61,27 @@ Not implemented yet
 - Square rooms grid
 - Extend side -> new room wall
 - Random border match
+
+## Design guide
+### Struct/Class general
+- Struct: POD 
+- Getter / Setter only when needed
+- only private member variables: name_
+
+### Functions
+- namespace: domain functions (interclass, non-class)
+- Class: free if no private member needed (eg. getter/setter), member if private member needed
+- For readability only: no new file, but forward declare
+
+### New class:
+- Define members
+- Check existing classes for communality
+    - if yes, extract:
+        - "Has-a" (preferred) -> Component
+        - "Is-a" -> Parent
+    - check present methods (became inter-class?)
+
+
 
 ## Refactor Composition instead of Inheritance
 Refactor with (Interface) Composition when another version of the smae type (:interface) is needed:
@@ -126,3 +149,5 @@ private:
 [x] make ECS (removed)
 
 [x] realize viewport/camera system
+
+[x] Implement zoom

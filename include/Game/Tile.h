@@ -2,8 +2,7 @@
 #define _20240215012942
 
 #include "GameObject.h"
-#include "Position.h"
-#include "RenderId.h"
+#include "RenderID.h"
 
 class Tile : public GameObject
 {

@@ -4,20 +4,21 @@
 #include "CursorMovement.h"
 #include "EdgePan.h"
 #include "GameObject.h"
+#include "Graphic.h"
 #include "Pathfinder.h"
-#include "Render.h"
-#include "RenderId.h"
 #include "RuntimeDatabase.h"
 #include "Selection.h"
+#include "ShowPath.h"
+#include "ShowUnitRange.h"
 #include "TileMap.h"
 #include "TilePositionConversion.h"
 #include "Unit.h"
 #include "World.h"
 #include "Zoom.h"
 #include "raylibEx.h"
-#include <iostream>
 #include <raygui.h>
 #include <raylib.h>
+#include <vector>
 
 World world{};
 GameObject cursor{};
@@ -25,10 +26,10 @@ Unit hero{};
 
 void GameScene::initialize()
 {
-    cursor.setRenderId(RENDER_CURSOR);
+    cursor.graphic().setRenderID(RenderID::cursor);
 
-    hero.setMoveRange(5);
-    hero.setRenderId(RENDER_HERO);
+    hero.move().setRange(5);
+    hero.graphic().setRenderID(RenderID::hero);
 }
 
 void GameScene::processInput()
@@ -41,69 +42,52 @@ void GameScene::processInput()
 
     processCursorMovement(cursor.position());
 
-    processEdgePan(cursor.position(), hero.position());
+    processEdgePan(
+        positionToWorld(cursor.position()),
+        positionToWorld(hero.position()));
 
     processZoom();
 
-    processSelection(hero, cursor.position());
+    processSelection(
+        hero,
+        cursor.position());
+
+    // Set unit movment target
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
+    {
+        for (auto& tile : world.framedMapOverlay().values())
+        {
+            if (!Vector2IntEquals(tile.position(), cursor.position()))
+                continue;
+
+            // Set movement target
+        }
+    }
 }
 
 void GameScene::updateState()
 {
-    // Show range of selected unit
     static bool moveRangeShown{false};
 
-    if (hero.selected() && !moveRangeShown)
-    {
-        moveRangeShown = true;
-
-        // Filter relevant tiles
-        for (auto& steppedPositions : filterReachable(world.currentMap(), hero.moveRange(), hero.position()))
-        {
-            for (auto& steppedPosition : steppedPositions)
-            {
-                // Create reachable tile
-                Tile reachableTile{};
-                reachableTile.setPosition(steppedPosition.position);
-                reachableTile.setRenderId(RENDER_REACHABLE_TILE);
-                reachableTile.setIsSolid(false);
-
-                // Add reachable tile to overlay
-                world.mapOverlay().insert(
-                    steppedPosition.position,
-                    reachableTile);
-            }
-        }
-    }
+    showUnitRange(
+        moveRangeShown,
+        hero,
+        world);
 
     // Clear overlay if no unit selected
     if (!hero.selected() && moveRangeShown)
     {
         world.mapOverlay().clear();
         moveRangeShown = false;
+        dtb::Globals::setPathShown(false);
     }
 
-    // Show path
-    if (moveRangeShown)
-    {
-        auto path{findPath(
-            world.mapOverlay(),
-            hero.position(),
-            cursor.position(),
-            hero.moveRange())};
-
-        for (auto& steppedPosition : path)
-        {
-            Tile pathTile{};
-            pathTile.setPosition(steppedPosition.position);
-            pathTile.setRenderId(RENDER_PATH_TILE);
-            pathTile.setIsSolid(false);
-
-            world.framedMapOverlay().insert(
-                steppedPosition.position,
-                pathTile);
-        }
-    }
+    showPath(
+        moveRangeShown,
+        hero.position(),
+        cursor.position(),
+        hero.move().range(),
+        world);
 }
 
 void GameScene::renderOutputWorld()
@@ -113,35 +97,26 @@ void GameScene::renderOutputWorld()
     // Layer map
     for (auto& tile : world.currentMap().values())
     {
-        render(
-            tile.renderId(),
-            tile.position().x,
-            tile.position().y);
+        tile.graphic().render(tile.position());
     }
 
     // Layer map overlay
     for (auto& tile : world.mapOverlay().values())
     {
-        render(
-            tile.renderId(),
-            tile.position().x,
-            tile.position().y);
+        tile.graphic().render(tile.position());
     }
 
     // Layer framed map overlay
     for (auto& tile : world.framedMapOverlay().values())
     {
-        render(
-            tile.renderId(),
-            tile.position().x,
-            tile.position().y);
+        tile.graphic().render(tile.position());
     }
 
     // Render object layer
-    render(hero.renderId(), hero.position().x, hero.position().y);
+    hero.graphic().render(hero.position());
 
     // Render UI layer
-    render(cursor.renderId(), cursor.position().x, cursor.position().y);
+    cursor.graphic().render(cursor.position());
 
     EndMode2D();
 }

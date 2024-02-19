@@ -1,7 +1,7 @@
 #ifndef _20240117233028
 #define _20240117233028
 
-#include "RenderId.h"
+#include "RenderID.h"
 #include "Scene.h"
 #include "raylibEx.h"
 #include <raylib.h>
@@ -32,6 +32,24 @@ protected:
 
 namespace dtb
 {
+    // Constants
+    //=================================
+    class Constants : public Singleton<Constants>
+    {
+    public:
+        static inline void loadFont(const char* fileName) { instance().font_ = LoadFont(fileName); };
+        static inline Font& font() { return instance().font_; };
+        static inline void unloadFont() { UnloadFont(instance().font_); };
+
+        static inline Rectangle cursorDeadzone() { return instance().cursorDeadzone_; };
+        static inline void setCursorDeadzone(const Rectangle& deadzone) { instance().cursorDeadzone_ = deadzone; };
+
+    private:
+        static inline Font font_{};
+        static inline Rectangle cursorDeadzone_{};
+    };
+    //=================================
+
     // Application state
     //=================================
     class Globals : public Singleton<Globals>
@@ -43,11 +61,15 @@ namespace dtb
         static inline Camera2D& camera() { return instance().camera_; };
         static inline void moveCamera(Vector2 distance) { camera().target = Vector2Add(camera().target, distance); };
 
+        static inline bool pathShown() { return instance().pathShown_; };
+        static inline void setPathShown(bool status) { instance().pathShown_ = status; };
+
     private:
         static inline bool appShouldClose_{false};
 
         // Setup Camera2D
         static inline Camera2D camera_{};
+        static inline bool pathShown_{};
     };
     //=================================
 
@@ -84,24 +106,6 @@ namespace dtb
     };
     //=================================
 
-    // Constants
-    //=================================
-    class Constants : public Singleton<Constants>
-    {
-    public:
-        static inline void loadFont(const char* fileName) { instance().font_ = LoadFont(fileName); };
-        static inline Font& font() { return instance().font_; };
-        static inline void unloadFont() { UnloadFont(instance().font_); };
-
-        static inline Rectangle cursorDeadzone() { return instance().cursorDeadzone_; };
-        static inline void setCursorDeadzone(const Rectangle& deadzone) { instance().cursorDeadzone_ = deadzone; };
-
-    private:
-        static inline Font font_{};
-        static inline Rectangle cursorDeadzone_{};
-    };
-    //=================================
-
     // Active scene
     //=================================
     class ActiveScene : public Singleton<ActiveScene>
@@ -120,14 +124,14 @@ namespace dtb
     class Textures : public Singleton<Textures>
     {
     public:
-        static inline void load(RenderId textureId, std::string filename)
+        static inline void load(RenderID textureID, std::string filename)
         {
-            instance().textures_.insert(std::make_pair(textureId, LoadTexture((texturePath + filename).c_str())));
+            instance().textures_.insert(std::make_pair(textureID, LoadTexture((texturePath + filename).c_str())));
         };
 
-        static inline Texture2D* get(RenderId textureId)
+        static inline Texture2D* get(RenderID textureID)
         {
-            return &instance().textures_.at(textureId);
+            return &instance().textures_.at(textureID);
         };
 
         static inline void unloadAll()
@@ -142,7 +146,7 @@ namespace dtb
 
     private:
         static const inline std::string texturePath{"resources/textures/"};
-        static inline std::unordered_map<RenderId, Texture2D> textures_{};
+        static inline std::unordered_map<RenderID, Texture2D> textures_{};
     };
     //=================================
 }
