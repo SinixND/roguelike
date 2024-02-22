@@ -8,24 +8,27 @@
 #include <raylib.h>
 #include <raymath.h>
 
-void renderAction(RenderID renderID, const Vector2Int& position)
+void render(RenderID renderID, const Vector2Int& position)
 {
-    Vector2 positionPixel{
+    // Convert tile position to world pixel coordinates
+    Vector2 pixelCoordinatesWorld{
         positionToWorld(
             position)};
 
+    // Return if pixel is out of screen
     if (!IsPixelOnScreenRender(
             {GetWorldToScreen2D(
-                positionPixel,
+                pixelCoordinatesWorld,
                 dtb::Globals::camera())},
             3 * TILE_SIZE))
         return;
 
+    // Get texture data
     Texture2D* texture{dtb::Textures::get(renderID)};
-
     Vector2 tileSize{TILE_DIMENSIONS};
     Vector2 tileCenter{Vector2Scale(tileSize, 0.5f)};
 
+    // Draw texture
     DrawTexturePro(
         *texture,
         Rectangle{
@@ -34,8 +37,8 @@ void renderAction(RenderID renderID, const Vector2Int& position)
             float(texture->width),
             float(texture->height)},
         Rectangle{
-            positionPixel.x,
-            positionPixel.y,
+            pixelCoordinatesWorld.x,
+            pixelCoordinatesWorld.y,
             tileSize.x,
             tileSize.y},
         tileCenter,

@@ -5,18 +5,10 @@
 #include "Movement.h"
 #include <cstddef>
 
-class Unit : public GameObject
+struct Unit : public GameObject
 {
-public:
-    bool selected() { return selected_; };
-    void setSelected(bool selected) { selected_ = selected; };
-    void toggleSelected() { selected_ = !selected_; };
-
-    Movement& move() { return move_; };
-
-private:
-    bool selected_{};
-    Movement move_{};
+    bool isSelected;
+    Movement movement;
 };
 
 #endif

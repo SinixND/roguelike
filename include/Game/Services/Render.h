@@ -4,6 +4,6 @@
 #include "RenderID.h"
 #include "raylibEx.h"
 
-void renderAction(RenderID renderID, const Vector2Int& position);
+void render(RenderID renderID, const Vector2Int& position);
 
 #endif

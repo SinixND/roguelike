@@ -24,10 +24,10 @@ void MapHandler::createTiles(TileMap& tileMap, const Area& area, RenderID render
         {
             Vector2Int position{(area.left + x), (area.top + y)};
 
-            auto tile{tileMap.createOrUpdate(position)};
-            tile->setPosition(position);
-            tile->graphic().setRenderID(renderID);
-            tile->setIsSolid(isSolid);
+            Tile* tile{tileMap.createOrUpdate(position)};
+            tile->position = position;
+            tile->renderID = renderID;
+            tile->isSolid = isSolid;
         };
     }
 }

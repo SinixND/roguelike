@@ -7,9 +7,11 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Refactor globals (Runtime database) as arguments
+[0] Refactor RuntimeDatabase
 
 [1] Check class design (see notes); make diagram to track classes
+
+[1] Refactor render function to take graphics object argument
 
 
 # Shortterm
@@ -70,7 +72,7 @@ Not implemented yet
 
 ### Functions
 - namespace: domain functions (interclass, non-class)
-- Class: free if no private member needed (eg. getter/setter), member if private member needed
+- Class: free if no private member needed (eg. getter/setter), member if private member needed (class behaviour)
 - For readability only: no new file, but forward declare
 
 ### New class:

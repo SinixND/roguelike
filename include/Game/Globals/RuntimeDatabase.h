@@ -32,20 +32,24 @@ protected:
 
 namespace dtb
 {
+    namespace
+    {
+        static inline Font font_{};
+    };
+
+    inline void loadFont(const char* fileName) { font_ = LoadFont(fileName); };
+    inline Font& font() { return font_; };
+    inline void unloadFont() { UnloadFont(font_); };
+
     // Constants
     //=================================
     class Constants : public Singleton<Constants>
     {
     public:
-        static inline void loadFont(const char* fileName) { instance().font_ = LoadFont(fileName); };
-        static inline Font& font() { return instance().font_; };
-        static inline void unloadFont() { UnloadFont(instance().font_); };
-
         static inline Rectangle cursorDeadzone() { return instance().cursorDeadzone_; };
         static inline void setCursorDeadzone(const Rectangle& deadzone) { instance().cursorDeadzone_ = deadzone; };
 
     private:
-        static inline Font font_{};
         static inline Rectangle cursorDeadzone_{};
     };
     //=================================
@@ -84,25 +88,9 @@ namespace dtb
         static inline bool& vSyncMode() { return instance().VSyncMode_; };
         static inline void setVSyncMode(bool status) { VSyncMode_ = status; };
 
-        static inline bool isMouseActivated() { return instance().mouseActivated_; }
-        static inline void toggleMouseActivated()
-        {
-            instance().mouseActivated_ = !instance().mouseActivated_;
-
-            if (instance().mouseActivated_)
-            {
-                ShowCursor();
-            }
-            else
-            {
-                HideCursor();
-            }
-        }
-
     private:
         static inline bool debugMode_{true};
         static inline bool VSyncMode_{false};
-        static inline bool mouseActivated_{false};
     };
     //=================================
 

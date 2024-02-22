@@ -56,10 +56,10 @@ std::vector<Vector2Int> filterNonSolidPositions(TileMap& tileMap)
 
     for (auto& tile : tileMap.values())
     {
-        if (tile.isSolid())
+        if (tile.isSolid)
             continue;
 
-        accessiblePositions.push_back(tile.position());
+        accessiblePositions.push_back(tile.position);
     }
 
     return accessiblePositions;

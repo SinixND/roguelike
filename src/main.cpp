@@ -17,14 +17,14 @@
 #include <emscripten/emscripten.h>
 #endif
 
-constexpr int WINDOW_WIDTH{800};
-constexpr int WINDOW_HEIGHT{450};
-
 void applicationLoop();
 int main(/* int argc, char **argv */)
 {
     // Setup the window
     //=====================================
+    constexpr int WINDOW_WIDTH{800};
+    constexpr int WINDOW_HEIGHT{450};
+
     // Flags
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     if (dtb::Configs::vSyncMode())
@@ -40,7 +40,7 @@ int main(/* int argc, char **argv */)
     SetTargetFPS(245);
 
     // Fonts
-    dtb::Constants::loadFont("resources/fonts/JuliaMono-RegularLatin.ttf");
+    Font font{LoadFont("resources/fonts/JuliaMono-RegularLatin.ttf")};
     GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
     //=====================================
 
@@ -88,7 +88,7 @@ int main(/* int argc, char **argv */)
     // De-Initialization
     //=================================
     // Unload fonts
-    dtb::Constants::unloadFont();
+    UnloadFont(font);
 
     // Unlaod textures
     dtb::Textures::unloadAll();

@@ -4,13 +4,8 @@
 #include "GameObject.h"
 #include "RenderID.h"
 
-class Tile : public GameObject
+struct Tile : public GameObject
 {
-public:
-    bool isSolid() { return isSolid_; };
-    void setIsSolid(bool isSolid) { isSolid_ = isSolid; };
-
-private:
-    bool isSolid_{};
+    bool isSolid;
 };
 #endif
