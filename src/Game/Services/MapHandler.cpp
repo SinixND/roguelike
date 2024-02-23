@@ -1,5 +1,6 @@
 #include "MapHandler.h"
 
+#include "LayerID.h"
 #include "RenderID.h"
 #include "Tile.h"
 #include "TileMap.h"
@@ -16,7 +17,7 @@ TileMap createNewMap(size_t level)
     return newMap;
 }
 
-void MapHandler::createTiles(TileMap& tileMap, const Area& area, RenderID renderID, bool isSolid)
+void MapHandler::createTiles(TileMap& tileMap, const Area& area, RenderID renderID, LayerID layerID, bool isSolid)
 {
     for (int x{0}; x < area.width; ++x)
     {
@@ -26,7 +27,9 @@ void MapHandler::createTiles(TileMap& tileMap, const Area& area, RenderID render
 
             Tile* tile{tileMap.createOrUpdate(position)};
             tile->position = position;
-            tile->renderID = renderID;
+            tile->graphic.position = &tile->position;
+            tile->graphic.renderID = renderID;
+            tile->graphic.layerID = layerID;
             tile->isSolid = isSolid;
         };
     }
@@ -43,6 +46,7 @@ void MapHandler::addRoom(TileMap& tileMap, const Area& room)
             room.width - 1,
             1},
         RenderID::wall,
+        LayerID::map,
         true);
 
     // Right wall
@@ -54,6 +58,7 @@ void MapHandler::addRoom(TileMap& tileMap, const Area& room)
             1,
             room.height - 1},
         RenderID::wall,
+        LayerID::map,
         true);
 
     // Bottom wall
@@ -65,6 +70,7 @@ void MapHandler::addRoom(TileMap& tileMap, const Area& room)
             room.width - 1,
             1},
         RenderID::wall,
+        LayerID::map,
         true);
 
     // Left wall
@@ -76,6 +82,7 @@ void MapHandler::addRoom(TileMap& tileMap, const Area& room)
             1,
             room.height - 1},
         RenderID::wall,
+        LayerID::map,
         true);
 
     // Floor
@@ -87,6 +94,7 @@ void MapHandler::addRoom(TileMap& tileMap, const Area& room)
             room.width - 2,
             room.height - 2},
         RenderID::floor,
+        LayerID::map,
         false);
 }
 
@@ -108,5 +116,6 @@ void MapHandler::addStartRoom(TileMap& tileMap)
             3,
             1},
         RenderID::wall,
+        LayerID::map,
         true);
 }

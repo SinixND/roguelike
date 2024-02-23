@@ -11,26 +11,26 @@ void GameScene::renderOutput()
     // Layer map
     for (auto& tile : world.currentMap().values())
     {
-        render(tile.renderID, tile.position);
+        render(tile.graphic.renderID, tile.position);
     }
 
     // Layer map overlay
     for (auto& tile : world.mapOverlay().values())
     {
-        render(tile.renderID, tile.position);
+        render(tile.graphic.renderID, tile.position);
     }
 
     // Layer framed map overlay
     for (auto& tile : world.framedMapOverlay().values())
     {
-        render(tile.renderID, tile.position);
+        render(tile.graphic.renderID, tile.position);
     }
 
     // Render object layer
-    render(hero.renderID, hero.position);
+    render(hero.graphic.renderID, hero.position);
 
     // Render UI layer
-    render(cursor.renderID, cursor.position);
+    render(cursor.graphic.renderID, cursor.position);
 
     EndMode2D();
 

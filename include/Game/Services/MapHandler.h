@@ -11,7 +11,7 @@ TileMap createNewMap(size_t level);
 namespace MapHandler
 {
 
-    void createTiles(TileMap& tileMap, const Area& area, RenderID renderID, bool isSolid);
+    void createTiles(TileMap& tileMap, const Area& area, RenderID renderID, LayerID layerID, bool isSolid);
     void addRoom(TileMap& tileMap, const Area& room);
     void addStartRoom(TileMap& tileMap);
 }

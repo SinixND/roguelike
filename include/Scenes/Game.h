@@ -1,7 +1,7 @@
 #ifndef _20231203204745
 #define _20231203204745
 
-#include "GameObject.h"
+#include "Renderable.h"
 #include "Scene.h"
 #include "Unit.h"
 #include "World.h"
@@ -15,7 +15,7 @@ public:
 
 private:
     World world{};
-    GameObject cursor{};
+    Renderable cursor{};
     Unit hero{};
 
 private:

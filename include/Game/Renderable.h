@@ -1,13 +1,13 @@
 #ifndef _20240211172120
 #define _20240211172120
 
-#include "RenderID.h"
+#include "Graphic.h"
 #include "raylibEx.h"
 
-struct GameObject
+struct Renderable
 {
     Vector2Int position;
-    RenderID renderID;
+    Graphic graphic;
 };
 
 #endif

@@ -51,7 +51,7 @@ void showUnitRange(bool& moveRangeShown, Unit& unit, World& world)
                 // Create reachable tile
                 Tile reachableTile{};
                 reachableTile.position = steppedPosition.position;
-                reachableTile.renderID = RenderID::reachable;
+                reachableTile.graphic.renderID = RenderID::reachable;
                 reachableTile.isSolid = false;
 
                 // Add reachable tile to overlay
@@ -94,7 +94,7 @@ void showPath(const Vector2Int& unitPosition, const Vector2Int& cursorPosition, 
     {
         Tile pathTile{};
         pathTile.position = steppedPosition.position;
-        pathTile.renderID = RenderID::path;
+        pathTile.graphic.renderID = RenderID::path;
         pathTile.isSolid = false;
 
         world.framedMapOverlay().createOrUpdate(
