@@ -11,7 +11,7 @@ development of a (maybe) roguelike game with c++ and raylib
 
 [1] Check class design (see notes); make diagram to track classes
 
-[1] Refactor render function to take graphics object argument
+[2] Command patter for rendering and layers
 
 
 # Shortterm
