@@ -27,7 +27,7 @@ int main(/* int argc, char **argv */)
 
     // Flags
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    if (dtb::Configs::vSyncMode())
+    if (VSYNC_ACTIVE)
         SetConfigFlags(FLAG_VSYNC_HINT);
 
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Roguelike");
@@ -47,25 +47,25 @@ int main(/* int argc, char **argv */)
     // Application Initialization
     //=================================
     // Load textures
-    dtb::Textures::load(RenderID::none, "Empty.png");
-    dtb::Textures::load(RenderID::hero, "Hero.png");
-    dtb::Textures::load(RenderID::cursor, "Cursor.png");
-    dtb::Textures::load(RenderID::wall, "TileWall.png");
-    dtb::Textures::load(RenderID::floor, "TileFloor.png");
-    dtb::Textures::load(RenderID::reachable, "TileReachable.png");
-    dtb::Textures::load(RenderID::path, "TilePath.png");
-    dtb::Textures::load(RenderID::attackable, "TileAttackable.png");
-    dtb::Textures::load(RenderID::supportable, "TileSupportable.png");
+    dtb::loadTexture(RenderID::none, "Empty.png");
+    dtb::loadTexture(RenderID::hero, "Hero.png");
+    dtb::loadTexture(RenderID::cursor, "Cursor.png");
+    dtb::loadTexture(RenderID::wall, "TileWall.png");
+    dtb::loadTexture(RenderID::floor, "TileFloor.png");
+    dtb::loadTexture(RenderID::reachable, "TileReachable.png");
+    dtb::loadTexture(RenderID::path, "TilePath.png");
+    dtb::loadTexture(RenderID::attackable, "TileAttackable.png");
+    dtb::loadTexture(RenderID::supportable, "TileSupportable.png");
 
     // Define scenes
     GameScene game{};
     game.initialize();
 
     // Set default scene
-    dtb::ActiveScene::setScene(game);
+    dtb::setActiveScene(game);
 
     // Setup Camera2D
-    dtb::Globals::camera() =
+    dtb::camera() =
         {Vector2Scale(GetDisplaySize(), 0.5f),
          V_NULL,
          0.0f,
@@ -77,7 +77,7 @@ int main(/* int argc, char **argv */)
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(applicationLoop, 245, 1);
 #else
-    while (!WindowShouldClose() && !dtb::Globals::shouldAppClose())
+    while (!(WindowShouldClose() || dtb::shouldAppClose()))
     {
         // Call update function for emscripten compatibility
         applicationLoop();
@@ -91,7 +91,7 @@ int main(/* int argc, char **argv */)
     UnloadFont(font);
 
     // Unlaod textures
-    dtb::Textures::unloadAll();
+    dtb::unloadAllTextures();
 
     // Deinitialize scenes
     game.deinitialize();
@@ -105,16 +105,7 @@ int main(/* int argc, char **argv */)
 void applicationLoop()
 {
     // Set window dependent variables
-    dtb::Globals::camera().offset = {GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f};
-
-    dtb::Constants::setCursorDeadzone(
-        GetRectangle(
-            Vector2AddValue(
-                {0, 0},
-                DEADZONE_PIXELS),
-            Vector2SubtractValue(
-                {static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())},
-                DEADZONE_PIXELS)));
+    dtb::camera().offset = {GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f};
 
 #ifndef __EMSCRIPTEN__
     // Toggle fullscreen
@@ -133,5 +124,5 @@ void applicationLoop()
 #endif
     //=================================
 
-    dtb::ActiveScene::scene().update();
+    dtb::activeScene().update();
 }

@@ -4,7 +4,7 @@
 #include "RuntimeDatabase.h"
 
 void showUnitRange(bool& moveRangeShown, Unit& unit, World& world);
-void showPath(bool& moveRangeShown, const Vector2Int& unitPosition, const Vector2Int& cursorPosition, size_t unitRange, World& world);
+void showPath(const Vector2Int& unitPosition, const Vector2Int& cursorPosition, size_t unitRange, World& world);
 
 void GameScene::updateState()
 {
@@ -20,15 +20,17 @@ void GameScene::updateState()
     {
         world.mapOverlay().clear();
         moveRangeShown = false;
-        dtb::Globals::setPathShown(false);
+        //* pathShown = false;
     }
 
-    showPath(
-        moveRangeShown,
-        hero.position,
-        cursor.position,
-        hero.movement.range,
-        world);
+    if (moveRangeShown)
+    {
+        showPath(
+            hero.position,
+            cursor.position,
+            hero.movement.range,
+            world);
+    }
 }
 
 void showUnitRange(bool& moveRangeShown, Unit& unit, World& world)
@@ -61,46 +63,42 @@ void showUnitRange(bool& moveRangeShown, Unit& unit, World& world)
     }
 }
 
-void showPath(bool& moveRangeShown, const Vector2Int& unitPosition, const Vector2Int& cursorPosition, size_t unitRange, World& world)
+void showPath(const Vector2Int& unitPosition, const Vector2Int& cursorPosition, size_t unitRange, World& world)
 {
-    // Show path
-    if (moveRangeShown)
+    static Vector2Int origin{};
+    static Vector2Int target{};
+    static size_t range{};
+    static std::vector<SteppedPosition> path{};
+
+    // Check if path input changed
+    if (!(
+            origin == unitPosition &&
+            target == cursorPosition &&
+            range == unitRange))
     {
-        static Vector2Int origin{};
-        static Vector2Int target{};
-        static size_t range{};
-        static std::vector<SteppedPosition> path{};
+        // Update input and path
+        origin = unitPosition;
+        target = cursorPosition;
+        range = unitRange;
 
-        // Check if path input changed
-        if (!(
-                origin == unitPosition &&
-                target == cursorPosition &&
-                range == unitRange))
-        {
-            // Update input and path
-            origin = unitPosition;
-            target = cursorPosition;
-            range = unitRange;
+        path = findPath(
+            world.mapOverlay(),
+            unitPosition,
+            cursorPosition,
+            unitRange);
 
-            path = findPath(
-                world.mapOverlay(),
-                unitPosition,
-                cursorPosition,
-                unitRange);
+        //* if (!path.empty()) pathShown = true;
+    }
 
-            if (path.size()) dtb::Globals::setPathShown(true);
-        }
+    for (auto& steppedPosition : path)
+    {
+        Tile pathTile{};
+        pathTile.position = steppedPosition.position;
+        pathTile.renderID = RenderID::path;
+        pathTile.isSolid = false;
 
-        for (auto& steppedPosition : path)
-        {
-            Tile pathTile{};
-            pathTile.position = steppedPosition.position;
-            pathTile.renderID = RenderID::path;
-            pathTile.isSolid = false;
-
-            world.framedMapOverlay().createOrUpdate(
-                steppedPosition.position,
-                pathTile);
-        }
+        world.framedMapOverlay().createOrUpdate(
+            steppedPosition.position,
+            pathTile);
     }
 }

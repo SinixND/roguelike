@@ -2,6 +2,7 @@
 
 #include "RuntimeDatabase.h"
 #include "TilePositionConversion.h"
+#include <raylib.h>
 
 void moveCursor(Vector2Int& cursorPosition, bool mouseActive);
 void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& referenceWorldPosition, bool mouseActive);
@@ -127,10 +128,18 @@ void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& reference
     dt += GetFrameTime();
 
     // Check if out of deadzone
-    auto screenCursor{GetWorldToScreen2D(cursorWorldPosition, dtb::Globals::camera())};
-    auto screenReference{GetWorldToScreen2D(referenceWorldPosition, dtb::Globals::camera())};
+    auto screenCursor{GetWorldToScreen2D(cursorWorldPosition, dtb::camera())};
+    auto screenReference{GetWorldToScreen2D(referenceWorldPosition, dtb::camera())};
 
-    if (!CheckCollisionPointRec(screenCursor, dtb::Constants::cursorDeadzone()))
+    Rectangle cursorDeadzone{GetRectangle(
+        Vector2AddValue(
+            {0, 0},
+            DEADZONE_PIXELS),
+        Vector2SubtractValue(
+            {static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())},
+            DEADZONE_PIXELS))};
+
+    if (!CheckCollisionPointRec(screenCursor, cursorDeadzone))
     {
         if (mouseActive && dt < 0.1f)
             return;
@@ -138,37 +147,37 @@ void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& reference
         dt = 0;
 
         // Adjust cursor position relative to deadzone
-        if (screenCursor.x < dtb::Constants::cursorDeadzone().x &&
-            screenReference.x < dtb::Constants::cursorDeadzone().x + dtb::Constants::cursorDeadzone().width)
+        if (screenCursor.x < cursorDeadzone.x &&
+            screenReference.x < cursorDeadzone.x + cursorDeadzone.width)
         {
-            dtb::Globals::moveCamera(
+            dtb::moveCamera(
                 Vector2IntScale(
                     V_LEFT,
                     TILE_SIZE));
         }
 
-        if (screenCursor.x > (dtb::Constants::cursorDeadzone().x + dtb::Constants::cursorDeadzone().width) &&
-            screenReference.x > dtb::Constants::cursorDeadzone().x)
+        if (screenCursor.x > (cursorDeadzone.x + cursorDeadzone.width) &&
+            screenReference.x > cursorDeadzone.x)
         {
-            dtb::Globals::moveCamera(
+            dtb::moveCamera(
                 Vector2IntScale(
                     V_RIGHT,
                     TILE_SIZE));
         }
 
-        if (screenCursor.y < dtb::Constants::cursorDeadzone().y &&
-            screenReference.y < dtb::Constants::cursorDeadzone().y + dtb::Constants::cursorDeadzone().height)
+        if (screenCursor.y < cursorDeadzone.y &&
+            screenReference.y < cursorDeadzone.y + cursorDeadzone.height)
         {
-            dtb::Globals::moveCamera(
+            dtb::moveCamera(
                 Vector2IntScale(
                     V_UP,
                     TILE_SIZE));
         }
 
-        if (screenCursor.y > (dtb::Constants::cursorDeadzone().y + dtb::Constants::cursorDeadzone().height) &&
-            screenReference.y > dtb::Constants::cursorDeadzone().y)
+        if (screenCursor.y > (cursorDeadzone.y + cursorDeadzone.height) &&
+            screenReference.y > cursorDeadzone.y)
         {
-            dtb::Globals::moveCamera(
+            dtb::moveCamera(
                 Vector2IntScale(
                     V_DOWN,
                     TILE_SIZE));
@@ -178,8 +187,8 @@ void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& reference
 
 void processZoom()
 {
-    Camera2D& camera{dtb::Globals::camera()};
     float wheel = GetMouseWheelMove();
+    Camera2D& camera{dtb::camera()};
 
     if (wheel != 0)
     {

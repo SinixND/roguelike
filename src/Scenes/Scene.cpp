@@ -23,7 +23,7 @@ namespace snd
         // Draw simple frame
         DrawRectangleLinesEx(Rectangle{0, 0, static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())}, BORDER_WEIGHT, BORDER_COLOR);
 
-        if (dtb::Configs::debugMode())
+        if (dtb::debugMode())
         {
             DrawFPS(0, 0);
         }

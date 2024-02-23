@@ -19,12 +19,12 @@ void render(RenderID renderID, const Vector2Int& position)
     if (!IsPixelOnScreenRender(
             {GetWorldToScreen2D(
                 pixelCoordinatesWorld,
-                dtb::Globals::camera())},
+                dtb::camera())},
             3 * TILE_SIZE))
         return;
 
     // Get texture data
-    Texture2D* texture{dtb::Textures::get(renderID)};
+    Texture2D* texture{dtb::getTexture(renderID)};
     Vector2 tileSize{TILE_DIMENSIONS};
     Vector2 tileCenter{Vector2Scale(tileSize, 0.5f)};
 

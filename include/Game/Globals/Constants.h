@@ -4,6 +4,8 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
+const bool VSYNC_ACTIVE{false};
+
 const float TILE_SIZE{25};
 const Vector2 TILE_DIMENSIONS{TILE_SIZE, TILE_SIZE};
 const float DEADZONE_PIXELS{40};

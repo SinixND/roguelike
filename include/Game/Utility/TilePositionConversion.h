@@ -12,12 +12,12 @@ inline Vector2 positionToScreen(const Vector2Int& position)
         position.x * TILE_SIZE,
         position.y * TILE_SIZE};
 
-    return GetWorldToScreen2D(worldPixel, dtb::Globals::camera());
+    return GetWorldToScreen2D(worldPixel, dtb::camera());
 }
 
 inline Vector2Int screenToPosition(const Vector2& pixel)
 {
-    Vector2 worldPixel{GetScreenToWorld2D(pixel, dtb::Globals::camera())};
+    Vector2 worldPixel{GetScreenToWorld2D(pixel, dtb::camera())};
 
     return Vector2Int{
         static_cast<int>(std::floor((worldPixel.x + (TILE_SIZE / 2)) / TILE_SIZE)),

@@ -4,6 +4,7 @@
 #include "RenderID.h"
 #include "Scene.h"
 #include "raylibEx.h"
+#include <cstddef>
 #include <raylib.h>
 #include <string>
 #include <unordered_map>
@@ -30,112 +31,87 @@ protected:
     DISALLOW_COPY_AND_ASSIGN(Singleton)
 };
 
-namespace dtb
+class dtb : public Singleton<dtb>
 {
-    namespace
+    // Constants (ONLY SET ONCE)
+    //=================================
+    // Font
+public:
+    static inline Font& font() { return instance().font_; };
+    static inline void loadFont(const char* fileName) { font() = LoadFont(fileName); };
+    static inline void unloadFont() { UnloadFont(font()); };
+
+private:
+    static inline Font font_{};
+
+    // Textures
+public:
+    static inline void loadTexture(RenderID textureID, std::string filename)
     {
-        static inline Font font_{};
+        textures().insert(std::make_pair(textureID, LoadTexture((texturePath + filename).c_str())));
     };
 
-    inline void loadFont(const char* fileName) { font_ = LoadFont(fileName); };
-    inline Font& font() { return font_; };
-    inline void unloadFont() { UnloadFont(font_); };
-
-    // Constants
-    //=================================
-    class Constants : public Singleton<Constants>
+    static inline Texture2D* getTexture(RenderID textureID)
     {
-    public:
-        static inline Rectangle cursorDeadzone() { return instance().cursorDeadzone_; };
-        static inline void setCursorDeadzone(const Rectangle& deadzone) { instance().cursorDeadzone_ = deadzone; };
+        if (textures().find(textureID) == textures().end())
+            return nullptr;
 
-    private:
-        static inline Rectangle cursorDeadzone_{};
+        return &textures().at(textureID);
     };
-    //=================================
 
-    // Application state
-    //=================================
-    class Globals : public Singleton<Globals>
+    static inline void unloadAllTextures()
     {
-    public:
-        static inline bool& shouldAppClose() { return instance().appShouldClose_; };
-        static inline void closeApp() { instance().appShouldClose_ = true; };
-
-        static inline Camera2D& camera() { return instance().camera_; };
-        static inline void moveCamera(Vector2 distance) { camera().target = Vector2Add(camera().target, distance); };
-
-        static inline bool pathShown() { return instance().pathShown_; };
-        static inline void setPathShown(bool status) { instance().pathShown_ = status; };
-
-    private:
-        static inline bool appShouldClose_{false};
-
-        // Setup Camera2D
-        static inline Camera2D camera_{};
-        static inline bool pathShown_{};
+        for (const auto& texture : textures())
+        {
+            Texture2D tex = texture.second;
+            UnloadTexture(tex);
+        }
+        textures().clear();
     };
+
+private:
+    static inline std::unordered_map<RenderID, Texture2D>& textures() { return instance().textures_; };
+    static const inline std::string texturePath{"resources/textures/"};
+    static inline std::unordered_map<RenderID, Texture2D> textures_{};
+    //=================================
+
+    // Globals
+    //=================================
+    // Terminate app
+public:
+    static inline bool& shouldAppClose() { return instance().appShouldClose_; };
+    static inline void closeApp() { shouldAppClose() = true; };
+
+private:
+    static inline bool appShouldClose_{false};
+
+    // Camera / Viewport
+public:
+    static inline Camera2D& camera() { return instance().camera_; };
+    static inline void moveCamera(Vector2 distance) { camera().target = Vector2Add(camera().target, distance); };
+
+private:
+    static inline Camera2D camera_{};
+
+    // Active scene
+public:
+    static inline snd::Scene& activeScene() { return *instance().activeScene_; };
+    static inline void setActiveScene(snd::Scene& scene) { instance().activeScene_ = &scene; };
+
+private:
+    static inline snd::Scene* activeScene_{};
     //=================================
 
     // Configs / Settings
     //=================================
-    class Configs : public Singleton<Configs>
-    {
-    public:
-        static inline bool& debugMode() { return instance().debugMode_; };
-        static inline void setDebugMode(bool status) { debugMode_ = status; };
+    // Debug mode
+public:
+    static inline bool& debugMode() { return instance().debugMode_; };
+    static inline void setDebugMode(bool status) { debugMode() = status; };
 
-        static inline bool& vSyncMode() { return instance().VSyncMode_; };
-        static inline void setVSyncMode(bool status) { VSyncMode_ = status; };
-
-    private:
-        static inline bool debugMode_{true};
-        static inline bool VSyncMode_{false};
-    };
+private:
+    static inline bool debugMode_{true};
     //=================================
+};
 
-    // Active scene
-    //=================================
-    class ActiveScene : public Singleton<ActiveScene>
-    {
-    public:
-        static inline snd::Scene& scene() { return *instance().activeScene_; };
-        static inline void setScene(snd::Scene& scene) { instance().activeScene_ = &scene; };
-
-    private:
-        static inline snd::Scene* activeScene_{};
-    };
-    //=================================
-
-    // Textures
-    //=================================
-    class Textures : public Singleton<Textures>
-    {
-    public:
-        static inline void load(RenderID textureID, std::string filename)
-        {
-            instance().textures_.insert(std::make_pair(textureID, LoadTexture((texturePath + filename).c_str())));
-        };
-
-        static inline Texture2D* get(RenderID textureID)
-        {
-            return &instance().textures_.at(textureID);
-        };
-
-        static inline void unloadAll()
-        {
-            for (const auto& texture : instance().textures_)
-            {
-                Texture2D tex = texture.second;
-                UnloadTexture(tex);
-            }
-            instance().textures_.clear();
-        };
-
-    private:
-        static const inline std::string texturePath{"resources/textures/"};
-        static inline std::unordered_map<RenderID, Texture2D> textures_{};
-    };
-    //=================================
-}
 #endif

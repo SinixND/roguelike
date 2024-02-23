@@ -1,12 +1,14 @@
 #ifndef _20240211230403
 #define _20240211230403
 
-#include "GameObject.h"
 #include "Movement.h"
-#include <cstddef>
+#include "RenderID.h"
+#include "raylibEx.h"
 
-struct Unit : public GameObject
+struct Unit
 {
+    Vector2Int position;
+    RenderID renderID;
     bool isSelected;
     Movement movement;
 };

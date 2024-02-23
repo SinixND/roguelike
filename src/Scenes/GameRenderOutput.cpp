@@ -6,7 +6,7 @@
 
 void GameScene::renderOutput()
 {
-    BeginMode2D(dtb::Globals::camera());
+    BeginMode2D(dtb::camera());
 
     // Layer map
     for (auto& tile : world.currentMap().values())
@@ -56,13 +56,8 @@ void GameScene::renderOutput()
         RAYWHITE);
     //=================================
 
-    if (dtb::Configs::debugMode())
+    if (dtb::debugMode())
     {
-        DrawRectangleLinesEx(
-            dtb::Constants::cursorDeadzone(),
-            1,
-            RED);
-
         DrawLineV(
             {GetRenderWidth() / 2.0f, 0},
             {GetRenderWidth() / 2.0f, static_cast<float>(GetRenderHeight())},

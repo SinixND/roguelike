@@ -1,11 +1,13 @@
 #ifndef _20240215012942
 #define _20240215012942
 
-#include "GameObject.h"
 #include "RenderID.h"
+#include "raylibEx.h"
 
-struct Tile : public GameObject
+struct Tile
 {
+    Vector2Int position;
+    RenderID renderID;
     bool isSolid;
 };
 #endif
