@@ -7,7 +7,7 @@
 
 struct Unit
 {
-    Vector2Int position;
+    Vector2i position;
     Graphic graphic;
     bool isSelected;
     Movement movement;

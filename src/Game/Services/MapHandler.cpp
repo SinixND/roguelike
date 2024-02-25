@@ -1,5 +1,6 @@
 #include "MapHandler.h"
 
+#include "Graphic.h"
 #include "LayerID.h"
 #include "RenderID.h"
 #include "Tile.h"
@@ -23,11 +24,10 @@ void MapHandler::createTiles(TileMap& tileMap, const Area& area, RenderID render
     {
         for (int y{0}; y < area.height; ++y)
         {
-            Vector2Int position{(area.left + x), (area.top + y)};
+            Vector2i position{(area.left + x), (area.top + y)};
 
             Tile* tile{tileMap.createOrUpdate(position)};
             tile->position = position;
-            tile->graphic.position = &tile->position;
             tile->graphic.renderID = renderID;
             tile->graphic.layerID = layerID;
             tile->isSolid = isSolid;

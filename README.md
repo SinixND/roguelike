@@ -9,8 +9,6 @@ development of a (maybe) roguelike game with c++ and raylib
 # active
 [1] Check class design (see notes); make diagram to track classes
 
-[2] Command patter for rendering and layers
-
 
 # Shortterm
 [1] Implement movment
@@ -66,7 +64,7 @@ Not implemented yet
 ### Struct/Class general
 - Struct: POD 
 - Getter / Setter only when needed
-- only private member variables: name_
+- Only private member variables: name_
 
 ### Functions
 - namespace: domain functions (interclass, non-class)
@@ -151,3 +149,5 @@ private:
 [x] realize viewport/camera system
 
 [x] Implement zoom
+
+[-] Command pattern for rendering and layers (not implemented, words poorly when commands created in a loop)

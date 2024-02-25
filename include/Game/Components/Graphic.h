@@ -7,8 +7,6 @@
 
 struct Graphic
 {
-    Vector2Int* position;
-
     RenderID renderID;
     LayerID layerID;
 };

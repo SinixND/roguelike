@@ -2,11 +2,13 @@
 #define _20240215012942
 
 #include "Graphic.h"
+#include "LayerID.h"
+#include "RenderID.h"
 #include "raylibEx.h"
 
 struct Tile
 {
-    Vector2Int position;
+    Vector2i position;
     Graphic graphic;
     bool isSolid;
 };

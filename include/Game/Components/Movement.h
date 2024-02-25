@@ -7,7 +7,7 @@
 struct Movement
 {
     size_t range;
-    Vector2Int target;
+    Vector2i target;
     float speed;
 };
 

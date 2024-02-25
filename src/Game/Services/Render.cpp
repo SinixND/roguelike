@@ -1,6 +1,7 @@
 #include "Render.h"
 
 #include "Constants.h"
+#include "Graphic.h"
 #include "RenderID.h"
 #include "RuntimeDatabase.h"
 #include "TilePositionConversion.h"
@@ -8,7 +9,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-void render(RenderID renderID, const Vector2Int& position)
+void render(Vector2i& position, Graphic& graphic)
 {
     // Convert tile position to world pixel coordinates
     Vector2 pixelCoordinatesWorld{
@@ -24,7 +25,7 @@ void render(RenderID renderID, const Vector2Int& position)
         return;
 
     // Get texture data
-    Texture2D* texture{dtb::getTexture(renderID)};
+    Texture2D* texture{dtb::getTexture(graphic.renderID)};
     Vector2 tileSize{TILE_DIMENSIONS};
     Vector2 tileCenter{Vector2Scale(tileSize, 0.5f)};
 

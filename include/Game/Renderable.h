@@ -2,11 +2,13 @@
 #define _20240211172120
 
 #include "Graphic.h"
+#include "LayerID.h"
+#include "RenderID.h"
 #include "raylibEx.h"
 
 struct Renderable
 {
-    Vector2Int position;
+    Vector2i position;
     Graphic graphic;
 };
 

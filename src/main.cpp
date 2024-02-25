@@ -30,6 +30,7 @@ int main(/* int argc, char **argv */)
     if (VSYNC_ACTIVE)
         SetConfigFlags(FLAG_VSYNC_HINT);
 
+    // Initialize window
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Roguelike");
 
     // Settings

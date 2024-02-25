@@ -14,22 +14,22 @@ const float ZOOM_STEP{0.125f};
 // Direction vectors
 // X is right-positive, Y is down-positive
 const Vector2 V_NULL{0, 0};
-const Vector2Int V_NODIR{0, 0};
-const Vector2Int V_LEFT{-1, 0};
-const Vector2Int V_RIGHT{1, 0};
-const Vector2Int V_UP{0, -1};
-const Vector2Int V_DOWN{0, 1};
+const Vector2i V_NODIR{0, 0};
+const Vector2i V_LEFT{-1, 0};
+const Vector2i V_RIGHT{1, 0};
+const Vector2i V_UP{0, -1};
+const Vector2i V_DOWN{0, 1};
 
 // Rotation matrices
-const Matrix2x2Int M_ROTATE_NONE{
+const Matrix2i M_ROTATE_NONE{
     1, 0,
     0, 1};
 
-const Matrix2x2Int M_ROTATE_RIGHT{
+const Matrix2i M_ROTATE_RIGHT{
     0, -1,
     1, 0};
 
-const Matrix2x2Int M_ROTATE_LEFT{
+const Matrix2i M_ROTATE_LEFT{
     0, 1,
     -1, 0};
 

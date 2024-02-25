@@ -9,27 +9,27 @@
 
 // Typedefs
 //=====================================
-struct Vector2Int
+struct Vector2i
 {
-    int x{};
-    int y{};
+    int x;
+    int y;
 };
 
-struct Matrix2x2Int
+struct Matrix2i
 {
-    int m11{}, m12{};
-    int m21{}, m22{};
+    int m11, m12;
+    int m21, m22;
 };
 
 struct Area
 {
-    int left{};   // Rectangle top-left corner position x
-    int top{};    // Rectangle top-left corner position y
-    int width{};  // Rectangle width
-    int height{}; // Rectangle height
+    int left;   // Rectangle top-left corner position x
+    int top;    // Rectangle top-left corner position y
+    int width;  // Rectangle width
+    int height; // Rectangle height
 
-    int right{};
-    int bottom{};
+    int right;
+    int bottom;
 
     Area(int leftX, int topY, int widthX, int heightY)
         : left(leftX)
@@ -52,12 +52,12 @@ inline Vector2 GetDisplaySize()
         return Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
 }
 
-inline Vector2Int Vector2IntMatrixMultiply(const Matrix2x2Int& M, const Vector2Int& V)
+inline Vector2i MatrixMultiply(const Matrix2i& M, const Vector2i& V)
 {
-    return Vector2Int{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
+    return Vector2i{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
 }
 
-inline size_t Vector2IntLength(const Vector2Int& V)
+inline size_t Vector2Length(const Vector2i& V)
 {
     return abs(V.x) + abs(V.y);
 }
@@ -98,7 +98,7 @@ inline int IsPixelOnScreenRender(const Vector2& pixel, float margin)
     return CheckCollisionPointRec(pixel, screen);
 }
 
-inline Vector2 ConvertVector2(const Vector2Int& v)
+inline Vector2 ConvertVector2(const Vector2i& v)
 {
     return Vector2{static_cast<float>(v.x), static_cast<float>(v.y)};
 }
@@ -108,35 +108,35 @@ inline Vector2 ConvertVector2(const Vector2Int& v)
 //=====================================
 
 // Add two vectors (v1 + v2)
-RMAPI Vector2Int Vector2IntAdd(const Vector2Int& v1, const Vector2Int& v2)
+RMAPI Vector2i Vector2Add(const Vector2i& v1, const Vector2i& v2)
 {
-    return Vector2Int{v1.x + v2.x, v1.y + v2.y};
+    return Vector2i{v1.x + v2.x, v1.y + v2.y};
 }
 
-RMAPI Vector2Int Vector2IntAddValue(const Vector2Int& v1, int value)
+RMAPI Vector2i Vector2AddValue(const Vector2i& v1, int value)
 {
-    return Vector2Int{v1.x + value, v1.y + value};
+    return Vector2i{v1.x + value, v1.y + value};
 }
 
 // Subtract two vectors (v1 - v2)
-RMAPI Vector2Int Vector2IntSubtract(const Vector2Int& v1, const Vector2Int& v2)
+RMAPI Vector2i Vector2Subtract(const Vector2i& v1, const Vector2i& v2)
 {
-    return Vector2Int{v1.x - v2.x, v1.y - v2.y};
+    return Vector2i{v1.x - v2.x, v1.y - v2.y};
 }
 
-RMAPI Vector2Int Vector2IntSubtractValue(const Vector2Int& v1, int value)
+RMAPI Vector2i Vector2SubtractValue(const Vector2i& v1, int value)
 {
-    return Vector2Int{v1.x - value, v1.y - value};
+    return Vector2i{v1.x - value, v1.y - value};
 }
 
 // Scale vector (multiply by value)
-RMAPI Vector2 Vector2IntScale(const Vector2Int& v, float scale)
+RMAPI Vector2 Vector2Scale(const Vector2i& v, float scale)
 {
     return Vector2{v.x * scale, v.y * scale};
 }
 
 // Check whether two given vectors are almost equal
-RMAPI int Vector2IntEquals(const Vector2Int& v1, const Vector2Int& v2)
+RMAPI int Vector2Equals(const Vector2i& v1, const Vector2i& v2)
 {
     return ((v1.x == v2.x) && (v1.y == v2.y));
 }
@@ -161,9 +161,9 @@ inline bool operator==(const Vector2& lhs, const Vector2& rhs)
 };
 
 template <>
-struct std::hash<Vector2Int>
+struct std::hash<Vector2i>
 {
-    size_t operator()(const Vector2Int& V) const noexcept
+    size_t operator()(const Vector2i& V) const noexcept
     {
         size_t h1 = std::hash<int>()(V.x);
         size_t h2 = std::hash<int>()(V.y);
@@ -171,9 +171,9 @@ struct std::hash<Vector2Int>
     }
 };
 
-inline bool operator==(const Vector2Int& lhs, const Vector2Int& rhs)
+inline bool operator==(const Vector2i& lhs, const Vector2i& rhs)
 {
-    return Vector2IntEquals(lhs, rhs);
+    return Vector2Equals(lhs, rhs);
 };
 //=====================================
 
