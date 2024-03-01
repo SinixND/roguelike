@@ -9,17 +9,12 @@
 #include <raylib.h>
 #include <raymath.h>
 
-void render(Vector2i& position, Graphic& graphic)
+void render(const Vector2& positionTile, Graphic& graphic)
 {
-    // Convert tile position to world pixel coordinates
-    Vector2 pixelCoordinatesWorld{
-        positionToWorld(
-            position)};
-
     // Return if pixel is out of screen
     if (!IsPixelOnScreenRender(
             {GetWorldToScreen2D(
-                pixelCoordinatesWorld,
+                positionTile,
                 dtb::camera())},
             3 * TILE_SIZE))
         return;
@@ -38,11 +33,16 @@ void render(Vector2i& position, Graphic& graphic)
             float(texture->width),
             float(texture->height)},
         Rectangle{
-            pixelCoordinatesWorld.x,
-            pixelCoordinatesWorld.y,
+            positionTile.x,
+            positionTile.y,
             tileSize.x,
             tileSize.y},
         tileCenter,
         0,
         WHITE);
+}
+
+void renderAtTile(const Vector2i& tilePosition, Graphic& graphic)
+{
+    render(tilePositionToWorld(tilePosition), graphic);
 }

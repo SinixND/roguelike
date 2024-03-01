@@ -3,11 +3,11 @@
 
 #include "Graphic.h"
 #include "Movement.h"
-#include "raylibEx.h"
+#include "Position.h"
 
 struct Unit
 {
-    Vector2i position;
+    Position position;
     Graphic graphic;
     bool isSelected;
     Movement movement;

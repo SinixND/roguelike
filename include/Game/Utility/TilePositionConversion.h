@@ -6,7 +6,7 @@
 #include "raylib.h"
 #include "raylibEx.h"
 
-inline Vector2 positionToScreen(const Vector2i& position)
+inline Vector2 tilePositionToScreen(const Vector2i& position)
 {
     Vector2 worldPixel{
         position.x * TILE_SIZE,
@@ -15,7 +15,7 @@ inline Vector2 positionToScreen(const Vector2i& position)
     return GetWorldToScreen2D(worldPixel, dtb::camera());
 }
 
-inline Vector2i screenToPosition(const Vector2& pixel)
+inline Vector2i screenToTilePosition(const Vector2& pixel)
 {
     Vector2 worldPixel{GetScreenToWorld2D(pixel, dtb::camera())};
 
@@ -24,14 +24,14 @@ inline Vector2i screenToPosition(const Vector2& pixel)
         static_cast<int>(std::floor((worldPixel.y + (TILE_SIZE / 2)) / TILE_SIZE))};
 }
 
-inline Vector2 positionToWorld(const Vector2i& position)
+inline Vector2 tilePositionToWorld(const Vector2i& position)
 {
     return Vector2{
         (position.x * TILE_SIZE),
         (position.y * TILE_SIZE)};
 }
 
-inline Vector2i worldToPosition(const Vector2& pixel)
+inline Vector2i worldToTilePosition(const Vector2& pixel)
 {
     return Vector2i{
         static_cast<int>((pixel.x / TILE_SIZE)),
@@ -41,10 +41,9 @@ inline Vector2i worldToPosition(const Vector2& pixel)
 inline void setMouseTile(Vector2i& position)
 {
     Vector2i newPosition{
-        screenToPosition(GetMousePosition())};
+        screenToTilePosition(GetMousePosition())};
 
-    position.x = newPosition.x;
-    position.y = newPosition.y;
+    position = newPosition;
 }
 
 #endif

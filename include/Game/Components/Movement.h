@@ -1,13 +1,13 @@
 #ifndef _20240218231113
 #define _20240218231113
 
-#include "raylibEx.h"
+#include "TilePosition.h"
 #include <cstddef>
 
 struct Movement
 {
     size_t range;
-    Vector2i target;
+    TilePosition target;
     float speed;
 };
 

@@ -27,7 +27,7 @@ void MapHandler::createTiles(TileMap& tileMap, const Area& area, RenderID render
             Vector2i position{(area.left + x), (area.top + y)};
 
             Tile* tile{tileMap.createOrUpdate(position)};
-            tile->position = position;
+            tile->tilePosition = position;
             tile->graphic.renderID = renderID;
             tile->graphic.layerID = layerID;
             tile->isSolid = isSolid;

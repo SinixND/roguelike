@@ -26,7 +26,7 @@ bool isInTiles(
 {
     for (const auto& tile : tiles)
     {
-        if (Vector2Equals(target, tile.position))
+        if (Vector2Equals(target, tile.tilePosition))
             return true;
     }
     return false;
@@ -42,7 +42,7 @@ bool isInSteppedTiles(
         {
             if (Vector2Equals(
                     target,
-                    tile.position))
+                    tile.tilePosition))
                 return true;
         }
     }
@@ -59,7 +59,7 @@ std::vector<Vector2i> filterNonSolidPositions(TileMap& tileMap)
         if (tile.isSolid)
             continue;
 
-        accessiblePositions.push_back(tile.position);
+        accessiblePositions.push_back(tile.tilePosition);
     }
 
     return accessiblePositions;
@@ -168,7 +168,7 @@ ClassifiedPositions filterReachable(
             for (Matrix2i R : {M_ROTATE_NONE, M_ROTATE_LEFT, M_ROTATE_RIGHT})
             {
                 // Set next stepped tile position
-                Vector2i nextTilePosition{Vector2Add(steppedTile.position, MatrixMultiply(R, steppedTile.direction))};
+                Vector2i nextTilePosition{Vector2Add(steppedTile.tilePosition, MatrixMultiply(R, steppedTile.direction))};
 
                 // Check if tile is already known
                 bool tileKnown{false};
@@ -177,7 +177,7 @@ ClassifiedPositions filterReachable(
                 {
                     for (const auto& tile : tiles)
                     {
-                        if (!Vector2Equals(tile.position, nextTilePosition))
+                        if (!Vector2Equals(tile.tilePosition, nextTilePosition))
                             continue;
 
                         tileKnown = true;
@@ -233,7 +233,7 @@ std::vector<SteppedPosition> findPath(
     if (!isInSteppedTiles(target, reachableTiles))
         return path;
 
-    Vector2i origin{reachableTiles.front().front().position};
+    Vector2i origin{reachableTiles.front().front().tilePosition};
 
     // Check if target equals root position
     if (Vector2Equals(target, origin))
@@ -253,7 +253,7 @@ std::vector<SteppedPosition> findPath(
     {
         for (const auto& tile : reachableTiles[stepLevel])
         {
-            if (!Vector2Equals(tile.position, target))
+            if (!Vector2Equals(tile.tilePosition, target))
                 continue;
 
             currentStepLevelTile = tile;
@@ -276,7 +276,7 @@ std::vector<SteppedPosition> findPath(
         {
             // CheckVector is delta between checked tiles position and current step level position
             // CheckVector also is used to store the direction to next path tile
-            Vector2i checkVector{Vector2Subtract(currentStepLevelTile.position, tile.position)};
+            Vector2i checkVector{Vector2Subtract(currentStepLevelTile.tilePosition, tile.tilePosition)};
 
             // Tiled length of checkVector needs to be 1 (then it is a neighbour)
             auto checkValue{Vector2Length(checkVector)};

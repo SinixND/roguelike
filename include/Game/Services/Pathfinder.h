@@ -3,13 +3,14 @@
 
 #include "Constants.h"
 #include "TileMap.h"
+#include "TilePosition.h"
 #include <cstddef>
 #include <raylibEx.h>
 #include <vector>
 
 struct SteppedPosition
 {
-    Vector2i position;
+    TilePosition tilePosition;
     Vector2i direction = V_NODIR; // in which it was accessed
 };
 

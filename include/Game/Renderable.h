@@ -2,13 +2,11 @@
 #define _20240211172120
 
 #include "Graphic.h"
-#include "LayerID.h"
-#include "RenderID.h"
-#include "raylibEx.h"
+#include "TilePosition.h"
 
-struct Renderable
+struct Cursor
 {
-    Vector2i position;
+    TilePosition tilePosition;
     Graphic graphic;
 };
 

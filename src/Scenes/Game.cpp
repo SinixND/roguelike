@@ -1,18 +1,21 @@
 #include "Game.h"
 
 #include "LayerID.h"
+#include "Movement.h"
 #include "Pathfinder.h"
 #include "Render.h"
 #include "Renderable.h"
 #include "TilePositionConversion.h"
 #include "Unit.h"
 #include "World.h"
+#include "raylibEx.h"
+#include <iostream>
 #include <raygui.h>
 
 namespace
 {
-    World world{};
-    Renderable cursor{};
+    World gameWorld{};
+    Cursor cursor{};
     Unit hero{};
 }
 
@@ -25,6 +28,7 @@ void GameScene::initialize()
     hero.graphic.layerID = LayerID::object;
     hero.movement.range = 5;
     hero.movement.speed = 1;
+    hero.movement.target = hero.position.tilePosition();
 }
 
 void moveCursor(Vector2i& cursorPosition, bool mouseActive);
@@ -51,29 +55,24 @@ void GameScene::processInput()
         }
     }
 
-    moveCursor(cursor.position, mouseActive);
+    moveCursor(cursor.tilePosition, mouseActive);
 
     processEdgePan(
-        positionToWorld(cursor.position),
-        positionToWorld(hero.position),
+        tilePositionToWorld(cursor.tilePosition),
+        tilePositionToWorld(hero.position.tilePosition()),
         mouseActive);
 
     processZoom();
 
     processSelection(
         hero,
-        cursor.position);
+        cursor.tilePosition);
 
     // Set unit movment target
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
     {
-        for (auto& tile : world.framedMapOverlay().values())
-        {
-            if (!Vector2Equals(tile.position, cursor.position))
-                continue;
-
-            // Set movement target
-        }
+        // Set movement target
+        hero.movement.target = cursor.tilePosition;
     }
 }
 
@@ -95,22 +94,22 @@ void moveCursor(Vector2i& cursorPosition, bool mouseActive)
         {
         case KEY_W:
         case KEY_UP:
-            if (positionToScreen(cursorPosition).y > 0)
+            if (tilePositionToScreen(cursorPosition).y > 0)
                 dir = V_UP;
             break;
         case KEY_A:
         case KEY_LEFT:
-            if (positionToScreen(cursorPosition).x > 0)
+            if (tilePositionToScreen(cursorPosition).x > 0)
                 dir = V_LEFT;
             break;
         case KEY_S:
         case KEY_DOWN:
-            if (positionToScreen(cursorPosition).y < GetRenderHeight())
+            if (tilePositionToScreen(cursorPosition).y < GetRenderHeight())
                 dir = V_DOWN;
             break;
         case KEY_D:
         case KEY_RIGHT:
-            if (positionToScreen(cursorPosition).x < GetRenderWidth())
+            if (tilePositionToScreen(cursorPosition).x < GetRenderWidth())
                 dir = V_RIGHT;
             break;
 
@@ -128,7 +127,7 @@ void moveCursor(Vector2i& cursorPosition, bool mouseActive)
                                    cursorPosition.y + (dir.y * scale)};
 
         // If out of screen and boost applied
-        if (scale > 1 && !CheckCollisionPointRec(positionToScreen(newCursorPosition), GetRenderRec()))
+        if (scale > 1 && !CheckCollisionPointRec(tilePositionToScreen(newCursorPosition), GetRenderRec()))
         {
             // Check again without boost
             scale = 1;
@@ -137,7 +136,7 @@ void moveCursor(Vector2i& cursorPosition, bool mouseActive)
                                  cursorPosition.y + (dir.y * scale)};
 
             // If still out of screen
-            if (!CheckCollisionPointRec(positionToScreen(newCursorPosition), GetRenderRec()))
+            if (!CheckCollisionPointRec(tilePositionToScreen(newCursorPosition), GetRenderRec()))
                 return;
         }
 
@@ -230,7 +229,7 @@ void processSelection(Unit& unit, const Vector2i& cursorPosition)
     // Select unit
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
     {
-        if (unit.position == cursorPosition)
+        if (unit.position.tilePosition() == cursorPosition)
         {
             // Toggle isSelected
             unit.isSelected = !unit.isSelected;
@@ -245,36 +244,41 @@ void processSelection(Unit& unit, const Vector2i& cursorPosition)
 }
 
 void showUnitRange(bool& moveRangeShown, Unit& unit, World& world);
-void showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size_t unitRange, World& world);
+void showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size_t unitRange, World& world, bool& pathShown);
+void moveUnit(Unit& unit);
 
 void GameScene::updateState()
 {
     static bool moveRangeShown{false};
+    static bool pathShown{false};
 
     showUnitRange(
         moveRangeShown,
         hero,
-        world);
+        gameWorld);
 
     // Clear overlay if no unit selected
     if (!hero.isSelected && moveRangeShown)
     {
-        world.mapOverlay().clear();
+        gameWorld.mapOverlay().clear();
         moveRangeShown = false;
-        //* pathShown = false;
+        pathShown = false;
     }
 
     if (moveRangeShown)
     {
         showPath(
-            hero.position,
-            cursor.position,
+            hero.position.tilePosition(),
+            cursor.tilePosition,
             hero.movement.range,
-            world);
+            gameWorld,
+            pathShown);
     }
+
+    moveUnit(hero);
 }
 
-void showUnitRange(bool& moveRangeShown, Unit& unit, World& World)
+void showUnitRange(bool& moveRangeShown, Unit& unit, World& world)
 {
     // Show range of selected unit
     if (unit.isSelected && !moveRangeShown)
@@ -283,29 +287,29 @@ void showUnitRange(bool& moveRangeShown, Unit& unit, World& World)
 
         // Filter relevant tiles
         for (auto& steppedPositions : filterReachable(
-                 World.currentMap(),
+                 world.currentMap(),
                  unit.movement.range,
-                 unit.position))
+                 unit.position.tilePosition()))
         {
             for (auto& steppedPosition : steppedPositions)
             {
                 // Create reachable tile
                 Tile reachableTile{};
-                reachableTile.position = steppedPosition.position;
+                reachableTile.tilePosition = steppedPosition.tilePosition;
                 reachableTile.graphic.renderID = RenderID::reachable;
+                reachableTile.graphic.layerID = LayerID::mapOverlay;
                 reachableTile.isSolid = false;
 
                 // Add reachable tile to overlay
-                World.currentMap().createOrUpdate(
-                    //* World.mapOverlay().createOrUpdate(
-                    steppedPosition.position,
+                world.mapOverlay().createOrUpdate(
+                    steppedPosition.tilePosition,
                     reachableTile);
             }
         }
     }
 }
 
-void showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size_t unitRange, World& World)
+void showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size_t unitRange, World& world, bool& pathShown)
 {
     static Vector2i origin{};
     static Vector2i target{};
@@ -324,26 +328,34 @@ void showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size
         range = unitRange;
 
         path = findPath(
-            World.currentMap(),
-            //* World.mapOverlay(),
+            world.mapOverlay(),
             unitPosition,
             cursorPosition,
             unitRange);
 
-        //* if (!path.empty()) pathShown = true;
+        if (!path.empty()) pathShown = true;
     }
 
     for (auto& steppedPosition : path)
     {
         Tile pathTile{};
-        pathTile.position = steppedPosition.position;
+        pathTile.tilePosition = steppedPosition.tilePosition;
         pathTile.graphic.renderID = RenderID::path;
+        pathTile.graphic.layerID = LayerID::mapOverlay;
         pathTile.isSolid = false;
 
-        World.framedMapOverlay().createOrUpdate(
-            steppedPosition.position,
+        world.framedMapOverlay().createOrUpdate(
+            steppedPosition.tilePosition,
             pathTile);
     }
+}
+
+void moveUnit(Unit& unit)
+{
+    if (Vector2Equals(unit.movement.target, unit.position.tilePosition()))
+        return;
+
+    std::cout << "Move unit\n";
 }
 
 void GameScene::renderOutput()
@@ -351,34 +363,34 @@ void GameScene::renderOutput()
     BeginMode2D(dtb::camera());
 
     // Layer map
-    for (auto& tile : world.currentMap().values())
+    for (auto& tile : gameWorld.currentMap().values())
     {
-        render(tile.position, tile.graphic);
+        renderAtTile(tile.tilePosition, tile.graphic);
     }
 
     // Layer map overlay
-    for (auto& tile : world.mapOverlay().values())
+    for (auto& tile : gameWorld.mapOverlay().values())
     {
-        render(tile.position, tile.graphic);
+        renderAtTile(tile.tilePosition, tile.graphic);
     }
 
     // Layer framed map overlay
-    for (auto& tile : world.framedMapOverlay().values())
+    for (auto& tile : gameWorld.framedMapOverlay().values())
     {
-        render(tile.position, tile.graphic);
+        renderAtTile(tile.tilePosition, tile.graphic);
     }
 
     // Render object layer
-    render(hero.position, hero.graphic);
+    render(hero.position.get(), hero.graphic);
 
     // Render UI layer
-    render(cursor.position, cursor.graphic);
+    renderAtTile(cursor.tilePosition, cursor.graphic);
 
     EndMode2D();
 
     // Draw text for current level
     //=================================
-    const char* currentLevel{TextFormat("Level %i", world.currentLevel())};
+    const char* currentLevel{TextFormat("Level %i", gameWorld.currentLevel())};
 
     Font& font{dtb::font()};
 
@@ -415,7 +427,7 @@ void GameScene::renderOutput()
 void GameScene::postOutput()
 {
     // Clear path
-    world.framedMapOverlay().clear();
+    gameWorld.framedMapOverlay().clear();
 }
 
 void GameScene::deinitialize() {}

@@ -18,25 +18,25 @@ direction TB
 
 class Graphic {
     + RenderID renderID
-    + Vector2Int* position
+    + Vector2* position
 }
 
 class GameObject{
-    + Vector2Int position
+    + Vector2 position
     + Graphic graphic
 }
 Graphic --* GameObject
 
 class Hero {
     + bool isSelected
-    + Vector2Int position
+    + Vector2 position
     + Graphic graphic
 }
 Graphic --* Hero
 
 class Tile{
-    +bool isSolid
-    + Vector2Int position
+    + bool isSolid
+    + Vector2 position
     + Graphic graphic
 }
 Graphic --* Tile

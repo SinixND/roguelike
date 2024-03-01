@@ -7,7 +7,7 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[1] Check class design (see notes); make diagram to track classes
+[0] Refactor to float position
 
 
 # Shortterm
@@ -67,8 +67,8 @@ Not implemented yet
 - Only private member variables: name_
 
 ### Functions
-- namespace: domain functions (interclass, non-class)
-- Class: free if no private member needed (eg. getter/setter), member if private member needed (class behaviour)
+- namespace: domain/related functions (interclass, non-class)
+- Class: member if private member needed (class internal behaviour), free if no private member needed (eg. getter/setter)
 - For readability only: no new file, but forward declare
 
 ### New class:
@@ -77,7 +77,7 @@ Not implemented yet
     - if yes, extract:
         - "Has-a" (preferred) -> Component
         - "Is-a" -> Parent
-    - check present methods (became inter-class?)
+    - check present methods (became inter-class / free function?)
 
 
 
@@ -150,4 +150,6 @@ private:
 
 [x] Implement zoom
 
-[-] Command pattern for rendering and layers (not implemented, words poorly when commands created in a loop)
+[x] Check class design (see notes); make diagram to track classes
+
+[-] Command pattern for rendering and layers (not implemented -> need to handle abiguous keys in SparseSet)
