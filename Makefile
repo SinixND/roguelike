@@ -49,13 +49,13 @@ WIN_DEP_EXT 		:= win.d
 ### set the respective folders from structure
 ### set VPATH as std dir to look for compile targets
 VPATH 				:= $(shell find . -type d) 
-### here go all source files (with the $(SRC_EXT) extension)
+### here go all source files (with the $(SRC_EXT) extension) and project specific header files
 SRC_DIRS 			:= ./src
-### here go local include files
+### here go prject independend header files
 LOC_INC_DIR 		:= ./include 
-### here go external include files
+### here go external header files
 EXT_INC_DIR 		:= ./include/external
-### here go local library files
+### here go library files
 LOC_LIB_DIR 		:= ./lib
 ### here the object files will be outputted
 OBJ_DIR 			:= ./build
@@ -74,6 +74,7 @@ ifdef TERMUX_VERSION
 endif
 EXT_INC_DIRS 		:= $(shell find $(EXT_INC_DIR) -wholename "**" -type d) 
 LOC_INC_DIRS 		:= $(shell find . -wholename "*include*" -type d) 
+LOC_INC_DIRS 		+= $(shell find . -wholename "*src*" -type d) 
 
 ### set the locations of all possible libraries used
 SYS_LIB_DIR 		:= /usr/local/lib /usr/lib 

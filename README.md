@@ -71,18 +71,9 @@ Not implemented yet
 - Class: member if private member needed (class internal behaviour), free if no private member needed (eg. getter/setter)
 - For readability only: no new file, but forward declare
 
-### New class:
-- Define members
-- Check existing classes for communality
-    - if yes, extract:
-        - "Has-a" (preferred) -> Component
-        - "Is-a" -> Parent
-    - check present methods (became inter-class / free function?)
-
-
 
 ## Refactor Composition instead of Inheritance
-Refactor with (Interface) Composition when another version of the smae type (:interface) is needed:
+Refactor with (Interface) Composition when another version of the same type (:interface) is needed:
 
 1) Old:
 ```cpp
