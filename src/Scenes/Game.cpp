@@ -9,14 +9,20 @@
 #include "Unit.h"
 #include "World.h"
 #include "raylibEx.h"
+#include <bitset>
 #include <iostream>
 #include <raygui.h>
+#include <raylib.h>
 
 namespace
 {
+    // Variables needed for multiple stepps in main loop
     World gameWorld{};
     Cursor cursor{};
     Unit hero{};
+
+    bool isInputBlocked{false};
+    bool isPathShown{false};
 }
 
 void GameScene::initialize()
@@ -27,19 +33,22 @@ void GameScene::initialize()
     hero.graphic.renderID = RenderID::hero;
     hero.graphic.layerID = LayerID::object;
     hero.movement.range = 5;
-    hero.movement.speed = 1;
-    hero.movement.target = hero.position.tilePosition();
+    hero.movement.speed = 50;
+    hero.movement.setTarget(hero.position.tilePosition());
 }
 
 void moveCursor(Vector2i& cursorPosition, bool mouseActive);
 void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& referenceWorldPosition, bool mouseActive);
 void processZoom();
 void processSelection(Unit& unit, const Vector2i& cursorPosition);
+void processDeselection(Unit& unit);
 
 void GameScene::processInput()
 {
+    if (isInputBlocked) return;
+
     // Toggle between mouse or key control for cursor
-    static bool mouseActive{false};
+    static bool mouseActive{true};
 
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
     {
@@ -68,11 +77,21 @@ void GameScene::processInput()
         hero,
         cursor.tilePosition);
 
+    processDeselection(
+        hero);
+
     // Set unit movment target
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
     {
-        // Set movement target
-        hero.movement.target = cursor.tilePosition;
+        // Check if target is valid
+        if (
+            gameWorld.mapOverlay().contains(cursor.tilePosition) &&
+            !Vector2Equals(cursor.tilePosition, hero.position.tilePosition()))
+        {
+            // Set movement target
+            hero.movement.setTarget(cursor.tilePosition);
+            hero.movement.setIsTargetSet(true);
+        }
     }
 }
 
@@ -94,24 +113,32 @@ void moveCursor(Vector2i& cursorPosition, bool mouseActive)
         {
         case KEY_W:
         case KEY_UP:
+        {
             if (tilePositionToScreen(cursorPosition).y > 0)
                 dir = V_UP;
-            break;
+        }
+        break;
         case KEY_A:
         case KEY_LEFT:
+        {
             if (tilePositionToScreen(cursorPosition).x > 0)
                 dir = V_LEFT;
-            break;
+        }
+        break;
         case KEY_S:
         case KEY_DOWN:
+        {
             if (tilePositionToScreen(cursorPosition).y < GetRenderHeight())
                 dir = V_DOWN;
-            break;
+        }
+        break;
         case KEY_D:
         case KEY_RIGHT:
+        {
             if (tilePositionToScreen(cursorPosition).x < GetRenderWidth())
                 dir = V_RIGHT;
-            break;
+        }
+        break;
 
         default:
             break;
@@ -235,7 +262,10 @@ void processSelection(Unit& unit, const Vector2i& cursorPosition)
             unit.isSelected = !unit.isSelected;
         }
     }
+}
 
+void processDeselection(Unit& unit)
+{
     // Deselect unit
     if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_CAPS_LOCK))
     {
@@ -244,38 +274,61 @@ void processSelection(Unit& unit, const Vector2i& cursorPosition)
 }
 
 void showUnitRange(bool& moveRangeShown, Unit& unit, World& world);
-void showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size_t unitRange, World& world, bool& pathShown);
-void moveUnit(Unit& unit);
+Path& showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size_t unitRange, World& world, bool& pathShown);
+void triggerMovement(Unit& unit, Path& path, bool& inputBlocked);
+void processMovement(Unit& unit, bool& inputBlocked);
 
 void GameScene::updateState()
 {
     static bool moveRangeShown{false};
-    static bool pathShown{false};
+    static Path path{};
 
-    showUnitRange(
-        moveRangeShown,
-        hero,
-        gameWorld);
+    int condition = // A=isSelected, B=rangeShown
+        (hero.isSelected ? (true << 1) : false) +
+        (moveRangeShown ? (true << 0) : false);
 
-    // Clear overlay if no unit selected
-    if (!hero.isSelected && moveRangeShown)
+    switch (condition)
     {
+    default:
+        break;
+    case 0:
+        // 0 0 // not selected, not shown -> Do nothing
+
+        break;
+
+    case 1:
+    { // 0 1 // not selected, range shown -> Hide range
         gameWorld.mapOverlay().clear();
         moveRangeShown = false;
-        pathShown = false;
+        isPathShown = false;
     }
+    break;
 
-    if (moveRangeShown)
-    {
-        showPath(
+    case 2:
+    { // 1 0 // selected, range not shown -> Show range
+        showUnitRange(
+            moveRangeShown,
+            hero,
+            gameWorld);
+    }
+    break;
+
+    case 3:
+    { // 1 1 // selected, range shown -> Show path
+        path = showPath(
             hero.position.tilePosition(),
             cursor.tilePosition,
             hero.movement.range,
             gameWorld,
-            pathShown);
+            isPathShown);
+    }
+    break;
     }
 
-    moveUnit(hero);
+    triggerMovement(hero, path, isInputBlocked);
+
+    // Unblock input if target is reached
+    processMovement(hero, isInputBlocked);
 }
 
 void showUnitRange(bool& moveRangeShown, Unit& unit, World& world)
@@ -309,12 +362,12 @@ void showUnitRange(bool& moveRangeShown, Unit& unit, World& world)
     }
 }
 
-void showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size_t unitRange, World& world, bool& pathShown)
+Path& showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size_t unitRange, World& world, bool& pathShown)
 {
     static Vector2i origin{};
     static Vector2i target{};
     static size_t range{};
-    static std::vector<SteppedPosition> path{};
+    static Path path{};
 
     // Check if path input changed
     if (!(
@@ -348,14 +401,40 @@ void showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size
             steppedPosition.tilePosition,
             pathTile);
     }
+
+    return path;
 }
 
-void moveUnit(Unit& unit)
+void triggerMovement(Unit& unit, Path& path, bool& inputBlocked)
 {
-    if (Vector2Equals(unit.movement.target, unit.position.tilePosition()))
-        return;
+    if (unit.movement.isTargetSet() && !unit.movement.isMoving())
+    {
+        // Reset (doesnt interrupt movement)
+        unit.movement.setIsTargetSet(false);
 
-    std::cout << "Move unit\n";
+        // Setting path triggers movment
+        unit.movement.setPath(path);
+
+        inputBlocked = true;
+    }
+}
+
+void processMovement(Unit& unit, bool& inputBlocked)
+{
+    bool targetReached{false};
+    if (unit.movement.isMoving())
+    {
+        // Move unit
+        targetReached = unit.movement.move(
+            unit.position.get(),
+            GetFrameTime());
+    }
+
+    if (targetReached)
+    {
+        hero.isSelected = false;
+        inputBlocked = false;
+    }
 }
 
 void GameScene::renderOutput()
@@ -409,19 +488,6 @@ void GameScene::renderOutput()
         GuiGetStyle(DEFAULT, TEXT_SPACING),
         RAYWHITE);
     //=================================
-
-    if (dtb::debugMode())
-    {
-        DrawLineV(
-            {GetRenderWidth() / 2.0f, 0},
-            {GetRenderWidth() / 2.0f, static_cast<float>(GetRenderHeight())},
-            RED);
-
-        DrawLineV(
-            {0, GetRenderHeight() / 2.0f},
-            {static_cast<float>(GetRenderWidth()), GetRenderHeight() / 2.0f},
-            RED);
-    }
 }
 
 void GameScene::postOutput()

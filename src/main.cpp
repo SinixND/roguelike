@@ -20,7 +20,7 @@
 void applicationLoop();
 int main(/* int argc, char **argv */)
 {
-    // Setup the window
+    // SETUP THE WINDOW
     //=====================================
     constexpr int WINDOW_WIDTH{800};
     constexpr int WINDOW_HEIGHT{450};
@@ -45,7 +45,7 @@ int main(/* int argc, char **argv */)
     GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
     //=====================================
 
-    // Application Initialization
+    // APPLICATION INITIALIZATION
     //=================================
     // Load textures
     dtb::loadTexture(RenderID::none, "Empty.png");
@@ -73,7 +73,7 @@ int main(/* int argc, char **argv */)
          1.0f};
     //=================================
 
-    // Main app loop
+    // MAIN APP LOOP
     //=================================
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(applicationLoop, 245, 1);
@@ -86,7 +86,7 @@ int main(/* int argc, char **argv */)
 #endif
     //=================================
 
-    // De-Initialization
+    // DE-INITIALIZATION
     //=================================
     // Unload fonts
     UnloadFont(font);
@@ -97,7 +97,7 @@ int main(/* int argc, char **argv */)
     // Deinitialize scenes
     game.deinitialize();
 
-    CloseWindow(); // Close window and OpenGL context
+    CloseWindow(); // CLOSE WINDOW AND OPENGL CONTEXT
     //=================================
 
     return 0;
@@ -109,7 +109,7 @@ void applicationLoop()
     dtb::camera().offset = {GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f};
 
 #ifndef __EMSCRIPTEN__
-    // Toggle fullscreen
+    // TOGGLE FULLSCREEN
     //=================================
     if (IsKeyPressed(KEY_F11))
     {

@@ -7,12 +7,12 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Refactor to float position
+[0] Refactor tilePosition to float position
+
+[1] Implement vision (fog of war: unseen, seen, visible)
 
 
 # Shortterm
-[1] Implement movment
-
 [1] Map generation
 
 [1] Map change
@@ -144,7 +144,7 @@ private:
 
 [x] Render sprites/textures
 
-[x] make ECS (removed)
+[-] make ECS (removed)
 
 [x] realize viewport/camera system
 
@@ -153,3 +153,5 @@ private:
 [x] Check class design (see notes); make diagram to track classes
 
 [-] Command pattern for rendering and layers (not implemented -> need to handle abiguous keys in SparseSet)
+
+[x] Implement movment

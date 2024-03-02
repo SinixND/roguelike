@@ -33,7 +33,7 @@ protected:
 
 class dtb : public Singleton<dtb>
 {
-    // Constants (ONLY SET ONCE)
+    // CONSTANTS (ONLY SET ONCE)
     //=================================
     // Font
 public:
@@ -75,7 +75,7 @@ private:
     static inline std::unordered_map<RenderID, Texture2D> textures_{};
     //=================================
 
-    // Globals
+    // GLOBALS
     //=================================
     // Terminate app
 public:
@@ -102,7 +102,7 @@ private:
     static inline snd::Scene* activeScene_{};
     //=================================
 
-    // Configs / Settings
+    // CONFIGS / SETTINGS
     //=================================
     // Debug mode
 public:

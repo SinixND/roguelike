@@ -7,7 +7,7 @@
 
 #include <functional>
 
-// Typedefs
+// TYPEDEFS
 //=====================================
 struct Vector2i
 {
@@ -41,7 +41,7 @@ struct Area
 };
 //=====================================
 
-// Functions
+// FUNCTIONS
 //=====================================
 // in fullscreen mode we can't use GetScreenWidth/Height, so make a function that gets the right data for each mode
 inline Vector2 GetDisplaySize()
@@ -104,7 +104,7 @@ inline Vector2 ConvertVector2(const Vector2i& v)
 }
 //=====================================
 
-// Function overloads
+// FUNCTION OVERLOADS
 //=====================================
 
 // Add two vectors (v1 + v2)
@@ -142,7 +142,7 @@ RMAPI int Vector2Equals(const Vector2i& v1, const Vector2i& v2)
 }
 //=====================================
 
-// Operator overloads
+// OPERATOR OVERLOADS
 //=====================================
 template <>
 struct std::hash<Vector2>
