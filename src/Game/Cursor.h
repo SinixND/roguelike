@@ -2,11 +2,11 @@
 #define _20240211172120
 
 #include "Graphic.h"
-#include "TilePosition.h"
+#include "Position.h"
 
 struct Cursor
 {
-    TilePosition tilePosition;
+    Position position;
     Graphic graphic;
 };
 

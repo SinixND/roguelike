@@ -9,12 +9,12 @@
 #include <raylib.h>
 #include <raymath.h>
 
-void render(const Vector2& positionTile, Graphic& graphic)
+void render(const Vector2& position, Graphic& graphic)
 {
     // Return if pixel is out of screen
     if (!IsPixelOnScreenRender(
             {GetWorldToScreen2D(
-                positionTile,
+                position,
                 dtb::camera())},
             3 * TILE_SIZE))
         return;
@@ -33,16 +33,11 @@ void render(const Vector2& positionTile, Graphic& graphic)
             float(texture->width),
             float(texture->height)},
         Rectangle{
-            positionTile.x,
-            positionTile.y,
+            position.x,
+            position.y,
             tileSize.x,
             tileSize.y},
         tileCenter,
         0,
         WHITE);
-}
-
-void renderAtTile(const Vector2i& tilePosition, Graphic& graphic)
-{
-    render(tilePositionToWorld(tilePosition), graphic);
 }

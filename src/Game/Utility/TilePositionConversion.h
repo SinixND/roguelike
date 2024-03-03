@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 #include "RuntimeDatabase.h"
+#include "TilePosition.h"
 #include "raylib.h"
 #include "raylibEx.h"
 
@@ -38,12 +39,9 @@ inline Vector2i worldToTilePosition(const Vector2& pixel)
         static_cast<int>((pixel.y / TILE_SIZE))};
 }
 
-inline void setMouseTile(Vector2i& position)
+inline TilePosition getMouseTile()
 {
-    Vector2i newPosition{
-        screenToTilePosition(GetMousePosition())};
-
-    position = newPosition;
+    return screenToTilePosition(GetMousePosition());
 }
 
 #endif

@@ -5,6 +5,5 @@
 #include "raylibEx.h"
 
 void render(const Vector2& position, Graphic& graphic);
-void renderAtTile(const Vector2i& tilePosition, Graphic& graphic);
 
 #endif

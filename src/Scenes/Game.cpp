@@ -1,10 +1,10 @@
 #include "Game.h"
 
+#include "Cursor.h"
 #include "LayerID.h"
 #include "Movement.h"
 #include "Pathfinder.h"
 #include "Render.h"
-#include "Renderable.h"
 #include "TilePositionConversion.h"
 #include "Unit.h"
 #include "World.h"
@@ -37,7 +37,7 @@ void GameScene::initialize()
     hero.movement.setTarget(hero.position.tilePosition());
 }
 
-void moveCursor(Vector2i& cursorPosition, bool mouseActive);
+void moveCursor(Position& cursorPosition, bool mouseActive);
 void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& referenceWorldPosition, bool mouseActive);
 void processZoom();
 void processSelection(Unit& unit, const Vector2i& cursorPosition);
@@ -64,10 +64,10 @@ void GameScene::processInput()
         }
     }
 
-    moveCursor(cursor.tilePosition, mouseActive);
+    moveCursor(cursor.position, mouseActive);
 
     processEdgePan(
-        tilePositionToWorld(cursor.tilePosition),
+        tilePositionToWorld(cursor.position.tilePosition()),
         tilePositionToWorld(hero.position.tilePosition()),
         mouseActive);
 
@@ -75,7 +75,7 @@ void GameScene::processInput()
 
     processSelection(
         hero,
-        cursor.tilePosition);
+        cursor.position.tilePosition());
 
     processDeselection(
         hero);
@@ -85,23 +85,23 @@ void GameScene::processInput()
     {
         // Check if target is valid
         if (
-            gameWorld.mapOverlay().contains(cursor.tilePosition) &&
-            !Vector2Equals(cursor.tilePosition, hero.position.tilePosition()))
+            gameWorld.mapOverlay().contains(cursor.position.tilePosition()) &&
+            !Vector2Equals(cursor.position.tilePosition(), hero.position.tilePosition()))
         {
             // Set movement target
-            hero.movement.setTarget(cursor.tilePosition);
+            hero.movement.setTarget(cursor.position.tilePosition());
             hero.movement.setIsTargetSet(true);
         }
     }
 }
 
-void moveCursor(Vector2i& cursorPosition, bool mouseActive)
+void moveCursor(Position& cursorPosition, bool mouseActive)
 {
     // Cursor control
     if (mouseActive)
     {
         // Mouse controlled cursor
-        setMouseTile(cursorPosition);
+        cursorPosition.setTilePosition(getMouseTile());
     }
     else
     {
@@ -114,28 +114,28 @@ void moveCursor(Vector2i& cursorPosition, bool mouseActive)
         case KEY_W:
         case KEY_UP:
         {
-            if (tilePositionToScreen(cursorPosition).y > 0)
+            if (tilePositionToScreen(cursorPosition.tilePosition()).y > 0)
                 dir = V_UP;
         }
         break;
         case KEY_A:
         case KEY_LEFT:
         {
-            if (tilePositionToScreen(cursorPosition).x > 0)
+            if (tilePositionToScreen(cursorPosition.tilePosition()).x > 0)
                 dir = V_LEFT;
         }
         break;
         case KEY_S:
         case KEY_DOWN:
         {
-            if (tilePositionToScreen(cursorPosition).y < GetRenderHeight())
+            if (tilePositionToScreen(cursorPosition.tilePosition()).y < GetRenderHeight())
                 dir = V_DOWN;
         }
         break;
         case KEY_D:
         case KEY_RIGHT:
         {
-            if (tilePositionToScreen(cursorPosition).x < GetRenderWidth())
+            if (tilePositionToScreen(cursorPosition.tilePosition()).x < GetRenderWidth())
                 dir = V_RIGHT;
         }
         break;
@@ -150,8 +150,8 @@ void moveCursor(Vector2i& cursorPosition, bool mouseActive)
             scale = 4;
 
         // Check if cursor would go out of screen
-        Vector2i newCursorPosition{cursorPosition.x + (dir.x * scale),
-                                   cursorPosition.y + (dir.y * scale)};
+        Vector2i newCursorPosition{cursorPosition.tilePosition().x + (dir.x * scale),
+                                   cursorPosition.tilePosition().y + (dir.y * scale)};
 
         // If out of screen and boost applied
         if (scale > 1 && !CheckCollisionPointRec(tilePositionToScreen(newCursorPosition), GetRenderRec()))
@@ -159,15 +159,15 @@ void moveCursor(Vector2i& cursorPosition, bool mouseActive)
             // Check again without boost
             scale = 1;
 
-            newCursorPosition = {cursorPosition.x + (dir.x * scale),
-                                 cursorPosition.y + (dir.y * scale)};
+            newCursorPosition = {cursorPosition.tilePosition().x + (dir.x * scale),
+                                 cursorPosition.tilePosition().y + (dir.y * scale)};
 
             // If still out of screen
             if (!CheckCollisionPointRec(tilePositionToScreen(newCursorPosition), GetRenderRec()))
                 return;
         }
 
-        cursorPosition = newCursorPosition;
+        cursorPosition.setTilePosition(newCursorPosition);
     }
 }
 
@@ -317,7 +317,7 @@ void GameScene::updateState()
     { // 1 1 // selected, range shown -> Show path
         path = showPath(
             hero.position.tilePosition(),
-            cursor.tilePosition,
+            cursor.position.tilePosition(),
             hero.movement.range,
             gameWorld,
             isPathShown);
@@ -348,7 +348,7 @@ void showUnitRange(bool& moveRangeShown, Unit& unit, World& world)
             {
                 // Create reachable tile
                 Tile reachableTile{};
-                reachableTile.tilePosition = steppedPosition.tilePosition;
+                reachableTile.position = steppedPosition.tilePosition;
                 reachableTile.graphic.renderID = RenderID::reachable;
                 reachableTile.graphic.layerID = LayerID::mapOverlay;
                 reachableTile.isSolid = false;
@@ -392,7 +392,7 @@ Path& showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, siz
     for (auto& steppedPosition : path)
     {
         Tile pathTile{};
-        pathTile.tilePosition = steppedPosition.tilePosition;
+        pathTile.position = steppedPosition.tilePosition;
         pathTile.graphic.renderID = RenderID::path;
         pathTile.graphic.layerID = LayerID::mapOverlay;
         pathTile.isSolid = false;
@@ -444,26 +444,26 @@ void GameScene::renderOutput()
     // Layer map
     for (auto& tile : gameWorld.currentMap().values())
     {
-        renderAtTile(tile.tilePosition, tile.graphic);
+        render(tile.position.get(), tile.graphic);
     }
 
     // Layer map overlay
     for (auto& tile : gameWorld.mapOverlay().values())
     {
-        renderAtTile(tile.tilePosition, tile.graphic);
+        render(tile.position.get(), tile.graphic);
     }
 
     // Layer framed map overlay
     for (auto& tile : gameWorld.framedMapOverlay().values())
     {
-        renderAtTile(tile.tilePosition, tile.graphic);
+        render(tile.position.get(), tile.graphic);
     }
 
     // Render object layer
     render(hero.position.get(), hero.graphic);
 
     // Render UI layer
-    renderAtTile(cursor.tilePosition, cursor.graphic);
+    render(cursor.position.get(), cursor.graphic);
 
     EndMode2D();
 

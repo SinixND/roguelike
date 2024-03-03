@@ -2,11 +2,11 @@
 #define _20240215012942
 
 #include "Graphic.h"
-#include "TilePosition.h"
+#include "Position.h"
 
 struct Tile
 {
-    TilePosition tilePosition;
+    Position position;
     Graphic graphic;
     bool isSolid;
 };

@@ -13,9 +13,14 @@ public:
         return position_;
     }
 
-    void set(Vector2 position)
+    void set(const Vector2& position)
     {
         position_ = position;
+    }
+
+    void set(const TilePosition& tilePosition)
+    {
+        position_ = tilePositionToWorld(tilePosition);
     }
 
     TilePosition tilePosition()

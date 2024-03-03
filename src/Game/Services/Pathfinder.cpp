@@ -58,7 +58,7 @@ std::vector<Vector2i> filterNonSolidPositions(TileMap& tileMap)
         if (tile.isSolid)
             continue;
 
-        accessiblePositions.push_back(tile.tilePosition);
+        accessiblePositions.push_back(tile.position.tilePosition());
     }
 
     return accessiblePositions;

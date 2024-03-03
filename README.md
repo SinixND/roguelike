@@ -7,15 +7,15 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Refactor tilePosition to float position
-
-[1] Implement vision (fog of war: unseen, seen, visible)
+[0] Implement render area (start with render area = screen)
 
 
 # Shortterm
-[1] Map generation
+[0] Implement vision (fog of war: unseen, seen, visible)
 
-[1] Map change
+[0] Map change
+
+[0] Map generation
 
 
 # Longterm 
@@ -146,3 +146,5 @@ private:
 [-] Command pattern for rendering and layers (not implemented -> need to handle abiguous keys in SparseSet)
 
 [x] Implement movment
+
+[x] Refactor tilePosition to float position
