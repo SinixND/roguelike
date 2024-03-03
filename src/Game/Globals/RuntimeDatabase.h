@@ -36,13 +36,13 @@ class dtb : public Singleton<dtb>
     // CONSTANTS (ONLY SET ONCE)
     //=================================
     // Font
+private:
+    static inline Font font_{};
+
 public:
     static inline Font& font() { return instance().font_; };
     static inline void loadFont(const char* fileName) { font() = LoadFont(fileName); };
     static inline void unloadFont() { UnloadFont(font()); };
-
-private:
-    static inline Font font_{};
 
     // Textures
 public:
@@ -70,47 +70,49 @@ public:
     };
 
 private:
-    static inline std::unordered_map<RenderID, Texture2D>& textures() { return instance().textures_; };
-    static const inline std::string texturePath{"resources/textures/"};
     static inline std::unordered_map<RenderID, Texture2D> textures_{};
+    static const inline std::string texturePath{"resources/textures/"};
+
+private:
+    static inline std::unordered_map<RenderID, Texture2D>& textures() { return instance().textures_; };
     //=================================
 
     // GLOBALS
     //=================================
     // Terminate app
+private:
+    static inline bool appShouldClose_{false};
+
 public:
     static inline bool& shouldAppClose() { return instance().appShouldClose_; };
     static inline void closeApp() { shouldAppClose() = true; };
 
-private:
-    static inline bool appShouldClose_{false};
-
     // Camera / Viewport
+private:
+    static inline Camera2D camera_{};
+
 public:
     static inline Camera2D& camera() { return instance().camera_; };
     static inline void moveCamera(Vector2 distance) { camera().target = Vector2Add(camera().target, distance); };
 
-private:
-    static inline Camera2D camera_{};
-
     // Active scene
+private:
+    static inline snd::Scene* activeScene_{};
+
 public:
     static inline snd::Scene& activeScene() { return *instance().activeScene_; };
     static inline void setActiveScene(snd::Scene& scene) { instance().activeScene_ = &scene; };
-
-private:
-    static inline snd::Scene* activeScene_{};
     //=================================
 
     // CONFIGS / SETTINGS
     //=================================
     // Debug mode
+private:
+    static inline bool debugMode_{true};
+
 public:
     static inline bool& debugMode() { return instance().debugMode_; };
     static inline void setDebugMode(bool status) { debugMode() = status; };
-
-private:
-    static inline bool debugMode_{true};
     //=================================
 };
 

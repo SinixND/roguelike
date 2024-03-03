@@ -7,12 +7,10 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Implement render area (start with render area = screen)
+[0] Implement vision (fog of war: unseen, seen, visible)
 
 
 # Shortterm
-[0] Implement vision (fog of war: unseen, seen, visible)
-
 [0] Map change
 
 [0] Map generation
@@ -24,6 +22,8 @@ development of a (maybe) roguelike game with c++ and raylib
 [0] (Hold) TAB to show map overview
 
 [0] Add touch support
+
+[1] Remove zoom?
 
 
 # Continuous
@@ -148,3 +148,5 @@ private:
 [x] Implement movment
 
 [x] Refactor tilePosition to float position
+
+[x] Implement render area

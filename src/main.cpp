@@ -36,12 +36,12 @@ int main(/* int argc, char **argv */)
     // Settings
     Image favicon{LoadImage("resources/favicon/favicon.png")};
     SetWindowIcon(favicon);
-    SetWindowMinSize(320, 240);
+    SetWindowMinSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     SetExitKey(KEY_F4);
     SetTargetFPS(245);
 
     // Fonts
-    Font font{LoadFont("resources/fonts/JuliaMono-RegularLatin.ttf")};
+    dtb::loadFont("resources/fonts/JuliaMono-RegularLatin.ttf");
     GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
     //=====================================
 
@@ -89,7 +89,7 @@ int main(/* int argc, char **argv */)
     // DE-INITIALIZATION
     //=================================
     // Unload fonts
-    UnloadFont(font);
+    dtb::unloadFont();
 
     // Unlaod textures
     dtb::unloadAllTextures();

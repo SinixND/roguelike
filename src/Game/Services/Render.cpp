@@ -9,14 +9,23 @@
 #include <raylib.h>
 #include <raymath.h>
 
+Rectangle getRenderArea()
+{
+    return Rectangle{
+        -MAP_RENDER_AREA_MARGIN + LEFT_MAP_RENDER_OFFSET,
+        -MAP_RENDER_AREA_MARGIN + TOP_MAP_RENDER_OFFSET,
+        GetRenderWidth() - LEFT_MAP_RENDER_OFFSET - RIGHT_MAP_RENDER_OFFSET + 2 * MAP_RENDER_AREA_MARGIN,
+        GetRenderHeight() - TOP_MAP_RENDER_OFFSET - BOTTOM_MAP_RENDER_OFFSET + 2 * MAP_RENDER_AREA_MARGIN};
+}
+
 void render(const Vector2& position, Graphic& graphic)
 {
-    // Return if pixel is out of screen
-    if (!IsPixelOnScreenRender(
-            {GetWorldToScreen2D(
-                position,
-                dtb::camera())},
-            3 * TILE_SIZE))
+    static Rectangle RENDER_AREA{getRenderArea()};
+    if (IsWindowResized())
+        RENDER_AREA = getRenderArea();
+
+    // Return if pixel is out of render area
+    if (!CheckCollisionPointRec(GetWorldToScreen2D(position, dtb::camera()), RENDER_AREA))
         return;
 
     // Get texture data

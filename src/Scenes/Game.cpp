@@ -176,28 +176,28 @@ void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& reference
     static float dt{};
     dt += GetFrameTime();
 
-    // Check if out of deadzone
+    // Check if outside of edge pan area
     auto screenCursor{GetWorldToScreen2D(cursorWorldPosition, dtb::camera())};
     auto screenReference{GetWorldToScreen2D(referenceWorldPosition, dtb::camera())};
 
-    Rectangle cursorDeadzone{GetRectangle(
+    Rectangle edgePanArea{GetRectangle(
         Vector2AddValue(
             Vector2{0, 0},
-            DEADZONE_PIXELS),
+            EDGE_PAN_FRAME_WEIGHT),
         Vector2SubtractValue(
             Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())},
-            DEADZONE_PIXELS))};
+            EDGE_PAN_FRAME_WEIGHT))};
 
-    if (!CheckCollisionPointRec(screenCursor, cursorDeadzone))
+    if (!CheckCollisionPointRec(screenCursor, edgePanArea))
     {
         if (mouseActive && dt < 0.1f)
             return;
 
         dt = 0;
 
-        // Adjust cursor position relative to deadzone
-        if (screenCursor.x < cursorDeadzone.x &&
-            screenReference.x < cursorDeadzone.x + cursorDeadzone.width)
+        // Adjust cursor position relative to edge pan area
+        if (screenCursor.x < edgePanArea.x &&
+            screenReference.x < edgePanArea.x + edgePanArea.width)
         {
             dtb::moveCamera(
                 Vector2Scale(
@@ -205,8 +205,8 @@ void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& reference
                     TILE_SIZE));
         }
 
-        if (screenCursor.x > (cursorDeadzone.x + cursorDeadzone.width) &&
-            screenReference.x > cursorDeadzone.x)
+        if (screenCursor.x > (edgePanArea.x + edgePanArea.width) &&
+            screenReference.x > edgePanArea.x)
         {
             dtb::moveCamera(
                 Vector2Scale(
@@ -214,8 +214,8 @@ void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& reference
                     TILE_SIZE));
         }
 
-        if (screenCursor.y < cursorDeadzone.y &&
-            screenReference.y < cursorDeadzone.y + cursorDeadzone.height)
+        if (screenCursor.y < edgePanArea.y &&
+            screenReference.y < edgePanArea.y + edgePanArea.height)
         {
             dtb::moveCamera(
                 Vector2Scale(
@@ -223,8 +223,8 @@ void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& reference
                     TILE_SIZE));
         }
 
-        if (screenCursor.y > (cursorDeadzone.y + cursorDeadzone.height) &&
-            screenReference.y > cursorDeadzone.y)
+        if (screenCursor.y > (edgePanArea.y + edgePanArea.height) &&
+            screenReference.y > edgePanArea.y)
         {
             dtb::moveCamera(
                 Vector2Scale(

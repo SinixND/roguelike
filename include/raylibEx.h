@@ -87,17 +87,6 @@ inline Rectangle GetRenderRec()
         static_cast<float>(GetRenderHeight())};
 }
 
-inline int IsPixelOnScreenRender(const Vector2& pixel, float margin)
-{
-    Rectangle screen{
-        -margin,
-        -margin,
-        GetRenderWidth() + 2 * margin,
-        GetRenderHeight() + 2 * margin};
-
-    return CheckCollisionPointRec(pixel, screen);
-}
-
 inline Vector2 ConvertVector2(const Vector2i& v)
 {
     return Vector2{static_cast<float>(v.x), static_cast<float>(v.y)};
