@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include "Constants.h"
 #include "Cursor.h"
 #include "LayerID.h"
 #include "Movement.h"
@@ -13,6 +14,7 @@
 #include <iostream>
 #include <raygui.h>
 #include <raylib.h>
+#include <raymath.h>
 
 namespace
 {
@@ -38,7 +40,7 @@ void GameScene::initialize()
 }
 
 void moveCursor(Position& cursorPosition, bool mouseActive);
-void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& referenceWorldPosition, bool mouseActive);
+void processEdgePan(const Vector2& cursorWorldPosition, bool mouseActive);
 void processZoom();
 void processSelection(Unit& unit, const Vector2i& cursorPosition);
 void processDeselection(Unit& unit);
@@ -68,7 +70,6 @@ void GameScene::processInput()
 
     processEdgePan(
         tilePositionToWorld(cursor.position.tilePosition()),
-        tilePositionToWorld(hero.position.tilePosition()),
         mouseActive);
 
     processZoom();
@@ -171,14 +172,14 @@ void moveCursor(Position& cursorPosition, bool mouseActive)
     }
 }
 
-void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& referenceWorldPosition, bool mouseActive)
+void processEdgePan(const Vector2& cursorWorldPosition, bool mouseActive)
 {
     static float dt{};
+    static const float PAN_SPEED{0.1f}; // time in seconds to next pan progress
     dt += GetFrameTime();
 
-    // Check if outside of edge pan area
+    // Check if cursor is outside of edge pan area
     auto screenCursor{GetWorldToScreen2D(cursorWorldPosition, dtb::camera())};
-    auto screenReference{GetWorldToScreen2D(referenceWorldPosition, dtb::camera())};
 
     Rectangle edgePanArea{GetRectangle(
         Vector2AddValue(
@@ -190,47 +191,44 @@ void processEdgePan(const Vector2& cursorWorldPosition, const Vector2& reference
 
     if (!CheckCollisionPointRec(screenCursor, edgePanArea))
     {
-        if (mouseActive && dt < 0.1f)
+        if (mouseActive && dt < PAN_SPEED)
             return;
 
         dt = 0;
 
-        // Adjust cursor position relative to edge pan area
-        if (screenCursor.x < edgePanArea.x &&
-            screenReference.x < edgePanArea.x + edgePanArea.width)
+        // Adjust cursor position relative to edge pan area while avoiding to pan too far
+        Vector2i panDirection{V_NODIR};
+
+        // Determine pan direction
+        if (screenCursor.x < edgePanArea.x)
         {
-            dtb::moveCamera(
-                Vector2Scale(
-                    V_LEFT,
-                    TILE_SIZE));
+            panDirection = Vector2Add(panDirection, V_LEFT);
+        }
+        else if (screenCursor.x > (edgePanArea.x + edgePanArea.width))
+        {
+            panDirection = Vector2Add(panDirection, V_RIGHT);
         }
 
-        if (screenCursor.x > (edgePanArea.x + edgePanArea.width) &&
-            screenReference.x > edgePanArea.x)
+        if (screenCursor.y < edgePanArea.y)
         {
-            dtb::moveCamera(
-                Vector2Scale(
-                    V_RIGHT,
-                    TILE_SIZE));
+            panDirection = Vector2Add(panDirection, V_UP);
+        }
+        else if (screenCursor.y > (edgePanArea.y + edgePanArea.height))
+        {
+            panDirection = Vector2Add(panDirection, V_DOWN);
         }
 
-        if (screenCursor.y < edgePanArea.y &&
-            screenReference.y < edgePanArea.y + edgePanArea.height)
-        {
-            dtb::moveCamera(
-                Vector2Scale(
-                    V_UP,
-                    TILE_SIZE));
-        }
+        // Check if pan is valid
+        if (!CheckCollisionPointArea(
+                Vector2Add(
+                    screenToTilePosition(
+                        {GetRenderWidth() / 2.0f, GetRenderHeight() / 2.0f}),
+                    panDirection),
+                dtb::mapSize()))
+            return;
 
-        if (screenCursor.y > (edgePanArea.y + edgePanArea.height) &&
-            screenReference.y > edgePanArea.y)
-        {
-            dtb::moveCamera(
-                Vector2Scale(
-                    V_DOWN,
-                    TILE_SIZE));
-        }
+        // Update camera
+        dtb::moveCamera(Vector2Scale(panDirection, TILE_SIZE));
     }
 }
 

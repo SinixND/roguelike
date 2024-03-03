@@ -102,6 +102,28 @@ private:
 public:
     static inline snd::Scene& activeScene() { return *instance().activeScene_; };
     static inline void setActiveScene(snd::Scene& scene) { instance().activeScene_ = &scene; };
+
+    // Map size
+private:
+    static inline Area mapSize_{};
+
+public:
+    static inline Area& mapSize() { return instance().mapSize_; };
+
+    static inline void updateMapSize(const Vector2i& V)
+    {
+        auto left{V.x < mapSize().left ? V.x : mapSize().left};
+        auto right{V.x > mapSize().right ? V.x : mapSize().right};
+        auto top{V.y < mapSize().top ? V.y : mapSize().top};
+        auto bottom{V.y > mapSize().bottom ? V.y : mapSize().bottom};
+
+        mapSize() = Area{
+            left,
+            top,
+            right - left + 1,
+            bottom - top + 1};
+    };
+
     //=================================
 
     // CONFIGS / SETTINGS

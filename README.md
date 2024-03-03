@@ -150,3 +150,5 @@ private:
 [x] Refactor tilePosition to float position
 
 [x] Implement render area
+
+[x] edge pan stop relative to map not player

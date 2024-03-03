@@ -33,6 +33,11 @@ void MapHandler::createTiles(TileMap& tileMap, const Area& area, RenderID render
             tile->isSolid = isSolid;
         };
     }
+
+    // Update global available map dimensions
+    [[maybe_unused]] auto& a{dtb::mapSize()};
+    dtb::updateMapSize({area.left, area.top});
+    dtb::updateMapSize({area.right, area.bottom});
 }
 
 void MapHandler::addRoom(TileMap& tileMap, const Area& room)

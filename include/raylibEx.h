@@ -31,7 +31,7 @@ struct Area
     int right;
     int bottom;
 
-    Area(int leftX, int topY, int widthX, int heightY)
+    Area(int leftX = 0, int topY = 0, int widthX = 1, int heightY = 1)
         : left(leftX)
         , top(topY)
         , width(widthX)
@@ -87,9 +87,32 @@ inline Rectangle GetRenderRec()
         static_cast<float>(GetRenderHeight())};
 }
 
-inline Vector2 ConvertVector2(const Vector2i& v)
+inline Vector2 ConvertVector2(const Vector2i& V)
 {
-    return Vector2{static_cast<float>(v.x), static_cast<float>(v.y)};
+    return Vector2{static_cast<float>(V.x), static_cast<float>(V.y)};
+}
+
+inline Vector2i GetMin(const Vector2i& V1, const Vector2i& V2)
+{
+    return Vector2i{
+        (V1.x < V2.x ? V1.x : V2.x),
+        (V1.y < V2.y ? V1.y : V2.y)};
+}
+
+inline Vector2i GetMax(const Vector2i& V1, const Vector2i& V2)
+{
+    return Vector2i{
+        (V1.x > V2.x ? V1.x : V2.x),
+        (V1.y > V2.y ? V1.y : V2.y)};
+}
+
+inline bool CheckCollisionPointArea(const Vector2i& tilePosition, const Area& area)
+{
+    bool collision = false;
+
+    if ((tilePosition.x >= area.left) && (tilePosition.x < area.right) && (tilePosition.y >= area.top) && (tilePosition.y < area.bottom)) collision = true;
+
+    return collision;
 }
 //=====================================
 
