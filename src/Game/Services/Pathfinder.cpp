@@ -79,7 +79,7 @@ std::vector<Vector2i> filterInRange(
     {
         Vector2i delta{Vector2Subtract(position, origin)};
 
-        if (Vector2Length(delta) > range)
+        if (Vector2Sum(delta) > range)
             continue;
 
         inRangePositions.push_back(position);
@@ -164,7 +164,7 @@ RangeSeparatedPositions filterReachable(
             SteppedPosition steppedTile{steppedPositions[previousStepLevel][tileIndex]};
 
             // Check the 3 neighbours it was not stepped from
-            for (Matrix2i R : {M_ROTATE_NONE, M_ROTATE_LEFT, M_ROTATE_RIGHT})
+            for (auto R : {M_ROTATE_NONE, M_ROTATE_CCW, M_ROTATE_CW})
             {
                 // Set next stepped tile position
                 Vector2i nextTilePosition{Vector2Add(steppedTile.tilePosition, MatrixMultiply(R, steppedTile.directionAccessed))};
@@ -279,7 +279,7 @@ Path findPath(
             Vector2i checkVector{Vector2Subtract(currentStepLevelTile.tilePosition, tile.tilePosition)};
 
             // Tiled length of checkVector needs to be 1 (then it is a neighbour)
-            auto checkValue{Vector2Length(checkVector)};
+            auto checkValue{Vector2Sum(checkVector)};
 
             // Check if tile is neighbour
             if (checkValue == 1)

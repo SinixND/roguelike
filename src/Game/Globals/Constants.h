@@ -34,16 +34,20 @@ const Vector2i V_UP{0, -1};
 const Vector2i V_DOWN{0, 1};
 
 // Rotation matrices
-const Matrix2i M_ROTATE_NONE{
+const Matrix2x2i M_ROTATE_NONE{
     1, 0,
     0, 1};
 
-const Matrix2i M_ROTATE_RIGHT{
+const Matrix2x2i M_ROTATE_CW{
     0, -1,
     1, 0};
 
-const Matrix2i M_ROTATE_LEFT{
+const Matrix2x2i M_ROTATE_CCW{
     0, 1,
     -1, 0};
+
+const Matrix2x2 M_ROTATE_CW_45{
+    0.7071068, -0.7071068,
+    0.7071068, 0.7071068};
 
 #endif

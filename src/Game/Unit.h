@@ -1,16 +1,23 @@
 #ifndef _20240211230403
 #define _20240211230403
 
-#include "Graphic.h"
+#include "Entity.h"
 #include "Movement.h"
-#include "Position.h"
+#include "VisibilityID.h"
 
-struct Unit
+struct Unit : public Entity
 {
-    Position position;
-    Graphic graphic;
-    bool isSelected;
+    bool isSelected{false};
     Movement movement;
+    const bool isSolid{true};
+    VisibilityID visibilityID;
+    int visionRange;
+
+    Unit(Position position, Graphic graphic, Movement movement, VisibilityID visibilityID, int visionRange)
+        : Entity(position, graphic)
+        , movement(movement)
+        , visibilityID(visibilityID)
+        , visionRange(visionRange){};
 };
 
 #endif

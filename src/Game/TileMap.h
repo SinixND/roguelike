@@ -4,6 +4,7 @@
 #include "SparseSet.h"
 #include "Tile.h"
 #include "TilePosition.h"
+#include <memory>
 
 using TileMap = snd::SparseSet<TilePosition, Tile>;
 

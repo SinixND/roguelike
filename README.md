@@ -48,6 +48,9 @@ development of a (maybe) roguelike game with c++ and raylib
 | L_SHIFT                           | Fast cursor movment |
 | CTRL + 0 (both numpad and normal) | Reset Zoom          |
 | ESCAPE / CAPS_LOCK                | Deselect            |
+| F1                                | Toggle debug mode   |
+| F4                                | Exit                |
+| F11                               | Maximize window     |
 
 
 ### Touch

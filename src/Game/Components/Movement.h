@@ -40,6 +40,12 @@ public:
     // Returns if movement finished
     bool move(Vector2& position, float dt);
 
+    Movement(
+        size_t range,
+        float speed)
+        : range(range)
+        , speed(speed){};
+
 private:
     TilePosition target_{};
     bool targetSet_{false};

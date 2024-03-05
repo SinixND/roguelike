@@ -15,7 +15,13 @@ struct Vector2i
     int y;
 };
 
-struct Matrix2i
+struct Matrix2x2
+{
+    float m11, m12;
+    float m21, m22;
+};
+
+struct Matrix2x2i
 {
     int m11, m12;
     int m21, m22;
@@ -39,6 +45,18 @@ struct Area
         , right(leftX + widthX - 1)
         , bottom(topY + heightY - 1){};
 };
+
+struct Ray2D
+{
+    Vector2 position;
+    Vector2 direction;
+};
+
+struct Line
+{
+    Vector2 start;
+    Vector2 end;
+};
 //=====================================
 
 // FUNCTIONS
@@ -52,12 +70,12 @@ inline Vector2 GetDisplaySize()
         return Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
 }
 
-inline Vector2i MatrixMultiply(const Matrix2i& M, const Vector2i& V)
+inline Vector2i MatrixMultiply(const Matrix2x2i& M, const Vector2i& V)
 {
     return Vector2i{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
 }
 
-inline size_t Vector2Length(const Vector2i& V)
+inline size_t Vector2Sum(const Vector2i& V)
 {
     return abs(V.x) + abs(V.y);
 }
@@ -118,7 +136,6 @@ inline bool CheckCollisionPointArea(const Vector2i& tilePosition, const Area& ar
 
 // FUNCTION OVERLOADS
 //=====================================
-
 // Add two vectors (v1 + v2)
 RMAPI Vector2i Vector2Add(const Vector2i& v1, const Vector2i& v2)
 {

@@ -5,6 +5,7 @@
 #include "RenderID.h"
 #include "RuntimeDatabase.h"
 #include "TilePositionConversion.h"
+#include "VisibilityID.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
@@ -18,7 +19,7 @@ Rectangle getRenderArea()
         GetRenderHeight() - TOP_MAP_RENDER_OFFSET - BOTTOM_MAP_RENDER_OFFSET + 2 * MAP_RENDER_AREA_MARGIN};
 }
 
-void render(const Vector2& position, Graphic& graphic)
+void render(const Vector2& position, Graphic& graphic, VisibilityID visibilityID)
 {
     static Rectangle RENDER_AREA{getRenderArea()};
     if (IsWindowResized())
@@ -32,6 +33,38 @@ void render(const Vector2& position, Graphic& graphic)
     Texture2D* texture{dtb::getTexture(graphic.renderID)};
     Vector2 tileSize{TILE_DIMENSIONS};
     Vector2 tileCenter{Vector2Scale(tileSize, 0.5f)};
+
+    // Consider visibility
+    Color tint{WHITE};
+    switch (visibilityID)
+    {
+    default:
+    case VisibilityID::visible:
+        tint = ColorBrightness(tint, 1);
+        if (dtb::debugMode())
+            tint = GREEN;
+        break;
+
+    case VisibilityID::seen:
+        tint = BLACK;
+        tint = ColorBrightness(tint, 0.5);
+        if (dtb::debugMode())
+        {
+            tint = ColorBrightness(tint, 1);
+            tint = BLUE;
+        }
+        break;
+
+    case VisibilityID::unseen:
+        tint = BLACK;
+        tint = ColorBrightness(tint, 0.0);
+        if (dtb::debugMode())
+        {
+            tint = ColorBrightness(tint, 0.75);
+            tint = RED;
+        }
+        break;
+    }
 
     // Draw texture
     DrawTexturePro(
@@ -48,5 +81,5 @@ void render(const Vector2& position, Graphic& graphic)
             tileSize.y},
         tileCenter,
         0,
-        WHITE);
+        tint);
 }

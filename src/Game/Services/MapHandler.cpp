@@ -5,8 +5,10 @@
 #include "RenderID.h"
 #include "Tile.h"
 #include "TileMap.h"
+#include "VisibilityID.h"
 #include "raylibEx.h"
 #include <cstddef>
+#include <memory>
 
 TileMap createNewMap(size_t level)
 {
@@ -18,7 +20,12 @@ TileMap createNewMap(size_t level)
     return newMap;
 }
 
-void MapHandler::createTiles(TileMap& tileMap, const Area& area, RenderID renderID, LayerID layerID, bool isSolid)
+void MapHandler::createTiles(
+    TileMap& tileMap,
+    const Area& area,
+    Graphic graphic,
+    bool isSolid,
+    bool blocksVision)
 {
     for (int x{0}; x < area.width; ++x)
     {
@@ -26,16 +33,17 @@ void MapHandler::createTiles(TileMap& tileMap, const Area& area, RenderID render
         {
             Vector2i position{(area.left + x), (area.top + y)};
 
-            Tile* tile{tileMap.createOrUpdate(position)};
-            tile->position = position;
-            tile->graphic.renderID = renderID;
-            tile->graphic.layerID = layerID;
-            tile->isSolid = isSolid;
+            tileMap.createOrUpdate(
+                position,
+                Tile(
+                    position,
+                    graphic,
+                    isSolid,
+                    blocksVision));
         };
     }
 
     // Update global available map dimensions
-    [[maybe_unused]] auto& a{dtb::mapSize()};
     dtb::updateMapSize({area.left, area.top});
     dtb::updateMapSize({area.right, area.bottom});
 }
@@ -50,8 +58,10 @@ void MapHandler::addRoom(TileMap& tileMap, const Area& room)
             room.top,
             room.width - 1,
             1},
-        RenderID::wall,
-        LayerID::map,
+        Graphic(
+            RenderID::wall,
+            LayerID::map),
+        true,
         true);
 
     // Right wall
@@ -62,8 +72,10 @@ void MapHandler::addRoom(TileMap& tileMap, const Area& room)
             room.top,
             1,
             room.height - 1},
-        RenderID::wall,
-        LayerID::map,
+        Graphic(
+            RenderID::wall,
+            LayerID::map),
+        true,
         true);
 
     // Bottom wall
@@ -74,8 +86,10 @@ void MapHandler::addRoom(TileMap& tileMap, const Area& room)
             room.bottom,
             room.width - 1,
             1},
-        RenderID::wall,
-        LayerID::map,
+        Graphic(
+            RenderID::wall,
+            LayerID::map),
+        true,
         true);
 
     // Left wall
@@ -86,8 +100,10 @@ void MapHandler::addRoom(TileMap& tileMap, const Area& room)
             room.top + 1,
             1,
             room.height - 1},
-        RenderID::wall,
-        LayerID::map,
+        Graphic(
+            RenderID::wall,
+            LayerID::map),
+        true,
         true);
 
     // Floor
@@ -98,8 +114,10 @@ void MapHandler::addRoom(TileMap& tileMap, const Area& room)
             room.top + 1,
             room.width - 2,
             room.height - 2},
-        RenderID::floor,
-        LayerID::map,
+        Graphic(
+            RenderID::floor,
+            LayerID::map),
+        false,
         false);
 }
 
@@ -120,7 +138,9 @@ void MapHandler::addStartRoom(TileMap& tileMap)
             -1,
             3,
             1},
-        RenderID::wall,
-        LayerID::map,
+        Graphic(
+            RenderID::wall,
+            LayerID::map),
+        true,
         true);
 }

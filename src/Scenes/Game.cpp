@@ -1,17 +1,23 @@
 #include "Game.h"
 
 #include "Constants.h"
-#include "Cursor.h"
+#include "Entity.h"
+#include "Graphic.h"
 #include "LayerID.h"
 #include "Movement.h"
 #include "Pathfinder.h"
+#include "Position.h"
 #include "Render.h"
+#include "RenderID.h"
+#include "TileMap.h"
 #include "TilePositionConversion.h"
 #include "Unit.h"
+#include "VisibilityID.h"
 #include "World.h"
 #include "raylibEx.h"
 #include <bitset>
 #include <iostream>
+#include <memory>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -20,8 +26,20 @@ namespace
 {
     // Variables needed for multiple stepps in main loop
     World gameWorld{};
-    Cursor cursor{};
-    Unit hero{};
+    Entity cursor{
+        Position(),
+        Graphic(
+            RenderID::cursor,
+            LayerID::UI)};
+
+    Unit hero{
+        Position(),
+        Graphic(
+            RenderID::hero,
+            LayerID::object),
+        Movement(5, 50),
+        VisibilityID::visible,
+        5};
 
     bool isInputBlocked{false};
     bool isPathShown{false};
@@ -29,14 +47,6 @@ namespace
 
 void GameScene::initialize()
 {
-    cursor.graphic.renderID = RenderID::cursor;
-    cursor.graphic.layerID = LayerID::UI;
-
-    hero.graphic.renderID = RenderID::hero;
-    hero.graphic.layerID = LayerID::object;
-    hero.movement.range = 5;
-    hero.movement.speed = 50;
-    hero.movement.setTarget(hero.position.tilePosition());
 }
 
 void moveCursor(Position& cursorPosition, bool mouseActive);
@@ -48,6 +58,10 @@ void processDeselection(Unit& unit);
 void GameScene::processInput()
 {
     if (isInputBlocked) return;
+
+    // Toggle debug mode
+    if (IsKeyDown(KEY_F1))
+        dtb::setDebugMode(!dtb::debugMode());
 
     // Toggle between mouse or key control for cursor
     static bool mouseActive{true};
@@ -275,6 +289,7 @@ void showUnitRange(bool& moveRangeShown, Unit& unit, World& world);
 Path& showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size_t unitRange, World& world, bool& pathShown);
 void triggerMovement(Unit& unit, Path& path, bool& inputBlocked);
 void processMovement(Unit& unit, bool& inputBlocked);
+void processVision(Unit& unit, TileMap& tiles);
 
 void GameScene::updateState()
 {
@@ -327,6 +342,8 @@ void GameScene::updateState()
 
     // Unblock input if target is reached
     processMovement(hero, isInputBlocked);
+
+    processVision(hero, gameWorld.currentMap());
 }
 
 void showUnitRange(bool& moveRangeShown, Unit& unit, World& world)
@@ -344,17 +361,14 @@ void showUnitRange(bool& moveRangeShown, Unit& unit, World& world)
         {
             for (auto& steppedPosition : steppedPositions)
             {
-                // Create reachable tile
-                Tile reachableTile{};
-                reachableTile.position = steppedPosition.tilePosition;
-                reachableTile.graphic.renderID = RenderID::reachable;
-                reachableTile.graphic.layerID = LayerID::mapOverlay;
-                reachableTile.isSolid = false;
-
                 // Add reachable tile to overlay
                 world.mapOverlay().createOrUpdate(
                     steppedPosition.tilePosition,
-                    reachableTile);
+                    Tile(
+                        steppedPosition.tilePosition,
+                        Graphic(
+                            RenderID::reachable,
+                            LayerID::mapOverlay)));
             }
         }
     }
@@ -389,15 +403,13 @@ Path& showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, siz
 
     for (auto& steppedPosition : path)
     {
-        Tile pathTile{};
-        pathTile.position = steppedPosition.tilePosition;
-        pathTile.graphic.renderID = RenderID::path;
-        pathTile.graphic.layerID = LayerID::mapOverlay;
-        pathTile.isSolid = false;
-
         world.framedMapOverlay().createOrUpdate(
             steppedPosition.tilePosition,
-            pathTile);
+            Tile(
+                steppedPosition.tilePosition,
+                Graphic(
+                    RenderID::path,
+                    LayerID::mapOverlay)));
     }
 
     return path;
@@ -435,6 +447,99 @@ void processMovement(Unit& unit, bool& inputBlocked)
     }
 }
 
+void processVision(Unit& unit, TileMap& tileMap)
+{
+
+    std::vector<Vector2i> tilesInVisionRange{
+        filterInRange(
+            tileMap,
+            unit.visionRange + 2,
+            unit.position.tilePosition())};
+
+    // Reset "visible" tiles to "seen" in extended vision range before updating visibility
+    for (auto& tilePosition : tilesInVisionRange)
+    {
+        auto tile{tileMap.at(tilePosition)};
+
+        if (tile->visibilityID == VisibilityID::visible)
+        {
+            tile->visibilityID = VisibilityID::seen;
+
+            if (dtb::debugMode())
+            {
+                BeginDrawing();
+                BeginMode2D(dtb::camera());
+
+                DrawCircleLinesV(tile->position.get(), 5, RED);
+
+                EndMode2D();
+                EndDrawing();
+            }
+        }
+    }
+
+    // Iterate outer positions of vision range (map independent)
+    int x{unit.visionRange};
+    int y{0};
+    int dx{-1};
+    int dy{1};
+
+    do
+    {
+        // Set ray properties
+        Vector2 direction{Vector2Subtract(
+            tilePositionToWorld(Vector2i{x, y}),
+            unit.position.get())};
+
+        Ray2D ray{
+            unit.position.get(),
+            Vector2Normalize(
+                direction)};
+
+        // Increment ray until visionRange
+        float maxLength{Vector2Length(direction)};
+        for (float length{TILE_SIZE}; length < maxLength; length += (TILE_SIZE / 4))
+        {
+            Vector2 target{
+                Vector2Add(
+                    ray.position,
+                    Vector2Scale(
+                        ray.direction,
+                        length))};
+
+            Tile* targetTile{tileMap.at(worldToTilePosition(target))};
+
+            targetTile->visibilityID = VisibilityID::visible;
+
+            if (dtb::debugMode())
+            {
+                BeginDrawing();
+                //* ClearBackground(BLACK);
+                BeginMode2D(dtb::camera());
+
+                DrawLineEx(ray.position, Vector2Scale(ray.direction, length), 1, GREEN);
+                DrawCircleLinesV(targetTile->position.get(), 10, WHITE);
+
+                EndMode2D();
+                EndDrawing();
+            }
+
+            // End ray cast if solid is hit
+            if (targetTile->isSolid)
+                break;
+        };
+
+        // Update position
+        if (x == unit.visionRange) dx = -1;
+        if (x == -unit.visionRange) dx = 1;
+        if (y == unit.visionRange) dy = -1;
+        if (y == -unit.visionRange) dy = 1;
+
+        x += dx;
+        y += dy;
+    } while (!(x == unit.visionRange && y == 0));
+};
+
 void GameScene::renderOutput()
 {
     BeginMode2D(dtb::camera());
@@ -442,19 +547,19 @@ void GameScene::renderOutput()
     // Layer map
     for (auto& tile : gameWorld.currentMap().values())
     {
-        render(tile.position.get(), tile.graphic);
+        render(tile.position.get(), tile.graphic, tile.visibilityID);
     }
 
     // Layer map overlay
     for (auto& tile : gameWorld.mapOverlay().values())
     {
-        render(tile.position.get(), tile.graphic);
+        render(tile.position.get(), tile.graphic, tile.visibilityID);
     }
 
     // Layer framed map overlay
     for (auto& tile : gameWorld.framedMapOverlay().values())
     {
-        render(tile.position.get(), tile.graphic);
+        render(tile.position.get(), tile.graphic, tile.visibilityID);
     }
 
     // Render object layer

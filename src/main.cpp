@@ -24,6 +24,7 @@ int main(/* int argc, char **argv */)
     //=====================================
     constexpr int WINDOW_WIDTH{800};
     constexpr int WINDOW_HEIGHT{450};
+    constexpr int FPS_TARGET{245};
 
     // Flags
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -38,7 +39,7 @@ int main(/* int argc, char **argv */)
     SetWindowIcon(favicon);
     SetWindowMinSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     SetExitKey(KEY_F4);
-    SetTargetFPS(245);
+    SetTargetFPS(FPS_TARGET);
 
     // Fonts
     dtb::loadFont("resources/fonts/JuliaMono-RegularLatin.ttf");
@@ -76,7 +77,7 @@ int main(/* int argc, char **argv */)
     // MAIN APP LOOP
     //=================================
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(applicationLoop, 245, 1);
+    emscripten_set_main_loop(applicationLoop, FPS_TARGET, 1);
 #else
     while (!(WindowShouldClose() || dtb::shouldAppClose()))
     {
