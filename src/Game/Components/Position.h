@@ -2,7 +2,7 @@
 #define _20240227231122
 
 #include "TilePosition.h"
-#include "TilePositionConversion.h"
+#include "TileTransformation.h"
 #include "raylibEx.h"
 
 class Position
@@ -20,17 +20,17 @@ public:
 
     void set(const TilePosition& tilePosition)
     {
-        position_ = tilePositionToWorld(tilePosition);
+        position_ = TileTransformation::positionToWorld(tilePosition);
     }
 
     TilePosition tilePosition()
     {
-        return worldToTilePosition(position_);
+        return TileTransformation::worldToPosition(position_);
     }
 
     void setTilePosition(const TilePosition& tilePosition)
     {
-        position_ = tilePositionToWorld(tilePosition);
+        position_ = TileTransformation::positionToWorld(tilePosition);
     }
 
     Position(const Vector2& position = {0, 0})

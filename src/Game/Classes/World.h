@@ -21,7 +21,7 @@ private:
     size_t maxLevel_{};
     size_t currentLevel_{};
 
-    std::vector<TileMap> maps_{createNewMap(maxLevel_)};
+    std::vector<TileMap> maps_{MapHandler::createNewMap(maxLevel_)};
     TileMap& currentMap_{maps_.back()};
 
     TileMap mapOverlay_{};

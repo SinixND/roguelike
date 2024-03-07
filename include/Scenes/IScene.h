@@ -1,6 +1,6 @@
-#include "Scene.h"
+#ifndef _20231201203725
+#define _20231201203725
 
-#include "RuntimeDatabase.h"
 #include <raylib.h>
 
 namespace snd
@@ -9,7 +9,10 @@ namespace snd
     constexpr Color BORDER_COLOR{GRAY};
     constexpr Color BACKGROUND_COLOR{BLACK};
 
-    void Scene::update()
+    class IScene
+    {
+    public:
+        virtual void update(bool debugMode)
     {
         processInput();
         updateState();
@@ -23,7 +26,7 @@ namespace snd
         // Draw simple frame
         DrawRectangleLinesEx(Rectangle{0, 0, static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())}, BORDER_WEIGHT, BORDER_COLOR);
 
-        if (dtb::debugMode())
+        if (debugMode)
         {
             DrawFPS(0, 0);
         }
@@ -32,4 +35,19 @@ namespace snd
 
         postOutput();
     };
+
+        virtual void initialize() = 0;
+        virtual void deinitialize() = 0;
+
+        virtual ~IScene() = default;
+
+    protected:
+        virtual void processInput() = 0;
+        virtual void updateState() = 0;
+        virtual void renderOutput() = 0;
+        virtual void postOutput() = 0;
+    };
+    //=====================================
 }
+
+#endif

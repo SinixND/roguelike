@@ -1,8 +1,8 @@
 #include "Constants.h"
 #include "Game.h"
 #include "RuntimeDatabase.h"
-#include "Scene.h"
-#include "TilePositionConversion.h"
+#include "IScene.h"
+#include "TileTransformation.h"
 #include <raylib.h>
 #include <raymath.h>
 
@@ -126,5 +126,5 @@ void applicationLoop()
 #endif
     //=================================
 
-    dtb::activeScene().update();
+    dtb::activeScene().update(dtb::debugMode());
 }

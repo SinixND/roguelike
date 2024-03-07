@@ -6,10 +6,9 @@
 #include "raylibEx.h"
 #include <cstddef>
 
-TileMap createNewMap(size_t level);
-
 namespace MapHandler
 {
+    TileMap createNewMap(size_t level);
 
     void createTiles(
         TileMap& tileMap,

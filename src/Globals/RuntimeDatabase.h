@@ -2,7 +2,7 @@
 #define _20240117233028
 
 #include "RenderID.h"
-#include "Scene.h"
+#include "IScene.h"
 #include "raylibEx.h"
 #include <cstddef>
 #include <raylib.h>
@@ -87,6 +87,14 @@ public:
     static inline bool& shouldAppClose() { return instance().appShouldClose_; };
     static inline void closeApp() { shouldAppClose() = true; };
 
+    // Active scene
+private:
+    static inline snd::IScene* activeScene_{};
+
+public:
+    static inline snd::IScene& activeScene() { return *instance().activeScene_; };
+    static inline void setActiveScene(snd::IScene& scene) { activeScene() = scene; };
+
     // Camera / Viewport
 private:
     static inline Camera2D camera_{};
@@ -94,14 +102,6 @@ private:
 public:
     static inline Camera2D& camera() { return instance().camera_; };
     static inline void moveCamera(Vector2 distance) { camera().target = Vector2Add(camera().target, distance); };
-
-    // Active scene
-private:
-    static inline snd::Scene* activeScene_{};
-
-public:
-    static inline snd::Scene& activeScene() { return *instance().activeScene_; };
-    static inline void setActiveScene(snd::Scene& scene) { instance().activeScene_ = &scene; };
 
     // Map size
 private:

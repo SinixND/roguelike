@@ -6,24 +6,6 @@
 
 const bool VSYNC_ACTIVE{false};
 
-// Tile
-const float TILE_SIZE{25};
-const Vector2 TILE_DIMENSIONS{TILE_SIZE, TILE_SIZE};
-
-// Edge pan
-const float EDGE_PAN_FRAME_WEIGHT{3.5f * TILE_SIZE};
-
-// Zoom
-const float ZOOM_STEP{0.125f};
-
-// Render area
-const float LEFT_MAP_RENDER_OFFSET{0};
-const float TOP_MAP_RENDER_OFFSET{2.0f * TILE_SIZE};
-const float RIGHT_MAP_RENDER_OFFSET{0};
-const float BOTTOM_MAP_RENDER_OFFSET{0};
-
-const float MAP_RENDER_AREA_MARGIN{0.5f * TILE_SIZE};
-
 // Direction vectors
 // X is right-positive, Y is down-positive
 const Vector2 V_NULL{0, 0};
@@ -49,5 +31,26 @@ const Matrix2x2i M_ROTATE_CCW{
 const Matrix2x2 M_ROTATE_CW_45{
     0.7071068, -0.7071068,
     0.7071068, 0.7071068};
+
+// GAME
+//=====================================
+// Tile
+const float TILE_SIZE{25};
+const Vector2 TILE_DIMENSIONS{TILE_SIZE, TILE_SIZE};
+
+// Edge pan
+const float EDGE_PAN_FRAME_WEIGHT{3.5f * TILE_SIZE};
+
+// Zoom
+const float ZOOM_STEP{0.125f};
+
+// Render area
+const float LEFT_MAP_RENDER_OFFSET{0};
+const float TOP_MAP_RENDER_OFFSET{2.0f * TILE_SIZE};
+const float RIGHT_MAP_RENDER_OFFSET{0};
+const float BOTTOM_MAP_RENDER_OFFSET{0};
+
+const float MAP_RENDER_AREA_MARGIN{0.5f * TILE_SIZE};
+//=====================================
 
 #endif

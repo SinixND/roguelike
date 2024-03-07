@@ -7,27 +7,29 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Check bug player not moving correctly
+- [ ] Extract non-member functions in separate translation unit (file)
+
+- [ ] Check bug player not moving correctly
 
 
 # Shortterm
-[0] Map change
+- [ ] Map change
 
-[0] Map generation
+- [ ] Map generation
 
 
 # Longterm 
-[0] Indicate select option (different cursor color on hover?)
+- [ ] Indicate select option (different cursor color on hover?)
 
-[0] (Hold) TAB to show map overview
+- [ ] (Hold) TAB to show map overview
 
-[0] Add touch support
+- [ ] Add touch support
 
-[1] Remove zoom?
+- [ ] Remove zoom?
 
 
 # Continuous
-[0] Check for obsolete [[maybe_unused]] and //* comments
+- [ ] Check for obsolete [[maybe_unused]] and //* comments
 
 
 # Notes
@@ -135,26 +137,26 @@ private:
 
 
 # Done
-[x] compile for linux & windows
+- [x] compile for linux & windows
 
-[x] Render sprites/textures
+- [x] Render sprites/textures
 
-[-] make ECS (removed)
+- [ ] make ECS (removed)
 
-[x] realize viewport/camera system
+- [x] realize viewport/camera system
 
-[x] Implement zoom
+- [x] Implement zoom
 
-[x] Check class design (see notes); make diagram to track classes
+- [x] Check class design (see notes); make diagram to track classes
 
-[-] Command pattern for rendering and layers (not implemented -> need to handle abiguous keys in SparseSet)
+- [ ] Command pattern for rendering and layers (not implemented -> need to handle abiguous keys in SparseSet: potential duplicate positions for tiles in different layers)
 
-[x] Implement movment
+- [x] Implement movment
 
-[x] Refactor tilePosition to float position
+- [x] Refactor tilePosition to float position
 
-[x] Implement render area
+- [x] Implement render area
 
-[x] edge pan stop relative to map not player
+- [x] edge pan stop relative to map not player
 
-[x] Implement vision (fog of war: unseen, seen, visible)
+- [x] Implement vision (fog of war: unseen, seen, visible)

@@ -35,7 +35,7 @@ TileMap& World::framedMapOverlay() { return framedMapOverlay_; }
 // Private:
 void World::addNewMap(size_t level)
 {
-    maps_.push_back(createNewMap(level));
+    maps_.push_back(MapHandler::createNewMap(level));
 }
 
 void World::setMap(size_t level)

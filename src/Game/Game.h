@@ -1,10 +1,10 @@
-#ifndef _20231203204745
-#define _20231203204745
+#ifndef _20231203204746
+#define _20231203204746
 
-#include "Scene.h"
+#include "IScene.h"
 
 class GameScene
-    : public snd::Scene
+    : public snd::IScene
 {
 public:
     void initialize() override;

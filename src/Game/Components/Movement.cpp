@@ -24,7 +24,7 @@ bool Movement::move(Vector2& position, float dt)
     {
         tileFraction = 0;
         wholeDistanceMoved -= TILE_SIZE - tileFraction;
-        position = tilePositionToWorld(path_.back().tilePosition);
+        position = TileTransformation::positionToWorld(path_.back().tilePosition);
         path_.pop_back();
 
         // Check if target reached
