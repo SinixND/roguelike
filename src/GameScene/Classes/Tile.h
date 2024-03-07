@@ -2,6 +2,8 @@
 #define _20240215012942
 
 #include "Entity.h"
+#include "Graphic.h"
+#include "Position.h"
 #include "VisibilityID.h"
 
 struct Tile : public Entity

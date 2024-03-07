@@ -7,6 +7,7 @@
 #include <raymath.h>
 
 #include <functional>
+#include <vector>
 
 // TYPEDEFS
 //=====================================
@@ -126,6 +127,12 @@ inline bool CheckCollisionPointArea(const Vector2i& tilePosition, const Area& ar
     if ((tilePosition.x >= area.left) && (tilePosition.x < area.right) && (tilePosition.y >= area.top) && (tilePosition.y < area.bottom)) collision = true;
 
     return collision;
+}
+
+template <typename Type>
+inline void appendVector(std::vector<Type>& targetVector, const std::vector<Type>& vector)
+{
+    targetVector.insert(targetVector.end(), vector.begin(), vector.end());
 }
 //=====================================
 

@@ -1,8 +1,9 @@
 #ifndef _20240307161500
 #define _20240307161500
 
-#include "TileMapFilters.h"
 #include "TileMap.h"
+#include "TileMapFilters.h"
+#include <cstddef>
 #include <raylibEx.h>
 #include <vector>
 

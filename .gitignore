@@ -3,7 +3,6 @@ test
 .cache
 *.d
 *.o
-.clang-format
 test
 bin
 .vscode
@@ -13,3 +12,4 @@ bin
 perf.*
 callgrind*
 vgcore*
+.clangd

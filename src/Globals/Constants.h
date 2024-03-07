@@ -39,6 +39,7 @@ const float TILE_SIZE{25};
 const Vector2 TILE_DIMENSIONS{TILE_SIZE, TILE_SIZE};
 
 // Edge pan
+const float PAN_SPEED{0.1f}; // time in seconds to next pan progress
 const float EDGE_PAN_FRAME_WEIGHT{3.5f * TILE_SIZE};
 
 // Zoom

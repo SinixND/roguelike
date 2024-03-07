@@ -1,12 +1,10 @@
 #ifndef _20240218231113
 #define _20240218231113
 
-#include "Constants.h"
 #include "Pathfinder.h"
-#include "TilePosition.h"
-#include "TileTransformation.h"
+#include "raylibEx.h"
 #include <cstddef>
-#include <iostream>
+#include <raylib.h>
 #include <raymath.h>
 
 class Movement
@@ -16,8 +14,8 @@ public:
     float speed{}; // pixel per second
 
 public:
-    TilePosition& target() { return target_; };
-    void setTarget(const TilePosition& target)
+    Vector2i& target() { return target_; };
+    void setTarget(const Vector2i& target)
     {
         target_ = target;
     };
@@ -47,7 +45,7 @@ public:
         , speed(speed){};
 
 private:
-    TilePosition target_{};
+    Vector2i target_{};
     bool targetSet_{false};
     bool isMoving_{false};
     bool isExhausted_{false};

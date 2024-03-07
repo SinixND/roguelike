@@ -3,12 +3,11 @@
 #include "Graphic.h"
 #include "LayerID.h"
 #include "RenderID.h"
+#include "RuntimeDatabase.h"
 #include "Tile.h"
 #include "TileMap.h"
-#include "VisibilityID.h"
 #include "raylibEx.h"
 #include <cstddef>
-#include <memory>
 
 namespace MapHandler
 {

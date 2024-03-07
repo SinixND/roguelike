@@ -1,6 +1,8 @@
 #include "World.h"
 
 #include "MapHandler.h"
+#include "TileMap.h"
+#include <cstddef>
 
 // Public:
 TileMap& World::currentMap() { return currentMap_; }

@@ -13,12 +13,17 @@ development of a (maybe) roguelike game with c++ and raylib
 
 
 # Shortterm
+- [ ] Add logger
+
+- [ ] Refactor vision: IF ray target out of map THEN cast ray from target and add first tile hit to targets
+
 - [ ] Map change
 
 - [ ] Map generation
 
 
 # Longterm 
+- [ ] Lua/Jinx settings file?
 - [ ] Indicate select option (different cursor color on hover?)
 
 - [ ] (Hold) TAB to show map overview

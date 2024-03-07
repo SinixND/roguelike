@@ -47,4 +47,3 @@ class Render{
 Render ..> Graphic
 
 ```
-

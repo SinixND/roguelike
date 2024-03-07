@@ -1,9 +1,9 @@
 #ifndef _20240227231122
 #define _20240227231122
 
-#include "TilePosition.h"
 #include "TileTransformation.h"
 #include "raylibEx.h"
+#include <raylib.h>
 
 class Position
 {
@@ -18,17 +18,17 @@ public:
         position_ = position;
     }
 
-    void set(const TilePosition& tilePosition)
+    void set(const Vector2i& tilePosition)
     {
         position_ = TileTransformation::positionToWorld(tilePosition);
     }
 
-    TilePosition tilePosition()
+    Vector2i tilePosition()
     {
         return TileTransformation::worldToPosition(position_);
     }
 
-    void setTilePosition(const TilePosition& tilePosition)
+    void setTilePosition(const Vector2i& tilePosition)
     {
         position_ = TileTransformation::positionToWorld(tilePosition);
     }
@@ -36,7 +36,7 @@ public:
     Position(const Vector2& position = {0, 0})
         : position_(position){};
 
-    Position(const TilePosition& tilePosition)
+    Position(const Vector2i& tilePosition)
     {
         setTilePosition(tilePosition);
     }

@@ -3,9 +3,9 @@
 
 #include "Constants.h"
 #include "RuntimeDatabase.h"
-#include "TilePosition.h"
 #include "raylib.h"
 #include "raylibEx.h"
+#include <cmath>
 
 namespace TileTransformation
 {
@@ -41,7 +41,7 @@ namespace TileTransformation
         return GetWorldToScreen2D(worldPixel, dtb::camera());
     }
 
-    inline TilePosition getMouseTile()
+    inline Vector2i getMouseTile()
     {
         return screenToPosition(GetMousePosition());
     }

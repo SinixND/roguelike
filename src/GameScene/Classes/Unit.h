@@ -2,7 +2,9 @@
 #define _20240211230403
 
 #include "Entity.h"
+#include "Graphic.h"
 #include "Movement.h"
+#include "Position.h"
 #include "VisibilityID.h"
 
 struct Unit : public Entity

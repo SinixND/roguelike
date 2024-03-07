@@ -13,28 +13,35 @@ namespace snd
     {
     public:
         virtual void update(bool debugMode)
-    {
-        processInput();
-        updateState();
-
-        BeginDrawing();
-
-        ClearBackground(BACKGROUND_COLOR);
-
-        renderOutput();
-
-        // Draw simple frame
-        DrawRectangleLinesEx(Rectangle{0, 0, static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())}, BORDER_WEIGHT, BORDER_COLOR);
-
-        if (debugMode)
         {
-            DrawFPS(0, 0);
-        }
+            processInput();
+            updateState();
 
-        EndDrawing();
+            BeginDrawing();
 
-        postOutput();
-    };
+            ClearBackground(BACKGROUND_COLOR);
+
+            renderOutput();
+
+            // Draw simple frame
+            DrawRectangleLinesEx(
+                Rectangle{
+                    0,
+                    0,
+                    static_cast<float>(GetRenderWidth()),
+                    static_cast<float>(GetRenderHeight())},
+                BORDER_WEIGHT,
+                BORDER_COLOR);
+
+            if (debugMode)
+            {
+                DrawFPS(0, 0);
+            }
+
+            EndDrawing();
+
+            postOutput();
+        };
 
         virtual void initialize() = 0;
         virtual void deinitialize() = 0;

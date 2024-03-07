@@ -1,4 +1,8 @@
 #include "Pathfinder.h"
+#include "TileMap.h"
+#include "TileMapFilters.h"
+#include "raylibEx.h"
+#include <cstddef>
 
 // Pathfinder returns vector of positions from target to origin (excluded) if target is reachable
 Path findPath(

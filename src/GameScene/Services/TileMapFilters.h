@@ -3,18 +3,18 @@
 
 #include "Constants.h"
 #include "TileMap.h"
-#include "TilePosition.h"
+#include "raylibEx.h"
 #include <cstddef>
 #include <raylibEx.h>
 #include <vector>
 
 struct SteppedPosition
 {
-    TilePosition tilePosition;
+    Vector2i tilePosition;
     Vector2i directionAccessed = V_NODIR; // in which it was accessed
 };
 
-    using RangeSeparatedPositions = std::vector<std::vector<SteppedPosition>>;
+using RangeSeparatedPositions = std::vector<std::vector<SteppedPosition>>;
 
 namespace TileMapFilters
 {
@@ -84,17 +84,6 @@ namespace TileMapFilters
         size_t range,
         const Vector2i& origin,
         TileMap& tileMap);
-
-    // Pathfinder returns vector of positions from target to origin (excluded) if target is reachable
-    Path findPath(
-        const RangeSeparatedPositions& reachableTiles,
-        const Vector2i& target);
-
-    Path findPath(
-        TileMap& tileMap,
-        const Vector2i& origin,
-        const Vector2i& target,
-        size_t range);
 }
 
 #endif

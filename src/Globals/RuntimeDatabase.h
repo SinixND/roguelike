@@ -1,13 +1,14 @@
 #ifndef _20240117233028
 #define _20240117233028
 
-#include "RenderID.h"
 #include "IScene.h"
+#include "RenderID.h"
 #include "raylibEx.h"
-#include <cstddef>
 #include <raylib.h>
+#include <raymath.h>
 #include <string>
 #include <unordered_map>
+#include <utility>
 
 // Included as an example of a parameterized macro
 #define DISALLOW_COPY_AND_ASSIGN(T) \
@@ -92,8 +93,8 @@ private:
     static inline snd::IScene* activeScene_{};
 
 public:
-    static inline snd::IScene& activeScene() { return *instance().activeScene_; };
-    static inline void setActiveScene(snd::IScene& scene) { activeScene() = scene; };
+    static inline snd::IScene*& activeScene() { return instance().activeScene_; };
+    static inline void setActiveScene(snd::IScene& scene) { activeScene() = &scene; };
 
     // Camera / Viewport
 private:

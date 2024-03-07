@@ -3,9 +3,8 @@
 
 #include "SparseSet.h"
 #include "Tile.h"
-#include "TilePosition.h"
-#include <memory>
+#include "raylibEx.h"
 
-using TileMap = snd::SparseSet<TilePosition, Tile>;
+using TileMap = snd::SparseSet<Vector2i, Tile>;
 
 #endif
