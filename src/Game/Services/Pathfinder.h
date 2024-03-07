@@ -33,14 +33,33 @@ bool isInSteppedTiles(
 std::vector<Vector2i> filterNonSolidPositions(TileMap& tileMap);
 
 std::vector<Vector2i> filterInRange(
-    const std::vector<Vector2i>& nonSolidPositions,
-    size_t range,
+    TileMap& tileMap,
+    size_t rangeStart,
+    size_t rangeEnd,
     const Vector2i& origin);
 
 std::vector<Vector2i> filterInRange(
     TileMap& tileMap,
     size_t range,
     const Vector2i& origin);
+
+std::vector<Vector2i> filterInRange(
+    const std::vector<Vector2i>& positions,
+    size_t rangeStart,
+    size_t rangeEnd,
+    const Vector2i& origin);
+
+std::vector<Vector2i> filterInRange(
+    const std::vector<Vector2i>& positions,
+    size_t range,
+    const Vector2i& origin);
+
+bool isInRange(
+    const Vector2i& target,
+    size_t rangeStart,
+    size_t rangeEnd,
+    const Vector2i& origin,
+    TileMap& tileMap);
 
 bool isInRange(
     const Vector2i& target,

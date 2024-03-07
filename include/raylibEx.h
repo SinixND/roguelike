@@ -1,6 +1,7 @@
 #ifndef _20240203171045
 #define _20240203171045
 
+#include <cmath>
 #include <cstddef>
 #include <raylib.h>
 #include <raymath.h>
@@ -46,12 +47,6 @@ struct Area
         , bottom(topY + heightY - 1){};
 };
 
-struct Ray2D
-{
-    Vector2 position;
-    Vector2 direction;
-};
-
 struct Line
 {
     Vector2 start;
@@ -68,11 +63,6 @@ inline Vector2 GetDisplaySize()
         return Vector2{static_cast<float>(GetMonitorWidth(GetCurrentMonitor())), static_cast<float>(GetMonitorHeight(GetCurrentMonitor()))};
     else
         return Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
-}
-
-inline Vector2i MatrixMultiply(const Matrix2x2i& M, const Vector2i& V)
-{
-    return Vector2i{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
 }
 
 inline size_t Vector2Sum(const Vector2i& V)
@@ -105,9 +95,14 @@ inline Rectangle GetRenderRec()
         static_cast<float>(GetRenderHeight())};
 }
 
-inline Vector2 ConvertVector2(const Vector2i& V)
+inline Vector2 ConvertToVector2(const Vector2i& V)
 {
     return Vector2{static_cast<float>(V.x), static_cast<float>(V.y)};
+}
+
+inline Vector2i ConvertToVector2i(const Vector2& V)
+{
+    return Vector2i{static_cast<int>(V.x), static_cast<int>(V.y)};
 }
 
 inline Vector2i GetMin(const Vector2i& V1, const Vector2i& V2)
@@ -169,6 +164,17 @@ RMAPI int Vector2Equals(const Vector2i& v1, const Vector2i& v2)
 {
     return ((v1.x == v2.x) && (v1.y == v2.y));
 }
+
+RMAPI Vector2i Vector2Transform(const Matrix2x2i& M, const Vector2i& V)
+{
+    return Vector2i{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
+}
+
+RMAPI Vector2 Vector2Transform(const Matrix2x2& M, const Vector2& V)
+{
+    return Vector2{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
+}
+
 //=====================================
 
 // OPERATOR OVERLOADS

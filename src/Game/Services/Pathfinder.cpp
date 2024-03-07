@@ -48,6 +48,19 @@ bool isInSteppedTiles(
     return false;
 }
 
+// Returns all positions
+std::vector<Vector2i> filterAllPositions(TileMap& tileMap)
+{
+    std::vector<Vector2i> positions{};
+
+    for (auto& tile : tileMap.values())
+    {
+        positions.push_back(tile.position.tilePosition());
+    }
+
+    return positions;
+}
+
 // Returns accessible positions (non-solid tiles)
 std::vector<Vector2i> filterNonSolidPositions(TileMap& tileMap)
 {
@@ -65,21 +78,23 @@ std::vector<Vector2i> filterNonSolidPositions(TileMap& tileMap)
 }
 
 std::vector<Vector2i> filterInRange(
-    const std::vector<Vector2i>& nonSolidPositions,
-    size_t range,
+    const std::vector<Vector2i>& positions,
+    size_t rangeStart,
+    size_t rangeEnd,
     const Vector2i& origin)
 {
     std::vector<Vector2i> inRangePositions{};
 
-    // Check if range is 0
-    if (!range)
+    // Check if ranges are valid
+    if (rangeEnd == 0 || rangeEnd < rangeStart)
         return inRangePositions;
 
-    for (const auto& position : nonSolidPositions)
+    for (const auto& position : positions)
     {
         Vector2i delta{Vector2Subtract(position, origin)};
+        size_t sumDelta{Vector2Sum(delta)};
 
-        if (Vector2Sum(delta) > range)
+        if (sumDelta < rangeStart || sumDelta > rangeEnd)
             continue;
 
         inRangePositions.push_back(position);
@@ -89,24 +104,50 @@ std::vector<Vector2i> filterInRange(
 }
 
 std::vector<Vector2i> filterInRange(
+    const std::vector<Vector2i>& positions,
+    size_t range,
+    const Vector2i& origin)
+{
+    return filterInRange(positions, 0, range, origin);
+}
+
+std::vector<Vector2i> filterInRange(
+    TileMap& tileMap,
+    size_t rangeStart,
+    size_t rangeEnd,
+    const Vector2i& origin)
+{
+    return filterInRange(filterAllPositions(tileMap), rangeStart, rangeEnd, origin);
+}
+
+std::vector<Vector2i> filterInRange(
     TileMap& tileMap,
     size_t range,
     const Vector2i& origin)
 {
-    return filterInRange(filterNonSolidPositions(tileMap), range, origin);
+    return filterInRange(tileMap, 0, range, origin);
 }
 
+bool isInRange(
+    const Vector2i& target,
+    size_t rangeStart,
+    size_t rangeEnd,
+    const Vector2i& origin,
+    TileMap& tileMap)
+{
+    return isInPositions(target, filterInRange(tileMap, rangeStart, rangeEnd, origin));
+}
 bool isInRange(
     const Vector2i& target,
     size_t range,
     const Vector2i& origin,
     TileMap& tileMap)
 {
-    return isInPositions(target, filterInRange(tileMap, range, origin));
+    return isInRange(target, 0, range, origin, tileMap);
 }
 
 RangeSeparatedPositions filterReachable(
-    const std::vector<Vector2i>& inRangePositions,
+    const std::vector<Vector2i>& positions,
     size_t range,
     const Vector2i& origin)
 {
@@ -141,7 +182,7 @@ RangeSeparatedPositions filterReachable(
         auto nextTilePosition{Vector2Add(origin, direction)};
 
         // Check if next tile is in range
-        if (!isInPositions(nextTilePosition, inRangePositions))
+        if (!isInPositions(nextTilePosition, positions))
             continue;
 
         // Add stepped tile to stepped tiles
@@ -167,7 +208,7 @@ RangeSeparatedPositions filterReachable(
             for (auto R : {M_ROTATE_NONE, M_ROTATE_CCW, M_ROTATE_CW})
             {
                 // Set next stepped tile position
-                Vector2i nextTilePosition{Vector2Add(steppedTile.tilePosition, MatrixMultiply(R, steppedTile.directionAccessed))};
+                Vector2i nextTilePosition{Vector2Add(steppedTile.tilePosition, Vector2Transform(R, steppedTile.directionAccessed))};
 
                 // Check if tile is already known
                 bool tileKnown{false};
@@ -187,11 +228,11 @@ RangeSeparatedPositions filterReachable(
                 if (tileKnown) continue;
 
                 // Check if next tile is in range
-                if (!isInPositions(nextTilePosition, inRangePositions))
+                if (!isInPositions(nextTilePosition, positions))
                     continue;
 
                 // Add passable tile to stepped tiles
-                steppedPositions[stepLevel].push_back(SteppedPosition(nextTilePosition, MatrixMultiply(R, steppedTile.directionAccessed)));
+                steppedPositions[stepLevel].push_back(SteppedPosition(nextTilePosition, Vector2Transform(R, steppedTile.directionAccessed)));
             }
         }
         if (steppedPositions[stepLevel].empty())
@@ -209,7 +250,7 @@ RangeSeparatedPositions filterReachable(
     size_t range,
     const Vector2i& origin)
 {
-    return filterReachable(filterInRange(tileMap, range, origin), range, origin);
+    return filterReachable(filterInRange(filterNonSolidPositions(tileMap), range, origin), range, origin);
 }
 
 bool isReachable(

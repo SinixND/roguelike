@@ -7,7 +7,7 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-[0] Implement vision (fog of war: unseen, seen, visible)
+[0] Check bug player not moving correctly
 
 
 # Shortterm
@@ -27,6 +27,7 @@ development of a (maybe) roguelike game with c++ and raylib
 
 
 # Continuous
+[0] Check for obsolete [[maybe_unused]] and //* comments
 
 
 # Notes
@@ -155,3 +156,5 @@ private:
 [x] Implement render area
 
 [x] edge pan stop relative to map not player
+
+[x] Implement vision (fog of war: unseen, seen, visible)
