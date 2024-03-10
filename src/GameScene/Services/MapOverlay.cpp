@@ -21,18 +21,18 @@ namespace MapOverlay
             moveRangeShown = true;
 
             // Filter relevant tiles
-            for (auto& steppedPositions : TileMapFilters::filterReachable(
+            for (auto& steppedTiles : TileMapFilters::filterReachable(
                      world.currentMap(),
                      unit.movement.range,
                      unit.position.tilePosition()))
             {
-                for (auto& steppedPosition : steppedPositions)
+                for (auto& steppedTile : steppedTiles)
                 {
                     // Add reachable tile to overlay
                     world.mapOverlay().createOrUpdate(
-                        steppedPosition.tilePosition,
+                        steppedTile.tile->position.tilePosition(),
                         Tile(
-                            steppedPosition.tilePosition,
+                            steppedTile.tile->position.tilePosition(),
                             Graphic(
                                 RenderID::reachable,
                                 LayerID::mapOverlay)));
@@ -68,12 +68,12 @@ namespace MapOverlay
             if (!path.empty()) pathShown = true;
         }
 
-        for (auto& steppedPosition : path)
+        for (auto& steppedTile : path)
         {
             world.framedMapOverlay().createOrUpdate(
-                steppedPosition.tilePosition,
+                steppedTile.tile->position.tilePosition(),
                 Tile(
-                    steppedPosition.tilePosition,
+                    steppedTile.tile->position.tilePosition(),
                     Graphic(
                         RenderID::path,
                         LayerID::mapOverlay)));

@@ -6,23 +6,23 @@
 
 // Pathfinder returns vector of positions from target to origin (excluded) if target is reachable
 Path findPath(
-    const RangeSeparatedPositions& reachableTiles,
+    const RangeSeparatedTiles& reachableTiles,
     const Vector2i& target)
 {
     Path path{};
 
     // Check if target is reachable
-    if (!TileMapFilters::isInSteppedTiles(target, reachableTiles))
+    if (!TileMapFilters::isInRangeSeparatedTiles(target, reachableTiles))
         return path;
 
-    Vector2i origin{reachableTiles.front().front().tilePosition};
+    Vector2i origin{reachableTiles.front().front().tile->position.tilePosition()};
 
     // Check if target equals root position
     if (Vector2Equals(target, origin))
         return path;
 
     // Find tiles in reachable positions, and recursively find neighbour until origin in next lower step level
-    SteppedPosition currentStepLevelTile{};
+    SteppedTile currentStepLevelTile{};
     size_t stepsNeeded{};
     size_t maxRange{reachableTiles.size()};
 
@@ -33,12 +33,12 @@ Path findPath(
     // Find target tile in reachable positions
     for (size_t stepLevel{0}; stepLevel < maxRange; ++stepLevel)
     {
-        for (const auto& tile : reachableTiles[stepLevel])
+        for (const auto& steppedTile : reachableTiles[stepLevel])
         {
-            if (!Vector2Equals(tile.tilePosition, target))
+            if (!Vector2Equals(steppedTile.tile->position.tilePosition(), target))
                 continue;
 
-            currentStepLevelTile = tile;
+            currentStepLevelTile = steppedTile;
             stepsNeeded = stepLevel;
         }
     }
@@ -55,11 +55,11 @@ Path findPath(
     for (auto stepLevel{stepsNeeded - 1}; stepLevel > 0; --stepLevel)
     {
         // Check tiles from previous step level if its neighbour to current step level tile
-        for (auto tile : reachableTiles[stepLevel])
+        for (auto steppedTile : reachableTiles[stepLevel])
         {
             // CheckVector is delta between checked tile position and current step level position
             // CheckVector also is used to store the direction to next path tile
-            Vector2i checkVector{Vector2Subtract(currentStepLevelTile.tilePosition, tile.tilePosition)};
+            Vector2i checkVector{Vector2Subtract(currentStepLevelTile.tile->position.tilePosition(), steppedTile.tile->position.tilePosition())};
 
             // Tiled length of checkVector needs to be 1 (then it is a neighbour)
             auto checkValue{Vector2Sum(checkVector)};
@@ -70,8 +70,8 @@ Path findPath(
                 // Add direction to next path tile to found tile
                 //* tile.directionAccessed = checkVector;
                 //* tile.directionAccessed = Vector2Subtract(path.back().tilePosition, tile.tilePosition);
-                path.push_back(tile);
-                currentStepLevelTile = tile;
+                path.push_back(steppedTile);
+                currentStepLevelTile = steppedTile;
             }
         }
     }

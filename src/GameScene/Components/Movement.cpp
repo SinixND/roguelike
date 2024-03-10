@@ -27,7 +27,7 @@ bool Movement::move(Vector2& position, float dt)
     {
         std::cout << "Tile " << path_.size() << " reached!\n";
         tileFraction = 0;
-        position = TileTransformation::positionToWorld(path_.back().tilePosition);
+        position = TileTransformation::positionToWorld(path_.back().tile->position.tilePosition());
         path_.pop_back();
     }
 

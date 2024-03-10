@@ -2,57 +2,62 @@
 #define _20240128183417
 
 #include "Constants.h"
+#include "Tile.h"
 #include "TileMap.h"
 #include "raylibEx.h"
 #include <cstddef>
 #include <raylibEx.h>
 #include <vector>
 
-struct SteppedPosition
+struct SteppedTile
 {
-    Vector2i tilePosition;
-    Vector2i directionAccessed = V_NODIR; // in which it was accessed
+    Tile* tile;
+    Vector2i directionAccessed; // in which it was accessed
+
+    SteppedTile(Tile* tile = nullptr, Vector2i directionAccessed = V_NODIR)
+        : tile(tile)
+        , directionAccessed(directionAccessed)
+    {
+    }
 };
 
-using RangeSeparatedPositions = std::vector<std::vector<SteppedPosition>>;
+using RangeSeparatedTiles = std::vector<std::vector<SteppedTile>>;
 
 namespace TileMapFilters
 {
-    using Path = std::vector<SteppedPosition>;
-
-    bool isInPositions(
-        const Vector2i& target,
-        const std::vector<Vector2i>& positions);
-
     bool isInTiles(
         const Vector2i& target,
-        const std::vector<SteppedPosition>& tiles);
+        const std::vector<Tile*>& tiles);
 
     bool isInSteppedTiles(
         const Vector2i& target,
-        const RangeSeparatedPositions& steppedTiles);
+        const std::vector<SteppedTile>& steppedTiles);
 
-    std::vector<Vector2i> filterNonSolidPositions(TileMap& tileMap);
+    bool isInRangeSeparatedTiles(
+        const Vector2i& target,
+        const RangeSeparatedTiles& rangeSeparatedTiles);
 
-    std::vector<Vector2i> filterInRange(
-        TileMap& tileMap,
+    std::vector<Tile*> filterNonSolidTiles(TileMap& tileMap);
+
+    std::vector<Tile*> filterInRange(
+        const std::vector<Tile*>& tiles,
         size_t rangeStart,
         size_t rangeEnd,
         const Vector2i& origin);
 
-    std::vector<Vector2i> filterInRange(
-        TileMap& tileMap,
+    std::vector<Tile*> filterInRange(
+        const std::vector<Tile*>& tiles,
         size_t range,
         const Vector2i& origin);
 
-    std::vector<Vector2i> filterInRange(
-        const std::vector<Vector2i>& positions,
+    std::vector<Tile*> filterInRange(
+        TileMap& tileMap,
         size_t rangeStart,
         size_t rangeEnd,
         const Vector2i& origin);
 
-    std::vector<Vector2i> filterInRange(
-        const std::vector<Vector2i>& positions,
+    std::vector<Tile*> filterInRange(
+        TileMap& tileMap,
         size_t range,
         const Vector2i& origin);
 
@@ -69,12 +74,12 @@ namespace TileMapFilters
         const Vector2i& origin,
         TileMap& tileMap);
 
-    RangeSeparatedPositions filterReachable(
-        const std::vector<Vector2i>& inRangePositions,
+    RangeSeparatedTiles filterReachable(
+        const std::vector<Tile*>& inRangeTiles,
         size_t range,
         const Vector2i& origin);
 
-    RangeSeparatedPositions filterReachable(
+    RangeSeparatedTiles filterReachable(
         TileMap& tileMap,
         size_t range,
         const Vector2i& origin);

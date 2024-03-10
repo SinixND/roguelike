@@ -20,26 +20,26 @@ namespace Vision
     void update(Unit& unit, TileMap& tileMap)
     {
         // Filter tiles
-        std::vector<Vector2i> tilesInExtendedVisionRange{
+        auto tilesInExtendedVisionRange{
             TileMapFilters::filterInRange(
                 tileMap,
                 unit.visionRange + 1,
                 unit.position.tilePosition())};
 
-        std::vector<Vector2i> tilesOutOfVisionRange{
+        auto tilesOutOfVisionRange{
             TileMapFilters::filterInRange(
                 tilesInExtendedVisionRange,
                 unit.visionRange + 1,
                 unit.visionRange + 1,
                 unit.position.tilePosition())};
 
-        std::vector<Vector2i> tilesInVisionRange{
+        auto tilesInVisionRange{
             TileMapFilters::filterInRange(
                 tilesInExtendedVisionRange,
                 unit.visionRange,
                 unit.position.tilePosition())};
 
-        std::vector<Vector2i> rayTargets{
+        auto rayTargets{
             TileMapFilters::filterInRange(
                 tilesInVisionRange,
                 unit.visionRange,
@@ -54,18 +54,18 @@ namespace Vision
 
             targetCount = rayTargets.size();
 
-            for (const Vector2i& position : TileMapFilters::filterInRange(tilesInVisionRange, visionRange, visionRange, unit.position.tilePosition()))
+            for (auto& tile : TileMapFilters::filterInRange(tilesInVisionRange, visionRange, visionRange, unit.position.tilePosition()))
             {
-                rayTargets.push_back(position);
+                rayTargets.push_back(tile);
             }
 
             targetCount += (4 * visionRange);
         }
 
         // Reset "visible" tiles to "seen" outside of vision range
-        for (auto& tilePosition : tilesOutOfVisionRange)
+        for (auto& tile : tilesOutOfVisionRange)
         {
-            auto tile{tileMap.at(tilePosition)};
+            //*auto tile{tileMap.at(tile.position->tilePosition())};
 
             if (tile->visibilityID == VisibilityID::visible)
             {
@@ -93,7 +93,7 @@ namespace Vision
         {
             Vector2 ray{
                 Vector2Subtract(
-                    TileTransformation::positionToWorld(rayTarget),
+                    rayTarget->position.get(),
                     rayStart)};
 
             Vector2 rayDirection{Vector2Normalize(ray)};
