@@ -49,7 +49,7 @@ const float ZOOM_STEP{0.125f};
 const float LEFT_MAP_RENDER_OFFSET{0};
 const float TOP_MAP_RENDER_OFFSET{2.0f * TILE_SIZE};
 const float RIGHT_MAP_RENDER_OFFSET{0};
-const float BOTTOM_MAP_RENDER_OFFSET{0};
+const float BOTTOM_MAP_RENDER_OFFSET{100};
 
 const float MAP_RENDER_AREA_MARGIN{0.5f * TILE_SIZE};
 //=====================================

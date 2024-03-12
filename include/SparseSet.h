@@ -52,14 +52,6 @@ namespace snd
             return &values_[keyToIndex_[key]];
         };
 
-        //* Type* createOrSkip(const Key& key, const Type& value)
-        //* {
-        //* if (contains(key))
-        //* return nullptr;
-
-        //* return createOrUpdate(key, value);
-        //* };
-
         void erase(const Key& key) override
         {
             if (!contains(key))

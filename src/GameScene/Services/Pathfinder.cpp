@@ -46,9 +46,7 @@ Path findPath(
     // Reconstruct path from steps
 
     // Add final/last position to path
-    //* currentStepLevelTile.directionAccessed = V_NODIR;
     path.push_back(currentStepLevelTile);
-    //* path.insert(path.begin(), currentStepLevelTile);
 
     // Push back position from previous step level to the path if it is a neighbour to current step level tile (which is the target initially)
     // Iterate all tiles that need one step less aka. are in previous step level
@@ -68,8 +66,6 @@ Path findPath(
             if (checkValue == 1)
             {
                 // Add direction to next path tile to found tile
-                //* tile.directionAccessed = checkVector;
-                //* tile.directionAccessed = Vector2Subtract(path.back().tilePosition, tile.tilePosition);
                 path.push_back(steppedTile);
                 currentStepLevelTile = steppedTile;
             }

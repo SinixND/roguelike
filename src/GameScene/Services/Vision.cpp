@@ -1,19 +1,22 @@
 #include "Vision.h"
 
-#include "Constants.h"
+#include "RayCast.h"
 #include "RuntimeDatabase.h"
 #include "Tile.h"
 #include "TileMap.h"
 #include "TileMapFilters.h"
-#include "TileTransformation.h"
 #include "Unit.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
-#include <cmath>
-#include <cstdlib>
 #include <raylib.h>
 #include <raymath.h>
 #include <vector>
+
+namespace
+{
+    void resetVisibleTiles(std::vector<Tile*>& tiles);
+    void addRayTargets(std::vector<Vector2i>& rayTargets, Unit& unit);
+}
 
 namespace Vision
 {
@@ -26,47 +29,31 @@ namespace Vision
                 unit.visionRange + 1,
                 unit.position.tilePosition())};
 
-        auto tilesOutOfVisionRange{
-            TileMapFilters::filterInRange(
-                tilesInExtendedVisionRange,
-                unit.visionRange + 1,
-                unit.visionRange + 1,
-                unit.position.tilePosition())};
+        // Reset "visible" tiles to "seen" in extended vision range
+        resetVisibleTiles(tilesInExtendedVisionRange);
 
-        auto tilesInVisionRange{
-            TileMapFilters::filterInRange(
-                tilesInExtendedVisionRange,
-                unit.visionRange,
-                unit.position.tilePosition())};
+        // Set ray targets
+        std::vector<Vector2i> rayTargets{};
 
-        auto rayTargets{
-            TileMapFilters::filterInRange(
-                tilesInVisionRange,
-                unit.visionRange,
-                unit.visionRange,
-                unit.position.tilePosition())};
+        addRayTargets(rayTargets, unit);
 
-        int visionRange{unit.visionRange};
-        int targetCount{4 * unit.visionRange};
-        while (static_cast<int>(rayTargets.size()) < (targetCount))
+        // Set visible tiles
+        std::vector<Tile*> visibleTiles{RayCast::getTilesRayed(rayTargets, unit.position.get(), tileMap)};
+
+        // Make tiles visible
+        for (auto& tile : visibleTiles)
         {
-            --visionRange;
-
-            targetCount = rayTargets.size();
-
-            for (auto& tile : TileMapFilters::filterInRange(tilesInVisionRange, visionRange, visionRange, unit.position.tilePosition()))
-            {
-                rayTargets.push_back(tile);
-            }
-
-            targetCount += (4 * visionRange);
+            tile->visibilityID = VisibilityID::visible;
         }
+    }
+}
 
-        // Reset "visible" tiles to "seen" outside of vision range
-        for (auto& tile : tilesOutOfVisionRange)
+namespace
+{
+    void resetVisibleTiles(std::vector<Tile*>& tiles)
+    {
+        for (auto& tile : tiles)
         {
-            //*auto tile{tileMap.at(tile.position->tilePosition())};
-
             if (tile->visibilityID == VisibilityID::visible)
             {
                 tile->visibilityID = VisibilityID::seen;
@@ -83,120 +70,44 @@ namespace Vision
                 }
             }
         }
+    }
 
-        // Set ray cast values
-        Vector2 rayStart{unit.position.get()};
+    void addRayTargets(std::vector<Vector2i>& rayTargets, Unit& unit)
+    {
+        Vector2i origin{unit.position.tilePosition()};
+        int visionRange{unit.visionRange};
 
-        float unitRelative{TILE_SIZE / sqrt(2.0f)};
+        // Add all target positions that are exaclty at vision range
+        // Set first target
+        Vector2i firstTarget{
+            Vector2Add(
+                origin,
+                Vector2i{
+                    visionRange,
+                    0})};
 
-        for (auto& rayTarget : rayTargets)
+        Vector2i target{firstTarget};
+
+        // Loop positions
+        Vector2i delta{-1, +1};
+
+        do
         {
-            Vector2 ray{
-                Vector2Subtract(
-                    rayTarget->position.get(),
-                    rayStart)};
+            // Add target
+            rayTargets.push_back(target);
 
-            Vector2 rayDirection{Vector2Normalize(ray)};
+            // Update target
+            target = Vector2Add(target, delta);
 
-            float maxLength{Vector2Length(ray)};
+            // Adjust / flip delta
+            if ((target.x >= (origin.x + visionRange)) ||
+                (target.x <= (origin.x - visionRange)))
+                delta.x *= -1;
 
-            /* ALGORITHM EXPLANATION
-            //
-            // To get the intersections with tile diagonals (which form a relative grid / coordinate system (aka. csys))
-            // we need to transform the direction vector.
-            //
-            // Because we can only easily calculate within our reference (base) csys (aka. "frame of reference"),
-            // we transform FROM THE RELATIVE TO the REFERENCE csys.
-            //
-            // That requires [1.] a ROTATION by 45 deg (CW or CCW, does not matter),
-            // and (see next step) a SCALING FACTOR of SQRT(2) (reference unit (TILE_SIZE) is the hypothenuse in the relative normalized unit csys)
-            //
-            // To get the ray increment (-> hypothenuse, for x = 1 reference unit and y = 1 reference unit) back to the relative system,
-            // we need to [2.] NORMALIZE (both for the "x" and "y" component) the hypothenuse / length to the relative systems unit,
-            // which is our reference unit DOWNSCALED.
-            */
+            if ((target.y >= (origin.y + visionRange)) ||
+                (target.y <= (origin.y - visionRange)))
+                delta.y *= -1;
 
-            // [1.] Rotation
-            Vector2 directionTransformed{Vector2Transform(M_ROTATE_CW_45, rayDirection)};
-
-            // Prevent division by 0: if < precision then set to precision
-            // Introduces a small amount of error, but should be insignificant
-            if (abs(directionTransformed.x) < EPSILON)
-                directionTransformed.x = EPSILON;
-
-            if (abs(directionTransformed.y) < EPSILON)
-                directionTransformed.y = (EPSILON);
-
-            // [2.] Normalized rayIncrements
-            const Vector2 rayLengthIncrements{
-                sqrtf(pow(unitRelative, 2) * (1 + pow((directionTransformed.y / directionTransformed.x), 2))),
-                sqrtf(pow(unitRelative, 2) * (1 + pow((directionTransformed.x / directionTransformed.y), 2)))};
-
-            Vector2 rayLengths{};
-            if (FloatEquals(rayLengthIncrements.x, rayLengthIncrements.y))
-                rayLengths.y = maxLength;
-
-            Vector2 rayEnd{rayStart};
-
-            // Increment rayLength for shorter length until maxLength
-
-            // ray incrementing loop
-            bool tileFound{false};
-            float minLength{(rayLengthIncrements.x < rayLengthIncrements.y) ? rayLengthIncrements.x : rayLengthIncrements.y};
-
-            while (!tileFound)
-            {
-                // udpate minLength
-                if (rayLengths.x < rayLengths.y)
-                {
-                    // Cache minLength
-                    minLength = rayLengths.x;
-                    // Update ray length
-                    rayLengths.x += rayLengthIncrements.x;
-                }
-                else
-                {
-                    // Cache position
-                    minLength = rayLengths.y;
-                    // Update ray length
-                    rayLengths.y += rayLengthIncrements.y;
-                }
-
-                if (minLength > maxLength)
-                    break;
-
-                // If rayLenghts are equal increase one once more to avoid double checks
-                if (FloatEquals(rayLengths.x, rayLengths.y))
-                    rayLengths.x += rayLengthIncrements.x;
-
-                // Update target tile position
-                rayEnd = Vector2Add(
-                    rayStart,
-                    Vector2Scale(
-                        rayDirection,
-                        minLength));
-
-                // Make current target visible
-                Tile* tileHit{tileMap.at(TileTransformation::worldToPosition(rayEnd))};
-
-                tileHit->visibilityID = VisibilityID::visible;
-
-                if (dtb::debugMode())
-                {
-                    BeginDrawing();
-                    BeginMode2D(dtb::camera());
-
-                    DrawLineEx(rayStart, rayEnd, 1, GREEN);
-                    DrawCircleLinesV(tileHit->position.get(), 3, WHITE);
-
-                    EndMode2D();
-                    EndDrawing();
-                }
-
-                // End ray cast if opaque is hit
-                if (tileHit->blocksVision)
-                    break;
-            }
-        }
+        } while (!Vector2Equals(target, firstTarget));
     }
 }

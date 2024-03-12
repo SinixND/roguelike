@@ -3,7 +3,6 @@
 #include "Constants.h"
 #include "TileTransformation.h"
 #include "raylibEx.h"
-#include <iostream>
 #include <raylib.h>
 #include <raymath.h>
 
@@ -25,7 +24,6 @@ bool Movement::move(Vector2& position, float dt)
     // Progress path
     if (tileFraction > TILE_SIZE)
     {
-        std::cout << "Tile " << path_.size() << " reached!\n";
         tileFraction = 0;
         position = TileTransformation::positionToWorld(path_.back().tile->position.tilePosition());
         path_.pop_back();
@@ -34,7 +32,6 @@ bool Movement::move(Vector2& position, float dt)
     // Check if target reached
     if (path_.empty())
     {
-        std::cout << "Path is empty!\n";
         isMoving_ = false;
         return true;
     }

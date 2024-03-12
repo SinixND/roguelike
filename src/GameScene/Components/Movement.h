@@ -24,7 +24,6 @@ public:
     void setIsTargetSet(bool status) { targetSet_ = status; };
 
     bool isMoving() { return isMoving_; };
-    //* void setIsMoving(bool state) { isMoving_ = state; };
 
     bool isExhausted() { return isExhausted_; };
     void setIsExhausted(bool state) { isExhausted_ = state; };

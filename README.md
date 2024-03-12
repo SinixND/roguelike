@@ -7,23 +7,16 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-- [ ] Extract non-member functions in separate translation unit (file)
-
-- [ ] Check bug player not moving correctly
+- [ ] Refactor EdgePan relative to render area
 
 
 # Shortterm
-- [ ] Add logger
-
-- [ ] Refactor vision: IF ray target out of map THEN cast ray from target and add first tile hit to targets
+- [ ] Map generation
 
 - [ ] Map change
 
-- [ ] Map generation
-
 
 # Longterm 
-- [ ] Lua/Jinx settings file?
 - [ ] Indicate select option (different cursor color on hover?)
 
 - [ ] (Hold) TAB to show map overview
@@ -34,7 +27,13 @@ development of a (maybe) roguelike game with c++ and raylib
 
 
 # Continuous
-- [ ] Check for obsolete [[maybe_unused]] and //* comments
+- Check for obsolete [[maybe_unused]] and //* comments
+
+
+# Ideas
+- [ ] Add logger
+
+- [ ] Lua/Jinx settings file?
 
 
 # Notes

@@ -44,7 +44,7 @@ namespace
             LayerID::object),
         Movement(5, 50),
         VisibilityID::visible,
-        5};
+        20};
 
     bool isInputBlocked{false};
     bool isPathShown{false};
@@ -208,6 +208,9 @@ void GameScene::renderOutput()
         GuiGetStyle(DEFAULT, TEXT_SPACING),
         RAYWHITE);
     //=================================
+
+    // Draw render area
+    DrawRectangleLinesEx(Render::getRenderArea(), 1, DARKGRAY);
 }
 
 void GameScene::postOutput()

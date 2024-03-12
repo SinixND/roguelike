@@ -1,4 +1,5 @@
 #include "EdgePan.h"
+
 #include "Constants.h"
 #include "RuntimeDatabase.h"
 #include "TileTransformation.h"
@@ -16,13 +17,14 @@ namespace EdgePan
         // Check if cursor is outside of edge pan area
         auto screenCursor{GetWorldToScreen2D(cursorWorldPosition, dtb::camera())};
 
-        Rectangle edgePanArea{GetRectangle(
-            Vector2AddValue(
-                Vector2{0, 0},
-                EDGE_PAN_FRAME_WEIGHT),
-            Vector2SubtractValue(
-                Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())},
-                EDGE_PAN_FRAME_WEIGHT))};
+        Rectangle edgePanArea{
+            GetRectangle(
+                Vector2AddValue(
+                    Vector2{0, 0},
+                    EDGE_PAN_FRAME_WEIGHT),
+                Vector2SubtractValue(
+                    Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())},
+                    EDGE_PAN_FRAME_WEIGHT))};
 
         if (!CheckCollisionPointRec(screenCursor, edgePanArea))
         {

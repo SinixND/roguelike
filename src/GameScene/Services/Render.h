@@ -8,6 +8,7 @@
 namespace Render
 {
     void update(const Vector2& position, Graphic& graphic, VisibilityID visibilityID = VisibilityID::visible);
+    Rectangle getRenderArea();
 }
 
 #endif

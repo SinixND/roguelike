@@ -7,11 +7,6 @@
 #include <raylib.h>
 #include <raymath.h>
 
-namespace
-{
-    Rectangle getRenderArea();
-}
-
 namespace Render
 {
     void update(const Vector2& position, Graphic& graphic, VisibilityID visibilityID)
@@ -33,32 +28,32 @@ namespace Render
         Color tint{WHITE};
         switch (visibilityID)
         {
-        default:
-        case VisibilityID::visible:
-            tint = ColorBrightness(tint, 1);
-            if (dtb::debugMode())
-                tint = GREEN;
-            break;
-
-        case VisibilityID::seen:
-            tint = BLACK;
-            tint = ColorBrightness(tint, 0.5);
-            if (dtb::debugMode())
-            {
+            default:
+            case VisibilityID::visible:
                 tint = ColorBrightness(tint, 1);
-                tint = BLUE;
-            }
-            break;
+                if (dtb::debugMode())
+                    tint = GREEN;
+                break;
 
-        case VisibilityID::unseen:
-            tint = BLACK;
-            tint = ColorBrightness(tint, 0.0);
-            if (dtb::debugMode())
-            {
-                tint = ColorBrightness(tint, 0.75);
-                tint = RED;
-            }
-            break;
+            case VisibilityID::seen:
+                tint = BLACK;
+                tint = ColorBrightness(tint, 0.5);
+                if (dtb::debugMode())
+                {
+                    tint = ColorBrightness(tint, 1);
+                    tint = BLUE;
+                }
+                break;
+
+            case VisibilityID::unseen:
+                tint = BLACK;
+                tint = ColorBrightness(tint, 0.0);
+                if (dtb::debugMode())
+                {
+                    tint = ColorBrightness(tint, 0.75);
+                    tint = RED;
+                }
+                break;
         }
 
         // Draw texture
@@ -78,10 +73,7 @@ namespace Render
             0,
             tint);
     }
-}
 
-namespace
-{
     Rectangle getRenderArea()
     {
         return Rectangle{
