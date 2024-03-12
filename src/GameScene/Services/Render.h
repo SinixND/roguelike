@@ -3,12 +3,13 @@
 
 #include "Graphic.h"
 #include "VisibilityID.h"
+#include "raylibEx.h"
 #include <raylib.h>
 
 namespace Render
 {
     void update(const Vector2& position, Graphic& graphic, VisibilityID visibilityID = VisibilityID::visible);
-    Rectangle getRenderArea();
+    RectangleEx getRenderArea();
 }
 
 #endif

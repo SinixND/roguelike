@@ -1,7 +1,6 @@
 #include "Vision.h"
 
 #include "RayCast.h"
-#include "RuntimeDatabase.h"
 #include "Tile.h"
 #include "TileMap.h"
 #include "TileMapFilters.h"
@@ -58,16 +57,16 @@ namespace
             {
                 tile->visibilityID = VisibilityID::seen;
 
-                if (dtb::debugMode())
-                {
-                    BeginDrawing();
-                    BeginMode2D(dtb::camera());
+                //* if (dtb::debugMode())
+                //* {
+                //* BeginDrawing();
+                //* BeginMode2D(dtb::camera());
 
-                    DrawCircleLinesV(tile->position.get(), 5, RED);
+                //* DrawCircleLinesV(tile->position.get(), 5, RED);
 
-                    EndMode2D();
-                    EndDrawing();
-                }
+                //* EndMode2D();
+                //* EndDrawing();
+                //* }
             }
         }
     }

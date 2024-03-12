@@ -7,7 +7,6 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-- [ ] Refactor EdgePan relative to render area
 
 
 # Shortterm
@@ -164,3 +163,7 @@ private:
 - [x] edge pan stop relative to map not player
 
 - [x] Implement vision (fog of war: unseen, seen, visible)
+
+- [x] Refactor EdgePan relative to render area
+
+- [x] Add RectangleEx (has left, top, right, bottom, height, width)

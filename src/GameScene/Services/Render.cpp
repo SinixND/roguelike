@@ -4,6 +4,7 @@
 #include "Graphic.h"
 #include "RuntimeDatabase.h"
 #include "VisibilityID.h"
+#include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
 
@@ -11,12 +12,12 @@ namespace Render
 {
     void update(const Vector2& position, Graphic& graphic, VisibilityID visibilityID)
     {
-        static Rectangle RENDER_AREA{getRenderArea()};
+        static RectangleEx renderArea{getRenderArea()};
         if (IsWindowResized())
-            RENDER_AREA = getRenderArea();
+            renderArea = getRenderArea();
 
         // Return if pixel is out of render area
-        if (!CheckCollisionPointRec(GetWorldToScreen2D(position, dtb::camera()), RENDER_AREA))
+        if (!CheckCollisionPointRec(GetWorldToScreen2D(position, dtb::camera()), renderArea))
             return;
 
         // Get texture data
@@ -74,9 +75,9 @@ namespace Render
             tint);
     }
 
-    Rectangle getRenderArea()
+    RectangleEx getRenderArea()
     {
-        return Rectangle{
+        return RectangleEx{
             -MAP_RENDER_AREA_MARGIN + LEFT_MAP_RENDER_OFFSET,
             -MAP_RENDER_AREA_MARGIN + TOP_MAP_RENDER_OFFSET,
             GetRenderWidth() - LEFT_MAP_RENDER_OFFSET - RIGHT_MAP_RENDER_OFFSET + 2 * MAP_RENDER_AREA_MARGIN,

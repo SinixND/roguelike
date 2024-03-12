@@ -59,7 +59,7 @@ void GameScene::processInput()
     if (isInputBlocked) return;
 
     // Toggle debug mode
-    if (IsKeyDown(KEY_F1))
+    if (IsKeyPressed(KEY_F1))
         dtb::setDebugMode(!dtb::debugMode());
 
     // Toggle between mouse or key control for cursor
@@ -210,7 +210,7 @@ void GameScene::renderOutput()
     //=================================
 
     // Draw render area
-    DrawRectangleLinesEx(Render::getRenderArea(), 1, DARKGRAY);
+    DrawRectangleLinesEx(Render::getRenderArea().rectangle(), 1, DARKGRAY);
 }
 
 void GameScene::postOutput()

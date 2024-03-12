@@ -1,7 +1,6 @@
 #include "RayCast.h"
 
 #include "Constants.h"
-#include "RuntimeDatabase.h"
 #include "Tile.h"
 #include "TileMap.h"
 #include "TileTransformation.h"
@@ -133,17 +132,17 @@ namespace RayCast
                 // Add rayed tile
                 tilesRayed.push_back(tileHit);
 
-                if (dtb::debugMode())
-                {
-                    BeginDrawing();
-                    BeginMode2D(dtb::camera());
+                //* if (dtb::debugMode())
+                //* {
+                //* BeginDrawing();
+                //* BeginMode2D(dtb::camera());
 
-                    DrawLineEx(rayStart, rayEnd, 1, GREEN);
-                    DrawCircleLinesV(tileHit->position.get(), 3, WHITE);
+                //* DrawLineEx(rayStart, rayEnd, 1, GREEN);
+                //* DrawCircleLinesV(tileHit->position.get(), 3, WHITE);
 
-                    EndMode2D();
-                    EndDrawing();
-                }
+                //* EndMode2D();
+                //* EndDrawing();
+                //* }
             }
         }
 

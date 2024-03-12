@@ -131,7 +131,7 @@ public:
     //=================================
     // Debug mode
 private:
-    static inline bool debugMode_{false};
+    static inline bool debugMode_{true};
 
 public:
     static inline bool& debugMode() { return instance().debugMode_; };

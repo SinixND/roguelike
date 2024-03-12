@@ -11,6 +11,155 @@
 
 // TYPEDEFS
 //=====================================
+class RectangleEx
+{
+public:
+    float& left()
+    {
+        return left_;
+    };
+
+    void resizeLeft(float left)
+    {
+        left_ = left;
+        width_ = right_ - left_;
+    };
+
+    void moveLeft(float left)
+    {
+        left_ = left;
+        right_ = left_ + width_;
+    };
+
+    float& right()
+    {
+        return right_;
+    };
+    void resizeRight(float right)
+    {
+        right_ = right;
+        width_ = right_ - left_;
+    };
+    void moveRight(float right)
+    {
+        right_ = right;
+        left_ = right_ - width_;
+    };
+
+    float& top()
+    {
+        return top_;
+    };
+    void resizeTop(float top)
+    {
+        top_ = top;
+        height_ = bottom_ - top_;
+    };
+    void moveTop(float top)
+    {
+        top_ = top;
+        bottom_ = top_ + height_;
+    };
+
+    float& bottom()
+    {
+        return bottom_;
+    };
+    void resizeBottom(float bottom)
+    {
+        bottom_ = bottom;
+        height_ = bottom_ - top_;
+    };
+    void moveBottom(float bottom)
+    {
+        bottom_ = bottom;
+        top_ = bottom_ - height_;
+    };
+
+    float& width()
+    {
+        return width_;
+    };
+    void resizeWidthLeft(float width)
+    {
+        width_ = width;
+        left_ = right_ - width_;
+    };
+    void resizeWidthRight(float width)
+    {
+        width_ = width;
+        right_ = left_ + width_;
+    };
+
+    float& height()
+    {
+        return height_;
+    };
+    void resizeHeightTop(float height)
+    {
+        height_ = height;
+        top_ = bottom_ - height_;
+    };
+    void resizeHeightBottom(float height)
+    {
+        height_ = height;
+        bottom_ = top_ + height_;
+    };
+
+    Vector2 topLeft()
+    {
+        return Vector2{left_, top_};
+    }
+
+    Vector2 bottomRight()
+    {
+        return Vector2{right_, bottom_};
+    }
+
+    Rectangle rectangle()
+    {
+        return Rectangle{left_, top_, width_, height_};
+    }
+
+    RectangleEx(float left, float top, float width, float height)
+        : left_(left)
+        , top_(top)
+        , right_(left + width)
+        , bottom_(top + height)
+        , width_(width)
+        , height_(height)
+    {
+    }
+
+    RectangleEx(const Vector2& topLeft, const Vector2& bottomRight)
+        : left_(topLeft.x)
+        , top_(topLeft.y)
+        , right_(bottomRight.x)
+        , bottom_(bottomRight.y)
+        , width_(bottomRight.x - topLeft.x)
+        , height_(bottomRight.y - topLeft.y)
+    {
+    }
+
+    RectangleEx(Rectangle rectangle)
+        : left_(rectangle.x)
+        , top_(rectangle.y)
+        , right_(rectangle.x + rectangle.width)
+        , bottom_(rectangle.y + rectangle.height)
+        , width_(rectangle.width)
+        , height_(rectangle.height)
+    {
+    }
+
+private:
+    float left_;
+    float top_;
+    float right_;
+    float bottom_;
+    float width_;
+    float height_;
+};
+
 struct Vector2i
 {
     int x;
@@ -182,6 +331,10 @@ RMAPI Vector2 Vector2Transform(const Matrix2x2& M, const Vector2& V)
     return Vector2{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
 }
 
+inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)
+{
+    return CheckCollisionPointRec(point, rec.rectangle());
+}
 //=====================================
 
 // OPERATOR OVERLOADS
