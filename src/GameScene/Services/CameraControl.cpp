@@ -1,9 +1,10 @@
-#include "EdgePan.h"
+#include "CameraControl.h"
 
 #include "Constants.h"
 #include "Render.h"
 #include "RuntimeDatabase.h"
 #include "TileTransformation.h"
+#include "Unit.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
@@ -13,9 +14,9 @@ namespace
     void setPanDirection(Vector2& screenCursor, RectangleEx& edgePanArea, Vector2i& panDirection);
 }
 
-namespace EdgePan
+namespace CameraControl
 {
-    void update(const Vector2& cursorWorldPosition, bool mouseActive)
+    void edgePan(const Vector2& cursorWorldPosition, bool mouseActive)
     {
         static float dt{};
         dt += GetFrameTime();
@@ -63,6 +64,11 @@ namespace EdgePan
             // Update camera
             dtb::moveCamera(Vector2Scale(panDirection, TILE_SIZE));
         }
+    }
+
+    void centerOnHero(Camera2D& camera, Unit& unit)
+    {
+        camera.target = unit.position.get();
     }
 }
 

@@ -17,7 +17,7 @@ namespace Zoom
             if (camera.zoom < ZOOM_STEP) camera.zoom = ZOOM_STEP;
         }
 
-        if (IsKeyDown(KEY_LEFT_CONTROL) && (IsKeyPressed(KEY_KP_0) || IsKeyPressed(KEY_ZERO)))
+        if ((IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL)) && (IsKeyPressed(KEY_KP_0) || IsKeyPressed(KEY_ZERO)))
         {
             camera.zoom = 1.0f;
         }

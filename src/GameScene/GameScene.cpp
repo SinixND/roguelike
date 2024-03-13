@@ -1,7 +1,7 @@
 #include "GameScene.h"
 
+#include "CameraControl.h"
 #include "CursorControl.h"
-#include "EdgePan.h"
 #include "Entity.h"
 #include "Graphic.h"
 #include "LayerID.h"
@@ -81,9 +81,13 @@ void GameScene::processInput()
 
     CursorControl::update(cursor.position, mouseActive);
 
-    EdgePan::update(
+    CameraControl::edgePan(
         TileTransformation::positionToWorld(cursor.position.tilePosition()),
         mouseActive);
+
+    // Center on hero
+    if (IsKeyPressed(KEY_TAB))
+        CameraControl::centerOnHero(dtb::camera(), hero);
 
     Zoom::update();
 

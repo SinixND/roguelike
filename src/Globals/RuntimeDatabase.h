@@ -1,36 +1,15 @@
-#ifndef _20240117233028
-#define _20240117233028
+#ifndef IG20240117233028
+#define IG20240117233028
 
 #include "IScene.h"
 #include "RenderID.h"
 #include "raylibEx.h"
+#include "Singleton.h"
 #include <raylib.h>
 #include <raymath.h>
 #include <string>
 #include <unordered_map>
 #include <utility>
-
-// Included as an example of a parameterized macro
-#define DISALLOW_COPY_AND_ASSIGN(T) \
-    T(const T&) = delete;           \
-    T& operator=(const T&) = delete;
-
-template <typename Type>
-class Singleton
-{
-public:
-    static inline Type& instance()
-    {
-        static Type instance;
-        return instance;
-    };
-
-protected:
-    Singleton() = default;
-    ~Singleton() = default;
-
-    DISALLOW_COPY_AND_ASSIGN(Singleton)
-};
 
 class dtb : public Singleton<dtb>
 {

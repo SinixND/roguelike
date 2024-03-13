@@ -1,5 +1,5 @@
-#ifndef _20240203171045
-#define _20240203171045
+#ifndef IG20240203171045
+#define IG20240203171045
 
 #include <cmath>
 #include <cstddef>
