@@ -1,5 +1,5 @@
-#ifndef _20231203204746
-#define _20231203204746
+#ifndef IG20231203204746
+#define IG20231203204746
 
 #include "IScene.h"
 

@@ -1,5 +1,5 @@
-#ifndef _20240307180713
-#define _20240307180713
+#ifndef IG20240307180713
+#define IG20240307180713
 
 #include "Position.h"
 

@@ -1,5 +1,5 @@
-#ifndef _20231201203725
-#define _20231201203725
+#ifndef IG20231201203725
+#define IG20231201203725
 
 #include <raylib.h>
 

@@ -1,5 +1,5 @@
-#ifndef _20240209181841
-#define _20240209181841
+#ifndef IG20240209181841
+#define IG20240209181841
 
 #include "Graphic.h"
 #include "VisibilityID.h"

@@ -1,5 +1,5 @@
-#ifndef _20240312000918
-#define _20240312000918
+#ifndef IG20240312000918
+#define IG20240312000918
 
 #include "Tile.h"
 #include "TileMap.h"

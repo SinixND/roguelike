@@ -1,5 +1,5 @@
-#ifndef _20240117233028
-#define _20240117233028
+#ifndef IG20240117233028
+#define IG20240117233028
 
 #include "IScene.h"
 #include "RenderID.h"

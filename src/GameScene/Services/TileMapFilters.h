@@ -1,5 +1,5 @@
-#ifndef _20240128183417
-#define _20240128183417
+#ifndef IG20240128183417
+#define IG20240128183417
 
 #include "Constants.h"
 #include "Tile.h"

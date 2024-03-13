@@ -1,5 +1,5 @@
-#ifndef _20240215012142
-#define _20240215012142
+#ifndef IG20240215012142
+#define IG20240215012142
 
 #include "Constants.h"
 #include "RuntimeDatabase.h"

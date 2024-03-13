@@ -1,5 +1,5 @@
-#ifndef _20240308010118
-#define _20240308010118
+#ifndef IG20240308010118
+#define IG20240308010118
 
 #include "Unit.h"
 #include "raylibEx.h"

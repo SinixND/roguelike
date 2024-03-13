@@ -1,5 +1,5 @@
-#ifndef _20240211230403
-#define _20240211230403
+#ifndef IG20240211230403
+#define IG20240211230403
 
 #include "Entity.h"
 #include "Graphic.h"

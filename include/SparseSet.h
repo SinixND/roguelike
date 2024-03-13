@@ -1,5 +1,5 @@
-#ifndef _20240128195657
-#define _20240128195657
+#ifndef IG20240128195657
+#define IG20240128195657
 
 #include <cstddef>
 #include <unordered_map>

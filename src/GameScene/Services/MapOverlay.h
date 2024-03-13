@@ -1,5 +1,5 @@
-#ifndef _20240308011247
-#define _20240308011247
+#ifndef IG20240308011247
+#define IG20240308011247
 
 #include "Pathfinder.h"
 #include "Unit.h"

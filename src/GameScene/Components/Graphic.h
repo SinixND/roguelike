@@ -1,5 +1,5 @@
-#ifndef _20240223182955
-#define _20240223182955
+#ifndef IG20240223182955
+#define IG20240223182955
 
 #include "LayerID.h"
 #include "RenderID.h"

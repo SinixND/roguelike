@@ -1,5 +1,5 @@
-#ifndef _20240304231953
-#define _20240304231953
+#ifndef IG20240304231953
+#define IG20240304231953
 
 enum class VisibilityID
 {

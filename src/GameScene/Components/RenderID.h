@@ -1,5 +1,5 @@
-#ifndef _20240209175845
-#define _20240209175845
+#ifndef IG20240209175845
+#define IG20240209175845
 
 enum class RenderID
 {

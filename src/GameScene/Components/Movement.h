@@ -1,5 +1,5 @@
-#ifndef _20240218231113
-#define _20240218231113
+#ifndef IG20240218231113
+#define IG20240218231113
 
 #include "Pathfinder.h"
 #include "raylibEx.h"

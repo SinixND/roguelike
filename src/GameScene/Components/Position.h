@@ -1,5 +1,5 @@
-#ifndef _20240227231122
-#define _20240227231122
+#ifndef IG20240227231122
+#define IG20240227231122
 
 #include "TileTransformation.h"
 #include "raylibEx.h"

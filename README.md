@@ -7,6 +7,7 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
+- [ ] Observer pattern for event communication
 
 
 # Shortterm
@@ -18,7 +19,7 @@ development of a (maybe) roguelike game with c++ and raylib
 # Longterm 
 - [ ] Indicate select option (different cursor color on hover?)
 
-- [ ] (Hold) TAB to show map overview
+- [ ] (Hold) KEY to show map overview
 
 - [ ] Add touch support
 
@@ -57,6 +58,7 @@ development of a (maybe) roguelike game with c++ and raylib
 | F1                                | Toggle debug mode   |
 | F4                                | Exit                |
 | F11                               | Maximize window     |
+| TAB                               | Center on hero      |
 
 
 ### Touch
@@ -167,3 +169,5 @@ private:
 - [x] Refactor EdgePan relative to render area
 
 - [x] Add RectangleEx (has left, top, right, bottom, height, width)
+
+- [x] Add input to center on hero
