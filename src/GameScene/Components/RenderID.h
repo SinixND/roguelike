@@ -3,15 +3,15 @@
 
 enum class RenderID
 {
-    none,
-    hero,
-    cursor,
-    wall,
-    floor,
-    reachable,
-    path,
-    attackable,
-    supportable,
+    NONE,
+    HERO,
+    CURSOR,
+    WALL,
+    FLOOR,
+    REACHABLE,
+    PATH,
+    ATTACKABLE,
+    SUPPORTABLE,
 };
 
 #endif

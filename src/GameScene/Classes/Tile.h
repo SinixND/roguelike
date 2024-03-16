@@ -17,12 +17,12 @@ struct Tile : public Entity
         : Entity(position, graphic)
         , isSolid(isSolid)
         , blocksVision(blocksVision)
-        , visibilityID(VisibilityID::unseen){};
+        , visibilityID(VisibilityID::UNSEEN){};
 
     // For overlay tiles
     Tile(const Position& position, const Graphic& graphic)
         : Entity(position, graphic)
         , isSolid(false)
-        , visibilityID(VisibilityID::visible){};
+        , visibilityID(VisibilityID::VISIBLE){};
 };
 #endif

@@ -9,7 +9,7 @@
 #include <functional>
 #include <vector>
 
-// TYPEDEFS
+// Typedefs
 //=====================================
 class RectangleEx
 {
@@ -204,7 +204,7 @@ struct Line
 };
 //=====================================
 
-// FUNCTIONS
+// Functions
 //=====================================
 // in fullscreen mode we can't use GetScreenWidth/Height, so make a function that gets the right data for each mode
 inline Vector2 GetDisplaySize()
@@ -285,7 +285,7 @@ inline void appendVector(std::vector<Type>& targetVector, const std::vector<Type
 }
 //=====================================
 
-// FUNCTION OVERLOADS
+// Function Overloads
 //=====================================
 // Add two vectors (v1 + v2)
 RMAPI Vector2i Vector2Add(const Vector2i& v1, const Vector2i& v2)
@@ -337,7 +337,7 @@ inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)
 }
 //=====================================
 
-// OPERATOR OVERLOADS
+// Operator Overloads
 //=====================================
 template <>
 struct std::hash<Vector2>

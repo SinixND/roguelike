@@ -3,6 +3,7 @@
 
 #include "IScene.h"
 #include "RenderID.h"
+#include "Singleton.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
@@ -10,31 +11,9 @@
 #include <unordered_map>
 #include <utility>
 
-// Included as an example of a parameterized macro
-#define DISALLOW_COPY_AND_ASSIGN(T) \
-    T(const T&) = delete;           \
-    T& operator=(const T&) = delete;
-
-template <typename Type>
-class Singleton
-{
-public:
-    static inline Type& instance()
-    {
-        static Type instance;
-        return instance;
-    };
-
-protected:
-    Singleton() = default;
-    ~Singleton() = default;
-
-    DISALLOW_COPY_AND_ASSIGN(Singleton)
-};
-
 class dtb : public Singleton<dtb>
 {
-    // CONSTANTS (ONLY SET ONCE)
+    // Constants (only set once)
     //=================================
     // Font
 private:
@@ -78,7 +57,7 @@ private:
     static inline std::unordered_map<RenderID, Texture2D>& textures() { return instance().textures_; };
     //=================================
 
-    // GLOBALS
+    // Globals
     //=================================
     // Terminate app
 private:
@@ -127,7 +106,7 @@ public:
 
     //=================================
 
-    // CONFIGS / SETTINGS
+    // Configs / settings
     //=================================
     // Debug mode
 private:

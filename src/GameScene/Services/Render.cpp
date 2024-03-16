@@ -30,13 +30,13 @@ namespace Render
         switch (visibilityID)
         {
             default:
-            case VisibilityID::visible:
+            case VisibilityID::VISIBLE:
                 tint = ColorBrightness(tint, 1);
                 if (dtb::debugMode())
                     tint = GREEN;
                 break;
 
-            case VisibilityID::seen:
+            case VisibilityID::SEEN:
                 tint = BLACK;
                 tint = ColorBrightness(tint, 0.5);
                 if (dtb::debugMode())
@@ -46,7 +46,7 @@ namespace Render
                 }
                 break;
 
-            case VisibilityID::unseen:
+            case VisibilityID::UNSEEN:
                 tint = BLACK;
                 tint = ColorBrightness(tint, 0.0);
                 if (dtb::debugMode())

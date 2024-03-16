@@ -32,7 +32,7 @@ const Matrix2x2 M_ROTATE_CW_45{
     0.7071068, -0.7071068,
     0.7071068, 0.7071068};
 
-// GAME
+// Game
 //=====================================
 // Tile
 const float TILE_SIZE{25};

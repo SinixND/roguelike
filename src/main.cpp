@@ -20,7 +20,7 @@
 void applicationLoop();
 int main(/* int argc, char **argv */)
 {
-    // SETUP THE WINDOW
+    // Setup the window
     //=====================================
     constexpr int WINDOW_WIDTH{800};
     constexpr int WINDOW_HEIGHT{450};
@@ -46,18 +46,18 @@ int main(/* int argc, char **argv */)
     GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
     //=====================================
 
-    // APPLICATION INITIALIZATION
+    // Application initialization
     //=================================
     // Load textures
-    dtb::loadTexture(RenderID::none, "Empty.png");
-    dtb::loadTexture(RenderID::hero, "Hero.png");
-    dtb::loadTexture(RenderID::cursor, "Cursor.png");
-    dtb::loadTexture(RenderID::wall, "TileWall.png");
-    dtb::loadTexture(RenderID::floor, "TileFloor.png");
-    dtb::loadTexture(RenderID::reachable, "TileReachable.png");
-    dtb::loadTexture(RenderID::path, "TilePath.png");
-    dtb::loadTexture(RenderID::attackable, "TileAttackable.png");
-    dtb::loadTexture(RenderID::supportable, "TileSupportable.png");
+    dtb::loadTexture(RenderID::NONE, "Empty.png");
+    dtb::loadTexture(RenderID::HERO, "Hero.png");
+    dtb::loadTexture(RenderID::CURSOR, "Cursor.png");
+    dtb::loadTexture(RenderID::WALL, "TileWall.png");
+    dtb::loadTexture(RenderID::FLOOR, "TileFloor.png");
+    dtb::loadTexture(RenderID::REACHABLE, "TileReachable.png");
+    dtb::loadTexture(RenderID::PATH, "TilePath.png");
+    dtb::loadTexture(RenderID::ATTACKABLE, "TileAttackable.png");
+    dtb::loadTexture(RenderID::SUPPORTABLE, "TileSupportable.png");
 
     // Define scenes
     GameScene game{};
@@ -74,7 +74,7 @@ int main(/* int argc, char **argv */)
          1.0f};
     //=================================
 
-    // MAIN APP LOOP
+    // Main app loop
     //=================================
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(applicationLoop, FPS_TARGET, 1);
@@ -87,7 +87,7 @@ int main(/* int argc, char **argv */)
 #endif
     //=================================
 
-    // DE-INITIALIZATION
+    // De-initialization
     //=================================
     // Unload fonts
     dtb::unloadFont();
@@ -98,7 +98,7 @@ int main(/* int argc, char **argv */)
     // Deinitialize scenes
     game.deinitialize();
 
-    CloseWindow(); // CLOSE WINDOW AND OPENGL CONTEXT
+    CloseWindow(); // Close window and opengl context
     //=================================
 
     return 0;
@@ -110,7 +110,7 @@ void applicationLoop()
     dtb::camera().offset = {GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f};
 
 #ifndef __EMSCRIPTEN__
-    // TOGGLE FULLSCREEN
+    // Toggle fullscreen
     //=================================
     if (IsKeyPressed(KEY_F11))
     {

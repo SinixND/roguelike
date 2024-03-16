@@ -60,8 +60,8 @@ namespace MapHandler
                 room.width - 1,
                 1},
             Graphic(
-                RenderID::wall,
-                LayerID::map),
+                RenderID::WALL,
+                LayerID::MAP),
             true,
             true);
 
@@ -74,8 +74,8 @@ namespace MapHandler
                 1,
                 room.height - 1},
             Graphic(
-                RenderID::wall,
-                LayerID::map),
+                RenderID::WALL,
+                LayerID::MAP),
             true,
             true);
 
@@ -88,8 +88,8 @@ namespace MapHandler
                 room.width - 1,
                 1},
             Graphic(
-                RenderID::wall,
-                LayerID::map),
+                RenderID::WALL,
+                LayerID::MAP),
             true,
             true);
 
@@ -102,8 +102,8 @@ namespace MapHandler
                 1,
                 room.height - 1},
             Graphic(
-                RenderID::wall,
-                LayerID::map),
+                RenderID::WALL,
+                LayerID::MAP),
             true,
             true);
 
@@ -116,8 +116,8 @@ namespace MapHandler
                 room.width - 2,
                 room.height - 2},
             Graphic(
-                RenderID::floor,
-                LayerID::map),
+                RenderID::FLOOR,
+                LayerID::MAP),
             false,
             false);
     }
@@ -140,8 +140,8 @@ namespace MapHandler
                 3,
                 1},
             Graphic(
-                RenderID::wall,
-                LayerID::map),
+                RenderID::WALL,
+                LayerID::MAP),
             true,
             true);
     }

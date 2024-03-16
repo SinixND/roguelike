@@ -42,7 +42,7 @@ namespace Vision
         // Make tiles visible
         for (auto& tile : visibleTiles)
         {
-            tile->visibilityID = VisibilityID::visible;
+            tile->visibilityID = VisibilityID::VISIBLE;
         }
     }
 }
@@ -53,9 +53,9 @@ namespace
     {
         for (auto& tile : tiles)
         {
-            if (tile->visibilityID == VisibilityID::visible)
+            if (tile->visibilityID == VisibilityID::VISIBLE)
             {
-                tile->visibilityID = VisibilityID::seen;
+                tile->visibilityID = VisibilityID::SEEN;
 
                 //* if (dtb::debugMode())
                 //* {

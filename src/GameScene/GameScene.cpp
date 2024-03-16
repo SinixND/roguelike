@@ -28,22 +28,21 @@
 
 namespace
 {
-    // Variables needed for multiple stepps in main loop
     World gameWorld{};
 
     Entity cursor{
         Position(),
         Graphic(
-            RenderID::cursor,
+            RenderID::CURSOR,
             LayerID::UI)};
 
     Unit hero{
         Position(),
         Graphic(
-            RenderID::hero,
-            LayerID::object),
+            RenderID::HERO,
+            LayerID::OBJECT),
         Movement(5, 50),
-        VisibilityID::visible,
+        VisibilityID::VISIBLE,
         20};
 
     bool isInputBlocked{false};

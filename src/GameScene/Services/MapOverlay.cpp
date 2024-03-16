@@ -34,8 +34,8 @@ namespace MapOverlay
                         Tile(
                             steppedTile.tile->position.tilePosition(),
                             Graphic(
-                                RenderID::reachable,
-                                LayerID::mapOverlay)));
+                                RenderID::REACHABLE,
+                                LayerID::MAP_OVERLAY)));
                 }
             }
         }
@@ -75,8 +75,8 @@ namespace MapOverlay
                 Tile(
                     steppedTile.tile->position.tilePosition(),
                     Graphic(
-                        RenderID::path,
-                        LayerID::mapOverlay)));
+                        RenderID::PATH,
+                        LayerID::MAP_OVERLAY)));
         }
 
         return path;

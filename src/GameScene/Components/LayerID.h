@@ -4,9 +4,9 @@
 enum class LayerID
 {
     UI,
-    object,
-    mapOverlay,
-    map,
+    OBJECT,
+    MAP_OVERLAY,
+    MAP,
 };
 
 #endif

@@ -8,7 +8,7 @@
 
 namespace Render
 {
-    void update(const Vector2& position, Graphic& graphic, VisibilityID visibilityID = VisibilityID::visible);
+    void update(const Vector2& position, Graphic& graphic, VisibilityID visibilityID = VisibilityID::VISIBLE);
     RectangleEx getRenderArea();
 }
 
