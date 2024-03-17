@@ -1,25 +1,21 @@
 #include "Zoom.h"
 
 #include "Constants.h"
-#include "RuntimeDatabase.h"
 #include <raylib.h>
 
 namespace Zoom
 {
-    void update()
+    void update(float wheel, Camera2D& camera)
     {
-        float wheel = GetMouseWheelMove();
-        Camera2D& camera{dtb::camera()};
-
         if (wheel != 0)
         {
             camera.zoom += (wheel * ZOOM_STEP);
             if (camera.zoom < ZOOM_STEP) camera.zoom = ZOOM_STEP;
         }
+    }
 
-        if ((IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL)) && (IsKeyPressed(KEY_KP_0) || IsKeyPressed(KEY_ZERO)))
-        {
-            camera.zoom = 1.0f;
-        }
+    void reset(Camera2D& camera)
+    {
+        camera.zoom = 1.0f;
     }
 }

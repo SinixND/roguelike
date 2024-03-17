@@ -13,31 +13,47 @@
 
 namespace MapOverlay
 {
-    void showUnitRange(bool& moveRangeShown, Unit& unit, World& world)
+    void showUnitMoveRange(Unit& unit, World& world)
     {
-        // Show range of selected unit
-        if (unit.isSelected && !moveRangeShown)
+        // Filter relevant tiles
+        for (auto& steppedTiles : TileMapFilters::filterMovable(
+                 world.currentMap(),
+                 unit.movement.range,
+                 unit.position.tilePosition()))
         {
-            moveRangeShown = true;
-
-            // Filter relevant tiles
-            for (auto& steppedTiles : TileMapFilters::filterReachable(
-                     world.currentMap(),
-                     unit.movement.range,
-                     unit.position.tilePosition()))
+            for (auto& steppedTile : steppedTiles)
             {
-                for (auto& steppedTile : steppedTiles)
-                {
-                    // Add reachable tile to overlay
-                    world.mapOverlay().createOrUpdate(
+                // Add reachable tile to overlay
+                world.mapOverlay().createOrUpdate(
+                    steppedTile.tile->position.tilePosition(),
+                    Tile(
                         steppedTile.tile->position.tilePosition(),
-                        Tile(
-                            steppedTile.tile->position.tilePosition(),
-                            Graphic(
-                                RenderID::REACHABLE,
-                                LayerID::MAP_OVERLAY)));
-                }
+                        Graphic(
+                            RenderID::REACHABLE,
+                            LayerID::MAP_OVERLAY)));
             }
+        }
+    }
+
+    void showUnitActionRange(Unit& unit, World& world)
+    {
+        // Filter relevant tiles
+        auto inActionRangeTiles{TileMapFilters::filterInActionRange(
+            world.currentMap(),
+            unit.attack.range,
+            unit.movement.range,
+            unit.position.tilePosition())};
+
+        for (auto& tile : inActionRangeTiles)
+        {
+            // Add reachable tile to overlay
+            world.mapOverlay().createOrUpdate(
+                tile->position.tilePosition(),
+                Tile(
+                    tile->position.tilePosition(),
+                    Graphic(
+                        RenderID::ATTACKABLE,
+                        LayerID::MAP_OVERLAY)));
         }
     }
 
@@ -81,5 +97,4 @@ namespace MapOverlay
 
         return path;
     }
-
 }

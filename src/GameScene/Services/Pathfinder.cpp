@@ -81,5 +81,5 @@ Path findPath(
     const Vector2i& target,
     size_t range)
 {
-    return findPath(TileMapFilters::filterReachable(tileMap, range, origin), target);
+    return findPath(TileMapFilters::filterMovable(tileMap, range, origin), target);
 }

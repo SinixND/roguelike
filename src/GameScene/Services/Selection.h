@@ -6,7 +6,8 @@
 
 namespace Selection
 {
-    void update(Unit& unit, const Vector2i& cursorPosition);
+    void select(Unit& unit, const Vector2i& cursorPosition);
+    void deselect(Unit& unit);
 }
 
 #endif

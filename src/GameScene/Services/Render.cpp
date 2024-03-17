@@ -32,28 +32,28 @@ namespace Render
             default:
             case VisibilityID::VISIBLE:
                 tint = ColorBrightness(tint, 1);
-                if (dtb::debugMode())
-                    tint = GREEN;
+                //* if (dtb::debugMode())
+                //* tint = GREEN;
                 break;
 
             case VisibilityID::SEEN:
                 tint = BLACK;
                 tint = ColorBrightness(tint, 0.5);
-                if (dtb::debugMode())
-                {
-                    tint = ColorBrightness(tint, 1);
-                    tint = BLUE;
-                }
+                //* if (dtb::debugMode())
+                //* {
+                //* tint = ColorBrightness(tint, 1);
+                //* tint = BLUE;
+                //* }
                 break;
 
             case VisibilityID::UNSEEN:
                 tint = BLACK;
                 tint = ColorBrightness(tint, 0.0);
-                if (dtb::debugMode())
-                {
-                    tint = ColorBrightness(tint, 0.75);
-                    tint = RED;
-                }
+                //* if (dtb::debugMode())
+                //* {
+                //* tint = ColorBrightness(tint, 0.75);
+                //* tint = RED;
+                //* }
                 break;
         }
 

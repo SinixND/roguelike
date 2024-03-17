@@ -1,6 +1,7 @@
 #ifndef IG20240211230403
 #define IG20240211230403
 
+#include "Attack.h"
 #include "Entity.h"
 #include "Graphic.h"
 #include "Movement.h"
@@ -14,12 +15,14 @@ struct Unit : public Entity
     const bool isSolid{true};
     VisibilityID visibilityID;
     int visionRange;
+    Attack attack;
 
-    Unit(Position position, Graphic graphic, Movement movement, VisibilityID visibilityID, int visionRange)
+    Unit(Position position, Graphic graphic, Movement movement, VisibilityID visibilityID, int visionRange, Attack attack)
         : Entity(position, graphic)
         , movement(movement)
         , visibilityID(visibilityID)
-        , visionRange(visionRange){};
+        , visionRange(visionRange)
+        , attack(attack){};
 };
 
 #endif

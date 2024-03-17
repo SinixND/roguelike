@@ -74,21 +74,29 @@ namespace TileMapFilters
         const Vector2i& origin,
         TileMap& tileMap);
 
-    RangeSeparatedTiles filterReachable(
+    RangeSeparatedTiles filterMovable(
         const std::vector<Tile*>& inRangeTiles,
-        size_t range,
+        size_t moveRange,
         const Vector2i& origin);
 
-    RangeSeparatedTiles filterReachable(
+    RangeSeparatedTiles filterMovable(
         TileMap& tileMap,
-        size_t range,
+        size_t moveRange,
         const Vector2i& origin);
 
-    bool isReachable(
+    bool isMovable(
         const Vector2i& target,
-        size_t range,
+        size_t moveRange,
         const Vector2i& origin,
         TileMap& tileMap);
+
+    std::vector<Tile*> filterEdgeTiles(const RangeSeparatedTiles& tiles);
+
+    std::vector<Tile*> filterInActionRange(
+        TileMap& tileMap,
+        size_t actionRange,
+        size_t moveRange,
+        const Vector2i& origin);
 }
 
 #endif

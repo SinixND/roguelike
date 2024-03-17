@@ -20,13 +20,10 @@ public:
         target_ = target;
     };
 
-    bool isTargetSet() { return targetSet_; };
-    void setIsTargetSet(bool status) { targetSet_ = status; };
+    bool isTargetSet() { return isTargetSet_; };
+    void setIsTargetSet(bool status) { isTargetSet_ = status; };
 
     bool isMoving() { return isMoving_; };
-
-    bool isExhausted() { return isExhausted_; };
-    void setIsExhausted(bool state) { isExhausted_ = state; };
 
     void setPath(const Path& path)
     {
@@ -45,9 +42,8 @@ public:
 
 private:
     Vector2i target_{};
-    bool targetSet_{false};
+    bool isTargetSet_{false};
     bool isMoving_{false};
-    bool isExhausted_{false};
     Path path_{};
 };
 

@@ -1,5 +1,6 @@
 #include "GameScene.h"
 
+#include "Attack.h"
 #include "CameraControl.h"
 #include "CursorControl.h"
 #include "Entity.h"
@@ -43,10 +44,12 @@ namespace
             LayerID::OBJECT),
         Movement(5, 50),
         VisibilityID::VISIBLE,
-        20};
+        20,
+        Attack(
+            1,
+            1)};
 
     bool isInputBlocked{false};
-    bool isPathShown{false};
 }
 
 void GameScene::initialize()
@@ -78,8 +81,10 @@ void GameScene::processInput()
         }
     }
 
+    // Update cursor
     CursorControl::update(cursor.position, mouseActive);
 
+    // Process edge pan
     CameraControl::edgePan(
         TileTransformation::positionToWorld(cursor.position.tilePosition()),
         mouseActive);
@@ -88,14 +93,41 @@ void GameScene::processInput()
     if (IsKeyPressed(KEY_TAB))
         CameraControl::centerOnHero(dtb::camera(), hero);
 
-    Zoom::update();
+    // Process zoom
+    Zoom::update(GetMouseWheelMove(), dtb::camera());
 
-    Selection::update(
-        hero,
-        cursor.position.tilePosition());
+    // Reset Zoom
+    if (
+        (IsKeyDown(KEY_LEFT_CONTROL) ||
+         IsKeyDown(KEY_RIGHT_CONTROL)) &&
+        (IsKeyPressed(KEY_KP_0) ||
+         IsKeyPressed(KEY_ZERO)))
+    {
+        Zoom::reset(dtb::camera());
+    }
+
+    // Select unit
+    if (
+        IsMouseButtonPressed(MOUSE_LEFT_BUTTON) ||
+        IsKeyPressed(KEY_SPACE))
+    {
+        Selection::select(
+            hero,
+            cursor.position.tilePosition());
+    }
+
+    // Deselect unit
+    if (
+        IsKeyPressed(KEY_ESCAPE) ||
+        IsKeyPressed(KEY_CAPS_LOCK))
+    {
+        Selection::deselect(hero);
+    }
 
     // Set unit movment target
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
+    if (
+        IsMouseButtonPressed(MOUSE_LEFT_BUTTON) ||
+        IsKeyPressed(KEY_SPACE))
     {
         UnitMovement::setTarget(
             gameWorld,
@@ -106,13 +138,15 @@ void GameScene::processInput()
 
 void GameScene::updateState()
 {
-    static bool moveRangeShown{false};
+    // Update map overlay
+    static bool rangeShown{false};
+    bool isPathShown{false};
 
     static Path path{};
 
     int condition = // A=isSelected, B=rangeShown
         (hero.isSelected ? (true << 1) : false) +
-        (moveRangeShown ? (true << 0) : false);
+        (rangeShown ? (true << 0) : false);
 
     switch (condition)
     {
@@ -121,32 +155,39 @@ void GameScene::updateState()
             break;
 
         case 1:
-        { // 0 1 // not selected, range shown -> Hide range
+            // 0 1 // not selected, range shown -> Hide range
             gameWorld.mapOverlay().clear();
-            moveRangeShown = false;
+
+            rangeShown = false;
+
             isPathShown = false;
-        }
-        break;
+
+            break;
 
         case 2:
-        { // 1 0 // selected, range not shown -> Show range
-            MapOverlay::showUnitRange(
-                moveRangeShown,
+            // 1 0 // selected, range not shown -> Show range
+            MapOverlay::showUnitMoveRange(
                 hero,
                 gameWorld);
-        }
-        break;
+
+            MapOverlay::showUnitActionRange(
+                hero,
+                gameWorld);
+
+            rangeShown = true;
+
+            break;
 
         case 3:
-        { // 1 1 // selected, range shown -> Show path
+            // 1 1 // selected, range shown -> Show path
             path = MapOverlay::showPath(
                 hero.position.tilePosition(),
                 cursor.position.tilePosition(),
                 hero.movement.range,
                 gameWorld,
                 isPathShown);
-        }
-        break;
+
+            break;
 
         default:
             break;
