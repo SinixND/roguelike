@@ -11,7 +11,7 @@ namespace MapOverlay
 {
     void showUnitMoveRange(Unit& unit, World& world);
     void showUnitActionRange(Unit& unit, World& world);
-    Path& showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size_t unitRange, World& world, bool& pathShown);
+    Path& showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size_t unitRange, World& world, bool& isPathShown);
 }
 
 #endif

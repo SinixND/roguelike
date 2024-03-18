@@ -5,7 +5,7 @@
 
 namespace CursorControl
 {
-    void update(Position& cursorPosition, bool mouseActive);
+    void update(Position& cursorPosition, bool isMouseActive);
 }
 
 #endif

@@ -6,8 +6,9 @@
 #include "Position.h"
 #include "VisibilityID.h"
 
-struct Tile : public Entity
+class Tile : public Entity
 {
+public:
     bool isSolid;
     bool blocksVision;
     VisibilityID visibilityID;

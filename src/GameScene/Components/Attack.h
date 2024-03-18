@@ -3,8 +3,9 @@
 
 #include <cstddef>
 
-struct Attack
+class Attack
 {
+public:
     size_t range{};
     int damage{};
 

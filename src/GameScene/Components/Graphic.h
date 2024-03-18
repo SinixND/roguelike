@@ -4,8 +4,9 @@
 #include "LayerID.h"
 #include "RenderID.h"
 
-struct Graphic
+class Graphic
 {
+public:
     RenderID renderID;
     LayerID layerID;
 

@@ -6,11 +6,13 @@
 #include "raylibEx.h"
 #include <cstddef>
 
+class World;
+
 namespace MapHandler
 {
     TileMap createNewMap(size_t level);
 
-    void createTiles(
+    void addTiles(
         TileMap& tileMap,
         const Area& area,
         Graphic graphic,
@@ -18,7 +20,8 @@ namespace MapHandler
         bool blocksVision);
 
     void addRoom(TileMap& tileMap, const Area& room);
-    void addStartRoom(TileMap& tileMap);
+    void createStartRoom(TileMap& tileMap);
+    void createGridRooms(TileMap& tileMap, size_t level);
 }
 
 #endif

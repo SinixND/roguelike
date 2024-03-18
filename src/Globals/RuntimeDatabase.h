@@ -61,10 +61,10 @@ private:
     //=================================
     // Terminate app
 private:
-    static inline bool appShouldClose_{false};
+    static inline bool isAppClosing_{false};
 
 public:
-    static inline bool& shouldAppClose() { return instance().appShouldClose_; };
+    static inline bool& shouldAppClose() { return instance().isAppClosing_; };
     static inline void closeApp() { shouldAppClose() = true; };
 
     // Active scene
@@ -100,8 +100,8 @@ public:
         mapSize() = Area{
             left,
             top,
-            right - left + 1,
-            bottom - top + 1};
+            right,
+            bottom};
     };
 
     //=================================

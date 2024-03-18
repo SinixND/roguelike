@@ -7,32 +7,32 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-- [ ] Observer pattern for event communication
+- [ ] No non-const return from getter() const
+- [ ] Fix Bug: Movement trigger on attackable tile
+- [ ] Fix Bug: Path finder ignores walls
+- [ ] Check FPS issue
 
 
 # Shortterm
-- [ ] Map generation
-
 - [ ] Map change
 
 
 # Longterm 
 - [ ] Indicate select option (different cursor color on hover?)
-
 - [ ] (Hold) KEY to show map overview
-
 - [ ] Add touch support
-
 - [ ] Remove zoom?
 
 
 # Continuous
+- [x] Map generation
+
 - Check for obsolete [[maybe_unused]] and //* comments
 
 
 # Ideas
+- [ ] Observer pattern for event communication
 - [ ] Add logger
-
 - [ ] Lua/Jinx settings file?
 
 
@@ -143,31 +143,17 @@ private:
 
 # Done
 - [x] compile for linux & windows
-
 - [x] Render sprites/textures
-
 - [ ] make ECS (removed)
-
 - [x] realize viewport/camera system
-
 - [x] Implement zoom
-
 - [x] Check class design (see notes); make diagram to track classes
-
 - [ ] Command pattern for rendering and layers (not implemented -> need to handle abiguous keys in SparseSet: potential duplicate positions for tiles in different layers)
-
 - [x] Implement movment
-
 - [x] Refactor tilePosition to float position
-
 - [x] Implement render area
-
 - [x] edge pan stop relative to map not player
-
 - [x] Implement vision (fog of war: unseen, seen, visible)
-
 - [x] Refactor EdgePan relative to render area
-
 - [x] Add RectangleEx (has left, top, right, bottom, height, width)
-
 - [x] Add input to center on hero

@@ -1,6 +1,7 @@
 #include "Constants.h"
 #include "GameScene.h"
 #include "IScene.h"
+#include "RNG.h"
 #include "RenderID.h"
 #include "RuntimeDatabase.h"
 #include <raylib.h>
@@ -48,6 +49,10 @@ int main(/* int argc, char **argv */)
 
     // Application initialization
     //=================================
+    // Seed Random number generator
+    if (dtb::debugMode())
+        RNG::seed(1);
+
     // Load textures
     dtb::loadTexture(RenderID::NONE, "Empty.png");
     dtb::loadTexture(RenderID::HERO, "Hero.png");

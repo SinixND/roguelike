@@ -5,7 +5,7 @@
 #include <cstddef>
 
 // Public:
-TileMap& World::currentMap() { return currentMap_; }
+TileMap& World::currentMap() { return *currentMap_; }
 
 size_t World::currentLevel() { return currentLevel_; }
 
@@ -42,5 +42,5 @@ void World::addNewMap(size_t level)
 
 void World::setMap(size_t level)
 {
-    currentMap_ = maps_[level];
+    currentMap_ = &maps_[level];
 }

@@ -13,10 +13,10 @@ namespace CursorControl
         void processKeyControl(Position& cursorPosition);
     }
 
-    void update(Position& cursorPosition, bool mouseActive)
+    void update(Position& cursorPosition, bool isMouseActive)
     {
         // Cursor control
-        if (mouseActive)
+        if (isMouseActive)
         {
             // Mouse controlled cursor
             cursorPosition.setTilePosition(TileTransformation::getMouseTile());

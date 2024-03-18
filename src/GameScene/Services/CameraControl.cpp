@@ -16,7 +16,7 @@ namespace
 
 namespace CameraControl
 {
-    void edgePan(const Vector2& cursorWorldPosition, bool mouseActive)
+    void edgePan(const Vector2& cursorWorldPosition, bool isMouseActive)
     {
         static float dt{};
         dt += GetFrameTime();
@@ -36,7 +36,7 @@ namespace CameraControl
 
         if (!CheckCollisionPointRec(screenCursor, edgePanArea))
         {
-            if (mouseActive && dt < PAN_SPEED)
+            if (isMouseActive && dt < PAN_SPEED)
                 return;
 
             dt = 0;

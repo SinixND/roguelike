@@ -54,6 +54,7 @@ namespace
 
 void GameScene::initialize()
 {
+    gameWorld.increaseLevel();
 }
 
 void GameScene::processInput()
@@ -65,13 +66,13 @@ void GameScene::processInput()
         dtb::setDebugMode(!dtb::debugMode());
 
     // Toggle between mouse or key control for cursor
-    static bool mouseActive{true};
+    static bool isMouseActive{true};
 
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
     {
-        mouseActive = !mouseActive;
+        isMouseActive = !isMouseActive;
 
-        if (mouseActive)
+        if (isMouseActive)
         {
             ShowCursor();
         }
@@ -82,12 +83,12 @@ void GameScene::processInput()
     }
 
     // Update cursor
-    CursorControl::update(cursor.position, mouseActive);
+    CursorControl::update(cursor.position, isMouseActive);
 
     // Process edge pan
     CameraControl::edgePan(
         TileTransformation::positionToWorld(cursor.position.tilePosition()),
-        mouseActive);
+        isMouseActive);
 
     // Center on hero
     if (IsKeyPressed(KEY_TAB))
@@ -139,14 +140,14 @@ void GameScene::processInput()
 void GameScene::updateState()
 {
     // Update map overlay
-    static bool rangeShown{false};
+    static bool isRangeShown{false};
     bool isPathShown{false};
 
     static Path path{};
 
     int condition = // A=isSelected, B=rangeShown
         (hero.isSelected ? (true << 1) : false) +
-        (rangeShown ? (true << 0) : false);
+        (isRangeShown ? (true << 0) : false);
 
     switch (condition)
     {
@@ -158,7 +159,7 @@ void GameScene::updateState()
             // 0 1 // not selected, range shown -> Hide range
             gameWorld.mapOverlay().clear();
 
-            rangeShown = false;
+            isRangeShown = false;
 
             isPathShown = false;
 
@@ -174,7 +175,7 @@ void GameScene::updateState()
                 hero,
                 gameWorld);
 
-            rangeShown = true;
+            isRangeShown = true;
 
             break;
 

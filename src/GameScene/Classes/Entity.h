@@ -4,8 +4,9 @@
 #include "Graphic.h"
 #include "Position.h"
 
-struct Entity
+class Entity
 {
+public:
     Position position;
     Graphic graphic;
 

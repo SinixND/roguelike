@@ -16,94 +16,104 @@ public:
     float& left()
     {
         return left_;
-    };
+    }
 
     void resizeLeft(float left)
     {
         left_ = left;
         width_ = right_ - left_;
-    };
+    }
 
     void moveLeft(float left)
     {
         left_ = left;
         right_ = left_ + width_;
-    };
+    }
 
     float& right()
     {
         return right_;
-    };
+    }
+
     void resizeRight(float right)
     {
         right_ = right;
         width_ = right_ - left_;
-    };
+    }
+
     void moveRight(float right)
     {
         right_ = right;
         left_ = right_ - width_;
-    };
+    }
 
     float& top()
     {
         return top_;
-    };
+    }
+
     void resizeTop(float top)
     {
         top_ = top;
         height_ = bottom_ - top_;
-    };
+    }
+
     void moveTop(float top)
     {
         top_ = top;
         bottom_ = top_ + height_;
-    };
+    }
 
     float& bottom()
     {
         return bottom_;
-    };
+    }
+
     void resizeBottom(float bottom)
     {
         bottom_ = bottom;
         height_ = bottom_ - top_;
-    };
+    }
+
     void moveBottom(float bottom)
     {
         bottom_ = bottom;
         top_ = bottom_ - height_;
-    };
+    }
 
     float& width()
     {
         return width_;
-    };
+    }
+
     void resizeWidthLeft(float width)
     {
         width_ = width;
         left_ = right_ - width_;
-    };
+    }
+
     void resizeWidthRight(float width)
     {
         width_ = width;
         right_ = left_ + width_;
-    };
+    }
 
     float& height()
     {
         return height_;
-    };
+    }
+
     void resizeHeightTop(float height)
     {
         height_ = height;
         top_ = bottom_ - height_;
-    };
+    }
+
     void resizeHeightBottom(float height)
     {
         height_ = height;
         bottom_ = top_ + height_;
-    };
+    }
 
     Vector2 topLeft()
     {
@@ -179,21 +189,70 @@ struct Matrix2x2i
 
 struct Area
 {
-    int left;   // Rectangle top-left corner position x
-    int top;    // Rectangle top-left corner position y
-    int width;  // Rectangle width
-    int height; // Rectangle height
+    int left;      // Rectangle top-left corner position x
+    int top;       // Rectangle top-left corner position y
+    size_t width;  // Rectangle width
+    size_t height; // Rectangle height
 
     int right;
     int bottom;
 
-    Area(int leftX = 0, int topY = 0, int widthX = 1, int heightY = 1)
-        : left(leftX)
-        , top(topY)
-        , width(widthX)
-        , height(heightY)
-        , right(leftX + widthX - 1)
-        , bottom(topY + heightY - 1){};
+    Area(int left = 0, int top = 0, int right = 0, int bottom = 0)
+        : left(left)
+        , top(top)
+        , width(right - left + 1)
+        , height(bottom - top + 1)
+        , right(right)
+        , bottom(bottom)
+    {
+    }
+
+    Area(int left, int top, size_t width, size_t height)
+        : left(left)
+        , top(top)
+        , width(width)
+        , height(height)
+        , right(left + width - 1)
+        , bottom(top + height - 1)
+    {
+    }
+
+    Area(const Vector2i& center, size_t width, size_t height)
+        : left(center.x - (width / 2))
+        , top(center.y - (height / 2))
+        , width(width)
+        , height(height)
+        , right(center.x + (width / 2))
+        , bottom(center.y + (height / 2))
+    {
+        [[maybe_unused]] int i{0};
+    }
+
+    Area(const Vector2i& from, const Vector2i& to)
+        : left(from.x)
+        , top(from.y)
+        , width(to.x - from.x + 1)
+        , height(to.y - from.y + 1)
+        , right(to.x)
+        , bottom(to.y)
+    {
+        // Verify left < right, top < bottom and width/height > 0
+        if (left > right)
+        {
+            int temp = left;
+            left = right;
+            right = temp;
+            width = right - left + 1;
+        }
+
+        if (top > bottom)
+        {
+            int temp = top;
+            top = bottom;
+            bottom = temp;
+            height = bottom - top + 1;
+        }
+    }
 };
 
 struct Line
@@ -270,11 +329,11 @@ inline Vector2i GetMax(const Vector2i& V1, const Vector2i& V2)
 
 inline bool CheckCollisionPointArea(const Vector2i& tilePosition, const Area& area)
 {
-    bool collision = false;
+    bool isColliding = false;
 
-    if ((tilePosition.x >= area.left) && (tilePosition.x < area.right) && (tilePosition.y >= area.top) && (tilePosition.y < area.bottom)) collision = true;
+    if ((tilePosition.x >= area.left) && (tilePosition.x < area.right) && (tilePosition.y >= area.top) && (tilePosition.y < area.bottom)) isColliding = true;
 
-    return collision;
+    return isColliding;
 }
 //=====================================
 
@@ -306,6 +365,11 @@ RMAPI Vector2i Vector2SubtractValue(const Vector2i& v1, int value)
 RMAPI Vector2 Vector2Scale(const Vector2i& v, float scale)
 {
     return Vector2{v.x * scale, v.y * scale};
+}
+
+RMAPI Vector2i Vector2Scale(const Vector2i& v, int scale)
+{
+    return Vector2i{v.x * scale, v.y * scale};
 }
 
 // Check whether two given vectors are almost equal

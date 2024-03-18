@@ -23,7 +23,7 @@ namespace UnitMovement
         }
     }
 
-    void triggerMovement(Movement& movement, Path& path, bool& inputBlocked)
+    void triggerMovement(Movement& movement, Path& path, bool& isInputBlocked)
     {
         if (movement.isTargetSet() && !movement.isMoving())
         {
@@ -33,25 +33,25 @@ namespace UnitMovement
             // Setting path triggers movment
             movement.setPath(path);
 
-            inputBlocked = true;
+            isInputBlocked = true;
         }
     }
 
-    void processMovement(Unit& unit, bool& inputBlocked)
+    void processMovement(Unit& unit, bool& isInputBlocked)
     {
-        bool targetReached{false};
+        bool isTargetReached{false};
         if (unit.movement.isMoving())
         {
             // Move unit
-            targetReached = unit.movement.move(
+            isTargetReached = unit.movement.move(
                 unit.position.get(),
                 GetFrameTime());
         }
 
-        if (targetReached)
+        if (isTargetReached)
         {
             unit.isSelected = false;
-            inputBlocked = false;
+            isInputBlocked = false;
         }
     }
 }

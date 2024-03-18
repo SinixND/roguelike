@@ -11,8 +11,8 @@
 namespace UnitMovement
 {
     void setTarget(World& gameWorld, Unit& unit, Position& cursorPosition);
-    void triggerMovement(Movement& movement, Path& path, bool& inputBlocked);
-    void processMovement(Unit& unit, bool& inputBlocked);
+    void triggerMovement(Movement& movement, Path& path, bool& isInputBlocked);
+    void processMovement(Unit& unit, bool& isInputBlocked);
 }
 
 #endif

@@ -8,11 +8,12 @@
 #include "Position.h"
 #include "VisibilityID.h"
 
-struct Unit : public Entity
+class Unit : public Entity
 {
+public:
     bool isSelected{false};
-    Movement movement;
     const bool isSolid{true};
+    Movement movement;
     VisibilityID visibilityID;
     int visionRange;
     Attack attack;

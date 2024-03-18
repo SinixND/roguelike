@@ -74,7 +74,6 @@ namespace RayCast
             // Increment rayLength for shorter length until maxLength
 
             // ray incrementing loop
-            bool visionBlocked{false};
             float minLength{(rayLengthIncrements.x < rayLengthIncrements.y) ? rayLengthIncrements.x : rayLengthIncrements.y};
 
             while (true)
@@ -109,28 +108,18 @@ namespace RayCast
                         rayDirection,
                         minLength));
 
-                // Ignore edge cases
-                //* int x{static_cast<int>(std::round((rayEnd.x / TILE_SIZE) * 10)) % 10};
-                //* int y{static_cast<int>(std::round((rayEnd.y / TILE_SIZE) * 10)) % 10};
-                //* if ((x == 5) || (y == 5))
-                //* continue;
-
                 Tile* tileHit{tileMap.at(TileTransformation::worldToPosition(rayEnd))};
 
                 // Check for nullptr aka. tile out of map
                 if (!tileHit)
                     continue;
 
-                // Detect tile blocking vision
-                if (tileHit->blocksVision)
-                    visionBlocked = true;
-
-                // End ray cast if vision blocking tile is passed
-                if (!tileHit->blocksVision && visionBlocked)
-                    break;
-
                 // Add rayed tile
                 tilesRayed.push_back(tileHit);
+
+                // Detect tile blocking vision
+                if (tileHit->blocksVision)
+                    break;
 
                 //* if (dtb::debugMode())
                 //* {
