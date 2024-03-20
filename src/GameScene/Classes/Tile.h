@@ -14,14 +14,14 @@ public:
     VisibilityID visibilityID;
 
     // For map tiles
-    Tile(const Position& position, const Graphic& graphic, bool isSolid, bool blocksVision)
+    Tile(Position const& position, Graphic const& graphic, bool isSolid, bool blocksVision)
         : Entity(position, graphic)
         , isSolid(isSolid)
         , blocksVision(blocksVision)
         , visibilityID(VisibilityID::UNSEEN){};
 
     // For overlay tiles
-    Tile(const Position& position, const Graphic& graphic)
+    Tile(Position const& position, Graphic const& graphic)
         : Entity(position, graphic)
         , isSolid(false)
         , visibilityID(VisibilityID::VISIBLE){};

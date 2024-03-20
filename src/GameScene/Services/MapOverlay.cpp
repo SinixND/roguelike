@@ -57,7 +57,7 @@ namespace MapOverlay
         }
     }
 
-    Path& showPath(const Vector2i& unitPosition, const Vector2i& cursorPosition, size_t unitRange, World& world, bool& isPathShown)
+    Path& showPath(Vector2i unitPosition, Vector2i cursorPosition, size_t unitRange, World& world, bool& isPathShown)
     {
         static Vector2i origin{};
         static Vector2i target{};

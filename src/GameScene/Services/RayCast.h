@@ -10,7 +10,7 @@
 namespace RayCast
 {
     // Tiles passed by ray
-    std::vector<Tile*> getTilesRayed(std::vector<Vector2i>& rayTargets, const Vector2& origin, TileMap& tileMap);
+    std::vector<Tile*> getTilesRayed(std::vector<Vector2i>& rayTargets, Vector2 origin, TileMap& tileMap);
 }
 
 #endif

@@ -234,7 +234,7 @@ void GameScene::renderOutput()
 
     // Draw text for current level
     //=================================
-    const char* currentLevel{TextFormat("Level %i", gameWorld.currentLevel())};
+    char const* currentLevel{TextFormat("Level %i", gameWorld.currentLevel())};
 
     Font& font{dtb::font()};
 

@@ -140,7 +140,7 @@ public:
     {
     }
 
-    RectangleEx(const Vector2& topLeft, const Vector2& bottomRight)
+    RectangleEx(Vector2 topLeft, Vector2 bottomRight)
         : left_(topLeft.x)
         , top_(topLeft.y)
         , right_(bottomRight.x)
@@ -217,7 +217,7 @@ struct Area
     {
     }
 
-    Area(const Vector2i& center, size_t width, size_t height)
+    Area(Vector2i center, size_t width, size_t height)
         : left(center.x - (width / 2))
         , top(center.y - (height / 2))
         , width(width)
@@ -228,7 +228,7 @@ struct Area
         [[maybe_unused]] int i{0};
     }
 
-    Area(const Vector2i& from, const Vector2i& to)
+    Area(Vector2i from, Vector2i to)
         : left(from.x)
         , top(from.y)
         , width(to.x - from.x + 1)
@@ -273,12 +273,12 @@ inline Vector2 GetDisplaySize()
         return Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
 }
 
-inline size_t Vector2Sum(const Vector2i& V)
+inline size_t Vector2Sum(Vector2i V)
 {
     return abs(V.x) + abs(V.y);
 }
 
-inline Rectangle GetRectangle(const Vector2& topLeft, const Vector2& bottomRight)
+inline Rectangle GetRectangle(Vector2 topLeft, Vector2 bottomRight)
 {
     return Rectangle{
         topLeft.x,
@@ -287,7 +287,7 @@ inline Rectangle GetRectangle(const Vector2& topLeft, const Vector2& bottomRight
         bottomRight.y - topLeft.y};
 }
 
-inline Vector2 GetMainDirection(const Vector2& from, const Vector2& to)
+inline Vector2 GetMainDirection(Vector2 from, Vector2 to)
 {
     Vector2 v{Vector2Subtract(to, from)};
     abs(v.x) > abs(v.y) ? v.y = 0 : v.x = 0;
@@ -303,31 +303,31 @@ inline Rectangle GetRenderRec()
         static_cast<float>(GetRenderHeight())};
 }
 
-inline Vector2 ConvertToVector2(const Vector2i& V)
+inline Vector2 ConvertToVector2(Vector2i V)
 {
     return Vector2{static_cast<float>(V.x), static_cast<float>(V.y)};
 }
 
-inline Vector2i ConvertToVector2i(const Vector2& V)
+inline Vector2i ConvertToVector2i(Vector2 V)
 {
     return Vector2i{static_cast<int>(V.x), static_cast<int>(V.y)};
 }
 
-inline Vector2i GetMin(const Vector2i& V1, const Vector2i& V2)
+inline Vector2i GetMin(Vector2i V1, Vector2i V2)
 {
     return Vector2i{
         (V1.x < V2.x ? V1.x : V2.x),
         (V1.y < V2.y ? V1.y : V2.y)};
 }
 
-inline Vector2i GetMax(const Vector2i& V1, const Vector2i& V2)
+inline Vector2i GetMax(Vector2i V1, Vector2i V2)
 {
     return Vector2i{
         (V1.x > V2.x ? V1.x : V2.x),
         (V1.y > V2.y ? V1.y : V2.y)};
 }
 
-inline bool CheckCollisionPointArea(const Vector2i& tilePosition, const Area& area)
+inline bool CheckCollisionPointArea(Vector2i tilePosition, Area const& area)
 {
     bool isColliding = false;
 
@@ -340,50 +340,50 @@ inline bool CheckCollisionPointArea(const Vector2i& tilePosition, const Area& ar
 // Function Overloads
 //=====================================
 // Add two vectors (v1 + v2)
-RMAPI Vector2i Vector2Add(const Vector2i& v1, const Vector2i& v2)
+RMAPI Vector2i Vector2Add(Vector2i v1, Vector2i v2)
 {
     return Vector2i{v1.x + v2.x, v1.y + v2.y};
 }
 
-RMAPI Vector2i Vector2AddValue(const Vector2i& v1, int value)
+RMAPI Vector2i Vector2AddValue(Vector2i v1, int value)
 {
     return Vector2i{v1.x + value, v1.y + value};
 }
 
 // Subtract two vectors (v1 - v2)
-RMAPI Vector2i Vector2Subtract(const Vector2i& v1, const Vector2i& v2)
+RMAPI Vector2i Vector2Subtract(Vector2i v1, Vector2i v2)
 {
     return Vector2i{v1.x - v2.x, v1.y - v2.y};
 }
 
-RMAPI Vector2i Vector2SubtractValue(const Vector2i& v1, int value)
+RMAPI Vector2i Vector2SubtractValue(Vector2i v1, int value)
 {
     return Vector2i{v1.x - value, v1.y - value};
 }
 
 // Scale vector (multiply by value)
-RMAPI Vector2 Vector2Scale(const Vector2i& v, float scale)
+RMAPI Vector2 Vector2Scale(Vector2i v, float scale)
 {
     return Vector2{v.x * scale, v.y * scale};
 }
 
-RMAPI Vector2i Vector2Scale(const Vector2i& v, int scale)
+RMAPI Vector2i Vector2Scale(Vector2i v, int scale)
 {
     return Vector2i{v.x * scale, v.y * scale};
 }
 
 // Check whether two given vectors are almost equal
-RMAPI int Vector2Equals(const Vector2i& v1, const Vector2i& v2)
+RMAPI int Vector2Equals(Vector2i v1, Vector2i v2)
 {
     return ((v1.x == v2.x) && (v1.y == v2.y));
 }
 
-RMAPI Vector2i Vector2Transform(const Matrix2x2i& M, const Vector2i& V)
+RMAPI Vector2i Vector2Transform(Matrix2x2i M, Vector2i V)
 {
     return Vector2i{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
 }
 
-RMAPI Vector2 Vector2Transform(const Matrix2x2& M, const Vector2& V)
+RMAPI Vector2 Vector2Transform(Matrix2x2 M, Vector2 V)
 {
     return Vector2{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
 }
@@ -399,7 +399,7 @@ inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)
 template <>
 struct std::hash<Vector2>
 {
-    size_t operator()(const Vector2& V) const noexcept
+    size_t operator()(Vector2 V) const noexcept
     {
         size_t h1 = std::hash<double>()(V.x);
         size_t h2 = std::hash<double>()(V.y);
@@ -407,7 +407,7 @@ struct std::hash<Vector2>
     }
 };
 
-inline bool operator==(const Vector2& lhs, const Vector2& rhs)
+inline bool operator==(Vector2 lhs, Vector2 rhs)
 {
     return Vector2Equals(lhs, rhs);
 };
@@ -415,7 +415,7 @@ inline bool operator==(const Vector2& lhs, const Vector2& rhs)
 template <>
 struct std::hash<Vector2i>
 {
-    size_t operator()(const Vector2i& V) const noexcept
+    size_t operator()(Vector2i V) const noexcept
     {
         size_t h1 = std::hash<int>()(V.x);
         size_t h2 = std::hash<int>()(V.y);
@@ -423,7 +423,7 @@ struct std::hash<Vector2i>
     }
 };
 
-inline bool operator==(const Vector2i& lhs, const Vector2i& rhs)
+inline bool operator==(Vector2i lhs, Vector2i rhs)
 {
     return Vector2Equals(lhs, rhs);
 };

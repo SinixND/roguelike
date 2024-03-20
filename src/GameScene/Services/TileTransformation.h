@@ -10,14 +10,14 @@
 namespace TileTransformation
 {
     // World coordinates
-    inline Vector2i worldToPosition(const Vector2& pixel)
+    inline Vector2i worldToPosition(Vector2 pixel)
     {
         return Vector2i{
             static_cast<int>(std::floor((pixel.x + (TILE_SIZE / 2)) / TILE_SIZE)),
             static_cast<int>(std::floor((pixel.y + (TILE_SIZE / 2)) / TILE_SIZE))};
     }
 
-    inline Vector2 positionToWorld(const Vector2i& position)
+    inline Vector2 positionToWorld(Vector2i position)
     {
         return Vector2{
             (position.x * TILE_SIZE),
@@ -25,14 +25,14 @@ namespace TileTransformation
     }
 
     // Screen coordinates
-    inline Vector2i screenToPosition(const Vector2& pixel)
+    inline Vector2i screenToPosition(Vector2 pixel)
     {
         Vector2 worldPixel{GetScreenToWorld2D(pixel, dtb::camera())};
 
         return worldToPosition(worldPixel);
     }
 
-    inline Vector2 positionToScreen(const Vector2i& position)
+    inline Vector2 positionToScreen(Vector2i position)
     {
         Vector2 worldPixel{
             position.x * TILE_SIZE,

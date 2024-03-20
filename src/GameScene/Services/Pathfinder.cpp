@@ -6,8 +6,8 @@
 
 // Pathfinder returns vector of positions from target to origin (excluded) if target is reachable
 Path findPath(
-    const RangeSeparatedTiles& reachableTiles,
-    const Vector2i& target)
+    RangeSeparatedTiles const& reachableTiles,
+    Vector2i target)
 {
     Path path{};
 
@@ -33,7 +33,7 @@ Path findPath(
     // Find target tile in reachable positions
     for (size_t stepLevel{0}; stepLevel < maxRange; ++stepLevel)
     {
-        for (const auto& steppedTile : reachableTiles[stepLevel])
+        for (auto const& steppedTile : reachableTiles[stepLevel])
         {
             if (!Vector2Equals(steppedTile.tile->position.tilePosition(), target))
                 continue;
@@ -77,8 +77,8 @@ Path findPath(
 
 Path findPath(
     TileMap& tileMap,
-    const Vector2i& origin,
-    const Vector2i& target,
+    Vector2i origin,
+    Vector2i target,
     size_t range)
 {
     return findPath(TileMapFilters::filterMovable(tileMap, range, origin), target);

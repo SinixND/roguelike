@@ -7,12 +7,12 @@
 namespace Utility
 {
     template <typename Type>
-    inline void appendVector(std::vector<Type>& targetVector, const std::vector<Type>& vector)
+    inline void appendVector(std::vector<Type>& targetVector, std::vector<Type> const& vector)
     {
         targetVector.insert(targetVector.end(), vector.begin(), vector.end());
     }
 
-    inline bool isInVector(const Vector2i& element, std::vector<Vector2i> vector)
+    inline bool isInVector(Vector2i element, std::vector<Vector2i> vector)
     {
         for (auto& entry : vector)
         {

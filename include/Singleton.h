@@ -3,8 +3,8 @@
 
 // Included as an example of a parameterized macro
 #define DISALLOW_COPY_AND_ASSIGN(T) \
-    T(const T&) = delete;           \
-    T& operator=(const T&) = delete;
+    T(T const&) = delete;           \
+    T& operator=(T const&) = delete;
 
 template <typename Type>
 class Singleton

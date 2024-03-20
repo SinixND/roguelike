@@ -15,7 +15,7 @@ public:
 
 public:
     Vector2i& target() { return target_; };
-    void setTarget(const Vector2i& target)
+    void setTarget(Vector2i target)
     {
         target_ = target;
     };
@@ -25,7 +25,7 @@ public:
 
     bool isMoving() { return isMoving_; };
 
-    void setPath(const Path& path)
+    void setPath(Path const& path)
     {
         path_ = path;
         isMoving_ = true;

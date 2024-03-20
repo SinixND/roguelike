@@ -14,9 +14,9 @@ namespace snd
     class ISparseSet
     {
     public:
-        virtual void erase(const Key& key) = 0;
+        virtual void erase(Key const& key) = 0;
         virtual void clear() = 0;
-        virtual bool contains(const Key& key) = 0;
+        virtual bool contains(Key const& key) = 0;
         virtual std::vector<Key> keys() = 0;
         virtual ~ISparseSet() = default;
     };
@@ -26,7 +26,7 @@ namespace snd
         : public ISparseSet<Key>
     {
     public:
-        Type* createOrUpdate(const Key& key, const Type& value = Type{})
+        Type* createOrUpdate(Key const& key, Type const& value = Type{})
         {
             if (contains(key))
             {
@@ -52,7 +52,7 @@ namespace snd
             return &values_[keyToIndex_[key]];
         };
 
-        void erase(const Key& key) override
+        void erase(Key const& key) override
         {
             if (!contains(key))
                 return;
@@ -104,12 +104,12 @@ namespace snd
             keys_.clear();
         };
 
-        bool contains(const Key& key) override
+        bool contains(Key const& key) override
         {
             return keys_.contains(key);
         };
 
-        Type* at(const Key& key)
+        Type* at(Key const& key)
         {
             if (!contains(key))
                 return nullptr;

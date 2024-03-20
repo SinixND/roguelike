@@ -21,7 +21,7 @@ private:
 
 public:
     static inline Font& font() { return instance().font_; };
-    static inline void loadFont(const char* fileName) { font() = LoadFont(fileName); };
+    static inline void loadFont(char const* fileName) { font() = LoadFont(fileName); };
     static inline void unloadFont() { UnloadFont(font()); };
 
     // Textures
@@ -41,7 +41,7 @@ public:
 
     static inline void unloadAllTextures()
     {
-        for (const auto& texture : textures())
+        for (auto const& texture : textures())
         {
             Texture2D tex = texture.second;
             UnloadTexture(tex);
@@ -90,7 +90,7 @@ private:
 public:
     static inline Area& mapSize() { return instance().mapSize_; };
 
-    static inline void updateMapSize(const Vector2i& V)
+    static inline void updateMapSize(Vector2i V)
     {
         auto left{V.x < mapSize().left ? V.x : mapSize().left};
         auto right{V.x > mapSize().right ? V.x : mapSize().right};

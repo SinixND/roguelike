@@ -16,7 +16,7 @@ namespace
 
 namespace CameraControl
 {
-    void edgePan(const Vector2& cursorWorldPosition, bool isMouseActive)
+    void edgePan(Vector2 cursorWorldPosition, bool isMouseActive)
     {
         static float dt{};
         dt += GetFrameTime();

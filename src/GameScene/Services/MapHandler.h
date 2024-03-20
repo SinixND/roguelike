@@ -14,12 +14,12 @@ namespace MapHandler
 
     void addTiles(
         TileMap& tileMap,
-        const Area& area,
+        Area const& area,
         Graphic graphic,
         bool isSolid,
         bool blocksVision);
 
-    void addRoom(TileMap& tileMap, const Area& room);
+    void addRoom(TileMap& tileMap, Area const& room);
     void createStartRoom(TileMap& tileMap);
     void createGridRooms(TileMap& tileMap, size_t level);
 }

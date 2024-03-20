@@ -43,7 +43,7 @@ namespace MapHandler
 
     void addTiles(
         TileMap& tileMap,
-        const Area& area,
+        Area const& area,
         Graphic graphic,
         bool isSolid,
         bool blocksVision)
@@ -69,7 +69,7 @@ namespace MapHandler
         dtb::updateMapSize({area.right, area.bottom});
     }
 
-    void addRoom(TileMap& tileMap, const Area& room)
+    void addRoom(TileMap& tileMap, Area const& room)
     {
         // Return if area width or height < 2
         if (room.width < 2 || room.height < 2)

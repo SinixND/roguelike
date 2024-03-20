@@ -10,7 +10,7 @@
 
 namespace Render
 {
-    void update(const Vector2& position, Graphic& graphic, VisibilityID visibilityID)
+    void update(Vector2 position, Graphic& graphic, VisibilityID visibilityID)
     {
         static RectangleEx renderArea{getRenderArea()};
         if (IsWindowResized())
@@ -45,8 +45,8 @@ namespace Render
 
                 if (dtb::debugMode())
                 {
-                tint = ColorBrightness(tint, 0.67);
-                tint = RED;
+                    tint = ColorBrightness(tint, 0.67);
+                    tint = RED;
                 }
                 break;
         }
