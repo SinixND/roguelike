@@ -1,8 +1,8 @@
 #include "CursorControl.h"
 
 #include "Constants.h"
-#include "Position.h"
 #include "TileTransformation.h"
+#include "Transformation.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -10,10 +10,10 @@ namespace CursorControl
 {
     namespace
     {
-        void processKeyControl(Position& cursorPosition);
+        void processKeyControl(Transformation& cursorPosition);
     }
 
-    void update(Position& cursorPosition, bool isMouseActive)
+    void update(Transformation& cursorPosition, bool isMouseActive)
     {
         // Cursor control
         if (isMouseActive)
@@ -29,7 +29,7 @@ namespace CursorControl
 
     namespace
     {
-        void processKeyControl(Position& cursorPosition)
+        void processKeyControl(Transformation& cursorPosition)
         {
             Vector2i dir{};
 

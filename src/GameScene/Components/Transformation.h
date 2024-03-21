@@ -5,25 +5,20 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-class Position
+class Transformation
 {
 public:
-    Vector2& get()
+    Vector2 position() const
     {
         return position_;
     }
 
-    void set(Vector2 position)
+    void setPosition(Vector2 position)
     {
         position_ = position;
     }
 
-    void set(Vector2i tilePosition)
-    {
-        position_ = TileTransformation::positionToWorld(tilePosition);
-    }
-
-    Vector2i tilePosition()
+    Vector2i tilePosition() const
     {
         return TileTransformation::worldToPosition(position_);
     }
@@ -33,10 +28,10 @@ public:
         position_ = TileTransformation::positionToWorld(tilePosition);
     }
 
-    Position(Vector2 position = {0, 0})
+    Transformation(Vector2 position = {0, 0})
         : position_(position){};
 
-    Position(Vector2i tilePosition)
+    Transformation(Vector2i tilePosition)
     {
         setTilePosition(tilePosition);
     }

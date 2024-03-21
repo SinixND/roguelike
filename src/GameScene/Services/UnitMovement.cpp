@@ -2,7 +2,7 @@
 
 #include "Movement.h"
 #include "Pathfinder.h"
-#include "Position.h"
+#include "Transformation.h"
 #include "Unit.h"
 #include "World.h"
 #include "raylibEx.h"
@@ -10,12 +10,12 @@
 
 namespace UnitMovement
 {
-    void setTarget(World& gameWorld, Unit& unit, Position& cursorPosition)
+    void setTarget(World& gameWorld, Unit& unit, Transformation& cursorPosition)
     {
         // Check if target is valid
         if (
             gameWorld.mapOverlay().contains(cursorPosition.tilePosition()) &&
-            !Vector2Equals(cursorPosition.tilePosition(), unit.position.tilePosition()))
+            !Vector2Equals(cursorPosition.tilePosition(), unit.transform.tilePosition()))
         {
             // Set movement target
             unit.movement.setTarget(cursorPosition.tilePosition());
@@ -44,13 +44,13 @@ namespace UnitMovement
         {
             // Move unit
             isTargetReached = unit.movement.move(
-                unit.position.get(),
+                unit.transform,
                 GetFrameTime());
         }
 
         if (isTargetReached)
         {
-            unit.isSelected = false;
+            unit.setIsSelected(false);
             isInputBlocked = false;
         }
     }

@@ -118,7 +118,7 @@ namespace RayCast
                 tilesRayed.push_back(tileHit);
 
                 // Detect tile blocking vision
-                if (tileHit->blocksVision)
+                if (tileHit->blocksVision())
                     break;
 
                 //* if (dtb::debugMode())
@@ -127,7 +127,7 @@ namespace RayCast
                 //* BeginMode2D(dtb::camera());
 
                 //* DrawLineEx(rayStart, rayEnd, 1, GREEN);
-                //* DrawCircleLinesV(tileHit->position.get(), 3, WHITE);
+                //* DrawCircleLinesV(tileHit->position().position(), 3, WHITE);
 
                 //* EndMode2D();
                 //* EndDrawing();

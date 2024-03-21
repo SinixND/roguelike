@@ -2,16 +2,17 @@
 #define IG20240211172120
 
 #include "Graphic.h"
-#include "Position.h"
+#include "Transformation.h"
+#include <raylib.h>
 
 class Entity
 {
 public:
-    Position position;
+    Transformation transform;
     Graphic graphic;
 
-    Entity(Position position, Graphic graphic)
-        : position(position)
+    Entity(Transformation transform, Graphic graphic)
+        : transform(transform)
         , graphic(graphic){};
 };
 

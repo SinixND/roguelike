@@ -7,7 +7,8 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-- [ ] No non-const return from getter() const
+- [ ] Refactor functions single purpose
+
 - [ ] Fix Bug: Movement trigger on attackable tile
 - [ ] Fix Bug: Path finder ignores walls
 - [ ] Check FPS issue
@@ -157,3 +158,4 @@ private:
 - [x] Refactor EdgePan relative to render area
 - [x] Add RectangleEx (has left, top, right, bottom, height, width)
 - [x] Add input to center on hero
+- [x] Always use Setter/Getter (keep open for possible later changes / flexibility)

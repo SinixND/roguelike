@@ -7,14 +7,21 @@
 class Graphic
 {
 public:
-    RenderID renderID;
-    LayerID layerID;
+    RenderID const& renderID() const { return renderID_; };
+    void setRenderID(RenderID const& renderID) { renderID_ = renderID; };
+
+    LayerID const& layerID() const { return layerID_; };
+    void setLayerID(LayerID const& layerID) { layerID_ = layerID; };
 
     Graphic(
         RenderID renderID,
         LayerID layerID)
-        : renderID(renderID)
-        , layerID(layerID){};
+        : renderID_(renderID)
+        , layerID_(layerID){};
+
+private:
+    RenderID renderID_;
+    LayerID layerID_;
 };
 
 #endif

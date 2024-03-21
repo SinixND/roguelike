@@ -9,7 +9,6 @@
 #include "MapOverlay.h"
 #include "Movement.h"
 #include "Pathfinder.h"
-#include "Position.h"
 #include "Render.h"
 #include "RenderID.h"
 #include "RuntimeDatabase.h"
@@ -17,6 +16,7 @@
 #include "Tile.h"
 #include "TileMap.h"
 #include "TileTransformation.h"
+#include "Transformation.h"
 #include "Unit.h"
 #include "UnitMovement.h"
 #include "VisibilityID.h"
@@ -32,13 +32,13 @@ namespace
     World gameWorld{};
 
     Entity cursor{
-        Position(),
+        Transformation(),
         Graphic(
             RenderID::CURSOR,
             LayerID::UI)};
 
     Unit hero{
-        Position(),
+        Transformation(),
         Graphic(
             RenderID::HERO,
             LayerID::OBJECT),
@@ -83,11 +83,11 @@ void GameScene::processInput()
     }
 
     // Update cursor
-    CursorControl::update(cursor.position, isMouseActive);
+    CursorControl::update(cursor.transform, isMouseActive);
 
     // Process edge pan
     CameraControl::edgePan(
-        TileTransformation::positionToWorld(cursor.position.tilePosition()),
+        TileTransformation::positionToWorld(cursor.transform.tilePosition()),
         isMouseActive);
 
     // Center on hero
@@ -114,7 +114,7 @@ void GameScene::processInput()
     {
         Selection::select(
             hero,
-            cursor.position.tilePosition());
+            cursor.transform.tilePosition());
     }
 
     // Deselect unit
@@ -133,7 +133,7 @@ void GameScene::processInput()
         UnitMovement::setTarget(
             gameWorld,
             hero,
-            cursor.position);
+            cursor.transform);
     }
 }
 
@@ -146,7 +146,7 @@ void GameScene::updateState()
     static Path path{};
 
     int condition = // A=isSelected, B=rangeShown
-        (hero.isSelected ? (true << 1) : false) +
+        (hero.isSelected() ? (true << 1) : false) +
         (isRangeShown ? (true << 0) : false);
 
     switch (condition)
@@ -182,9 +182,9 @@ void GameScene::updateState()
         case 3:
             // 1 1 // selected, range shown -> Show path
             path = MapOverlay::showPath(
-                hero.position.tilePosition(),
-                cursor.position.tilePosition(),
-                hero.movement.range,
+                hero.transform.tilePosition(),
+                cursor.transform.tilePosition(),
+                hero.movement.range(),
                 gameWorld,
                 isPathShown);
 
@@ -209,26 +209,26 @@ void GameScene::renderOutput()
     // Layer map
     for (auto& tile : gameWorld.currentMap().values())
     {
-        Render::update(tile.position.get(), tile.graphic, tile.visibilityID);
+        Render::update(tile.transform.position(), tile.graphic, tile.visibilityID());
     }
 
     // Layer map overlay
     for (auto& tile : gameWorld.mapOverlay().values())
     {
-        Render::update(tile.position.get(), tile.graphic, tile.visibilityID);
+        Render::update(tile.transform.position(), tile.graphic, tile.visibilityID());
     }
 
     // Layer framed map overlay
     for (auto& tile : gameWorld.framedMapOverlay().values())
     {
-        Render::update(tile.position.get(), tile.graphic, tile.visibilityID);
+        Render::update(tile.transform.position(), tile.graphic, tile.visibilityID());
     }
 
     // Render object layer
-    Render::update(hero.position.get(), hero.graphic);
+    Render::update(hero.transform.position(), hero.graphic);
 
     // Render UI layer
-    Render::update(cursor.position.get(), cursor.graphic);
+    Render::update(cursor.transform.position(), cursor.graphic);
 
     EndMode2D();
 

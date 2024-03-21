@@ -2,6 +2,7 @@
 #define IG20240218231113
 
 #include "Pathfinder.h"
+#include "Transformation.h"
 #include "raylibEx.h"
 #include <cstddef>
 #include <raylib.h>
@@ -10,20 +11,19 @@
 class Movement
 {
 public:
-    size_t range{};
-    float speed{}; // pixel per second
+    size_t range() const { return range_; };
+    void setRange(size_t range) { range_ = range; };
 
-public:
-    Vector2i& target() { return target_; };
-    void setTarget(Vector2i target)
-    {
-        target_ = target;
-    };
+    float speed() const { return speed_; };
+    void setSpeed(float speed) { speed_ = speed; };
 
-    bool isTargetSet() { return isTargetSet_; };
+    Vector2i target() const { return target_; };
+    void setTarget(Vector2i target) { target_ = target; };
+
+    bool isTargetSet() const { return isTargetSet_; };
     void setIsTargetSet(bool status) { isTargetSet_ = status; };
 
-    bool isMoving() { return isMoving_; };
+    bool isMoving() const { return isMoving_; };
 
     void setPath(Path const& path)
     {
@@ -32,15 +32,15 @@ public:
     };
 
     // Returns if movement finished
-    bool move(Vector2& position, float dt);
+    bool move(Transformation& transform, float dt);
 
-    Movement(
-        size_t range,
-        float speed)
-        : range(range)
-        , speed(speed){};
+    Movement(size_t range, float speed)
+        : range_(range)
+        , speed_(speed){};
 
 private:
+    size_t range_{};
+    float speed_{}; // pixel per second
     Vector2i target_{};
     bool isTargetSet_{false};
     bool isMoving_{false};

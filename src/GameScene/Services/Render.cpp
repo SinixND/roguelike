@@ -21,7 +21,7 @@ namespace Render
             return;
 
         // Get texture data
-        Texture2D* texture{dtb::getTexture(graphic.renderID)};
+        Texture2D* texture{dtb::getTexture(graphic.renderID())};
         Vector2 tileSize{TILE_DIMENSIONS};
         Vector2 tileCenter{Vector2Scale(tileSize, 0.5f)};
 

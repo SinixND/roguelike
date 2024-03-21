@@ -13,56 +13,20 @@
 
 namespace
 {
-    void resetVisibleTiles(std::vector<Tile*>& tiles);
-    void addRayTargets(std::vector<Vector2i>& rayTargets, Unit& unit);
-}
-
-namespace Vision
-{
-    void update(Unit& unit, TileMap& tileMap)
-    {
-        // Filter tiles
-        auto tilesInExtendedVisionRange{
-            TileMapFilters::filterInRange(
-                tileMap,
-                unit.visionRange + 1,
-                unit.position.tilePosition())};
-
-        // Reset "visible" tiles to "seen" in extended vision range
-        resetVisibleTiles(tilesInExtendedVisionRange);
-
-        // Set ray targets
-        std::vector<Vector2i> rayTargets{};
-
-        addRayTargets(rayTargets, unit);
-
-        // Set visible tiles
-        std::vector<Tile*> visibleTiles{RayCast::getTilesRayed(rayTargets, unit.position.get(), tileMap)};
-
-        // Make tiles visible
-        for (auto& tile : visibleTiles)
-        {
-            tile->visibilityID = VisibilityID::VISIBLE;
-        }
-    }
-}
-
-namespace
-{
     void resetVisibleTiles(std::vector<Tile*>& tiles)
     {
         for (auto& tile : tiles)
         {
-            if (tile->visibilityID == VisibilityID::VISIBLE)
+            if (tile->visibilityID() == VisibilityID::VISIBLE)
             {
-                tile->visibilityID = VisibilityID::SEEN;
+                tile->setVisibilityID(VisibilityID::SEEN);
 
                 //* if (dtb::debugMode())
                 //* {
                 //* BeginDrawing();
                 //* BeginMode2D(dtb::camera());
 
-                //* DrawCircleLinesV(tile->position.get(), 5, RED);
+                //* DrawCircleLinesV(tile->position().get(), 5, RED);
 
                 //* EndMode2D();
                 //* EndDrawing();
@@ -73,8 +37,8 @@ namespace
 
     void addRayTargets(std::vector<Vector2i>& rayTargets, Unit& unit)
     {
-        Vector2i origin{unit.position.tilePosition()};
-        int visionRange{unit.visionRange};
+        Vector2i origin{unit.transform.tilePosition()};
+        int visionRange{unit.visionRange()};
 
         // Add all target positions that are exaclty at vision range
         // Set first target
@@ -108,5 +72,35 @@ namespace
                 delta.y *= -1;
 
         } while (!Vector2Equals(target, firstTarget));
+    }
+}
+
+namespace Vision
+{
+    void update(Unit& unit, TileMap& tileMap)
+    {
+        // Filter tiles
+        auto tilesInExtendedVisionRange{
+            TileMapFilters::filterInRange(
+                tileMap,
+                unit.visionRange() + 1,
+                unit.transform.tilePosition())};
+
+        // Reset "visible" tiles to "seen" in extended vision range
+        resetVisibleTiles(tilesInExtendedVisionRange);
+
+        // Set ray targets
+        std::vector<Vector2i> rayTargets{};
+
+        addRayTargets(rayTargets, unit);
+
+        // Set visible tiles
+        std::vector<Tile*> visibleTiles{RayCast::getTilesRayed(rayTargets, unit.transform.position(), tileMap)};
+
+        // Make tiles visible
+        for (auto& tile : visibleTiles)
+        {
+            tile->setVisibilityID(VisibilityID::VISIBLE);
+        }
     }
 }

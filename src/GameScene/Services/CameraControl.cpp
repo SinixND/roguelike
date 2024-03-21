@@ -11,7 +11,26 @@
 
 namespace
 {
-    void setPanDirection(Vector2& screenCursor, RectangleEx& edgePanArea, Vector2i& panDirection);
+    void setPanDirection(Vector2& screenCursor, RectangleEx& edgePanArea, Vector2i& panDirection)
+    {
+        if (screenCursor.x < edgePanArea.left())
+        {
+            panDirection = Vector2Add(panDirection, V_LEFT);
+        }
+        else if (screenCursor.x > (edgePanArea.right()))
+        {
+            panDirection = Vector2Add(panDirection, V_RIGHT);
+        }
+
+        if (screenCursor.y < edgePanArea.top())
+        {
+            panDirection = Vector2Add(panDirection, V_UP);
+        }
+        else if (screenCursor.y > (edgePanArea.bottom()))
+        {
+            panDirection = Vector2Add(panDirection, V_DOWN);
+        }
+    }
 }
 
 namespace CameraControl
@@ -68,30 +87,7 @@ namespace CameraControl
 
     void centerOnHero(Camera2D& camera, Unit& unit)
     {
-        camera.target = unit.position.get();
+        camera.target = unit.transform.position();
     }
 }
 
-namespace
-{
-    void setPanDirection(Vector2& screenCursor, RectangleEx& edgePanArea, Vector2i& panDirection)
-    {
-        if (screenCursor.x < edgePanArea.left())
-        {
-            panDirection = Vector2Add(panDirection, V_LEFT);
-        }
-        else if (screenCursor.x > (edgePanArea.right()))
-        {
-            panDirection = Vector2Add(panDirection, V_RIGHT);
-        }
-
-        if (screenCursor.y < edgePanArea.top())
-        {
-            panDirection = Vector2Add(panDirection, V_UP);
-        }
-        else if (screenCursor.y > (edgePanArea.bottom()))
-        {
-            panDirection = Vector2Add(panDirection, V_DOWN);
-        }
-    }
-}

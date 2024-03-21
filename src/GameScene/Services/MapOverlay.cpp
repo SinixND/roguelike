@@ -18,16 +18,16 @@ namespace MapOverlay
         // Filter relevant tiles
         for (auto& steppedTiles : TileMapFilters::filterMovable(
                  world.currentMap(),
-                 unit.movement.range,
-                 unit.position.tilePosition()))
+                 unit.movement.range(),
+                 unit.transform.tilePosition()))
         {
             for (auto& steppedTile : steppedTiles)
             {
                 // Add reachable tile to overlay
                 world.mapOverlay().createOrUpdate(
-                    steppedTile.tile->position.tilePosition(),
+                    steppedTile.tile->transform.tilePosition(),
                     Tile(
-                        steppedTile.tile->position.tilePosition(),
+                        steppedTile.tile->transform.tilePosition(),
                         Graphic(
                             RenderID::REACHABLE,
                             LayerID::MAP_OVERLAY)));
@@ -40,17 +40,17 @@ namespace MapOverlay
         // Filter relevant tiles
         auto inActionRangeTiles{TileMapFilters::filterInActionRange(
             world.currentMap(),
-            unit.attack.range,
-            unit.movement.range,
-            unit.position.tilePosition())};
+            unit.attack.range(),
+            unit.movement.range(),
+            unit.transform.tilePosition())};
 
         for (auto& tile : inActionRangeTiles)
         {
             // Add reachable tile to overlay
             world.mapOverlay().createOrUpdate(
-                tile->position.tilePosition(),
+                tile->transform.tilePosition(),
                 Tile(
-                    tile->position.tilePosition(),
+                    tile->transform.tilePosition(),
                     Graphic(
                         RenderID::ATTACKABLE,
                         LayerID::MAP_OVERLAY)));
@@ -87,9 +87,9 @@ namespace MapOverlay
         for (auto& steppedTile : path)
         {
             world.framedMapOverlay().createOrUpdate(
-                steppedTile.tile->position.tilePosition(),
+                steppedTile.tile->transform.tilePosition(),
                 Tile(
-                    steppedTile.tile->position.tilePosition(),
+                    steppedTile.tile->transform.tilePosition(),
                     Graphic(
                         RenderID::PATH,
                         LayerID::MAP_OVERLAY)));

@@ -15,7 +15,7 @@ Path findPath(
     if (!TileMapFilters::isInRangeSeparatedTiles(target, reachableTiles))
         return path;
 
-    Vector2i origin{reachableTiles.front().front().tile->position.tilePosition()};
+    Vector2i origin{reachableTiles.front().front().tile->transform.tilePosition()};
 
     // Check if target equals root position
     if (Vector2Equals(target, origin))
@@ -35,7 +35,7 @@ Path findPath(
     {
         for (auto const& steppedTile : reachableTiles[stepLevel])
         {
-            if (!Vector2Equals(steppedTile.tile->position.tilePosition(), target))
+            if (!Vector2Equals(steppedTile.tile->transform.tilePosition(), target))
                 continue;
 
             currentStepLevelTile = steppedTile;
@@ -57,7 +57,7 @@ Path findPath(
         {
             // CheckVector is delta between checked tile position and current step level position
             // CheckVector also is used to store the direction to next path tile
-            Vector2i checkVector{Vector2Subtract(currentStepLevelTile.tile->position.tilePosition(), steppedTile.tile->position.tilePosition())};
+            Vector2i checkVector{Vector2Subtract(currentStepLevelTile.tile->transform.tilePosition(), steppedTile.tile->transform.tilePosition())};
 
             // Tiled length of checkVector needs to be 1 (then it is a neighbour)
             auto checkValue{Vector2Sum(checkVector)};

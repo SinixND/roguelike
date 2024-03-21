@@ -3,27 +3,36 @@
 
 #include "Entity.h"
 #include "Graphic.h"
-#include "Position.h"
+#include "Transformation.h"
 #include "VisibilityID.h"
 
 class Tile : public Entity
 {
 public:
-    bool isSolid;
-    bool blocksVision;
-    VisibilityID visibilityID;
+    bool isSolid() const { return isSolid_; };
+    void setIsSolid(bool isSolid) { isSolid_ = isSolid; };
 
-    // For map tiles
-    Tile(Position const& position, Graphic const& graphic, bool isSolid, bool blocksVision)
+    bool blocksVision() const { return blocksVision_; };
+    void setBlocksVision(bool blocksVision) { blocksVision_ = blocksVision; };
+
+    VisibilityID visibilityID() const { return visibilityID_; };
+    void setVisibilityID(VisibilityID visibilityID) { visibilityID_ = visibilityID; };
+
+    Tile(Transformation const& position, Graphic const& graphic, bool isSolid, bool blocksVision)
         : Entity(position, graphic)
-        , isSolid(isSolid)
-        , blocksVision(blocksVision)
-        , visibilityID(VisibilityID::UNSEEN){};
+        , isSolid_(isSolid)
+        , blocksVision_(blocksVision)
+        , visibilityID_(VisibilityID::UNSEEN){};
 
     // For overlay tiles
-    Tile(Position const& position, Graphic const& graphic)
+    Tile(Transformation const& position, Graphic const& graphic)
         : Entity(position, graphic)
-        , isSolid(false)
-        , visibilityID(VisibilityID::VISIBLE){};
+        , isSolid_(false)
+        , visibilityID_(VisibilityID::VISIBLE){};
+
+private:
+    bool isSolid_;
+    bool blocksVision_;
+    VisibilityID visibilityID_;
 };
 #endif

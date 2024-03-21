@@ -18,7 +18,7 @@ namespace TileMapFilters
         {
             if (Vector2Equals(
                     target,
-                    tile->position.tilePosition()))
+                    tile->transform.tilePosition()))
                 return true;
         }
         return false;
@@ -30,7 +30,7 @@ namespace TileMapFilters
     {
         for (auto const& steppedTile : steppedTiles)
         {
-            if (Vector2Equals(target, steppedTile.tile->position.tilePosition()))
+            if (Vector2Equals(target, steppedTile.tile->transform.tilePosition()))
                 return true;
         }
         return false;
@@ -46,7 +46,7 @@ namespace TileMapFilters
             {
                 if (Vector2Equals(
                         target,
-                        steppedTile.tile->position.tilePosition()))
+                        steppedTile.tile->transform.tilePosition()))
                     return true;
             }
         }
@@ -73,7 +73,7 @@ namespace TileMapFilters
 
         for (auto& tile : tileMap.values())
         {
-            if (tile.isSolid)
+            if (tile.isSolid())
                 continue;
 
             accessibleTiles.push_back(&tile);
@@ -98,7 +98,7 @@ namespace TileMapFilters
         {
             Vector2i delta{
                 Vector2Subtract(
-                    tile->position.tilePosition(),
+                    tile->transform.tilePosition(),
                     origin)};
 
             size_t sumDelta{Vector2Sum(delta)};
@@ -164,7 +164,7 @@ namespace TileMapFilters
 
         for (auto& tile : tiles)
         {
-            tileSet.createOrUpdate(tile->position.tilePosition(), tile);
+            tileSet.createOrUpdate(tile->transform.tilePosition(), tile);
         }
 
         RangeSeparatedTiles sortedSteppedTiles{};
@@ -224,7 +224,7 @@ namespace TileMapFilters
                 for (auto R : {M_ROTATE_NONE, M_ROTATE_CCW, M_ROTATE_CW})
                 {
                     // Set next stepped tile position
-                    Vector2i nextTilePosition{Vector2Add(lastSteppedTile.tile->position.tilePosition(), Vector2Transform(R, lastSteppedTile.directionAccessed))};
+                    Vector2i nextTilePosition{Vector2Add(lastSteppedTile.tile->transform.tilePosition(), Vector2Transform(R, lastSteppedTile.directionAccessed))};
 
                     // Check if tile is already known
                     bool tileKnown{false};
@@ -233,7 +233,7 @@ namespace TileMapFilters
                     {
                         for (auto const& steppedTile : steppedTiles)
                         {
-                            if (!Vector2Equals(steppedTile.tile->position.tilePosition(), nextTilePosition))
+                            if (!Vector2Equals(steppedTile.tile->transform.tilePosition(), nextTilePosition))
                                 continue;
 
                             tileKnown = true;
@@ -302,7 +302,7 @@ namespace TileMapFilters
                     // Skip if neighbour tile is in tiles
                     Vector2i position{
                         Vector2Add(
-                            tile->position.tilePosition(),
+                            tile->transform.tilePosition(),
                             dir)};
 
                     if (isInRangeSeparatedTiles(
@@ -341,11 +341,11 @@ namespace TileMapFilters
                 filterInRange(
                     tileMap,
                     actionRange,
-                    edgeTile->position.tilePosition())};
+                    edgeTile->transform.tilePosition())};
 
             for (auto& inRangeTile : inRangeTiles)
             {
-                if (isInRangeSeparatedTiles(inRangeTile->position.tilePosition(), movableTiles))
+                if (isInRangeSeparatedTiles(inRangeTile->transform.tilePosition(), movableTiles))
                     continue;
 
                 inActionRangeTiles.push_back(inRangeTile);

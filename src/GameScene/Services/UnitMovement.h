@@ -3,14 +3,14 @@
 
 #include "Movement.h"
 #include "Pathfinder.h"
-#include "Position.h"
+#include "Transformation.h"
 #include "Unit.h"
 #include "World.h"
 #include <raylib.h>
 
 namespace UnitMovement
 {
-    void setTarget(World& gameWorld, Unit& unit, Position& cursorPosition);
+    void setTarget(World& gameWorld, Unit& unit, Transformation& cursorPosition);
     void triggerMovement(Movement& movement, Path& path, bool& isInputBlocked);
     void processMovement(Unit& unit, bool& isInputBlocked);
 }
