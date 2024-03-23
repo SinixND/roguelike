@@ -23,8 +23,8 @@ public:
     VisibilityID visibilityID() const { return visibilityID_; };
     void setVisibilityID(VisibilityID visibilityID) { visibilityID_ = visibilityID; };
 
-    int visionRange() const { return visionRange_; };
-    void setVisionRange(int visionRange) { visionRange_ = visionRange; };
+    size_t visionRange() const { return visionRange_; };
+    void setVisionRange(size_t visionRange) { visionRange_ = visionRange; };
 
     Unit(Transformation position, Graphic graphic, Movement movement, VisibilityID visibilityID, int visionRange, Attack attack)
         : Entity(position, graphic)
@@ -37,7 +37,7 @@ private:
     bool isSelected_{false};
     const bool isSolid_{true};
     VisibilityID visibilityID_;
-    int visionRange_;
+    size_t visionRange_;
 };
 
 #endif

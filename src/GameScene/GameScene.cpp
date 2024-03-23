@@ -32,22 +32,22 @@ namespace
     World gameWorld{};
 
     Entity cursor{
-        Transformation(),
-        Graphic(
-            RenderID::CURSOR,
-            LayerID::UI)};
+      Transformation(),
+      Graphic(
+        RenderID::CURSOR,
+        LayerID::UI)};
 
     Unit hero{
-        Transformation(),
-        Graphic(
-            RenderID::HERO,
-            LayerID::OBJECT),
-        Movement(5, 50),
-        VisibilityID::VISIBLE,
-        20,
-        Attack(
-            1,
-            1)};
+      Transformation(),
+      Graphic(
+        RenderID::HERO,
+        LayerID::OBJECT),
+      Movement(5, 50),
+      VisibilityID::VISIBLE,
+      20,
+      Attack(
+        1,
+        1)};
 
     bool isInputBlocked{false};
 }
@@ -87,8 +87,8 @@ void GameScene::processInput()
 
     // Process edge pan
     CameraControl::edgePan(
-        TileTransformation::positionToWorld(cursor.transform.tilePosition()),
-        isMouseActive);
+      TileTransformation::positionToWorld(cursor.transform.tilePosition()),
+      isMouseActive);
 
     // Center on hero
     if (IsKeyPressed(KEY_TAB))
@@ -99,41 +99,36 @@ void GameScene::processInput()
 
     // Reset Zoom
     if (
-        (IsKeyDown(KEY_LEFT_CONTROL) ||
-         IsKeyDown(KEY_RIGHT_CONTROL)) &&
-        (IsKeyPressed(KEY_KP_0) ||
-         IsKeyPressed(KEY_ZERO)))
+      (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL))
+      && (IsKeyPressed(KEY_KP_0) || IsKeyPressed(KEY_ZERO)))
     {
         Zoom::reset(dtb::camera());
     }
 
     // Select unit
     if (
-        IsMouseButtonPressed(MOUSE_LEFT_BUTTON) ||
-        IsKeyPressed(KEY_SPACE))
+      IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
     {
         Selection::select(
-            hero,
-            cursor.transform.tilePosition());
+          hero,
+          cursor.transform.tilePosition());
     }
 
     // Deselect unit
     if (
-        IsKeyPressed(KEY_ESCAPE) ||
-        IsKeyPressed(KEY_CAPS_LOCK))
+      IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_CAPS_LOCK))
     {
         Selection::deselect(hero);
     }
 
     // Set unit movment target
     if (
-        IsMouseButtonPressed(MOUSE_LEFT_BUTTON) ||
-        IsKeyPressed(KEY_SPACE))
+      IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
     {
         UnitMovement::setTarget(
-            gameWorld,
-            hero,
-            cursor.transform);
+          gameWorld,
+          hero,
+          cursor.transform);
     }
 }
 
@@ -146,52 +141,51 @@ void GameScene::updateState()
     static Path path{};
 
     int condition = // A=isSelected, B=rangeShown
-        (hero.isSelected() ? (true << 1) : false) +
-        (isRangeShown ? (true << 0) : false);
+      (hero.isSelected() ? (true << 1) : false) + (isRangeShown ? (true << 0) : false);
 
     switch (condition)
     {
-        case 0:
-            // 0 0 // not selected, not shown -> Do nothing
-            break;
+    case 0:
+        // 0 0 // not selected, not shown -> Do nothing
+        break;
 
-        case 1:
-            // 0 1 // not selected, range shown -> Hide range
-            gameWorld.mapOverlay().clear();
+    case 1:
+        // 0 1 // not selected, range shown -> Hide range
+        gameWorld.mapOverlay().clear();
 
-            isRangeShown = false;
+        isRangeShown = false;
 
-            isPathShown = false;
+        isPathShown = false;
 
-            break;
+        break;
 
-        case 2:
-            // 1 0 // selected, range not shown -> Show range
-            MapOverlay::showUnitMoveRange(
-                hero,
-                gameWorld);
+    case 2:
+        // 1 0 // selected, range not shown -> Show range
+        MapOverlay::showUnitMoveRange(
+          hero,
+          gameWorld);
 
-            MapOverlay::showUnitActionRange(
-                hero,
-                gameWorld);
+        MapOverlay::showUnitActionRange(
+          hero,
+          gameWorld);
 
-            isRangeShown = true;
+        isRangeShown = true;
 
-            break;
+        break;
 
-        case 3:
-            // 1 1 // selected, range shown -> Show path
-            path = MapOverlay::showPath(
-                hero.transform.tilePosition(),
-                cursor.transform.tilePosition(),
-                hero.movement.range(),
-                gameWorld,
-                isPathShown);
+    case 3:
+        // 1 1 // selected, range shown -> Show path
+        path = MapOverlay::showPath(
+          hero.transform.tilePosition(),
+          cursor.transform.tilePosition(),
+          hero.movement.range(),
+          gameWorld,
+          isPathShown);
 
-            break;
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 
     UnitMovement::triggerMovement(hero.movement, path, isInputBlocked);
@@ -199,7 +193,8 @@ void GameScene::updateState()
     // Unblock input if target is reached
     UnitMovement::processMovement(hero, isInputBlocked);
 
-    Vision::update(hero, gameWorld.currentMap());
+    if (hero.transform.hasPositionChanged())
+        Vision::update(hero, gameWorld.currentMap());
 }
 
 void GameScene::renderOutput()
@@ -244,14 +239,14 @@ void GameScene::renderOutput()
     Vector2 textDimensions{MeasureTextEx(font, currentLevel, fontSize, fontSpacing)};
 
     DrawTextEx(
-        font,
-        currentLevel,
-        Vector2{
-            ((GetRenderWidth() / 2.0f) - (textDimensions.x / 2)),
-            10},
-        fontSize,
-        GuiGetStyle(DEFAULT, TEXT_SPACING),
-        RAYWHITE);
+      font,
+      currentLevel,
+      Vector2{
+        ((GetRenderWidth() / 2.0f) - (textDimensions.x / 2)),
+        10},
+      fontSize,
+      GuiGetStyle(DEFAULT, TEXT_SPACING),
+      RAYWHITE);
     //=================================
 
     // Draw render area
@@ -260,6 +255,8 @@ void GameScene::renderOutput()
 
 void GameScene::postOutput()
 {
+    hero.transform.resetPositionChanged();
+
     // Clear path
     gameWorld.framedMapOverlay().clear();
 }

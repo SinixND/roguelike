@@ -3,10 +3,9 @@
 
 #include <cmath>
 #include <cstddef>
+#include <functional>
 #include <raylib.h>
 #include <raymath.h>
-
-#include <functional>
 
 // Typedefs
 //=====================================
@@ -173,6 +172,20 @@ struct Vector2i
 {
     int x;
     int y;
+
+    Vector2i& operator+=(Vector2i const& right)
+    {
+        this->x += right.x;
+        this->y += right.y;
+        return *this;
+    }
+
+    Vector2i& operator-=(Vector2i const& right)
+    {
+        this->x -= right.x;
+        this->y -= right.y;
+        return *this;
+    }
 };
 
 struct Matrix2x2
@@ -281,10 +294,10 @@ inline size_t Vector2Sum(Vector2i V)
 inline Rectangle GetRectangle(Vector2 topLeft, Vector2 bottomRight)
 {
     return Rectangle{
-        topLeft.x,
-        topLeft.y,
-        bottomRight.x - topLeft.x,
-        bottomRight.y - topLeft.y};
+      topLeft.x,
+      topLeft.y,
+      bottomRight.x - topLeft.x,
+      bottomRight.y - topLeft.y};
 }
 
 inline Vector2 GetMainDirection(Vector2 from, Vector2 to)
@@ -297,10 +310,10 @@ inline Vector2 GetMainDirection(Vector2 from, Vector2 to)
 inline Rectangle GetRenderRec()
 {
     return Rectangle{
-        0,
-        0,
-        static_cast<float>(GetRenderWidth()),
-        static_cast<float>(GetRenderHeight())};
+      0,
+      0,
+      static_cast<float>(GetRenderWidth()),
+      static_cast<float>(GetRenderHeight())};
 }
 
 inline Vector2 ConvertToVector2(Vector2i V)
@@ -316,15 +329,15 @@ inline Vector2i ConvertToVector2i(Vector2 V)
 inline Vector2i GetMin(Vector2i V1, Vector2i V2)
 {
     return Vector2i{
-        (V1.x < V2.x ? V1.x : V2.x),
-        (V1.y < V2.y ? V1.y : V2.y)};
+      (V1.x < V2.x ? V1.x : V2.x),
+      (V1.y < V2.y ? V1.y : V2.y)};
 }
 
 inline Vector2i GetMax(Vector2i V1, Vector2i V2)
 {
     return Vector2i{
-        (V1.x > V2.x ? V1.x : V2.x),
-        (V1.y > V2.y ? V1.y : V2.y)};
+      (V1.x > V2.x ? V1.x : V2.x),
+      (V1.y > V2.y ? V1.y : V2.y)};
 }
 
 inline bool CheckCollisionPointArea(Vector2i tilePosition, Area const& area)
@@ -396,6 +409,30 @@ inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)
 
 // Operator Overloads
 //=====================================
+inline Vector2& operator+=(Vector2& left, Vector2 const& right)
+{
+    left.x += right.x;
+    left.y += right.y;
+    return left;
+}
+
+inline Vector2& operator-=(Vector2& left, Vector2 const& right)
+{
+    left.x -= right.x;
+    left.y -= right.y;
+    return left;
+}
+
+inline bool operator==(Vector2 lhs, Vector2 rhs)
+{
+    return Vector2Equals(lhs, rhs);
+};
+
+inline bool operator==(Vector2i lhs, Vector2i rhs)
+{
+    return Vector2Equals(lhs, rhs);
+};
+
 template <>
 struct std::hash<Vector2>
 {
@@ -407,11 +444,6 @@ struct std::hash<Vector2>
     }
 };
 
-inline bool operator==(Vector2 lhs, Vector2 rhs)
-{
-    return Vector2Equals(lhs, rhs);
-};
-
 template <>
 struct std::hash<Vector2i>
 {
@@ -421,11 +453,6 @@ struct std::hash<Vector2i>
         size_t h2 = std::hash<int>()(V.y);
         return (h1 ^ (h2 << 1));
     }
-};
-
-inline bool operator==(Vector2i lhs, Vector2i rhs)
-{
-    return Vector2Equals(lhs, rhs);
 };
 //=====================================
 

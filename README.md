@@ -7,6 +7,9 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
+- [ ] Size_t to unsigned int?
+- [ ] Rework semicolons
+
 - [ ] Refactor functions single purpose
 
 - [ ] Fix Bug: Movement trigger on attackable tile

@@ -8,15 +8,9 @@
 class Transformation
 {
 public:
-    Vector2 position() const
-    {
-        return position_;
-    }
+    Vector2 position() const { return position_; }
 
-    void setPosition(Vector2 position)
-    {
-        position_ = position;
-    }
+    void setPosition(Vector2 position) { position_ = position; }
 
     Vector2i tilePosition() const
     {
@@ -28,16 +22,33 @@ public:
         position_ = TileTransformation::positionToWorld(tilePosition);
     }
 
-    Transformation(Vector2 position = {0, 0})
-        : position_(position){};
-
-    Transformation(Vector2i tilePosition)
+    bool hasPositionChanged()
     {
-        setTilePosition(tilePosition);
+        if (!Vector2Equals(oldPosition_, tilePosition()))
+        {
+            hasPositionChanged_ = true;
+        }
+
+        return hasPositionChanged_;
     }
+
+    void resetPositionChanged()
+    {
+        oldPosition_ = tilePosition();
+        hasPositionChanged_ = false;
+    }
+
+    Transformation(Vector2 position = {0, 0})
+        : position_(position)
+    {
+    }
+
+    Transformation(Vector2i tilePosition) { setTilePosition(tilePosition); }
 
 private:
     Vector2 position_{};
+    Vector2i oldPosition_{tilePosition()};
+    bool hasPositionChanged_{true};
 };
 
 #endif

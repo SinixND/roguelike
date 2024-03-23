@@ -26,77 +26,83 @@ using RangeSeparatedTiles = std::vector<std::vector<SteppedTile>>;
 namespace TileMapFilters
 {
     bool isInTiles(
-        Vector2i target,
-        std::vector<Tile*> const& tiles);
+      Vector2i target,
+      std::vector<Tile*> const& tiles);
 
     bool isInSteppedTiles(
-        Vector2i target,
-        std::vector<SteppedTile> const& steppedTiles);
+      Vector2i target,
+      std::vector<SteppedTile> const& steppedTiles);
 
     bool isInRangeSeparatedTiles(
-        Vector2i target,
-        RangeSeparatedTiles const& rangeSeparatedTiles);
+      Vector2i target,
+      RangeSeparatedTiles const& rangeSeparatedTiles);
 
     std::vector<Tile*> filterNonSolidTiles(TileMap& tileMap);
 
-    std::vector<Tile*> filterInRange(
-        std::vector<Tile*> const& tiles,
-        size_t rangeStart,
-        size_t rangeEnd,
-        Vector2i origin);
+    std::vector<Tile*> filterSolidTiles(TileMap& tileMap);
+
+    std::vector<Tile*> filterNonOpaqueTiles(TileMap& tileMap);
+
+    std::vector<Tile*> filterOpaqueTiles(TileMap& tileMap);
 
     std::vector<Tile*> filterInRange(
-        std::vector<Tile*> const& tiles,
-        size_t range,
-        Vector2i origin);
+      std::vector<Tile*> const& tiles,
+      size_t rangeStart,
+      size_t rangeEnd,
+      Vector2i origin);
 
     std::vector<Tile*> filterInRange(
-        TileMap& tileMap,
-        size_t rangeStart,
-        size_t rangeEnd,
-        Vector2i origin);
+      std::vector<Tile*> const& tiles,
+      size_t range,
+      Vector2i origin);
 
     std::vector<Tile*> filterInRange(
-        TileMap& tileMap,
-        size_t range,
-        Vector2i origin);
+      TileMap& tileMap,
+      size_t rangeStart,
+      size_t rangeEnd,
+      Vector2i origin);
+
+    std::vector<Tile*> filterInRange(
+      TileMap& tileMap,
+      size_t range,
+      Vector2i origin);
 
     bool isInRange(
-        Vector2i target,
-        size_t rangeStart,
-        size_t rangeEnd,
-        Vector2i origin,
-        TileMap& tileMap);
+      Vector2i target,
+      size_t rangeStart,
+      size_t rangeEnd,
+      Vector2i origin,
+      TileMap& tileMap);
 
     bool isInRange(
-        Vector2i target,
-        size_t range,
-        Vector2i origin,
-        TileMap& tileMap);
+      Vector2i target,
+      size_t range,
+      Vector2i origin,
+      TileMap& tileMap);
 
     RangeSeparatedTiles filterMovable(
-        std::vector<Tile*> const& inRangeTiles,
-        size_t moveRange,
-        Vector2i origin);
+      std::vector<Tile*> const& inRangeTiles,
+      size_t moveRange,
+      Vector2i origin);
 
     RangeSeparatedTiles filterMovable(
-        TileMap& tileMap,
-        size_t moveRange,
-        Vector2i origin);
+      TileMap& tileMap,
+      size_t moveRange,
+      Vector2i origin);
 
     bool isMovable(
-        Vector2i target,
-        size_t moveRange,
-        Vector2i origin,
-        TileMap& tileMap);
+      Vector2i target,
+      size_t moveRange,
+      Vector2i origin,
+      TileMap& tileMap);
 
     std::vector<Tile*> filterEdgeTiles(RangeSeparatedTiles const& tiles);
 
     std::vector<Tile*> filterInActionRange(
-        TileMap& tileMap,
-        size_t actionRange,
-        size_t moveRange,
-        Vector2i origin);
+      TileMap& tileMap,
+      size_t actionRange,
+      size_t moveRange,
+      Vector2i origin);
 }
 
 #endif

@@ -251,7 +251,7 @@ $(OBJ_DIR)/%.$(WIN_OBJ_EXT): %.$(SRC_EXT)
 
 
 ### clear dynamically created directories
-clean: clean
+clean:
 	rm -rf $(shell find . -type f -wholename "*.$(BINARY_EXT)") 
 	rm -rf $(shell find . -type f -wholename "*.$(OBJ_EXT)") 
 	rm -rf $(shell find . -type f -wholename "*.$(DEP_EXT)") 

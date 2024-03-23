@@ -9,30 +9,44 @@
 class Tile : public Entity
 {
 public:
-    bool isSolid() const { return isSolid_; };
-    void setIsSolid(bool isSolid) { isSolid_ = isSolid; };
+    bool isSolid() const { return isSolid_; }
+    void setIsSolid(bool isSolid) { isSolid_ = isSolid; }
 
-    bool blocksVision() const { return blocksVision_; };
-    void setBlocksVision(bool blocksVision) { blocksVision_ = blocksVision; };
+    bool blocksVision() const { return blocksVision_; }
+    void setBlocksVision(bool blocksVision) { blocksVision_ = blocksVision; }
 
-    VisibilityID visibilityID() const { return visibilityID_; };
-    void setVisibilityID(VisibilityID visibilityID) { visibilityID_ = visibilityID; };
+    VisibilityID visibilityID() const { return visibilityID_; }
+    void setVisibilityID(VisibilityID visibilityID)
+    {
+        visibilityID_ = visibilityID;
+    }
 
-    Tile(Transformation const& position, Graphic const& graphic, bool isSolid, bool blocksVision)
+    Tile(
+      Transformation const& position,
+      Graphic const& graphic,
+      VisibilityID visibility,
+      bool isSolid,
+      bool blocksVision)
         : Entity(position, graphic)
+        , visibilityID_(visibility)
         , isSolid_(isSolid)
         , blocksVision_(blocksVision)
-        , visibilityID_(VisibilityID::UNSEEN){};
+    {
+    }
 
-    // For overlay tiles
-    Tile(Transformation const& position, Graphic const& graphic)
+    Tile(
+      Transformation const& position,
+      Graphic const& graphic,
+      VisibilityID visibility)
         : Entity(position, graphic)
+        , visibilityID_(visibility)
         , isSolid_(false)
-        , visibilityID_(VisibilityID::VISIBLE){};
+    {
+    }
 
 private:
+    VisibilityID visibilityID_;
     bool isSolid_;
     bool blocksVision_;
-    VisibilityID visibilityID_;
 };
 #endif

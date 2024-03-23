@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "make project",
+      "name": "make project cppdbg",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/bin/main.exe",
@@ -24,8 +24,18 @@
           "ignoreFailures": true
         }
       ],
-      "preLaunchTask": "make project",
+      "preLaunchTask": "make project cppdbg",
       "miDebuggerPath": "/usr/bin/gdb",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "make project lldb",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/main.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "make project lldb",
       "internalConsoleOptions": "neverOpen"
     },
     {
