@@ -13,11 +13,12 @@ namespace Render
     void update(Vector2 position, Graphic& graphic, VisibilityID visibilityID)
     {
         static RectangleEx renderArea{getRenderArea()};
-        if (IsWindowResized())
-            renderArea = getRenderArea();
+        if (IsWindowResized()) renderArea = getRenderArea();
 
         // Return if pixel is out of render area
-        if (!CheckCollisionPointRec(GetWorldToScreen2D(position, dtb::camera()), renderArea))
+        if (!CheckCollisionPointRec(
+              GetWorldToScreen2D(position, dtb::camera()),
+              renderArea))
             return;
 
         // Get texture data
@@ -27,54 +28,49 @@ namespace Render
 
         // Consider visibility
         Color tint{WHITE};
-        switch (visibilityID)
-        {
-            default:
-            case VisibilityID::VISIBLE:
-                tint = ColorBrightness(tint, 1);
-                break;
 
-            case VisibilityID::SEEN:
-                tint = BLACK;
+        switch (visibilityID) {
+        default:
+        case VisibilityID::VISIBLE:
+            tint = ColorBrightness(tint, 1);
+            break;
+
+        case VisibilityID::SEEN:
+            tint = BLACK;
+            tint = ColorBrightness(tint, 0.67);
+            break;
+
+        case VisibilityID::UNSEEN:
+            tint = BLACK;
+            tint = ColorBrightness(tint, 0.0);
+
+            if (dtb::debugMode()) {
                 tint = ColorBrightness(tint, 0.67);
-                break;
+                tint = RED;
+            }
 
-            case VisibilityID::UNSEEN:
-                tint = BLACK;
-                tint = ColorBrightness(tint, 0.0);
-
-                if (dtb::debugMode())
-                {
-                    tint = ColorBrightness(tint, 0.67);
-                    tint = RED;
-                }
-                break;
+            break;
         }
 
         // Draw texture
         DrawTexturePro(
-            *texture,
-            Rectangle{
-                0,
-                0,
-                float(texture->width),
-                float(texture->height)},
-            Rectangle{
-                position.x,
-                position.y,
-                tileSize.x,
-                tileSize.y},
-            tileCenter,
-            0,
-            tint);
+          *texture,
+          Rectangle{0, 0, float(texture->width), float(texture->height)},
+          Rectangle{position.x, position.y, tileSize.x, tileSize.y},
+          tileCenter,
+          0,
+          tint);
     }
 
     RectangleEx getRenderArea()
     {
         return RectangleEx{
-            -MAP_RENDER_AREA_MARGIN + LEFT_MAP_RENDER_OFFSET,
-            -MAP_RENDER_AREA_MARGIN + TOP_MAP_RENDER_OFFSET,
-            GetRenderWidth() - LEFT_MAP_RENDER_OFFSET - RIGHT_MAP_RENDER_OFFSET + 2 * MAP_RENDER_AREA_MARGIN,
-            GetRenderHeight() - TOP_MAP_RENDER_OFFSET - BOTTOM_MAP_RENDER_OFFSET + 2 * MAP_RENDER_AREA_MARGIN};
+          -MAP_RENDER_AREA_MARGIN + LEFT_MAP_RENDER_OFFSET,
+          -MAP_RENDER_AREA_MARGIN + TOP_MAP_RENDER_OFFSET,
+          GetRenderWidth() - LEFT_MAP_RENDER_OFFSET - RIGHT_MAP_RENDER_OFFSET +
+            2 * MAP_RENDER_AREA_MARGIN,
+          GetRenderHeight() - TOP_MAP_RENDER_OFFSET -
+            BOTTOM_MAP_RENDER_OFFSET + 2 * MAP_RENDER_AREA_MARGIN};
     }
+
 }

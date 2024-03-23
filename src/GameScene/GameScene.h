@@ -1,13 +1,12 @@
 #ifndef IG20231203204746
 #define IG20231203204746
-
 #include "IScene.h"
 
-class GameScene
-    : public snd::IScene
+class GameScene : public snd::IScene
 {
 public:
     void initialize() override;
+
     void deinitialize() override;
 
 private:
@@ -16,4 +15,5 @@ private:
     void renderOutput() override;
     void postOutput() override;
 };
+
 #endif

@@ -8,15 +8,13 @@ namespace Selection
 {
     void select(Unit& unit, Vector2i cursorPosition)
     {
-        if (unit.transform.tilePosition() == cursorPosition)
-        {
+        if (unit.transform.tilePosition() == cursorPosition) {
+
             // Toggle isSelected
             unit.setIsSelected(!unit.isSelected());
         }
     }
 
-    void deselect(Unit& unit)
-    {
-        unit.setIsSelected(false);
-    }
+    void deselect(Unit& unit) { unit.setIsSelected(false); }
+
 }

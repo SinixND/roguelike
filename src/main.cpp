@@ -4,13 +4,12 @@
 #include "RNG.h"
 #include "RenderID.h"
 #include "RuntimeDatabase.h"
+
 #include <raylib.h>
 #include <raymath.h>
-
 #define RAYGUI_IMPLEMENTATION // Only define once
 #define RAYGUI_CUSTOM_ICONS   // Custom icons set required
 #include "../resources/iconset/iconset.rgi.h"
-
 #include <raygui.h>
 #include <raylibEx.h>
 
@@ -19,6 +18,7 @@
 #endif
 
 void applicationLoop();
+
 int main(/* int argc, char **argv */)
 {
     // Setup the window
@@ -28,12 +28,18 @@ int main(/* int argc, char **argv */)
     constexpr int FPS_TARGET{245};
 
     // Flags
+#ifndef __EMSCRIPTEN__
+    //* SetConfigFlags(FLAG_WINDOW_TOPMOST);
+#endif
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+
     if (VSYNC_ACTIVE)
         SetConfigFlags(FLAG_VSYNC_HINT);
 
     // Initialize window
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Roguelike");
+
+    MaximizeWindow();
 
     // Settings
     Image favicon{LoadImage("resources/favicon/favicon.png")};
@@ -45,8 +51,8 @@ int main(/* int argc, char **argv */)
     // Fonts
     dtb::loadFont("resources/fonts/JuliaMono-RegularLatin.ttf");
     GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
-    //=====================================
 
+    //=====================================
     // Application initialization
     //=================================
     // Seed Random number generator
@@ -72,26 +78,22 @@ int main(/* int argc, char **argv */)
     dtb::setActiveScene(game);
 
     // Setup Camera2D
-    dtb::camera() =
-        {Vector2Scale(GetDisplaySize(), 0.5f),
-         V_NULL,
-         0.0f,
-         1.0f};
-    //=================================
+    dtb::camera() = {Vector2Scale(GetDisplaySize(), 0.5f), V_NULL, 0.0f, 1.0f};
 
+    //=================================
     // Main app loop
     //=================================
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(applicationLoop, FPS_TARGET, 1);
 #else
-    while (!(WindowShouldClose() || dtb::shouldAppClose()))
-    {
+    while (!(WindowShouldClose() || dtb::shouldAppClose())) {
+
         // Call update function for emscripten compatibility
         applicationLoop();
     }
 #endif
-    //=================================
 
+    //=================================
     // De-initialization
     //=================================
     // Unload fonts
@@ -116,20 +118,15 @@ void applicationLoop()
 
 #ifndef __EMSCRIPTEN__
     // Toggle fullscreen
-    //=================================
-    if (IsKeyPressed(KEY_F11))
-    {
-        if (IsWindowMaximized())
-        {
+    if (IsKeyPressed(KEY_F11)) {
+        if (IsWindowMaximized()) {
             RestoreWindow();
         }
-        else
-        {
+        else {
             MaximizeWindow();
         }
     }
 #endif
-    //=================================
 
     dtb::activeScene()->update(dtb::debugMode());
 }

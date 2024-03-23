@@ -1,6 +1,5 @@
 #ifndef IG20240211172120
 #define IG20240211172120
-
 #include "Graphic.h"
 #include "Transformation.h"
 #include <raylib.h>
@@ -13,7 +12,8 @@ public:
 
     Entity(Transformation transform, Graphic graphic)
         : transform(transform)
-        , graphic(graphic){};
+        , graphic(graphic)
+    {}
 };
 
 #endif

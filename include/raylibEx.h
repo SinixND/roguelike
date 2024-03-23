@@ -1,22 +1,17 @@
 #ifndef IG20240203171045
 #define IG20240203171045
-
 #include <cmath>
 #include <cstddef>
+#include <functional>
 #include <raylib.h>
 #include <raymath.h>
-
-#include <functional>
 
 // Typedefs
 //=====================================
 class RectangleEx
 {
 public:
-    float& left()
-    {
-        return left_;
-    }
+    float const& left() const { return left_; }
 
     void resizeLeft(float left)
     {
@@ -30,10 +25,7 @@ public:
         right_ = left_ + width_;
     }
 
-    float& right()
-    {
-        return right_;
-    }
+    float const& right() const { return right_; }
 
     void resizeRight(float right)
     {
@@ -47,10 +39,7 @@ public:
         left_ = right_ - width_;
     }
 
-    float& top()
-    {
-        return top_;
-    }
+    float const& top() const { return top_; }
 
     void resizeTop(float top)
     {
@@ -64,10 +53,7 @@ public:
         bottom_ = top_ + height_;
     }
 
-    float& bottom()
-    {
-        return bottom_;
-    }
+    float const& bottom() const { return bottom_; }
 
     void resizeBottom(float bottom)
     {
@@ -81,10 +67,7 @@ public:
         top_ = bottom_ - height_;
     }
 
-    float& width()
-    {
-        return width_;
-    }
+    float const& width() const { return width_; }
 
     void resizeWidthLeft(float width)
     {
@@ -98,10 +81,7 @@ public:
         right_ = left_ + width_;
     }
 
-    float& height()
-    {
-        return height_;
-    }
+    float const& height() const { return height_; }
 
     void resizeHeightTop(float height)
     {
@@ -115,20 +95,11 @@ public:
         bottom_ = top_ + height_;
     }
 
-    Vector2 topLeft()
-    {
-        return Vector2{left_, top_};
-    }
+    Vector2 topLeft() { return Vector2{left_, top_}; }
 
-    Vector2 bottomRight()
-    {
-        return Vector2{right_, bottom_};
-    }
+    Vector2 bottomRight() { return Vector2{right_, bottom_}; }
 
-    Rectangle rectangle()
-    {
-        return Rectangle{left_, top_, width_, height_};
-    }
+    Rectangle rectangle() { return Rectangle{left_, top_, width_, height_}; }
 
     RectangleEx(float left, float top, float width, float height)
         : left_(left)
@@ -137,8 +108,7 @@ public:
         , bottom_(top + height)
         , width_(width)
         , height_(height)
-    {
-    }
+    {}
 
     RectangleEx(Vector2 topLeft, Vector2 bottomRight)
         : left_(topLeft.x)
@@ -147,8 +117,7 @@ public:
         , bottom_(bottomRight.y)
         , width_(bottomRight.x - topLeft.x)
         , height_(bottomRight.y - topLeft.y)
-    {
-    }
+    {}
 
     RectangleEx(Rectangle rectangle)
         : left_(rectangle.x)
@@ -157,8 +126,7 @@ public:
         , bottom_(rectangle.y + rectangle.height)
         , width_(rectangle.width)
         , height_(rectangle.height)
-    {
-    }
+    {}
 
 private:
     float left_;
@@ -169,31 +137,26 @@ private:
     float height_;
 };
 
-struct Vector2i
-{
+struct Vector2i {
     int x;
     int y;
 };
 
-struct Matrix2x2
-{
+struct Matrix2x2 {
     float m11, m12;
     float m21, m22;
 };
 
-struct Matrix2x2i
-{
+struct Matrix2x2i {
     int m11, m12;
     int m21, m22;
 };
 
-struct Area
-{
+struct Area {
     int left;      // Rectangle top-left corner position x
     int top;       // Rectangle top-left corner position y
     size_t width;  // Rectangle width
     size_t height; // Rectangle height
-
     int right;
     int bottom;
 
@@ -204,8 +167,7 @@ struct Area
         , height(bottom - top + 1)
         , right(right)
         , bottom(bottom)
-    {
-    }
+    {}
 
     Area(int left, int top, size_t width, size_t height)
         : left(left)
@@ -214,8 +176,7 @@ struct Area
         , height(height)
         , right(left + width - 1)
         , bottom(top + height - 1)
-    {
-    }
+    {}
 
     Area(Vector2i center, size_t width, size_t height)
         : left(center.x - (width / 2))
@@ -236,17 +197,16 @@ struct Area
         , right(to.x)
         , bottom(to.y)
     {
+
         // Verify left < right, top < bottom and width/height > 0
-        if (left > right)
-        {
+        if (left > right) {
             int temp = left;
             left = right;
             right = temp;
             width = right - left + 1;
         }
 
-        if (top > bottom)
-        {
+        if (top > bottom) {
             int temp = top;
             top = bottom;
             bottom = temp;
@@ -255,36 +215,38 @@ struct Area
     }
 };
 
-struct Line
-{
+struct Line {
     Vector2 start;
     Vector2 end;
 };
-//=====================================
 
+//=====================================
 // Functions
 //=====================================
-// in fullscreen mode we can't use GetScreenWidth/Height, so make a function that gets the right data for each mode
+// in fullscreen mode we can't use GetScreenWidth/Height, so make a function
+// that gets the right data for each mode
 inline Vector2 GetDisplaySize()
 {
     if (IsWindowFullscreen())
-        return Vector2{static_cast<float>(GetMonitorWidth(GetCurrentMonitor())), static_cast<float>(GetMonitorHeight(GetCurrentMonitor()))};
+        return Vector2{
+          static_cast<float>(GetMonitorWidth(GetCurrentMonitor())),
+          static_cast<float>(GetMonitorHeight(GetCurrentMonitor()))};
+
     else
-        return Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
+        return Vector2{
+          static_cast<float>(GetRenderWidth()),
+          static_cast<float>(GetRenderHeight())};
 }
 
-inline size_t Vector2Sum(Vector2i V)
-{
-    return abs(V.x) + abs(V.y);
-}
+inline size_t Vector2Sum(Vector2i V) { return abs(V.x) + abs(V.y); }
 
 inline Rectangle GetRectangle(Vector2 topLeft, Vector2 bottomRight)
 {
     return Rectangle{
-        topLeft.x,
-        topLeft.y,
-        bottomRight.x - topLeft.x,
-        bottomRight.y - topLeft.y};
+      topLeft.x,
+      topLeft.y,
+      bottomRight.x - topLeft.x,
+      bottomRight.y - topLeft.y};
 }
 
 inline Vector2 GetMainDirection(Vector2 from, Vector2 to)
@@ -297,10 +259,10 @@ inline Vector2 GetMainDirection(Vector2 from, Vector2 to)
 inline Rectangle GetRenderRec()
 {
     return Rectangle{
-        0,
-        0,
-        static_cast<float>(GetRenderWidth()),
-        static_cast<float>(GetRenderHeight())};
+      0,
+      0,
+      static_cast<float>(GetRenderWidth()),
+      static_cast<float>(GetRenderHeight())};
 }
 
 inline Vector2 ConvertToVector2(Vector2i V)
@@ -315,34 +277,44 @@ inline Vector2i ConvertToVector2i(Vector2 V)
 
 inline Vector2i GetMin(Vector2i V1, Vector2i V2)
 {
-    return Vector2i{
-        (V1.x < V2.x ? V1.x : V2.x),
-        (V1.y < V2.y ? V1.y : V2.y)};
+    return Vector2i{(V1.x < V2.x ? V1.x : V2.x), (V1.y < V2.y ? V1.y : V2.y)};
 }
 
 inline Vector2i GetMax(Vector2i V1, Vector2i V2)
 {
-    return Vector2i{
-        (V1.x > V2.x ? V1.x : V2.x),
-        (V1.y > V2.y ? V1.y : V2.y)};
+    return Vector2i{(V1.x > V2.x ? V1.x : V2.x), (V1.y > V2.y ? V1.y : V2.y)};
 }
 
 inline bool CheckCollisionPointArea(Vector2i tilePosition, Area const& area)
 {
     bool isColliding = false;
 
-    if ((tilePosition.x >= area.left) && (tilePosition.x < area.right) && (tilePosition.y >= area.top) && (tilePosition.y < area.bottom)) isColliding = true;
-
+    if (
+      (tilePosition.x >= area.left) && (tilePosition.x < area.right) &&
+      (tilePosition.y >= area.top) && (tilePosition.y < area.bottom))
+        isColliding = true;
     return isColliding;
 }
-//=====================================
 
+//=====================================
 // Function Overloads
 //=====================================
 // Add two vectors (v1 + v2)
 RMAPI Vector2i Vector2Add(Vector2i v1, Vector2i v2)
 {
     return Vector2i{v1.x + v2.x, v1.y + v2.y};
+}
+
+RMAPI void addToVector2(Vector2& v1, Vector2 v2)
+{
+    v1.x += v2.x;
+    v1.y += v2.y;
+}
+
+RMAPI void addToVector2(Vector2i& v1, Vector2i v2)
+{
+    v1.x += v2.x;
+    v1.y += v2.y;
 }
 
 RMAPI Vector2i Vector2AddValue(Vector2i v1, int value)
@@ -380,25 +352,28 @@ RMAPI int Vector2Equals(Vector2i v1, Vector2i v2)
 
 RMAPI Vector2i Vector2Transform(Matrix2x2i M, Vector2i V)
 {
-    return Vector2i{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
+    return Vector2i{
+      ((M.m11 * V.x) + (M.m12 * V.y)),
+      ((M.m21 * V.x) + (M.m22 * V.y))};
 }
 
 RMAPI Vector2 Vector2Transform(Matrix2x2 M, Vector2 V)
 {
-    return Vector2{((M.m11 * V.x) + (M.m12 * V.y)), ((M.m21 * V.x) + (M.m22 * V.y))};
+    return Vector2{
+      ((M.m11 * V.x) + (M.m12 * V.y)),
+      ((M.m21 * V.x) + (M.m22 * V.y))};
 }
 
 inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)
 {
     return CheckCollisionPointRec(point, rec.rectangle());
 }
-//=====================================
 
+//=====================================
 // Operator Overloads
 //=====================================
 template <>
-struct std::hash<Vector2>
-{
+struct std::hash<Vector2> {
     size_t operator()(Vector2 V) const noexcept
     {
         size_t h1 = std::hash<double>()(V.x);
@@ -410,11 +385,10 @@ struct std::hash<Vector2>
 inline bool operator==(Vector2 lhs, Vector2 rhs)
 {
     return Vector2Equals(lhs, rhs);
-};
+}
 
 template <>
-struct std::hash<Vector2i>
-{
+struct std::hash<Vector2i> {
     size_t operator()(Vector2i V) const noexcept
     {
         size_t h1 = std::hash<int>()(V.x);
@@ -426,7 +400,7 @@ struct std::hash<Vector2i>
 inline bool operator==(Vector2i lhs, Vector2i rhs)
 {
     return Vector2Equals(lhs, rhs);
-};
-//=====================================
+}
 
+//=====================================
 #endif

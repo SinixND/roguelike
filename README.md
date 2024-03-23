@@ -59,7 +59,7 @@ development of a (maybe) roguelike game with c++ and raylib
 | F1                                | Toggle debug mode   |
 | F4                                | Exit                |
 | F11                               | Maximize window     |
-| TAB                               | Center on hero      |
+| H                                 | Center on hero      |
 
 
 ### Touch

@@ -11,8 +11,7 @@ size_t World::currentLevel() { return currentLevel_; }
 
 void World::increaseLevel()
 {
-    if (currentLevel_ == maxLevel_)
-    {
+    if (currentLevel_ == maxLevel_) {
         ++maxLevel_;
         addNewMap(maxLevel_);
     }
@@ -23,9 +22,7 @@ void World::increaseLevel()
 
 void World::decreaseLevel()
 {
-    if (currentLevel_ == 0)
-        return;
-
+    if (currentLevel_ == 0) return;
     --currentLevel_;
     setMap(currentLevel_);
 }
@@ -40,7 +37,4 @@ void World::addNewMap(size_t level)
     maps_.push_back(MapHandler::createNewMap(level));
 }
 
-void World::setMap(size_t level)
-{
-    currentMap_ = &maps_[level];
-}
+void World::setMap(size_t level) { currentMap_ = &maps_[level]; }
