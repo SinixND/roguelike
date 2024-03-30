@@ -2,6 +2,7 @@
 
 #include "Movement.h"
 #include "Pathfinder.h"
+#include "RenderID.h"
 #include "Transformation.h"
 #include "Unit.h"
 #include "World.h"
@@ -14,8 +15,14 @@ namespace UnitMovement
     {
         // Check if target is valid
         if (
-          gameWorld.mapOverlay().contains(cursorPosition.tilePosition()) && !Vector2Equals(cursorPosition.tilePosition(), unit.transform.tilePosition()))
+          gameWorld.mapOverlay().contains(cursorPosition.tilePosition())
+          && !Vector2Equals(
+            cursorPosition.tilePosition(),
+            unit.transform.tilePosition()))
         {
+            if (gameWorld.mapOverlay().at(cursorPosition.tilePosition())->graphic.renderID() != RenderID::REACHABLE)
+                return;
+
             // Set movement target
             unit.movement.setTarget(cursorPosition.tilePosition());
         }

@@ -1,20 +1,20 @@
 # ROGUELIKE
-development of a (maybe) roguelike game with c++ and raylib
+A roguelike with movement inspired by 'Fire Emblem'.
+Made with raylib.
+Platforms: Linux, Windows, Browser
 
 # REQUIREMENTS
 - raylib
-- emscripten
+
+# OPTIONAL REQUIREMENTS
+- emscripten (for web build)
 
 # TODOs
 # active
-- [ ] Refactor functions single purpose
-
-- [ ] Fix Bug: Movement trigger on attackable tile
-- [ ] Fix Bug: Path finder ignores walls
+- [ ] Map change
 
 
 # Shortterm
-- [ ] Map change
 
 
 # Longterm 
@@ -25,7 +25,7 @@ development of a (maybe) roguelike game with c++ and raylib
 
 
 # Continuous
-- [x] Map generation
+- Map generation
 
 - Check for obsolete [[maybe_unused]] and //* comments
 

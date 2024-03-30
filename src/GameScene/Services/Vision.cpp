@@ -20,17 +20,6 @@ namespace
             if (tile->visibilityID() == VisibilityID::VISIBLE)
             {
                 tile->setVisibilityID(VisibilityID::SEEN);
-
-                //* if (dtb::debugMode())
-                //* {
-                //* BeginDrawing();
-                //* BeginMode2D(dtb::camera());
-
-                //* DrawCircleLinesV(tile->position().get(), 5, RED);
-
-                //* EndMode2D();
-                //* EndDrawing();
-                //* }
             }
         }
     }

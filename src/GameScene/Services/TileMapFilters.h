@@ -80,7 +80,7 @@ namespace TileMapFilters
       TileMap& tileMap);
 
     RangeSeparatedTiles filterMovable(
-      std::vector<Tile*> const& inRangeTiles,
+      std::vector<Tile*> const& inRangeMapTiles,
       int moveRange,
       Vector2I origin);
 

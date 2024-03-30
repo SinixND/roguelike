@@ -26,7 +26,7 @@ endif
 BINARY 				:= main
 
 ### automatically added flags to make command
-MAKEFLAGS 			:= 
+MAKEFLAGS 			:= -j
 
 #######################################
 ### set the used compiler to g++ or clang++

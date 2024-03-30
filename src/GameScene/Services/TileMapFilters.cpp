@@ -199,15 +199,16 @@ namespace TileMapFilters
     }
 
     RangeSeparatedTiles filterMovable(
-      std::vector<Tile*> const& tiles,
+      std::vector<Tile*> const& inRangeMapTiles,
       int moveRange,
       Vector2I origin)
     {
         snd::SparseSet<Vector2I, Tile*> tileSet{};
 
-        for (auto& tile : tiles)
+        for (auto& tile : inRangeMapTiles)
         {
-            tileSet.createOrUpdate(tile->transform.tilePosition(), tile);
+            if (!tile->isSolid())
+                tileSet.createOrUpdate(tile->transform.tilePosition(), tile);
         }
 
         RangeSeparatedTiles sortedSteppedTiles{};
@@ -241,7 +242,7 @@ namespace TileMapFilters
             auto nextTilePosition{Vector2Add(origin, direction)};
 
             // Check if next tile is in range
-            if (!isInTiles(nextTilePosition, tiles))
+            if (!isInTiles(nextTilePosition, inRangeMapTiles))
                 continue;
 
             // Add stepped tile to stepped tiles
@@ -287,7 +288,7 @@ namespace TileMapFilters
                     if (tileKnown) continue;
 
                     // Check if next tile is in range
-                    if (!isInTiles(nextTilePosition, tiles))
+                    if (!isInTiles(nextTilePosition, inRangeMapTiles))
                         continue;
 
                     // Add passable tile to stepped tiles

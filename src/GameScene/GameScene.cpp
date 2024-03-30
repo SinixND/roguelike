@@ -54,7 +54,6 @@ namespace
 
 void GameScene::initialize()
 {
-    gameWorld.increaseLevel();
 }
 
 void GameScene::processInput()

@@ -65,7 +65,6 @@ namespace MapOverlay
         static Vector2I origin{};
         static Vector2I target{};
         static Path path{};
-        TileMap overlayTiles{world.mapOverlay()};
 
         // Check if path input changed
         if (!(
@@ -77,7 +76,7 @@ namespace MapOverlay
             target = cursorPosition;
 
             path = findPath(
-              overlayTiles,
+              world.currentMap(),
               unitPosition,
               cursorPosition,
               unitRange);
