@@ -11,10 +11,12 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
-- [ ] Map change
+- [ ] Trigger non-input by event system (pub-sub / observer pattern)
 
 
 # Shortterm
+- [ ] Map change
+- [ ] Add enemy
 
 
 # Longterm 
@@ -158,3 +160,4 @@ private:
 - [x] Add RectangleEx (has left, top, right, bottom, height, width)
 - [x] Add input to center on hero
 - [x] Always use Setter/Getter (keep open for possible later changes / flexibility)
+- [x] Refactor using spritesheet

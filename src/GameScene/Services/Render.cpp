@@ -21,7 +21,8 @@ namespace Render
             return;
 
         // Get texture data
-        Texture2D const* texture{dtb::getTexture(graphic.renderID())};
+        Texture2D const* textureAtlas{dtb::getTextureAtlas()};
+        Vector2 texturePosition{dtb::getTexturePosition(graphic.renderID())};
         Vector2 tileSize{TILE_DIMENSIONS};
         Vector2 tileCenter{Vector2Scale(tileSize, 0.5f)};
 
@@ -52,14 +53,14 @@ namespace Render
             break;
         }
 
-        // Draw texture
+        // Draw texture (using 0.5f pixel offset to get rid of texture bleeding)
         DrawTexturePro(
-          *texture,
+          *textureAtlas,
           Rectangle{
-            0,
-            0,
-            float(texture->width),
-            float(texture->height)},
+            texturePosition.x + 0.5f,
+            texturePosition.y + 0.5f,
+            TEXTURE_WIDTH - 0.5f,
+            TEXTURE_WIDTH - 0.5f},
           Rectangle{
             position.x,
             position.y,

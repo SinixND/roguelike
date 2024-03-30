@@ -42,6 +42,9 @@ Matrix2x2 const M_ROTATE_CW_45{
 
 // Game
 //=====================================
+// Textures
+float const TEXTURE_WIDTH{32};
+
 // Tile
 float const TILE_SIZE{25};
 Vector2 const TILE_DIMENSIONS{TILE_SIZE, TILE_SIZE};
@@ -51,8 +54,10 @@ float const PAN_TICK{0.1f}; // time in seconds to next pan progress
 float const EDGE_PAN_FRAME_WIDTH{3.5f * TILE_SIZE};
 int const PAN_BOOST_FACTOR{4};
 
-// Zoom
-float const ZOOM_STEP{0.125f};
+// Zoom (3-step)
+float const ZOOM_DEFAULT{1};
+float const ZOOM_MIN{0.1f};
+float const ZOOM_MAX{2.0f};
 
 // Render area
 float const LEFT_MAP_RENDER_OFFSET{0};

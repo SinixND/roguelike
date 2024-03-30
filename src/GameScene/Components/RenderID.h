@@ -12,6 +12,7 @@ enum class RenderID
     PATH,
     ATTACKABLE,
     SUPPORTABLE,
+    NEXT_LEVEL,
 };
 
 #endif

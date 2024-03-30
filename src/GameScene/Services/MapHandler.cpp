@@ -41,6 +41,21 @@ namespace MapHandler
         return newMap;
     }
 
+    void addTile(
+      TileMap& tileMap,
+      Vector2I const& position,
+      Graphic graphic,
+      VisibilityID visibility,
+      bool isSolid,
+      bool blocksVision)
+    {
+        tileMap.createOrUpdate(
+          position,
+          Tile(position, graphic, visibility, isSolid, blocksVision));
+
+        // Update global available map dimensions
+        dtb::extendMapsize(position);
+    }
     void addTiles(
       TileMap& tileMap,
       RectangleExI const& rectangle,
@@ -53,19 +68,17 @@ namespace MapHandler
         {
             for (int y{0}; y < rectangle.height; ++y)
             {
-                Vector2I position{
-                  (rectangle.left + x),
-                  (rectangle.top + y)};
-
-                tileMap.createOrUpdate(
-                  position,
-                  Tile(position, graphic, visibility, isSolid, blocksVision));
+                addTile(
+                  tileMap,
+                  Vector2I{
+                    rectangle.left + x,
+                    rectangle.top + y},
+                  graphic,
+                  visibility,
+                  isSolid,
+                  blocksVision);
             }
         }
-
-        // Update global available map dimensions
-        dtb::extendMapsize({rectangle.left, rectangle.top});
-        dtb::extendMapsize({rectangle.right, rectangle.bottom});
     }
 
     // Add room (floor with surrounding walls)
@@ -144,6 +157,7 @@ namespace MapHandler
     {
         addRoom(tileMap, RectangleExI{-7, -7, 15, 15});
 
+        // Add walls
         addTiles(
           tileMap,
           RectangleExI{-1, -1, 3, 1},
@@ -151,6 +165,31 @@ namespace MapHandler
           VisibilityID::UNSEEN,
           true,
           true);
+
+        addTiles(
+          tileMap,
+          RectangleExI{-2, 0, 1, 2},
+          Graphic(RenderID::WALL, LayerID::MAP),
+          VisibilityID::UNSEEN,
+          true,
+          true);
+
+        addTiles(
+          tileMap,
+          RectangleExI{2, 0, 1, 2},
+          Graphic(RenderID::WALL, LayerID::MAP),
+          VisibilityID::UNSEEN,
+          true,
+          true);
+
+        // Add next level trigger
+        addTile(
+          tileMap,
+          Vector2I{0, -5},
+          Graphic(RenderID::NEXT_LEVEL, LayerID::MAP),
+          VisibilityID::UNSEEN,
+          false,
+          false);
     }
 
     void createGridRooms(TileMap& tileMap, int level)

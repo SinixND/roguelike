@@ -5,13 +5,12 @@
 #include "Unit.h"
 #include "World.h"
 #include "raylibEx.h"
-#include <cstddef>
 
 namespace MapOverlay
 {
     void showUnitMoveRange(Unit& unit, World& world);
     void showUnitActionRange(Unit& unit, World& world);
-    Path& showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World& world, bool& isPathShown);
+    Path& showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World& world);
 }
 
 #endif

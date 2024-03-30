@@ -60,7 +60,7 @@ namespace MapOverlay
         }
     }
 
-    Path& showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World& world, bool& isPathShown)
+    Path& showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World& world)
     {
         static Vector2I origin{};
         static Vector2I target{};
@@ -80,8 +80,6 @@ namespace MapOverlay
               unitPosition,
               cursorPosition,
               unitRange);
-
-            if (!path.empty()) isPathShown = true;
         }
 
         for (auto& steppedTile : path)

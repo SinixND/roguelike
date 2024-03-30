@@ -25,34 +25,38 @@ public:
 
     // Textures
 private:
-    static inline std::unordered_map<RenderID, Texture2D> textures_{};
     static inline std::string const texturePath{"resources/textures/"};
 
+    // Texture atlas
+    static inline Texture2D textureAtlas_{};
+    static inline std::unordered_map<RenderID, Vector2> texturePositions_{};
+
 public:
-    static void loadTexture(RenderID textureID, std::string filename)
+    // Texture atlas
+    static void loadAtlas(std::string filename)
     {
-        textures_.insert(std::make_pair(textureID, LoadTexture((texturePath + filename).c_str())));
-    };
+        textureAtlas_ = LoadTexture((texturePath + filename).c_str());
+    }
 
-    static Texture2D const* getTexture(RenderID textureID)
+    static Texture2D const* getTextureAtlas()
     {
-        if (textures_.find(textureID) == textures_.end())
-            return nullptr;
+        return &textureAtlas_;
+    }
 
-        return &textures_.at(textureID);
-    };
-
-    static void unloadAllTextures()
+    static void registerTexture(RenderID textureID, Vector2 position)
     {
-        for (auto const& texture : textures_)
-        {
-            Texture2D tex = texture.second;
-            UnloadTexture(tex);
-        }
+        texturePositions_.insert(std::make_pair(textureID, position));
+    }
 
-        textures_.clear();
-    };
+    static Vector2& getTexturePosition(RenderID textureID)
+    {
+        return texturePositions_.at(textureID);
+    }
 
+    static void unloadAtlas()
+    {
+        UnloadTexture(textureAtlas_);
+    }
     //=================================
 
     // Globals
@@ -117,7 +121,7 @@ public:
           Vector2I{
             right,
             bottom}};
-    };
+    }
 
     //=================================
 

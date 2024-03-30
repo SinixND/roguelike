@@ -54,16 +54,20 @@ int main(/* int argc, char **argv */)
     if (dtb::debugMode())
         RNG::seed(1);
 
-    // Load textures
-    dtb::loadTexture(RenderID::NONE, "Empty.png");
-    dtb::loadTexture(RenderID::HERO, "Hero.png");
-    dtb::loadTexture(RenderID::CURSOR, "Cursor.png");
-    dtb::loadTexture(RenderID::WALL, "TileWall.png");
-    dtb::loadTexture(RenderID::FLOOR, "TileFloor.png");
-    dtb::loadTexture(RenderID::REACHABLE, "TileReachable.png");
-    dtb::loadTexture(RenderID::PATH, "TilePath.png");
-    dtb::loadTexture(RenderID::ATTACKABLE, "TileAttackable.png");
-    dtb::loadTexture(RenderID::SUPPORTABLE, "TileSupportable.png");
+    // Load texture atlas
+    dtb::loadAtlas("TextureAtlas.png");
+
+    // Register textures
+    dtb::registerTexture(RenderID::NONE, {0, 0});
+    dtb::registerTexture(RenderID::CURSOR, {35, 0});
+    dtb::registerTexture(RenderID::HERO, {70, 0});
+    dtb::registerTexture(RenderID::WALL, {105, 0});
+    dtb::registerTexture(RenderID::FLOOR, {0, 35});
+    dtb::registerTexture(RenderID::REACHABLE, {35, 35});
+    dtb::registerTexture(RenderID::PATH, {70, 35});
+    dtb::registerTexture(RenderID::ATTACKABLE, {105, 35});
+    dtb::registerTexture(RenderID::SUPPORTABLE, {0, 70});
+    dtb::registerTexture(RenderID::NEXT_LEVEL, {35, 70});
 
     // Define scenes
     GameScene game{};
@@ -99,8 +103,8 @@ int main(/* int argc, char **argv */)
     // Unload fonts
     dtb::unloadFont();
 
-    // Unlaod textures
-    dtb::unloadAllTextures();
+    // Unload texture atlas
+    dtb::unloadAtlas();
 
     // Deinitialize scenes
     game.deinitialize();

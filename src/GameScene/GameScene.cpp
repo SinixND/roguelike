@@ -136,56 +136,40 @@ void GameScene::updateState()
 {
     // Update map overlay
     static bool isRangeShown{false};
-    bool isPathShown{false};
 
     static Path path{};
 
-    int condition = // A=isSelected, B=rangeShown
-      (hero.isSelected() ? (true << 1) : false) + (isRangeShown ? (true << 0) : false);
-
-    switch (condition)
+    if (hero.isSelected())
     {
-    case 0:
-        // 0 0 // not selected, not shown -> Do nothing
-        break;
+        if (isRangeShown)
+        {
+            path = MapOverlay::showPath(
+              hero.transform.tilePosition(),
+              cursor.transform.tilePosition(),
+              hero.movement.range(),
+              gameWorld);
+        }
+        else // range not shown
+        {
+            MapOverlay::showUnitMoveRange(
+              hero,
+              gameWorld);
 
-    case 1:
-        // 0 1 // not selected, range shown -> Hide range
-        gameWorld.mapOverlay().clear();
+            MapOverlay::showUnitActionRange(
+              hero,
+              gameWorld);
 
-        isRangeShown = false;
+            isRangeShown = true;
+        }
+    }
+    else // not selected
+    {
+        if (isRangeShown)
+        {
+            gameWorld.mapOverlay().clear();
 
-        isPathShown = false;
-
-        break;
-
-    case 2:
-        // 1 0 // selected, range not shown -> Show range
-        MapOverlay::showUnitMoveRange(
-          hero,
-          gameWorld);
-
-        MapOverlay::showUnitActionRange(
-          hero,
-          gameWorld);
-
-        isRangeShown = true;
-
-        break;
-
-    case 3:
-        // 1 1 // selected, range shown -> Show path
-        path = MapOverlay::showPath(
-          hero.transform.tilePosition(),
-          cursor.transform.tilePosition(),
-          hero.movement.range(),
-          gameWorld,
-          isPathShown);
-
-        break;
-
-    default:
-        break;
+            isRangeShown = false;
+        }
     }
 
     UnitMovement::triggerMovement(hero.movement, path, isInputBlocked);
