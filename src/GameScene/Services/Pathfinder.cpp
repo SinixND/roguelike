@@ -1,4 +1,5 @@
 #include "Pathfinder.h"
+
 #include "TileMap.h"
 #include "TileMapFilters.h"
 #include "raylibEx.h"
@@ -6,8 +7,8 @@
 
 // Pathfinder returns vector of positions from target to origin (excluded) if target is reachable
 Path findPath(
-    RangeSeparatedTiles const& reachableTiles,
-    Vector2i target)
+  RangeSeparatedTiles const& reachableTiles,
+  Vector2I target)
 {
     Path path{};
 
@@ -15,7 +16,7 @@ Path findPath(
     if (!TileMapFilters::isInRangeSeparatedTiles(target, reachableTiles))
         return path;
 
-    Vector2i origin{reachableTiles.front().front().tile->transform.tilePosition()};
+    Vector2I origin{reachableTiles.front().front().tile->transform.tilePosition()};
 
     // Check if target equals root position
     if (Vector2Equals(target, origin))
@@ -57,7 +58,7 @@ Path findPath(
         {
             // CheckVector is delta between checked tile position and current step level position
             // CheckVector also is used to store the direction to next path tile
-            Vector2i checkVector{Vector2Subtract(currentStepLevelTile.tile->transform.tilePosition(), steppedTile.tile->transform.tilePosition())};
+            Vector2I checkVector{Vector2Subtract(currentStepLevelTile.tile->transform.tilePosition(), steppedTile.tile->transform.tilePosition())};
 
             // Tiled length of checkVector needs to be 1 (then it is a neighbour)
             auto checkValue{Vector2Sum(checkVector)};
@@ -76,10 +77,10 @@ Path findPath(
 }
 
 Path findPath(
-    TileMap& tileMap,
-    Vector2i origin,
-    Vector2i target,
-    size_t range)
+  TileMap& tileMap,
+  Vector2I origin,
+  Vector2I target,
+  int range)
 {
     return findPath(TileMapFilters::filterMovable(tileMap, range, origin), target);
 }

@@ -6,7 +6,7 @@
 
 namespace CameraControl
 {
-    void edgePan(Vector2 cursorWorldPosition, bool isMouseActive);
+    void edgePan(Camera2D& camera, Vector2 cursorWorldPosition, bool isMouseControlled);
     void centerOnHero(Camera2D& camera, Unit& unit);
 }
 

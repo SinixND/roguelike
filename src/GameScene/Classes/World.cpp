@@ -7,7 +7,7 @@
 // Public:
 TileMap& World::currentMap() { return *currentMap_; }
 
-size_t World::currentLevel() { return currentLevel_; }
+int World::currentLevel() { return currentLevel_; }
 
 void World::increaseLevel()
 {
@@ -35,12 +35,12 @@ TileMap& World::mapOverlay() { return mapOverlay_; }
 TileMap& World::framedMapOverlay() { return framedMapOverlay_; }
 
 // Private:
-void World::addNewMap(size_t level)
+void World::addNewMap(int level)
 {
     maps_.push_back(MapHandler::createNewMap(level));
 }
 
-void World::setMap(size_t level)
+void World::setMap(int level)
 {
     currentMap_ = &maps_[level];
 }

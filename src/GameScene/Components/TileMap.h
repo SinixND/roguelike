@@ -5,6 +5,6 @@
 #include "Tile.h"
 #include "raylibEx.h"
 
-using TileMap = snd::SparseSet<Vector2i, Tile>;
+using TileMap = snd::SparseSet<Vector2I, Tile>;
 
 #endif

@@ -14,21 +14,20 @@ namespace UnitMovement
     {
         // Check if target is valid
         if (
-            gameWorld.mapOverlay().contains(cursorPosition.tilePosition()) &&
-            !Vector2Equals(cursorPosition.tilePosition(), unit.transform.tilePosition()))
+          gameWorld.mapOverlay().contains(cursorPosition.tilePosition()) && !Vector2Equals(cursorPosition.tilePosition(), unit.transform.tilePosition()))
         {
             // Set movement target
             unit.movement.setTarget(cursorPosition.tilePosition());
-            unit.movement.setIsTargetSet(true);
         }
     }
 
     void triggerMovement(Movement& movement, Path& path, bool& isInputBlocked)
     {
+        // If target is set but not yet moving
         if (movement.isTargetSet() && !movement.isMoving())
         {
             // Reset (doesnt interrupt movement)
-            movement.setIsTargetSet(false);
+            movement.unsetTarget();
 
             // Setting path triggers movment
             movement.setPath(path);
@@ -44,8 +43,8 @@ namespace UnitMovement
         {
             // Move unit
             isTargetReached = unit.movement.move(
-                unit.transform,
-                GetFrameTime());
+              unit.transform,
+              GetFrameTime());
         }
 
         if (isTargetReached)

@@ -6,7 +6,7 @@
 
 namespace Selection
 {
-    void select(Unit& unit, Vector2i cursorPosition);
+    void select(Unit& unit, Vector2I cursorPosition);
     void deselect(Unit& unit);
 }
 

@@ -16,6 +16,7 @@
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
+
 #endif
 
 void applicationLoop();
@@ -72,11 +73,11 @@ int main(/* int argc, char **argv */)
     dtb::setActiveScene(game);
 
     // Setup Camera2D
-    dtb::camera() =
-        {Vector2Scale(GetDisplaySize(), 0.5f),
-         V_NULL,
-         0.0f,
-         1.0f};
+    dtb::camera() = {
+      Vector2Scale(GetDisplaySize(), 0.5f),
+      V_NULL,
+      0.0f,
+      1.0f};
     //=================================
 
     // Main app loop
@@ -89,6 +90,7 @@ int main(/* int argc, char **argv */)
         // Call update function for emscripten compatibility
         applicationLoop();
     }
+
 #endif
     //=================================
 
@@ -128,6 +130,7 @@ void applicationLoop()
             MaximizeWindow();
         }
     }
+
 #endif
     //=================================
 

@@ -3,7 +3,6 @@
 
 #include "IScene.h"
 #include "RenderID.h"
-#include "Singleton.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
@@ -11,7 +10,7 @@
 #include <unordered_map>
 #include <utility>
 
-class dtb : public Singleton<dtb>
+class dtb
 {
     // Constants (only set once)
     //=================================
@@ -20,41 +19,40 @@ private:
     static inline Font font_{};
 
 public:
-    static inline Font& font() { return instance().font_; };
-    static inline void loadFont(char const* fileName) { font() = LoadFont(fileName); };
-    static inline void unloadFont() { UnloadFont(font()); };
+    static Font const& font() { return font_; }
+    static void loadFont(char const* fileName) { font_ = LoadFont(fileName); }
+    static void unloadFont() { UnloadFont(font_); }
 
     // Textures
+private:
+    static inline std::unordered_map<RenderID, Texture2D> textures_{};
+    static inline std::string const texturePath{"resources/textures/"};
+
 public:
-    static inline void loadTexture(RenderID textureID, std::string filename)
+    static void loadTexture(RenderID textureID, std::string filename)
     {
-        textures().insert(std::make_pair(textureID, LoadTexture((texturePath + filename).c_str())));
+        textures_.insert(std::make_pair(textureID, LoadTexture((texturePath + filename).c_str())));
     };
 
-    static inline Texture2D* getTexture(RenderID textureID)
+    static Texture2D const* getTexture(RenderID textureID)
     {
-        if (textures().find(textureID) == textures().end())
+        if (textures_.find(textureID) == textures_.end())
             return nullptr;
 
-        return &textures().at(textureID);
+        return &textures_.at(textureID);
     };
 
-    static inline void unloadAllTextures()
+    static void unloadAllTextures()
     {
-        for (auto const& texture : textures())
+        for (auto const& texture : textures_)
         {
             Texture2D tex = texture.second;
             UnloadTexture(tex);
         }
-        textures().clear();
+
+        textures_.clear();
     };
 
-private:
-    static inline std::unordered_map<RenderID, Texture2D> textures_{};
-    static const inline std::string texturePath{"resources/textures/"};
-
-private:
-    static inline std::unordered_map<RenderID, Texture2D>& textures() { return instance().textures_; };
     //=================================
 
     // Globals
@@ -64,44 +62,61 @@ private:
     static inline bool isAppClosing_{false};
 
 public:
-    static inline bool& shouldAppClose() { return instance().isAppClosing_; };
-    static inline void closeApp() { shouldAppClose() = true; };
+    static bool shouldAppClose() { return isAppClosing_; }
+    static void closeApp() { isAppClosing_ = true; }
 
     // Active scene
 private:
     static inline snd::IScene* activeScene_{};
 
 public:
-    static inline snd::IScene*& activeScene() { return instance().activeScene_; };
-    static inline void setActiveScene(snd::IScene& scene) { activeScene() = &scene; };
+    static snd::IScene* const& activeScene() { return activeScene_; }
+    static void setActiveScene(snd::IScene& scene) { activeScene_ = &scene; }
 
     // Camera / Viewport
 private:
     static inline Camera2D camera_{};
 
 public:
-    static inline Camera2D& camera() { return instance().camera_; };
-    static inline void moveCamera(Vector2 distance) { camera().target = Vector2Add(camera().target, distance); };
+    static Camera2D& camera() { return camera_; }
 
     // Map size
 private:
-    static inline Area mapSize_{};
+    static inline RectangleExI mapsize_{};
 
 public:
-    static inline Area& mapSize() { return instance().mapSize_; };
+    static RectangleExI const& mapsize() { return mapsize_; }
 
-    static inline void updateMapSize(Vector2i V)
+    // Extends mapsize to include point provided
+    static void extendMapsize(Vector2I V)
     {
-        auto left{V.x < mapSize().left ? V.x : mapSize().left};
-        auto right{V.x > mapSize().right ? V.x : mapSize().right};
-        auto top{V.y < mapSize().top ? V.y : mapSize().top};
-        auto bottom{V.y > mapSize().bottom ? V.y : mapSize().bottom};
+        auto left{
+          (V.x < mapsize_.left)
+            ? V.x
+            : mapsize_.left};
 
-        mapSize() = Area{
+        auto right{
+          (V.x > mapsize_.right)
+            ? V.x
+            : mapsize_.right};
+
+        auto top{
+          (V.y < mapsize_.top)
+            ? V.y
+            : mapsize_.top};
+
+        auto bottom{
+          (V.y > mapsize_.bottom)
+            ? V.y
+            : mapsize_.bottom};
+
+        mapsize_ = RectangleExI{
+          Vector2I{
             left,
-            top,
+            top},
+          Vector2I{
             right,
-            bottom};
+            bottom}};
     };
 
     //=================================
@@ -113,8 +128,8 @@ private:
     static inline bool debugMode_{true};
 
 public:
-    static inline bool& debugMode() { return instance().debugMode_; };
-    static inline void setDebugMode(bool status) { debugMode() = status; };
+    static bool debugMode() { return debugMode_; }
+    static void toggleDebugMode() { debugMode_ = !debugMode_; }
     //=================================
 };
 

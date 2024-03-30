@@ -11,13 +11,13 @@ using Path = std::vector<SteppedTile>;
 
 // Pathfinder returns vector of positions from target to origin (excluded) if target is reachable
 Path findPath(
-    RangeSeparatedTiles const& reachableTiles,
-    Vector2i target);
+  RangeSeparatedTiles const& reachableTiles,
+  Vector2I target);
 
 Path findPath(
-    TileMap& tileMap,
-    Vector2i origin,
-    Vector2i target,
-    size_t range);
+  TileMap& tileMap,
+  Vector2I origin,
+  Vector2I target,
+  int range);
 
 #endif

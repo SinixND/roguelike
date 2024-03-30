@@ -50,7 +50,7 @@ namespace snd
             indexToKey_.insert(std::make_pair(valueIndex, key));
 
             return &values_[keyToIndex_[key]];
-        };
+        }
 
         void erase(Key const& key) override
         {
@@ -94,7 +94,7 @@ namespace snd
 
             // Remove key from used keys
             keys_.erase(key);
-        };
+        }
 
         void clear() override
         {
@@ -102,12 +102,12 @@ namespace snd
             keyToIndex_.clear();
             indexToKey_.clear();
             keys_.clear();
-        };
+        }
 
         bool contains(Key const& key) override
         {
             return keys_.contains(key);
-        };
+        }
 
         Type* at(Key const& key)
         {
@@ -115,19 +115,19 @@ namespace snd
                 return nullptr;
 
             return &values_[keyToIndex_[key]];
-        };
+        }
 
         std::vector<Type>& values()
         {
             return values_;
-        };
+        }
 
         std::vector<Key> keys() override
         {
             std::vector<Key> keys{keys_.begin(), keys_.end()};
 
             return keys;
-        };
+        }
 
     private:
         std::vector<Type> values_{};                  // Vector index is used as value key

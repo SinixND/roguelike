@@ -14,7 +14,7 @@
 namespace RayCast
 {
     std::vector<Tile*> getTilesRayed(
-      std::vector<Vector2i>& rayTargets,
+      std::vector<Vector2I>& rayTargets,
       Vector2 origin,
       TileMap& tileMap)
     {
@@ -56,7 +56,7 @@ namespace RayCast
                 directionTransformed.y = (EPSILON);
 
             // Normalize rayIncrements to relative unit
-            const Vector2 rayLengthIncrements{
+            Vector2 const rayLengthIncrements{
               sqrtf(pow(unitRelative, 2) * (1 + pow((directionTransformed.y / directionTransformed.x), 2))),
               sqrtf(pow(unitRelative, 2) * (1 + pow((directionTransformed.x / directionTransformed.y), 2)))};
 

@@ -5,7 +5,7 @@
 
 namespace snd
 {
-    constexpr float BORDER_WEIGHT{1};
+    constexpr float BORDER_WIDTH{1};
     constexpr Color BORDER_COLOR{GRAY};
     constexpr Color BACKGROUND_COLOR{BLACK};
 
@@ -25,13 +25,13 @@ namespace snd
 
             // Draw simple frame
             DrawRectangleLinesEx(
-                Rectangle{
-                    0,
-                    0,
-                    static_cast<float>(GetRenderWidth()),
-                    static_cast<float>(GetRenderHeight())},
-                BORDER_WEIGHT,
-                BORDER_COLOR);
+              Rectangle{
+                0,
+                0,
+                static_cast<float>(GetRenderWidth()),
+                static_cast<float>(GetRenderHeight())},
+              BORDER_WIDTH,
+              BORDER_COLOR);
 
             if (debugMode)
             {
@@ -41,7 +41,7 @@ namespace snd
             EndDrawing();
 
             postOutput();
-        };
+        }
 
         virtual void initialize() = 0;
         virtual void deinitialize() = 0;

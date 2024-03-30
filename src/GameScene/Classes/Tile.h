@@ -49,4 +49,5 @@ private:
     bool isSolid_;
     bool blocksVision_;
 };
+
 #endif

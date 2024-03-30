@@ -12,12 +12,12 @@ public:
 
     void setPosition(Vector2 position) { position_ = position; }
 
-    Vector2i tilePosition() const
+    Vector2I tilePosition() const
     {
         return TileTransformation::worldToPosition(position_);
     }
 
-    void setTilePosition(Vector2i tilePosition)
+    void setTilePosition(Vector2I tilePosition)
     {
         position_ = TileTransformation::positionToWorld(tilePosition);
     }
@@ -43,11 +43,11 @@ public:
     {
     }
 
-    Transformation(Vector2i tilePosition) { setTilePosition(tilePosition); }
+    Transformation(Vector2I tilePosition) { setTilePosition(tilePosition); }
 
 private:
     Vector2 position_{};
-    Vector2i oldPosition_{tilePosition()};
+    Vector2I oldPosition_{tilePosition()};
     bool hasPositionChanged_{true};
 };
 

@@ -16,4 +16,5 @@ private:
     void renderOutput() override;
     void postOutput() override;
 };
+
 #endif

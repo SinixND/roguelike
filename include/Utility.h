@@ -12,7 +12,7 @@ namespace Utility
         targetVector.insert(targetVector.end(), vector.begin(), vector.end());
     }
 
-    inline bool isInVector(Vector2i element, std::vector<Vector2i> vector)
+    inline bool isInVector(Vector2I element, std::vector<Vector2I> vector)
     {
         for (auto& entry : vector)
         {

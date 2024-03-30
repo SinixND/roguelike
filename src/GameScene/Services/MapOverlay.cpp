@@ -5,11 +5,12 @@
 #include "Pathfinder.h"
 #include "RenderID.h"
 #include "Tile.h"
+#include "TileMap.h"
 #include "TileMapFilters.h"
 #include "Unit.h"
+#include "VisibilityID.h"
 #include "World.h"
 #include "raylibEx.h"
-#include <cstddef>
 
 namespace MapOverlay
 {
@@ -59,24 +60,24 @@ namespace MapOverlay
         }
     }
 
-    Path& showPath(Vector2i unitPosition, Vector2i cursorPosition, size_t unitRange, World& world, bool& isPathShown)
+    Path& showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World& world, bool& isPathShown)
     {
-        static Vector2i origin{};
-        static Vector2i target{};
-        static size_t range{};
+        static Vector2I origin{};
+        static Vector2I target{};
         static Path path{};
+        TileMap overlayTiles{world.mapOverlay()};
 
         // Check if path input changed
         if (!(
-              origin == unitPosition && target == cursorPosition && range == unitRange))
+              origin == unitPosition
+              && target == cursorPosition))
         {
             // Update input and path
             origin = unitPosition;
             target = cursorPosition;
-            range = unitRange;
 
             path = findPath(
-              world.mapOverlay(),
+              overlayTiles,
               unitPosition,
               cursorPosition,
               unitRange);

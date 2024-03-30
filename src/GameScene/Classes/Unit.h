@@ -15,29 +15,31 @@ public:
     Attack attack;
 
 public:
-    bool isSelected() const { return isSelected_; };
-    void setIsSelected(bool isSelected) { isSelected_ = isSelected; };
+    bool isSelected() const { return isSelected_; }
+    void setIsSelected(bool isSelected) { isSelected_ = isSelected; }
 
-    bool isSolid() const { return isSolid_; };
+    bool isSolid() const { return isSolid_; }
 
-    VisibilityID visibilityID() const { return visibilityID_; };
-    void setVisibilityID(VisibilityID visibilityID) { visibilityID_ = visibilityID; };
+    VisibilityID visibilityID() const { return visibilityID_; }
+    void setVisibilityID(VisibilityID visibilityID) { visibilityID_ = visibilityID; }
 
-    size_t visionRange() const { return visionRange_; };
-    void setVisionRange(size_t visionRange) { visionRange_ = visionRange; };
+    int visionRange() const { return visionRange_; }
+    void setVisionRange(int visionRange) { visionRange_ = visionRange; }
 
     Unit(Transformation position, Graphic graphic, Movement movement, VisibilityID visibilityID, int visionRange, Attack attack)
         : Entity(position, graphic)
         , movement(movement)
         , attack(attack)
         , visibilityID_(visibilityID)
-        , visionRange_(visionRange){};
+        , visionRange_(visionRange)
+    {
+    }
 
 private:
     bool isSelected_{false};
-    const bool isSolid_{true};
+    bool const isSolid_{true};
     VisibilityID visibilityID_;
-    size_t visionRange_;
+    int visionRange_;
 };
 
 #endif

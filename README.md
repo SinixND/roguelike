@@ -7,14 +7,10 @@ development of a (maybe) roguelike game with c++ and raylib
 
 # TODOs
 # active
-- [ ] Size_t to unsigned int?
-- [ ] Rework semicolons
-
 - [ ] Refactor functions single purpose
 
 - [ ] Fix Bug: Movement trigger on attackable tile
 - [ ] Fix Bug: Path finder ignores walls
-- [ ] Check FPS issue
 
 
 # Shortterm
@@ -62,7 +58,7 @@ development of a (maybe) roguelike game with c++ and raylib
 | F1                                | Toggle debug mode   |
 | F4                                | Exit                |
 | F11                               | Maximize window     |
-| TAB                               | Center on hero      |
+| H                                 | Center on hero      |
 
 
 ### Touch

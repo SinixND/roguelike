@@ -10,11 +10,11 @@ template <typename Type>
 class Singleton
 {
 public:
-    static inline Type& instance()
+    static Type& instance()
     {
         static Type instance;
         return instance;
-    };
+    }
 
 protected:
     Singleton() = default;

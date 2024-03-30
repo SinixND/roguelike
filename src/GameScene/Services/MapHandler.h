@@ -10,18 +10,18 @@ class World;
 
 namespace MapHandler
 {
-    TileMap createNewMap(size_t level);
+    TileMap createNewMap(int level);
 
     void addTiles(
-        TileMap& tileMap,
-        Area const& area,
-        Graphic graphic,
-        bool isSolid,
-        bool blocksVision);
+      TileMap& tileMap,
+      RectangleExI const& area,
+      Graphic graphic,
+      bool isSolid,
+      bool blocksVision);
 
-    void addRoom(TileMap& tileMap, Area const& room);
+    void addRoom(TileMap& tileMap, RectangleExI const& room);
     void createStartRoom(TileMap& tileMap);
-    void createGridRooms(TileMap& tileMap, size_t level);
+    void createGridRooms(TileMap& tileMap, int level);
 }
 
 #endif

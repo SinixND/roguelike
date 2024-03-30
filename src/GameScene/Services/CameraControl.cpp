@@ -11,78 +11,83 @@
 
 namespace
 {
-    void setPanDirection(Vector2& screenCursor, RectangleEx& edgePanArea, Vector2i& panDirection)
+    void setPanDirection(Vector2I& panDirection, Vector2 screenCursor, RectangleEx edgePanRectangle)
     {
-        if (screenCursor.x < edgePanArea.left())
+        if (screenCursor.x < edgePanRectangle.left())
         {
-            panDirection = Vector2Add(panDirection, V_LEFT);
+            panDirection += V_LEFT;
         }
-        else if (screenCursor.x > (edgePanArea.right()))
+        else if (screenCursor.x > (edgePanRectangle.right()))
         {
-            panDirection = Vector2Add(panDirection, V_RIGHT);
+            panDirection += V_RIGHT;
         }
 
-        if (screenCursor.y < edgePanArea.top())
+        if (screenCursor.y < edgePanRectangle.top())
         {
-            panDirection = Vector2Add(panDirection, V_UP);
+            panDirection += V_UP;
         }
-        else if (screenCursor.y > (edgePanArea.bottom()))
+        else if (screenCursor.y > (edgePanRectangle.bottom()))
         {
-            panDirection = Vector2Add(panDirection, V_DOWN);
+            panDirection += V_DOWN;
         }
     }
 }
 
 namespace CameraControl
 {
-    void edgePan(Vector2 cursorWorldPosition, bool isMouseActive)
+    void edgePan(Camera2D& camera, Vector2 cursorWorldPosition, bool isMouseControlled)
     {
         static float dt{};
         dt += GetFrameTime();
 
-        // Trigger if cursor is outside of edge pan area
+        // Trigger if cursor is outside of edge pan deadzone
         Vector2 screenCursor{GetWorldToScreen2D(cursorWorldPosition, dtb::camera())};
 
-        RectangleEx renderArea{Render::getRenderArea()};
+        // Calculate edge pan deadzone (not triggered within)
+        RectangleEx renderRectangle{Render::getRenderRectangle()};
 
-        RectangleEx edgePanArea{
-            Vector2AddValue(
-                renderArea.topLeft(),
-                EDGE_PAN_FRAME_WEIGHT),
-            Vector2SubtractValue(
-                renderArea.bottomRight(),
-                EDGE_PAN_FRAME_WEIGHT)};
+        RectangleEx edgePanDeadzone{
+          Vector2AddValue(
+            renderRectangle.topLeft(),
+            EDGE_PAN_FRAME_WIDTH),
+          Vector2SubtractValue(
+            renderRectangle.bottomRight(),
+            EDGE_PAN_FRAME_WIDTH)};
 
-        if (!CheckCollisionPointRec(screenCursor, edgePanArea))
-        {
-            if (isMouseActive && dt < PAN_SPEED)
-                return;
+        // Check if cursor is inside edge pan deadzone
+        if (CheckCollisionPointRec(screenCursor, edgePanDeadzone))
+            return;
 
-            dt = 0;
+        // Only when mouse controlled: check if frame dt exceeds threshold
+        // Has no effect if key controlled!
+        if (isMouseControlled && dt < PAN_TICK)
+            return;
 
-            // Adjust cursor position relative to edge pan area while avoiding to pan too far
-            Vector2i panDirection{V_NODIR};
+        // Reset frame dt (only relevant if mouse contolled)
+        dt = 0;
 
-            // Determine pan direction
-            setPanDirection(screenCursor, edgePanArea, panDirection);
+        // Adjust cursor position relative to edge pan deadzone while avoiding to pan too far
+        Vector2I panDirection{V_NODIR};
 
-            // Check if pan is valid
-            Vector2i renderCenter{
-                TileTransformation::screenToPosition(
-                    Vector2{
-                        renderArea.left() + (renderArea.width() / 2),
-                        renderArea.top() + (renderArea.height() / 2)})};
+        // Determine pan direction
+        setPanDirection(panDirection, screenCursor, edgePanDeadzone);
 
-            if (!CheckCollisionPointArea(
-                    Vector2Add(
-                        renderCenter,
-                        panDirection),
-                    dtb::mapSize()))
-                return;
+        // Check if center of render area stays on map
+        Vector2I renderCenter{
+          TileTransformation::screenToPosition(
+            Vector2{
+              renderRectangle.left() + (renderRectangle.width() / 2),
+              renderRectangle.top() + (renderRectangle.height() / 2)})};
 
-            // Update camera
-            dtb::moveCamera(Vector2Scale(panDirection, TILE_SIZE));
-        }
+        if (!CheckCollisionPointRectangleEx(
+              Vector2Add(
+                renderCenter,
+                panDirection),
+              dtb::mapsize()))
+            return;
+
+        // Update camera
+        camera.target += Vector2Scale(panDirection, TILE_SIZE);
     }
 
     void centerOnHero(Camera2D& camera, Unit& unit)
@@ -90,4 +95,3 @@ namespace CameraControl
         camera.target = unit.transform.position();
     }
 }
-

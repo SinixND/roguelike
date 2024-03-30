@@ -10,7 +10,7 @@ class World
 {
 public:
     TileMap& currentMap();
-    size_t currentLevel();
+    int currentLevel();
 
     void increaseLevel();
     void decreaseLevel();
@@ -19,8 +19,8 @@ public:
     TileMap& framedMapOverlay();
 
 private:
-    size_t maxLevel_{};
-    size_t currentLevel_{};
+    int maxLevel_{};
+    int currentLevel_{};
 
     std::vector<TileMap> maps_{MapHandler::createNewMap(maxLevel_)};
     TileMap* currentMap_{&maps_.back()};
@@ -29,8 +29,8 @@ private:
     TileMap framedMapOverlay_{};
 
 private:
-    void addNewMap(size_t level);
-    void setMap(size_t level);
+    void addNewMap(int level);
+    void setMap(int level);
 };
 
 #endif

@@ -13,7 +13,9 @@ public:
 
     Entity(Transformation transform, Graphic graphic)
         : transform(transform)
-        , graphic(graphic){};
+        , graphic(graphic)
+    {
+    }
 };
 
 #endif

@@ -11,37 +11,43 @@
 class Movement
 {
 public:
-    size_t range() const { return range_; };
-    void setRange(size_t range) { range_ = range; };
+    int range() const { return range_; }
+    void setRange(int range) { range_ = range; }
 
-    float speed() const { return speed_; };
-    void setSpeed(float speed) { speed_ = speed; };
+    float speed() const { return speed_; }
+    void setSpeed(float speed) { speed_ = speed; }
 
-    Vector2i target() const { return target_; };
-    void setTarget(Vector2i target) { target_ = target; };
+    Vector2I target() const { return target_; }
+    void setTarget(Vector2I target)
+    {
+        target_ = target;
+        isTargetSet_ = true;
+    }
 
-    bool isTargetSet() const { return isTargetSet_; };
-    void setIsTargetSet(bool status) { isTargetSet_ = status; };
+    bool isTargetSet() const { return isTargetSet_; }
+    void unsetTarget() { isTargetSet_ = false; }
 
-    bool isMoving() const { return isMoving_; };
+    bool isMoving() const { return isMoving_; }
 
     void setPath(Path const& path)
     {
         path_ = path;
         isMoving_ = true;
-    };
+    }
 
     // Returns if movement finished
     bool move(Transformation& transform, float dt);
 
-    Movement(size_t range, float speed)
+    Movement(int range, float speed)
         : range_(range)
-        , speed_(speed){};
+        , speed_(speed)
+    {
+    }
 
 private:
-    size_t range_{};
+    int range_{};
     float speed_{}; // pixel per second
-    Vector2i target_{};
+    Vector2I target_{};
     bool isTargetSet_{false};
     bool isMoving_{false};
     Path path_{};

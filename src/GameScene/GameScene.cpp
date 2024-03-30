@@ -63,16 +63,16 @@ void GameScene::processInput()
 
     // Toggle debug mode
     if (IsKeyPressed(KEY_F1))
-        dtb::setDebugMode(!dtb::debugMode());
+        dtb::toggleDebugMode();
 
     // Toggle between mouse or key control for cursor
-    static bool isMouseActive{true};
+    static bool isMouseControlled{true};
 
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
     {
-        isMouseActive = !isMouseActive;
+        isMouseControlled = !isMouseControlled;
 
-        if (isMouseActive)
+        if (isMouseControlled)
         {
             ShowCursor();
         }
@@ -83,15 +83,16 @@ void GameScene::processInput()
     }
 
     // Update cursor
-    CursorControl::update(cursor.transform, isMouseActive);
+    CursorControl::update(cursor.transform, isMouseControlled);
 
     // Process edge pan
     CameraControl::edgePan(
+      dtb::camera(),
       TileTransformation::positionToWorld(cursor.transform.tilePosition()),
-      isMouseActive);
+      isMouseControlled);
 
     // Center on hero
-    if (IsKeyPressed(KEY_TAB))
+    if (IsKeyPressed(KEY_H))
         CameraControl::centerOnHero(dtb::camera(), hero);
 
     // Process zoom
@@ -231,7 +232,7 @@ void GameScene::renderOutput()
     //=================================
     char const* currentLevel{TextFormat("Level %i", gameWorld.currentLevel())};
 
-    Font& font{dtb::font()};
+    Font const& font{dtb::font()};
 
     int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
     int fontSpacing{GuiGetStyle(DEFAULT, TEXT_SPACING)};
@@ -249,8 +250,8 @@ void GameScene::renderOutput()
       RAYWHITE);
     //=================================
 
-    // Draw render area
-    DrawRectangleLinesEx(Render::getRenderArea().rectangle(), 1, DARKGRAY);
+    // Draw render rectangle
+    DrawRectangleLinesEx(Render::getRenderRectangle().rectangle(), 1, DARKGRAY);
 }
 
 void GameScene::postOutput()
