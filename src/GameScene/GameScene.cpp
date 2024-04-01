@@ -141,15 +141,7 @@ void GameScene::updateState()
 
     if (hero.isSelected())
     {
-        if (isRangeShown)
-        {
-            path = MapOverlay::showPath(
-              hero.transform.tilePosition(),
-              cursor.transform.tilePosition(),
-              hero.movement.range(),
-              gameWorld);
-        }
-        else // range not shown
+        if (!isRangeShown)
         {
             MapOverlay::showUnitMoveRange(
               hero,
@@ -160,6 +152,14 @@ void GameScene::updateState()
               gameWorld);
 
             isRangeShown = true;
+        }
+        else // range is shown
+        {
+            path = MapOverlay::showPath(
+              hero.transform.tilePosition(),
+              cursor.transform.tilePosition(),
+              hero.movement.range(),
+              gameWorld);
         }
     }
     else // not selected

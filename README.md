@@ -11,6 +11,7 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
+- [ ] FoV
 - [ ] Trigger non-input by event system (pub-sub / observer pattern)
 
 

@@ -160,7 +160,7 @@ namespace MapHandler
         // Add walls
         addTiles(
           tileMap,
-          RectangleExI{-1, -1, 3, 1},
+          RectangleExI{-1, 2, 3, 1},
           Graphic(RenderID::WALL, LayerID::MAP),
           VisibilityID::UNSEEN,
           true,

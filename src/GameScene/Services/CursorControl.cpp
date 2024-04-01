@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "Render.h"
 #include "TileTransformation.h"
+#include "Timer.h"
 #include "Transformation.h"
 #include "raylibEx.h"
 #include <raylib.h>
@@ -27,36 +28,49 @@ namespace CursorControl
 
         void processKeyControl(Transformation& cursorPosition)
         {
+            // Store last key
+            static int key{};
+            int keyPressed{GetKeyPressed()};
+            if (keyPressed)
+                key = keyPressed;
+
             Vector2I dir{};
 
+            static Timer timer{CURSOR_MOVE_TICK};
+            static Timer delay{CURSOR_MOVE_DELAY};
+
             // Set direction
-            switch (GetKeyPressed())
+            switch (key)
             {
             case KEY_W:
             case KEY_UP:
             {
-                dir = V_UP;
+                if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
+                    dir = V_UP;
             }
             break;
 
             case KEY_A:
             case KEY_LEFT:
             {
-                dir = V_LEFT;
+                if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
+                    dir = V_LEFT;
             }
             break;
 
             case KEY_S:
             case KEY_DOWN:
             {
-                dir = V_DOWN;
+                if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
+                    dir = V_DOWN;
             }
             break;
 
             case KEY_D:
             case KEY_RIGHT:
             {
-                dir = V_RIGHT;
+                if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
+                    dir = V_RIGHT;
             }
             break;
 
