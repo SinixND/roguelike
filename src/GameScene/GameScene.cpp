@@ -2,12 +2,14 @@
 
 #include "Attack.h"
 #include "CameraControl.h"
+#include "Constants.h"
 #include "CursorControl.h"
 #include "Entity.h"
 #include "Graphic.h"
 #include "LayerID.h"
 #include "MapOverlay.h"
 #include "Movement.h"
+#include "PanelStatus.h"
 #include "Pathfinder.h"
 #include "Render.h"
 #include "RenderID.h"
@@ -185,56 +187,62 @@ void GameScene::renderOutput()
 {
     BeginMode2D(dtb::camera());
 
-    // Layer map
+    // Map layer
     for (auto& tile : gameWorld.currentMap().values())
     {
         Render::update(tile.transform.position(), tile.graphic, tile.visibilityID());
     }
 
-    // Layer map overlay
+    // Map overlay
     for (auto& tile : gameWorld.mapOverlay().values())
     {
         Render::update(tile.transform.position(), tile.graphic, tile.visibilityID());
     }
 
-    // Layer framed map overlay
+    // (Single frame) Map overlay
     for (auto& tile : gameWorld.framedMapOverlay().values())
     {
         Render::update(tile.transform.position(), tile.graphic, tile.visibilityID());
     }
 
-    // Render object layer
+    // Object layer
     Render::update(hero.transform.position(), hero.graphic);
 
-    // Render UI layer
+    // UI layer
     Render::update(cursor.transform.position(), cursor.graphic);
 
     EndMode2D();
 
-    // Draw text for current level
+    // Panels
     //=================================
-    char const* currentLevel{TextFormat("Level %i", gameWorld.currentLevel())};
-
-    Font const& font{dtb::font()};
-
-    int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
-    int fontSpacing{GuiGetStyle(DEFAULT, TEXT_SPACING)};
-
-    Vector2 textDimensions{MeasureTextEx(font, currentLevel, fontSize, fontSpacing)};
-
-    DrawTextEx(
-      font,
-      currentLevel,
-      Vector2{
-        ((GetRenderWidth() / 2.0f) - (textDimensions.x / 2)),
-        10},
-      fontSize,
-      GuiGetStyle(DEFAULT, TEXT_SPACING),
-      RAYWHITE);
+    PanelStatus::update(gameWorld.currentLevel(), dtb::font(), Render::mapPanel());
     //=================================
 
-    // Draw render rectangle
-    DrawRectangleLinesEx(Render::getRenderRectangle().rectangle(), 1, DARKGRAY);
+    // Draw panel borders
+
+    // Map panel (mid-left)
+    DrawRectangleLinesEx(
+      Render::mapPanel().rectangle(),
+      1,
+      DARKGRAY);
+
+    // Info panel (right)
+    DrawRectangleLinesEx(
+      Rectangle{
+        Render::mapPanel().right(),
+        0,
+        INFO_PANEL_WIDTH + 1,
+        static_cast<float>(GetRenderHeight())},
+      1,
+      DARKGRAY);
+
+    // Under cursor info panel (bottom-right)
+    DrawLineEx(
+      Render::mapPanel().bottomRight(),
+      {static_cast<float>(GetRenderWidth()),
+       Render::mapPanel().bottom() + 1},
+      1,
+      DARKGRAY);
 }
 
 void GameScene::postOutput()

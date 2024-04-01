@@ -44,7 +44,7 @@ namespace CameraControl
         Vector2 screenCursor{GetWorldToScreen2D(cursorWorldPosition, dtb::camera())};
 
         // Calculate edge pan deadzone (not triggered within)
-        RectangleEx renderRectangle{Render::getRenderRectangle()};
+        RectangleEx renderRectangle{Render::mapPanel()};
 
         RectangleEx edgePanDeadzone{
           Vector2AddValue(

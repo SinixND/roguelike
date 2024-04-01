@@ -11,12 +11,16 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
-- [ ] FoV
-- [ ] Trigger non-input by event system (pub-sub / observer pattern)
+- explicit constructor (with single argument?)
+- [ ] Named parameter for setters:
+  - inline Class& setA(T a){a_ = a; return * this;}
+- [ ] Print tile info in panel
 
 
 # Shortterm
 - [ ] Map change
+  - [ ] Trigger non-input by event system (pub-sub / observer pattern)
+  - [ ] Print action in log panel
 - [ ] Add enemy
 
 

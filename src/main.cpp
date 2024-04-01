@@ -45,7 +45,7 @@ int main(/* int argc, char **argv */)
 
     // Fonts
     dtb::loadFont("resources/fonts/JuliaMono-RegularLatin.ttf");
-    GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, FONT_SIZE);
     //=====================================
 
     // Application initialization

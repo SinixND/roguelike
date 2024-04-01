@@ -122,7 +122,7 @@ namespace Vision
 
         visibleTiles = RayCast::getTilesRayed(
           rayTargets,
-          unit.transform.position(),
+          unit.transform.tilePosition(),
           tileMap);
 
         // Make tiles visible

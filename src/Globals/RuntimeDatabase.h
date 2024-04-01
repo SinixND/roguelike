@@ -38,7 +38,7 @@ public:
         textureAtlas_ = LoadTexture((texturePath + filename).c_str());
     }
 
-    static Texture2D const* getTextureAtlas()
+    static Texture2D* getTextureAtlas()
     {
         return &textureAtlas_;
     }

@@ -93,7 +93,7 @@ namespace CursorControl
                 factor)};
 
             // If new position were out of screen with potential boost applied
-            Rectangle renderRectangle{Render::getRenderRectangle().rectangle()};
+            Rectangle renderRectangle{Render::mapPanel().rectangle()};
 
             if (isOutOfRectangle(
                   newCursorPosition,

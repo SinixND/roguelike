@@ -42,6 +42,9 @@ Matrix2x2 const M_ROTATE_CW_45{
 
 // Game
 //=====================================
+// Font
+float const FONT_SIZE{20};
+
 // Timings
 float const PAN_TICK{0.1f};           // time in seconds to next pan move step
 float const CURSOR_MOVE_TICK{0.1f};   // time in seconds to next cursor move step
@@ -63,13 +66,16 @@ float const ZOOM_DEFAULT{1};
 float const ZOOM_MIN{0.1f};
 float const ZOOM_MAX{3.0f};
 
-// Render area
-float const LEFT_MAP_RENDER_OFFSET{0};
-float const TOP_MAP_RENDER_OFFSET{2.0f * TILE_SIZE};
-float const RIGHT_MAP_RENDER_OFFSET{0};
-float const BOTTOM_MAP_RENDER_OFFSET{100};
+// Panels (sorted by descending priority)
+// Info (right); Number: chars per line
+float const INFO_PANEL_WIDTH{(10 /*Number of chars per line*/ * FONT_SIZE) + FONT_SIZE};
+// Status (top); Number: lines to print
+float const STATUS_PANEL_HEIGHT{(1 /*Number of lines to print*/ * (1.5f * FONT_SIZE)) + (0.5f * FONT_SIZE)};
+// Log (bottom);
+float const LOG_PANEL_HEIGHT{(3 /*Number of lines to print*/ * (1.5f * FONT_SIZE)) + (0.5f * FONT_SIZE)};
 
-float const MAP_RENDER_AREA_MARGIN{0.5f * TILE_SIZE};
+// Ray casting
+float const RAY_CAST_PRECISION{0.0001f};
 //=====================================
 
 #endif

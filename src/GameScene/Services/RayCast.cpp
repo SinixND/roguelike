@@ -1,6 +1,7 @@
 #include "RayCast.h"
 
 #include "Constants.h"
+#include "SparseSet.h"
 #include "Tile.h"
 #include "TileMap.h"
 #include "TileTransformation.h"
@@ -18,7 +19,7 @@ namespace RayCast
       Vector2 origin,
       TileMap& tileMap)
     {
-        std::vector<Tile*> tilesRayed{};
+        snd::SparseSet<Vector2I, Tile*> tilesRayed{};
 
         // Set ray cast values
         Vector2 rayStart{origin};
@@ -97,8 +98,7 @@ namespace RayCast
                 if (minLength > (maxLength + 1))
                     break;
 
-                // If rayLenghts are equal increase one once more to avoid
-                // double checks
+                // If rayLenghts are equal increase one once more to avoid double checks
                 if (FloatEquals(rayLengths.x, rayLengths.y))
                     rayLengths.x += rayLengthIncrements.x;
 
@@ -109,65 +109,68 @@ namespace RayCast
                     rayDirection,
                     minLength));
 
-                // Make vision symmetrical ()
-                int chkx{static_cast<int>(round((rayEnd.x + 12.5) * 10)) % 250};
-                int chky{static_cast<int>(round((rayEnd.y + 12.5) * 10)) % 250};
+                // Tile corners
+                // If tile corner hit check 4 adjacent tiles
 
-                if (!chkx && !chky)
-                    continue;
+                // Offset from corner
+                float cornerOffsetX{remainder((rayEnd.x + (TILE_SIZE / 2)), TILE_SIZE)};
+                float cornerOffsetY{remainder((rayEnd.y + (TILE_SIZE / 2)), TILE_SIZE)};
 
-                Tile* tileHit{tileMap.at(TileTransformation::worldToPosition(rayEnd))};
+                bool cornerHit{false};
 
-                // Check for nullptr aka. tile out of map
-                if (!tileHit)
-                    continue;
+                if ((abs(cornerOffsetX) < RAY_CAST_PRECISION) && (abs(cornerOffsetY) < RAY_CAST_PRECISION))
+                    cornerHit = true;
 
-                tilesRayed.push_back(tileHit);
+                std::vector<Vector2> offsets{{0, 0}};
 
-                if (false && dtb::debugMode())
+                if (cornerHit)
                 {
-                    BeginDrawing();
-                    BeginMode2D(dtb::camera());
-
-                    // Draw ray target
-                    DrawCircleLinesV(target, 3, ColorAlpha(PURPLE, 0.1));
-
-                    // Draw ray line
-                    DrawLineEx(rayStart, rayEnd, 1, ColorAlpha(GREEN, 0.1));
-
-                    // Draw ray checkpoint
-                    DrawCircleLinesV(rayEnd, 3, ColorAlpha(RED, 0.1));
-
-                    // Draw diagonals of rayed tile
-                    DrawLineEx(
-                      Vector2{
-                        tileHit->transform.position().x + (TILE_SIZE / 2.5f),
-                        tileHit->transform.position().y + (TILE_SIZE / 2.5f)},
-                      Vector2{
-                        tileHit->transform.position().x - (TILE_SIZE / 2.5f),
-                        tileHit->transform.position().y - (TILE_SIZE / 2.5f)},
-                      1,
-                      ColorAlpha(WHITE, 0.1));
-
-                    DrawLineEx(
-                      Vector2{
-                        tileHit->transform.position().x - (TILE_SIZE / 2.5f),
-                        tileHit->transform.position().y + (TILE_SIZE / 2.5f)},
-                      Vector2{
-                        tileHit->transform.position().x + (TILE_SIZE / 2.5f),
-                        tileHit->transform.position().y - (TILE_SIZE / 2.5f)},
-                      1,
-                      ColorAlpha(WHITE, 0.1));
-                    EndMode2D();
-                    EndDrawing();
+                    offsets.pop_back();
+                    // Add offsets for 4 adjacent tiles
+                    offsets.push_back({-RAY_CAST_PRECISION, -RAY_CAST_PRECISION});
+                    offsets.push_back({RAY_CAST_PRECISION, -RAY_CAST_PRECISION});
+                    offsets.push_back({-RAY_CAST_PRECISION, RAY_CAST_PRECISION});
+                    offsets.push_back({RAY_CAST_PRECISION, RAY_CAST_PRECISION});
                 }
 
-                // Detect tile blocking vision
-                if (tileHit->blocksVision())
+                bool collisionDetected{false};
+
+                for (auto offset : offsets)
+                {
+                    Vector2 offsetRayEnd = rayEnd;
+
+                    offsetRayEnd += offset;
+
+                    Tile* tileHit{tileMap.at(TileTransformation::worldToPosition(offsetRayEnd))};
+
+                    // Check for nullptr aka. tile out of map
+                    if (!tileHit)
+                        continue;
+
+                    if (!cornerHit)
+                        tilesRayed.createOrUpdate(tileHit->transform.tilePosition(), tileHit);
+
+                    // Detect tile blocking vision
+                    if (tileHit->blocksVision())
+                    {
+                        collisionDetected = true;
+                        break;
+                    }
+                }
+
+                if (collisionDetected)
                     break;
             }
         }
 
-        return tilesRayed;
+        return tilesRayed.values();
+    }
+
+    std::vector<Tile*> getTilesRayed(
+      std::vector<Vector2I>& rayTargets,
+      Vector2I origin,
+      TileMap& tileMap)
+    {
+        return getTilesRayed(rayTargets, TileTransformation::positionToWorld(origin), tileMap);
     }
 }

@@ -12,12 +12,25 @@ namespace Render
 {
     void update(Vector2 position, Graphic graphic, VisibilityID visibilityID)
     {
-        static RectangleEx renderRectangle{getRenderRectangle()};
+        static RectangleEx renderRectangle{mapPanel()};
+        static RectangleEx extendedRenderRectangle{
+          renderRectangle.left() - TILE_SIZE,
+          renderRectangle.top() - TILE_SIZE,
+          renderRectangle.width() + (2 * TILE_SIZE),
+          renderRectangle.height() + (2 * TILE_SIZE)};
+
         if (IsWindowResized())
-            renderRectangle = getRenderRectangle();
+        {
+            renderRectangle = mapPanel();
+            extendedRenderRectangle = {
+              renderRectangle.left() - TILE_SIZE,
+              renderRectangle.top() - TILE_SIZE,
+              renderRectangle.width() + (2 * TILE_SIZE),
+              renderRectangle.height() + (2 * TILE_SIZE)};
+        }
 
         // Return if pixel is out of render area
-        if (!CheckCollisionPointRec(GetWorldToScreen2D(position, dtb::camera()), renderRectangle))
+        if (!CheckCollisionPointRec(GetWorldToScreen2D(position, dtb::camera()), extendedRenderRectangle))
             return;
 
         // Get texture data
@@ -38,7 +51,7 @@ namespace Render
 
         case VisibilityID::SEEN:
             tint = BLACK;
-            tint = ColorBrightness(tint, 0.67);
+            tint = ColorBrightness(tint, 0.33);
             break;
 
         case VisibilityID::UNSEEN:
@@ -53,14 +66,15 @@ namespace Render
             break;
         }
 
+        BeginScissorMode(renderRectangle.left(), renderRectangle.top(), renderRectangle.width(), renderRectangle.height());
         // Draw texture (using 0.5f pixel offset to get rid of texture bleeding)
         DrawTexturePro(
           *textureAtlas,
           Rectangle{
             texturePosition.x + 0.5f,
             texturePosition.y + 0.5f,
-            TEXTURE_WIDTH - 0.5f,
-            TEXTURE_WIDTH - 0.5f},
+            TEXTURE_WIDTH - (2 * 0.5f),
+            TEXTURE_WIDTH - (2 * 0.5f)},
           Rectangle{
             position.x,
             position.y,
@@ -69,14 +83,15 @@ namespace Render
           tileCenter,
           0,
           tint);
+        EndScissorMode();
     }
 
-    RectangleEx getRenderRectangle()
+    RectangleEx mapPanel()
     {
         return RectangleEx{
-          -MAP_RENDER_AREA_MARGIN + LEFT_MAP_RENDER_OFFSET,
-          -MAP_RENDER_AREA_MARGIN + TOP_MAP_RENDER_OFFSET,
-          GetRenderWidth() - LEFT_MAP_RENDER_OFFSET - RIGHT_MAP_RENDER_OFFSET + 2 * MAP_RENDER_AREA_MARGIN,
-          GetRenderHeight() - TOP_MAP_RENDER_OFFSET - BOTTOM_MAP_RENDER_OFFSET + 2 * MAP_RENDER_AREA_MARGIN};
+          0,
+          STATUS_PANEL_HEIGHT,
+          GetRenderWidth() - INFO_PANEL_WIDTH,
+          GetRenderHeight() - LOG_PANEL_HEIGHT - STATUS_PANEL_HEIGHT};
     }
 }
