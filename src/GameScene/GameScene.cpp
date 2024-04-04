@@ -9,6 +9,7 @@
 #include "LayerID.h"
 #include "MapOverlay.h"
 #include "Movement.h"
+#include "Panel.h"
 #include "PanelStatus.h"
 #include "Pathfinder.h"
 #include "Render.h"
@@ -215,33 +216,47 @@ void GameScene::renderOutput()
 
     // Panels
     //=================================
-    PanelStatus::update(gameWorld.currentLevel(), dtb::font(), Render::mapPanel());
+    PanelStatus::update(gameWorld.currentLevel(), dtb::font(), Panel::panelMap());
     //=================================
 
     // Draw panel borders
-
-    // Map panel (mid-left)
+    //=================================
+    // Info panel (right)
     DrawRectangleLinesEx(
-      Render::mapPanel().rectangle(),
-      1,
+      Panel::panelTileInfo().rectangle(),
+      PANEL_BORDER_WEIGHT,
       DARKGRAY);
 
     // Info panel (right)
     DrawRectangleLinesEx(
-      Rectangle{
-        Render::mapPanel().right(),
-        0,
-        INFO_PANEL_WIDTH + 1,
-        static_cast<float>(GetRenderHeight())},
-      1,
+      Panel::panelInfo().rectangle(),
+      PANEL_BORDER_WEIGHT,
+      DARKGRAY);
+
+    // Status panel (top)
+    DrawRectangleLinesEx(
+      Panel::panelStatus().rectangle(),
+      PANEL_BORDER_WEIGHT,
+      DARKGRAY);
+
+    // Log panel (bottom)
+    DrawRectangleLinesEx(
+      Panel::panelLog().rectangle(),
+      PANEL_BORDER_WEIGHT,
+      DARKGRAY);
+
+    // Map panel (mid-left)
+    DrawRectangleLinesEx(
+      Panel::panelMap().rectangle(),
+      PANEL_BORDER_WEIGHT,
       DARKGRAY);
 
     // Under cursor info panel (bottom-right)
     DrawLineEx(
-      Render::mapPanel().bottomRight(),
+      Panel::panelMap().bottomRight(),
       {static_cast<float>(GetRenderWidth()),
-       Render::mapPanel().bottom() + 1},
-      1,
+       Panel::panelMap().bottom() + 1},
+      PANEL_BORDER_WEIGHT,
       DARKGRAY);
 }
 

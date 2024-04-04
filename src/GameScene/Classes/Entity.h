@@ -8,8 +8,8 @@
 class Entity
 {
 public:
-    Transformation transform;
-    Graphic graphic;
+    Transformation transform{};
+    Graphic graphic{};
 
     Entity(Transformation transform, Graphic graphic)
         : transform(transform)

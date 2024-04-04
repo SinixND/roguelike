@@ -26,7 +26,7 @@ endif
 BINARY 				:= main
 
 ### automatically added flags to make command
-MAKEFLAGS 			:= -j
+MAKEFLAGS 			:= #-j
 
 #######################################
 ### set the used compiler to g++ or clang++
@@ -174,7 +174,7 @@ benchmark: $(BIN_DIR)/benchmark.$(BINARY_EXT)
 
 ### rule for release build process with binary as prerequisite
 release: CXX_FLAGS += -O2
-release: build 
+release: clean build 
 
 publish: release web windows
 

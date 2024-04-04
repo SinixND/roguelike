@@ -2,6 +2,7 @@
 
 #include "Constants.h"
 #include "Graphic.h"
+#include "Panel.h"
 #include "RuntimeDatabase.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
@@ -12,25 +13,27 @@ namespace Render
 {
     void update(Vector2 position, Graphic graphic, VisibilityID visibilityID)
     {
-        static RectangleEx renderRectangle{mapPanel()};
-        static RectangleEx extendedRenderRectangle{
-          renderRectangle.left() - TILE_SIZE,
-          renderRectangle.top() - TILE_SIZE,
-          renderRectangle.width() + (2 * TILE_SIZE),
-          renderRectangle.height() + (2 * TILE_SIZE)};
+        static RectangleEx mapPanel{Panel::panelMap()};
+        static RectangleEx extendedMapPanel{mapPanel};
+        extendedMapPanel
+          .offsetLeft(-TILE_SIZE)
+          .offsetTop(-TILE_SIZE)
+          .offsetRight(TILE_SIZE)
+          .offsetBottom(TILE_SIZE);
 
         if (IsWindowResized())
         {
-            renderRectangle = mapPanel();
-            extendedRenderRectangle = {
-              renderRectangle.left() - TILE_SIZE,
-              renderRectangle.top() - TILE_SIZE,
-              renderRectangle.width() + (2 * TILE_SIZE),
-              renderRectangle.height() + (2 * TILE_SIZE)};
+            mapPanel = Panel::panelMap();
+            extendedMapPanel = mapPanel;
+            extendedMapPanel
+              .offsetLeft(-TILE_SIZE)
+              .offsetTop(-TILE_SIZE)
+              .offsetRight(TILE_SIZE)
+              .offsetBottom(TILE_SIZE);
         }
 
         // Return if pixel is out of render area
-        if (!CheckCollisionPointRec(GetWorldToScreen2D(position, dtb::camera()), extendedRenderRectangle))
+        if (!CheckCollisionPointRec(GetWorldToScreen2D(position, dtb::camera()), extendedMapPanel))
             return;
 
         // Get texture data
@@ -66,7 +69,7 @@ namespace Render
             break;
         }
 
-        BeginScissorMode(renderRectangle.left(), renderRectangle.top(), renderRectangle.width(), renderRectangle.height());
+        BeginScissorMode(mapPanel.left(), mapPanel.top(), mapPanel.width(), mapPanel.height());
         // Draw texture (using 0.5f pixel offset to get rid of texture bleeding)
         DrawTexturePro(
           *textureAtlas,
@@ -84,14 +87,5 @@ namespace Render
           0,
           tint);
         EndScissorMode();
-    }
-
-    RectangleEx mapPanel()
-    {
-        return RectangleEx{
-          0,
-          STATUS_PANEL_HEIGHT,
-          GetRenderWidth() - INFO_PANEL_WIDTH,
-          GetRenderHeight() - LOG_PANEL_HEIGHT - STATUS_PANEL_HEIGHT};
     }
 }

@@ -1,7 +1,7 @@
 #include "CursorControl.h"
 
 #include "Constants.h"
-#include "Render.h"
+#include "Panel.h"
 #include "TileTransformation.h"
 #include "Timer.h"
 #include "Transformation.h"
@@ -93,7 +93,7 @@ namespace CursorControl
                 factor)};
 
             // If new position were out of screen with potential boost applied
-            Rectangle renderRectangle{Render::mapPanel().rectangle()};
+            Rectangle renderRectangle{Panel::panelMap().rectangle()};
 
             if (isOutOfRectangle(
                   newCursorPosition,

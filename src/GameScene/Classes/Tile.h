@@ -5,6 +5,7 @@
 #include "Graphic.h"
 #include "Transformation.h"
 #include "VisibilityID.h"
+#include <string>
 
 class Tile : public Entity
 {
@@ -45,9 +46,10 @@ public:
     }
 
 private:
-    VisibilityID visibilityID_;
-    bool isSolid_;
-    bool blocksVision_;
+    std::string tag_{};
+    VisibilityID visibilityID_{};
+    bool isSolid_{};
+    bool blocksVision_{};
 };
 
 #endif

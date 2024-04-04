@@ -1,7 +1,7 @@
 #include "CameraControl.h"
 
 #include "Constants.h"
-#include "Render.h"
+#include "Panel.h"
 #include "RuntimeDatabase.h"
 #include "TileTransformation.h"
 #include "Unit.h"
@@ -44,7 +44,7 @@ namespace CameraControl
         Vector2 screenCursor{GetWorldToScreen2D(cursorWorldPosition, dtb::camera())};
 
         // Calculate edge pan deadzone (not triggered within)
-        RectangleEx renderRectangle{Render::mapPanel()};
+        RectangleEx renderRectangle{Panel::panelMap()};
 
         RectangleEx edgePanDeadzone{
           Vector2AddValue(

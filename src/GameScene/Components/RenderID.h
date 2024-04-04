@@ -3,7 +3,7 @@
 
 enum class RenderID
 {
-    NONE,
+    INVISIBLE,
     HERO,
     CURSOR,
     WALL,

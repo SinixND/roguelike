@@ -26,7 +26,13 @@ public:
     int visionRange() const { return visionRange_; }
     void setVisionRange(int visionRange) { visionRange_ = visionRange; }
 
-    Unit(Transformation position, Graphic graphic, Movement movement, VisibilityID visibilityID, int visionRange, Attack attack)
+    Unit(
+      Transformation position,
+      Graphic graphic,
+      Movement movement,
+      VisibilityID visibilityID,
+      int visionRange,
+      Attack attack)
         : Entity(position, graphic)
         , movement(movement)
         , attack(attack)
@@ -38,8 +44,8 @@ public:
 private:
     bool isSelected_{false};
     bool const isSolid_{true};
-    VisibilityID visibilityID_;
-    int visionRange_;
+    VisibilityID visibilityID_{};
+    int visionRange_{};
 };
 
 #endif

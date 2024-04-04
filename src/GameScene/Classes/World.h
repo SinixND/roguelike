@@ -3,7 +3,6 @@
 
 #include "MapHandler.h"
 #include "TileMap.h"
-#include <cstddef>
 #include <vector>
 
 class World

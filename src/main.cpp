@@ -58,7 +58,7 @@ int main(/* int argc, char **argv */)
     dtb::loadAtlas("TextureAtlas.png");
 
     // Register textures
-    dtb::registerTexture(RenderID::NONE, {0, 0});
+    dtb::registerTexture(RenderID::INVISIBLE, {0, 0});
     dtb::registerTexture(RenderID::CURSOR, {35, 0});
     dtb::registerTexture(RenderID::HERO, {70, 0});
     dtb::registerTexture(RenderID::WALL, {105, 0});

@@ -67,6 +67,7 @@ float const ZOOM_MIN{0.1f};
 float const ZOOM_MAX{3.0f};
 
 // Panels (sorted by descending priority)
+float const PANEL_BORDER_WEIGHT{1};
 // Info (right); Number: chars per line
 float const INFO_PANEL_WIDTH{(10 /*Number of chars per line*/ * FONT_SIZE) + FONT_SIZE};
 // Status (top); Number: lines to print

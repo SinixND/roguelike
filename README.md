@@ -11,9 +11,6 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
-- explicit constructor (with single argument?)
-- [ ] Named parameter for setters:
-  - inline Class& setA(T a){a_ = a; return * this;}
 - [ ] Print tile info in panel
 
 

@@ -14,105 +14,105 @@ class RectangleEx
 public:
     float left() const { return left_; }
 
-    RectangleEx& resizeLeft(float left)
+    RectangleEx& setLeft(float left)
     {
         left_ = left;
-        width_ = right_ - left_;
+        updateWidth();
         return *this;
     }
 
-    RectangleEx& moveLeft(float left)
+    RectangleEx& offsetLeft(float left)
     {
-        left_ = left;
-        right_ = left_ + width_;
+        left_ += left;
+        updateWidth();
         return *this;
     }
 
     float right() const { return right_; }
 
-    RectangleEx& resizeRight(float right)
+    RectangleEx& setRight(float right)
     {
         right_ = right;
-        width_ = right_ - left_;
+        updateWidth();
         return *this;
     }
 
-    RectangleEx& moveRight(float right)
+    RectangleEx& offsetRight(float right)
     {
-        right_ = right;
-        left_ = right_ - width_;
+        right_ += right;
+        updateWidth();
         return *this;
     }
 
     float top() const { return top_; }
 
-    RectangleEx& resizeTop(float top)
+    RectangleEx& setTop(float top)
     {
         top_ = top;
-        height_ = bottom_ - top_;
+        updateHeight();
         return *this;
     }
 
-    RectangleEx& moveTop(float top)
+    RectangleEx& offsetTop(float top)
     {
-        top_ = top;
-        bottom_ = top_ + height_;
+        top_ += top;
+        updateHeight();
         return *this;
     }
 
     float bottom() const { return bottom_; }
 
-    RectangleEx& resizeBottom(float bottom)
+    RectangleEx& setBottom(float bottom)
     {
         bottom_ = bottom;
-        height_ = bottom_ - top_;
+        updateHeight();
         return *this;
     }
 
-    RectangleEx& moveBottom(float bottom)
+    RectangleEx& offsetBottom(float bottom)
     {
-        bottom_ = bottom;
-        top_ = bottom_ - height_;
+        bottom_ += bottom;
+        updateHeight();
         return *this;
     }
 
     float width() const { return width_; }
 
-    RectangleEx& resizeWidthLeft(float width)
-    {
-        width_ = width;
-        left_ = right_ - width_;
-        return *this;
-    }
-
     RectangleEx& resizeWidthRight(float width)
     {
         width_ = width;
-        right_ = left_ + width_;
+        updateRight();
+        return *this;
+    }
+
+    RectangleEx& resizeWidthLeft(float width)
+    {
+        width_ = width;
+        updateLeft();
         return *this;
     }
 
     float height() const { return height_; }
 
-    RectangleEx& resizeHeightTop(float height)
-    {
-        height_ = height;
-        top_ = bottom_ - height_;
-        return *this;
-    }
-
     RectangleEx& resizeHeightBottom(float height)
     {
         height_ = height;
-        bottom_ = top_ + height_;
+        updateBottom();
         return *this;
     }
 
-    Vector2 topLeft() { return Vector2{left_, top_}; }
+    RectangleEx& resizeHeightTop(float height)
+    {
+        height_ = height;
+        updateTop();
+        return *this;
+    }
 
-    Vector2 bottomRight() { return Vector2{right_, bottom_}; }
+    Vector2 topLeft() const { return Vector2{left_, top_}; }
 
-    Rectangle rectangle()
+    Vector2 bottomRight() const { return Vector2{right_, bottom_}; }
+
+    Rectangle rectangle() const
     {
         return Rectangle{
           left_,
@@ -120,6 +120,8 @@ public:
           width_,
           height_};
     }
+
+    RectangleEx() = default;
 
     RectangleEx(float left, float top, float width = 1, float height = 1)
         : left_(left)
@@ -129,6 +131,10 @@ public:
         , width_(width)
         , height_(height)
     {
+        setLeft(left);
+        setTop(top);
+        resizeWidthRight(width);
+        resizeHeightBottom(height);
     }
 
     RectangleEx(Vector2 topLeft, Vector2 bottomRight = {0, 0})
@@ -158,6 +164,37 @@ private:
     float bottom_;
     float width_;
     float height_;
+
+private:
+    void updateWidth()
+    {
+        width_ = right_ - left_ + 1;
+    }
+
+    void updateHeight()
+    {
+        height_ = bottom_ - top_ + 1;
+    }
+
+    void updateLeft()
+    {
+        left_ = right_ - width_ + 1;
+    }
+
+    void updateTop()
+    {
+        top_ = bottom_ - height_ + 1;
+    }
+
+    void updateRight()
+    {
+        right_ = left_ + width_ - 1;
+    }
+
+    void updateBottom()
+    {
+        bottom_ = top_ + height_ - 1;
+    }
 };
 
 struct Vector2I
@@ -264,15 +301,6 @@ inline Vector2 GetDisplaySize()
 inline int Vector2Sum(Vector2I V)
 {
     return abs(V.x) + abs(V.y);
-}
-
-inline Rectangle GetRectangle(Vector2 topLeft, Vector2 bottomRight)
-{
-    return Rectangle{
-      topLeft.x,
-      topLeft.y,
-      bottomRight.x - topLeft.x,
-      bottomRight.y - topLeft.y};
 }
 
 inline Vector2 GetMainDirection(Vector2 from, Vector2 to)
