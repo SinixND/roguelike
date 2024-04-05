@@ -31,7 +31,9 @@ int main(/* int argc, char **argv */)
     // Flags
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     if (VSYNC_ACTIVE)
+    {
         SetConfigFlags(FLAG_VSYNC_HINT);
+    }
 
     // Initialize window
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Roguelike");
@@ -52,7 +54,9 @@ int main(/* int argc, char **argv */)
     //=================================
     // Seed Random number generator
     if (dtb::debugMode())
+    {
         RNG::seed(1);
+    }
 
     // Load texture atlas
     dtb::loadAtlas("TextureAtlas.png");
@@ -78,10 +82,10 @@ int main(/* int argc, char **argv */)
 
     // Setup Camera2D
     dtb::camera() = {
-      Vector2Scale(GetDisplaySize(), 0.5f),
-      V_NULL,
-      0.0f,
-      1.0f};
+        Vector2Scale(GetDisplaySize(), 0.5f),
+        V_NULL,
+        0.0f,
+        1.0f};
     //=================================
 
     // Main app loop

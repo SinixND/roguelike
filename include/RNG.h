@@ -30,14 +30,14 @@ private:
 
     // get 8 integers of random numbers from std::random_device for our seed
     static inline std::seed_seq ss_{
-      rd_(),
-      rd_(),
-      rd_(),
-      rd_(),
-      rd_(),
-      rd_(),
-      rd_(),
-      rd_()};
+        rd_(),
+        rd_(),
+        rd_(),
+        rd_(),
+        rd_(),
+        rd_(),
+        rd_(),
+        rd_()};
 
     static inline std::mt19937 rng_{ss_};
 };

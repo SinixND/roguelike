@@ -13,3 +13,4 @@ perf.*
 callgrind*
 vgcore*
 .clangd
+.clang-tidy

@@ -47,21 +47,25 @@ namespace CameraControl
         RectangleEx renderRectangle{Panel::panelMap()};
 
         RectangleEx edgePanDeadzone{
-          Vector2AddValue(
-            renderRectangle.topLeft(),
-            EDGE_PAN_FRAME_WIDTH),
-          Vector2SubtractValue(
-            renderRectangle.bottomRight(),
-            EDGE_PAN_FRAME_WIDTH)};
+            Vector2AddValue(
+                renderRectangle.topLeft(),
+                EDGE_PAN_FRAME_WIDTH),
+            Vector2SubtractValue(
+                renderRectangle.bottomRight(),
+                EDGE_PAN_FRAME_WIDTH)};
 
         // Check if cursor is inside edge pan deadzone
         if (CheckCollisionPointRec(screenCursor, edgePanDeadzone))
+        {
             return;
+        }
 
         // Only when mouse controlled: check if frame dt exceeds threshold
         // Has no effect if key controlled!
         if (isMouseControlled && dt < PAN_TICK)
+        {
             return;
+        }
 
         // Reset frame dt (only relevant if mouse contolled)
         dt = 0;
@@ -74,17 +78,19 @@ namespace CameraControl
 
         // Check if center of render area stays on map
         Vector2I renderCenter{
-          TileTransformation::screenToPosition(
-            Vector2{
-              renderRectangle.left() + (renderRectangle.width() / 2),
-              renderRectangle.top() + (renderRectangle.height() / 2)})};
+            TileTransformation::screenToPosition(
+                Vector2{
+                    renderRectangle.left() + (renderRectangle.width() / 2),
+                    renderRectangle.top() + (renderRectangle.height() / 2)})};
 
         if (!CheckCollisionPointRectangleEx(
-              Vector2Add(
-                renderCenter,
-                panDirection),
-              dtb::mapsize()))
+                Vector2Add(
+                    renderCenter,
+                    panDirection),
+                dtb::mapsize()))
+        {
             return;
+        }
 
         // Update camera
         camera.target += Vector2Scale(panDirection, TILE_SIZE);

@@ -11,7 +11,7 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
-- [ ] Print tile info in panel
+- [ ] Refactor InputMode in separate file
 
 
 # Shortterm
@@ -163,3 +163,4 @@ private:
 - [x] Add input to center on hero
 - [x] Always use Setter/Getter (keep open for possible later changes / flexibility)
 - [x] Refactor using spritesheet
+- [x] Print tile info in panel

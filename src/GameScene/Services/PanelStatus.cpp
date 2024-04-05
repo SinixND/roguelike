@@ -18,12 +18,12 @@ void PanelStatus::update(int level, Font const& font, RectangleEx const& mapPane
     Vector2 textDimensions{MeasureTextEx(font, currentLevel, fontSize, fontSpacing)};
 
     DrawTextEx(
-      font,
-      currentLevel,
-      Vector2{
-        ((mapPanel.width() / 2.0f) - (textDimensions.x / 2)),
-        (fontSize / 2.0f)},
-      fontSize,
-      GuiGetStyle(DEFAULT, TEXT_SPACING),
-      RAYWHITE);
+        font,
+        currentLevel,
+        Vector2{
+            ((mapPanel.width() / 2.0f) - (textDimensions.x / 2)),
+            (fontSize / 2.0f)},
+        fontSize,
+        GuiGetStyle(DEFAULT, TEXT_SPACING),
+        RAYWHITE);
 }

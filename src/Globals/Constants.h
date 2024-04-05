@@ -17,28 +17,28 @@ Vector2I const V_DOWN{0, 1};
 
 // Rotation matrices
 Matrix2x2I const M_ROTATE_NONE{
-  1,
-  0,
-  0,
-  1};
+    1,
+    0,
+    0,
+    1};
 
 Matrix2x2I const M_ROTATE_CW{
-  0,
-  -1,
-  1,
-  0};
+    0,
+    -1,
+    1,
+    0};
 
 Matrix2x2I const M_ROTATE_CCW{
-  0,
-  1,
-  -1,
-  0};
+    0,
+    1,
+    -1,
+    0};
 
 Matrix2x2 const M_ROTATE_CW_45{
-  0.7071068,
-  -0.7071068,
-  0.7071068,
-  0.7071068};
+    0.7071068,
+    -0.7071068,
+    0.7071068,
+    0.7071068};
 
 // Game
 //=====================================

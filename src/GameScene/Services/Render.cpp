@@ -16,25 +16,27 @@ namespace Render
         static RectangleEx mapPanel{Panel::panelMap()};
         static RectangleEx extendedMapPanel{mapPanel};
         extendedMapPanel
-          .offsetLeft(-TILE_SIZE)
-          .offsetTop(-TILE_SIZE)
-          .offsetRight(TILE_SIZE)
-          .offsetBottom(TILE_SIZE);
+            .offsetLeft(-TILE_SIZE)
+            .offsetTop(-TILE_SIZE)
+            .offsetRight(TILE_SIZE)
+            .offsetBottom(TILE_SIZE);
 
         if (IsWindowResized())
         {
             mapPanel = Panel::panelMap();
             extendedMapPanel = mapPanel;
             extendedMapPanel
-              .offsetLeft(-TILE_SIZE)
-              .offsetTop(-TILE_SIZE)
-              .offsetRight(TILE_SIZE)
-              .offsetBottom(TILE_SIZE);
+                .offsetLeft(-TILE_SIZE)
+                .offsetTop(-TILE_SIZE)
+                .offsetRight(TILE_SIZE)
+                .offsetBottom(TILE_SIZE);
         }
 
         // Return if pixel is out of render area
         if (!CheckCollisionPointRec(GetWorldToScreen2D(position, dtb::camera()), extendedMapPanel))
+        {
             return;
+        }
 
         // Get texture data
         Texture2D const* textureAtlas{dtb::getTextureAtlas()};
@@ -72,20 +74,20 @@ namespace Render
         BeginScissorMode(mapPanel.left(), mapPanel.top(), mapPanel.width(), mapPanel.height());
         // Draw texture (using 0.5f pixel offset to get rid of texture bleeding)
         DrawTexturePro(
-          *textureAtlas,
-          Rectangle{
-            texturePosition.x + 0.5f,
-            texturePosition.y + 0.5f,
-            TEXTURE_WIDTH - (2 * 0.5f),
-            TEXTURE_WIDTH - (2 * 0.5f)},
-          Rectangle{
-            position.x,
-            position.y,
-            tileSize.x,
-            tileSize.y},
-          tileCenter,
-          0,
-          tint);
+            *textureAtlas,
+            Rectangle{
+                texturePosition.x + 0.5f,
+                texturePosition.y + 0.5f,
+                TEXTURE_WIDTH - (2 * 0.5f),
+                TEXTURE_WIDTH - (2 * 0.5f)},
+            Rectangle{
+                position.x,
+                position.y,
+                tileSize.x,
+                tileSize.y},
+            tileCenter,
+            0,
+            tint);
         EndScissorMode();
     }
 }

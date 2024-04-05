@@ -115,10 +115,10 @@ public:
     Rectangle rectangle() const
     {
         return Rectangle{
-          left_,
-          top_,
-          width_,
-          height_};
+            left_,
+            top_,
+            width_,
+            height_};
     }
 
     RectangleEx() = default;
@@ -293,9 +293,13 @@ struct RectangleExI
 inline Vector2 GetDisplaySize()
 {
     if (IsWindowFullscreen())
+    {
         return Vector2{static_cast<float>(GetMonitorWidth(GetCurrentMonitor())), static_cast<float>(GetMonitorHeight(GetCurrentMonitor()))};
+    }
     else
+    {
         return Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
+    }
 }
 
 inline int Vector2Sum(Vector2I V)
@@ -308,8 +312,8 @@ inline Vector2 GetMainDirection(Vector2 from, Vector2 to)
     Vector2 v{Vector2Subtract(to, from)};
 
     (abs(v.x) > abs(v.y))
-      ? (v.y = 0)
-      : (v.x = 0);
+        ? (v.y = 0)
+        : (v.x = 0);
 
     return Vector2Normalize(v);
 }
@@ -317,45 +321,48 @@ inline Vector2 GetMainDirection(Vector2 from, Vector2 to)
 inline Rectangle GetRenderRec()
 {
     return Rectangle{
-      0,
-      0,
-      static_cast<float>(GetRenderWidth()),
-      static_cast<float>(GetRenderHeight())};
+        0,
+        0,
+        static_cast<float>(GetRenderWidth()),
+        static_cast<float>(GetRenderHeight())};
 }
 
 inline Vector2 ConvertToVector2(Vector2I V)
 {
     return Vector2{
-      static_cast<float>(V.x),
-      static_cast<float>(V.y)};
+        static_cast<float>(V.x),
+        static_cast<float>(V.y)};
 }
 
 inline Vector2I ConvertToVector2I(Vector2 V)
 {
     return Vector2I{
-      static_cast<int>(V.x),
-      static_cast<int>(V.y)};
+        static_cast<int>(V.x),
+        static_cast<int>(V.y)};
 }
 
 inline Vector2I GetMin(Vector2I V1, Vector2I V2)
 {
     return Vector2I{
-      (V1.x < V2.x ? V1.x : V2.x),
-      (V1.y < V2.y ? V1.y : V2.y)};
+        (V1.x < V2.x ? V1.x : V2.x),
+        (V1.y < V2.y ? V1.y : V2.y)};
 }
 
 inline Vector2I GetMax(Vector2I V1, Vector2I V2)
 {
     return Vector2I{
-      (V1.x > V2.x ? V1.x : V2.x),
-      (V1.y > V2.y ? V1.y : V2.y)};
+        (V1.x > V2.x ? V1.x : V2.x),
+        (V1.y > V2.y ? V1.y : V2.y)};
 }
 
 inline bool CheckCollisionPointRectangleEx(Vector2I tilePosition, RectangleExI const& rectangle)
 {
     bool isColliding = false;
 
-    if ((tilePosition.x >= rectangle.left) && (tilePosition.x < rectangle.right) && (tilePosition.y >= rectangle.top) && (tilePosition.y < rectangle.bottom)) isColliding = true;
+    if ((tilePosition.x >= rectangle.left) && (tilePosition.x < rectangle.right) && (tilePosition.y >= rectangle.top) && (tilePosition.y < rectangle.bottom))
+    {
+        isColliding = true;
+    }
 
     return isColliding;
 }
@@ -367,45 +374,45 @@ inline bool CheckCollisionPointRectangleEx(Vector2I tilePosition, RectangleExI c
 RMAPI Vector2I Vector2Add(Vector2I v1, Vector2I v2)
 {
     return Vector2I{
-      v1.x + v2.x,
-      v1.y + v2.y};
+        v1.x + v2.x,
+        v1.y + v2.y};
 }
 
 RMAPI Vector2I Vector2AddValue(Vector2I v1, int value)
 {
     return Vector2I{
-      v1.x + value,
-      v1.y + value};
+        v1.x + value,
+        v1.y + value};
 }
 
 // Subtract two vectors (v1 - v2)
 RMAPI Vector2I Vector2Subtract(Vector2I v1, Vector2I v2)
 {
     return Vector2I{
-      v1.x - v2.x,
-      v1.y - v2.y};
+        v1.x - v2.x,
+        v1.y - v2.y};
 }
 
 RMAPI Vector2I Vector2SubtractValue(Vector2I v1, int value)
 {
     return Vector2I{
-      v1.x - value,
-      v1.y - value};
+        v1.x - value,
+        v1.y - value};
 }
 
 // Scale vector (multiply by value)
 RMAPI Vector2 Vector2Scale(Vector2I v, float scale)
 {
     return Vector2{
-      v.x * scale,
-      v.y * scale};
+        v.x * scale,
+        v.y * scale};
 }
 
 RMAPI Vector2I Vector2Scale(Vector2I v, int scale)
 {
     return Vector2I{
-      v.x * scale,
-      v.y * scale};
+        v.x * scale,
+        v.y * scale};
 }
 
 // Check whether two given vectors are almost equal
@@ -417,15 +424,15 @@ RMAPI int Vector2Equals(Vector2I v1, Vector2I v2)
 RMAPI Vector2I Vector2Transform(Matrix2x2I M, Vector2I V)
 {
     return Vector2I{
-      ((M.m11 * V.x) + (M.m12 * V.y)),
-      ((M.m21 * V.x) + (M.m22 * V.y))};
+        ((M.m11 * V.x) + (M.m12 * V.y)),
+        ((M.m21 * V.x) + (M.m22 * V.y))};
 }
 
 RMAPI Vector2 Vector2Transform(Matrix2x2 M, Vector2 V)
 {
     return Vector2{
-      ((M.m11 * V.x) + (M.m12 * V.y)),
-      ((M.m21 * V.x) + (M.m22 * V.y))};
+        ((M.m11 * V.x) + (M.m12 * V.y)),
+        ((M.m21 * V.x) + (M.m22 * V.y))};
 }
 
 inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)

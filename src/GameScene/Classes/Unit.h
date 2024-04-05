@@ -16,7 +16,7 @@ public:
 
 public:
     bool isSelected() const { return isSelected_; }
-    void setIsSelected(bool isSelected) { isSelected_ = isSelected; }
+    void setIsSelected(bool state) { isSelected_ = state; }
 
     bool isSolid() const { return isSolid_; }
 
@@ -27,12 +27,12 @@ public:
     void setVisionRange(int visionRange) { visionRange_ = visionRange; }
 
     Unit(
-      Transformation position,
-      Graphic graphic,
-      Movement movement,
-      VisibilityID visibilityID,
-      int visionRange,
-      Attack attack)
+        Transformation position,
+        Graphic graphic,
+        Movement movement,
+        VisibilityID visibilityID,
+        int visionRange,
+        Attack attack)
         : Entity(position, graphic)
         , movement(movement)
         , attack(attack)

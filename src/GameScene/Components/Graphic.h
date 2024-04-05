@@ -14,8 +14,8 @@ public:
     void setLayerID(LayerID const& layerID) { layerID_ = layerID; }
 
     Graphic(
-      RenderID renderID = RenderID::INVISIBLE,
-      LayerID layerID = LayerID::UI)
+        RenderID renderID = RenderID::INVISIBLE,
+        LayerID layerID = LayerID::UI)
         : renderID_(renderID)
         , layerID_(layerID)
     {

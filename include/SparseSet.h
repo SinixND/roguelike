@@ -55,7 +55,9 @@ namespace snd
         void erase(Key const& key) override
         {
             if (!contains(key))
+            {
                 return;
+            }
 
             // Get list index of removed value
             Index removedValueIndex{keyToIndex_[key]};
@@ -112,7 +114,9 @@ namespace snd
         Type* at(Key const& key)
         {
             if (!contains(key))
+            {
                 return nullptr;
+            }
 
             return &values_[keyToIndex_[key]];
         }

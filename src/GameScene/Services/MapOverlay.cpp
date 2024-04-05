@@ -1,5 +1,6 @@
 #include "MapOverlay.h"
 
+#include "Entity.h"
 #include "Graphic.h"
 #include "LayerID.h"
 #include "Pathfinder.h"
@@ -8,7 +9,6 @@
 #include "TileMap.h"
 #include "TileMapFilters.h"
 #include "Unit.h"
-#include "VisibilityID.h"
 #include "World.h"
 #include "raylibEx.h"
 
@@ -18,21 +18,20 @@ namespace MapOverlay
     {
         // Filter relevant tiles
         for (auto& steppedTiles : TileMapFilters::filterMovable(
-               world.currentMap(),
-               unit.movement.range(),
-               unit.transform.tilePosition()))
+                 world.currentMap(),
+                 unit.movement.range(),
+                 unit.transform.tilePosition()))
         {
             for (auto& steppedTile : steppedTiles)
             {
                 // Add reachable tile to overlay
                 world.mapOverlay().createOrUpdate(
-                  steppedTile.tile->transform.tilePosition(),
-                  Tile(
                     steppedTile.tile->transform.tilePosition(),
-                    Graphic(
-                      RenderID::REACHABLE,
-                      LayerID::MAP_OVERLAY),
-                    VisibilityID::VISIBLE));
+                    Entity(
+                        steppedTile.tile->transform.tilePosition(),
+                        Graphic(
+                            RenderID::REACHABLE,
+                            LayerID::MAP_OVERLAY)));
             }
         }
     }
@@ -41,22 +40,21 @@ namespace MapOverlay
     {
         // Filter relevant tiles
         auto inActionRangeTiles{TileMapFilters::filterInActionRange(
-          world.currentMap(),
-          unit.attack.range(),
-          unit.movement.range(),
-          unit.transform.tilePosition())};
+            world.currentMap(),
+            unit.attack.range(),
+            unit.movement.range(),
+            unit.transform.tilePosition())};
 
         for (auto& tile : inActionRangeTiles)
         {
             // Add reachable tile to overlay
             world.mapOverlay().createOrUpdate(
-              tile->transform.tilePosition(),
-              Tile(
                 tile->transform.tilePosition(),
-                Graphic(
-                  RenderID::ATTACKABLE,
-                  LayerID::MAP_OVERLAY),
-                VisibilityID::VISIBLE));
+                Entity(
+                    tile->transform.tilePosition(),
+                    Graphic(
+                        RenderID::ATTACKABLE,
+                        LayerID::MAP_OVERLAY)));
         }
     }
 
@@ -68,30 +66,29 @@ namespace MapOverlay
 
         // Check if path input changed
         if (!(
-              origin == unitPosition
-              && target == cursorPosition))
+                origin == unitPosition
+                && target == cursorPosition))
         {
             // Update input and path
             origin = unitPosition;
             target = cursorPosition;
 
             path = findPath(
-              world.currentMap(),
-              unitPosition,
-              cursorPosition,
-              unitRange);
+                world.currentMap(),
+                unitPosition,
+                cursorPosition,
+                unitRange);
         }
 
         for (auto& steppedTile : path)
         {
             world.framedMapOverlay().createOrUpdate(
-              steppedTile.tile->transform.tilePosition(),
-              Tile(
                 steppedTile.tile->transform.tilePosition(),
-                Graphic(
-                  RenderID::PATH,
-                  LayerID::MAP_OVERLAY),
-                VisibilityID::VISIBLE));
+                Entity(
+                    steppedTile.tile->transform.tilePosition(),
+                    Graphic(
+                        RenderID::PATH,
+                        LayerID::MAP_OVERLAY)));
         }
 
         return path;

@@ -13,6 +13,7 @@
 #include "raylibEx.h"
 #include <array>
 #include <raylib.h>
+#include <string>
 #include <vector>
 
 namespace MapHandler
@@ -42,41 +43,44 @@ namespace MapHandler
     }
 
     void addTile(
-      TileMap& tileMap,
-      Vector2I const& position,
-      Graphic graphic,
-      VisibilityID visibility,
-      bool isSolid,
-      bool blocksVision)
+        TileMap& tileMap,
+        std::string tag,
+        Vector2I const& position,
+        Graphic graphic,
+        VisibilityID visibility,
+        bool isSolid,
+        bool blocksVision)
     {
         tileMap.createOrUpdate(
-          position,
-          Tile(position, graphic, visibility, isSolid, blocksVision));
+            position,
+            Tile(tag, position, graphic, visibility, isSolid, blocksVision));
 
         // Update global available map dimensions
         dtb::extendMapsize(position);
     }
     void addTiles(
-      TileMap& tileMap,
-      RectangleExI const& rectangle,
-      Graphic graphic,
-      VisibilityID visibility,
-      bool isSolid,
-      bool blocksVision)
+        TileMap& tileMap,
+        std::string tag,
+        RectangleExI const& rectangle,
+        Graphic graphic,
+        VisibilityID visibility,
+        bool isSolid,
+        bool blocksVision)
     {
         for (int x{0}; x < rectangle.width; ++x)
         {
             for (int y{0}; y < rectangle.height; ++y)
             {
                 addTile(
-                  tileMap,
-                  Vector2I{
-                    rectangle.left + x,
-                    rectangle.top + y},
-                  graphic,
-                  visibility,
-                  isSolid,
-                  blocksVision);
+                    tileMap,
+                    tag,
+                    Vector2I{
+                        rectangle.left + x,
+                        rectangle.top + y},
+                    graphic,
+                    visibility,
+                    isSolid,
+                    blocksVision);
             }
         }
     }
@@ -85,72 +89,79 @@ namespace MapHandler
     void addRoom(TileMap& tileMap, RectangleExI const& room)
     {
         if (room.width < 2 || room.height < 2)
+        {
             return;
+        }
 
         // Top wall
         addTiles(
-          tileMap,
-          RectangleExI{
-            room.left,
-            room.top,
-            room.width - 1,
-            1},
-          Graphic(RenderID::WALL, LayerID::MAP),
-          VisibilityID::UNSEEN,
-          true,
-          true);
+            tileMap,
+            "Wall",
+            RectangleExI{
+                room.left,
+                room.top,
+                room.width - 1,
+                1},
+            Graphic(RenderID::WALL, LayerID::MAP),
+            VisibilityID::UNSEEN,
+            true,
+            true);
 
         // Right wall
         addTiles(
-          tileMap,
-          RectangleExI{
-            room.right,
-            room.top,
-            1,
-            room.height - 1},
-          Graphic(RenderID::WALL, LayerID::MAP),
-          VisibilityID::UNSEEN,
-          true,
-          true);
+            tileMap,
+            "Wall",
+            RectangleExI{
+                room.right,
+                room.top,
+                1,
+                room.height - 1},
+            Graphic(RenderID::WALL, LayerID::MAP),
+            VisibilityID::UNSEEN,
+            true,
+            true);
 
         // Bottom wall
         addTiles(
-          tileMap,
-          RectangleExI{
-            room.left + 1,
-            room.bottom,
-            room.width - 1,
-            1},
-          Graphic(RenderID::WALL, LayerID::MAP),
-          VisibilityID::UNSEEN,
-          true,
-          true);
+            tileMap,
+            "Wall",
+            RectangleExI{
+                room.left + 1,
+                room.bottom,
+                room.width - 1,
+                1},
+            Graphic(RenderID::WALL, LayerID::MAP),
+            VisibilityID::UNSEEN,
+            true,
+            true);
 
         // Left wall
         addTiles(
-          tileMap,
-          RectangleExI{
-            room.left,
-            room.top + 1,
-            1,
-            room.height - 1},
-          Graphic(RenderID::WALL, LayerID::MAP),
-          VisibilityID::UNSEEN,
-          true,
-          true);
+            tileMap,
+            "Wall",
+            RectangleExI{
+                room.left,
+                room.top + 1,
+                1,
+                room.height - 1},
+            Graphic(RenderID::WALL, LayerID::MAP),
+            VisibilityID::UNSEEN,
+            true,
+            true);
 
         // Floor
         addTiles(
-          tileMap,
-          RectangleExI{
-            room.left + 1,
-            room.top + 1,
-            room.width - 2,
-            room.height - 2},
-          Graphic(RenderID::FLOOR, LayerID::MAP),
-          VisibilityID::UNSEEN,
-          false,
-          false);
+            tileMap,
+            "Floor",
+            RectangleExI{
+                room.left + 1,
+                room.top + 1,
+                room.width - 2,
+                room.height - 2},
+            Graphic(RenderID::FLOOR, LayerID::MAP),
+            VisibilityID::UNSEEN,
+            false,
+            false);
     }
 
     void createStartRoom(TileMap& tileMap)
@@ -159,46 +170,50 @@ namespace MapHandler
 
         // Add walls
         addTiles(
-          tileMap,
-          RectangleExI{-1, 2, 3, 1},
-          Graphic(RenderID::WALL, LayerID::MAP),
-          VisibilityID::UNSEEN,
-          true,
-          true);
+            tileMap,
+            "Wall",
+            RectangleExI{-1, 2, 3, 1},
+            Graphic(RenderID::WALL, LayerID::MAP),
+            VisibilityID::UNSEEN,
+            true,
+            true);
 
         addTiles(
-          tileMap,
-          RectangleExI{-2, 0, 1, 2},
-          Graphic(RenderID::WALL, LayerID::MAP),
-          VisibilityID::UNSEEN,
-          true,
-          true);
+            tileMap,
+            "Wall",
+            RectangleExI{-2, 0, 1, 2},
+            Graphic(RenderID::WALL, LayerID::MAP),
+            VisibilityID::UNSEEN,
+            true,
+            true);
 
         addTiles(
-          tileMap,
-          RectangleExI{2, 0, 1, 2},
-          Graphic(RenderID::WALL, LayerID::MAP),
-          VisibilityID::UNSEEN,
-          true,
-          true);
+            tileMap,
+            "Wall",
+            RectangleExI{2, 0, 1, 2},
+            Graphic(RenderID::WALL, LayerID::MAP),
+            VisibilityID::UNSEEN,
+            true,
+            true);
 
         // Add next level trigger
         addTile(
-          tileMap,
-          Vector2I{0, -5},
-          Graphic(RenderID::NEXT_LEVEL, LayerID::MAP),
-          VisibilityID::UNSEEN,
-          false,
-          false);
+            tileMap,
+            "Stairs",
+            Vector2I{0, -5},
+            Graphic(RenderID::NEXT_LEVEL, LayerID::MAP),
+            VisibilityID::UNSEEN,
+            false,
+            false);
     }
 
     void createGridRooms(TileMap& tileMap, int level)
     {
         static std::array<Vector2I, 4> const directions{
-          V_LEFT,
-          V_RIGHT,
-          V_UP,
-          V_DOWN};
+            V_LEFT,
+            V_RIGHT,
+            V_UP,
+            V_DOWN};
 
         Vector2I roomPosition{0, 0};
         int const roomWidth{15};
@@ -206,11 +221,11 @@ namespace MapHandler
 
         // Add first room
         addRoom(
-          tileMap,
-          RectangleExI{
-            roomPosition,
-            roomWidth,
-            roomWidth});
+            tileMap,
+            RectangleExI{
+                roomPosition,
+                roomWidth,
+                roomWidth});
 
         std::vector<Vector2I> usedPositions{roomPosition};
 
@@ -226,8 +241,8 @@ namespace MapHandler
 
             // Update new room position
             roomPosition += Vector2Scale(
-              direction,
-              roomWidth);
+                direction,
+                roomWidth);
 
             // Add new room if room position unused
             if (!Utility::isInVector(roomPosition, usedPositions))
@@ -235,18 +250,19 @@ namespace MapHandler
                 usedPositions.push_back(roomPosition);
 
                 addRoom(
-                  tileMap,
-                  RectangleExI{roomPosition, roomWidth, roomWidth});
+                    tileMap,
+                    RectangleExI{roomPosition, roomWidth, roomWidth});
             }
 
             // Add connection gap in wall between old and new room
             addTiles(
-              tileMap,
-              RectangleExI{oldRoomPosition, roomPosition},
-              Graphic{RenderID::FLOOR, LayerID::MAP},
-              VisibilityID::UNSEEN,
-              false,
-              false);
+                tileMap,
+                "Floor",
+                RectangleExI{oldRoomPosition, roomPosition},
+                Graphic{RenderID::FLOOR, LayerID::MAP},
+                VisibilityID::UNSEEN,
+                false,
+                false);
         }
     }
 }

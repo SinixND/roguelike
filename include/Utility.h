@@ -17,7 +17,9 @@ namespace Utility
         for (auto& entry : vector)
         {
             if (Vector2Equals(element, entry))
+            {
                 return true;
+            }
         }
 
         return false;

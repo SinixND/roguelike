@@ -11,43 +11,49 @@
 namespace TileMapFilters
 {
     bool isInTiles(
-      Vector2I target,
-      std::vector<Tile*> const& tiles)
+        Vector2I target,
+        std::vector<Tile*> const& tiles)
     {
         for (auto tile : tiles)
         {
             if (Vector2Equals(
-                  target,
-                  tile->transform.tilePosition()))
+                    target,
+                    tile->transform.tilePosition()))
+            {
                 return true;
+            }
         }
         return false;
     }
 
     bool isInSteppedTiles(
-      Vector2I target,
-      std::vector<SteppedTile> const& steppedTiles)
+        Vector2I target,
+        std::vector<SteppedTile> const& steppedTiles)
     {
         for (auto const& steppedTile : steppedTiles)
         {
             if (Vector2Equals(target, steppedTile.tile->transform.tilePosition()))
+            {
                 return true;
+            }
         }
         return false;
     }
 
     bool isInRangeSeparatedTiles(
-      Vector2I target,
-      RangeSeparatedTiles const& sortedSteppedTiles)
+        Vector2I target,
+        RangeSeparatedTiles const& sortedSteppedTiles)
     {
         for (auto const& steppedTiles : sortedSteppedTiles)
         {
             for (auto const& steppedTile : steppedTiles)
             {
                 if (Vector2Equals(
-                      target,
-                      steppedTile.tile->transform.tilePosition()))
+                        target,
+                        steppedTile.tile->transform.tilePosition()))
+                {
                     return true;
+                }
             }
         }
         return false;
@@ -74,7 +80,9 @@ namespace TileMapFilters
         for (auto& tile : tileMap.values())
         {
             if (tile.isSolid())
+            {
                 continue;
+            }
 
             accessibleTiles.push_back(&tile);
         }
@@ -89,7 +97,10 @@ namespace TileMapFilters
 
         for (auto& tile : tileMap.values())
         {
-            if (!tile.isSolid()) continue;
+            if (!tile.isSolid())
+            {
+                continue;
+            }
             tiles.push_back(&tile);
         }
 
@@ -103,7 +114,10 @@ namespace TileMapFilters
 
         for (auto& tile : tileMap.values())
         {
-            if (tile.blocksVision()) continue;
+            if (tile.blocksVision())
+            {
+                continue;
+            }
             tiles.push_back(&tile);
         }
 
@@ -117,7 +131,10 @@ namespace TileMapFilters
 
         for (auto& tile : tileMap.values())
         {
-            if (!tile.blocksVision()) continue;
+            if (!tile.blocksVision())
+            {
+                continue;
+            }
             tiles.push_back(&tile);
         }
 
@@ -125,28 +142,32 @@ namespace TileMapFilters
     }
 
     std::vector<Tile*> filterInRange(
-      std::vector<Tile*> const& tiles,
-      int rangeStart,
-      int rangeEnd,
-      Vector2I origin)
+        std::vector<Tile*> const& tiles,
+        int rangeStart,
+        int rangeEnd,
+        Vector2I origin)
     {
         std::vector<Tile*> inRangeTiles{};
 
         // Check if ranges are valid
         if (rangeEnd == 0 || rangeEnd < rangeStart)
+        {
             return inRangeTiles;
+        }
 
         for (auto* tile : tiles)
         {
             Vector2I delta{
-              Vector2Subtract(
-                tile->transform.tilePosition(),
-                origin)};
+                Vector2Subtract(
+                    tile->transform.tilePosition(),
+                    origin)};
 
             int sumDelta{Vector2Sum(delta)};
 
             if (sumDelta < rangeStart || sumDelta > rangeEnd)
+            {
                 continue;
+            }
 
             inRangeTiles.push_back(tile);
         }
@@ -155,67 +176,71 @@ namespace TileMapFilters
     }
 
     std::vector<Tile*> filterInRange(
-      std::vector<Tile*> const& tiles,
-      int range,
-      Vector2I origin)
+        std::vector<Tile*> const& tiles,
+        int range,
+        Vector2I origin)
     {
         return filterInRange(tiles, 0, range, origin);
     }
 
     std::vector<Tile*> filterInRange(
-      TileMap& tileMap,
-      int rangeStart,
-      int rangeEnd,
-      Vector2I origin)
+        TileMap& tileMap,
+        int rangeStart,
+        int rangeEnd,
+        Vector2I origin)
     {
         return filterInRange(filterAllPositions(tileMap), rangeStart, rangeEnd, origin);
     }
 
     std::vector<Tile*> filterInRange(
-      TileMap& tileMap,
-      int range,
-      Vector2I origin)
+        TileMap& tileMap,
+        int range,
+        Vector2I origin)
     {
         return filterInRange(tileMap, 0, range, origin);
     }
 
     bool isInRange(
-      Vector2I target,
-      int rangeStart,
-      int rangeEnd,
-      Vector2I origin,
-      TileMap& tileMap)
+        Vector2I target,
+        int rangeStart,
+        int rangeEnd,
+        Vector2I origin,
+        TileMap& tileMap)
     {
         return isInTiles(target, filterInRange(tileMap, rangeStart, rangeEnd, origin));
     }
 
     bool isInRange(
-      Vector2I target,
-      int range,
-      Vector2I origin,
-      TileMap& tileMap)
+        Vector2I target,
+        int range,
+        Vector2I origin,
+        TileMap& tileMap)
     {
         return isInRange(target, 0, range, origin, tileMap);
     }
 
     RangeSeparatedTiles filterMovable(
-      std::vector<Tile*> const& inRangeMapTiles,
-      int moveRange,
-      Vector2I origin)
+        std::vector<Tile*> const& inRangeMapTiles,
+        int moveRange,
+        Vector2I origin)
     {
         snd::SparseSet<Vector2I, Tile*> tileSet{};
 
         for (auto& tile : inRangeMapTiles)
         {
             if (!tile->isSolid())
+            {
                 tileSet.createOrUpdate(tile->transform.tilePosition(), tile);
+            }
         }
 
         RangeSeparatedTiles sortedSteppedTiles{};
 
         // Check if range is 0
         if (!moveRange)
+        {
             return sortedSteppedTiles;
+        }
 
         // Step 0
 
@@ -232,10 +257,10 @@ namespace TileMapFilters
 
         // Test all four directions for first step
         for (Vector2I direction : {
-               V_RIGHT,
-               V_DOWN,
-               V_LEFT,
-               V_UP,
+                 V_RIGHT,
+                 V_DOWN,
+                 V_LEFT,
+                 V_UP,
              })
         {
             // Set next stepped tile position
@@ -243,7 +268,9 @@ namespace TileMapFilters
 
             // Check if next tile is in range
             if (!isInTiles(nextTilePosition, inRangeMapTiles))
+            {
                 continue;
+            }
 
             // Add stepped tile to stepped tiles
             sortedSteppedTiles.back().push_back(SteppedTile(*tileSet.at(nextTilePosition), direction));
@@ -278,27 +305,34 @@ namespace TileMapFilters
                         for (auto const& steppedTile : steppedTiles)
                         {
                             if (!Vector2Equals(steppedTile.tile->transform.tilePosition(), nextTilePosition))
+                            {
                                 continue;
+                            }
 
                             tileKnown = true;
                             break;
                         }
                     }
 
-                    if (tileKnown) continue;
+                    if (tileKnown)
+                    {
+                        continue;
+                    }
 
                     // Check if next tile is in range
                     if (!isInTiles(nextTilePosition, inRangeMapTiles))
+                    {
                         continue;
+                    }
 
                     // Add passable tile to stepped tiles
                     sortedSteppedTiles[stepLevel].push_back(
-                      SteppedTile(
-                        *tileSet.at(
-                          nextTilePosition),
-                        Vector2Transform(
-                          R,
-                          lastSteppedTile.directionAccessed)));
+                        SteppedTile(
+                            *tileSet.at(
+                                nextTilePosition),
+                            Vector2Transform(
+                                R,
+                                lastSteppedTile.directionAccessed)));
                 }
             }
 
@@ -313,24 +347,24 @@ namespace TileMapFilters
     }
 
     RangeSeparatedTiles filterMovable(
-      TileMap& tileMap,
-      int moveRange,
-      Vector2I origin)
+        TileMap& tileMap,
+        int moveRange,
+        Vector2I origin)
     {
         return filterMovable(
-          filterInRange(
-            filterNonSolidTiles(tileMap),
+            filterInRange(
+                filterNonSolidTiles(tileMap),
+                moveRange,
+                origin),
             moveRange,
-            origin),
-          moveRange,
-          origin);
+            origin);
     }
 
     bool isMovable(
-      Vector2I target,
-      int moveRange,
-      Vector2I origin,
-      TileMap& tileMap)
+        Vector2I target,
+        int moveRange,
+        Vector2I origin,
+        TileMap& tileMap)
     {
         return isInRangeSeparatedTiles(target, filterMovable(tileMap, moveRange, origin));
     }
@@ -351,14 +385,16 @@ namespace TileMapFilters
                 {
                     // Skip if neighbour tile is in tiles
                     Vector2I position{
-                      Vector2Add(
-                        tile->transform.tilePosition(),
-                        dir)};
+                        Vector2Add(
+                            tile->transform.tilePosition(),
+                            dir)};
 
                     if (isInRangeSeparatedTiles(
-                          position,
-                          tiles))
+                            position,
+                            tiles))
+                    {
                         continue;
+                    }
 
                     edgeTiles.push_back(tile);
                     break;
@@ -370,33 +406,35 @@ namespace TileMapFilters
     }
 
     std::vector<Tile*> filterInActionRange(
-      TileMap& tileMap,
-      int actionRange,
-      int moveRange,
-      Vector2I origin)
+        TileMap& tileMap,
+        int actionRange,
+        int moveRange,
+        Vector2I origin)
     {
         std::vector<Tile*> inActionRangeTiles{};
 
         RangeSeparatedTiles movableTiles{
-          filterMovable(
-            tileMap,
-            moveRange,
-            origin)};
+            filterMovable(
+                tileMap,
+                moveRange,
+                origin)};
 
         std::vector<Tile*> edgeTiles{filterEdgeTiles(movableTiles)};
 
         for (auto& edgeTile : edgeTiles)
         {
             auto inRangeTiles{
-              filterInRange(
-                tileMap,
-                actionRange,
-                edgeTile->transform.tilePosition())};
+                filterInRange(
+                    tileMap,
+                    actionRange,
+                    edgeTile->transform.tilePosition())};
 
             for (auto& inRangeTile : inRangeTiles)
             {
                 if (isInRangeSeparatedTiles(inRangeTile->transform.tilePosition(), movableTiles))
+                {
                     continue;
+                }
 
                 inActionRangeTiles.push_back(inRangeTile);
             }

@@ -11,6 +11,7 @@
 #include "Movement.h"
 #include "Panel.h"
 #include "PanelStatus.h"
+#include "PanelTileInfo.h"
 #include "Pathfinder.h"
 #include "Render.h"
 #include "RenderID.h"
@@ -35,24 +36,34 @@ namespace
     World gameWorld{};
 
     Entity cursor{
-      Transformation(),
-      Graphic(
-        RenderID::CURSOR,
-        LayerID::UI)};
+        Transformation(),
+        Graphic(
+            RenderID::CURSOR,
+            LayerID::UI)};
 
     Unit hero{
-      Transformation(),
-      Graphic(
-        RenderID::HERO,
-        LayerID::OBJECT),
-      Movement(5, 50),
-      VisibilityID::VISIBLE,
-      20,
-      Attack(
-        1,
-        1)};
+        Transformation(),
+        Graphic(
+            RenderID::HERO,
+            LayerID::OBJECT),
+        Movement(5, 50),
+        VisibilityID::VISIBLE,
+        20,
+        Attack(
+            1,
+            1)};
 
+    // Black input
     bool isInputBlocked{false};
+
+    // Game phases
+    enum class GamePhase
+    {
+        movement,
+        action,
+    };
+
+    //* GamePhase gamePhase{};
 }
 
 void GameScene::initialize()
@@ -61,11 +72,16 @@ void GameScene::initialize()
 
 void GameScene::processInput()
 {
-    if (isInputBlocked) return;
+    if (isInputBlocked)
+    {
+        return;
+    }
 
     // Toggle debug mode
     if (IsKeyPressed(KEY_F1))
+    {
         dtb::toggleDebugMode();
+    }
 
     // Toggle between mouse or key control for cursor
     static bool isMouseControlled{true};
@@ -89,49 +105,51 @@ void GameScene::processInput()
 
     // Process edge pan
     CameraControl::edgePan(
-      dtb::camera(),
-      TileTransformation::positionToWorld(cursor.transform.tilePosition()),
-      isMouseControlled);
+        dtb::camera(),
+        TileTransformation::positionToWorld(cursor.transform.tilePosition()),
+        isMouseControlled);
 
     // Center on hero
     if (IsKeyPressed(KEY_H))
+    {
         CameraControl::centerOnHero(dtb::camera(), hero);
+    }
 
     // Process zoom
     Zoom::update(GetMouseWheelMove(), dtb::camera());
 
     // Reset Zoom
     if (
-      (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL))
-      && (IsKeyPressed(KEY_KP_0) || IsKeyPressed(KEY_ZERO)))
+        (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL))
+        && (IsKeyPressed(KEY_KP_0) || IsKeyPressed(KEY_ZERO)))
     {
         Zoom::reset(dtb::camera());
     }
 
     // Select unit
     if (
-      IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
+        IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
     {
         Selection::select(
-          hero,
-          cursor.transform.tilePosition());
+            hero,
+            cursor.transform.tilePosition());
     }
 
     // Deselect unit
     if (
-      IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_CAPS_LOCK))
+        IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_CAPS_LOCK))
     {
         Selection::deselect(hero);
     }
 
     // Set unit movment target
     if (
-      IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
+        IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
     {
         UnitMovement::setTarget(
-          gameWorld,
-          hero,
-          cursor.transform);
+            gameWorld,
+            hero,
+            cursor.transform);
     }
 }
 
@@ -147,22 +165,22 @@ void GameScene::updateState()
         if (!isRangeShown)
         {
             MapOverlay::showUnitMoveRange(
-              hero,
-              gameWorld);
+                hero,
+                gameWorld);
 
             MapOverlay::showUnitActionRange(
-              hero,
-              gameWorld);
+                hero,
+                gameWorld);
 
             isRangeShown = true;
         }
         else // range is shown
         {
             path = MapOverlay::showPath(
-              hero.transform.tilePosition(),
-              cursor.transform.tilePosition(),
-              hero.movement.range(),
-              gameWorld);
+                hero.transform.tilePosition(),
+                cursor.transform.tilePosition(),
+                hero.movement.range(),
+                gameWorld);
         }
     }
     else // not selected
@@ -181,7 +199,10 @@ void GameScene::updateState()
     UnitMovement::processMovement(hero, isInputBlocked);
 
     if (hero.transform.hasPositionChanged())
+    {
         Vision::update(hero, gameWorld.currentMap());
+    }
+    t a
 }
 
 void GameScene::renderOutput()
@@ -197,13 +218,13 @@ void GameScene::renderOutput()
     // Map overlay
     for (auto& tile : gameWorld.mapOverlay().values())
     {
-        Render::update(tile.transform.position(), tile.graphic, tile.visibilityID());
+        Render::update(tile.transform.position(), tile.graphic);
     }
 
     // (Single frame) Map overlay
     for (auto& tile : gameWorld.framedMapOverlay().values())
     {
-        Render::update(tile.transform.position(), tile.graphic, tile.visibilityID());
+        Render::update(tile.transform.position(), tile.graphic);
     }
 
     // Object layer
@@ -216,48 +237,57 @@ void GameScene::renderOutput()
 
     // Panels
     //=================================
-    PanelStatus::update(gameWorld.currentLevel(), dtb::font(), Panel::panelMap());
+    PanelStatus::update(
+        gameWorld.currentLevel(),
+        dtb::font(),
+        Panel::panelMap());
+
+    PanelTileInfo::update(
+        gameWorld.currentMap(),
+        cursor.transform.tilePosition(),
+        dtb::font(),
+        Panel::panelTileInfo());
     //=================================
 
     // Draw panel borders
     //=================================
     // Info panel (right)
     DrawRectangleLinesEx(
-      Panel::panelTileInfo().rectangle(),
-      PANEL_BORDER_WEIGHT,
-      DARKGRAY);
+        Panel::panelTileInfo().rectangle(),
+        PANEL_BORDER_WEIGHT,
+        DARKGRAY);
 
     // Info panel (right)
     DrawRectangleLinesEx(
-      Panel::panelInfo().rectangle(),
-      PANEL_BORDER_WEIGHT,
-      DARKGRAY);
+        Panel::panelInfo().rectangle(),
+        PANEL_BORDER_WEIGHT,
+        DARKGRAY);
 
     // Status panel (top)
     DrawRectangleLinesEx(
-      Panel::panelStatus().rectangle(),
-      PANEL_BORDER_WEIGHT,
-      DARKGRAY);
+        Panel::panelStatus().rectangle(),
+        PANEL_BORDER_WEIGHT,
+        DARKGRAY);
 
     // Log panel (bottom)
     DrawRectangleLinesEx(
-      Panel::panelLog().rectangle(),
-      PANEL_BORDER_WEIGHT,
-      DARKGRAY);
+        Panel::panelLog().rectangle(),
+        PANEL_BORDER_WEIGHT,
+        DARKGRAY);
 
     // Map panel (mid-left)
     DrawRectangleLinesEx(
-      Panel::panelMap().rectangle(),
-      PANEL_BORDER_WEIGHT,
-      DARKGRAY);
+        Panel::panelMap().rectangle(),
+        PANEL_BORDER_WEIGHT,
+        DARKGRAY);
 
     // Under cursor info panel (bottom-right)
     DrawLineEx(
-      Panel::panelMap().bottomRight(),
-      {static_cast<float>(GetRenderWidth()),
-       Panel::panelMap().bottom() + 1},
-      PANEL_BORDER_WEIGHT,
-      DARKGRAY);
+        Panel::panelMap().bottomRight(),
+        {static_cast<float>(GetRenderWidth()),
+         Panel::panelMap().bottom() + 1},
+        PANEL_BORDER_WEIGHT,
+        DARKGRAY);
 }
 
 void GameScene::postOutput()

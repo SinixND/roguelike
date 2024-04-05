@@ -4,7 +4,6 @@
 #include "Pathfinder.h"
 #include "Transformation.h"
 #include "raylibEx.h"
-#include <cstddef>
 #include <raylib.h>
 #include <raymath.h>
 

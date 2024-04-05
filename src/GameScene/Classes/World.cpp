@@ -2,7 +2,6 @@
 
 #include "MapHandler.h"
 #include "TileMap.h"
-#include <cstddef>
 
 // Public:
 TileMap& World::currentMap() { return *currentMap_; }
@@ -24,15 +23,17 @@ void World::increaseLevel()
 void World::decreaseLevel()
 {
     if (currentLevel_ == 0)
+    {
         return;
+    }
 
     --currentLevel_;
     setMap(currentLevel_);
 }
 
-TileMap& World::mapOverlay() { return mapOverlay_; }
+TileOverlayMap& World::mapOverlay() { return mapOverlay_; }
 
-TileMap& World::framedMapOverlay() { return framedMapOverlay_; }
+TileOverlayMap& World::framedMapOverlay() { return framedMapOverlay_; }
 
 // Private:
 void World::addNewMap(int level)

@@ -9,53 +9,53 @@ namespace Panel
 {
     inline RectangleEx panelTileInfo()
     {
-        RectangleEx re{};
-        re.setRight(static_cast<int>(GetRenderWidth()))
-          .setBottom(static_cast<int>(GetRenderHeight()))
-          .resizeWidthLeft(INFO_PANEL_WIDTH)
-          .resizeHeightTop(LOG_PANEL_HEIGHT);
+        RectangleEx rect{};
+        rect.setRight(static_cast<int>(GetRenderWidth()))
+            .setBottom(static_cast<int>(GetRenderHeight()))
+            .resizeWidthLeft(INFO_PANEL_WIDTH)
+            .resizeHeightTop(LOG_PANEL_HEIGHT);
 
-        return re;
+        return rect;
     }
+
     inline RectangleEx panelInfo()
     {
-        RectangleEx re{};
-        re.setRight(static_cast<int>(GetRenderWidth()))
-          .setBottom(panelTileInfo().top())
-          .resizeWidthLeft(INFO_PANEL_WIDTH);
+        RectangleEx rect{};
+        rect.setRight(static_cast<int>(GetRenderWidth()))
+            .setBottom(panelTileInfo().top())
+            .resizeWidthLeft(INFO_PANEL_WIDTH);
 
-        return re;
+        return rect;
     }
 
     inline RectangleEx panelStatus()
     {
-        RectangleEx re{};
-        re.setRight(panelTileInfo().left())
-          .setBottom(STATUS_PANEL_HEIGHT);
+        RectangleEx rect{};
+        rect.setRight(panelTileInfo().left())
+            .setBottom(STATUS_PANEL_HEIGHT);
 
-        return re;
+        return rect;
     }
 
     inline RectangleEx panelLog()
     {
-        RectangleEx re{};
-        re.setRight(panelTileInfo().left())
-          .setBottom(static_cast<int>(GetRenderHeight()))
-          .resizeHeightTop(LOG_PANEL_HEIGHT);
+        RectangleEx rect{};
+        rect.setRight(panelTileInfo().left())
+            .setBottom(static_cast<int>(GetRenderHeight()))
+            .resizeHeightTop(LOG_PANEL_HEIGHT);
 
-        return re;
+        return rect;
     }
 
     inline RectangleEx panelMap()
     {
-        RectangleEx re{};
-        re.setRight(panelInfo().left())
-          .setBottom(panelLog().top())
-          .setTop(panelStatus().bottom());
+        RectangleEx rect{};
+        rect.setRight(panelInfo().left())
+            .setBottom(panelLog().top())
+            .setTop(panelStatus().bottom());
 
-        return re;
+        return rect;
     }
-
 }
 
 #endif

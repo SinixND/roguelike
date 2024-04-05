@@ -32,11 +32,11 @@ namespace
         // Add all target positions that are exaclty at vision range
         // Set first target
         Vector2I firstTarget{
-          Vector2Add(
-            origin,
-            Vector2I{
-              visionRange,
-              0})};
+            Vector2Add(
+                origin,
+                Vector2I{
+                    visionRange,
+                    0})};
 
         Vector2I target{firstTarget};
 
@@ -53,21 +53,25 @@ namespace
 
             // Adjust / flip delta
             if (
-              (target.x >= (origin.x + visionRange))
-              || (target.x <= (origin.x - visionRange)))
+                (target.x >= (origin.x + visionRange))
+                || (target.x <= (origin.x - visionRange)))
+            {
                 delta.x *= -1;
+            }
 
             if (
-              (target.y >= (origin.y + visionRange))
-              || (target.y <= (origin.y - visionRange)))
+                (target.y >= (origin.y + visionRange))
+                || (target.y <= (origin.y - visionRange)))
+            {
                 delta.y *= -1;
+            }
         } while (!Vector2Equals(target, firstTarget));
     }
 
     [[maybe_unused]] void addRayTargetsOpaque(
-      std::vector<Vector2I>& rayTargets,
-      Unit& unit,
-      TileMap& tileMap)
+        std::vector<Vector2I>& rayTargets,
+        Unit& unit,
+        TileMap& tileMap)
     {
         Vector2I origin{unit.transform.tilePosition()};
         int visionRange{unit.visionRange()};
@@ -78,7 +82,9 @@ namespace
             Vector2I target{tile->transform.tilePosition()};
 
             if (Vector2Sum(Vector2Subtract(target, origin)) > visionRange)
+            {
                 continue;
+            }
 
             rayTargets.push_back(target);
         }
@@ -102,10 +108,10 @@ namespace Vision
     {
         // Filter tiles
         auto tilesInExtendedVisionRange{
-          TileMapFilters::filterInRange(
-            tileMap,
-            unit.visionRange() + 1,
-            unit.transform.tilePosition())};
+            TileMapFilters::filterInRange(
+                tileMap,
+                unit.visionRange() + 1,
+                unit.transform.tilePosition())};
 
         // Reset "visible" tiles to "seen" in extended vision range
         resetVisibleTiles(tilesInExtendedVisionRange);
@@ -121,9 +127,9 @@ namespace Vision
         std::vector<Tile*> visibleTiles{};
 
         visibleTiles = RayCast::getTilesRayed(
-          rayTargets,
-          unit.transform.tilePosition(),
-          tileMap);
+            rayTargets,
+            unit.transform.tilePosition(),
+            tileMap);
 
         // Make tiles visible
         for (auto& tile : visibleTiles)

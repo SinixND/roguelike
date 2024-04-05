@@ -11,7 +11,9 @@ namespace Zoom
 
         // No zoom
         if (wheel == 0)
+        {
             return;
+        }
 
         // Zoom in
         if (wheel > 0)

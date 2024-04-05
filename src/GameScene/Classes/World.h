@@ -14,8 +14,8 @@ public:
     void increaseLevel();
     void decreaseLevel();
 
-    TileMap& mapOverlay();
-    TileMap& framedMapOverlay();
+    TileOverlayMap& mapOverlay();
+    TileOverlayMap& framedMapOverlay();
 
 private:
     int maxLevel_{};
@@ -24,8 +24,8 @@ private:
     std::vector<TileMap> maps_{MapHandler::createNewMap(maxLevel_)};
     TileMap* currentMap_{&maps_.back()};
 
-    TileMap mapOverlay_{};
-    TileMap framedMapOverlay_{};
+    TileOverlayMap mapOverlay_{};
+    TileOverlayMap framedMapOverlay_{};
 
 private:
     void addNewMap(int level);

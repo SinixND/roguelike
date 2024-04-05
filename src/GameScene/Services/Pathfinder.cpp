@@ -7,20 +7,24 @@
 
 // Pathfinder returns vector of positions from target to origin (excluded) if target is reachable
 Path findPath(
-  RangeSeparatedTiles const& reachableTiles,
-  Vector2I target)
+    RangeSeparatedTiles const& reachableTiles,
+    Vector2I target)
 {
     Path path{};
 
     // Check if target is reachable
     if (!TileMapFilters::isInRangeSeparatedTiles(target, reachableTiles))
+    {
         return path;
+    }
 
     Vector2I origin{reachableTiles.front().front().tile->transform.tilePosition()};
 
     // Check if target equals root position
     if (Vector2Equals(target, origin))
+    {
         return path;
+    }
 
     // Find tiles in reachable positions, and recursively find neighbour until origin in next lower step level
     SteppedTile currentStepLevelTile{};
@@ -29,7 +33,9 @@ Path findPath(
 
     // Check if range is 0
     if (!maxRange)
+    {
         return path;
+    }
 
     // Find target tile in reachable positions
     for (size_t stepLevel{0}; stepLevel < maxRange; ++stepLevel)
@@ -37,7 +43,9 @@ Path findPath(
         for (auto const& steppedTile : reachableTiles[stepLevel])
         {
             if (!Vector2Equals(steppedTile.tile->transform.tilePosition(), target))
+            {
                 continue;
+            }
 
             currentStepLevelTile = steppedTile;
             stepsNeeded = stepLevel;
@@ -77,10 +85,10 @@ Path findPath(
 }
 
 Path findPath(
-  TileMap& tileMap,
-  Vector2I origin,
-  Vector2I target,
-  int range)
+    TileMap& tileMap,
+    Vector2I origin,
+    Vector2I target,
+    int range)
 {
     return findPath(TileMapFilters::filterMovable(tileMap, range, origin), target);
 }

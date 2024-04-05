@@ -25,13 +25,13 @@ namespace snd
 
             // Draw simple frame
             DrawRectangleLinesEx(
-              Rectangle{
-                0,
-                0,
-                static_cast<float>(GetRenderWidth()),
-                static_cast<float>(GetRenderHeight())},
-              BORDER_WIDTH,
-              BORDER_COLOR);
+                Rectangle{
+                    0,
+                    0,
+                    static_cast<float>(GetRenderWidth()),
+                    static_cast<float>(GetRenderHeight())},
+                BORDER_WIDTH,
+                BORDER_COLOR);
 
             if (debugMode)
             {

@@ -15,15 +15,15 @@ namespace CursorControl
         Vector2I getNewCursorPosition(Vector2I cursorPosition, Vector2I direction, int boostFactor)
         {
             return Vector2I{
-              cursorPosition.x + (direction.x * boostFactor),
-              cursorPosition.y + (direction.y * boostFactor)};
+                cursorPosition.x + (direction.x * boostFactor),
+                cursorPosition.y + (direction.y * boostFactor)};
         }
 
         bool isOutOfRectangle(Vector2I position, Rectangle rectangle)
         {
             return !CheckCollisionPointRec(
-              TileTransformation::positionToScreen(position),
-              rectangle);
+                TileTransformation::positionToScreen(position),
+                rectangle);
         }
 
         void processKeyControl(Transformation& cursorPosition)
@@ -32,7 +32,9 @@ namespace CursorControl
             static int key{};
             int keyPressed{GetKeyPressed()};
             if (keyPressed)
+            {
                 key = keyPressed;
+            }
 
             Vector2I dir{};
 
@@ -46,7 +48,9 @@ namespace CursorControl
             case KEY_UP:
             {
                 if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
+                {
                     dir = V_UP;
+                }
             }
             break;
 
@@ -54,7 +58,9 @@ namespace CursorControl
             case KEY_LEFT:
             {
                 if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
+                {
                     dir = V_LEFT;
+                }
             }
             break;
 
@@ -62,7 +68,9 @@ namespace CursorControl
             case KEY_DOWN:
             {
                 if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
+                {
                     dir = V_DOWN;
+                }
             }
             break;
 
@@ -70,7 +78,9 @@ namespace CursorControl
             case KEY_RIGHT:
             {
                 if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
+                {
                     dir = V_RIGHT;
+                }
             }
             break;
 
@@ -83,40 +93,46 @@ namespace CursorControl
 
             // Apply pan boost factor to cursor movement when shift is pressed
             if (IsKeyDown(KEY_LEFT_SHIFT))
+            {
                 factor = PAN_BOOST_FACTOR;
+            }
 
             // Check if cursor would go out of screen
             Vector2I newCursorPosition{
-              getNewCursorPosition(
-                cursorPosition.tilePosition(),
-                dir,
-                factor)};
+                getNewCursorPosition(
+                    cursorPosition.tilePosition(),
+                    dir,
+                    factor)};
 
             // If new position were out of screen with potential boost applied
             Rectangle renderRectangle{Panel::panelMap().rectangle()};
 
             if (isOutOfRectangle(
-                  newCursorPosition,
-                  renderRectangle))
+                    newCursorPosition,
+                    renderRectangle))
             {
                 // Return early if no boost applied
                 if (factor == 1)
+                {
                     return;
+                }
 
                 // Check again without boost
                 factor = 1;
 
                 // Remove boost from cursor position
                 newCursorPosition = getNewCursorPosition(
-                  cursorPosition.tilePosition(),
-                  dir,
-                  factor);
+                    cursorPosition.tilePosition(),
+                    dir,
+                    factor);
 
                 // If still out of render rectangle
                 if (isOutOfRectangle(
-                      newCursorPosition,
-                      renderRectangle))
+                        newCursorPosition,
+                        renderRectangle))
+                {
                     return;
+                }
             }
 
             // Set verified position
