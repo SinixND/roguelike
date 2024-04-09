@@ -1,20 +1,17 @@
 #include "GameScene.h"
 
-#include "Attack.h"
 #include "CameraControl.h"
 #include "Constants.h"
 #include "CursorControl.h"
 #include "Entity.h"
+#include "GamePhase.h"
 #include "Graphic.h"
-#include "LayerID.h"
+#include "InputMode.h"
 #include "MapOverlay.h"
-#include "Movement.h"
 #include "Panel.h"
 #include "PanelStatus.h"
 #include "PanelTileInfo.h"
-#include "Pathfinder.h"
 #include "Render.h"
-#include "RenderID.h"
 #include "RuntimeDatabase.h"
 #include "Selection.h"
 #include "Tile.h"
@@ -23,7 +20,6 @@
 #include "Transformation.h"
 #include "Unit.h"
 #include "UnitMovement.h"
-#include "VisibilityID.h"
 #include "Vision.h"
 #include "World.h"
 #include "Zoom.h"
@@ -31,48 +27,13 @@
 #include <raylib.h>
 #include <raymath.h>
 
-namespace
-{
-    World gameWorld{};
-
-    Entity cursor{
-        Transformation(),
-        Graphic(
-            RenderID::CURSOR,
-            LayerID::UI)};
-
-    Unit hero{
-        Transformation(),
-        Graphic(
-            RenderID::HERO,
-            LayerID::OBJECT),
-        Movement(5, 50),
-        VisibilityID::VISIBLE,
-        20,
-        Attack(
-            1,
-            1)};
-
-    // Black input
-    bool isInputBlocked{false};
-
-    // Game phases
-    enum class GamePhase
-    {
-        movement,
-        action,
-    };
-
-    //* GamePhase gamePhase{};
-}
-
 void GameScene::initialize()
 {
 }
 
 void GameScene::processInput()
 {
-    if (isInputBlocked)
+    if (isInputBlocked_)
     {
         return;
     }
@@ -84,30 +45,16 @@ void GameScene::processInput()
     }
 
     // Toggle between mouse or key control for cursor
-    static bool isMouseControlled{true};
-
-    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
-    {
-        isMouseControlled = !isMouseControlled;
-
-        if (isMouseControlled)
-        {
-            ShowCursor();
-        }
-        else
-        {
-            HideCursor();
-        }
-    }
+    InputMode::update();
 
     // Update cursor
-    CursorControl::update(cursor.transform, isMouseControlled);
+    CursorControl::update(cursor_.transform, InputMode::isMouseControlled());
 
     // Process edge pan
     CameraControl::edgePan(
         dtb::camera(),
-        TileTransformation::positionToWorld(cursor.transform.tilePosition()),
-        isMouseControlled);
+        TileTransformation::positionToWorld(cursor_.transform.tilePosition()),
+        InputMode::isMouseControlled());
 
     // Center on hero
     if (IsKeyPressed(KEY_H))
@@ -126,83 +73,59 @@ void GameScene::processInput()
         Zoom::reset(dtb::camera());
     }
 
-    // Select unit
-    if (
-        IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
+    // Branch game phase
+    switch (gamePhase_)
     {
-        Selection::select(
-            hero,
-            cursor.transform.tilePosition());
-    }
+    case GamePhase::movementPhase:
+        // Select unit
+        if (
+            IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
+        {
+            Selection::select(
+                hero,
+                cursor_.transform.tilePosition());
+        }
 
-    // Deselect unit
-    if (
-        IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_CAPS_LOCK))
-    {
-        Selection::deselect(hero);
-    }
+        // Deselect unit
+        if (
+            IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_CAPS_LOCK))
+        {
+            Selection::deselect(hero);
+        }
 
-    // Set unit movment target
-    if (
-        IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
-    {
-        UnitMovement::setTarget(
-            gameWorld,
-            hero,
-            cursor.transform);
+        // Set unit movment target
+        if (
+            IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
+        {
+            UnitMovement::setTarget(
+                gameWorld_,
+                hero,
+                cursor_.transform);
+        }
+        break;
+
+    case GamePhase::actionPhase:
+        break;
+
+    default:
+        break;
     }
 }
 
 void GameScene::updateState()
 {
     // Update map overlay
-    static bool isRangeShown{false};
+    MapOverlay::update(hero, gameWorld_, cursor_);
 
-    static Path path{};
-
-    if (hero.isSelected())
-    {
-        if (!isRangeShown)
-        {
-            MapOverlay::showUnitMoveRange(
-                hero,
-                gameWorld);
-
-            MapOverlay::showUnitActionRange(
-                hero,
-                gameWorld);
-
-            isRangeShown = true;
-        }
-        else // range is shown
-        {
-            path = MapOverlay::showPath(
-                hero.transform.tilePosition(),
-                cursor.transform.tilePosition(),
-                hero.movement.range(),
-                gameWorld);
-        }
-    }
-    else // not selected
-    {
-        if (isRangeShown)
-        {
-            gameWorld.mapOverlay().clear();
-
-            isRangeShown = false;
-        }
-    }
-
-    UnitMovement::triggerMovement(hero.movement, path, isInputBlocked);
+    UnitMovement::triggerMovement(hero.movement, MapOverlay::path(), isInputBlocked_);
 
     // Unblock input if target is reached
-    UnitMovement::processMovement(hero, isInputBlocked);
+    UnitMovement::processMovement(hero, isInputBlocked_, gamePhase_);
 
     if (hero.transform.hasPositionChanged())
     {
-        Vision::update(hero, gameWorld.currentMap());
+        Vision::update(hero, gameWorld_.currentMap());
     }
-    t a
 }
 
 void GameScene::renderOutput()
@@ -210,19 +133,19 @@ void GameScene::renderOutput()
     BeginMode2D(dtb::camera());
 
     // Map layer
-    for (auto& tile : gameWorld.currentMap().values())
+    for (auto& tile : gameWorld_.currentMap().values())
     {
         Render::update(tile.transform.position(), tile.graphic, tile.visibilityID());
     }
 
     // Map overlay
-    for (auto& tile : gameWorld.mapOverlay().values())
+    for (auto& tile : gameWorld_.mapOverlay().values())
     {
         Render::update(tile.transform.position(), tile.graphic);
     }
 
     // (Single frame) Map overlay
-    for (auto& tile : gameWorld.framedMapOverlay().values())
+    for (auto& tile : gameWorld_.framedMapOverlay().values())
     {
         Render::update(tile.transform.position(), tile.graphic);
     }
@@ -231,20 +154,20 @@ void GameScene::renderOutput()
     Render::update(hero.transform.position(), hero.graphic);
 
     // UI layer
-    Render::update(cursor.transform.position(), cursor.graphic);
+    Render::update(cursor_.transform.position(), cursor_.graphic);
 
     EndMode2D();
 
     // Panels
     //=================================
     PanelStatus::update(
-        gameWorld.currentLevel(),
+        gameWorld_.currentLevel(),
         dtb::font(),
         Panel::panelMap());
 
     PanelTileInfo::update(
-        gameWorld.currentMap(),
-        cursor.transform.tilePosition(),
+        gameWorld_.currentMap(),
+        cursor_.transform.tilePosition(),
         dtb::font(),
         Panel::panelTileInfo());
     //=================================
@@ -295,7 +218,7 @@ void GameScene::postOutput()
     hero.transform.resetPositionChanged();
 
     // Clear path
-    gameWorld.framedMapOverlay().clear();
+    gameWorld_.framedMapOverlay().clear();
 }
 
 void GameScene::deinitialize() {}

@@ -38,7 +38,7 @@ int main(/* int argc, char **argv */)
     // Initialize window
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Roguelike");
 
-    // Settings
+    // Raylib Settings
     Image favicon{LoadImage("resources/favicon/favicon.png")};
     SetWindowIcon(favicon);
     SetWindowMinSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -84,8 +84,8 @@ int main(/* int argc, char **argv */)
     dtb::camera() = {
         Vector2Scale(GetDisplaySize(), 0.5f),
         V_NULL,
-        0.0f,
-        1.0f};
+        0,
+        1};
     //=================================
 
     // Main app loop
@@ -122,7 +122,7 @@ int main(/* int argc, char **argv */)
 void applicationLoop()
 {
     // Set window dependent variables
-    dtb::camera().offset = {GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f};
+    dtb::camera().offset = {static_cast<int>(GetRenderWidth()) * 0.5F, GetRenderHeight() * 0.5F};
 
 #ifndef __EMSCRIPTEN__
     // Toggle fullscreen

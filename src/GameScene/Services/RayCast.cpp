@@ -24,7 +24,7 @@ namespace RayCast
         // Set ray cast values
         Vector2 rayStart{origin};
 
-        float unitRelative{TILE_SIZE / sqrt(2.0f)};
+        float unitRelative{TILE_SIZE / sqrt(2.0F)};
 
         for (auto const& rayTarget : rayTargets)
         {

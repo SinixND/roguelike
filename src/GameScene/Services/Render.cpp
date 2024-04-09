@@ -42,7 +42,7 @@ namespace Render
         Texture2D const* textureAtlas{dtb::getTextureAtlas()};
         Vector2 texturePosition{dtb::getTexturePosition(graphic.renderID())};
         Vector2 tileSize{TILE_DIMENSIONS};
-        Vector2 tileCenter{Vector2Scale(tileSize, 0.5f)};
+        Vector2 tileCenter{Vector2Scale(tileSize, 0.5F)};
 
         // Consider visibility
         Color tint{WHITE};
@@ -72,14 +72,14 @@ namespace Render
         }
 
         BeginScissorMode(mapPanel.left(), mapPanel.top(), mapPanel.width(), mapPanel.height());
-        // Draw texture (using 0.5f pixel offset to get rid of texture bleeding)
+        // Draw texture (using 0.5F pixel offset to get rid of texture bleeding)
         DrawTexturePro(
             *textureAtlas,
             Rectangle{
-                texturePosition.x + 0.5f,
-                texturePosition.y + 0.5f,
-                TEXTURE_WIDTH - (2 * 0.5f),
-                TEXTURE_WIDTH - (2 * 0.5f)},
+                texturePosition.x + 0.5F,
+                texturePosition.y + 0.5F,
+                TEXTURE_WIDTH - (2 * 0.5F),
+                TEXTURE_WIDTH - (2 * 0.5F)},
             Rectangle{
                 position.x,
                 position.y,

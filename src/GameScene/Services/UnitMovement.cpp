@@ -1,5 +1,6 @@
 #include "UnitMovement.h"
 
+#include "GamePhase.h"
 #include "Movement.h"
 #include "Pathfinder.h"
 #include "RenderID.h"
@@ -45,7 +46,7 @@ namespace UnitMovement
         }
     }
 
-    void processMovement(Unit& unit, bool& isInputBlocked)
+    void processMovement(Unit& unit, bool& isInputBlocked, [[maybe_unused]] GamePhase& gamePhase)
     {
         bool isTargetReached{false};
         if (unit.movement.isMoving())
@@ -58,6 +59,7 @@ namespace UnitMovement
 
         if (isTargetReached)
         {
+            //* gamePhase = GamePhase::actionPhase;
             unit.setIsSelected(false);
             isInputBlocked = false;
         }

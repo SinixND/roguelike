@@ -11,7 +11,7 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
-- [ ] Refactor InputMode in separate file
+- [ ] Check movement functions in regards to game phases
 
 
 # Shortterm

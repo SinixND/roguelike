@@ -21,8 +21,8 @@ void PanelStatus::update(int level, Font const& font, RectangleEx const& mapPane
         font,
         currentLevel,
         Vector2{
-            ((mapPanel.width() / 2.0f) - (textDimensions.x / 2)),
-            (fontSize / 2.0f)},
+            ((mapPanel.width() / 2.0F) - (textDimensions.x / 2)),
+            (fontSize / 2.0F)},
         fontSize,
         GuiGetStyle(DEFAULT, TEXT_SPACING),
         RAYWHITE);

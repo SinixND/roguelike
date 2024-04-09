@@ -3,17 +3,9 @@
 
 namespace InputMode
 {
-    enum class Mode
-    {
-        mouse,
-        keys,
-    };
+    void update();
 
-    bool isInputBlocked();
-    void setInputBlocked(bool state);
-
-    Mode inputMode();
-    void setInputMode(Mode mode);
+    bool& isMouseControlled();
 }
 
 #endif

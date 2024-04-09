@@ -7,7 +7,7 @@ namespace Zoom
 {
     void update(float wheel, Camera2D& camera)
     {
-        // camera.zoom += (wheel * ZOOM_STEP); // 0.125f
+        // camera.zoom += (wheel * ZOOM_STEP); // 0.125F
 
         // No zoom
         if (wheel == 0)
@@ -44,6 +44,6 @@ namespace Zoom
 
     void reset(Camera2D& camera)
     {
-        camera.zoom = 1.0f;
+        camera.zoom = 1.0F;
     }
 }

@@ -12,8 +12,10 @@
 #include "World.h"
 #include "raylibEx.h"
 
-namespace MapOverlay
+namespace
 {
+    static Path path_{};
+
     void showUnitMoveRange(Unit& unit, World& world)
     {
         // Filter relevant tiles
@@ -92,5 +94,51 @@ namespace MapOverlay
         }
 
         return path;
+    }
+}
+
+namespace MapOverlay
+{
+    void update(Unit& hero, World& gameWorld, Entity& cursor)
+    {
+        static bool isRangeShown{false};
+
+        if (hero.isSelected())
+        {
+            if (!isRangeShown)
+            {
+                showUnitMoveRange(
+                    hero,
+                    gameWorld);
+
+                showUnitActionRange(
+                    hero,
+                    gameWorld);
+
+                isRangeShown = true;
+            }
+            else // range is shown
+            {
+                path_ = showPath(
+                    hero.transform.tilePosition(),
+                    cursor.transform.tilePosition(),
+                    hero.movement.range(),
+                    gameWorld);
+            }
+        }
+        else // not selected
+        {
+            if (isRangeShown)
+            {
+                gameWorld.mapOverlay().clear();
+
+                isRangeShown = false;
+            }
+        }
+    }
+
+    Path& path()
+    {
+        return path_;
     }
 }
