@@ -38,12 +38,12 @@ public:
         hasPositionChanged_ = false;
     }
 
-    Transformation(Vector2 position = {0, 0})
+    explicit Transformation(Vector2 position = {0, 0})
         : position_(position)
     {
     }
 
-    Transformation(Vector2I tilePosition) { setTilePosition(tilePosition); }
+    explicit Transformation(Vector2I tilePosition) { setTilePosition(tilePosition); }
 
 private:
     Vector2 position_{};

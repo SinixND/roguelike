@@ -1,13 +1,13 @@
 #ifndef IG20240215012942
 #define IG20240215012942
 
-#include "Entity.h"
+#include "GameObject.h"
 #include "Graphic.h"
 #include "Transformation.h"
 #include "VisibilityID.h"
 #include <string>
 
-class Tile : public Entity
+class Tile : public GameObject
 {
 public:
     std::string const& tag() const { return tag_; }
@@ -24,14 +24,14 @@ public:
         visibilityID_ = visibilityID;
     }
 
-    Tile(
+    explicit Tile(
         std::string const& tag,
-        Transformation const& position,
+        Transformation const& transform,
         Graphic const& graphic,
         VisibilityID visibility,
         bool isSolid,
         bool blocksVision)
-        : Entity(position, graphic)
+        : GameObject(transform, graphic)
         , tag_(tag)
         , visibilityID_(visibility)
         , isSolid_(isSolid)

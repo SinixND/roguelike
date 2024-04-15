@@ -1,6 +1,7 @@
 #include "TileMapFilters.h"
 
-#include "Constants.h"
+#include "Directions.h"
+#include "RotationMatrices.h"
 #include "SparseSet.h"
 #include "Tile.h"
 #include "TileMap.h"
@@ -224,7 +225,7 @@ namespace TileMapFilters
         int moveRange,
         Vector2I origin)
     {
-        snd::SparseSet<Vector2I, Tile*> tileSet{};
+        snx::SparseSet<Vector2I, Tile*> tileSet{};
 
         for (auto& tile : inRangeMapTiles)
         {
@@ -257,10 +258,10 @@ namespace TileMapFilters
 
         // Test all four directions for first step
         for (Vector2I direction : {
-                 V_RIGHT,
-                 V_DOWN,
-                 V_LEFT,
-                 V_UP,
+                 Directions::V_RIGHT,
+                 Directions::V_DOWN,
+                 Directions::V_LEFT,
+                 Directions::V_UP,
              })
         {
             // Set next stepped tile position
@@ -292,7 +293,10 @@ namespace TileMapFilters
                 SteppedTile lastSteppedTile{sortedSteppedTiles[previousStepLevel][tileIndex]};
 
                 // Check the 3 neighbours it was not stepped from
-                for (auto R : {M_ROTATE_NONE, M_ROTATE_CCW, M_ROTATE_CW})
+                for (auto R : {
+                         RotationMatrices::M_ROTATE_NONE,
+                         RotationMatrices::M_ROTATE_CCW,
+                         RotationMatrices::M_ROTATE_CW})
                 {
                     // Set next stepped tile position
                     Vector2I nextTilePosition{Vector2Add(lastSteppedTile.tile->transform.tilePosition(), Vector2Transform(R, lastSteppedTile.directionAccessed))};
@@ -381,7 +385,7 @@ namespace TileMapFilters
                 Tile* tile{steppedTile.tile};
 
                 // check neighbours
-                for (auto dir : {V_LEFT, V_RIGHT, V_UP, V_DOWN})
+                for (auto dir : {Directions::V_LEFT, Directions::V_RIGHT, Directions::V_UP, Directions::V_DOWN})
                 {
                     // Skip if neighbour tile is in tiles
                     Vector2I position{

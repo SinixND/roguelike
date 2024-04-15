@@ -71,11 +71,11 @@ public:
 
     // Active scene
 private:
-    static inline snd::IScene* activeScene_{};
+    static inline snx::IScene* activeScene_{};
 
 public:
-    static snd::IScene* const& activeScene() { return activeScene_; }
-    static void setActiveScene(snd::IScene& scene) { activeScene_ = &scene; }
+    static snx::IScene* const& activeScene() { return activeScene_; }
+    static void setActiveScene(snx::IScene& scene) { activeScene_ = &scene; }
 
     // Camera / Viewport
 private:

@@ -3,58 +3,61 @@
 
 #include <raylib.h>
 
-class Timer
+namespace snx
 {
-public:
-    bool hasTimePassed()
+    class Timer
     {
-        // Check if passed
-        if (dt_ < time_)
+    public:
+        bool hasTimePassed()
         {
-            // Tick
-            dt_ += GetFrameTime();
-
-            return false;
-        }
-        else
-        {
-            dt_ = 0;
-            return true;
-        }
-    }
-
-    bool hasDelayPassed(bool action)
-    {
-        if (action)
-        {
-            if (dt_ > time_)
-            {
-                return true;
-            }
-            else
+            // Check if passed
+            if (dt_ < time_)
             {
                 // Tick
                 dt_ += GetFrameTime();
 
                 return false;
             }
+            else
+            {
+                dt_ = 0;
+                return true;
+            }
         }
-        else // action not active
+
+        bool hasDelayPassed(bool action)
         {
-            dt_ = 0;
+            if (action)
+            {
+                if (dt_ > time_)
+                {
+                    return true;
+                }
+                else
+                {
+                    // Tick
+                    dt_ += GetFrameTime();
 
-            return false;
+                    return false;
+                }
+            }
+            else // action not active
+            {
+                dt_ = 0;
+
+                return false;
+            }
         }
-    }
 
-    Timer(float time)
-        : time_(time)
-    {
-    }
+        Timer(float time)
+            : time_(time)
+        {
+        }
 
-private:
-    float const time_{};
-    float dt_{0};
-};
+    private:
+        float const time_{};
+        float dt_{0};
+    };
+}
 
 #endif

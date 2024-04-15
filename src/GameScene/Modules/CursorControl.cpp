@@ -1,7 +1,8 @@
 #include "CursorControl.h"
 
-#include "Constants.h"
-#include "Panel.h"
+#include "CameraControl.h"
+#include "Directions.h"
+#include "Panels.h"
 #include "TileTransformation.h"
 #include "Timer.h"
 #include "Transformation.h"
@@ -12,14 +13,14 @@ namespace CursorControl
 {
     namespace
     {
-        Vector2I getNewCursorPosition(Vector2I cursorPosition, Vector2I direction, int boostFactor)
+        auto getNewCursorPosition(Vector2I cursorPosition, Vector2I direction, int boostFactor) -> Vector2I
         {
             return Vector2I{
                 cursorPosition.x + (direction.x * boostFactor),
                 cursorPosition.y + (direction.y * boostFactor)};
         }
 
-        bool isOutOfRectangle(Vector2I position, Rectangle rectangle)
+        auto isOutOfRectangle(Vector2I position, Rectangle rectangle) -> bool
         {
             return !CheckCollisionPointRec(
                 TileTransformation::positionToScreen(position),
@@ -38,8 +39,8 @@ namespace CursorControl
 
             Vector2I dir{};
 
-            static Timer timer{CURSOR_MOVE_TICK};
-            static Timer delay{CURSOR_MOVE_DELAY};
+            static snx::Timer timer{CURSOR_MOVE_TICK};
+            static snx::Timer delay{CURSOR_MOVE_DELAY};
 
             // Set direction
             switch (key)
@@ -49,7 +50,7 @@ namespace CursorControl
             {
                 if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
                 {
-                    dir = V_UP;
+                    dir = Directions::V_UP;
                 }
             }
             break;
@@ -59,7 +60,7 @@ namespace CursorControl
             {
                 if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
                 {
-                    dir = V_LEFT;
+                    dir = Directions::V_LEFT;
                 }
             }
             break;
@@ -69,7 +70,7 @@ namespace CursorControl
             {
                 if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
                 {
-                    dir = V_DOWN;
+                    dir = Directions::V_DOWN;
                 }
             }
             break;
@@ -79,7 +80,7 @@ namespace CursorControl
             {
                 if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
                 {
-                    dir = V_RIGHT;
+                    dir = Directions::V_RIGHT;
                 }
             }
             break;
@@ -94,7 +95,7 @@ namespace CursorControl
             // Apply pan boost factor to cursor movement when shift is pressed
             if (IsKeyDown(KEY_LEFT_SHIFT))
             {
-                factor = PAN_BOOST_FACTOR;
+                factor = CameraControl::PAN_BOOST_FACTOR;
             }
 
             // Check if cursor would go out of screen
@@ -105,7 +106,7 @@ namespace CursorControl
                     factor)};
 
             // If new position were out of screen with potential boost applied
-            Rectangle renderRectangle{Panel::panelMap().rectangle()};
+            Rectangle renderRectangle{PanelMap::panel().rectangle()};
 
             if (isOutOfRectangle(
                     newCursorPosition,

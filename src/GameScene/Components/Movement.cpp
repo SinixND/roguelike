@@ -1,19 +1,19 @@
 #include "Movement.h"
 
-#include "Constants.h"
+#include "Textures.h"
 #include "TileTransformation.h"
 #include "Transformation.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
 
-bool Movement::move(Transformation& transform, float dt)
+auto Movement::move(Transformation& transform, float dt) -> bool
 {
     // Fraction of one tile size for path progressing
     static float tileFraction{};
 
     // Distance moved this frame
-    float frameDistance = (speed_ * TILE_SIZE) * dt;
+    float frameDistance = (speed_ * Textures::TILE_SIZE) * dt;
 
     // Update distances
     tileFraction += frameDistance;
@@ -28,10 +28,10 @@ bool Movement::move(Transformation& transform, float dt)
                 frameDistance)));
 
     // Progress path
-    if (tileFraction > TILE_SIZE)
+    if (tileFraction > Textures::TILE_SIZE)
     {
         tileFraction = 0;
-        transform = TileTransformation::positionToWorld(path_.back().tile->transform.tilePosition());
+        transform.setPosition(TileTransformation::positionToWorld(path_.back().tile->transform.tilePosition()));
         path_.pop_back();
     }
 

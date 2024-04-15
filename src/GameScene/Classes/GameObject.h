@@ -5,13 +5,13 @@
 #include "Transformation.h"
 #include <raylib.h>
 
-class Entity
+class GameObject
 {
 public:
     Transformation transform{};
     Graphic graphic{};
 
-    Entity(Transformation transform, Graphic graphic)
+    explicit GameObject(Transformation transform, Graphic graphic)
         : transform(transform)
         , graphic(graphic)
     {

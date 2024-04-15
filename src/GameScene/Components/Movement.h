@@ -37,7 +37,7 @@ public:
     // Returns if movement finished
     bool move(Transformation& transform, float dt);
 
-    Movement(int range, float speed)
+    explicit Movement(int range, float speed)
         : range_(range)
         , speed_(speed)
     {

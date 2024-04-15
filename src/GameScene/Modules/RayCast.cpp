@@ -1,7 +1,8 @@
 #include "RayCast.h"
 
-#include "Constants.h"
+#include "RotationMatrices.h"
 #include "SparseSet.h"
+#include "Textures.h"
 #include "Tile.h"
 #include "TileMap.h"
 #include "TileTransformation.h"
@@ -14,17 +15,17 @@
 
 namespace RayCast
 {
-    std::vector<Tile*> getTilesRayed(
+    auto getTilesRayed(
         std::vector<Vector2I>& rayTargets,
         Vector2 origin,
-        TileMap& tileMap)
+        TileMap& tileMap) -> std::vector<Tile*>
     {
-        snd::SparseSet<Vector2I, Tile*> tilesRayed{};
+        snx::SparseSet<Vector2I, Tile*> tilesRayed{};
 
         // Set ray cast values
         Vector2 rayStart{origin};
 
-        float unitRelative{TILE_SIZE / sqrt(2.0F)};
+        float unitRelative{Textures::TILE_SIZE / sqrt(2.0F)};
 
         for (auto const& rayTarget : rayTargets)
         {
@@ -39,14 +40,14 @@ namespace RayCast
 
             Because we can only easily calculate within our reference (base) csys (aka. "frame of reference"), we transform FROM THE RELATIVE TO the REFERENCE csys.
 
-            That requires a ROTATION by 45 deg (CW or CCW, does not matter), and (see next step) a SCALING FACTOR of SQRT(2) (reference unit (TILE_SIZE) is the hypothenuse in the relative normalized unit csys).
+            That requires a ROTATION by 45 deg (CW or CCW, does not matter), and (see next step) a SCALING FACTOR of SQRT(2) (reference unit (Textures::TILE_SIZE) is the hypothenuse in the relative normalized unit csys).
 
             To get the ray increment (-> hypothenuse, for x = 1 reference unit and y = 1 reference unit) back to the relative system, we need to NORMALIZE (both for the "x" and "y" component) the hypothenuse / length to the relative systems unit, which is our reference unit DOWNSCALED.
             */
 
             // Rotation
             Vector2 directionTransformed{
-                Vector2Transform(M_ROTATE_CW_45, rayDirection)};
+                Vector2Transform(RotationMatrices::M_ROTATE_CW_45, rayDirection)};
 
             // Prevent division by 0: if < precision then set to precision
             // Introduces a small amount of error, but should be insignificant
@@ -123,8 +124,8 @@ namespace RayCast
                 // If tile corner hit check 4 adjacent tiles
 
                 // Offset from corner
-                float cornerOffsetX{remainder((rayEnd.x + (TILE_SIZE / 2)), TILE_SIZE)};
-                float cornerOffsetY{remainder((rayEnd.y + (TILE_SIZE / 2)), TILE_SIZE)};
+                float cornerOffsetX{remainder((rayEnd.x + (Textures::TILE_SIZE / 2)), Textures::TILE_SIZE)};
+                float cornerOffsetY{remainder((rayEnd.y + (Textures::TILE_SIZE / 2)), Textures::TILE_SIZE)};
 
                 bool cornerHit{false};
 
@@ -184,10 +185,10 @@ namespace RayCast
         return tilesRayed.values();
     }
 
-    std::vector<Tile*> getTilesRayed(
+    auto getTilesRayed(
         std::vector<Vector2I>& rayTargets,
         Vector2I origin,
-        TileMap& tileMap)
+        TileMap& tileMap) -> std::vector<Tile*>
     {
         return getTilesRayed(rayTargets, TileTransformation::positionToWorld(origin), tileMap);
     }

@@ -1,6 +1,6 @@
 #include "MapHandler.h"
 
-#include "Constants.h"
+#include "Directions.h"
 #include "Graphic.h"
 #include "LayerID.h"
 #include "RNG.h"
@@ -8,6 +8,7 @@
 #include "RuntimeDatabase.h"
 #include "Tile.h"
 #include "TileMap.h"
+#include "Transformation.h"
 #include "Utility.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
@@ -18,7 +19,7 @@
 
 namespace MapHandler
 {
-    TileMap createNewMap(int level)
+    auto createNewMap(int level) -> TileMap
     {
         TileMap newMap{};
 
@@ -53,7 +54,13 @@ namespace MapHandler
     {
         tileMap.createOrUpdate(
             position,
-            Tile(tag, position, graphic, visibility, isSolid, blocksVision));
+            Tile(
+                tag,
+                Transformation(position),
+                graphic,
+                visibility,
+                isSolid,
+                blocksVision));
 
         // Update global available map dimensions
         dtb::extendMapsize(position);
@@ -210,10 +217,10 @@ namespace MapHandler
     void createGridRooms(TileMap& tileMap, int level)
     {
         static std::array<Vector2I, 4> const directions{
-            V_LEFT,
-            V_RIGHT,
-            V_UP,
-            V_DOWN};
+            Directions::V_LEFT,
+            Directions::V_RIGHT,
+            Directions::V_UP,
+            Directions::V_DOWN};
 
         Vector2I roomPosition{0, 0};
         int const roomWidth{15};
@@ -237,7 +244,7 @@ namespace MapHandler
             Vector2I oldRoomPosition{roomPosition};
 
             // Choose random direction
-            Vector2I direction{directions[RNG::random(0, 3)]};
+            Vector2I direction{directions[snx::RNG::random(0, 3)]};
 
             // Update new room position
             roomPosition += Vector2Scale(
@@ -245,7 +252,7 @@ namespace MapHandler
                 roomWidth);
 
             // Add new room if room position unused
-            if (!Utility::isInVector(roomPosition, usedPositions))
+            if (!snx::isInVector(roomPosition, usedPositions))
             {
                 usedPositions.push_back(roomPosition);
 

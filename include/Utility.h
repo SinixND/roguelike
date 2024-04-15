@@ -4,7 +4,7 @@
 #include "raylibEx.h"
 #include <vector>
 
-namespace Utility
+namespace snx
 {
     template <typename Type>
     inline void appendVector(std::vector<Type>& targetVector, std::vector<Type> const& vector)

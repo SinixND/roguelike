@@ -1,8 +1,9 @@
 #include "CameraControl.h"
 
-#include "Constants.h"
-#include "Panel.h"
+#include "Directions.h"
+#include "Panels.h"
 #include "RuntimeDatabase.h"
+#include "Textures.h"
 #include "TileTransformation.h"
 #include "Unit.h"
 #include "raylibEx.h"
@@ -15,20 +16,20 @@ namespace
     {
         if (screenCursor.x < edgePanRectangle.left())
         {
-            panDirection += V_LEFT;
+            panDirection += Directions::V_LEFT;
         }
         else if (screenCursor.x > (edgePanRectangle.right()))
         {
-            panDirection += V_RIGHT;
+            panDirection += Directions::V_RIGHT;
         }
 
         if (screenCursor.y < edgePanRectangle.top())
         {
-            panDirection += V_UP;
+            panDirection += Directions::V_UP;
         }
         else if (screenCursor.y > (edgePanRectangle.bottom()))
         {
-            panDirection += V_DOWN;
+            panDirection += Directions::V_DOWN;
         }
     }
 }
@@ -44,15 +45,15 @@ namespace CameraControl
         Vector2 screenCursor{GetWorldToScreen2D(cursorWorldPosition, dtb::camera())};
 
         // Calculate edge pan deadzone (not triggered within)
-        RectangleEx renderRectangle{Panel::panelMap()};
+        RectangleEx renderRectangle{PanelMap::panel()};
 
         RectangleEx edgePanDeadzone{
             Vector2AddValue(
                 renderRectangle.topLeft(),
-                EDGE_PAN_FRAME_WIDTH),
+                EDGE_PAN_TRIGGER_WIDTH),
             Vector2SubtractValue(
                 renderRectangle.bottomRight(),
-                EDGE_PAN_FRAME_WIDTH)};
+                EDGE_PAN_TRIGGER_WIDTH)};
 
         // Check if cursor is inside edge pan deadzone
         if (CheckCollisionPointRec(screenCursor, edgePanDeadzone))
@@ -71,7 +72,7 @@ namespace CameraControl
         dt = 0;
 
         // Adjust cursor position relative to edge pan deadzone while avoiding to pan too far
-        Vector2I panDirection{V_NODIR};
+        Vector2I panDirection{Directions::V_NODIR};
 
         // Determine pan direction
         setPanDirection(panDirection, screenCursor, edgePanDeadzone);
@@ -93,7 +94,7 @@ namespace CameraControl
         }
 
         // Update camera
-        camera.target += Vector2Scale(panDirection, TILE_SIZE);
+        camera.target += Vector2Scale(panDirection, Textures::TILE_SIZE);
     }
 
     void centerOnHero(Camera2D& camera, Unit& unit)

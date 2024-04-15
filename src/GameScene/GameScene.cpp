@@ -1,16 +1,13 @@
 #include "GameScene.h"
 
 #include "CameraControl.h"
-#include "Constants.h"
 #include "CursorControl.h"
-#include "Entity.h"
+#include "GameObject.h"
 #include "GamePhase.h"
 #include "Graphic.h"
 #include "InputMode.h"
 #include "MapOverlay.h"
-#include "Panel.h"
-#include "PanelStatus.h"
-#include "PanelTileInfo.h"
+#include "Panels.h"
 #include "Render.h"
 #include "RuntimeDatabase.h"
 #include "Selection.h"
@@ -79,7 +76,8 @@ void GameScene::processInput()
     case GamePhase::movementPhase:
         // Select unit
         if (
-            IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
+            IsMouseButtonPressed(MOUSE_LEFT_BUTTON)
+            || IsKeyPressed(KEY_SPACE))
         {
             Selection::select(
                 hero,
@@ -162,54 +160,52 @@ void GameScene::renderOutput()
     //=================================
     PanelStatus::update(
         gameWorld_.currentLevel(),
-        dtb::font(),
-        Panel::panelMap());
+        dtb::font());
 
     PanelTileInfo::update(
         gameWorld_.currentMap(),
         cursor_.transform.tilePosition(),
-        dtb::font(),
-        Panel::panelTileInfo());
+        dtb::font());
     //=================================
 
     // Draw panel borders
     //=================================
     // Info panel (right)
     DrawRectangleLinesEx(
-        Panel::panelTileInfo().rectangle(),
-        PANEL_BORDER_WEIGHT,
+        PanelTileInfo::panel().rectangle(),
+        Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Info panel (right)
     DrawRectangleLinesEx(
-        Panel::panelInfo().rectangle(),
-        PANEL_BORDER_WEIGHT,
+        PanelInfo::panel().rectangle(),
+        Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Status panel (top)
     DrawRectangleLinesEx(
-        Panel::panelStatus().rectangle(),
-        PANEL_BORDER_WEIGHT,
+        PanelStatus::panel().rectangle(),
+        Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Log panel (bottom)
     DrawRectangleLinesEx(
-        Panel::panelLog().rectangle(),
-        PANEL_BORDER_WEIGHT,
+        PanelLog::panel().rectangle(),
+        Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Map panel (mid-left)
     DrawRectangleLinesEx(
-        Panel::panelMap().rectangle(),
-        PANEL_BORDER_WEIGHT,
+        PanelMap::panel().rectangle(),
+        Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Under cursor info panel (bottom-right)
     DrawLineEx(
-        Panel::panelMap().bottomRight(),
+        PanelMap::panel().bottomRight(),
         {static_cast<float>(GetRenderWidth()),
-         Panel::panelMap().bottom() + 1},
-        PANEL_BORDER_WEIGHT,
+         PanelMap::panel().bottom() + 1},
+        Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 }
 

@@ -1,7 +1,7 @@
 #ifndef IG20240128183417
 #define IG20240128183417
 
-#include "Constants.h"
+#include "Directions.h"
 #include "Tile.h"
 #include "TileMap.h"
 #include "raylibEx.h"
@@ -13,7 +13,7 @@ struct SteppedTile
     Tile* tile;
     Vector2I directionAccessed; // in which it was accessed
 
-    SteppedTile(Tile* tile = nullptr, Vector2I directionAccessed = V_NODIR)
+    SteppedTile(Tile* tile = nullptr, Vector2I directionAccessed = Directions::V_NODIR)
         : tile(tile)
         , directionAccessed(directionAccessed)
     {
