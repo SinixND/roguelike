@@ -3,7 +3,7 @@
 
 #include <raylib.h>
 
-namespace snd
+namespace snx
 {
     constexpr float BORDER_WIDTH{1};
     constexpr Color BORDER_COLOR{GRAY};

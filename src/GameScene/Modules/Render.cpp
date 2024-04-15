@@ -1,9 +1,9 @@
 #include "Render.h"
 
-#include "Constants.h"
 #include "Graphic.h"
-#include "Panel.h"
+#include "Panels.h"
 #include "RuntimeDatabase.h"
+#include "Textures.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
 #include <raylib.h>
@@ -13,23 +13,23 @@ namespace Render
 {
     void update(Vector2 position, Graphic graphic, VisibilityID visibilityID)
     {
-        static RectangleEx mapPanel{Panel::panelMap()};
+        static RectangleEx mapPanel{PanelMap::panel()};
         static RectangleEx extendedMapPanel{mapPanel};
         extendedMapPanel
-            .offsetLeft(-TILE_SIZE)
-            .offsetTop(-TILE_SIZE)
-            .offsetRight(TILE_SIZE)
-            .offsetBottom(TILE_SIZE);
+            .offsetLeft(-Textures::TILE_SIZE)
+            .offsetTop(-Textures::TILE_SIZE)
+            .offsetRight(Textures::TILE_SIZE)
+            .offsetBottom(Textures::TILE_SIZE);
 
         if (IsWindowResized())
         {
-            mapPanel = Panel::panelMap();
+            mapPanel = PanelMap::panel();
             extendedMapPanel = mapPanel;
             extendedMapPanel
-                .offsetLeft(-TILE_SIZE)
-                .offsetTop(-TILE_SIZE)
-                .offsetRight(TILE_SIZE)
-                .offsetBottom(TILE_SIZE);
+                .offsetLeft(-Textures::TILE_SIZE)
+                .offsetTop(-Textures::TILE_SIZE)
+                .offsetRight(Textures::TILE_SIZE)
+                .offsetBottom(Textures::TILE_SIZE);
         }
 
         // Return if pixel is out of render area
@@ -41,7 +41,7 @@ namespace Render
         // Get texture data
         Texture2D const* textureAtlas{dtb::getTextureAtlas()};
         Vector2 texturePosition{dtb::getTexturePosition(graphic.renderID())};
-        Vector2 tileSize{TILE_DIMENSIONS};
+        Vector2 tileSize{Textures::TILE_DIMENSIONS};
         Vector2 tileCenter{Vector2Scale(tileSize, 0.5F)};
 
         // Consider visibility
@@ -78,8 +78,8 @@ namespace Render
             Rectangle{
                 texturePosition.x + 0.5F,
                 texturePosition.y + 0.5F,
-                TEXTURE_WIDTH - (2 * 0.5F),
-                TEXTURE_WIDTH - (2 * 0.5F)},
+                Textures::TEXTURE_WIDTH - (2 * 0.5F),
+                Textures::TEXTURE_WIDTH - (2 * 0.5F)},
             Rectangle{
                 position.x,
                 position.y,

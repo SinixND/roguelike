@@ -10,7 +10,7 @@ public:
     int damage() const { return damage_; }
     void setDamage(int damage) { damage_ = damage; }
 
-    Attack(int range, int damage)
+    explicit Attack(int range, int damage)
         : range_(range)
         , damage_(damage)
     {

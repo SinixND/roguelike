@@ -2,7 +2,7 @@
 #define IG20231203204746
 
 #include "Attack.h"
-#include "Entity.h"
+#include "GameObject.h"
 #include "GamePhase.h"
 #include "Graphic.h"
 #include "IScene.h"
@@ -15,7 +15,7 @@
 #include "World.h"
 
 class GameScene
-    : public snd::IScene
+    : public snx::IScene
 {
 public:
     void initialize() override;
@@ -24,7 +24,7 @@ public:
 private:
     World gameWorld_{};
 
-    Entity cursor_{
+    GameObject cursor_{
         Transformation(),
         Graphic(
             RenderID::CURSOR,

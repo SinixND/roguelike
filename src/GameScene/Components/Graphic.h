@@ -13,7 +13,7 @@ public:
     LayerID const& layerID() const { return layerID_; }
     void setLayerID(LayerID const& layerID) { layerID_ = layerID; }
 
-    Graphic(
+    explicit Graphic(
         RenderID renderID = RenderID::INVISIBLE,
         LayerID layerID = LayerID::UI)
         : renderID_(renderID)

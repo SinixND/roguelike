@@ -1,6 +1,6 @@
 #include "MapOverlay.h"
 
-#include "Entity.h"
+#include "GameObject.h"
 #include "Graphic.h"
 #include "LayerID.h"
 #include "Pathfinder.h"
@@ -8,6 +8,7 @@
 #include "Tile.h"
 #include "TileMap.h"
 #include "TileMapFilters.h"
+#include "Transformation.h"
 #include "Unit.h"
 #include "World.h"
 #include "raylibEx.h"
@@ -29,8 +30,8 @@ namespace
                 // Add reachable tile to overlay
                 world.mapOverlay().createOrUpdate(
                     steppedTile.tile->transform.tilePosition(),
-                    Entity(
-                        steppedTile.tile->transform.tilePosition(),
+                    GameObject(
+                        Transformation(steppedTile.tile->transform.tilePosition()),
                         Graphic(
                             RenderID::REACHABLE,
                             LayerID::MAP_OVERLAY)));
@@ -52,15 +53,15 @@ namespace
             // Add reachable tile to overlay
             world.mapOverlay().createOrUpdate(
                 tile->transform.tilePosition(),
-                Entity(
-                    tile->transform.tilePosition(),
+                GameObject(
+                    Transformation(tile->transform.tilePosition()),
                     Graphic(
                         RenderID::ATTACKABLE,
                         LayerID::MAP_OVERLAY)));
         }
     }
 
-    Path& showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World& world)
+    auto showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World& world) -> Path&
     {
         static Vector2I origin{};
         static Vector2I target{};
@@ -86,8 +87,8 @@ namespace
         {
             world.framedMapOverlay().createOrUpdate(
                 steppedTile.tile->transform.tilePosition(),
-                Entity(
-                    steppedTile.tile->transform.tilePosition(),
+                GameObject(
+                    Transformation(steppedTile.tile->transform.tilePosition()),
                     Graphic(
                         RenderID::PATH,
                         LayerID::MAP_OVERLAY)));
@@ -99,7 +100,7 @@ namespace
 
 namespace MapOverlay
 {
-    void update(Unit& hero, World& gameWorld, Entity& cursor)
+    void update(Unit& hero, World& gameWorld, GameObject& cursor)
     {
         static bool isRangeShown{false};
 
@@ -137,7 +138,7 @@ namespace MapOverlay
         }
     }
 
-    Path& path()
+    auto path() -> Path&
     {
         return path_;
     }

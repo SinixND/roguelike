@@ -4,9 +4,9 @@
 #include "TileMap.h"
 
 // Public:
-TileMap& World::currentMap() { return *currentMap_; }
+auto World::currentMap() -> TileMap& { return *currentMap_; }
 
-int World::currentLevel() { return currentLevel_; }
+auto World::currentLevel() -> int { return currentLevel_; }
 
 void World::increaseLevel()
 {
@@ -31,9 +31,9 @@ void World::decreaseLevel()
     setMap(currentLevel_);
 }
 
-TileOverlayMap& World::mapOverlay() { return mapOverlay_; }
+auto World::mapOverlay() -> TileOverlayMap& { return mapOverlay_; }
 
-TileOverlayMap& World::framedMapOverlay() { return framedMapOverlay_; }
+auto World::framedMapOverlay() -> TileOverlayMap& { return framedMapOverlay_; }
 
 // Private:
 void World::addNewMap(int level)

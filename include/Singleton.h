@@ -6,21 +6,25 @@
     T(T const&) = delete;           \
     T& operator=(T const&) = delete;
 
-template <typename Type>
-class Singleton
+namespace snx
 {
-public:
-    static Type& instance()
+    template <typename Type>
+    class Singleton
     {
-        static Type instance;
-        return instance;
-    }
+    public:
+        static auto instance() -> Type&
+        {
+            static Type instance;
+            return instance;
+        }
 
-protected:
-    Singleton() = default;
-    ~Singleton() = default;
+    protected:
+        Singleton() = default;
+        ~Singleton() = default;
 
-    DISALLOW_COPY_AND_ASSIGN(Singleton)
-};
+        Singleton(Singleton const&) = delete;
+        auto operator=(Singleton const&) -> Singleton& = delete;
+    };
+}
 
 #endif

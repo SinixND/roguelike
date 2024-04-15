@@ -11,6 +11,9 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
+- [ ] Sort data members decending size
+- [ ] Dependency inject dtb::
+- [ ] World holds list of Units
 - [ ] Check movement functions in regards to game phases
 
 

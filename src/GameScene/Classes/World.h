@@ -3,6 +3,7 @@
 
 #include "MapHandler.h"
 #include "TileMap.h"
+#include "Unit.h"
 #include <vector>
 
 class World
@@ -22,10 +23,12 @@ private:
     int currentLevel_{};
 
     std::vector<TileMap> maps_{MapHandler::createNewMap(maxLevel_)};
-    TileMap* currentMap_{&maps_.back()};
-
     TileOverlayMap mapOverlay_{};
     TileOverlayMap framedMapOverlay_{};
+
+    TileMap* currentMap_{&maps_.back()};
+
+    std::vector<Unit> units_{};
 
 private:
     void addNewMap(int level);

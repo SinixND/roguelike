@@ -6,7 +6,7 @@
 #include <unordered_set>
 #include <vector>
 
-namespace snd
+namespace snx
 {
     typedef size_t Index;
 

@@ -466,7 +466,10 @@ inline bool operator==(Vector2I lhs, Vector2I rhs)
 {
     return Vector2Equals(lhs, rhs);
 }
+//=====================================
 
+// Hash overloads
+//=====================================
 template <>
 struct std::hash<Vector2>
 {
@@ -489,5 +492,4 @@ struct std::hash<Vector2I>
     }
 };
 //=====================================
-
 #endif

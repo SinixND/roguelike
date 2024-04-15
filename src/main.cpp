@@ -1,9 +1,11 @@
-#include "Constants.h"
+#include "Directions.h"
+#include "FontProperties.h"
 #include "GameScene.h"
 #include "IScene.h"
 #include "RNG.h"
 #include "RenderID.h"
 #include "RuntimeDatabase.h"
+#include "VSync.h"
 #include <raylib.h>
 #include <raymath.h>
 
@@ -19,7 +21,7 @@
 
 #endif
 
-void applicationLoop();
+void applicationLoop(); // must not have parameters for emscripten compatibility
 int main(/* int argc, char **argv */)
 {
     // Setup the window
@@ -30,7 +32,7 @@ int main(/* int argc, char **argv */)
 
     // Flags
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    if (VSYNC_ACTIVE)
+    if (VSync::VSYNC_ACTIVE)
     {
         SetConfigFlags(FLAG_VSYNC_HINT);
     }
@@ -39,6 +41,7 @@ int main(/* int argc, char **argv */)
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Roguelike");
 
     // Raylib Settings
+    //* Image favicon{LoadImage("resources/favicon/favicon.png")};
     Image favicon{LoadImage("resources/favicon/favicon.png")};
     SetWindowIcon(favicon);
     SetWindowMinSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -47,7 +50,7 @@ int main(/* int argc, char **argv */)
 
     // Fonts
     dtb::loadFont("resources/fonts/JuliaMono-RegularLatin.ttf");
-    GuiSetStyle(DEFAULT, TEXT_SIZE, FONT_SIZE);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, FontProperties::FONT_SIZE);
     //=====================================
 
     // Application initialization
@@ -55,7 +58,7 @@ int main(/* int argc, char **argv */)
     // Seed Random number generator
     if (dtb::debugMode())
     {
-        RNG::seed(1);
+        snx::RNG::seed(1);
     }
 
     // Load texture atlas
@@ -83,7 +86,7 @@ int main(/* int argc, char **argv */)
     // Setup Camera2D
     dtb::camera() = {
         Vector2Scale(GetDisplaySize(), 0.5f),
-        V_NULL,
+        Directions::V_NULL,
         0,
         1};
     //=================================
@@ -119,10 +122,12 @@ int main(/* int argc, char **argv */)
     return 0;
 }
 
+void updateCameraOffset(Camera2D& camera);
+void updateActiveScene(snx::IScene* activeScene, bool debugMode);
 void applicationLoop()
 {
     // Set window dependent variables
-    dtb::camera().offset = {static_cast<int>(GetRenderWidth()) * 0.5F, GetRenderHeight() * 0.5F};
+    updateCameraOffset(dtb::camera());
 
 #ifndef __EMSCRIPTEN__
     // Toggle fullscreen
@@ -142,5 +147,15 @@ void applicationLoop()
 #endif
     //=================================
 
-    dtb::activeScene()->update(dtb::debugMode());
+    updateActiveScene(dtb::activeScene(), dtb::debugMode());
+}
+
+void updateCameraOffset(Camera2D& camera)
+{
+    camera.offset = {static_cast<int>(GetRenderWidth()) * 0.5F, GetRenderHeight() * 0.5F};
+}
+
+void updateActiveScene(snx::IScene* activeScene, bool debugMode)
+{
+    activeScene->update(debugMode);
 }

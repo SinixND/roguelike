@@ -1,6 +1,5 @@
 #include "Zoom.h"
 
-#include "Constants.h"
 #include <raylib.h>
 
 namespace Zoom
