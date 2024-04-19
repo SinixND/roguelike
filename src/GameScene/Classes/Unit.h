@@ -4,8 +4,6 @@
 #include "Attack.h"
 #include "GameObject.h"
 #include "Graphic.h"
-#include "Id.h"
-#include "IdManager.h"
 #include "Movement.h"
 #include "Transformation.h"
 #include "VisibilityID.h"
@@ -13,7 +11,6 @@
 class Unit : public GameObject
 {
 public:
-    snx::Id const id_{};
     Movement movement;
     Attack attack;
 
@@ -37,36 +34,11 @@ public:
         int visionRange,
         Attack attack)
         : GameObject(position, graphic)
-        , id_(snx::IdManager::instance().requestId())
         , movement(movement)
         , attack(attack)
         , visibilityID_(visibilityID)
         , visionRange_(visionRange)
     {
-    }
-
-    // Copy ctor
-    Unit(Unit const& o)
-        : Unit(
-            o.transform,
-            o.graphic,
-            o.movement,
-            o.visibilityID_,
-            o.visionRange_,
-            o.attack)
-    {
-    }
-
-    // Copy assignment
-
-    // Move ctor
-
-    // Move assingment
-
-    // Dtor
-    ~Unit()
-    {
-        snx::IdManager::instance().suspendId(id_);
     }
 
 private:

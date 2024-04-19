@@ -11,8 +11,11 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
-- [ ] Sort data members decending size
 - [ ] Dependency inject dtb::
+    - [ ] Make dtb functions free/pure
+- [ ] Refactor objects to DOD (if cnt > 1)
+    - For DOD: Object aggregates reference/pointer to component-container (requested from SparseSet -> static member of class?)
+    - For OOP: Object owns component
 - [ ] World holds list of Units
 - [ ] Check movement functions in regards to game phases
 
@@ -147,6 +150,20 @@ private:
 };
 ```
 
+## Global alternative
+```cpp
+class Class {
+    static inline int state_{};
+    static void doModify(){std::cout << ++state_  << "\n";};
+
+public:
+    void doSmth(){doModify();}
+}
+
+int main(){
+    std::make_unique<Class>()->doSmth();
+}
+```
 
 # Done
 - [x] compile for linux & windows

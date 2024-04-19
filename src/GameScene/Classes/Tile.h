@@ -5,6 +5,7 @@
 #include "Graphic.h"
 #include "Transformation.h"
 #include "VisibilityID.h"
+#include <iostream>
 #include <string>
 
 class Tile : public GameObject
@@ -37,6 +38,14 @@ public:
         , isSolid_(isSolid)
         , blocksVision_(blocksVision)
     {
+        std::cout
+            << sizeof(Tile) << "\n"
+            << sizeof(std::string) << "\n"
+            << sizeof(Transformation) << "\n"
+            << sizeof(Graphic) << "\n"
+            << sizeof(VisibilityID) << "\n"
+            << sizeof(bool) << "\n"
+            << "\n";
     }
 
 private:
@@ -45,5 +54,7 @@ private:
     bool isSolid_{};
     bool blocksVision_{};
 };
+
+static constexpr size_t size1{sizeof(Tile)};
 
 #endif
