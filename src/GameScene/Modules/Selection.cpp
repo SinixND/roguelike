@@ -8,7 +8,7 @@ namespace Selection
 {
     void select(Unit& unit, Vector2I cursorPosition)
     {
-        if (unit.transform.tilePosition() == cursorPosition)
+        if (unit.positionComponent.tilePosition() == cursorPosition)
         {
             // Toggle isSelected
             unit.setIsSelected(!unit.isSelected());

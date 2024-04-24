@@ -164,7 +164,7 @@ namespace RayCast
 
                     if (!cornerHit)
                     {
-                        tilesRayed.createOrUpdate(tileHit->transform.tilePosition(), tileHit);
+                        tilesRayed.createOrUpdate(tileHit->positionComponent.tilePosition(), tileHit);
                     }
 
                     // Detect tile blocking vision

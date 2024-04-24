@@ -1,38 +1,37 @@
 #ifndef IG20240211205246
 #define IG20240211205246
 
-#include "MapHandler.h"
+#include "MapGenerator.h"
 #include "TileMap.h"
-#include "Unit.h"
 #include <vector>
 
 class World
 {
 public:
-    TileMap& currentMap();
-    int currentLevel();
+    auto currentMap() -> TileMap& { return *currentMap_; }
+    auto currentMapLevel() -> int { return currentMapLevel_; }
 
-    void increaseLevel();
-    void decreaseLevel();
+    void increaseMapLevel();
+    void decreaseMapLevel();
 
-    TileOverlayMap& mapOverlay();
-    TileOverlayMap& framedMapOverlay();
+    auto mapOverlay() -> TileOverlayMap& { return mapOverlay_; }
+
+    auto framedMapOverlay() -> TileOverlayMap& { return framedMapOverlay_; }
 
 private:
-    int maxLevel_{};
-    int currentLevel_{};
-
-    std::vector<TileMap> maps_{MapHandler::createNewMap(maxLevel_)};
     TileOverlayMap mapOverlay_{};
     TileOverlayMap framedMapOverlay_{};
 
+    std::vector<TileMap> maps_{MapGenerator::createStartRoom()};
+
     TileMap* currentMap_{&maps_.back()};
 
-    std::vector<Unit> units_{};
+    int maxMapLevel_{};
+    int currentMapLevel_{};
 
 private:
     void addNewMap(int level);
-    void setMap(int level);
+    void setCurrentMap(int level);
 };
 
 #endif

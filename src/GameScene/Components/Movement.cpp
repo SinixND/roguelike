@@ -1,46 +1,85 @@
 #include "Movement.h"
 
+#include "Position.h"
 #include "Textures.h"
 #include "TileTransformation.h"
-#include "Transformation.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
 
-auto Movement::move(Transformation& transform, float dt) -> bool
+void updateTileFraction(float& cumulativeTileFraction, float frameDistance);
+void updatePosition(PositionComponent& positionComponent, float frameDistance, Vector2I const& directionAccessed);
+void resetTileProgress(float& cumulativeTileFraction);
+void adjustPosition(PositionComponent& positionComponent, Vector2I const& targetTilePosition);
+void updatePath(MovementComponent& movementComponent);
+
+auto Movement::moveAlongPath(PositionComponent& positionComponent, MovementComponent& movementComponent, float dt) -> bool
 {
-    // Fraction of one tile size for path progressing
-    static float tileFraction{};
+    // Cumulative fraction of one tile size for smooth path progressing
+    static float cumulativeTileFraction{};
 
-    // Distance moved this frame
-    float frameDistance = (speed_ * Textures::TILE_SIZE) * dt;
+    // Distance to move this frame
+    float frameDistance = (movementComponent.speed() * Textures::TILE_SIZE) * dt;
 
-    // Update distances
-    tileFraction += frameDistance;
+    updateTileFraction(
+        cumulativeTileFraction,
+        frameDistance);
 
-    // Move
-    // Update position: move in direction provided by path
-    transform.setPosition(
-        Vector2Add(
-            transform.position(),
-            Vector2Scale(
-                path_.back().directionAccessed,
-                frameDistance)));
+    updatePosition(
+        positionComponent,
+        frameDistance,
+        movementComponent.path().back().directionAccessed);
 
-    // Progress path
-    if (tileFraction > Textures::TILE_SIZE)
+    // If next tile reached
+    if (cumulativeTileFraction > Textures::TILE_SIZE)
     {
-        tileFraction = 0;
-        transform.setPosition(TileTransformation::positionToWorld(path_.back().tile->transform.tilePosition()));
-        path_.pop_back();
+        resetTileProgress(cumulativeTileFraction);
+
+        adjustPosition(
+            positionComponent,
+            movementComponent.path().back().tile->positionComponent.tilePosition());
+
+        updatePath(movementComponent);
     }
 
-    // Check if target reached
-    if (path_.empty())
+    // If target reached
+    if (movementComponent.path().empty())
     {
-        isMoving_ = false;
+        movementComponent.setIsMoving(false);
         return true;
     }
 
     return false;
+}
+
+void updateTileFraction(float& cumulativeTileFraction, float frameDistance)
+{
+    cumulativeTileFraction += frameDistance;
+}
+
+void updatePosition(PositionComponent& positionComponent, float frameDistance, Vector2I const& directionAccessed)
+{
+    positionComponent.setRenderPosition(
+        Vector2Add(
+            positionComponent.renderPosition(),
+            Vector2Scale(
+                directionAccessed,
+                frameDistance)));
+}
+
+void resetTileProgress(float& cumulativeTileFraction)
+{
+    cumulativeTileFraction = 0;
+}
+
+void adjustPosition(PositionComponent& positionComponent, Vector2I const& targetTilePosition)
+{
+    positionComponent.setRenderPosition(
+        TileTransformation::positionToWorld(
+            targetTilePosition));
+}
+
+void updatePath(MovementComponent& movementComponent)
+{
+    movementComponent.popFromPath();
 }

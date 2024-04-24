@@ -2,18 +2,20 @@
 #define IG20240211172120
 
 #include "Graphic.h"
-#include "Transformation.h"
+#include "Position.h"
 #include <raylib.h>
 
 class GameObject
 {
 public:
-    Transformation transform{};
-    Graphic graphic{};
+    PositionComponent positionComponent{};
+    GraphicComponent graphicComponent{};
 
-    explicit GameObject(Transformation transform, Graphic graphic)
-        : transform(transform)
-        , graphic(graphic)
+    explicit GameObject(
+        PositionComponent positionComponent,
+        GraphicComponent graphicComponent)
+        : positionComponent(positionComponent)
+        , graphicComponent(graphicComponent)
     {
     }
 };

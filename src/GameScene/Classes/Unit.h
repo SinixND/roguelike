@@ -2,40 +2,42 @@
 #define IG20240211230403
 
 #include "Attack.h"
-#include "GameObject.h"
 #include "Graphic.h"
 #include "Movement.h"
-#include "Transformation.h"
+#include "Position.h"
 #include "VisibilityID.h"
 
-class Unit : public GameObject
+class Unit
 {
 public:
-    Movement movement;
-    Attack attack;
+    MovementComponent movementComponent;
+    PositionComponent positionComponent;
+    GraphicComponent graphicComponent;
+    AttackComponent attackComponent;
 
 public:
-    bool isSelected() const { return isSelected_; }
+    auto isSelected() const -> bool { return isSelected_; }
     void setIsSelected(bool state) { isSelected_ = state; }
 
-    bool isSolid() const { return isSolid_; }
+    auto isSolid() const -> bool { return isSolid_; }
 
-    VisibilityID visibilityID() const { return visibilityID_; }
+    auto visibilityID() const -> VisibilityID { return visibilityID_; }
     void setVisibilityID(VisibilityID visibilityID) { visibilityID_ = visibilityID; }
 
-    int visionRange() const { return visionRange_; }
+    auto visionRange() const -> int { return visionRange_; }
     void setVisionRange(int visionRange) { visionRange_ = visionRange; }
 
     explicit Unit(
-        Transformation position,
-        Graphic graphic,
-        Movement movement,
+        PositionComponent positionComponent,
+        GraphicComponent graphicComponent,
+        MovementComponent movementComponent,
         VisibilityID visibilityID,
         int visionRange,
-        Attack attack)
-        : GameObject(position, graphic)
-        , movement(movement)
-        , attack(attack)
+        AttackComponent attackComponent)
+        : movementComponent(movementComponent)
+        , positionComponent(positionComponent)
+        , graphicComponent(graphicComponent)
+        , attackComponent(attackComponent)
         , visibilityID_(visibilityID)
         , visionRange_(visionRange)
     {

@@ -2,7 +2,6 @@
 
 #include "Directions.h"
 #include "Panels.h"
-#include "RuntimeDatabase.h"
 #include "Textures.h"
 #include "TileTransformation.h"
 #include "Unit.h"
@@ -36,13 +35,13 @@ namespace
 
 namespace CameraControl
 {
-    void edgePan(Camera2D& camera, Vector2 cursorWorldPosition, bool isMouseControlled)
+    void edgePan(Camera2D& camera, Vector2 cursorWorldPosition, bool isMouseControlled, RectangleExI const& mapSize)
     {
         static float dt{};
         dt += GetFrameTime();
 
         // Trigger if cursor is outside of edge pan deadzone
-        Vector2 screenCursor{GetWorldToScreen2D(cursorWorldPosition, dtb::camera())};
+        Vector2 screenCursor{GetWorldToScreen2D(cursorWorldPosition, camera)};
 
         // Calculate edge pan deadzone (not triggered within)
         RectangleEx renderRectangle{PanelMap::panel()};
@@ -88,7 +87,7 @@ namespace CameraControl
                 Vector2Add(
                     renderCenter,
                     panDirection),
-                dtb::mapsize()))
+                mapSize))
         {
             return;
         }
@@ -99,6 +98,6 @@ namespace CameraControl
 
     void centerOnHero(Camera2D& camera, Unit& unit)
     {
-        camera.target = unit.transform.position();
+        camera.target = unit.positionComponent.renderPosition();
     }
 }

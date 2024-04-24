@@ -1,47 +1,38 @@
 #include "World.h"
 
-#include "MapHandler.h"
-#include "TileMap.h"
+#include "MapGenerator.h"
 
 // Public:
-auto World::currentMap() -> TileMap& { return *currentMap_; }
-
-auto World::currentLevel() -> int { return currentLevel_; }
-
-void World::increaseLevel()
+void World::increaseMapLevel()
 {
-    if (currentLevel_ == maxLevel_)
+    if (currentMapLevel_ == maxMapLevel_)
     {
-        ++maxLevel_;
-        addNewMap(maxLevel_);
+        ++maxMapLevel_;
+        addNewMap(maxMapLevel_);
     }
 
-    ++currentLevel_;
-    setMap(currentLevel_);
+    ++currentMapLevel_;
+    setCurrentMap(currentMapLevel_);
 }
 
-void World::decreaseLevel()
+void World::decreaseMapLevel()
 {
-    if (currentLevel_ == 0)
+    if (currentMapLevel_ == 0)
     {
         return;
     }
 
-    --currentLevel_;
-    setMap(currentLevel_);
+    --currentMapLevel_;
+    setCurrentMap(currentMapLevel_);
 }
-
-auto World::mapOverlay() -> TileOverlayMap& { return mapOverlay_; }
-
-auto World::framedMapOverlay() -> TileOverlayMap& { return framedMapOverlay_; }
 
 // Private:
 void World::addNewMap(int level)
 {
-    maps_.push_back(MapHandler::createNewMap(level));
+    maps_.push_back(MapGenerator::createRandomMap(level));
 }
 
-void World::setMap(int level)
+void World::setCurrentMap(int level)
 {
     currentMap_ = &maps_[level];
 }

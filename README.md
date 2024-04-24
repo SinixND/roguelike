@@ -11,20 +11,23 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
-- [ ] Dependency inject dtb::
+- [ ] Dependency inject dtb:: (Simply check for necessary RuntimeDatabase include!)
     - [ ] Make dtb functions free/pure
-- [ ] Refactor objects to DOD (if cnt > 1)
-    - For DOD: Object aggregates reference/pointer to component-container (requested from SparseSet -> static member of class?)
-    - For OOP: Object owns component
-- [ ] World holds list of Units
-- [ ] Check movement functions in regards to game phases
 
 
 # Shortterm
+- [ ] Consider refactoring constexpr (compile time const) (wherever possible! eg. getter/setter?)
+- [ ] Refactor classes to DOD (if object count > 1)
+    - For DOD: Class/Object owns component-container (SparseSet for individual access)
+    - For OOP: Object owns individual component
+        - Prefer NMNF function [Nmsp::f(C& o)] over member functions [o.f()]
+        - Choose closest scope parameter that contains all information needed (member > object)
+- [ ] Check movement functions in regards to game phases
 - [ ] Map change
   - [ ] Trigger non-input by event system (pub-sub / observer pattern)
-  - [ ] Print action in log panel
+  - [ ] Print the action in log panel
 - [ ] Add enemy
+    - Therefore World holds list of Units
 
 
 # Longterm 
@@ -84,12 +87,13 @@ Not implemented yet
 ## Design guide
 ### Struct/Class general
 - Struct: POD 
-- Getter / Setter only when needed
 - Only private member variables: name_
 
 ### Functions
 - namespace: domain/related functions (interclass, non-class)
-- Class: member if private member needed (class internal behaviour), free if no private member needed (eg. getter/setter)
+- Class: member if private member needed (class internal behaviour), free if no private member needed (can work with existing interface)
+- Task: Find most concise interface (as small as possible, as big as needed)!!!
+    - When creating a member function: can it make use of a more "atomic" member function and therefore be made NMNF?
 - For readability only: no new file, but forward declare
 
 
@@ -184,3 +188,4 @@ int main(){
 - [x] Always use Setter/Getter (keep open for possible later changes / flexibility)
 - [x] Refactor using spritesheet
 - [x] Print tile info in panel
+- [x] Refactor classes to emphasize NMNF (nonmember, nonfriend) functions

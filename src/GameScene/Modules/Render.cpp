@@ -11,7 +11,7 @@
 
 namespace Render
 {
-    void update(Vector2 position, Graphic graphic, VisibilityID visibilityID)
+    void update(Vector2 position, GraphicComponent graphic, VisibilityID visibilityID)
     {
         static RectangleEx mapPanel{PanelMap::panel()};
         static RectangleEx extendedMapPanel{mapPanel};

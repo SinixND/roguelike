@@ -8,8 +8,8 @@
 #include "IScene.h"
 #include "LayerID.h"
 #include "Movement.h"
+#include "Position.h"
 #include "RenderID.h"
-#include "Transformation.h"
 #include "Unit.h"
 #include "VisibilityID.h"
 #include "World.h"
@@ -25,20 +25,20 @@ private:
     World gameWorld_{};
 
     GameObject cursor_{
-        Transformation(),
-        Graphic(
+        PositionComponent(),
+        GraphicComponent(
             RenderID::CURSOR,
             LayerID::UI)};
 
     Unit hero{
-        Transformation(),
-        Graphic(
+        PositionComponent(),
+        GraphicComponent(
             RenderID::HERO,
             LayerID::OBJECT),
-        Movement(5, 50),
+        MovementComponent(5, 50),
         VisibilityID::VISIBLE,
         20,
-        Attack(
+        AttackComponent(
             1,
             1)};
 

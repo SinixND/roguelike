@@ -1,16 +1,16 @@
 #ifndef IG20240316224041
 #define IG20240316224041
 
-class Attack
+class AttackComponent
 {
 public:
-    int range() const { return range_; }
+    auto range() const -> int { return range_; }
     void setRange(int range) { range_ = range; }
 
-    int damage() const { return damage_; }
+    auto damage() const -> int { return damage_; }
     void setDamage(int damage) { damage_ = damage; }
 
-    explicit Attack(int range, int damage)
+    explicit AttackComponent(int range, int damage)
         : range_(range)
         , damage_(damage)
     {

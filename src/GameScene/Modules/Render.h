@@ -8,7 +8,7 @@
 
 namespace Render
 {
-    void update(Vector2 position, Graphic graphic, VisibilityID visibilityID = VisibilityID::VISIBLE);
+    void update(Vector2 position, GraphicComponent graphic, VisibilityID visibilityID = VisibilityID::VISIBLE);
     RectangleEx panelMap();
 }
 

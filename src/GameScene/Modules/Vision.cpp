@@ -26,7 +26,7 @@ namespace
 
     [[maybe_unused]] void addRayTargetsAtVisionRange(std::vector<Vector2I>& rayTargets, Unit& unit)
     {
-        Vector2I origin{unit.transform.tilePosition()};
+        Vector2I origin{unit.positionComponent.tilePosition()};
         int visionRange{unit.visionRange()};
 
         // Add all target positions that are exaclty at vision range
@@ -73,13 +73,13 @@ namespace
         Unit& unit,
         TileMap& tileMap)
     {
-        Vector2I origin{unit.transform.tilePosition()};
+        Vector2I origin{unit.positionComponent.tilePosition()};
         int visionRange{unit.visionRange()};
 
         // Add all opaque positions within vision range
         for (auto& tile : TileMapFilters::filterOpaqueTiles(tileMap))
         {
-            Vector2I target{tile->transform.tilePosition()};
+            Vector2I target{tile->positionComponent.tilePosition()};
 
             if (Vector2Sum(Vector2Subtract(target, origin)) > visionRange)
             {
@@ -94,9 +94,9 @@ namespace
     [[maybe_unused]] void addRayTargetsWithinRange(std::vector<Vector2I>& rayTargets, Unit& unit, TileMap& tileMap)
     {
         // Add all positions within vision range + 1
-        for (auto& tile : TileMapFilters::filterInRange(tileMap, unit.visionRange(), unit.transform.tilePosition()))
+        for (auto& tile : TileMapFilters::filterInRange(tileMap, unit.visionRange(), unit.positionComponent.tilePosition()))
         {
-            rayTargets.push_back(tile->transform.tilePosition());
+            rayTargets.push_back(tile->positionComponent.tilePosition());
         }
     }
 
@@ -111,7 +111,7 @@ namespace Vision
             TileMapFilters::filterInRange(
                 tileMap,
                 unit.visionRange() + 1,
-                unit.transform.tilePosition())};
+                unit.positionComponent.tilePosition())};
 
         // Reset "visible" tiles to "seen" in extended vision range
         resetVisibleTiles(tilesInExtendedVisionRange);
@@ -128,7 +128,7 @@ namespace Vision
 
         visibleTiles = RayCast::getTilesRayed(
             rayTargets,
-            unit.transform.tilePosition(),
+            unit.positionComponent.tilePosition(),
             tileMap);
 
         // Make tiles visible

@@ -41,7 +41,6 @@ int main(/* int argc, char **argv */)
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Roguelike");
 
     // Raylib Settings
-    //* Image favicon{LoadImage("resources/favicon/favicon.png")};
     Image favicon{LoadImage("resources/favicon/favicon.png")};
     SetWindowIcon(favicon);
     SetWindowMinSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -143,9 +142,8 @@ void applicationLoop()
             MaximizeWindow();
         }
     }
-
-#endif
     //=================================
+#endif
 
     updateActiveScene(dtb::activeScene(), dtb::debugMode());
 }

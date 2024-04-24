@@ -8,13 +8,13 @@
 #include "InputMode.h"
 #include "MapOverlay.h"
 #include "Panels.h"
+#include "Position.h"
 #include "Render.h"
 #include "RuntimeDatabase.h"
 #include "Selection.h"
 #include "Tile.h"
 #include "TileMap.h"
 #include "TileTransformation.h"
-#include "Transformation.h"
 #include "Unit.h"
 #include "UnitMovement.h"
 #include "Vision.h"
@@ -45,13 +45,14 @@ void GameScene::processInput()
     InputMode::update();
 
     // Update cursor
-    CursorControl::update(cursor_.transform, InputMode::isMouseControlled());
+    CursorControl::update(cursor_.positionComponent, InputMode::isMouseControlled());
 
     // Process edge pan
     CameraControl::edgePan(
         dtb::camera(),
-        TileTransformation::positionToWorld(cursor_.transform.tilePosition()),
-        InputMode::isMouseControlled());
+        TileTransformation::positionToWorld(cursor_.positionComponent.tilePosition()),
+        InputMode::isMouseControlled(),
+        dtb::mapsize());
 
     // Center on hero
     if (IsKeyPressed(KEY_H))
@@ -81,7 +82,7 @@ void GameScene::processInput()
         {
             Selection::select(
                 hero,
-                cursor_.transform.tilePosition());
+                cursor_.positionComponent.tilePosition());
         }
 
         // Deselect unit
@@ -98,7 +99,7 @@ void GameScene::processInput()
             UnitMovement::setTarget(
                 gameWorld_,
                 hero,
-                cursor_.transform);
+                cursor_.positionComponent);
         }
         break;
 
@@ -115,12 +116,12 @@ void GameScene::updateState()
     // Update map overlay
     MapOverlay::update(hero, gameWorld_, cursor_);
 
-    UnitMovement::triggerMovement(hero.movement, MapOverlay::path(), isInputBlocked_);
+    UnitMovement::triggerMovement(hero.movementComponent, MapOverlay::path(), isInputBlocked_);
 
     // Unblock input if target is reached
     UnitMovement::processMovement(hero, isInputBlocked_, gamePhase_);
 
-    if (hero.transform.hasPositionChanged())
+    if (hero.positionComponent.hasPositionChanged())
     {
         Vision::update(hero, gameWorld_.currentMap());
     }
@@ -133,38 +134,38 @@ void GameScene::renderOutput()
     // Map layer
     for (auto& tile : gameWorld_.currentMap().values())
     {
-        Render::update(tile.transform.position(), tile.graphic, tile.visibilityID());
+        Render::update(tile.positionComponent.renderPosition(), tile.graphicComponent, tile.visibilityID());
     }
 
     // Map overlay
     for (auto& tile : gameWorld_.mapOverlay().values())
     {
-        Render::update(tile.transform.position(), tile.graphic);
+        Render::update(tile.positionComponent.renderPosition(), tile.graphicComponent);
     }
 
     // (Single frame) Map overlay
     for (auto& tile : gameWorld_.framedMapOverlay().values())
     {
-        Render::update(tile.transform.position(), tile.graphic);
+        Render::update(tile.positionComponent.renderPosition(), tile.graphicComponent);
     }
 
     // Object layer
-    Render::update(hero.transform.position(), hero.graphic);
+    Render::update(hero.positionComponent.renderPosition(), hero.graphicComponent);
 
     // UI layer
-    Render::update(cursor_.transform.position(), cursor_.graphic);
+    Render::update(cursor_.positionComponent.renderPosition(), cursor_.graphicComponent);
 
     EndMode2D();
 
     // Panels
     //=================================
     PanelStatus::update(
-        gameWorld_.currentLevel(),
+        gameWorld_.currentMapLevel(),
         dtb::font());
 
     PanelTileInfo::update(
         gameWorld_.currentMap(),
-        cursor_.transform.tilePosition(),
+        cursor_.positionComponent.tilePosition(),
         dtb::font());
     //=================================
 
@@ -211,7 +212,7 @@ void GameScene::renderOutput()
 
 void GameScene::postOutput()
 {
-    hero.transform.resetPositionChanged();
+    hero.positionComponent.resetPositionChanged();
 
     // Clear path
     gameWorld_.framedMapOverlay().clear();

@@ -4,11 +4,11 @@
 #include "Graphic.h"
 #include "LayerID.h"
 #include "Pathfinder.h"
+#include "Position.h"
 #include "RenderID.h"
 #include "Tile.h"
 #include "TileMap.h"
 #include "TileMapFilters.h"
-#include "Transformation.h"
 #include "Unit.h"
 #include "World.h"
 #include "raylibEx.h"
@@ -22,17 +22,17 @@ namespace
         // Filter relevant tiles
         for (auto& steppedTiles : TileMapFilters::filterMovable(
                  world.currentMap(),
-                 unit.movement.range(),
-                 unit.transform.tilePosition()))
+                 unit.movementComponent.range(),
+                 unit.positionComponent.tilePosition()))
         {
             for (auto& steppedTile : steppedTiles)
             {
                 // Add reachable tile to overlay
                 world.mapOverlay().createOrUpdate(
-                    steppedTile.tile->transform.tilePosition(),
+                    steppedTile.tile->positionComponent.tilePosition(),
                     GameObject(
-                        Transformation(steppedTile.tile->transform.tilePosition()),
-                        Graphic(
+                        PositionComponent(steppedTile.tile->positionComponent.tilePosition()),
+                        GraphicComponent(
                             RenderID::REACHABLE,
                             LayerID::MAP_OVERLAY)));
             }
@@ -44,18 +44,18 @@ namespace
         // Filter relevant tiles
         auto inActionRangeTiles{TileMapFilters::filterInActionRange(
             world.currentMap(),
-            unit.attack.range(),
-            unit.movement.range(),
-            unit.transform.tilePosition())};
+            unit.attackComponent.range(),
+            unit.movementComponent.range(),
+            unit.positionComponent.tilePosition())};
 
         for (auto& tile : inActionRangeTiles)
         {
             // Add reachable tile to overlay
             world.mapOverlay().createOrUpdate(
-                tile->transform.tilePosition(),
+                tile->positionComponent.tilePosition(),
                 GameObject(
-                    Transformation(tile->transform.tilePosition()),
-                    Graphic(
+                    PositionComponent(tile->positionComponent.tilePosition()),
+                    GraphicComponent(
                         RenderID::ATTACKABLE,
                         LayerID::MAP_OVERLAY)));
         }
@@ -86,10 +86,10 @@ namespace
         for (auto& steppedTile : path)
         {
             world.framedMapOverlay().createOrUpdate(
-                steppedTile.tile->transform.tilePosition(),
+                steppedTile.tile->positionComponent.tilePosition(),
                 GameObject(
-                    Transformation(steppedTile.tile->transform.tilePosition()),
-                    Graphic(
+                    PositionComponent(steppedTile.tile->positionComponent.tilePosition()),
+                    GraphicComponent(
                         RenderID::PATH,
                         LayerID::MAP_OVERLAY)));
         }
@@ -121,9 +121,9 @@ namespace MapOverlay
             else // range is shown
             {
                 path_ = showPath(
-                    hero.transform.tilePosition(),
-                    cursor.transform.tilePosition(),
-                    hero.movement.range(),
+                    hero.positionComponent.tilePosition(),
+                    cursor.positionComponent.tilePosition(),
+                    hero.movementComponent.range(),
                     gameWorld);
             }
         }

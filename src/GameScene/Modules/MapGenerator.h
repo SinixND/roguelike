@@ -6,22 +6,20 @@
 #include "raylibEx.h"
 #include <string>
 
-class World;
-
-namespace MapHandler
+namespace MapGenerator
 {
-    TileMap createNewMap(int level);
+    auto createStartRoom() -> TileMap;
+    auto createRandomMap(int level) -> TileMap;
 
     void addTiles(
         TileMap& tileMap,
         std::string tag,
         RectangleExI const& area,
-        Graphic graphic,
+        GraphicComponent graphic,
         bool isSolid,
         bool blocksVision);
 
     void addRoom(TileMap& tileMap, RectangleExI const& room);
-    void createStartRoom(TileMap& tileMap);
     void createGridRooms(TileMap& tileMap, int level);
 }
 

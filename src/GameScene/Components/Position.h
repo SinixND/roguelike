@@ -5,12 +5,12 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-class Transformation
+class PositionComponent
 {
 public:
-    Vector2 position() const { return position_; }
+    Vector2 renderPosition() const { return position_; }
 
-    void setPosition(Vector2 position) { position_ = position; }
+    void setRenderPosition(Vector2 position) { position_ = position; }
 
     Vector2I tilePosition() const
     {
@@ -24,7 +24,7 @@ public:
 
     bool hasPositionChanged()
     {
-        if (!Vector2Equals(oldPosition_, tilePosition()))
+        if (!Vector2Equals(oldTilePosition_, tilePosition()))
         {
             hasPositionChanged_ = true;
         }
@@ -34,20 +34,23 @@ public:
 
     void resetPositionChanged()
     {
-        oldPosition_ = tilePosition();
+        oldTilePosition_ = tilePosition();
         hasPositionChanged_ = false;
     }
 
-    explicit Transformation(Vector2 position = {0, 0})
+    explicit PositionComponent(Vector2 position = {0, 0})
         : position_(position)
     {
     }
 
-    explicit Transformation(Vector2I tilePosition) { setTilePosition(tilePosition); }
+    explicit PositionComponent(Vector2I tilePosition)
+    {
+        setTilePosition(tilePosition);
+    }
 
 private:
     Vector2 position_{};
-    Vector2I oldPosition_{tilePosition()};
+    Vector2I oldTilePosition_{tilePosition()};
     bool hasPositionChanged_{true};
 };
 

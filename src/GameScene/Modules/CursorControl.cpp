@@ -3,9 +3,9 @@
 #include "CameraControl.h"
 #include "Directions.h"
 #include "Panels.h"
+#include "Position.h"
 #include "TileTransformation.h"
 #include "Timer.h"
-#include "Transformation.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -27,7 +27,7 @@ namespace CursorControl
                 rectangle);
         }
 
-        void processKeyControl(Transformation& cursorPosition)
+        void processKeyControl(PositionComponent& cursorPosition)
         {
             // Store last key
             static int key{};
@@ -141,7 +141,7 @@ namespace CursorControl
         }
     }
 
-    void update(Transformation& cursorPosition, bool isMouseControlled)
+    void update(PositionComponent& cursorPosition, bool isMouseControlled)
     {
         // Cursor control
         if (isMouseControlled)

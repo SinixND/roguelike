@@ -1,51 +1,43 @@
 #ifndef IG20240215012942
 #define IG20240215012942
 
-#include "GameObject.h"
 #include "Graphic.h"
-#include "Transformation.h"
+#include "Position.h"
 #include "VisibilityID.h"
-#include <iostream>
 #include <string>
 
-class Tile : public GameObject
+class Tile
 {
 public:
-    std::string const& tag() const { return tag_; }
+    PositionComponent positionComponent{};
+    GraphicComponent graphicComponent{};
 
-    bool isSolid() const { return isSolid_; }
+public:
+    auto tag() const -> std::string const& { return tag_; }
+
+    auto visibilityID() const -> VisibilityID { return visibilityID_; }
+    void setVisibilityID(VisibilityID visibilityID) { visibilityID_ = visibilityID; }
+
+    auto isSolid() const -> bool { return isSolid_; }
     void setIsSolid(bool state) { isSolid_ = state; }
 
-    bool blocksVision() const { return blocksVision_; }
+    auto blocksVision() const -> bool { return blocksVision_; }
     void setBlocksVision(bool state) { blocksVision_ = state; }
-
-    VisibilityID visibilityID() const { return visibilityID_; }
-    void setVisibilityID(VisibilityID visibilityID)
-    {
-        visibilityID_ = visibilityID;
-    }
 
     explicit Tile(
         std::string const& tag,
-        Transformation const& transform,
-        Graphic const& graphic,
-        VisibilityID visibility,
+        PositionComponent const& positionComponent,
+        GraphicComponent const& graphicComponent,
+        VisibilityID visibilityID,
         bool isSolid,
         bool blocksVision)
-        : GameObject(transform, graphic)
+        : positionComponent(positionComponent)
+        , graphicComponent(graphicComponent)
         , tag_(tag)
-        , visibilityID_(visibility)
+        , visibilityID_(visibilityID)
         , isSolid_(isSolid)
         , blocksVision_(blocksVision)
     {
-        std::cout
-            << sizeof(Tile) << "\n"
-            << sizeof(std::string) << "\n"
-            << sizeof(Transformation) << "\n"
-            << sizeof(Graphic) << "\n"
-            << sizeof(VisibilityID) << "\n"
-            << sizeof(bool) << "\n"
-            << "\n";
     }
 
 private:
@@ -54,7 +46,5 @@ private:
     bool isSolid_{};
     bool blocksVision_{};
 };
-
-static constexpr size_t size1{sizeof(Tile)};
 
 #endif

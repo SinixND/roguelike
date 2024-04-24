@@ -2,54 +2,61 @@
 #define IG20240218231113
 
 #include "Pathfinder.h"
-#include "Transformation.h"
+#include "Position.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
 
-class Movement
+class MovementComponent
 {
 public:
-    int range() const { return range_; }
+    auto range() const -> int { return range_; }
     void setRange(int range) { range_ = range; }
 
-    float speed() const { return speed_; }
+    auto speed() const -> float { return speed_; }
     void setSpeed(float speed) { speed_ = speed; }
 
-    Vector2I target() const { return target_; }
+    auto target() const -> Vector2I { return target_; }
     void setTarget(Vector2I target)
     {
         target_ = target;
         isTargetSet_ = true;
     }
 
-    bool isTargetSet() const { return isTargetSet_; }
+    auto isTargetSet() const -> bool { return isTargetSet_; }
     void unsetTarget() { isTargetSet_ = false; }
 
-    bool isMoving() const { return isMoving_; }
+    auto isMoving() const -> bool { return isMoving_; }
+    void setIsMoving(bool state) { isMoving_ = state; }
 
+    auto path() const -> Path const& { return path_; }
+    void popFromPath() { path_.pop_back(); }
     void setPath(Path const& path)
     {
         path_ = path;
         isMoving_ = true;
     }
 
-    // Returns if movement finished
-    bool move(Transformation& transform, float dt);
-
-    explicit Movement(int range, float speed)
+    explicit MovementComponent(int range, float speed)
         : range_(range)
         , speed_(speed)
     {
     }
 
 private:
+    Path path_{};
+    Vector2I target_{};
     int range_{};
     float speed_{}; // pixel per second
-    Vector2I target_{};
+
     bool isTargetSet_{false};
     bool isMoving_{false};
-    Path path_{};
 };
+
+namespace Movement
+{
+    // Returns if movement finished
+    auto moveAlongPath(PositionComponent& position, MovementComponent& movementComponent, float dt) -> bool;
+}
 
 #endif

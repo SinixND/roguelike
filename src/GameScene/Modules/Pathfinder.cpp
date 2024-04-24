@@ -18,7 +18,7 @@ auto findPath(
         return path;
     }
 
-    Vector2I origin{reachableTiles.front().front().tile->transform.tilePosition()};
+    Vector2I origin{reachableTiles.front().front().tile->positionComponent.tilePosition()};
 
     // Check if target equals root position
     if (Vector2Equals(target, origin))
@@ -42,7 +42,7 @@ auto findPath(
     {
         for (auto const& steppedTile : reachableTiles[stepLevel])
         {
-            if (!Vector2Equals(steppedTile.tile->transform.tilePosition(), target))
+            if (!Vector2Equals(steppedTile.tile->positionComponent.tilePosition(), target))
             {
                 continue;
             }
@@ -66,7 +66,7 @@ auto findPath(
         {
             // CheckVector is delta between checked tile position and current step level position
             // CheckVector also is used to store the direction to next path tile
-            Vector2I checkVector{Vector2Subtract(currentStepLevelTile.tile->transform.tilePosition(), steppedTile.tile->transform.tilePosition())};
+            Vector2I checkVector{Vector2Subtract(currentStepLevelTile.tile->positionComponent.tilePosition(), steppedTile.tile->positionComponent.tilePosition())};
 
             // Tiled length of checkVector needs to be 1 (then it is a neighbour)
             auto checkValue{Vector2Sum(checkVector)};

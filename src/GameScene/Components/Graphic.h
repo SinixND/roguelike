@@ -4,16 +4,16 @@
 #include "LayerID.h"
 #include "RenderID.h"
 
-class Graphic
+class GraphicComponent
 {
 public:
-    RenderID const& renderID() const { return renderID_; }
+    auto renderID() const -> RenderID const& { return renderID_; }
     void setRenderID(RenderID const& renderID) { renderID_ = renderID; }
 
-    LayerID const& layerID() const { return layerID_; }
+    auto layerID() const -> LayerID const& { return layerID_; }
     void setLayerID(LayerID const& layerID) { layerID_ = layerID; }
 
-    explicit Graphic(
+    explicit GraphicComponent(
         RenderID renderID = RenderID::INVISIBLE,
         LayerID layerID = LayerID::UI)
         : renderID_(renderID)

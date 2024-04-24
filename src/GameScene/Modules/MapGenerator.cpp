@@ -1,14 +1,14 @@
-#include "MapHandler.h"
+#include "MapGenerator.h"
 
 #include "Directions.h"
 #include "Graphic.h"
 #include "LayerID.h"
+#include "Position.h"
 #include "RNG.h"
 #include "RenderID.h"
 #include "RuntimeDatabase.h"
 #include "Tile.h"
 #include "TileMap.h"
-#include "Transformation.h"
 #include "Utility.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
@@ -17,20 +17,14 @@
 #include <string>
 #include <vector>
 
-namespace MapHandler
+namespace MapGenerator
 {
-    auto createNewMap(int level) -> TileMap
+    auto createRandomMap(int level) -> TileMap
     {
         TileMap newMap{};
 
-        if (!level)
-        {
-            createStartRoom(newMap);
-            return newMap;
-        }
-
         // Choose map design
-        switch (1) // RNG::random(1, 2)
+        switch (1) //* RNG::random(1, 2)
         {
         case 1:
             createGridRooms(newMap, level);
@@ -47,7 +41,7 @@ namespace MapHandler
         TileMap& tileMap,
         std::string tag,
         Vector2I const& position,
-        Graphic graphic,
+        GraphicComponent graphic,
         VisibilityID visibility,
         bool isSolid,
         bool blocksVision)
@@ -56,7 +50,7 @@ namespace MapHandler
             position,
             Tile(
                 tag,
-                Transformation(position),
+                PositionComponent(position),
                 graphic,
                 visibility,
                 isSolid,
@@ -65,11 +59,12 @@ namespace MapHandler
         // Update global available map dimensions
         dtb::extendMapsize(position);
     }
+
     void addTiles(
         TileMap& tileMap,
         std::string tag,
         RectangleExI const& rectangle,
-        Graphic graphic,
+        GraphicComponent graphic,
         VisibilityID visibility,
         bool isSolid,
         bool blocksVision)
@@ -109,7 +104,7 @@ namespace MapHandler
                 room.top,
                 room.width - 1,
                 1},
-            Graphic(RenderID::WALL, LayerID::MAP),
+            GraphicComponent(RenderID::WALL, LayerID::MAP),
             VisibilityID::UNSEEN,
             true,
             true);
@@ -123,7 +118,7 @@ namespace MapHandler
                 room.top,
                 1,
                 room.height - 1},
-            Graphic(RenderID::WALL, LayerID::MAP),
+            GraphicComponent(RenderID::WALL, LayerID::MAP),
             VisibilityID::UNSEEN,
             true,
             true);
@@ -137,7 +132,7 @@ namespace MapHandler
                 room.bottom,
                 room.width - 1,
                 1},
-            Graphic(RenderID::WALL, LayerID::MAP),
+            GraphicComponent(RenderID::WALL, LayerID::MAP),
             VisibilityID::UNSEEN,
             true,
             true);
@@ -151,7 +146,7 @@ namespace MapHandler
                 room.top + 1,
                 1,
                 room.height - 1},
-            Graphic(RenderID::WALL, LayerID::MAP),
+            GraphicComponent(RenderID::WALL, LayerID::MAP),
             VisibilityID::UNSEEN,
             true,
             true);
@@ -165,53 +160,64 @@ namespace MapHandler
                 room.top + 1,
                 room.width - 2,
                 room.height - 2},
-            Graphic(RenderID::FLOOR, LayerID::MAP),
+            GraphicComponent(RenderID::FLOOR, LayerID::MAP),
             VisibilityID::UNSEEN,
             false,
             false);
     }
 
-    void createStartRoom(TileMap& tileMap)
+    auto createStartRoom() -> TileMap
     {
-        addRoom(tileMap, RectangleExI{-7, -7, 15, 15});
+        TileMap startRoom{};
+
+        addRoom(
+            startRoom,
+            RectangleExI{
+                Vector2I{
+                    0,
+                    0},
+                15,
+                15});
 
         // Add walls
         addTiles(
-            tileMap,
+            startRoom,
             "Wall",
             RectangleExI{-1, 2, 3, 1},
-            Graphic(RenderID::WALL, LayerID::MAP),
+            GraphicComponent(RenderID::WALL, LayerID::MAP),
             VisibilityID::UNSEEN,
             true,
             true);
 
         addTiles(
-            tileMap,
+            startRoom,
             "Wall",
             RectangleExI{-2, 0, 1, 2},
-            Graphic(RenderID::WALL, LayerID::MAP),
+            GraphicComponent(RenderID::WALL, LayerID::MAP),
             VisibilityID::UNSEEN,
             true,
             true);
 
         addTiles(
-            tileMap,
+            startRoom,
             "Wall",
             RectangleExI{2, 0, 1, 2},
-            Graphic(RenderID::WALL, LayerID::MAP),
+            GraphicComponent(RenderID::WALL, LayerID::MAP),
             VisibilityID::UNSEEN,
             true,
             true);
 
         // Add next level trigger
         addTile(
-            tileMap,
+            startRoom,
             "Stairs",
             Vector2I{0, -5},
-            Graphic(RenderID::NEXT_LEVEL, LayerID::MAP),
+            GraphicComponent(RenderID::NEXT_LEVEL, LayerID::MAP),
             VisibilityID::UNSEEN,
             false,
             false);
+
+        return startRoom;
     }
 
     void createGridRooms(TileMap& tileMap, int level)
@@ -266,7 +272,7 @@ namespace MapHandler
                 tileMap,
                 "Floor",
                 RectangleExI{oldRoomPosition, roomPosition},
-                Graphic{RenderID::FLOOR, LayerID::MAP},
+                GraphicComponent{RenderID::FLOOR, LayerID::MAP},
                 VisibilityID::UNSEEN,
                 false,
                 false);
