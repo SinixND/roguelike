@@ -1,8 +1,9 @@
 #include "Render.h"
 
+#include "DebugMode.h"
 #include "Graphic.h"
 #include "Panels.h"
-#include "RuntimeDatabase.h"
+#include "TextureData.h"
 #include "Textures.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
@@ -11,37 +12,42 @@
 
 namespace Render
 {
-    void update(Vector2 position, GraphicComponent graphic, VisibilityID visibilityID)
+    void update(
+        Vector2 position,
+        GraphicComponent graphic,
+        Camera2D const& camera,
+        Textures& gameTextures,
+        DebugMode const& debugMode,
+        VisibilityID visibilityID)
     {
-        static RectangleEx mapPanel{PanelMap::panel()};
+        static RectangleEx mapPanel{PanelMap::setup()};
         static RectangleEx extendedMapPanel{mapPanel};
         extendedMapPanel
-            .offsetLeft(-Textures::TILE_SIZE)
-            .offsetTop(-Textures::TILE_SIZE)
-            .offsetRight(Textures::TILE_SIZE)
-            .offsetBottom(Textures::TILE_SIZE);
+            .offsetLeft(-TextureData::TILE_SIZE)
+            .offsetTop(-TextureData::TILE_SIZE)
+            .offsetRight(TextureData::TILE_SIZE)
+            .offsetBottom(TextureData::TILE_SIZE);
 
         if (IsWindowResized())
         {
-            mapPanel = PanelMap::panel();
+            mapPanel = PanelMap::setup();
             extendedMapPanel = mapPanel;
             extendedMapPanel
-                .offsetLeft(-Textures::TILE_SIZE)
-                .offsetTop(-Textures::TILE_SIZE)
-                .offsetRight(Textures::TILE_SIZE)
-                .offsetBottom(Textures::TILE_SIZE);
+                .offsetLeft(-TextureData::TILE_SIZE)
+                .offsetTop(-TextureData::TILE_SIZE)
+                .offsetRight(TextureData::TILE_SIZE)
+                .offsetBottom(TextureData::TILE_SIZE);
         }
 
         // Return if pixel is out of render area
-        if (!CheckCollisionPointRec(GetWorldToScreen2D(position, dtb::camera()), extendedMapPanel))
+        if (!CheckCollisionPointRec(GetWorldToScreen2D(position, camera), extendedMapPanel))
         {
             return;
         }
 
         // Get texture data
-        Texture2D const* textureAtlas{dtb::getTextureAtlas()};
-        Vector2 texturePosition{dtb::getTexturePosition(graphic.renderID())};
-        Vector2 tileSize{Textures::TILE_DIMENSIONS};
+        Vector2 texturePosition{gameTextures.getTexturePosition(graphic.renderID())};
+        Vector2 tileSize{TextureData::TILE_DIMENSIONS};
         Vector2 tileCenter{Vector2Scale(tileSize, 0.5F)};
 
         // Consider visibility
@@ -63,7 +69,7 @@ namespace Render
             tint = BLACK;
             tint = ColorBrightness(tint, 0.0);
 
-            if (dtb::debugMode())
+            if (debugMode())
             {
                 tint = ColorBrightness(tint, 0.67);
                 tint = RED;
@@ -74,12 +80,12 @@ namespace Render
         BeginScissorMode(mapPanel.left(), mapPanel.top(), mapPanel.width(), mapPanel.height());
         // Draw texture (using 0.5F pixel offset to get rid of texture bleeding)
         DrawTexturePro(
-            *textureAtlas,
+            *gameTextures.getTextureAtlas(),
             Rectangle{
                 texturePosition.x + 0.5F,
                 texturePosition.y + 0.5F,
-                Textures::TEXTURE_WIDTH - (2 * 0.5F),
-                Textures::TEXTURE_WIDTH - (2 * 0.5F)},
+                TextureData::TEXTURE_WIDTH - (2 * 0.5F),
+                TextureData::TEXTURE_WIDTH - (2 * 0.5F)},
             Rectangle{
                 position.x,
                 position.y,

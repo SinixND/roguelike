@@ -2,7 +2,7 @@
 
 #include "RotationMatrices.h"
 #include "SparseSet.h"
-#include "Textures.h"
+#include "TextureData.h"
 #include "Tile.h"
 #include "TileMap.h"
 #include "TileTransformation.h"
@@ -25,7 +25,7 @@ namespace RayCast
         // Set ray cast values
         Vector2 rayStart{origin};
 
-        float unitRelative{Textures::TILE_SIZE / sqrt(2.0F)};
+        float unitRelative{TextureData::TILE_SIZE / sqrt(2.0F)};
 
         for (auto const& rayTarget : rayTargets)
         {
@@ -40,7 +40,7 @@ namespace RayCast
 
             Because we can only easily calculate within our reference (base) csys (aka. "frame of reference"), we transform FROM THE RELATIVE TO the REFERENCE csys.
 
-            That requires a ROTATION by 45 deg (CW or CCW, does not matter), and (see next step) a SCALING FACTOR of SQRT(2) (reference unit (Textures::TILE_SIZE) is the hypothenuse in the relative normalized unit csys).
+            That requires a ROTATION by 45 deg (CW or CCW, does not matter), and (see next step) a SCALING FACTOR of SQRT(2) (reference unit (TextureData::TILE_SIZE) is the hypothenuse in the relative normalized unit csys).
 
             To get the ray increment (-> hypothenuse, for x = 1 reference unit and y = 1 reference unit) back to the relative system, we need to NORMALIZE (both for the "x" and "y" component) the hypothenuse / length to the relative systems unit, which is our reference unit DOWNSCALED.
             */
@@ -124,8 +124,8 @@ namespace RayCast
                 // If tile corner hit check 4 adjacent tiles
 
                 // Offset from corner
-                float cornerOffsetX{remainder((rayEnd.x + (Textures::TILE_SIZE / 2)), Textures::TILE_SIZE)};
-                float cornerOffsetY{remainder((rayEnd.y + (Textures::TILE_SIZE / 2)), Textures::TILE_SIZE)};
+                float cornerOffsetX{remainder((rayEnd.x + (TextureData::TILE_SIZE / 2)), TextureData::TILE_SIZE)};
+                float cornerOffsetY{remainder((rayEnd.y + (TextureData::TILE_SIZE / 2)), TextureData::TILE_SIZE)};
 
                 bool cornerHit{false};
 

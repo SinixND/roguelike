@@ -20,30 +20,30 @@ namespace Panels
 
 namespace PanelTileInfo
 {
-    RectangleEx panel();
+    RectangleEx setup();
 
-    void update(TileMap& tileMap, Vector2I cursorPosition, Font const& font);
+    void render(TileMap& tileMap, Vector2I cursorPosition, Font const& font);
 }
 
 namespace PanelInfo
 {
-    RectangleEx panel();
+    RectangleEx setup();
 }
 
 namespace PanelStatus
 {
-    RectangleEx panel();
+    RectangleEx setup();
 
-    void update(int level, Font const& font);
+    void render(int level, Font const& font);
 }
 
 namespace PanelLog
 {
-    RectangleEx panel();
+    RectangleEx setup();
 }
 
 namespace PanelMap
 {
-    RectangleEx panel();
+    RectangleEx setup();
 }
 #endif

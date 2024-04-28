@@ -56,7 +56,8 @@ AttributeMacros:
 BinPackArguments: false
 BinPackParameters: false
 BitFieldColonSpacing: Both
-#Stroustrup and Linux: break after function, catch, else, namespace, class
+#Stroustrup: break after function, catch, else, 
+#and Linux: namespace, class
 BraceWrapping:
   AfterCaseLabel:  false
   AfterClass:      true

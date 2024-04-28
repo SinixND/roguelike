@@ -2,11 +2,15 @@
 #define IG20240211205246
 
 #include "MapGenerator.h"
+#include "MapSize.h"
 #include "TileMap.h"
 #include <vector>
 
 class World
 {
+public:
+    MapSize mapSize_{};
+
 public:
     auto currentMap() -> TileMap& { return *currentMap_; }
     auto currentMapLevel() -> int { return currentMapLevel_; }
@@ -22,7 +26,7 @@ private:
     TileOverlayMap mapOverlay_{};
     TileOverlayMap framedMapOverlay_{};
 
-    std::vector<TileMap> maps_{MapGenerator::createStartRoom()};
+    std::vector<TileMap> maps_{MapGenerator::createStartRoom(mapSize_)};
 
     TileMap* currentMap_{&maps_.back()};
 

@@ -11,11 +11,11 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
-- [ ] Dependency inject dtb:: (Simply check for necessary RuntimeDatabase include!)
-    - [ ] Make dtb functions free/pure
+- [ ] Check function design
 
 
 # Shortterm
+- [ ] Check for triggered functions -> pub-sub functor
 - [ ] Consider refactoring constexpr (compile time const) (wherever possible! eg. getter/setter?)
 - [ ] Refactor classes to DOD (if object count > 1)
     - For DOD: Class/Object owns component-container (SparseSet for individual access)

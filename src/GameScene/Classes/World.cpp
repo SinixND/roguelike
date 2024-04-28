@@ -29,7 +29,7 @@ void World::decreaseMapLevel()
 // Private:
 void World::addNewMap(int level)
 {
-    maps_.push_back(MapGenerator::createRandomMap(level));
+    maps_.push_back(MapGenerator::createRandomMap(level, mapSize_));
 }
 
 void World::setCurrentMap(int level)

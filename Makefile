@@ -17,7 +17,7 @@ endif
 # -pg			ADD FOR gprof analysis TO BOTH COMPILE AND LINK COMMAND!!
 
 CXX_FLAGS		:= -std=c++2a
-debug: CXX_FLAGS 	+= -g -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -MMD -O0 #-Wfatal-errors #-fsanitize=address 
+debug: CXX_FLAGS 	+= -g -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -MMD -O0 -Wfatal-errors #-fsanitize=address 
 ifndef TERMUX_VERSION
 debug: CXX_FLAGS 	+= -pg
 endif

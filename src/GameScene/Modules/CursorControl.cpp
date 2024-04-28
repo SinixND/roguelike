@@ -13,6 +13,13 @@ namespace CursorControl
 {
     namespace
     {
+        auto isOutOfRectangle(Vector2I position, Rectangle rectangle, Camera2D const& camera) -> bool
+        {
+            return !CheckCollisionPointRec(
+                TileTransformation::positionToScreen(position, camera),
+                rectangle);
+        }
+
         auto getNewCursorPosition(Vector2I cursorPosition, Vector2I direction, int boostFactor) -> Vector2I
         {
             return Vector2I{
@@ -20,29 +27,46 @@ namespace CursorControl
                 cursorPosition.y + (direction.y * boostFactor)};
         }
 
-        auto isOutOfRectangle(Vector2I position, Rectangle rectangle) -> bool
+        auto cursorWouldGoOutOfScreen(Vector2I& newCursorPosition, PositionComponent const& cursorPosition, Vector2I const& dir, int& factor, Camera2D const& camera) -> bool
         {
-            return !CheckCollisionPointRec(
-                TileTransformation::positionToScreen(position),
-                rectangle);
-        }
+            // If new position were out of screen with potential boost applied
+            Rectangle renderRectangle{PanelMap::setup().rectangle()};
 
-        void processKeyControl(PositionComponent& cursorPosition)
-        {
-            // Store last key
-            static int key{};
-            int keyPressed{GetKeyPressed()};
-            if (keyPressed)
+            if (isOutOfRectangle(
+                    newCursorPosition,
+                    renderRectangle,
+                    camera))
             {
-                key = keyPressed;
+                // Return early if no boost applied
+                if (factor == 1)
+                {
+                    return true;
+                }
+
+                // Check again without boost
+                factor = 1;
+
+                // Remove boost from cursor position
+                newCursorPosition = getNewCursorPosition(
+                    cursorPosition.tilePosition(),
+                    dir,
+                    factor);
+
+                // If still out of render rectangle
+                if (isOutOfRectangle(
+                        newCursorPosition,
+                        renderRectangle,
+                        camera))
+                {
+                    return true;
+                }
             }
 
-            Vector2I dir{};
+            return false;
+        }
 
-            static snx::Timer timer{CURSOR_MOVE_TICK};
-            static snx::Timer delay{CURSOR_MOVE_DELAY};
-
-            // Set direction
+        void setDirection(Vector2I& dir, int const& key, int const& keyPressed, snx::Timer& timer, snx::Timer& delay)
+        {
             switch (key)
             {
             case KEY_W:
@@ -88,6 +112,26 @@ namespace CursorControl
             default:
                 break;
             }
+        }
+
+        void processKeyControl(PositionComponent& cursorPosition, Camera2D const& camera)
+        {
+            // Store last key
+            static int key{};
+            int keyPressed{GetKeyPressed()};
+
+            if (keyPressed)
+            {
+                key = keyPressed;
+            }
+
+            Vector2I dir{};
+
+            static snx::Timer timer{CURSOR_MOVE_TICK};
+            static snx::Timer delay{CURSOR_MOVE_DELAY};
+
+            // Set direction
+            setDirection(dir, key, keyPressed, timer, delay);
 
             // No boost by default
             int factor{1};
@@ -98,42 +142,16 @@ namespace CursorControl
                 factor = CameraControl::PAN_BOOST_FACTOR;
             }
 
-            // Check if cursor would go out of screen
             Vector2I newCursorPosition{
                 getNewCursorPosition(
                     cursorPosition.tilePosition(),
                     dir,
                     factor)};
 
-            // If new position were out of screen with potential boost applied
-            Rectangle renderRectangle{PanelMap::panel().rectangle()};
-
-            if (isOutOfRectangle(
-                    newCursorPosition,
-                    renderRectangle))
+            // Check if cursor would go out of screen, removes boost if helpful
+            if (cursorWouldGoOutOfScreen(newCursorPosition, cursorPosition, dir, factor, camera))
             {
-                // Return early if no boost applied
-                if (factor == 1)
-                {
-                    return;
-                }
-
-                // Check again without boost
-                factor = 1;
-
-                // Remove boost from cursor position
-                newCursorPosition = getNewCursorPosition(
-                    cursorPosition.tilePosition(),
-                    dir,
-                    factor);
-
-                // If still out of render rectangle
-                if (isOutOfRectangle(
-                        newCursorPosition,
-                        renderRectangle))
-                {
-                    return;
-                }
+                return;
             }
 
             // Set verified position
@@ -141,17 +159,17 @@ namespace CursorControl
         }
     }
 
-    void update(PositionComponent& cursorPosition, bool isMouseControlled)
+    void update(PositionComponent& cursorPosition, Camera2D const& camera, bool isMouseControlled)
     {
         // Cursor control
         if (isMouseControlled)
         {
             // Mouse controlled cursor
-            cursorPosition.setTilePosition(TileTransformation::getMouseTile());
+            cursorPosition.setTilePosition(TileTransformation::getMouseTile(camera));
         }
         else
         {
-            processKeyControl(cursorPosition);
+            processKeyControl(cursorPosition, camera);
         }
     }
 }

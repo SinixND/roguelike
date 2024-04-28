@@ -3,7 +3,7 @@
 
 #include <raylib.h>
 
-namespace Textures
+namespace TextureData
 {
     float constexpr TEXTURE_WIDTH{32};
 

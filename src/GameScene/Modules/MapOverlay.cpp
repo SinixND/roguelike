@@ -13,93 +13,93 @@
 #include "World.h"
 #include "raylibEx.h"
 
-namespace
+namespace MapOverlay
 {
-    static Path path_{};
-
-    void showUnitMoveRange(Unit& unit, World& world)
+    namespace
     {
-        // Filter relevant tiles
-        for (auto& steppedTiles : TileMapFilters::filterMovable(
-                 world.currentMap(),
-                 unit.movementComponent.range(),
-                 unit.positionComponent.tilePosition()))
+        static Path path_{};
+
+        auto showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World& world) -> Path&
         {
-            for (auto& steppedTile : steppedTiles)
+            static Vector2I origin{};
+            static Vector2I target{};
+            static Path path{};
+
+            // Check if path input changed
+            if (!(
+                    origin == unitPosition
+                    && target == cursorPosition))
             {
-                // Add reachable tile to overlay
-                world.mapOverlay().createOrUpdate(
+                // Update input and path
+                origin = unitPosition;
+                target = cursorPosition;
+
+                path = findPath(
+                    world.currentMap(),
+                    unitPosition,
+                    cursorPosition,
+                    unitRange);
+            }
+
+            for (auto& steppedTile : path)
+            {
+                world.framedMapOverlay().createOrUpdate(
                     steppedTile.tile->positionComponent.tilePosition(),
                     GameObject(
                         PositionComponent(steppedTile.tile->positionComponent.tilePosition()),
                         GraphicComponent(
-                            RenderID::REACHABLE,
+                            RenderID::PATH,
+                            LayerID::MAP_OVERLAY)));
+            }
+
+            return path;
+        }
+
+        void showUnitMoveRange(Unit& unit, World& world)
+        {
+            // Filter relevant tiles
+            for (auto& steppedTiles : TileMapFilters::filterMovable(
+                     world.currentMap(),
+                     unit.movementComponent.range(),
+                     unit.positionComponent.tilePosition()))
+            {
+                for (auto& steppedTile : steppedTiles)
+                {
+                    // Add reachable tile to overlay
+                    world.mapOverlay().createOrUpdate(
+                        steppedTile.tile->positionComponent.tilePosition(),
+                        GameObject(
+                            PositionComponent(steppedTile.tile->positionComponent.tilePosition()),
+                            GraphicComponent(
+                                RenderID::REACHABLE,
+                                LayerID::MAP_OVERLAY)));
+                }
+            }
+        }
+
+        void showUnitActionRange(Unit& unit, World& world)
+        {
+            // Filter relevant tiles
+            auto inActionRangeTiles{TileMapFilters::filterInActionRange(
+                world.currentMap(),
+                unit.attackComponent.range(),
+                unit.movementComponent.range(),
+                unit.positionComponent.tilePosition())};
+
+            for (auto& tile : inActionRangeTiles)
+            {
+                // Add reachable tile to overlay
+                world.mapOverlay().createOrUpdate(
+                    tile->positionComponent.tilePosition(),
+                    GameObject(
+                        PositionComponent(tile->positionComponent.tilePosition()),
+                        GraphicComponent(
+                            RenderID::ATTACKABLE,
                             LayerID::MAP_OVERLAY)));
             }
         }
     }
 
-    void showUnitActionRange(Unit& unit, World& world)
-    {
-        // Filter relevant tiles
-        auto inActionRangeTiles{TileMapFilters::filterInActionRange(
-            world.currentMap(),
-            unit.attackComponent.range(),
-            unit.movementComponent.range(),
-            unit.positionComponent.tilePosition())};
-
-        for (auto& tile : inActionRangeTiles)
-        {
-            // Add reachable tile to overlay
-            world.mapOverlay().createOrUpdate(
-                tile->positionComponent.tilePosition(),
-                GameObject(
-                    PositionComponent(tile->positionComponent.tilePosition()),
-                    GraphicComponent(
-                        RenderID::ATTACKABLE,
-                        LayerID::MAP_OVERLAY)));
-        }
-    }
-
-    auto showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World& world) -> Path&
-    {
-        static Vector2I origin{};
-        static Vector2I target{};
-        static Path path{};
-
-        // Check if path input changed
-        if (!(
-                origin == unitPosition
-                && target == cursorPosition))
-        {
-            // Update input and path
-            origin = unitPosition;
-            target = cursorPosition;
-
-            path = findPath(
-                world.currentMap(),
-                unitPosition,
-                cursorPosition,
-                unitRange);
-        }
-
-        for (auto& steppedTile : path)
-        {
-            world.framedMapOverlay().createOrUpdate(
-                steppedTile.tile->positionComponent.tilePosition(),
-                GameObject(
-                    PositionComponent(steppedTile.tile->positionComponent.tilePosition()),
-                    GraphicComponent(
-                        RenderID::PATH,
-                        LayerID::MAP_OVERLAY)));
-        }
-
-        return path;
-    }
-}
-
-namespace MapOverlay
-{
     void update(Unit& hero, World& gameWorld, GameObject& cursor)
     {
         static bool isRangeShown{false};

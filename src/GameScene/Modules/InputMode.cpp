@@ -1,27 +1,22 @@
 #include "InputMode.h"
 
 #include <raylib.h>
-namespace
-{
-    static bool isMouseControlled_{true};
-}
 
 namespace InputMode
 {
+    static bool isMouseControlled_{true};
+
     void update()
     {
-        if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
-        {
-            isMouseControlled_ = !isMouseControlled_;
+        isMouseControlled_ = !isMouseControlled_;
 
-            if (isMouseControlled_)
-            {
-                ShowCursor();
-            }
-            else
-            {
-                HideCursor();
-            }
+        if (isMouseControlled_)
+        {
+            ShowCursor();
+        }
+        else
+        {
+            HideCursor();
         }
     }
 

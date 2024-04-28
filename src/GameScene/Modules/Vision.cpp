@@ -11,7 +11,7 @@
 #include <raymath.h>
 #include <vector>
 
-namespace
+namespace Vision
 {
     void resetVisibleTiles(std::vector<Tile*>& tiles)
     {
@@ -100,10 +100,6 @@ namespace
         }
     }
 
-}
-
-namespace Vision
-{
     void update(Unit& unit, TileMap& tileMap)
     {
         // Filter tiles

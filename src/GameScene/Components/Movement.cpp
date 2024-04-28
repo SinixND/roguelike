@@ -1,17 +1,43 @@
 #include "Movement.h"
 
 #include "Position.h"
-#include "Textures.h"
+#include "TextureData.h"
 #include "TileTransformation.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
 
-void updateTileFraction(float& cumulativeTileFraction, float frameDistance);
-void updatePosition(PositionComponent& positionComponent, float frameDistance, Vector2I const& directionAccessed);
-void resetTileProgress(float& cumulativeTileFraction);
-void adjustPosition(PositionComponent& positionComponent, Vector2I const& targetTilePosition);
-void updatePath(MovementComponent& movementComponent);
+void updatePath(MovementComponent& movementComponent)
+{
+    movementComponent.popFromPath();
+}
+
+void adjustPosition(PositionComponent& positionComponent, Vector2I const& targetTilePosition)
+{
+    positionComponent.setRenderPosition(
+        TileTransformation::positionToWorld(
+            targetTilePosition));
+}
+
+void resetTileProgress(float& cumulativeTileFraction)
+{
+    cumulativeTileFraction = 0;
+}
+
+void updatePosition(PositionComponent& positionComponent, float frameDistance, Vector2I const& directionAccessed)
+{
+    positionComponent.setRenderPosition(
+        Vector2Add(
+            positionComponent.renderPosition(),
+            Vector2Scale(
+                directionAccessed,
+                frameDistance)));
+}
+
+void updateTileFraction(float& cumulativeTileFraction, float frameDistance)
+{
+    cumulativeTileFraction += frameDistance;
+}
 
 auto Movement::moveAlongPath(PositionComponent& positionComponent, MovementComponent& movementComponent, float dt) -> bool
 {
@@ -19,7 +45,7 @@ auto Movement::moveAlongPath(PositionComponent& positionComponent, MovementCompo
     static float cumulativeTileFraction{};
 
     // Distance to move this frame
-    float frameDistance = (movementComponent.speed() * Textures::TILE_SIZE) * dt;
+    float frameDistance = (movementComponent.speed() * TextureData::TILE_SIZE) * dt;
 
     updateTileFraction(
         cumulativeTileFraction,
@@ -31,7 +57,7 @@ auto Movement::moveAlongPath(PositionComponent& positionComponent, MovementCompo
         movementComponent.path().back().directionAccessed);
 
     // If next tile reached
-    if (cumulativeTileFraction > Textures::TILE_SIZE)
+    if (cumulativeTileFraction > TextureData::TILE_SIZE)
     {
         resetTileProgress(cumulativeTileFraction);
 
@@ -50,36 +76,4 @@ auto Movement::moveAlongPath(PositionComponent& positionComponent, MovementCompo
     }
 
     return false;
-}
-
-void updateTileFraction(float& cumulativeTileFraction, float frameDistance)
-{
-    cumulativeTileFraction += frameDistance;
-}
-
-void updatePosition(PositionComponent& positionComponent, float frameDistance, Vector2I const& directionAccessed)
-{
-    positionComponent.setRenderPosition(
-        Vector2Add(
-            positionComponent.renderPosition(),
-            Vector2Scale(
-                directionAccessed,
-                frameDistance)));
-}
-
-void resetTileProgress(float& cumulativeTileFraction)
-{
-    cumulativeTileFraction = 0;
-}
-
-void adjustPosition(PositionComponent& positionComponent, Vector2I const& targetTilePosition)
-{
-    positionComponent.setRenderPosition(
-        TileTransformation::positionToWorld(
-            targetTilePosition));
-}
-
-void updatePath(MovementComponent& movementComponent)
-{
-    movementComponent.popFromPath();
 }

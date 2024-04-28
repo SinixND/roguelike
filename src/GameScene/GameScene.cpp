@@ -2,23 +2,18 @@
 
 #include "CameraControl.h"
 #include "CursorControl.h"
+#include "Enums/RenderID.h"
 #include "GameObject.h"
 #include "GamePhase.h"
-#include "Graphic.h"
 #include "InputMode.h"
 #include "MapOverlay.h"
 #include "Panels.h"
-#include "Position.h"
+#include "RNG.h"
 #include "Render.h"
-#include "RuntimeDatabase.h"
 #include "Selection.h"
-#include "Tile.h"
-#include "TileMap.h"
 #include "TileTransformation.h"
-#include "Unit.h"
 #include "UnitMovement.h"
 #include "Vision.h"
-#include "World.h"
 #include "Zoom.h"
 #include <raygui.h>
 #include <raylib.h>
@@ -26,6 +21,68 @@
 
 void GameScene::initialize()
 {
+    // Seed Random number generator
+    if (debugMode_())
+    {
+        snx::RNG::seed(1);
+    }
+
+    // Textures
+    // Load texture atlas
+    textures_.loadAtlas("TextureAtlas.png");
+
+    // Register textures
+    textures_.registerTexture(RenderID::INVISIBLE, {0, 0});
+    textures_.registerTexture(RenderID::CURSOR, {35, 0});
+    textures_.registerTexture(RenderID::HERO, {70, 0});
+    textures_.registerTexture(RenderID::WALL, {105, 0});
+    textures_.registerTexture(RenderID::FLOOR, {0, 35});
+    textures_.registerTexture(RenderID::REACHABLE, {35, 35});
+    textures_.registerTexture(RenderID::PATH, {70, 35});
+    textures_.registerTexture(RenderID::ATTACKABLE, {105, 35});
+    textures_.registerTexture(RenderID::SUPPORTABLE, {0, 70});
+    textures_.registerTexture(RenderID::NEXT_LEVEL, {35, 70});
+}
+
+void GameScene::update()
+{
+
+    processInput();
+    updateState();
+
+    BeginDrawing();
+
+    ClearBackground(BACKGROUND_COLOR);
+
+    renderOutput();
+
+    // Draw simple frame
+    DrawRectangleLinesEx(
+        Rectangle{
+            0,
+            0,
+            static_cast<float>(GetRenderWidth()),
+            static_cast<float>(GetRenderHeight())},
+        BORDER_WIDTH,
+        BORDER_COLOR);
+
+    if (debugMode_())
+    {
+        DrawFPS(0, 0);
+    }
+
+    EndDrawing();
+
+    postOutput();
+}
+
+void GameScene::deinitialize()
+{
+    // Unload fonts
+    gameFont_.unloadFont();
+
+    // Unload texture atlas
+    textures_.unloadAtlas();
 }
 
 void GameScene::processInput()
@@ -38,37 +95,40 @@ void GameScene::processInput()
     // Toggle debug mode
     if (IsKeyPressed(KEY_F1))
     {
-        dtb::toggleDebugMode();
+        debugMode_.toggle();
     }
 
     // Toggle between mouse or key control for cursor
-    InputMode::update();
+    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+    {
+        InputMode::update();
+    }
 
     // Update cursor
-    CursorControl::update(cursor_.positionComponent, InputMode::isMouseControlled());
+    CursorControl::update(cursor_.positionComponent, camera_, InputMode::isMouseControlled());
 
     // Process edge pan
     CameraControl::edgePan(
-        dtb::camera(),
+        camera_,
         TileTransformation::positionToWorld(cursor_.positionComponent.tilePosition()),
         InputMode::isMouseControlled(),
-        dtb::mapsize());
+        gameWorld_.mapSize_());
 
     // Center on hero
     if (IsKeyPressed(KEY_H))
     {
-        CameraControl::centerOnHero(dtb::camera(), hero);
+        CameraControl::centerOnHero(camera_, hero);
     }
 
     // Process zoom
-    Zoom::update(GetMouseWheelMove(), dtb::camera());
+    Zoom::update(GetMouseWheelMove(), camera_);
 
     // Reset Zoom
     if (
         (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL))
         && (IsKeyPressed(KEY_KP_0) || IsKeyPressed(KEY_ZERO)))
     {
-        Zoom::reset(dtb::camera());
+        Zoom::reset(camera_);
     }
 
     // Branch game phase
@@ -129,83 +189,109 @@ void GameScene::updateState()
 
 void GameScene::renderOutput()
 {
-    BeginMode2D(dtb::camera());
+    BeginMode2D(camera_);
 
     // Map layer
     for (auto& tile : gameWorld_.currentMap().values())
     {
-        Render::update(tile.positionComponent.renderPosition(), tile.graphicComponent, tile.visibilityID());
+        Render::update(
+            tile.positionComponent.renderPosition(),
+            tile.graphicComponent,
+            camera_,
+            textures_,
+            debugMode_,
+            tile.visibilityID());
     }
 
     // Map overlay
     for (auto& tile : gameWorld_.mapOverlay().values())
     {
-        Render::update(tile.positionComponent.renderPosition(), tile.graphicComponent);
+        Render::update(
+            tile.positionComponent.renderPosition(),
+            tile.graphicComponent,
+            camera_,
+            textures_,
+            debugMode_);
     }
 
     // (Single frame) Map overlay
     for (auto& tile : gameWorld_.framedMapOverlay().values())
     {
-        Render::update(tile.positionComponent.renderPosition(), tile.graphicComponent);
+        Render::update(
+            tile.positionComponent.renderPosition(),
+            tile.graphicComponent,
+            camera_,
+            textures_,
+            debugMode_);
     }
 
     // Object layer
-    Render::update(hero.positionComponent.renderPosition(), hero.graphicComponent);
+    Render::update(
+        hero.positionComponent.renderPosition(),
+        hero.graphicComponent,
+        camera_,
+        textures_,
+        debugMode_);
 
     // UI layer
-    Render::update(cursor_.positionComponent.renderPosition(), cursor_.graphicComponent);
+    Render::update(
+        cursor_.positionComponent.renderPosition(),
+        cursor_.graphicComponent,
+        camera_,
+        textures_,
+        debugMode_);
 
     EndMode2D();
 
     // Panels
     //=================================
-    PanelStatus::update(
+    PanelStatus::render(
         gameWorld_.currentMapLevel(),
-        dtb::font());
+        gameFont_());
 
-    PanelTileInfo::update(
+    PanelTileInfo::render(
         gameWorld_.currentMap(),
         cursor_.positionComponent.tilePosition(),
-        dtb::font());
+        gameFont_());
     //=================================
 
     // Draw panel borders
     //=================================
     // Info panel (right)
     DrawRectangleLinesEx(
-        PanelTileInfo::panel().rectangle(),
+        PanelTileInfo::setup().rectangle(),
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Info panel (right)
     DrawRectangleLinesEx(
-        PanelInfo::panel().rectangle(),
+        PanelInfo::setup().rectangle(),
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Status panel (top)
     DrawRectangleLinesEx(
-        PanelStatus::panel().rectangle(),
+        PanelStatus::setup().rectangle(),
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Log panel (bottom)
     DrawRectangleLinesEx(
-        PanelLog::panel().rectangle(),
+        PanelLog::setup().rectangle(),
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Map panel (mid-left)
     DrawRectangleLinesEx(
-        PanelMap::panel().rectangle(),
+        PanelMap::setup().rectangle(),
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Under cursor info panel (bottom-right)
     DrawLineEx(
-        PanelMap::panel().bottomRight(),
+        PanelMap::setup().bottomRight(),
         {static_cast<float>(GetRenderWidth()),
-         PanelMap::panel().bottom() + 1},
+         PanelMap::setup().bottom() + 1},
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 }
@@ -217,5 +303,3 @@ void GameScene::postOutput()
     // Clear path
     gameWorld_.framedMapOverlay().clear();
 }
-
-void GameScene::deinitialize() {}

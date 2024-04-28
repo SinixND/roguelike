@@ -1,27 +1,45 @@
 #ifndef IG20231203204746
 #define IG20231203204746
 
-#include "Attack.h"
+#include "Components/Attack.h"
+#include "Components/Movement.h"
+#include "DebugMode.h"
+#include "Directions.h"
+#include "Enums/VisibilityID.h"
+#include "GameFont.h"
 #include "GameObject.h"
 #include "GamePhase.h"
 #include "Graphic.h"
 #include "IScene.h"
 #include "LayerID.h"
-#include "Movement.h"
 #include "Position.h"
 #include "RenderID.h"
+#include "Textures.h"
 #include "Unit.h"
-#include "VisibilityID.h"
 #include "World.h"
+#include "raylibEx.h"
+#include <raylib.h>
+#include <raymath.h>
 
-class GameScene
-    : public snx::IScene
+class GameScene : public snx::IScene
 {
-public:
-    void initialize() override;
-    void deinitialize() override;
-
 private:
+    DebugMode debugMode_{};
+
+    Camera2D camera_{
+        Vector2Scale(GetDisplaySize(), 0.5f),
+        Directions::V_NULL,
+        0,
+        1};
+
+    Textures textures_{};
+
+    GameFont gameFont_{};
+
+    const float BORDER_WIDTH{1};
+    const Color BORDER_COLOR{GRAY};
+    const Color BACKGROUND_COLOR{BLACK};
+
     World gameWorld_{};
 
     GameObject cursor_{
@@ -46,7 +64,16 @@ private:
 
     bool isInputBlocked_{false};
 
-private:
+public:
+    void initialize() override;
+    void update() override;
+    void deinitialize() override;
+
+    GameScene()
+    {
+        initialize();
+    }
+
     void processInput() override;
     void updateState() override;
     void renderOutput() override;
