@@ -9,7 +9,7 @@ private:
     Font font_{};
 
 public:
-    Font const& operator()() { return font_; }
+    auto operator()() -> Font const& { return font_; }
     void loadFont(char const* fileName) { font_ = LoadFont(fileName); }
     void unloadFont() { UnloadFont(font_); }
 };

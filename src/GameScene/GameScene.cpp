@@ -199,7 +199,7 @@ void GameScene::renderOutput()
             tile.graphicComponent,
             camera_,
             textures_,
-            debugMode_,
+            debugMode_(),
             tile.visibilityID());
     }
 
@@ -211,7 +211,7 @@ void GameScene::renderOutput()
             tile.graphicComponent,
             camera_,
             textures_,
-            debugMode_);
+            debugMode_());
     }
 
     // (Single frame) Map overlay
@@ -222,7 +222,7 @@ void GameScene::renderOutput()
             tile.graphicComponent,
             camera_,
             textures_,
-            debugMode_);
+            debugMode_());
     }
 
     // Object layer
@@ -231,7 +231,7 @@ void GameScene::renderOutput()
         hero.graphicComponent,
         camera_,
         textures_,
-        debugMode_);
+        debugMode_());
 
     // UI layer
     Render::update(
@@ -239,7 +239,7 @@ void GameScene::renderOutput()
         cursor_.graphicComponent,
         camera_,
         textures_,
-        debugMode_);
+        debugMode_());
 
     EndMode2D();
 

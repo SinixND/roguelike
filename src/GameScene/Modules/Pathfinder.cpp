@@ -90,5 +90,5 @@ auto findPath(
     Vector2I target,
     int range) -> Path
 {
-    return findPath(TileMapFilters::filterMovable(tileMap, range, origin), target);
+    return findPath(TileMapFilters::filterMovableSorted(tileMap, range, origin), target);
 }

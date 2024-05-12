@@ -56,7 +56,7 @@ namespace MapOverlay
     void showUnitMoveRange(Unit& unit, World& world)
     {
         // Filter relevant tiles
-        for (auto& steppedTiles : TileMapFilters::filterMovable(
+        for (auto& steppedTiles : TileMapFilters::filterMovableSorted(
                  world.currentMap(),
                  unit.movementComponent.range(),
                  unit.positionComponent.tilePosition()))

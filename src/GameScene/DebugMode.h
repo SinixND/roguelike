@@ -7,7 +7,7 @@ private:
     bool debugMode_{true};
 
 public:
-    bool operator()() const { return debugMode_; }
+    auto operator()() const -> bool { return debugMode_; }
     void toggle() { debugMode_ = !debugMode_; }
 };
 

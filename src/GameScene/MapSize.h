@@ -11,7 +11,7 @@ private:
     RectangleExI mapsize_{};
 
 public:
-    RectangleExI const& operator()() { return mapsize_; }
+    auto operator()() -> RectangleExI const& { return mapsize_; }
 
     // Extends mapsize to include point provided
     void extend(Vector2I V);

@@ -20,7 +20,9 @@ struct SteppedTile
     }
 };
 
-using RangeSeparatedTiles = std::vector<std::vector<SteppedTile>>;
+using SteppedTiles = std::vector<SteppedTile>;
+
+using RangeSeparatedTiles = std::vector<SteppedTiles>;
 
 namespace TileMapFilters
 {
@@ -30,7 +32,7 @@ namespace TileMapFilters
 
     bool isInSteppedTiles(
         Vector2I target,
-        std::vector<SteppedTile> const& steppedTiles);
+        SteppedTiles const& steppedTiles);
 
     bool isInRangeSeparatedTiles(
         Vector2I target,
@@ -40,9 +42,9 @@ namespace TileMapFilters
 
     std::vector<Tile*> filterSolidTiles(TileMap& tileMap);
 
-    std::vector<Tile*> filterNonOpaqueTiles(TileMap& tileMap);
+    std::vector<Tile*> filterNonVisionBlockingTiles(TileMap& tileMap);
 
-    std::vector<Tile*> filterOpaqueTiles(TileMap& tileMap);
+    std::vector<Tile*> filterVisionBlockingTiles(TileMap& tileMap);
 
     std::vector<Tile*> filterInRange(
         std::vector<Tile*> const& tiles,
@@ -79,12 +81,12 @@ namespace TileMapFilters
         Vector2I origin,
         TileMap& tileMap);
 
-    RangeSeparatedTiles filterMovable(
+    RangeSeparatedTiles filterMovableSorted(
         std::vector<Tile*> const& inRangeMapTiles,
         int moveRange,
         Vector2I origin);
 
-    RangeSeparatedTiles filterMovable(
+    RangeSeparatedTiles filterMovableSorted(
         TileMap& tileMap,
         int moveRange,
         Vector2I origin);

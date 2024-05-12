@@ -40,7 +40,7 @@ namespace Vision
 
         Vector2I target{firstTarget};
 
-        // Loop positions
+        // Loop positions CW
         Vector2I delta{-1, +1};
 
         do
@@ -68,7 +68,7 @@ namespace Vision
         } while (!Vector2Equals(target, firstTarget));
     }
 
-    [[maybe_unused]] void addRayTargetsOpaque(
+    [[maybe_unused]] void addRayTargetsVisionBlocking(
         std::vector<Vector2I>& rayTargets,
         Unit& unit,
         TileMap& tileMap)
@@ -77,7 +77,7 @@ namespace Vision
         int visionRange{unit.visionRange()};
 
         // Add all opaque positions within vision range
-        for (auto& tile : TileMapFilters::filterOpaqueTiles(tileMap))
+        for (auto& tile : TileMapFilters::filterVisionBlockingTiles(tileMap))
         {
             Vector2I target{tile->positionComponent.tilePosition()};
 
@@ -115,14 +115,14 @@ namespace Vision
         // Set ray targets if unit position has changed
         std::vector<Vector2I> rayTargets{};
 
-        //* addRayTargetsOpaque(rayTargets, unit, tileMap);
+        //* addRayTargetsVisionBlocking(rayTargets, unit, tileMap);
         //* addRayTargetsAtVisionRange(rayTargets, unit);
         addRayTargetsWithinRange(rayTargets, unit, tileMap);
 
         // Set visible tiles if unit position has changed
         std::vector<Tile*> visibleTiles{};
 
-        visibleTiles = RayCast::getTilesRayed(
+        visibleTiles = RayCast::getTilesPassedByRay(
             rayTargets,
             unit.positionComponent.tilePosition(),
             tileMap);

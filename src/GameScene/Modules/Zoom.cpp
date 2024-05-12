@@ -9,7 +9,7 @@ namespace Zoom
         // camera.zoom += (wheel * ZOOM_STEP); // 0.125F
 
         // No zoom
-        if (wheel == 0)
+        if (!wheel)
         {
             return;
         }

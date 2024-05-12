@@ -29,7 +29,7 @@ namespace TileMapFilters
 
     bool isInSteppedTiles(
         Vector2I target,
-        std::vector<SteppedTile> const& steppedTiles)
+        SteppedTiles const& steppedTiles)
     {
         for (auto const& steppedTile : steppedTiles)
         {
@@ -43,9 +43,9 @@ namespace TileMapFilters
 
     bool isInRangeSeparatedTiles(
         Vector2I target,
-        RangeSeparatedTiles const& sortedSteppedTiles)
+        RangeSeparatedTiles const& rangeSeparatedTiles)
     {
-        for (auto const& steppedTiles : sortedSteppedTiles)
+        for (auto const& steppedTiles : rangeSeparatedTiles)
         {
             for (auto const& steppedTile : steppedTiles)
             {
@@ -109,7 +109,7 @@ namespace TileMapFilters
     }
 
     // Returns opaque positions (non vision blocking tiles)
-    std::vector<Tile*> filterNonOpaqueTiles(TileMap& tileMap)
+    std::vector<Tile*> filterNonVisionBlockingTiles(TileMap& tileMap)
     {
         std::vector<Tile*> tiles{};
 
@@ -126,7 +126,7 @@ namespace TileMapFilters
     }
 
     // Returns accessible positions (vision blocking tiles)
-    std::vector<Tile*> filterOpaqueTiles(TileMap& tileMap)
+    std::vector<Tile*> filterVisionBlockingTiles(TileMap& tileMap)
     {
         std::vector<Tile*> tiles{};
 
@@ -151,12 +151,12 @@ namespace TileMapFilters
         std::vector<Tile*> inRangeTiles{};
 
         // Check if ranges are valid
-        if (rangeEnd == 0 || rangeEnd < rangeStart)
+        if (rangeEnd <= 0 || rangeEnd < rangeStart)
         {
             return inRangeTiles;
         }
 
-        for (auto* tile : tiles)
+        for (auto tile : tiles)
         {
             Vector2I delta{
                 Vector2Subtract(
@@ -220,41 +220,14 @@ namespace TileMapFilters
         return isInRange(target, 0, range, origin, tileMap);
     }
 
-    RangeSeparatedTiles filterMovable(
+    void addTilesRequiringOneStep(
+        RangeSeparatedTiles& rangeSeparatedTiles,
         std::vector<Tile*> const& inRangeMapTiles,
-        int moveRange,
-        Vector2I origin)
+        Vector2I origin,
+        snx::SparseSet<Vector2I, Tile*>& tileSet)
     {
-        snx::SparseSet<Vector2I, Tile*> tileSet{};
-
-        for (auto& tile : inRangeMapTiles)
-        {
-            if (!tile->isSolid())
-            {
-                tileSet.createOrUpdate(tile->positionComponent.tilePosition(), tile);
-            }
-        }
-
-        RangeSeparatedTiles sortedSteppedTiles{};
-
-        // Check if range is 0
-        if (!moveRange)
-        {
-            return sortedSteppedTiles;
-        }
-
-        // Step 0
-
         // Extend vector by one additional step level
-        sortedSteppedTiles.push_back(std::vector<SteppedTile>());
-
-        // Add starting position
-        sortedSteppedTiles.front().push_back(SteppedTile(*tileSet.at(origin)));
-
-        // Step 1
-
-        // Extend vector by one additional step level
-        sortedSteppedTiles.push_back(std::vector<SteppedTile>());
+        rangeSeparatedTiles.push_back(SteppedTiles());
 
         // Test all four directions for first step
         for (Vector2I direction : {
@@ -274,23 +247,28 @@ namespace TileMapFilters
             }
 
             // Add stepped tile to stepped tiles
-            sortedSteppedTiles.back().push_back(SteppedTile(*tileSet.at(nextTilePosition), direction));
+            rangeSeparatedTiles.back().push_back(SteppedTile(*tileSet.at(nextTilePosition), direction));
         }
+    }
 
-        // Steps > 1
-
+    void addTilesRequiringMoreSteps(
+        RangeSeparatedTiles& rangeSeparatedTiles,
+        std::vector<Tile*> const& inRangeMapTiles,
+        int moveRange,
+        snx::SparseSet<Vector2I, Tile*>& tileSet)
+    {
         for (int stepLevel{2}; stepLevel <= moveRange; ++stepLevel)
         {
             // Extend vector by one additional step level
-            sortedSteppedTiles.push_back(std::vector<SteppedTile>());
+            rangeSeparatedTiles.push_back(SteppedTiles());
 
             int previousStepLevel{stepLevel - 1};
-            size_t previousTilesCount{sortedSteppedTiles[previousStepLevel].size()};
+            size_t previousTilesCount{rangeSeparatedTiles[previousStepLevel].size()};
 
             // Iterate previous stepped tiles to step one further from
             for (size_t tileIndex{0}; tileIndex < previousTilesCount; ++tileIndex)
             {
-                SteppedTile lastSteppedTile{sortedSteppedTiles[previousStepLevel][tileIndex]};
+                SteppedTile lastSteppedTile{rangeSeparatedTiles[previousStepLevel][tileIndex]};
 
                 // Check the 3 neighbours it was not stepped from
                 for (auto R : {
@@ -304,7 +282,7 @@ namespace TileMapFilters
                     // Check if tile is already known
                     bool tileKnown{false};
 
-                    for (auto const& steppedTiles : sortedSteppedTiles)
+                    for (auto const& steppedTiles : rangeSeparatedTiles)
                     {
                         for (auto const& steppedTile : steppedTiles)
                         {
@@ -330,7 +308,7 @@ namespace TileMapFilters
                     }
 
                     // Add passable tile to stepped tiles
-                    sortedSteppedTiles[stepLevel].push_back(
+                    rangeSeparatedTiles[stepLevel].push_back(
                         SteppedTile(
                             *tileSet.at(
                                 nextTilePosition),
@@ -340,22 +318,77 @@ namespace TileMapFilters
                 }
             }
 
-            if (sortedSteppedTiles[stepLevel].empty())
+            if (rangeSeparatedTiles[stepLevel].empty())
             {
-                sortedSteppedTiles.pop_back();
+                rangeSeparatedTiles.pop_back();
                 break;
             }
         }
-
-        return sortedSteppedTiles;
     }
 
-    RangeSeparatedTiles filterMovable(
+    void filterNonSolidTiles(
+        snx::SparseSet<Vector2I, Tile*>& tileSet,
+        std::vector<Tile*> const& inRangeMapTiles)
+    {
+        for (auto& tile : inRangeMapTiles)
+        {
+            if (tile->isSolid())
+            {
+                continue;
+            }
+
+            tileSet.createOrUpdate(tile->positionComponent.tilePosition(), tile);
+        }
+    }
+
+    RangeSeparatedTiles filterMovableSorted(
+        std::vector<Tile*> const& inRangeMapTiles,
+        int moveRange,
+        Vector2I origin)
+    {
+        snx::SparseSet<Vector2I, Tile*> tileSet{};
+
+        filterNonSolidTiles(tileSet, inRangeMapTiles);
+
+        RangeSeparatedTiles rangeSeparatedTiles{};
+
+        // Check if range is 0
+        if (!moveRange)
+        {
+            return rangeSeparatedTiles;
+        }
+
+        // Step 0
+
+        // Extend vector by one additional step level
+        rangeSeparatedTiles.push_back(SteppedTiles());
+
+        // Add starting position
+        rangeSeparatedTiles.front().push_back(SteppedTile(*tileSet.at(origin)));
+
+        // Step 1
+        addTilesRequiringOneStep(
+            rangeSeparatedTiles,
+            inRangeMapTiles,
+            origin,
+            tileSet);
+
+        // Steps > 1
+        addTilesRequiringMoreSteps(
+            rangeSeparatedTiles,
+            inRangeMapTiles,
+            moveRange,
+            tileSet);
+
+        return rangeSeparatedTiles;
+    }
+
+    RangeSeparatedTiles filterMovableSorted(
         TileMap& tileMap,
         int moveRange,
         Vector2I origin)
     {
-        return filterMovable(
+        return filterMovableSorted(
             filterInRange(
                 filterNonSolidTiles(tileMap),
                 moveRange,
@@ -370,7 +403,7 @@ namespace TileMapFilters
         Vector2I origin,
         TileMap& tileMap)
     {
-        return isInRangeSeparatedTiles(target, filterMovable(tileMap, moveRange, origin));
+        return isInRangeSeparatedTiles(target, filterMovableSorted(tileMap, moveRange, origin));
     }
 
     std::vector<Tile*> filterEdgeTiles(RangeSeparatedTiles const& tiles)
@@ -418,7 +451,7 @@ namespace TileMapFilters
         std::vector<Tile*> inActionRangeTiles{};
 
         RangeSeparatedTiles movableTiles{
-            filterMovable(
+            filterMovableSorted(
                 tileMap,
                 moveRange,
                 origin)};

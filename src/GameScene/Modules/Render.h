@@ -1,11 +1,9 @@
 #ifndef IG20240209181841
 #define IG20240209181841
 
-#include "DebugMode.h"
 #include "Graphic.h"
 #include "Textures.h"
 #include "VisibilityID.h"
-#include "raylibEx.h"
 #include <raylib.h>
 
 namespace Render
@@ -15,10 +13,8 @@ namespace Render
         GraphicComponent graphic,
         Camera2D const& camera,
         Textures& gameTextures,
-        DebugMode const& debugMode,
+        bool debugMode,
         VisibilityID visibilityID = VisibilityID::VISIBLE);
-
-    RectangleEx panelMap();
 }
 
 #endif
