@@ -14,7 +14,7 @@ namespace Render
     void adjustTint(
         Color& tint,
         VisibilityID visibilityID,
-        bool debugMode)
+        bool cheatMode)
     {
         switch (visibilityID)
         {
@@ -32,10 +32,10 @@ namespace Render
             tint = BLACK;
             tint = ColorBrightness(tint, 0.0);
 
-            if (debugMode)
+            if (cheatMode)
             {
-                tint = ColorBrightness(tint, 0.67);
                 tint = RED;
+                tint = ColorBrightness(tint, 0.67);
             }
             break;
         }
@@ -81,7 +81,7 @@ namespace Render
         GraphicComponent graphic,
         Camera2D const& camera,
         Textures& gameTextures,
-        bool debugMode,
+        bool cheatMode,
         VisibilityID visibilityID)
     {
         static RectangleEx mapPanel{PanelMap::setup()};
@@ -120,7 +120,7 @@ namespace Render
         adjustTint(
             tint,
             visibilityID,
-            debugMode);
+            cheatMode);
 
         render(
             mapPanel,

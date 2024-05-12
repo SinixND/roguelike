@@ -2,6 +2,7 @@
 
 #include "CameraControl.h"
 #include "CursorControl.h"
+#include "DebugMode.h"
 #include "Enums/RenderID.h"
 #include "GameObject.h"
 #include "GamePhase.h"
@@ -15,6 +16,7 @@
 #include "UnitMovement.h"
 #include "Vision.h"
 #include "Zoom.h"
+#include <iostream>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -22,7 +24,7 @@
 void GameScene::initialize()
 {
     // Seed Random number generator
-    if (debugMode_())
+    if (DebugMode::debugMode())
     {
         snx::RNG::seed(1);
     }
@@ -66,7 +68,7 @@ void GameScene::update()
         BORDER_WIDTH,
         BORDER_COLOR);
 
-    if (debugMode_())
+    if (DebugMode::debugMode())
     {
         DrawFPS(0, 0);
     }
@@ -92,10 +94,16 @@ void GameScene::processInput()
         return;
     }
 
-    // Toggle debug mode
+    // Toggle cheatMode
     if (IsKeyPressed(KEY_F1))
     {
-        debugMode_.toggle();
+        cheatMode_.toggle();
+    }
+
+    // Toggle debugMode
+    if (IsKeyPressed(KEY_F10))
+    {
+        DebugMode::toggleDebugMode();
     }
 
     // Toggle between mouse or key control for cursor
@@ -199,7 +207,7 @@ void GameScene::renderOutput()
             tile.graphicComponent,
             camera_,
             textures_,
-            debugMode_(),
+            cheatMode_(),
             tile.visibilityID());
     }
 
@@ -211,7 +219,7 @@ void GameScene::renderOutput()
             tile.graphicComponent,
             camera_,
             textures_,
-            debugMode_());
+            cheatMode_());
     }
 
     // (Single frame) Map overlay
@@ -222,7 +230,7 @@ void GameScene::renderOutput()
             tile.graphicComponent,
             camera_,
             textures_,
-            debugMode_());
+            cheatMode_());
     }
 
     // Object layer
@@ -231,7 +239,7 @@ void GameScene::renderOutput()
         hero.graphicComponent,
         camera_,
         textures_,
-        debugMode_());
+        cheatMode_());
 
     // UI layer
     Render::update(
@@ -239,7 +247,7 @@ void GameScene::renderOutput()
         cursor_.graphicComponent,
         camera_,
         textures_,
-        debugMode_());
+        cheatMode_());
 
     EndMode2D();
 
@@ -294,6 +302,10 @@ void GameScene::renderOutput()
          PanelMap::setup().bottom() + 1},
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
+
+    std::cout
+        << "c offset: " << camera_.offset.x << ", " << camera_.offset.y << "\n"
+        << "c target: " << camera_.target.x << ", " << camera_.target.y << "\n";
 }
 
 void GameScene::postOutput()

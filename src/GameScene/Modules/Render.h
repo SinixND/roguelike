@@ -13,7 +13,7 @@ namespace Render
         GraphicComponent graphic,
         Camera2D const& camera,
         Textures& gameTextures,
-        bool debugMode,
+        bool cheatMode,
         VisibilityID visibilityID = VisibilityID::VISIBLE);
 }
 

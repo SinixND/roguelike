@@ -11,44 +11,49 @@
 
 namespace CameraControl
 {
-    namespace
+    void setPanDirection(Vector2I& panDirection, Vector2 screenCursor, RectangleEx edgePanRectangle)
     {
-        void setPanDirection(Vector2I& panDirection, Vector2 screenCursor, RectangleEx edgePanRectangle)
+        if (screenCursor.x < edgePanRectangle.left())
         {
-            if (screenCursor.x < edgePanRectangle.left())
-            {
-                panDirection += Directions::V_LEFT;
-            }
-            else if (screenCursor.x > (edgePanRectangle.right()))
-            {
-                panDirection += Directions::V_RIGHT;
-            }
-
-            if (screenCursor.y < edgePanRectangle.top())
-            {
-                panDirection += Directions::V_UP;
-            }
-            else if (screenCursor.y > (edgePanRectangle.bottom()))
-            {
-                panDirection += Directions::V_DOWN;
-            }
+            panDirection += Directions::V_LEFT;
+        }
+        else if (screenCursor.x > (edgePanRectangle.right()))
+        {
+            panDirection += Directions::V_RIGHT;
         }
 
-        bool isPanValid(RectangleEx const& renderRectangle, Camera2D const& camera, Vector2I const& panDirection, RectangleExI const& mapRectangle)
+        if (screenCursor.y < edgePanRectangle.top())
         {
-            Vector2I renderCenter{
-                TileTransformation::screenToPosition(
-                    Vector2{
-                        renderRectangle.left() + (renderRectangle.width() / 2),
-                        renderRectangle.top() + (renderRectangle.height() / 2)},
-                    camera)};
-
-            return CheckCollisionPointRectangleEx(
-                Vector2Add(
-                    renderCenter,
-                    panDirection),
-                mapRectangle);
+            panDirection += Directions::V_UP;
         }
+        else if (screenCursor.y > (edgePanRectangle.bottom()))
+        {
+            panDirection += Directions::V_DOWN;
+        }
+    }
+
+    bool isPanValid(RectangleEx const& renderRectangle, Camera2D const& camera, Vector2I& panDirection, RectangleExI const& mapRectangle)
+    {
+        Vector2I renderCenter{TileTransformation::screenToPosition(
+            Vector2{renderRectangle.left() + (renderRectangle.width() / 2), renderRectangle.top() + (renderRectangle.height() / 2)},
+            camera)};
+
+        // Check x and y directions individually to enable half-valid pans
+        if (!CheckCollisionPointRectangleEx(
+                Vector2Add(renderCenter, Vector2I{panDirection.x, 0}),
+                mapRectangle))
+        {
+            panDirection.x = 0;
+        }
+
+        if (!CheckCollisionPointRectangleEx(
+                Vector2Add(renderCenter, Vector2I{0, panDirection.y}),
+                mapRectangle))
+        {
+            panDirection.y = 0;
+        }
+
+        return Vector2Sum(panDirection);
     }
 
     // Trigger if cursor is outside of edge pan deadzone
@@ -63,12 +68,8 @@ namespace CameraControl
         RectangleEx renderRectangle{PanelMap::setup()};
 
         RectangleEx edgePanDeadzone{
-            Vector2AddValue(
-                renderRectangle.topLeft(),
-                EDGE_PAN_TRIGGER_WIDTH),
-            Vector2SubtractValue(
-                renderRectangle.bottomRight(),
-                EDGE_PAN_TRIGGER_WIDTH)};
+            Vector2AddValue(renderRectangle.topLeft(), EDGE_PAN_TRIGGER_WIDTH),
+            Vector2SubtractValue(renderRectangle.bottomRight(), EDGE_PAN_TRIGGER_WIDTH)};
 
         // Return if cursor is inside edge pan deadzone (not triggering)
         if (CheckCollisionPointRec(screenCursor, edgePanDeadzone))
@@ -85,8 +86,8 @@ namespace CameraControl
         // Reset frame dt (only relevant if mouse contolled)
         dt = 0;
 
-        // Adjust cursor position relative to edge pan deadzone while avoiding to pan too far
-        // Determine pan direction
+        // Adjust cursor position relative to edge pan deadzone while avoiding to pan
+        // too far Determine pan direction
         Vector2I panDirection{Directions::V_NODIR};
         setPanDirection(panDirection, screenCursor, edgePanDeadzone);
 

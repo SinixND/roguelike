@@ -1,9 +1,9 @@
 #ifndef IG20231203204746
 #define IG20231203204746
 
+#include "CheatMode.h"
 #include "Components/Attack.h"
 #include "Components/Movement.h"
-#include "DebugMode.h"
 #include "Directions.h"
 #include "Enums/VisibilityID.h"
 #include "GameFont.h"
@@ -24,7 +24,7 @@
 class GameScene : public snx::IScene
 {
 private:
-    DebugMode debugMode_{};
+    CheatMode cheatMode_{};
 
     Camera2D camera_{
         Vector2Scale(GetDisplaySize(), 0.5f),

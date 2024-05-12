@@ -1,6 +1,5 @@
 # ROGUELIKE
-A roguelike with movement inspired by 'Fire Emblem'.
-Made with raylib.
+A roguelike made with raylib.
 Platforms: Linux, Windows, Browser
 
 # REQUIREMENTS
@@ -11,19 +10,16 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
-- [ ] Check function design
+- [ ] Redesign to usual rogue controls (remove fire emblem like controls)
 
 
 # Shortterm
-- [ ] Redesign to usual rogue controls (remove fire emblem like controls)
 - [ ] Check for triggered functions -> pub-sub functor
-- [ ] Consider refactoring constexpr (compile time const) (wherever possible! eg. getter/setter?)
 - [ ] Refactor classes to DOD (if object count > 1)
     - For DOD: Class/Object owns component-container (SparseSet for individual access)
     - For OOP: Object owns individual component
         - Prefer NMNF function [Nmsp::f(C& o)] over member functions [o.f()]
         - Choose closest scope parameter that contains all information needed (member > object)
-- [ ] Check movement functions in regards to game phases
 - [ ] Map change
   - [ ] Trigger non-input by event system (pub-sub / observer pattern)
   - [ ] Print the action in log panel
@@ -70,7 +66,7 @@ Platforms: Linux, Windows, Browser
 | L_SHIFT                           | Fast cursor movment |
 | CTRL + 0 (both numpad and normal) | Reset Zoom          |
 | ESCAPE / CAPS_LOCK                | Deselect            |
-| F1                                | Toggle debug mode   |
+| F1                                | Toggle cheat mode   |
 | F4                                | Exit                |
 | F11                               | Maximize window     |
 | H                                 | Center on hero      |
@@ -192,3 +188,5 @@ int main(){
 - [x] Print tile info in panel
 - [x] Refactor classes to emphasize NMNF (nonmember, nonfriend) functions
 - [x] Change 'emscripten_set_main_loop()' to 'emscripten_set_main_loop_arg()'
+- [x] Check function design (split long ones)
+- [ ] Check movement functions in regards to game phases (obsolete after movement system change)
