@@ -1,4 +1,3 @@
-#include "ActiveScene.h"
 #include "FontProperties.h"
 #include "GameScene.h"
 #include "IScene.h"
@@ -15,10 +14,40 @@
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
-
 #endif
 
-void applicationLoop(); // must not have parameters for emscripten compatibility
+#ifdef __EMSCRIPTEN__
+// Emscripten compatible app loop
+//=====================================
+struct emscriptenArgs
+{
+    snx::IScene* activeScene;
+};
+
+void applicationLoop(void* arg_)
+{
+    emscriptenArgs* arg = (emscriptenArgs*)arg_;
+
+    arg->activeScene->update();
+}
+//=====================================
+#endif
+
+void toggleFullscreen()
+{
+    if (IsKeyPressed(KEY_F11))
+    {
+        if (IsWindowMaximized())
+        {
+            RestoreWindow();
+        }
+        else
+        {
+            MaximizeWindow();
+        }
+    }
+}
+
 int main(/* int argc, char **argv */)
 {
     // Setup the window
@@ -52,73 +81,38 @@ int main(/* int argc, char **argv */)
     // Application initialization
     //=================================
 
-    // Define scenes
-    GameScene game{};
+    // Setup scenes
+    GameScene gameScene{};
 
     // Set default scene
-    ActiveScene activeScene{game};
+    snx::IScene* activeScene{&gameScene};
+
+    // Set emscripten argument
+#ifdef __EMSCRIPTEN__
+    emscriptenArgs arg{activeScene};
+#endif
     //=================================
 
     // Main app loop
     //=================================
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(applicationLoop, FPS_TARGET, 1);
+    emscripten_set_main_loop_arg(applicationLoop, &arg, 0, 1);
 #else
     while (!(WindowShouldClose()))
     {
-        // Call update function for emscripten compatibility
-        applicationLoop();
-    }
+        // Toggle fullscreen
+        toggleFullscreen();
 
+        activeScene->update();
+    }
 #endif
     //=================================
 
     // De-initialization
     //=================================
-    game.deinitialize();
+    gameScene.deinitialize();
     CloseWindow(); // Close window and opengl context
     //=================================
 
     return 0;
-}
-
-void updateActiveScene(snx::IScene* activeScene);
-
-void toggleFullscreen();
-void applicationLoop()
-{
-    // Define scenes
-    static GameScene game{};
-
-    // Set default scene
-    static ActiveScene activeScene{game};
-
-#ifndef __EMSCRIPTEN__
-    // Toggle fullscreen
-    //=================================
-    toggleFullscreen();
-    //=================================
-#endif
-
-    updateActiveScene(activeScene());
-}
-
-void updateActiveScene(snx::IScene* activeScene)
-{
-    activeScene->update();
-}
-
-void toggleFullscreen()
-{
-    if (IsKeyPressed(KEY_F11))
-    {
-        if (IsWindowMaximized())
-        {
-            RestoreWindow();
-        }
-        else
-        {
-            MaximizeWindow();
-        }
-    }
 }

@@ -15,6 +15,7 @@ Platforms: Linux, Windows, Browser
 
 
 # Shortterm
+- [ ] Redesign to usual rogue controls (remove fire emblem like controls)
 - [ ] Check for triggered functions -> pub-sub functor
 - [ ] Consider refactoring constexpr (compile time const) (wherever possible! eg. getter/setter?)
 - [ ] Refactor classes to DOD (if object count > 1)
@@ -31,6 +32,7 @@ Platforms: Linux, Windows, Browser
 
 
 # Longterm 
+- [ ] Camera grip
 - [ ] Indicate select option (different cursor color on hover?)
 - [ ] (Hold) KEY to show map overview
 - [ ] Add touch support
@@ -189,3 +191,4 @@ int main(){
 - [x] Refactor using spritesheet
 - [x] Print tile info in panel
 - [x] Refactor classes to emphasize NMNF (nonmember, nonfriend) functions
+- [x] Change 'emscripten_set_main_loop()' to 'emscripten_set_main_loop_arg()'
