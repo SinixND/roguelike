@@ -24,7 +24,7 @@ namespace Vision
         }
     }
 
-    [[maybe_unused]] void addRayTargetsAtVisionRange(std::vector<Vector2I>& rayTargets, Unit& unit)
+    [[maybe_unused]] void addRayTargetsAtVisionRange(std::vector<Vector2I>& rayTargets, Unit const& unit)
     {
         Vector2I origin{unit.positionComponent.tilePosition()};
         int visionRange{unit.visionRange()};
@@ -91,7 +91,7 @@ namespace Vision
     }
 
     // Add all within vision range
-    [[maybe_unused]] void addRayTargetsWithinRange(std::vector<Vector2I>& rayTargets, Unit& unit, TileMap& tileMap)
+    [[maybe_unused]] void addRayTargetsWithinRange(std::vector<Vector2I>& rayTargets, Unit const& unit, TileMap& tileMap)
     {
         // Add all positions within vision range + 1
         for (auto& tile : TileMapFilters::filterInRange(tileMap, unit.visionRange(), unit.positionComponent.tilePosition()))
@@ -100,7 +100,7 @@ namespace Vision
         }
     }
 
-    void update(Unit& unit, TileMap& tileMap)
+    void update(Unit const& unit, TileMap& tileMap)
     {
         // Filter tiles
         auto tilesInExtendedVisionRange{

@@ -61,11 +61,11 @@ namespace TileMapFilters
     }
 
     // Returns all positions
-    std::vector<Tile*> filterAllPositions(TileMap& tileMap)
+    std::vector<Tile*> filterAllPositions(TileMap* tileMap)
     {
         std::vector<Tile*> tiles{};
 
-        for (auto& tile : tileMap.values())
+        for (auto& tile : tileMap->values())
         {
             tiles.push_back(&tile);
         }
@@ -190,7 +190,7 @@ namespace TileMapFilters
         int rangeEnd,
         Vector2I origin)
     {
-        return filterInRange(filterAllPositions(tileMap), rangeStart, rangeEnd, origin);
+        return filterInRange(filterAllPositions(&tileMap), rangeStart, rangeEnd, origin);
     }
 
     std::vector<Tile*> filterInRange(

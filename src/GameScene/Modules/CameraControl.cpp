@@ -1,7 +1,6 @@
 #include "CameraControl.h"
 
 #include "Directions.h"
-#include "Panels.h"
 #include "TextureData.h"
 #include "TileTransformation.h"
 #include "Unit.h"
@@ -11,28 +10,28 @@
 
 namespace CameraControl
 {
-    void setPanDirection(Vector2I& panDirection, Vector2 screenCursor, RectangleEx edgePanRectangle)
+    void setPanDirection(Vector2I* panDirection, Vector2 screenCursor, RectangleEx edgePanRectangle)
     {
         if (screenCursor.x < edgePanRectangle.left())
         {
-            panDirection += Directions::V_LEFT;
+            *panDirection += Directions::V_LEFT;
         }
         else if (screenCursor.x > (edgePanRectangle.right()))
         {
-            panDirection += Directions::V_RIGHT;
+            *panDirection += Directions::V_RIGHT;
         }
 
         if (screenCursor.y < edgePanRectangle.top())
         {
-            panDirection += Directions::V_UP;
+            *panDirection += Directions::V_UP;
         }
         else if (screenCursor.y > (edgePanRectangle.bottom()))
         {
-            panDirection += Directions::V_DOWN;
+            *panDirection += Directions::V_DOWN;
         }
     }
 
-    bool isPanValid(RectangleEx const& renderRectangle, Camera2D const& camera, Vector2I& panDirection, RectangleExI const& mapRectangle)
+    bool isPanValid(RectangleEx const& renderRectangle, Camera2D const& camera, Vector2I* panDirection, RectangleExI const& mapRectangle)
     {
         Vector2I renderCenter{TileTransformation::screenToPosition(
             Vector2{renderRectangle.left() + (renderRectangle.width() / 2), renderRectangle.top() + (renderRectangle.height() / 2)},
@@ -40,29 +39,29 @@ namespace CameraControl
 
         // Check x and y directions individually to enable half-valid pans
         if (!CheckCollisionPointRectangleEx(
-                Vector2Add(renderCenter, Vector2I{panDirection.x, 0}),
+                Vector2Add(renderCenter, Vector2I{panDirection->x, 0}),
                 mapRectangle))
         {
-            panDirection.x = 0;
+            panDirection->x = 0;
         }
 
         if (!CheckCollisionPointRectangleEx(
-                Vector2Add(renderCenter, Vector2I{0, panDirection.y}),
+                Vector2Add(renderCenter, Vector2I{0, panDirection->y}),
                 mapRectangle))
         {
-            panDirection.y = 0;
+            panDirection->y = 0;
         }
 
-        return Vector2Sum(panDirection);
+        return Vector2Sum(*panDirection);
     }
 
     // Trigger if cursor is outside of edge pan deadzone
-    void edgePan(Camera2D& camera, Vector2 cursorWorldPosition, bool isMouseControlled, RectangleExI const& mapArea, RectangleEx const& panelMap)
+    void edgePan(Camera2D* camera, Vector2 cursorWorldPosition, bool isMouseControlled, RectangleExI const& mapArea, RectangleEx const& panelMap)
     {
         static float dt{};
         dt += GetFrameTime();
 
-        Vector2 screenCursor{GetWorldToScreen2D(cursorWorldPosition, camera)};
+        Vector2 screenCursor{GetWorldToScreen2D(cursorWorldPosition, *camera)};
 
         // Calculate edge pan deadzone (not triggered within)
         RectangleEx edgePanDeadzone{
@@ -87,20 +86,20 @@ namespace CameraControl
         // Adjust cursor position relative to edge pan deadzone while avoiding to pan
         // too far Determine pan direction
         Vector2I panDirection{Directions::V_NODIR};
-        setPanDirection(panDirection, screenCursor, edgePanDeadzone);
+        setPanDirection(&panDirection, screenCursor, edgePanDeadzone);
 
         // Check if center of render area stays on map
-        if (!isPanValid(panelMap, camera, panDirection, mapArea))
+        if (!isPanValid(panelMap, *camera, &panDirection, mapArea))
         {
             return;
         }
 
         // Update camera
-        camera.target += Vector2Scale(panDirection, TextureData::TILE_SIZE);
+        camera->target += Vector2Scale(panDirection, TextureData::TILE_SIZE);
     }
 
-    void centerOnHero(Camera2D& camera, Unit& unit)
+    void centerOnHero(Camera2D* camera, Unit const& unit)
     {
-        camera.target = unit.positionComponent.renderPosition();
+        camera->target = unit.positionComponent.renderPosition();
     }
 }

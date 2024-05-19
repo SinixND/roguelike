@@ -15,16 +15,16 @@
 
 namespace RayCast
 {
-    void ensureNonZeroValues(Vector2& directionTransformed)
+    void ensureNonZeroValues(Vector2* directionTransformed)
     {
-        if (abs(directionTransformed.x) < EPSILON)
+        if (abs(directionTransformed->x) < EPSILON)
         {
-            directionTransformed.x = EPSILON;
+            directionTransformed->x = EPSILON;
         }
 
-        if (abs(directionTransformed.y) < EPSILON)
+        if (abs(directionTransformed->y) < EPSILON)
         {
-            directionTransformed.y = (EPSILON);
+            directionTransformed->y = (EPSILON);
         }
     }
 
@@ -216,7 +216,7 @@ namespace RayCast
 
             // Prevent division by 0: if < precision then set to precision
             // Introduces a small amount of error, but should be insignificant
-            ensureNonZeroValues(rayDirectionTransformed);
+            ensureNonZeroValues(&rayDirectionTransformed);
 
             // Normalize transformed rayDirection to relative unit (= rayIncrements)
             Vector2 const rayLengthIncrementsInDirection{

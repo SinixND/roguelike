@@ -6,7 +6,7 @@
 
 namespace Vision
 {
-    void update(Unit& unit, TileMap& tiles);
+    void update(Unit const& unit, TileMap& tiles);
 }
 
 #endif

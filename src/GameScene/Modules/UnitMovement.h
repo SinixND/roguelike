@@ -10,9 +10,9 @@
 
 namespace UnitMovement
 {
-    void setTarget(World& gameWorld, Unit& unit, PositionComponent& cursorPosition);
-    void triggerMovement(MovementComponent& movementComponent, Path& path, bool& isInputBlocked);
-    void processMovement(Unit& unit, bool& isInputBlocked);
+    void setTarget(World& gameWorld, Unit* unit, PositionComponent const& cursorPosition);
+    void triggerMovement(MovementComponent* movementComponent, Path const& path, bool& isInputBlocked);
+    void processMovement(Unit* unit, bool& isInputBlocked);
 }
 
 #endif

@@ -19,15 +19,15 @@
 
 namespace MapGenerator
 {
-    void addTile(TileMap& tileMap, std::string tag, Vector2I const& position, GraphicComponent graphic, VisibilityID visibility, MapSize& mapSize, bool isSolid, bool blocksVision)
+    void addTile(TileMap* tileMap, std::string tag, Vector2I const& position, GraphicComponent graphic, VisibilityID visibility, MapSize* mapSize, bool isSolid, bool blocksVision)
     {
-        tileMap.createOrUpdate(position, Tile{tag, PositionComponent{position}, graphic, visibility, isSolid, blocksVision});
+        tileMap->createOrUpdate(position, Tile{tag, PositionComponent{position}, graphic, visibility, isSolid, blocksVision});
 
         // Update global available map dimensions
-        mapSize.extend(position);
+        mapSize->extend(position);
     }
 
-    void addTiles(TileMap& tileMap, std::string tag, RectangleExI const& rectangle, GraphicComponent graphic, VisibilityID visibility, MapSize& mapSize, bool isSolid, bool blocksVision)
+    void addTiles(TileMap* tileMap, std::string tag, RectangleExI const& rectangle, GraphicComponent graphic, VisibilityID visibility, MapSize* mapSize, bool isSolid, bool blocksVision)
     {
         for (int x{0}; x < rectangle.width; ++x)
         {
@@ -47,19 +47,19 @@ namespace MapGenerator
         }
 
         // Top wall
-        addTiles(tileMap, "Wall", RectangleExI{room.left, room.top, room.width - 1, 1}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, mapSize, true, true);
+        addTiles(&tileMap, "Wall", RectangleExI{room.left, room.top, room.width - 1, 1}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, &mapSize, true, true);
 
         // Right wall
-        addTiles(tileMap, "Wall", RectangleExI{room.right, room.top, 1, room.height - 1}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, mapSize, true, true);
+        addTiles(&tileMap, "Wall", RectangleExI{room.right, room.top, 1, room.height - 1}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, &mapSize, true, true);
 
         // Bottom wall
-        addTiles(tileMap, "Wall", RectangleExI{room.left + 1, room.bottom, room.width - 1, 1}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, mapSize, true, true);
+        addTiles(&tileMap, "Wall", RectangleExI{room.left + 1, room.bottom, room.width - 1, 1}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, &mapSize, true, true);
 
         // Left wall
-        addTiles(tileMap, "Wall", RectangleExI{room.left, room.top + 1, 1, room.height - 1}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, mapSize, true, true);
+        addTiles(&tileMap, "Wall", RectangleExI{room.left, room.top + 1, 1, room.height - 1}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, &mapSize, true, true);
 
         // Floor
-        addTiles(tileMap, "Floor", RectangleExI{room.left + 1, room.top + 1, room.width - 2, room.height - 2}, GraphicComponent{RenderID::FLOOR, LayerID::MAP}, VisibilityID::UNSEEN, mapSize, false, false);
+        addTiles(&tileMap, "Floor", RectangleExI{room.left + 1, room.top + 1, room.width - 2, room.height - 2}, GraphicComponent{RenderID::FLOOR, LayerID::MAP}, VisibilityID::UNSEEN, &mapSize, false, false);
     }
 
     void createGridRooms(TileMap& tileMap, int level, MapSize& mapSize)
@@ -101,7 +101,7 @@ namespace MapGenerator
             }
 
             // Add connection gap in wall between old and new room
-            addTiles(tileMap, "Floor", RectangleExI{oldRoomPosition, roomPosition}, GraphicComponent{RenderID::FLOOR, LayerID::MAP}, VisibilityID::UNSEEN, mapSize, false, false);
+            addTiles(&tileMap, "Floor", RectangleExI{oldRoomPosition, roomPosition}, GraphicComponent{RenderID::FLOOR, LayerID::MAP}, VisibilityID::UNSEEN, &mapSize, false, false);
         }
     }
 
@@ -112,14 +112,14 @@ namespace MapGenerator
         addRoom(startRoom, RectangleExI{Vector2I{0, 0}, 15, 15}, mapSize);
 
         // Add walls
-        addTiles(startRoom, "Wall", RectangleExI{-1, 2, 3, 1}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, mapSize, true, true);
+        addTiles(&startRoom, "Wall", RectangleExI{-1, 2, 3, 1}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, &mapSize, true, true);
 
-        addTiles(startRoom, "Wall", RectangleExI{-2, 0, 1, 2}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, mapSize, true, true);
+        addTiles(&startRoom, "Wall", RectangleExI{-2, 0, 1, 2}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, &mapSize, true, true);
 
-        addTiles(startRoom, "Wall", RectangleExI{2, 0, 1, 2}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, mapSize, true, true);
+        addTiles(&startRoom, "Wall", RectangleExI{2, 0, 1, 2}, GraphicComponent{RenderID::WALL, LayerID::MAP}, VisibilityID::UNSEEN, &mapSize, true, true);
 
         // Add next level trigger
-        addTile(startRoom, "Stairs", Vector2I{0, -5}, GraphicComponent{RenderID::NEXT_LEVEL, LayerID::MAP}, VisibilityID::UNSEEN, mapSize, false, false);
+        addTile(&startRoom, "Stairs", Vector2I{0, -5}, GraphicComponent{RenderID::NEXT_LEVEL, LayerID::MAP}, VisibilityID::UNSEEN, &mapSize, false, false);
 
         return startRoom;
     }

@@ -11,14 +11,14 @@
 
 namespace UnitMovement
 {
-    void setTarget(World& gameWorld, Unit& unit, PositionComponent& cursorPosition)
+    void setTarget(World& gameWorld, Unit* unit, PositionComponent const& cursorPosition)
     {
         // Check if target is valid
         if (
             gameWorld.mapOverlay().contains(cursorPosition.tilePosition())
             && !Vector2Equals(
                 cursorPosition.tilePosition(),
-                unit.positionComponent.tilePosition()))
+                unit->positionComponent.tilePosition()))
         {
             if (gameWorld.mapOverlay().at(cursorPosition.tilePosition())->graphicComponent.renderID() != RenderID::REACHABLE)
             {
@@ -26,41 +26,41 @@ namespace UnitMovement
             }
 
             // Set movement target
-            unit.movementComponent.setTarget(cursorPosition.tilePosition());
+            unit->movementComponent.setTarget(cursorPosition.tilePosition());
         }
     }
 
-    void triggerMovement(MovementComponent& movementComponent, Path& path, bool& isInputBlocked)
+    void triggerMovement(MovementComponent* movementComponent, Path const& path, bool& isInputBlocked)
     {
         // If target is set but not yet moving
-        if (movementComponent.isTargetSet() && !movementComponent.isMoving())
+        if (movementComponent->isTargetSet() && !movementComponent->isMoving())
         {
             // Reset (doesnt interrupt movement)
-            movementComponent.unsetTarget();
+            movementComponent->unsetTarget();
 
             // Setting path triggers movment
-            movementComponent.setPath(path);
+            movementComponent->setPath(path);
 
             isInputBlocked = true;
         }
     }
 
-    void processMovement(Unit& unit, bool& isInputBlocked)
+    void processMovement(Unit* unit, bool& isInputBlocked)
     {
         bool isTargetReached{false};
-        if (unit.movementComponent.isMoving())
+        if (unit->movementComponent.isMoving())
         {
             // Move unit
             isTargetReached = Movement::moveAlongPath(
-                unit.positionComponent,
-                unit.movementComponent,
+                unit->positionComponent,
+                unit->movementComponent,
                 GetFrameTime());
         }
 
         if (isTargetReached)
         {
             //* gamePhase = GamePhase::actionPhase;
-            unit.setIsSelected(false);
+            unit->setIsSelected(false);
             isInputBlocked = false;
         }
     }

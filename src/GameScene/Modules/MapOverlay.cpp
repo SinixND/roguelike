@@ -17,7 +17,7 @@ namespace MapOverlay
 {
     static Path path_{};
 
-    Path& showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World& world)
+    Path& showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World* world)
     {
         static Vector2I origin{};
         static Vector2I target{};
@@ -33,7 +33,7 @@ namespace MapOverlay
             target = cursorPosition;
 
             path = findPath(
-                world.currentMap(),
+                world->currentMap(),
                 unitPosition,
                 cursorPosition,
                 unitRange);
@@ -41,7 +41,7 @@ namespace MapOverlay
 
         for (auto& steppedTile : path)
         {
-            world.framedMapOverlay().createOrUpdate(
+            world->framedMapOverlay().createOrUpdate(
                 steppedTile.tile->positionComponent.tilePosition(),
                 GameObject{
                     PositionComponent{steppedTile.tile->positionComponent.tilePosition()},
@@ -53,18 +53,18 @@ namespace MapOverlay
         return path;
     }
 
-    void showUnitMoveRange(Unit& unit, World& world)
+    void showUnitMoveRange(Unit const& unit, World* world)
     {
         // Filter relevant tiles
         for (auto& steppedTiles : TileMapFilters::filterMovableSorted(
-                 world.currentMap(),
+                 world->currentMap(),
                  unit.movementComponent.range(),
                  unit.positionComponent.tilePosition()))
         {
             for (auto& steppedTile : steppedTiles)
             {
                 // Add reachable tile to overlay
-                world.mapOverlay().createOrUpdate(
+                world->mapOverlay().createOrUpdate(
                     steppedTile.tile->positionComponent.tilePosition(),
                     GameObject{
                         PositionComponent{steppedTile.tile->positionComponent.tilePosition()},
@@ -75,11 +75,11 @@ namespace MapOverlay
         }
     }
 
-    void showUnitActionRange(Unit& unit, World& world)
+    void showUnitActionRange(Unit const& unit, World* world)
     {
         // Filter relevant tiles
         auto inActionRangeTiles{TileMapFilters::filterInActionRange(
-            world.currentMap(),
+            world->currentMap(),
             unit.attackComponent.range(),
             unit.movementComponent.range(),
             unit.positionComponent.tilePosition())};
@@ -87,7 +87,7 @@ namespace MapOverlay
         for (auto& tile : inActionRangeTiles)
         {
             // Add reachable tile to overlay
-            world.mapOverlay().createOrUpdate(
+            world->mapOverlay().createOrUpdate(
                 tile->positionComponent.tilePosition(),
                 GameObject{
                     PositionComponent{tile->positionComponent.tilePosition()},
@@ -97,7 +97,7 @@ namespace MapOverlay
         }
     }
 
-    void update(Unit& hero, World& gameWorld, GameObject& cursor)
+    void update(Unit const& hero, World* gameWorld, GameObject const& cursor)
     {
         static bool isRangeShown{false};
 
@@ -128,14 +128,14 @@ namespace MapOverlay
         {
             if (isRangeShown)
             {
-                gameWorld.mapOverlay().clear();
+                gameWorld->mapOverlay().clear();
 
                 isRangeShown = false;
             }
         }
     }
 
-    Path& path()
+    Path const& path()
     {
         return path_;
     }

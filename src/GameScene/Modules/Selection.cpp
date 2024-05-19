@@ -6,17 +6,17 @@
 
 namespace Selection
 {
-    void select(Unit& unit, Vector2I cursorPosition)
+    void select(Unit* unit, Vector2I cursorPosition)
     {
-        if (unit.positionComponent.tilePosition() == cursorPosition)
+        if (unit->positionComponent.tilePosition() == cursorPosition)
         {
             // Toggle isSelected
-            unit.setIsSelected(!unit.isSelected());
+            unit->setIsSelected(!unit->isSelected());
         }
     }
 
-    void deselect(Unit& unit)
+    void deselect(Unit* unit)
     {
-        unit.setIsSelected(false);
+        unit->setIsSelected(false);
     }
 }

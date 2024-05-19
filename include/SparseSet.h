@@ -16,7 +16,7 @@ namespace snx
     public:
         virtual void erase(Key const& key) = 0;
         virtual void clear() = 0;
-        virtual bool contains(Key const& key) = 0;
+        virtual bool contains(Key const& key) const = 0;
         virtual std::vector<Key> keys() = 0;
         virtual ~ISparseSet() = default;
     };
@@ -106,7 +106,7 @@ namespace snx
             keys_.clear();
         }
 
-        bool contains(Key const& key) override
+        bool contains(Key const& key) const override
         {
             return keys_.contains(key);
         }

@@ -2,7 +2,6 @@
 
 #include "CameraControl.h"
 #include "Directions.h"
-#include "Panels.h"
 #include "Position.h"
 #include "TileTransformation.h"
 #include "Timer.h"
@@ -25,13 +24,13 @@ namespace CursorControl
             cursorPosition.y + (direction.y * boostFactor)};
     }
 
-    bool cursorWouldGoOutOfScreen(Vector2I& newCursorPosition, PositionComponent const& cursorPosition, Vector2I const& dir, int& factor, Camera2D const& camera, RectangleEx const& panelMap)
+    bool cursorWouldGoOutOfScreen(Vector2I* newCursorPosition, PositionComponent const& cursorPosition, Vector2I const& dir, int& factor, Camera2D const& camera, RectangleEx const& panelMap)
     {
         // If new position were out of screen with potential boost applied
         Rectangle renderRectangle{panelMap.rectangle()};
 
         if (isOutOfRectangle(
-                newCursorPosition,
+                *newCursorPosition,
                 renderRectangle,
                 camera))
         {
@@ -45,14 +44,14 @@ namespace CursorControl
             factor = 1;
 
             // Remove boost from cursor position
-            newCursorPosition = getNewCursorPosition(
+            *newCursorPosition = getNewCursorPosition(
                 cursorPosition.tilePosition(),
                 dir,
                 factor);
 
             // If still out of render rectangle
             if (isOutOfRectangle(
-                    newCursorPosition,
+                    *newCursorPosition,
                     renderRectangle,
                     camera))
             {
@@ -63,7 +62,7 @@ namespace CursorControl
         return false;
     }
 
-    void setDirection(Vector2I& dir, int const& key, int const& keyPressed, snx::Timer& timer, snx::Timer& delay)
+    void setDirection(Vector2I* dir, int const& key, int const& keyPressed, snx::Timer& timer, snx::Timer& delay)
     {
         switch (key)
         {
@@ -72,7 +71,7 @@ namespace CursorControl
         {
             if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
             {
-                dir = Directions::V_UP;
+                *dir = Directions::V_UP;
             }
         }
         break;
@@ -82,7 +81,7 @@ namespace CursorControl
         {
             if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
             {
-                dir = Directions::V_LEFT;
+                *dir = Directions::V_LEFT;
             }
         }
         break;
@@ -92,7 +91,7 @@ namespace CursorControl
         {
             if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
             {
-                dir = Directions::V_DOWN;
+                *dir = Directions::V_DOWN;
             }
         }
         break;
@@ -102,7 +101,7 @@ namespace CursorControl
         {
             if (keyPressed || (delay.hasDelayPassed(IsKeyDown(key)) && timer.hasTimePassed()))
             {
-                dir = Directions::V_RIGHT;
+                *dir = Directions::V_RIGHT;
             }
         }
         break;
@@ -112,7 +111,7 @@ namespace CursorControl
         }
     }
 
-    void processKeyControl(PositionComponent& cursorPosition, Camera2D const& camera, RectangleEx const& panelMap)
+    void processKeyControl(PositionComponent* cursorPosition, Camera2D const& camera, RectangleEx const& panelMap)
     {
         // Store last key
         static int key{};
@@ -129,7 +128,7 @@ namespace CursorControl
         static snx::Timer delay{CURSOR_MOVE_DELAY};
 
         // Set direction
-        setDirection(dir, key, keyPressed, timer, delay);
+        setDirection(&dir, key, keyPressed, timer, delay);
 
         // No boost by default
         int factor{1};
@@ -142,27 +141,27 @@ namespace CursorControl
 
         Vector2I newCursorPosition{
             getNewCursorPosition(
-                cursorPosition.tilePosition(),
+                cursorPosition->tilePosition(),
                 dir,
                 factor)};
 
         // Check if cursor would go out of screen, removes boost if helpful
-        if (cursorWouldGoOutOfScreen(newCursorPosition, cursorPosition, dir, factor, camera, panelMap))
+        if (cursorWouldGoOutOfScreen(&newCursorPosition, *cursorPosition, dir, factor, camera, panelMap))
         {
             return;
         }
 
         // Set verified position
-        cursorPosition.setTilePosition(newCursorPosition);
+        cursorPosition->setTilePosition(newCursorPosition);
     }
 
-    void update(PositionComponent& cursorPosition, Camera2D const& camera, bool isMouseControlled, RectangleEx const& panelMap)
+    void update(PositionComponent* cursorPosition, Camera2D const& camera, bool isMouseControlled, RectangleEx const& panelMap)
     {
         // Cursor control
         if (isMouseControlled)
         {
             // Mouse controlled cursor
-            cursorPosition.setTilePosition(TileTransformation::getMouseTile(camera));
+            cursorPosition->setTilePosition(TileTransformation::getMouseTile(camera));
         }
         else
         {

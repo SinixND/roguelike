@@ -8,8 +8,8 @@
 
 namespace MapOverlay
 {
-    void update(Unit& hero, World& gameWorld, GameObject& cursor);
-    Path& path();
+    void update(Unit const& hero, World* gameWorld, GameObject const& cursor);
+    Path const& path();
 }
 
 #endif

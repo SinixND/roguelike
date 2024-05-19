@@ -18,9 +18,9 @@ RectangleEx PanelTileInfo::setup()
     return rect;
 }
 
-void PanelTileInfo::render(TileMap& tileMap, Vector2I cursorPosition, Font const& font)
+void PanelTileInfo::render(TileMap* tileMap, Vector2I cursorPosition, Font const& font)
 {
-    Tile* tile{tileMap.at(cursorPosition)};
+    Tile* tile{tileMap->at(cursorPosition)};
 
     if (!tile)
     {

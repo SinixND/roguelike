@@ -4,7 +4,7 @@
 
 namespace Zoom
 {
-    void update(float wheel, Camera2D& camera)
+    void update(float wheel, Camera2D* camera)
     {
         // camera.zoom += (wheel * ZOOM_STEP); // 0.125F
 
@@ -17,32 +17,32 @@ namespace Zoom
         // Zoom in
         if (wheel > 0)
         {
-            if (camera.zoom < ZOOM_DEFAULT)
+            if (camera->zoom < ZOOM_DEFAULT)
             {
-                camera.zoom = ZOOM_DEFAULT;
+                camera->zoom = ZOOM_DEFAULT;
             }
             else
             {
-                camera.zoom = ZOOM_MAX;
+                camera->zoom = ZOOM_MAX;
             }
         }
 
         // Zoom out
         else
         {
-            if (camera.zoom > ZOOM_DEFAULT)
+            if (camera->zoom > ZOOM_DEFAULT)
             {
-                camera.zoom = ZOOM_DEFAULT;
+                camera->zoom = ZOOM_DEFAULT;
             }
             else
             {
-                camera.zoom = ZOOM_MIN;
+                camera->zoom = ZOOM_MIN;
             }
         }
     }
 
-    void reset(Camera2D& camera)
+    void reset(Camera2D* camera)
     {
-        camera.zoom = 1.0F;
+        camera->zoom = 1.0F;
     }
 }

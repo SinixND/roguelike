@@ -7,14 +7,14 @@
 #include <raylib.h>
 #include <raymath.h>
 
-void updatePath(MovementComponent& movementComponent)
+void updatePath(MovementComponent* movementComponent)
 {
-    movementComponent.popFromPath();
+    movementComponent->popFromPath();
 }
 
-void adjustPosition(PositionComponent& positionComponent, Vector2I const& targetTilePosition)
+void adjustPosition(PositionComponent* positionComponent, Vector2I const& targetTilePosition)
 {
-    positionComponent.setRenderPosition(
+    positionComponent->setRenderPosition(
         TileTransformation::positionToWorld(
             targetTilePosition));
 }
@@ -24,11 +24,11 @@ void resetTileProgress(float& cumulativeTileFraction)
     cumulativeTileFraction = 0;
 }
 
-void updatePosition(PositionComponent& positionComponent, float frameDistance, Vector2I const& directionAccessed)
+void updatePosition(PositionComponent* positionComponent, float frameDistance, Vector2I const& directionAccessed)
 {
-    positionComponent.setRenderPosition(
+    positionComponent->setRenderPosition(
         Vector2Add(
-            positionComponent.renderPosition(),
+            positionComponent->renderPosition(),
             Vector2Scale(
                 directionAccessed,
                 frameDistance)));
@@ -39,6 +39,16 @@ void updateTileFraction(float& cumulativeTileFraction, float frameDistance)
     cumulativeTileFraction += frameDistance;
 }
 
+bool isMovementComplete(MovementComponent* movementComponent)
+{
+    if (movementComponent->path().empty())
+    {
+        movementComponent->setIsMoving(false);
+        return true;
+    }
+
+    return false;
+}
 bool Movement::moveAlongPath(PositionComponent& positionComponent, MovementComponent& movementComponent, float dt)
 {
     // Cumulative fraction of one tile size for smooth path progressing
@@ -52,7 +62,7 @@ bool Movement::moveAlongPath(PositionComponent& positionComponent, MovementCompo
         frameDistance);
 
     updatePosition(
-        positionComponent,
+        &positionComponent,
         frameDistance,
         movementComponent.path().back().directionAccessed);
 
@@ -62,18 +72,12 @@ bool Movement::moveAlongPath(PositionComponent& positionComponent, MovementCompo
         resetTileProgress(cumulativeTileFraction);
 
         adjustPosition(
-            positionComponent,
+            &positionComponent,
             movementComponent.path().back().tile->positionComponent.tilePosition());
 
-        updatePath(movementComponent);
+        updatePath(&movementComponent);
     }
 
     // If target reached
-    if (movementComponent.path().empty())
-    {
-        movementComponent.setIsMoving(false);
-        return true;
-    }
-
-    return false;
+    return isMovementComplete(&movementComponent);
 }

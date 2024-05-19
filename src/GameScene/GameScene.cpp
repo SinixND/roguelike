@@ -112,11 +112,11 @@ void GameScene::processInput()
     }
 
     // Update cursor
-    CursorControl::update(cursor_.positionComponent, camera_, InputMode::isMouseControlled(), panelMap);
+    CursorControl::update(&cursor_.positionComponent, camera_, InputMode::isMouseControlled(), panelMap);
 
     // Process edge pan
     CameraControl::edgePan(
-        camera_,
+        &camera_,
         TileTransformation::positionToWorld(cursor_.positionComponent.tilePosition()),
         InputMode::isMouseControlled(),
         gameWorld_.mapSize_(),
@@ -125,18 +125,18 @@ void GameScene::processInput()
     // Center on hero
     if (IsKeyPressed(KEY_H))
     {
-        CameraControl::centerOnHero(camera_, gameWorld_.hero);
+        CameraControl::centerOnHero(&camera_, gameWorld_.hero);
     }
 
     // Process zoom
-    Zoom::update(GetMouseWheelMove(), camera_);
+    Zoom::update(GetMouseWheelMove(), &camera_);
 
     // Reset Zoom
     if (
         (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL))
         && (IsKeyPressed(KEY_KP_0) || IsKeyPressed(KEY_ZERO)))
     {
-        Zoom::reset(camera_);
+        Zoom::reset(&camera_);
     }
 
     // Branch game phase
@@ -146,7 +146,7 @@ void GameScene::processInput()
         || IsKeyPressed(KEY_SPACE))
     {
         Selection::select(
-            gameWorld_.hero,
+            &gameWorld_.hero,
             cursor_.positionComponent.tilePosition());
     }
 
@@ -154,7 +154,7 @@ void GameScene::processInput()
     if (
         IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_CAPS_LOCK))
     {
-        Selection::deselect(gameWorld_.hero);
+        Selection::deselect(&gameWorld_.hero);
     }
 
     // Set unit movment target
@@ -163,7 +163,7 @@ void GameScene::processInput()
     {
         UnitMovement::setTarget(
             gameWorld_,
-            gameWorld_.hero,
+            &gameWorld_.hero,
             cursor_.positionComponent);
     }
 }
@@ -184,12 +184,12 @@ void GameScene::updateState()
     }
 
     // Update map overlay
-    MapOverlay::update(gameWorld_.hero, gameWorld_, cursor_);
+    MapOverlay::update(gameWorld_.hero, &gameWorld_, cursor_);
 
-    UnitMovement::triggerMovement(gameWorld_.hero.movementComponent, MapOverlay::path(), isInputBlocked_);
+    UnitMovement::triggerMovement(&gameWorld_.hero.movementComponent, MapOverlay::path(), isInputBlocked_);
 
     // Unblock input if target is reached
-    UnitMovement::processMovement(gameWorld_.hero, isInputBlocked_);
+    UnitMovement::processMovement(&gameWorld_.hero, isInputBlocked_);
 
     if (gameWorld_.hero.positionComponent.hasPositionChanged())
     {
@@ -265,7 +265,7 @@ void GameScene::renderOutput()
         gameFont_());
 
     PanelTileInfo::render(
-        gameWorld_.currentMap(),
+        &gameWorld_.currentMap(),
         cursor_.positionComponent.tilePosition(),
         gameFont_());
     //=================================

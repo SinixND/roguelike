@@ -25,7 +25,7 @@ namespace PanelTileInfo
 {
     RectangleEx setup();
 
-    void render(TileMap& tileMap, Vector2I cursorPosition, Font const& font);
+    void render(TileMap* tileMap, Vector2I cursorPosition, Font const& font);
 }
 
 namespace PanelInfo
