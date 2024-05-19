@@ -309,12 +309,12 @@ namespace TileMapFilters
 
                     // Add passable tile to stepped tiles
                     rangeSeparatedTiles[stepLevel].push_back(
-                        SteppedTile(
+                        SteppedTile{
                             *tileSet.at(
                                 nextTilePosition),
                             Vector2Transform(
                                 R,
-                                lastSteppedTile.directionAccessed)));
+                                lastSteppedTile.directionAccessed)});
                 }
             }
 

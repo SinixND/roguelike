@@ -10,6 +10,9 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
+- [ ] Panel setup?
+- [ ] Modified parameters -> pointer
+
 - [ ] Redesign to usual rogue controls (remove fire emblem like controls)
 
 

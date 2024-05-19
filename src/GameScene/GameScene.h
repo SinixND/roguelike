@@ -2,10 +2,7 @@
 #define IG20231203204746
 
 #include "CheatMode.h"
-#include "Components/Attack.h"
-#include "Components/Movement.h"
 #include "Directions.h"
-#include "Enums/VisibilityID.h"
 #include "GameFont.h"
 #include "GameObject.h"
 #include "GamePhase.h"
@@ -15,7 +12,6 @@
 #include "Position.h"
 #include "RenderID.h"
 #include "Textures.h"
-#include "Unit.h"
 #include "World.h"
 #include "raylibEx.h"
 #include <raylib.h>
@@ -24,6 +20,10 @@
 class GameScene : public snx::IScene
 {
 private:
+    const float BORDER_WIDTH{1};
+    const Color BORDER_COLOR{GRAY};
+    const Color BACKGROUND_COLOR{BLACK};
+
     CheatMode cheatMode_{};
 
     Camera2D camera_{
@@ -36,10 +36,6 @@ private:
 
     GameFont gameFont_{};
 
-    const float BORDER_WIDTH{1};
-    const Color BORDER_COLOR{GRAY};
-    const Color BACKGROUND_COLOR{BLACK};
-
     World gameWorld_{};
 
     GameObject cursor_{
@@ -47,18 +43,6 @@ private:
         GraphicComponent(
             RenderID::CURSOR,
             LayerID::UI)};
-
-    Unit hero{
-        PositionComponent(),
-        GraphicComponent(
-            RenderID::HERO,
-            LayerID::OBJECT),
-        MovementComponent(5, 50),
-        VisibilityID::VISIBLE,
-        20,
-        AttackComponent(
-            1,
-            1)};
 
     GamePhase gamePhase_{};
 

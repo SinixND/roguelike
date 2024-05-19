@@ -108,9 +108,26 @@ public:
         return *this;
     }
 
-    Vector2 topLeft() const { return Vector2{left_, top_}; }
+    Vector2 topLeft() const
+    {
+        return Vector2{
+            left_,
+            top_};
+    }
 
-    Vector2 bottomRight() const { return Vector2{right_, bottom_}; }
+    Vector2 bottomRight() const
+    {
+        return Vector2{
+            right_,
+            bottom_};
+    }
+
+    Vector2 center() const
+    {
+        return Vector2{
+            (left_ + (width_ / 2)),
+            (top_ + (height_ / 2))};
+    }
 
     Rectangle rectangle() const
     {

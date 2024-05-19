@@ -16,6 +16,7 @@
 #include "UnitMovement.h"
 #include "Vision.h"
 #include "Zoom.h"
+#include "raylibEx.h"
 #include <iostream>
 #include <raygui.h>
 #include <raylib.h>
@@ -125,7 +126,7 @@ void GameScene::processInput()
     // Center on hero
     if (IsKeyPressed(KEY_H))
     {
-        CameraControl::centerOnHero(camera_, hero);
+        CameraControl::centerOnHero(camera_, gameWorld_.hero);
     }
 
     // Process zoom
@@ -149,7 +150,7 @@ void GameScene::processInput()
             || IsKeyPressed(KEY_SPACE))
         {
             Selection::select(
-                hero,
+                gameWorld_.hero,
                 cursor_.positionComponent.tilePosition());
         }
 
@@ -157,7 +158,7 @@ void GameScene::processInput()
         if (
             IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_CAPS_LOCK))
         {
-            Selection::deselect(hero);
+            Selection::deselect(gameWorld_.hero);
         }
 
         // Set unit movment target
@@ -166,7 +167,7 @@ void GameScene::processInput()
         {
             UnitMovement::setTarget(
                 gameWorld_,
-                hero,
+                gameWorld_.hero,
                 cursor_.positionComponent);
         }
         break;
@@ -181,17 +182,23 @@ void GameScene::processInput()
 
 void GameScene::updateState()
 {
-    // Update map overlay
-    MapOverlay::update(hero, gameWorld_, cursor_);
+    // Update camera offset
+    if (IsWindowResized())
+    {
+        camera_.offset = PanelMap::setup().center();
+    }
 
-    UnitMovement::triggerMovement(hero.movementComponent, MapOverlay::path(), isInputBlocked_);
+    // Update map overlay
+    MapOverlay::update(gameWorld_.hero, gameWorld_, cursor_);
+
+    UnitMovement::triggerMovement(gameWorld_.hero.movementComponent, MapOverlay::path(), isInputBlocked_);
 
     // Unblock input if target is reached
-    UnitMovement::processMovement(hero, isInputBlocked_, gamePhase_);
+    UnitMovement::processMovement(gameWorld_.hero, isInputBlocked_, gamePhase_);
 
-    if (hero.positionComponent.hasPositionChanged())
+    if (gameWorld_.hero.positionComponent.hasPositionChanged())
     {
-        Vision::update(hero, gameWorld_.currentMap());
+        Vision::update(gameWorld_.hero, gameWorld_.currentMap());
     }
 }
 
@@ -235,8 +242,8 @@ void GameScene::renderOutput()
 
     // Object layer
     Render::update(
-        hero.positionComponent.renderPosition(),
-        hero.graphicComponent,
+        gameWorld_.hero.positionComponent.renderPosition(),
+        gameWorld_.hero.graphicComponent,
         camera_,
         textures_,
         cheatMode_());
@@ -310,7 +317,7 @@ void GameScene::renderOutput()
 
 void GameScene::postOutput()
 {
-    hero.positionComponent.resetPositionChanged();
+    gameWorld_.hero.positionComponent.resetPositionChanged();
 
     // Clear path
     gameWorld_.framedMapOverlay().clear();

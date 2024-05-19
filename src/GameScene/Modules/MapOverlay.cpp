@@ -43,11 +43,11 @@ namespace MapOverlay
         {
             world.framedMapOverlay().createOrUpdate(
                 steppedTile.tile->positionComponent.tilePosition(),
-                GameObject(
-                    PositionComponent(steppedTile.tile->positionComponent.tilePosition()),
-                    GraphicComponent(
+                GameObject{
+                    PositionComponent{steppedTile.tile->positionComponent.tilePosition()},
+                    GraphicComponent{
                         RenderID::PATH,
-                        LayerID::MAP_OVERLAY)));
+                        LayerID::MAP_OVERLAY}});
         }
 
         return path;
@@ -66,11 +66,11 @@ namespace MapOverlay
                 // Add reachable tile to overlay
                 world.mapOverlay().createOrUpdate(
                     steppedTile.tile->positionComponent.tilePosition(),
-                    GameObject(
-                        PositionComponent(steppedTile.tile->positionComponent.tilePosition()),
-                        GraphicComponent(
+                    GameObject{
+                        PositionComponent{steppedTile.tile->positionComponent.tilePosition()},
+                        GraphicComponent{
                             RenderID::REACHABLE,
-                            LayerID::MAP_OVERLAY)));
+                            LayerID::MAP_OVERLAY}});
             }
         }
     }
@@ -89,11 +89,11 @@ namespace MapOverlay
             // Add reachable tile to overlay
             world.mapOverlay().createOrUpdate(
                 tile->positionComponent.tilePosition(),
-                GameObject(
-                    PositionComponent(tile->positionComponent.tilePosition()),
-                    GraphicComponent(
+                GameObject{
+                    PositionComponent{tile->positionComponent.tilePosition()},
+                    GraphicComponent{
                         RenderID::ATTACKABLE,
-                        LayerID::MAP_OVERLAY)));
+                        LayerID::MAP_OVERLAY}});
         }
     }
 
