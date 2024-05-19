@@ -25,10 +25,10 @@ namespace CursorControl
             cursorPosition.y + (direction.y * boostFactor)};
     }
 
-    bool cursorWouldGoOutOfScreen(Vector2I& newCursorPosition, PositionComponent const& cursorPosition, Vector2I const& dir, int& factor, Camera2D const& camera)
+    bool cursorWouldGoOutOfScreen(Vector2I& newCursorPosition, PositionComponent const& cursorPosition, Vector2I const& dir, int& factor, Camera2D const& camera, RectangleEx const& panelMap)
     {
         // If new position were out of screen with potential boost applied
-        Rectangle renderRectangle{PanelMap::setup().rectangle()};
+        Rectangle renderRectangle{panelMap.rectangle()};
 
         if (isOutOfRectangle(
                 newCursorPosition,
@@ -112,7 +112,7 @@ namespace CursorControl
         }
     }
 
-    void processKeyControl(PositionComponent& cursorPosition, Camera2D const& camera)
+    void processKeyControl(PositionComponent& cursorPosition, Camera2D const& camera, RectangleEx const& panelMap)
     {
         // Store last key
         static int key{};
@@ -147,7 +147,7 @@ namespace CursorControl
                 factor)};
 
         // Check if cursor would go out of screen, removes boost if helpful
-        if (cursorWouldGoOutOfScreen(newCursorPosition, cursorPosition, dir, factor, camera))
+        if (cursorWouldGoOutOfScreen(newCursorPosition, cursorPosition, dir, factor, camera, panelMap))
         {
             return;
         }
@@ -156,7 +156,7 @@ namespace CursorControl
         cursorPosition.setTilePosition(newCursorPosition);
     }
 
-    void update(PositionComponent& cursorPosition, Camera2D const& camera, bool isMouseControlled)
+    void update(PositionComponent& cursorPosition, Camera2D const& camera, bool isMouseControlled, RectangleEx const& panelMap)
     {
         // Cursor control
         if (isMouseControlled)
@@ -166,7 +166,7 @@ namespace CursorControl
         }
         else
         {
-            processKeyControl(cursorPosition, camera);
+            processKeyControl(cursorPosition, camera, panelMap);
         }
     }
 }

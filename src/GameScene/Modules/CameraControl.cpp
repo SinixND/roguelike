@@ -57,7 +57,7 @@ namespace CameraControl
     }
 
     // Trigger if cursor is outside of edge pan deadzone
-    void edgePan(Camera2D& camera, Vector2 cursorWorldPosition, bool isMouseControlled, RectangleExI const& mapRectangle)
+    void edgePan(Camera2D& camera, Vector2 cursorWorldPosition, bool isMouseControlled, RectangleExI const& mapArea, RectangleEx const& panelMap)
     {
         static float dt{};
         dt += GetFrameTime();
@@ -65,11 +65,9 @@ namespace CameraControl
         Vector2 screenCursor{GetWorldToScreen2D(cursorWorldPosition, camera)};
 
         // Calculate edge pan deadzone (not triggered within)
-        RectangleEx renderRectangle{PanelMap::setup()};
-
         RectangleEx edgePanDeadzone{
-            Vector2AddValue(renderRectangle.topLeft(), EDGE_PAN_TRIGGER_WIDTH),
-            Vector2SubtractValue(renderRectangle.bottomRight(), EDGE_PAN_TRIGGER_WIDTH)};
+            Vector2AddValue(panelMap.topLeft(), EDGE_PAN_TRIGGER_WIDTH),
+            Vector2SubtractValue(panelMap.bottomRight(), EDGE_PAN_TRIGGER_WIDTH)};
 
         // Return if cursor is inside edge pan deadzone (not triggering)
         if (CheckCollisionPointRec(screenCursor, edgePanDeadzone))
@@ -92,7 +90,7 @@ namespace CameraControl
         setPanDirection(panDirection, screenCursor, edgePanDeadzone);
 
         // Check if center of render area stays on map
-        if (!isPanValid(renderRectangle, camera, panDirection, mapRectangle))
+        if (!isPanValid(panelMap, camera, panDirection, mapArea))
         {
             return;
         }

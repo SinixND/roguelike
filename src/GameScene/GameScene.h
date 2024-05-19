@@ -8,6 +8,7 @@
 #include "Graphic.h"
 #include "IScene.h"
 #include "LayerID.h"
+#include "Panels.h"
 #include "Position.h"
 #include "RenderID.h"
 #include "Textures.h"
@@ -26,6 +27,12 @@ private:
     CheatMode cheatMode_{};
     Textures textures_{};
     GameFont gameFont_{};
+
+    RectangleEx panelTileInfo{PanelTileInfo::setup()};
+    RectangleEx panelInfo{PanelInfo::setup()};
+    RectangleEx panelStatus{PanelStatus::setup()};
+    RectangleEx panelLog{PanelLog::setup()};
+    RectangleEx panelMap{PanelMap::setup()};
 
     GameObject cursor_{
         PositionComponent(),

@@ -42,7 +42,7 @@ namespace Render
     }
 
     void render(
-        RectangleEx const& mapPanel,
+        RectangleEx const& panelMap,
         Textures& gameTextures,
         Vector2 texturePosition,
         Vector2 position,
@@ -51,10 +51,10 @@ namespace Render
         Color const& tint)
     {
         BeginScissorMode(
-            mapPanel.left(),
-            mapPanel.top(),
-            mapPanel.width(),
-            mapPanel.height());
+            panelMap.left(),
+            panelMap.top(),
+            panelMap.width(),
+            panelMap.height());
 
         // Draw texture (using 0.5F pixel offset to get rid of texture bleeding)
         DrawTexturePro(
@@ -82,10 +82,10 @@ namespace Render
         Camera2D const& camera,
         Textures& gameTextures,
         bool cheatMode,
+        RectangleEx const& panelMap,
         VisibilityID visibilityID)
     {
-        static RectangleEx mapPanel{PanelMap::setup()};
-        static RectangleEx extendedMapPanel{mapPanel};
+        static RectangleEx extendedMapPanel{panelMap};
         extendedMapPanel
             .offsetLeft(-TextureData::TILE_SIZE)
             .offsetTop(-TextureData::TILE_SIZE)
@@ -94,8 +94,7 @@ namespace Render
 
         if (IsWindowResized())
         {
-            mapPanel = PanelMap::setup();
-            extendedMapPanel = mapPanel;
+            extendedMapPanel = panelMap;
             extendedMapPanel
                 .offsetLeft(-TextureData::TILE_SIZE)
                 .offsetTop(-TextureData::TILE_SIZE)
@@ -123,7 +122,7 @@ namespace Render
             cheatMode);
 
         render(
-            mapPanel,
+            panelMap,
             gameTextures,
             texturePosition,
             position,

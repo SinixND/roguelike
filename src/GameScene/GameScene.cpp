@@ -112,14 +112,15 @@ void GameScene::processInput()
     }
 
     // Update cursor
-    CursorControl::update(cursor_.positionComponent, camera_, InputMode::isMouseControlled());
+    CursorControl::update(cursor_.positionComponent, camera_, InputMode::isMouseControlled(), panelMap);
 
     // Process edge pan
     CameraControl::edgePan(
         camera_,
         TileTransformation::positionToWorld(cursor_.positionComponent.tilePosition()),
         InputMode::isMouseControlled(),
-        gameWorld_.mapSize_());
+        gameWorld_.mapSize_(),
+        panelMap);
 
     // Center on hero
     if (IsKeyPressed(KEY_H))
@@ -169,10 +170,17 @@ void GameScene::processInput()
 
 void GameScene::updateState()
 {
-    // Update camera offset
     if (IsWindowResized())
     {
-        camera_.offset = PanelMap::setup().center();
+        // Update panels
+        panelTileInfo = PanelTileInfo::setup();
+        panelInfo = PanelInfo::setup();
+        panelStatus = PanelStatus::setup();
+        panelLog = PanelLog::setup();
+        panelMap = PanelMap::setup();
+
+        // Update camera offset
+        camera_.offset = panelMap.center();
     }
 
     // Update map overlay
@@ -202,6 +210,7 @@ void GameScene::renderOutput()
             camera_,
             textures_,
             cheatMode_(),
+            panelMap,
             tile.visibilityID());
     }
 
@@ -213,7 +222,8 @@ void GameScene::renderOutput()
             tile.graphicComponent,
             camera_,
             textures_,
-            cheatMode_());
+            cheatMode_(),
+            panelMap);
     }
 
     // (Single frame) Map overlay
@@ -224,7 +234,8 @@ void GameScene::renderOutput()
             tile.graphicComponent,
             camera_,
             textures_,
-            cheatMode_());
+            cheatMode_(),
+            panelMap);
     }
 
     // Object layer
@@ -233,7 +244,8 @@ void GameScene::renderOutput()
         gameWorld_.hero.graphicComponent,
         camera_,
         textures_,
-        cheatMode_());
+        cheatMode_(),
+        panelMap);
 
     // UI layer
     Render::update(
@@ -241,7 +253,8 @@ void GameScene::renderOutput()
         cursor_.graphicComponent,
         camera_,
         textures_,
-        cheatMode_());
+        cheatMode_(),
+        panelMap);
 
     EndMode2D();
 
@@ -261,39 +274,39 @@ void GameScene::renderOutput()
     //=================================
     // Info panel (right)
     DrawRectangleLinesEx(
-        PanelTileInfo::setup().rectangle(),
+        panelTileInfo.rectangle(),
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Info panel (right)
     DrawRectangleLinesEx(
-        PanelInfo::setup().rectangle(),
+        panelInfo.rectangle(),
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Status panel (top)
     DrawRectangleLinesEx(
-        PanelStatus::setup().rectangle(),
+        panelStatus.rectangle(),
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Log panel (bottom)
     DrawRectangleLinesEx(
-        PanelLog::setup().rectangle(),
+        panelLog.rectangle(),
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Map panel (mid-left)
     DrawRectangleLinesEx(
-        PanelMap::setup().rectangle(),
+        panelMap.rectangle(),
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     // Under cursor info panel (bottom-right)
     DrawLineEx(
-        PanelMap::setup().bottomRight(),
+        panelMap.bottomRight(),
         {static_cast<float>(GetRenderWidth()),
-         PanelMap::setup().bottom() + 1},
+         panelMap.bottom() + 1},
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 }

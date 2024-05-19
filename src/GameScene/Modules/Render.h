@@ -4,6 +4,7 @@
 #include "Graphic.h"
 #include "Textures.h"
 #include "VisibilityID.h"
+#include "raylibEx.h"
 #include <raylib.h>
 
 namespace Render
@@ -14,6 +15,7 @@ namespace Render
         Camera2D const& camera,
         Textures& gameTextures,
         bool cheatMode,
+        RectangleEx const& panelMap,
         VisibilityID visibilityID = VisibilityID::VISIBLE);
 }
 
