@@ -39,7 +39,7 @@ void updateTileFraction(float& cumulativeTileFraction, float frameDistance)
     cumulativeTileFraction += frameDistance;
 }
 
-auto Movement::moveAlongPath(PositionComponent& positionComponent, MovementComponent& movementComponent, float dt) -> bool
+bool Movement::moveAlongPath(PositionComponent& positionComponent, MovementComponent& movementComponent, float dt)
 {
     // Cumulative fraction of one tile size for smooth path progressing
     static float cumulativeTileFraction{};

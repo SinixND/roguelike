@@ -1,6 +1,5 @@
 #include "UnitMovement.h"
 
-#include "GamePhase.h"
 #include "Movement.h"
 #include "Pathfinder.h"
 #include "Position.h"
@@ -46,7 +45,7 @@ namespace UnitMovement
         }
     }
 
-    void processMovement(Unit& unit, bool& isInputBlocked, [[maybe_unused]] GamePhase& gamePhase)
+    void processMovement(Unit& unit, bool& isInputBlocked)
     {
         bool isTargetReached{false};
         if (unit.movementComponent.isMoving())

@@ -10,26 +10,26 @@
 class MovementComponent
 {
 public:
-    auto range() const -> int { return range_; }
+    int range() const { return range_; }
     void setRange(int range) { range_ = range; }
 
-    auto speed() const -> float { return speed_; }
+    float speed() const { return speed_; }
     void setSpeed(float speed) { speed_ = speed; }
 
-    auto target() const -> Vector2I { return target_; }
+    Vector2I target() const { return target_; }
     void setTarget(Vector2I target)
     {
         target_ = target;
         isTargetSet_ = true;
     }
 
-    auto isTargetSet() const -> bool { return isTargetSet_; }
+    bool isTargetSet() const { return isTargetSet_; }
     void unsetTarget() { isTargetSet_ = false; }
 
-    auto isMoving() const -> bool { return isMoving_; }
+    bool isMoving() const { return isMoving_; }
     void setIsMoving(bool state) { isMoving_ = state; }
 
-    auto path() const -> Path const& { return path_; }
+    Path const& path() const { return path_; }
     void popFromPath() { path_.pop_back(); }
     void setPath(Path const& path)
     {
@@ -56,7 +56,7 @@ private:
 namespace Movement
 {
     // Returns if movement finished
-    auto moveAlongPath(PositionComponent& position, MovementComponent& movementComponent, float dt) -> bool;
+    bool moveAlongPath(PositionComponent& position, MovementComponent& movementComponent, float dt);
 }
 
 #endif

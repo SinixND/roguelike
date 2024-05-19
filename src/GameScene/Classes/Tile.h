@@ -13,15 +13,15 @@ public:
     GraphicComponent graphicComponent{};
 
 public:
-    auto tag() const -> std::string const& { return tag_; }
+    std::string const& tag() const { return tag_; }
 
-    auto visibilityID() const -> VisibilityID { return visibilityID_; }
+    VisibilityID visibilityID() const { return visibilityID_; }
     void setVisibilityID(VisibilityID visibilityID) { visibilityID_ = visibilityID; }
 
-    auto isSolid() const -> bool { return isSolid_; }
+    bool isSolid() const { return isSolid_; }
     void setIsSolid(bool state) { isSolid_ = state; }
 
-    auto blocksVision() const -> bool { return blocksVision_; }
+    bool blocksVision() const { return blocksVision_; }
     void setBlocksVision(bool state) { blocksVision_ = state; }
 
     explicit Tile(

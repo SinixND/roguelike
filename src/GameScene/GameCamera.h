@@ -9,7 +9,7 @@ private:
     Camera2D camera_{};
 
 public:
-    auto operator()() -> Camera2D const& { return camera_; }
+    Camera2D operator()() const& { return camera_; }
 
     void updateCameraOffset(Camera2D& camera)
     {

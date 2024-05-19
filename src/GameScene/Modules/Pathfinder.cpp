@@ -6,9 +6,9 @@
 #include <cstddef>
 
 // Pathfinder returns vector of positions from target to origin (excluded) if target is reachable
-auto findPath(
+Path findPath(
     RangeSeparatedTiles const& reachableTiles,
-    Vector2I target) -> Path
+    Vector2I target)
 {
     Path path{};
 
@@ -84,11 +84,11 @@ auto findPath(
     return path;
 }
 
-auto findPath(
+Path findPath(
     TileMap& tileMap,
     Vector2I origin,
     Vector2I target,
-    int range) -> Path
+    int range)
 {
     return findPath(TileMapFilters::filterMovableSorted(tileMap, range, origin), target);
 }

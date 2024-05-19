@@ -7,7 +7,7 @@ private:
     bool cheatMode_{true};
 
 public:
-    auto operator()() const -> bool { return cheatMode_; }
+    bool operator()() const { return cheatMode_; }
     void toggle() { cheatMode_ = !cheatMode_; }
 };
 

@@ -11,21 +11,21 @@
 
 namespace CursorControl
 {
-    auto isOutOfRectangle(Vector2I position, Rectangle rectangle, Camera2D const& camera) -> bool
+    bool isOutOfRectangle(Vector2I position, Rectangle rectangle, Camera2D const& camera)
     {
         return !CheckCollisionPointRec(
             TileTransformation::positionToScreen(position, camera),
             rectangle);
     }
 
-    auto getNewCursorPosition(Vector2I cursorPosition, Vector2I direction, int boostFactor) -> Vector2I
+    Vector2I getNewCursorPosition(Vector2I cursorPosition, Vector2I direction, int boostFactor)
     {
         return Vector2I{
             cursorPosition.x + (direction.x * boostFactor),
             cursorPosition.y + (direction.y * boostFactor)};
     }
 
-    auto cursorWouldGoOutOfScreen(Vector2I& newCursorPosition, PositionComponent const& cursorPosition, Vector2I const& dir, int& factor, Camera2D const& camera) -> bool
+    bool cursorWouldGoOutOfScreen(Vector2I& newCursorPosition, PositionComponent const& cursorPosition, Vector2I const& dir, int& factor, Camera2D const& camera)
     {
         // If new position were out of screen with potential boost applied
         Rectangle renderRectangle{PanelMap::setup().rectangle()};

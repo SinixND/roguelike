@@ -17,7 +17,7 @@ namespace MapOverlay
 {
     static Path path_{};
 
-    auto showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World& world) -> Path&
+    Path& showPath(Vector2I unitPosition, Vector2I cursorPosition, int unitRange, World& world)
     {
         static Vector2I origin{};
         static Vector2I target{};
@@ -135,7 +135,7 @@ namespace MapOverlay
         }
     }
 
-    auto path() -> Path&
+    Path& path()
     {
         return path_;
     }

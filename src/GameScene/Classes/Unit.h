@@ -16,15 +16,15 @@ public:
     AttackComponent attackComponent;
 
 public:
-    auto isSelected() const -> bool { return isSelected_; }
+    bool isSelected() const { return isSelected_; }
     void setIsSelected(bool state) { isSelected_ = state; }
 
-    auto isSolid() const -> bool { return isSolid_; }
+    bool isSolid() const { return isSolid_; }
 
-    auto visibilityID() const -> VisibilityID { return visibilityID_; }
+    VisibilityID visibilityID() const { return visibilityID_; }
     void setVisibilityID(VisibilityID visibilityID) { visibilityID_ = visibilityID; }
 
-    auto visionRange() const -> int { return visionRange_; }
+    int visionRange() const { return visionRange_; }
     void setVisionRange(int visionRange) { visionRange_ = visionRange; }
 
     explicit Unit(

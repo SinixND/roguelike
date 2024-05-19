@@ -32,15 +32,15 @@ public:
             1)};
 
 public:
-    auto currentMap() -> TileMap& { return *currentMap_; }
-    auto currentMapLevel() -> int { return currentMapLevel_; }
+    TileMap& currentMap() { return *currentMap_; }
+    int currentMapLevel() { return currentMapLevel_; }
 
     void increaseMapLevel();
     void decreaseMapLevel();
 
-    auto mapOverlay() -> TileOverlayMap& { return mapOverlay_; }
+    TileOverlayMap& mapOverlay() { return mapOverlay_; }
 
-    auto framedMapOverlay() -> TileOverlayMap& { return framedMapOverlay_; }
+    TileOverlayMap& framedMapOverlay() { return framedMapOverlay_; }
 
 private:
     std::vector<TileMap> maps_{MapGenerator::createStartRoom(mapSize_)};

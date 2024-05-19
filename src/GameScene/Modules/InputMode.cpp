@@ -20,7 +20,7 @@ namespace InputMode
         }
     }
 
-    auto isMouseControlled() -> bool&
+    bool& isMouseControlled()
     {
         return isMouseControlled_;
     }

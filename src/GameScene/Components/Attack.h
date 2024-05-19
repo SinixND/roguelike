@@ -4,10 +4,10 @@
 class AttackComponent
 {
 public:
-    auto range() const -> int { return range_; }
+    int range() const { return range_; }
     void setRange(int range) { range_ = range; }
 
-    auto damage() const -> int { return damage_; }
+    int damage() const { return damage_; }
     void setDamage(int damage) { damage_ = damage; }
 
     explicit AttackComponent(int range, int damage)

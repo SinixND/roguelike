@@ -105,7 +105,7 @@ namespace MapGenerator
         }
     }
 
-    auto createStartRoom(MapSize& mapSize) -> TileMap
+    TileMap createStartRoom(MapSize& mapSize)
     {
         TileMap startRoom{};
 
@@ -124,7 +124,7 @@ namespace MapGenerator
         return startRoom;
     }
 
-    auto createRandomMap(int level, MapSize& mapSize) -> TileMap
+    TileMap createRandomMap(int level, MapSize& mapSize)
     {
         TileMap newMap{};
 

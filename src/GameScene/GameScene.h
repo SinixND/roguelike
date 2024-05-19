@@ -5,7 +5,6 @@
 #include "Directions.h"
 #include "GameFont.h"
 #include "GameObject.h"
-#include "GamePhase.h"
 #include "Graphic.h"
 #include "IScene.h"
 #include "LayerID.h"
@@ -25,18 +24,8 @@ private:
     const Color BACKGROUND_COLOR{BLACK};
 
     CheatMode cheatMode_{};
-
-    Camera2D camera_{
-        Vector2Scale(GetDisplaySize(), 0.5f),
-        Directions::V_NULL,
-        0,
-        1};
-
     Textures textures_{};
-
     GameFont gameFont_{};
-
-    World gameWorld_{};
 
     GameObject cursor_{
         PositionComponent(),
@@ -44,7 +33,13 @@ private:
             RenderID::CURSOR,
             LayerID::UI)};
 
-    GamePhase gamePhase_{};
+    Camera2D camera_{
+        Vector2Scale(GetDisplaySize(), 0.5f),
+        Directions::V_NULL,
+        0,
+        1};
+
+    World gameWorld_{};
 
     bool isInputBlocked_{false};
 

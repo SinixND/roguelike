@@ -5,7 +5,6 @@
 #include "DebugMode.h"
 #include "Enums/RenderID.h"
 #include "GameObject.h"
-#include "GamePhase.h"
 #include "InputMode.h"
 #include "MapOverlay.h"
 #include "Panels.h"
@@ -17,7 +16,6 @@
 #include "Vision.h"
 #include "Zoom.h"
 #include "raylibEx.h"
-#include <iostream>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -141,42 +139,31 @@ void GameScene::processInput()
     }
 
     // Branch game phase
-    switch (gamePhase_)
+    // Select unit
+    if (
+        IsMouseButtonPressed(MOUSE_LEFT_BUTTON)
+        || IsKeyPressed(KEY_SPACE))
     {
-    case GamePhase::movementPhase:
-        // Select unit
-        if (
-            IsMouseButtonPressed(MOUSE_LEFT_BUTTON)
-            || IsKeyPressed(KEY_SPACE))
-        {
-            Selection::select(
-                gameWorld_.hero,
-                cursor_.positionComponent.tilePosition());
-        }
+        Selection::select(
+            gameWorld_.hero,
+            cursor_.positionComponent.tilePosition());
+    }
 
-        // Deselect unit
-        if (
-            IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_CAPS_LOCK))
-        {
-            Selection::deselect(gameWorld_.hero);
-        }
+    // Deselect unit
+    if (
+        IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_CAPS_LOCK))
+    {
+        Selection::deselect(gameWorld_.hero);
+    }
 
-        // Set unit movment target
-        if (
-            IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
-        {
-            UnitMovement::setTarget(
-                gameWorld_,
-                gameWorld_.hero,
-                cursor_.positionComponent);
-        }
-        break;
-
-    case GamePhase::actionPhase:
-        break;
-
-    default:
-        break;
+    // Set unit movment target
+    if (
+        IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
+    {
+        UnitMovement::setTarget(
+            gameWorld_,
+            gameWorld_.hero,
+            cursor_.positionComponent);
     }
 }
 
@@ -194,7 +181,7 @@ void GameScene::updateState()
     UnitMovement::triggerMovement(gameWorld_.hero.movementComponent, MapOverlay::path(), isInputBlocked_);
 
     // Unblock input if target is reached
-    UnitMovement::processMovement(gameWorld_.hero, isInputBlocked_, gamePhase_);
+    UnitMovement::processMovement(gameWorld_.hero, isInputBlocked_);
 
     if (gameWorld_.hero.positionComponent.hasPositionChanged())
     {
@@ -309,10 +296,6 @@ void GameScene::renderOutput()
          PanelMap::setup().bottom() + 1},
         Panels::PANEL_BORDER_WEIGHT,
         DARKGRAY);
-
-    std::cout
-        << "c offset: " << camera_.offset.x << ", " << camera_.offset.y << "\n"
-        << "c target: " << camera_.target.x << ", " << camera_.target.y << "\n";
 }
 
 void GameScene::postOutput()

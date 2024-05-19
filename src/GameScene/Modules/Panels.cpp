@@ -7,7 +7,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-auto PanelTileInfo::setup() -> RectangleEx
+RectangleEx PanelTileInfo::setup()
 {
     RectangleEx rect{};
     rect.setRight(static_cast<int>(GetRenderWidth()))
@@ -48,7 +48,7 @@ void PanelTileInfo::render(TileMap& tileMap, Vector2I cursorPosition, Font const
         RAYWHITE);
 }
 
-auto PanelInfo::setup() -> RectangleEx
+RectangleEx PanelInfo::setup()
 {
     RectangleEx rect{};
     rect.setRight(static_cast<int>(GetRenderWidth()))
@@ -58,7 +58,7 @@ auto PanelInfo::setup() -> RectangleEx
     return rect;
 }
 
-auto PanelStatus::setup() -> RectangleEx
+RectangleEx PanelStatus::setup()
 {
     RectangleEx rect{};
     rect.setRight(PanelTileInfo::setup().left())
@@ -91,7 +91,7 @@ void PanelStatus::render(int level, Font const& font)
         RAYWHITE);
 }
 
-auto PanelLog::setup() -> RectangleEx
+RectangleEx PanelLog::setup()
 {
     RectangleEx rect{};
     rect.setRight(PanelTileInfo::setup().left())
@@ -101,7 +101,7 @@ auto PanelLog::setup() -> RectangleEx
     return rect;
 }
 
-auto PanelMap::setup() -> RectangleEx
+RectangleEx PanelMap::setup()
 {
     RectangleEx rect{};
     rect.setRight(PanelInfo::setup().left())

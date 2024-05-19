@@ -12,7 +12,7 @@ namespace snx
     class Singleton
     {
     public:
-        static auto instance() -> Type&
+        static Type& instance()
         {
             static Type instance;
             return instance;
@@ -23,7 +23,7 @@ namespace snx
         ~Singleton() = default;
 
         Singleton(Singleton const&) = delete;
-        auto operator=(Singleton const&) -> Singleton& = delete;
+        Singleton& operator=(Singleton const&) = delete;
     };
 }
 

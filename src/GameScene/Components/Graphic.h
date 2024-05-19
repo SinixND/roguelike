@@ -7,10 +7,10 @@
 class GraphicComponent
 {
 public:
-    auto renderID() const -> RenderID const& { return renderID_; }
+    RenderID const& renderID() const { return renderID_; }
     void setRenderID(RenderID const& renderID) { renderID_ = renderID; }
 
-    auto layerID() const -> LayerID const& { return layerID_; }
+    LayerID const& layerID() const { return layerID_; }
     void setLayerID(LayerID const& layerID) { layerID_ = layerID; }
 
     explicit GraphicComponent(

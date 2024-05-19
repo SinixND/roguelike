@@ -6,8 +6,8 @@
 
 namespace MapGenerator
 {
-    auto createStartRoom(MapSize& mapSize) -> TileMap;
-    auto createRandomMap(int level, MapSize& mapSize) -> TileMap;
+    TileMap createStartRoom(MapSize& mapSize);
+    TileMap createRandomMap(int level, MapSize& mapSize);
 }
 
 #endif

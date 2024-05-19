@@ -12,15 +12,15 @@ namespace RayCast
     float constexpr RAY_CAST_PRECISION{0.0001F};
 
     // Tiles passed by ray
-    auto getTilesPassedByRay(
+    std::vector<Tile*> getTilesPassedByRay(
         std::vector<Vector2I>& rayTargets,
         Vector2 origin,
-        TileMap& tileMap) -> std::vector<Tile*>;
+        TileMap& tileMap);
 
-    auto getTilesPassedByRay(
+    std::vector<Tile*> getTilesPassedByRay(
         std::vector<Vector2I>& rayTargets,
         Vector2I origin,
-        TileMap& tileMap) -> std::vector<Tile*>;
+        TileMap& tileMap);
 }
 
 #endif

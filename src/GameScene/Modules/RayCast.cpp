@@ -252,10 +252,10 @@ namespace RayCast
         }
     }
 
-    auto getTilesPassedByRay(
+    std::vector<Tile*> getTilesPassedByRay(
         std::vector<Vector2I>& rayTargets,
         Vector2 origin,
-        TileMap& tileMap) -> std::vector<Tile*>
+        TileMap& tileMap)
     {
         snx::SparseSet<Vector2I, Tile*> tilesPassedByRay{};
 
@@ -281,10 +281,10 @@ namespace RayCast
         return tilesPassedByRay.values();
     }
 
-    auto getTilesPassedByRay(
+    std::vector<Tile*> getTilesPassedByRay(
         std::vector<Vector2I>& rayTargets,
         Vector2I origin,
-        TileMap& tileMap) -> std::vector<Tile*>
+        TileMap& tileMap)
     {
         return getTilesPassedByRay(rayTargets, TileTransformation::positionToWorld(origin), tileMap);
     }
