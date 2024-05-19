@@ -10,31 +10,38 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
-- [ ] Modified parameters -> pointer
-
 - [ ] Redesign to usual rogue controls (remove fire emblem like controls)
+    - [ ] Arrow keys for cursor
+    - [ ] Character triggers edgePan
 
 
 # Shortterm
+- [ ] Changeable key bindings
+    - Does GameScene(?) hold Buttons that get funcitons assigned? (https://gameprogrammingpatterns.com/command.html)
+    - Or should actions be called via events? (see next point)
 - [ ] Check for triggered functions -> pub-sub functor
 - [ ] Refactor classes to DOD (if object count > 1)
     - For DOD: Class/Object owns component-container (SparseSet for individual access)
     - For OOP: Object owns individual component
         - Prefer NMNF function [Nmsp::f(C& o)] over member functions [o.f()]
         - Choose closest scope parameter that contains all information needed (member > object)
-- [ ] Map change
-  - [ ] Trigger non-input by event system (pub-sub / observer pattern)
-  - [ ] Print the action in log panel
-- [ ] Add enemy
-    - Therefore World holds list of Units
 
 
 # Longterm 
-- [ ] Camera grip
-- [ ] Indicate select option (different cursor color on hover?)
+- [ ] Add rogue theme (ASCII)
+    - Floor : '.'
+    - Wall  : '#'
+    - Hero  : '@'
+    - Stairs: '%'
+- [ ] Map change
+- [ ] Print the action in log panel
+- [ ] Add enemy
+    - Therefore World holds list of Units
 - [ ] (Hold) KEY to show map overview
 - [ ] Add touch support
 - [ ] Remove zoom?
+- [ ] Save/Load Account > Character > CurrentRun
+- [ ] Account settings via lua
 
 
 # Continuous
@@ -192,3 +199,4 @@ int main(){
 - [x] Change 'emscripten_set_main_loop()' to 'emscripten_set_main_loop_arg()'
 - [x] Check function design (split long ones)
 - [ ] Check movement functions in regards to game phases (obsolete after movement system change)
+- [x] Modified parameters -> pointer

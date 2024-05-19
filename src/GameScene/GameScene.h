@@ -2,13 +2,11 @@
 #define IG20231203204746
 
 #include "CheatMode.h"
-#include "Directions.h"
 #include "GameFont.h"
 #include "GameObject.h"
 #include "Graphic.h"
 #include "IScene.h"
 #include "LayerID.h"
-#include "Panels.h"
 #include "Position.h"
 #include "RenderID.h"
 #include "Textures.h"
@@ -28,23 +26,19 @@ private:
     Textures textures_{};
     GameFont gameFont_{};
 
-    RectangleEx panelTileInfo{PanelTileInfo::setup()};
-    RectangleEx panelInfo{PanelInfo::setup()};
-    RectangleEx panelStatus{PanelStatus::setup()};
-    RectangleEx panelLog{PanelLog::setup()};
-    RectangleEx panelMap{PanelMap::setup()};
+    RectangleEx panelTileInfo{};
+    RectangleEx panelInfo{};
+    RectangleEx panelStatus{};
+    RectangleEx panelLog{};
+    RectangleEx panelMap{};
+
+    Camera2D camera_{};
 
     GameObject cursor_{
         PositionComponent(),
         GraphicComponent(
             RenderID::CURSOR,
             LayerID::UI)};
-
-    Camera2D camera_{
-        Vector2Scale(GetDisplaySize(), 0.5f),
-        Directions::V_NULL,
-        0,
-        1};
 
     World gameWorld_{};
 
@@ -55,11 +49,7 @@ public:
     void update() override;
     void deinitialize() override;
 
-    GameScene()
-    {
-        initialize();
-    }
-
+private:
     void processInput() override;
     void updateState() override;
     void renderOutput() override;

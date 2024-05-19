@@ -3,13 +3,14 @@
 #include "CameraControl.h"
 #include "CursorControl.h"
 #include "DebugMode.h"
-#include "Enums/RenderID.h"
+#include "Directions.h"
 #include "GameObject.h"
 #include "InputMode.h"
 #include "MapOverlay.h"
 #include "Panels.h"
 #include "RNG.h"
 #include "Render.h"
+#include "RenderID.h"
 #include "Selection.h"
 #include "TileTransformation.h"
 #include "UnitMovement.h"
@@ -43,6 +44,20 @@ void GameScene::initialize()
     textures_.registerTexture(RenderID::ATTACKABLE, {105, 35});
     textures_.registerTexture(RenderID::SUPPORTABLE, {0, 70});
     textures_.registerTexture(RenderID::NEXT_LEVEL, {35, 70});
+
+    // Panels
+    panelTileInfo = PanelTileInfo::setup();
+    panelInfo = PanelInfo::setup();
+    panelStatus = PanelStatus::setup();
+    panelLog = PanelLog::setup();
+    panelMap = PanelMap::setup();
+
+    // Camera
+    camera_ = {
+        Vector2Scale(GetDisplaySize(), 0.5f),
+        Directions::V_NULL,
+        0,
+        1};
 }
 
 void GameScene::update()
@@ -272,7 +287,7 @@ void GameScene::renderOutput()
 
     // Draw panel borders
     //=================================
-    // Info panel (right)
+    // Tile info panel (right)
     DrawRectangleLinesEx(
         panelTileInfo.rectangle(),
         Panels::PANEL_BORDER_WEIGHT,

@@ -1,7 +1,6 @@
 #include "Render.h"
 
 #include "Graphic.h"
-#include "Panels.h"
 #include "TextureData.h"
 #include "Textures.h"
 #include "VisibilityID.h"
@@ -35,7 +34,7 @@ namespace Render
             if (cheatMode)
             {
                 tint = RED;
-                tint = ColorBrightness(tint, 0.67);
+                tint = ColorBrightness(tint, 0.25);
             }
             break;
         }
