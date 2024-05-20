@@ -109,6 +109,7 @@ namespace MapGenerator
     {
         TileMap startRoom{};
 
+        addRoom(startRoom, RectangleExI{Vector2I{0, 0}, 150, 150}, mapSize);
         addRoom(startRoom, RectangleExI{Vector2I{0, 0}, 15, 15}, mapSize);
 
         // Add walls

@@ -5,6 +5,7 @@
 #include "Tile.h"
 #include "TileMap.h"
 #include "raylibEx.h"
+#include <raylib.h>
 #include <raylibEx.h>
 #include <vector>
 
@@ -20,10 +21,6 @@ struct SteppedTile
     }
 };
 
-using SteppedTiles = std::vector<SteppedTile>;
-
-using RangeSeparatedTiles = std::vector<SteppedTiles>;
-
 namespace TileMapFilters
 {
     bool isInTiles(
@@ -32,11 +29,11 @@ namespace TileMapFilters
 
     bool isInSteppedTiles(
         Vector2I target,
-        SteppedTiles const& steppedTiles);
+        std::vector<SteppedTile> const& steppedTiles);
 
     bool isInRangeSeparatedTiles(
         Vector2I target,
-        RangeSeparatedTiles const& rangeSeparatedTiles);
+        std::vector<std::vector<SteppedTile>> const& rangeSeparatedTiles);
 
     std::vector<Tile*> filterNonSolidTiles(TileMap& tileMap);
 
@@ -81,12 +78,12 @@ namespace TileMapFilters
         Vector2I origin,
         TileMap& tileMap);
 
-    RangeSeparatedTiles filterMovableSorted(
+    std::vector<std::vector<SteppedTile>> filterMovableSorted(
         std::vector<Tile*> const& inRangeMapTiles,
         int moveRange,
         Vector2I origin);
 
-    RangeSeparatedTiles filterMovableSorted(
+    std::vector<std::vector<SteppedTile>> filterMovableSorted(
         TileMap& tileMap,
         int moveRange,
         Vector2I origin);
@@ -97,13 +94,15 @@ namespace TileMapFilters
         Vector2I origin,
         TileMap& tileMap);
 
-    std::vector<Tile*> filterEdgeTiles(RangeSeparatedTiles const& tiles);
+    std::vector<Tile*> filterEdgeTiles(std::vector<std::vector<SteppedTile>> const& tiles);
 
     std::vector<Tile*> filterInActionRange(
         TileMap& tileMap,
         int actionRange,
         int moveRange,
         Vector2I origin);
+
+    TileMap filterTilesToRender(TileMap& tileMap, Camera2D const& camera, RectangleEx const& panelMapExtended);
 }
 
 #endif

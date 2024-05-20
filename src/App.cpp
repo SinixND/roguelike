@@ -46,6 +46,21 @@ void App::init()
     gameScene.initialize();
 }
 
+void toggleFullscreen()
+{
+    if (IsKeyPressed(KEY_F11))
+    {
+        if (IsWindowMaximized())
+        {
+            RestoreWindow();
+        }
+        else
+        {
+            MaximizeWindow();
+        }
+    }
+}
+
 void App::run()
 {
     // Main app loop
@@ -56,12 +71,7 @@ void App::run()
 #else
     while (!(WindowShouldClose()))
     {
-        // Toggle fullscreen
-        //* toggleFullscreen();
-        if (IsKeyPressed(KEY_F11))
-        {
-            ToggleBorderlessWindowed();
-        }
+        toggleFullscreen();
 
         activeScene->update();
     }
