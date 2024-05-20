@@ -8,6 +8,7 @@
 #include "IScene.h"
 #include "LayerID.h"
 #include "Position.h"
+#include "Publisher.h"
 #include "RenderID.h"
 #include "Textures.h"
 #include "World.h"
@@ -26,11 +27,12 @@ private:
     Textures textures_{};
     GameFont gameFont_{};
 
-    RectangleEx panelTileInfo{};
-    RectangleEx panelInfo{};
-    RectangleEx panelStatus{};
-    RectangleEx panelLog{};
-    RectangleEx panelMap{};
+    RectangleEx panelTileInfo_{};
+    RectangleEx panelInfo_{};
+    RectangleEx panelStatus_{};
+    RectangleEx panelLog_{};
+    RectangleEx panelMap_{};
+    RectangleEx panelMapExtended_{};
 
     Camera2D camera_{};
 
@@ -43,6 +45,9 @@ private:
     World gameWorld_{};
 
     bool isInputBlocked_{false};
+
+    // Event handler
+    Publisher publisher_{};
 
 public:
     void initialize() override;

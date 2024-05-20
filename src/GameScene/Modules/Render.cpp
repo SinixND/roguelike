@@ -41,7 +41,6 @@ namespace Render
     }
 
     void render(
-        RectangleEx const& panelMap,
         Textures& gameTextures,
         Vector2 texturePosition,
         Vector2 position,
@@ -49,12 +48,6 @@ namespace Render
         Vector2 tileCenter,
         Color const& tint)
     {
-        BeginScissorMode(
-            panelMap.left(),
-            panelMap.top(),
-            panelMap.width(),
-            panelMap.height());
-
         // Draw texture (using 0.5F pixel offset to get rid of texture bleeding)
         DrawTexturePro(
             *gameTextures.getTextureAtlas(),
@@ -71,41 +64,22 @@ namespace Render
             tileCenter,
             0,
             tint);
-
-        EndScissorMode();
     }
 
     void update(
         Vector2 position,
         GraphicComponent graphic,
-        Camera2D const& camera,
+        //* Camera2D const& camera,
         Textures& gameTextures,
         bool cheatMode,
-        RectangleEx const& panelMap,
+        //* RectangleEx const& panelMapExtended,
         VisibilityID visibilityID)
     {
-        static RectangleEx extendedMapPanel{panelMap};
-        extendedMapPanel
-            .offsetLeft(-TextureData::TILE_SIZE)
-            .offsetTop(-TextureData::TILE_SIZE)
-            .offsetRight(TextureData::TILE_SIZE)
-            .offsetBottom(TextureData::TILE_SIZE);
-
-        if (IsWindowResized())
-        {
-            extendedMapPanel = panelMap;
-            extendedMapPanel
-                .offsetLeft(-TextureData::TILE_SIZE)
-                .offsetTop(-TextureData::TILE_SIZE)
-                .offsetRight(TextureData::TILE_SIZE)
-                .offsetBottom(TextureData::TILE_SIZE);
-        }
-
         // Skip if pixel is out of render area
-        if (!CheckCollisionPointRec(GetWorldToScreen2D(position, camera), extendedMapPanel))
-        {
-            return;
-        }
+        //* if (!CheckCollisionPointRec(GetWorldToScreen2D(position, camera), panelMapExtended))
+        //* {
+        //* return;
+        //* }
 
         // Get texture data
         Vector2 texturePosition{gameTextures.getTexturePosition(graphic.renderID())};
@@ -121,7 +95,6 @@ namespace Render
             cheatMode);
 
         render(
-            panelMap,
             gameTextures,
             texturePosition,
             position,

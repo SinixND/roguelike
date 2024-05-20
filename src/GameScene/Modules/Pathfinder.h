@@ -6,11 +6,11 @@
 #include <raylibEx.h>
 #include <vector>
 
-using Path = SteppedTiles;
+using Path = std::vector<SteppedTile>;
 
 // Pathfinder returns vector of positions from target to origin (excluded) if target is reachable
 Path findPath(
-    RangeSeparatedTiles const& reachableTiles,
+    std::vector<std::vector<SteppedTile>> const& reachableTiles,
     Vector2I target);
 
 Path findPath(

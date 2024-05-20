@@ -6,6 +6,7 @@
 #include "Tile.h"
 #include "TileMap.h"
 #include <cstddef>
+#include <raylib.h>
 #include <raylibEx.h>
 #include <vector>
 
@@ -29,7 +30,7 @@ namespace TileMapFilters
 
     bool isInSteppedTiles(
         Vector2I target,
-        SteppedTiles const& steppedTiles)
+        std::vector<SteppedTile> const& steppedTiles)
     {
         for (auto const& steppedTile : steppedTiles)
         {
@@ -43,7 +44,7 @@ namespace TileMapFilters
 
     bool isInRangeSeparatedTiles(
         Vector2I target,
-        RangeSeparatedTiles const& rangeSeparatedTiles)
+        std::vector<std::vector<SteppedTile>> const& rangeSeparatedTiles)
     {
         for (auto const& steppedTiles : rangeSeparatedTiles)
         {
@@ -221,13 +222,13 @@ namespace TileMapFilters
     }
 
     void addTilesRequiringOneStep(
-        RangeSeparatedTiles& rangeSeparatedTiles,
+        std::vector<std::vector<SteppedTile>>& rangeSeparatedTiles,
         std::vector<Tile*> const& inRangeMapTiles,
         Vector2I origin,
         snx::SparseSet<Vector2I, Tile*>& tileSet)
     {
         // Extend vector by one additional step level
-        rangeSeparatedTiles.push_back(SteppedTiles());
+        rangeSeparatedTiles.push_back(std::vector<SteppedTile>());
 
         // Test all four directions for first step
         for (Vector2I direction : {
@@ -252,7 +253,7 @@ namespace TileMapFilters
     }
 
     void addTilesRequiringMoreSteps(
-        RangeSeparatedTiles& rangeSeparatedTiles,
+        std::vector<std::vector<SteppedTile>>& rangeSeparatedTiles,
         std::vector<Tile*> const& inRangeMapTiles,
         int moveRange,
         snx::SparseSet<Vector2I, Tile*>& tileSet)
@@ -260,7 +261,7 @@ namespace TileMapFilters
         for (int stepLevel{2}; stepLevel <= moveRange; ++stepLevel)
         {
             // Extend vector by one additional step level
-            rangeSeparatedTiles.push_back(SteppedTiles());
+            rangeSeparatedTiles.push_back(std::vector<SteppedTile>());
 
             int previousStepLevel{stepLevel - 1};
             size_t previousTilesCount{rangeSeparatedTiles[previousStepLevel].size()};
@@ -341,7 +342,7 @@ namespace TileMapFilters
         }
     }
 
-    RangeSeparatedTiles filterMovableSorted(
+    std::vector<std::vector<SteppedTile>> filterMovableSorted(
         std::vector<Tile*> const& inRangeMapTiles,
         int moveRange,
         Vector2I origin)
@@ -350,7 +351,7 @@ namespace TileMapFilters
 
         filterNonSolidTiles(tileSet, inRangeMapTiles);
 
-        RangeSeparatedTiles rangeSeparatedTiles{};
+        std::vector<std::vector<SteppedTile>> rangeSeparatedTiles{};
 
         // Check if range is 0
         if (!moveRange)
@@ -361,7 +362,7 @@ namespace TileMapFilters
         // Step 0
 
         // Extend vector by one additional step level
-        rangeSeparatedTiles.push_back(SteppedTiles());
+        rangeSeparatedTiles.push_back(std::vector<SteppedTile>());
 
         // Add starting position
         rangeSeparatedTiles.front().push_back(SteppedTile(*tileSet.at(origin)));
@@ -383,7 +384,7 @@ namespace TileMapFilters
         return rangeSeparatedTiles;
     }
 
-    RangeSeparatedTiles filterMovableSorted(
+    std::vector<std::vector<SteppedTile>> filterMovableSorted(
         TileMap& tileMap,
         int moveRange,
         Vector2I origin)
@@ -406,7 +407,7 @@ namespace TileMapFilters
         return isInRangeSeparatedTiles(target, filterMovableSorted(tileMap, moveRange, origin));
     }
 
-    std::vector<Tile*> filterEdgeTiles(RangeSeparatedTiles const& tiles)
+    std::vector<Tile*> filterEdgeTiles(std::vector<std::vector<SteppedTile>> const& tiles)
     {
         std::vector<Tile*> edgeTiles{};
 
@@ -450,7 +451,7 @@ namespace TileMapFilters
     {
         std::vector<Tile*> inActionRangeTiles{};
 
-        RangeSeparatedTiles movableTiles{
+        std::vector<std::vector<SteppedTile>> movableTiles{
             filterMovableSorted(
                 tileMap,
                 moveRange,
@@ -478,5 +479,22 @@ namespace TileMapFilters
         }
 
         return inActionRangeTiles;
+    }
+
+    TileMap filterTilesToRender(TileMap& tileMap, Camera2D const& camera, RectangleEx const& panelMapExtended)
+    {
+        TileMap tilesToRender{};
+
+        for (auto& tile : tileMap.values())
+        {
+            if (!CheckCollisionPointRec(GetWorldToScreen2D(tile.positionComponent.renderPosition(), camera), panelMapExtended))
+            {
+                continue;
+            }
+
+            tilesToRender.createOrUpdate(tile.positionComponent.tilePosition(), tile);
+        }
+
+        return tilesToRender;
     }
 }

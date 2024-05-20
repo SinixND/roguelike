@@ -1,6 +1,8 @@
 #include "CameraControl.h"
 
 #include "Directions.h"
+#include "Event.h"
+#include "Publisher.h"
 #include "TextureData.h"
 #include "TileTransformation.h"
 #include "Unit.h"
@@ -56,7 +58,7 @@ namespace CameraControl
     }
 
     // Trigger if cursor is outside of edge pan deadzone
-    void edgePan(Camera2D* camera, Vector2 cursorWorldPosition, bool isMouseControlled, RectangleExI const& mapArea, RectangleEx const& panelMap)
+    void edgePan(Camera2D* camera, Vector2 cursorWorldPosition, bool isMouseControlled, RectangleExI const& mapArea, RectangleEx const& panelMap, Publisher& publisher)
     {
         static float dt{};
         dt += GetFrameTime();
@@ -96,10 +98,16 @@ namespace CameraControl
 
         // Update camera
         camera->target += Vector2Scale(panDirection, TextureData::TILE_SIZE);
+        publisher.notify(Event::cameraChanged);
     }
 
     void centerOnHero(Camera2D* camera, Unit const& unit)
     {
         camera->target = unit.positionComponent.renderPosition();
+    }
+
+    void SubUpdateCameraOffset::onNotify()
+    {
+        camera_.offset = panelMap_.center();
     }
 }

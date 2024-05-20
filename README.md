@@ -10,8 +10,10 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 # active
+- [ ] Fire event on camera change
+- [ ] Check for triggered functions -> pub-sub functor
+    - Keep filtered list of map tiles to render
 - [ ] Redesign to usual rogue controls (remove fire emblem like controls)
-    - [ ] Arrow keys for cursor
     - [ ] Character triggers edgePan
 
 
@@ -19,7 +21,6 @@ Platforms: Linux, Windows, Browser
 - [ ] Changeable key bindings
     - Does GameScene(?) hold Buttons that get funcitons assigned? (https://gameprogrammingpatterns.com/command.html)
     - Or should actions be called via events? (see next point)
-- [ ] Check for triggered functions -> pub-sub functor
 - [ ] Refactor classes to DOD (if object count > 1)
     - For DOD: Class/Object owns component-container (SparseSet for individual access)
     - For OOP: Object owns individual component
@@ -161,19 +162,28 @@ private:
 };
 ```
 
-## Global alternative
+## Functor for existing function
 ```cpp
-class Class {
-    static inline int state_{};
-    static void doModify(){std::cout << ++state_  << "\n";};
-
-public:
-    void doSmth(){doModify();}
+void func(int arg)
+{
+  std::cout << "Do something with arg " << arg << "\n";
 }
 
-int main(){
-    std::make_unique<Class>()->doSmth();
-}
+struct fFunctor
+{
+  void operator()(int arg) {func(arg);}
+
+  fFunctor() = default;
+  fFunctor(int arg, bool ctorTrigger = false)
+  {
+    if (ctorTrigger)
+    {
+      std::cout << "Trigger in ctor: ";
+      func(arg);
+    }
+  }
+};
+
 ```
 
 # Done

@@ -12,10 +12,10 @@ namespace Render
     void update(
         Vector2 position,
         GraphicComponent graphic,
-        Camera2D const& camera,
+        //* Camera2D const& camera,
         Textures& gameTextures,
         bool cheatMode,
-        RectangleEx const& panelMap,
+        //* RectangleEx const& panelMapExtended,
         VisibilityID visibilityID = VisibilityID::VISIBLE);
 }
 

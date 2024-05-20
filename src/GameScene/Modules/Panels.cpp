@@ -1,5 +1,6 @@
 #include "Panels.h"
 
+#include "TextureData.h"
 #include "Tile.h"
 #include "TileMap.h"
 #include "raylibEx.h"
@@ -7,20 +8,18 @@
 #include <raylib.h>
 #include <raymath.h>
 
-RectangleEx PanelTileInfo::setup()
+void PanelTileInfo::udpate(RectangleEx* panelTileInfo)
 {
-    RectangleEx rect{};
-    rect.setRight(static_cast<int>(GetRenderWidth()))
+    (*panelTileInfo)
+        .setRight(static_cast<int>(GetRenderWidth()))
         .setBottom(static_cast<int>(GetRenderHeight()))
         .resizeWidthLeft(Panels::INFO_PANEL_WIDTH)
         .resizeHeightTop(Panels::LOG_PANEL_HEIGHT);
-
-    return rect;
 }
 
-void PanelTileInfo::render(TileMap* tileMap, Vector2I cursorPosition, Font const& font)
+void PanelTileInfo::render(RectangleEx const& panelTileInfo, TileMap& tileMap, Vector2I cursorPosition, Font const& font)
 {
-    Tile* tile{tileMap->at(cursorPosition)};
+    Tile* tile{tileMap.at(cursorPosition)};
 
     if (!tile)
     {
@@ -41,33 +40,29 @@ void PanelTileInfo::render(TileMap* tileMap, Vector2I cursorPosition, Font const
         font,
         tag,
         Vector2AddValue(
-            PanelTileInfo::setup().topLeft(),
+            panelTileInfo.topLeft(),
             fontSize),
         fontSize,
         GuiGetStyle(DEFAULT, TEXT_SPACING),
         RAYWHITE);
 }
 
-RectangleEx PanelInfo::setup()
+void PanelInfo::update(RectangleEx* panelInfo, RectangleEx const& panelTileInfo)
 {
-    RectangleEx rect{};
-    rect.setRight(static_cast<int>(GetRenderWidth()))
-        .setBottom(PanelTileInfo::setup().top())
+    (*panelInfo)
+        .setRight(static_cast<int>(GetRenderWidth()))
+        .setBottom(panelTileInfo.top())
         .resizeWidthLeft(Panels::INFO_PANEL_WIDTH);
-
-    return rect;
 }
 
-RectangleEx PanelStatus::setup()
+void PanelStatus::update(RectangleEx* panelStatus, RectangleEx const& panelTileInfo)
 {
-    RectangleEx rect{};
-    rect.setRight(PanelTileInfo::setup().left())
+    (*panelStatus)
+        .setRight(panelTileInfo.left())
         .setBottom(Panels::STATUS_PANEL_HEIGHT);
-
-    return rect;
 }
 
-void PanelStatus::render(int level, Font const& font)
+void PanelStatus::render(RectangleEx const& panelMap, int level, Font const& font)
 {
     // Draw text for current level
     //* char const* currentLevel{TextFormat("Level %i", gameWorld.currentLevel())};
@@ -84,29 +79,66 @@ void PanelStatus::render(int level, Font const& font)
         font,
         currentLevel,
         Vector2{
-            ((PanelMap::setup().width() / 2.0F) - (textDimensions.x / 2)),
+            ((panelMap.width() / 2.0F) - (textDimensions.x / 2)),
             (fontSize / 2.0F)},
         fontSize,
         GuiGetStyle(DEFAULT, TEXT_SPACING),
         RAYWHITE);
 }
 
-RectangleEx PanelLog::setup()
+void PanelLog::update(RectangleEx* panelLog, RectangleEx const& panelTileInfo)
 {
-    RectangleEx rect{};
-    rect.setRight(PanelTileInfo::setup().left())
+    (*panelLog)
+        .setRight(panelTileInfo.left())
         .setBottom(static_cast<int>(GetRenderHeight()))
         .resizeHeightTop(Panels::LOG_PANEL_HEIGHT);
-
-    return rect;
 }
 
-RectangleEx PanelMap::setup()
+void PanelMap::update(
+    RectangleEx* panelMap,
+    RectangleEx const& panelTileInfo,
+    RectangleEx const& panelLog,
+    RectangleEx const& panelStatus)
 {
-    RectangleEx rect{};
-    rect.setRight(PanelInfo::setup().left())
-        .setBottom(PanelLog::setup().top())
-        .setTop(PanelStatus::setup().bottom());
+    (*panelMap)
+        .setRight(panelTileInfo.left())
+        .setBottom(panelLog.top())
+        .setTop(panelStatus.bottom());
+}
 
-    return rect;
+void PanelMapExtended::update(RectangleEx* panelMapExtended, RectangleEx const& panelMap)
+{
+    *panelMapExtended = panelMap;
+    (*panelMapExtended)
+        .offsetLeft(-TextureData::TILE_SIZE)
+        .offsetTop(-TextureData::TILE_SIZE)
+        .offsetRight(TextureData::TILE_SIZE)
+        .offsetBottom(TextureData::TILE_SIZE);
+}
+
+void Panels::SubUpdatePanels::onNotify()
+{
+    PanelTileInfo::udpate(&panelTileInfo_);
+
+    PanelInfo::update(
+        &panelInfo_,
+        panelTileInfo_);
+
+    PanelStatus::update(
+        &panelStatus_,
+        panelTileInfo_);
+
+    PanelLog::update(
+        &panelLog_,
+        panelTileInfo_);
+
+    PanelMap::update(
+        &panelMap_,
+        panelTileInfo_,
+        panelLog_,
+        panelStatus_);
+
+    PanelMapExtended::update(
+        &panelMapExtended_,
+        panelMap_);
 }
