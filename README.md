@@ -91,6 +91,7 @@ Not implemented yet
 - Square rooms grid
 - Extend side -> new room wall
 - Random border match
+- Quad tree ()
 
 ## Design guide
 ### Struct/Class general
@@ -99,7 +100,7 @@ Not implemented yet
 
 ### Functions
 - namespace: domain/related functions (interclass, non-class)
-- Class: member if private member needed (class internal behaviour), free if no private member needed (can work with existing interface)
+- methods: member if private member needed (class internal behaviour), free function (NMNF) if no private member needed (can work with existing interface)
 - Task: Find most concise interface (as small as possible, as big as needed)!!!
     - When creating a member function: can it make use of a more "atomic" member function and therefore be made NMNF?
 - For readability only: no new file, but forward declare
@@ -162,18 +163,49 @@ private:
 };
 ```
 
-## Global alternative
+## Functor for existing function
 ```cpp
-class Class {
-    static inline int state_{};
-    static void doModify(){std::cout << ++state_  << "\n";};
-
-public:
-    void doSmth(){doModify();}
+void func(int arg)
+{
+  std::cout << "Do something with arg " << arg << "\n";
 }
 
-int main(){
-    std::make_unique<Class>()->doSmth();
+struct fFunctor
+{
+  void operator()(int arg) {func(arg);}
+
+  fFunctor() = default;
+  fFunctor(int arg, bool ctorTrigger = false)
+  {
+    if (ctorTrigger)
+    {
+      std::cout << "Trigger in ctor: ";
+      func(arg);
+    }
+  }
+};
+```
+
+## Handles for SoA (https://youtu.be/QbffGSgsCcQ?si=5xdlcdhjIdP-QKVQ&t=1080)
+```cpp
+struct SoA
+{
+    static inline std::vector<int> members;
+};
+
+struct SoAHandle
+{
+    size_t index;
+    int& id() { return SoA::members[index]; }
+};
+
+namespace SoAUtility
+{
+    SoAHandle create(int member)
+    {
+        SoA::members.push_back(member);
+        return SoAHandle{SoA::members.size() - 1};
+    };
 }
 ```
 
