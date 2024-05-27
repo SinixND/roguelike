@@ -41,7 +41,7 @@ namespace MapOverlay
 
         for (auto& steppedTile : path)
         {
-            world->framedMapOverlay().createOrUpdate(
+            world->framedMapOverlay().insert(
                 steppedTile.tile->positionComponent.tilePosition(),
                 GameObject{
                     PositionComponent{steppedTile.tile->positionComponent.tilePosition()},
@@ -64,7 +64,7 @@ namespace MapOverlay
             for (auto& steppedTile : steppedTiles)
             {
                 // Add reachable tile to overlay
-                world->mapOverlay().createOrUpdate(
+                world->mapOverlay().insert(
                     steppedTile.tile->positionComponent.tilePosition(),
                     GameObject{
                         PositionComponent{steppedTile.tile->positionComponent.tilePosition()},
@@ -87,7 +87,7 @@ namespace MapOverlay
         for (auto& tile : inActionRangeTiles)
         {
             // Add reachable tile to overlay
-            world->mapOverlay().createOrUpdate(
+            world->mapOverlay().insert(
                 tile->positionComponent.tilePosition(),
                 GameObject{
                     PositionComponent{tile->positionComponent.tilePosition()},

@@ -26,7 +26,7 @@ namespace snx
         : public ISparseSet<Key>
     {
     public:
-        Type* createOrUpdate(Key const& key, Type const& value = Type{})
+        Type* insert(Key const& key, Type const& value = Type{})
         {
             if (contains(key))
             {

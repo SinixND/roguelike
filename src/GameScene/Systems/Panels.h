@@ -25,7 +25,7 @@ namespace Panels
 
 namespace PanelTileInfo
 {
-    void udpate(RectangleEx* panelTileInfo);
+    void update(RectangleEx* panelTileInfo);
 
     void render(RectangleEx const& panelTileInfo, TileMap& tileMap, Vector2I cursorPosition, Font const& font);
 }

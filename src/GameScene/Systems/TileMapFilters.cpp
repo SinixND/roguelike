@@ -338,7 +338,7 @@ namespace TileMapFilters
                 continue;
             }
 
-            tileSet.createOrUpdate(tile->positionComponent.tilePosition(), tile);
+            tileSet.insert(tile->positionComponent.tilePosition(), tile);
         }
     }
 
@@ -492,7 +492,7 @@ namespace TileMapFilters
                 continue;
             }
 
-            tilesToRender.createOrUpdate(tile.positionComponent.tilePosition(), tile);
+            tilesToRender.insert(tile.positionComponent.tilePosition(), tile);
         }
 
         return tilesToRender;

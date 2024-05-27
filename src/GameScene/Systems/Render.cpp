@@ -5,6 +5,7 @@
 #include "Textures.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
+#include <iostream>
 #include <raylib.h>
 #include <raymath.h>
 
@@ -34,7 +35,7 @@ namespace Render
             if (cheatMode)
             {
                 tint = RED;
-                tint = ColorBrightness(tint, 0.25);
+                tint = ColorBrightness(tint, 0);
             }
             break;
         }

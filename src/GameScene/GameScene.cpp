@@ -5,7 +5,6 @@
 #include "DebugMode.h"
 #include "Directions.h"
 #include "Enums/RenderID.h"
-#include "Event.h"
 #include "GameObject.h"
 #include "InputMode.h"
 #include "MapOverlay.h"
@@ -19,7 +18,6 @@
 #include "World.h"
 #include "Zoom.h"
 #include "raylibEx.h"
-#include <memory>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -48,32 +46,25 @@ void GameScene::initialize()
     textures_.registerTexture(RenderID::SUPPORTABLE, {0, 70});
     textures_.registerTexture(RenderID::NEXT_LEVEL, {35, 70});
 
-    // Attach subscribers
-    publisher_.addSubscriber(
-        std::make_shared<Panels::SubUpdatePanels>(
-            Event::windowResized,
-            panelTileInfo_,
-            panelInfo_,
-            panelStatus_,
-            panelLog_,
-            panelMap_,
-            panelMapExtended_));
-
-    publisher_.addSubscriber(
-        std::make_shared<CameraControl::SubUpdateCameraOffset>(
-            Event::windowResized,
-            camera_,
-            panelMap_));
-
-    publisher_.addSubscriber(
-        std::make_shared<World::SubUpdateRenderTiles>(
-            Event::cameraChanged,
-            gameWorld_,
-            camera_,
-            panelMap_));
-
-    // Trigger events to initialize
-    publisher_.notify(Event::windowResized);
+    // Panels
+    PanelTileInfo::update(&panelTileInfo_);
+    PanelInfo::update(
+        &panelInfo_,
+        panelTileInfo_);
+    PanelStatus::update(
+        &panelStatus_,
+        panelTileInfo_);
+    PanelLog::update(
+        &panelLog_,
+        panelTileInfo_);
+    PanelMap::update(
+        &panelMap_,
+        panelTileInfo_,
+        panelLog_,
+        panelStatus_);
+    PanelMapExtended::update(
+        &panelMapExtended_,
+        panelMap_);
 
     // Camera
     camera_ = {
@@ -121,8 +112,7 @@ void GameScene::processInput()
         TileTransformation::positionToWorld(cursor_.positionComponent.tilePosition()),
         InputMode::isMouseControlled(),
         gameWorld_.mapSize_(),
-        panelMap_,
-        publisher_);
+        panelMap_);
 
     // Center on hero
     if (IsKeyPressed(KEY_H))
@@ -175,7 +165,28 @@ void GameScene::updateState()
     // Publish window resize event
     if (IsWindowResized())
     {
-        publisher_.notify(Event::windowResized);
+        // Panels
+        PanelTileInfo::update(&panelTileInfo_);
+        PanelInfo::update(
+            &panelInfo_,
+            panelTileInfo_);
+        PanelStatus::update(
+            &panelStatus_,
+            panelTileInfo_);
+        PanelLog::update(
+            &panelLog_,
+            panelTileInfo_);
+        PanelMap::update(
+            &panelMap_,
+            panelTileInfo_,
+            panelLog_,
+            panelStatus_);
+        PanelMapExtended::update(
+            &panelMapExtended_,
+            panelMap_);
+
+        // Update camera offset
+        camera_.offset = panelMap_.center();
     }
 
     // Update map overlay
@@ -194,6 +205,10 @@ void GameScene::updateState()
 
 void GameScene::renderOutput()
 {
+    gameWorld_.initTilesToRender(
+        camera_,
+        panelMapExtended_);
+
     BeginMode2D(camera_);
     BeginScissorMode(
         panelMap_.left(),
@@ -268,13 +283,13 @@ void GameScene::renderOutput()
     PanelStatus::render(
         panelTileInfo_,
         gameWorld_.currentMapLevel(),
-        gameFont_());
+        GuiGetFont());
 
     PanelTileInfo::render(
         panelTileInfo_,
         gameWorld_.currentMap(),
         cursor_.positionComponent.tilePosition(),
-        gameFont_());
+        GuiGetFont());
     //=================================
 
     // Draw panel borders
@@ -361,7 +376,7 @@ void GameScene::update()
 void GameScene::deinitialize()
 {
     // Unload fonts
-    gameFont_.unloadFont();
+    UnloadFont(GuiGetFont());
 
     // Unload texture atlas
     textures_.unloadAtlas();

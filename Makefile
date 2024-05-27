@@ -174,9 +174,9 @@ benchmark: $(BIN_DIR)/benchmark.$(BINARY_EXT)
 
 ### rule for release build process with binary as prerequisite
 release: CXX_FLAGS += -O2
-release: clean build 
+release: build 
 
-publish: release web windows
+publish: clean release web windows
 
 ### rule for native build process with binary as prerequisite
 build: $(BIN_DIR)/$(BINARY).$(BINARY_EXT) 

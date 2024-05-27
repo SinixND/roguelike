@@ -2,7 +2,6 @@
 #define IG20231203204746
 
 #include "CheatMode.h"
-#include "GameFont.h"
 #include "GameObject.h"
 #include "Graphic.h"
 #include "IScene.h"
@@ -25,7 +24,6 @@ private:
 
     CheatMode cheatMode_{};
     Textures textures_{};
-    GameFont gameFont_{};
 
     RectangleEx panelTileInfo_{};
     RectangleEx panelInfo_{};

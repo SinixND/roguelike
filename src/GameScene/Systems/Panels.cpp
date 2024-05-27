@@ -8,7 +8,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-void PanelTileInfo::udpate(RectangleEx* panelTileInfo)
+void PanelTileInfo::update(RectangleEx* panelTileInfo)
 {
     (*panelTileInfo)
         .setRight(static_cast<int>(GetRenderWidth()))
@@ -118,7 +118,7 @@ void PanelMapExtended::update(RectangleEx* panelMapExtended, RectangleEx const& 
 
 void Panels::SubUpdatePanels::onNotify()
 {
-    PanelTileInfo::udpate(&panelTileInfo_);
+    PanelTileInfo::update(&panelTileInfo_);
 
     PanelInfo::update(
         &panelInfo_,

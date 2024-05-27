@@ -28,7 +28,7 @@ public:
         GraphicComponent(
             RenderID::HERO,
             LayerID::OBJECT),
-        MovementComponent(5, 50),
+        MovementComponent(15, 50),
         VisibilityID::VISIBLE,
         20,
         AttackComponent(
@@ -52,6 +52,7 @@ public:
 private:
     std::vector<TileMap> maps_{MapGenerator::createStartRoom(mapSize_)};
 
+    // Filtered tileMaps for efficiency
     TileMap tilesToRender_{};
 
     TileOverlayMap mapOverlay_{};

@@ -21,7 +21,7 @@ namespace MapGenerator
 {
     void addTile(TileMap* tileMap, std::string tag, Vector2I const& position, GraphicComponent graphic, VisibilityID visibility, MapSize* mapSize, bool isSolid, bool blocksVision)
     {
-        tileMap->createOrUpdate(position, Tile{tag, PositionComponent{position}, graphic, visibility, isSolid, blocksVision});
+        tileMap->insert(position, Tile{tag, PositionComponent{position}, graphic, visibility, isSolid, blocksVision});
 
         // Update global available map dimensions
         mapSize->extend(position);
