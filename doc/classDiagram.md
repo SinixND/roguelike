@@ -16,34 +16,32 @@ F *-- G : owns (created instance)
 classDiagram
 direction TB
 
-class Graphic {
-    + RenderID renderID
-    + Vector2* position
+class Transform {
+    - renderPosition_ : V2f
+
+    + renderPosition() V2f const&
+    + tilePosition() V2i
+    + change() void
+    + move() void
 }
 
-class GameObject{
-    + Vector2 position
-    + Graphic graphic
+
+Tiles *-- Transform : SparseSet
+Tiles *-- RenderID : SparseSet
+Tiles *-- isSolid : SparseSet
+class Tiles {
+    + newTileHandle() : tileHandle
 }
-Graphic --* GameObject
+
+
+tileHandle o-- Transform
+tileHandle o-- RenderID
+tileHandle 
+
 
 class Hero {
-    + bool isSelected
-    + Vector2 position
-    + Graphic graphic
+    + Transform
 }
-Graphic --* Hero
 
-class Tile{
-    + bool isSolid
-    + Vector2 position
-    + Graphic graphic
-}
-Graphic --* Tile
-
-class Render{
-    + render(Graphic graphic) void
-}
-Render ..> Graphic
-
+Hero *-- Transform
 ```

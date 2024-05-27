@@ -19,10 +19,8 @@ public:
     void setVisibilityID(VisibilityID visibilityID) { visibilityID_ = visibilityID; }
 
     bool isSolid() const { return isSolid_; }
-    void setIsSolid(bool state) { isSolid_ = state; }
 
     bool blocksVision() const { return blocksVision_; }
-    void setBlocksVision(bool state) { blocksVision_ = state; }
 
     explicit Tile(
         std::string const& tag,

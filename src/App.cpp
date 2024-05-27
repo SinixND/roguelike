@@ -39,7 +39,7 @@ void App::init()
     SetTargetFPS(FPS_TARGET);
 
     // Fonts
-    LoadFont("resources/fonts/JuliaMono-RegularLatin.ttf");
+    GuiSetFont(LoadFont("resources/fonts/LiberationMono-Regular.ttf"));
     GuiSetStyle(DEFAULT, TEXT_SIZE, FontProperties::FONT_SIZE);
 
     // Scene

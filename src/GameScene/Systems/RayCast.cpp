@@ -116,7 +116,7 @@ namespace RayCast
             // Corners are not considered part of a tile which can be passed by ray
             if (!isCornerHit)
             {
-                tilesPassedByRay.createOrUpdate(tileHit->positionComponent.tilePosition(), tileHit);
+                tilesPassedByRay.insert(tileHit->positionComponent.tilePosition(), tileHit);
             }
 
             // Detect tile blocking vision
@@ -141,7 +141,7 @@ namespace RayCast
     {
         while (true)
         {
-            // udpate shorterLength
+            // update shorterLength
             updateShorterLength(
                 rayLengthIncrementsInDirection,
                 incrementedRayLengths,
