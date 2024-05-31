@@ -4,6 +4,7 @@
 #include "UnitConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
+#include <raymath.h>
 
 // Holds a world / render position and provides convenience functions to work with tile positions as well
 class Position
@@ -38,9 +39,9 @@ public:
         position_ = UnitConversion::positionToWorld(tilePosition);
     }
 
-    void moveBy(float distance, Vector2 const& direction)
+    void move(Vector2 const& offset)
     {
-        position_ += Vector2Scale(direction, distance);
+        position_ += offset;
     }
 };
 

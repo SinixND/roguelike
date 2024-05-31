@@ -2,9 +2,11 @@
 
 #include "Cursor.h"
 #include "DeveloperMode.h"
-#include "Observer/Event.h"
+#include "Event.h"
 #include "PanelData.h"
 #include "PublisherStatic.h"
+#include "World.h"
+#include "raylibEx.h"
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -14,6 +16,8 @@ void GameScene::initialize()
     panels_.init();
     camera_.init(panels_.map().center());
     renderer_.init();
+
+    world_.init();
 
     snx::Publisher::addSubscriber(
         Event::windowResized,
@@ -38,6 +42,8 @@ void GameScene::processInput()
     {
         cursor_.update(camera_.get());
     }
+
+    inputHandler_.check(&world_.hero());
 }
 
 void GameScene::updateState()
@@ -46,6 +52,9 @@ void GameScene::updateState()
     {
         snx::Publisher::notify(Event::windowResized);
     }
+
+    // Update hero movment
+    world_.hero().movment().update(world_.hero().position());
 }
 
 void GameScene::renderOutput()

@@ -2,6 +2,7 @@
 #include "RenderID.h"
 #include "TextureData.h"
 #include "Textures.h"
+#include "TileData.h"
 #include <raylib.h>
 
 void Renderer::init()
@@ -35,9 +36,9 @@ void Renderer::render(RenderID renderID, Vector2 const& renderPosition, Color co
         Rectangle{
             renderPosition.x,
             renderPosition.y,
-            TextureData::TILE_SIZE,
-            TextureData::TILE_SIZE},
-        TextureData::TILE_CENTER,
+            TileData::TILE_SIZE,
+            TileData::TILE_SIZE},
+        TileData::TILE_CENTER,
         0,
         tint);
 }

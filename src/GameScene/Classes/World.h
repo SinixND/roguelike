@@ -5,9 +5,10 @@
 
 class World
 {
-    Hero hero_{};
+    Hero hero_;
 
 public:
+    void init();
     Hero& hero() { return hero_; }
 };
 

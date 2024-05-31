@@ -4,18 +4,19 @@
 #include "Cursor.h"
 #include "GameCamera.h"
 #include "IScene.h"
-#include "Input.h"
+#include "InputHandler.h"
 #include "Panels.h"
 #include "Renderer.h"
 #include "World.h"
 
 class GameScene : public snx::IScene
 {
+
     Panels panels_{};
     GameCamera camera_{};
     Renderer renderer_{};
 
-    Input inputHandler_{};
+    InputHandler inputHandler_{};
 
     Cursor cursor_{};
 

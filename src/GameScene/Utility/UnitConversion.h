@@ -1,7 +1,7 @@
 #ifndef IG20240215012142
 #define IG20240215012142
 
-#include "TextureData.h"
+#include "TileData.h"
 #include "raylib.h"
 #include "raylibEx.h"
 #include <cmath>
@@ -18,16 +18,16 @@ namespace UnitConversion
     inline Vector2I worldToPosition(Vector2 pixel)
     {
         return Vector2I{
-            static_cast<int>(std::floor((pixel.x + (TextureData::TILE_SIZE / 2)) / TextureData::TILE_SIZE)),
-            static_cast<int>(std::floor((pixel.y + (TextureData::TILE_SIZE / 2)) / TextureData::TILE_SIZE))};
+            static_cast<int>(std::floor((pixel.x + (TileData::TILE_SIZE / 2)) / TileData::TILE_SIZE)),
+            static_cast<int>(std::floor((pixel.y + (TileData::TILE_SIZE / 2)) / TileData::TILE_SIZE))};
     }
 
     // Tile position to world pixel
     inline Vector2 positionToWorld(Vector2I position)
     {
         return Vector2{
-            (position.x * TextureData::TILE_SIZE),
-            (position.y * TextureData::TILE_SIZE)};
+            (position.x * TileData::TILE_SIZE),
+            (position.y * TileData::TILE_SIZE)};
     }
 
     // Screen coordinates
@@ -43,8 +43,8 @@ namespace UnitConversion
     inline Vector2 tilePositionToScreen(Vector2I position, Camera2D const& camera)
     {
         Vector2 worldPixel{
-            position.x * TextureData::TILE_SIZE,
-            position.y * TextureData::TILE_SIZE};
+            position.x * TileData::TILE_SIZE,
+            position.y * TileData::TILE_SIZE};
 
         return GetWorldToScreen2D(worldPixel, camera);
     }

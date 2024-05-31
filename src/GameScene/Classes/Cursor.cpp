@@ -18,5 +18,5 @@ void Cursor::toggle()
 
 void Cursor::update(Camera2D const& camera)
 {
-    position_.setTilePosition(UnitConversion::getMouseTile(camera));
+    position_.changeTo(UnitConversion::getMouseTile(camera));
 }

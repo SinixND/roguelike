@@ -3,13 +3,10 @@
 
 #include "Hero.h"
 
-class Input
+class InputHandler
 {
-    Hero* hero_{nullptr};
-
 public:
-    void init(Hero* hero);
-    void check();
+    void check(Hero* hero);
 };
 
 #endif
