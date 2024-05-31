@@ -14,7 +14,7 @@ private:
 
     // Texture atlas
     Texture2D textureAtlas_{};
-    std::unordered_map<RenderID, Vector2> texturePositions_{};
+    std::unordered_map<RenderID, Vector2> textureIdToAtlasPosition_{};
 
 public:
     // Texture atlas
@@ -30,12 +30,12 @@ public:
 
     void registerTexture(RenderID textureID, Vector2 position)
     {
-        texturePositions_.insert(std::make_pair(textureID, position));
+        textureIdToAtlasPosition_.insert(std::make_pair(textureID, position));
     }
 
     Vector2& getTexturePosition(RenderID textureID)
     {
-        return texturePositions_.at(textureID);
+        return textureIdToAtlasPosition_.at(textureID);
     }
 
     void unloadAtlas()

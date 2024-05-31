@@ -1,57 +1,47 @@
 #ifndef IG20240227231122
 #define IG20240227231122
 
-#include "TileTransformation.h"
+#include "UnitConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
-class PositionComponent
+// Holds a world / render position and provides convenience functions to work with tile positions as well
+class Position
 {
+    Vector2 position_{};
+
 public:
-    Vector2 renderPosition() const { return position_; }
-
-    void setRenderPosition(Vector2 position) { position_ = position; }
-
-    Vector2I tilePosition() const
-    {
-        return TileTransformation::worldToPosition(position_);
-    }
-
-    void setTilePosition(Vector2I tilePosition)
-    {
-        position_ = TileTransformation::positionToWorld(tilePosition);
-    }
-
-    bool hasPositionChanged()
-    {
-        if (!Vector2Equals(oldTilePosition_, tilePosition()))
-        {
-            hasPositionChanged_ = true;
-        }
-
-        return hasPositionChanged_;
-    }
-
-    void resetPositionChanged()
-    {
-        oldTilePosition_ = tilePosition();
-        hasPositionChanged_ = false;
-    }
-
-    explicit PositionComponent(Vector2 position = {0, 0})
+    explicit Position(Vector2 const& position = {0, 0})
         : position_(position)
     {
     }
 
-    explicit PositionComponent(Vector2I tilePosition)
+    explicit Position(Vector2I const& tilePosition)
     {
-        setTilePosition(tilePosition);
+        changeTo(tilePosition);
     }
 
-private:
-    Vector2 position_{};
-    Vector2I oldTilePosition_{tilePosition()};
-    bool hasPositionChanged_{true};
+    Vector2 const& renderPosition() const { return position_; }
+
+    Vector2I tilePosition() const
+    {
+        return UnitConversion::worldToPosition(position_);
+    }
+
+    void changeTo(Vector2 const& renderPosition)
+    {
+        position_ = renderPosition;
+    }
+
+    void changeTo(Vector2I const& tilePosition)
+    {
+        position_ = UnitConversion::positionToWorld(tilePosition);
+    }
+
+    void moveBy(float distance, Vector2 const& direction)
+    {
+        position_ += Vector2Scale(direction, distance);
+    }
 };
 
 #endif

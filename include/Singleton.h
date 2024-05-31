@@ -20,7 +20,7 @@ namespace snx
 
     protected:
         Singleton() = default;
-        ~Singleton() = default;
+        virtual ~Singleton() = default;
 
         Singleton(Singleton const&) = delete;
         Singleton& operator=(Singleton const&) = delete;

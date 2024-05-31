@@ -8,8 +8,6 @@
 
 namespace snx
 {
-    typedef size_t Index;
-
     template <typename Key>
     class ISparseSet
     {
@@ -38,7 +36,7 @@ namespace snx
             keys_.insert(key);
 
             // Get new list index for value
-            Index valueIndex = values_.size();
+            size_t valueIndex = values_.size();
 
             // Add new value to list
             values_.push_back(value);
@@ -60,8 +58,8 @@ namespace snx
             }
 
             // Get list index of removed value
-            Index removedValueIndex{keyToIndex_[key]};
-            Index keptValueIndex{};
+            size_t removedValueIndex{keyToIndex_[key]};
+            size_t keptValueIndex{};
 
             // Replace removed value with last value before popping (if more than one value exists) to keep values contiguous
             if (values_.size() > 1)
@@ -134,10 +132,10 @@ namespace snx
         }
 
     private:
-        std::vector<Type> values_{};                  // Vector index is used as value key
-        std::unordered_map<Key, Index> keyToIndex_{}; // Key is used to identify value
-        std::unordered_map<Index, Key> indexToKey_{}; // Store a index (value) to key mapping (internal use only)
-        std::unordered_set<Key> keys_{};              // Set of all keys in use
+        std::vector<Type> values_{};                   // Vector index is used as value key
+        std::unordered_map<Key, size_t> keyToIndex_{}; // Key is used to identify value
+        std::unordered_map<size_t, Key> indexToKey_{}; // Store a index (value) to key mapping (internal use only)
+        std::unordered_set<Key> keys_{};               // Set of all keys in use
     };
 }
 

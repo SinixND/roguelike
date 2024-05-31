@@ -1,344 +1,109 @@
 #include "GameScene.h"
 
-#include "CameraControl.h"
-#include "CursorControl.h"
-#include "DebugMode.h"
-#include "Directions.h"
-#include "Enums/RenderID.h"
-#include "GameObject.h"
-#include "InputMode.h"
-#include "MapOverlay.h"
-#include "Panels.h"
-#include "RNG.h"
-#include "Render.h"
-#include "Selection.h"
-#include "TileTransformation.h"
-#include "UnitMovement.h"
-#include "Vision.h"
-#include "World.h"
-#include "Zoom.h"
-#include "raylibEx.h"
+#include "Cursor.h"
+#include "DeveloperMode.h"
+#include "Observer/Event.h"
+#include "PanelData.h"
+#include "PublisherStatic.h"
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
 
 void GameScene::initialize()
 {
-    // Seed Random number generator
-    if (DebugMode::debugMode())
-    {
-        snx::RNG::seed(1);
-    }
+    panels_.init();
+    camera_.init(panels_.map().center());
+    renderer_.init();
 
-    // Textures
-    // Load texture atlas
-    textures_.loadAtlas("TextureAtlas.png");
+    snx::Publisher::addSubscriber(
+        Event::windowResized,
+        [&]()
+        { panels_.init(); });
 
-    // Register textures
-    textures_.registerTexture(RenderID::INVISIBLE, {0, 0});
-    textures_.registerTexture(RenderID::CURSOR, {35, 0});
-    textures_.registerTexture(RenderID::HERO, {70, 0});
-    textures_.registerTexture(RenderID::WALL, {105, 0});
-    textures_.registerTexture(RenderID::FLOOR, {0, 35});
-    textures_.registerTexture(RenderID::REACHABLE, {35, 35});
-    textures_.registerTexture(RenderID::PATH, {70, 35});
-    textures_.registerTexture(RenderID::ATTACKABLE, {105, 35});
-    textures_.registerTexture(RenderID::SUPPORTABLE, {0, 70});
-    textures_.registerTexture(RenderID::NEXT_LEVEL, {35, 70});
-
-    // Panels
-    PanelTileInfo::update(&panelTileInfo_);
-    PanelInfo::update(
-        &panelInfo_,
-        panelTileInfo_);
-    PanelStatus::update(
-        &panelStatus_,
-        panelTileInfo_);
-    PanelLog::update(
-        &panelLog_,
-        panelTileInfo_);
-    PanelMap::update(
-        &panelMap_,
-        panelTileInfo_,
-        panelLog_,
-        panelStatus_);
-    PanelMapExtended::update(
-        &panelMapExtended_,
-        panelMap_);
-
-    // Camera
-    camera_ = {
-        Vector2Scale(GetDisplaySize(), 0.5f),
-        Directions::V_NULL,
-        0,
-        1};
-
-    gameWorld_.initTilesToRender(
-        camera_,
-        panelMapExtended_);
+    snx::Publisher::addSubscriber(
+        Event::panelsResized,
+        [&]()
+        { camera_.init(panels_.map().center()); });
 }
 
 void GameScene::processInput()
 {
-    if (isInputBlocked_)
-    {
-        return;
-    }
-
-    // Toggle cheatMode
-    if (IsKeyPressed(KEY_F1))
-    {
-        cheatMode_.toggle();
-    }
-
-    // Toggle debugMode
-    if (IsKeyPressed(KEY_F10))
-    {
-        DebugMode::toggleDebugMode();
-    }
-
-    // Toggle between mouse or key control for cursor
+    // Mouse input
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
     {
-        InputMode::update();
+        cursor_.toggle();
     }
 
-    // Update cursor
-    CursorControl::update(&cursor_.positionComponent, camera_, InputMode::isMouseControlled(), panelMap_);
-
-    // Process edge pan
-    CameraControl::edgePan(
-        &camera_,
-        TileTransformation::positionToWorld(cursor_.positionComponent.tilePosition()),
-        InputMode::isMouseControlled(),
-        gameWorld_.mapSize_(),
-        panelMap_);
-
-    // Center on hero
-    if (IsKeyPressed(KEY_H))
+    if (cursor_.isActive())
     {
-        CameraControl::centerOnHero(&camera_, gameWorld_.hero);
-    }
-
-    // Process zoom
-    Zoom::update(GetMouseWheelMove(), &camera_);
-
-    // Reset Zoom
-    if (
-        (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL))
-        && (IsKeyPressed(KEY_KP_0) || IsKeyPressed(KEY_ZERO)))
-    {
-        Zoom::reset(&camera_);
-    }
-
-    // Branch game phase
-    // Select unit
-    if (
-        IsMouseButtonPressed(MOUSE_LEFT_BUTTON)
-        || IsKeyPressed(KEY_SPACE))
-    {
-        Selection::select(
-            &gameWorld_.hero,
-            cursor_.positionComponent.tilePosition());
-    }
-
-    // Deselect unit
-    if (
-        IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_CAPS_LOCK))
-    {
-        Selection::deselect(&gameWorld_.hero);
-    }
-
-    // Set unit movment target
-    if (
-        IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsKeyPressed(KEY_SPACE))
-    {
-        UnitMovement::setTarget(
-            gameWorld_,
-            &gameWorld_.hero,
-            cursor_.positionComponent);
+        cursor_.update(camera_.get());
     }
 }
 
 void GameScene::updateState()
 {
-    // Publish window resize event
     if (IsWindowResized())
     {
-        // Panels
-        PanelTileInfo::update(&panelTileInfo_);
-        PanelInfo::update(
-            &panelInfo_,
-            panelTileInfo_);
-        PanelStatus::update(
-            &panelStatus_,
-            panelTileInfo_);
-        PanelLog::update(
-            &panelLog_,
-            panelTileInfo_);
-        PanelMap::update(
-            &panelMap_,
-            panelTileInfo_,
-            panelLog_,
-            panelStatus_);
-        PanelMapExtended::update(
-            &panelMapExtended_,
-            panelMap_);
-
-        // Update camera offset
-        camera_.offset = panelMap_.center();
-    }
-
-    // Update map overlay
-    MapOverlay::update(gameWorld_.hero, &gameWorld_, cursor_);
-
-    UnitMovement::triggerMovement(&gameWorld_.hero.movementComponent, MapOverlay::path(), isInputBlocked_);
-
-    // Unblock input if target is reached
-    UnitMovement::processMovement(&gameWorld_.hero, isInputBlocked_);
-
-    if (gameWorld_.hero.positionComponent.hasPositionChanged())
-    {
-        Vision::update(gameWorld_.hero, gameWorld_.currentMap());
+        snx::Publisher::notify(Event::windowResized);
     }
 }
 
 void GameScene::renderOutput()
 {
-    gameWorld_.initTilesToRender(
-        camera_,
-        panelMapExtended_);
-
-    BeginMode2D(camera_);
+    // Draw panel contents
+    BeginMode2D(camera_.get());
     BeginScissorMode(
-        panelMap_.left(),
-        panelMap_.top(),
-        panelMap_.width(),
-        panelMap_.height());
+        panels_.map().left(),
+        panels_.map().top(),
+        panels_.map().width(),
+        panels_.map().height());
 
-    // Map layer
-    for (auto& tile : gameWorld_.tilesToRender().values())
+    // Draw cursor
+    if (cursor_.isActive())
     {
-        Render::update(
-            tile.positionComponent.renderPosition(),
-            tile.graphicComponent,
-            //* camera_,
-            textures_,
-            cheatMode_(),
-            //* panelMapExtended_,
-            tile.visibilityID());
+        renderer_.render(
+            cursor_.renderID(),
+            cursor_.position().renderPosition());
     }
 
-    // Map overlay
-    for (auto& tile : gameWorld_.mapOverlay().values())
-    {
-        Render::update(
-            tile.positionComponent.renderPosition(),
-            tile.graphicComponent,
-            //* camera_,
-            textures_,
-            cheatMode_() //* ,
-            //* panelMapExtended_
-        );
-    }
-
-    // (Single frame) Map overlay
-    for (auto& tile : gameWorld_.framedMapOverlay().values())
-    {
-        Render::update(
-            tile.positionComponent.renderPosition(),
-            tile.graphicComponent,
-            //* camera_,
-            textures_,
-            cheatMode_() //* ,
-            //* panelMapExtended_
-        );
-    }
-
-    // Object layer
-    Render::update(
-        gameWorld_.hero.positionComponent.renderPosition(),
-        gameWorld_.hero.graphicComponent,
-        //* camera_,
-        textures_,
-        cheatMode_() //* ,
-        //* panelMapExtended_
-    );
-
-    // UI layer
-    Render::update(
-        cursor_.positionComponent.renderPosition(),
-        cursor_.graphicComponent,
-        //* camera_,
-        textures_,
-        cheatMode_() //* ,
-        //* panelMapExtended_
-    );
+    // Draw world
+    // Draw hero
+    renderer_.render(
+        world_.hero().renderID(),
+        world_.hero().position().renderPosition());
 
     EndScissorMode();
     EndMode2D();
 
-    // Panels
-    //=================================
-    PanelStatus::render(
-        panelTileInfo_,
-        gameWorld_.currentMapLevel(),
-        GuiGetFont());
-
-    PanelTileInfo::render(
-        panelTileInfo_,
-        gameWorld_.currentMap(),
-        cursor_.positionComponent.tilePosition(),
-        GuiGetFont());
-    //=================================
-
     // Draw panel borders
-    //=================================
-    // Tile info panel (right)
     DrawRectangleLinesEx(
-        panelTileInfo_.rectangle(),
-        Panels::PANEL_BORDER_WEIGHT,
+        panels_.tileInfo().rectangle(),
+        PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
-    // Info panel (right)
     DrawRectangleLinesEx(
-        panelInfo_.rectangle(),
-        Panels::PANEL_BORDER_WEIGHT,
+        panels_.info().rectangle(),
+        PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
-    // Status panel (top)
     DrawRectangleLinesEx(
-        panelStatus_.rectangle(),
-        Panels::PANEL_BORDER_WEIGHT,
+        panels_.status().rectangle(),
+        PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
-    // Log panel (bottom)
     DrawRectangleLinesEx(
-        panelLog_.rectangle(),
-        Panels::PANEL_BORDER_WEIGHT,
+        panels_.log().rectangle(),
+        PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
-    // Map panel (mid-left)
     DrawRectangleLinesEx(
-        panelMap_.rectangle(),
-        Panels::PANEL_BORDER_WEIGHT,
-        DARKGRAY);
-
-    // Under cursor info panel (bottom-right)
-    DrawLineEx(
-        panelMap_.bottomRight(),
-        {static_cast<float>(GetRenderWidth()),
-         panelMap_.bottom() + 1},
-        Panels::PANEL_BORDER_WEIGHT,
+        panels_.map().rectangle(),
+        PANEL_BORDER_WEIGHT,
         DARKGRAY);
 }
 
 void GameScene::postOutput()
 {
-    gameWorld_.hero.positionComponent.resetPositionChanged();
-
-    // Clear path
-    gameWorld_.framedMapOverlay().clear();
 }
 
 void GameScene::update()
@@ -354,16 +119,9 @@ void GameScene::update()
     renderOutput();
 
     // Draw simple frame
-    DrawRectangleLinesEx(
-        Rectangle{
-            0,
-            0,
-            static_cast<float>(GetRenderWidth()),
-            static_cast<float>(GetRenderHeight())},
-        BORDER_WIDTH,
-        BORDER_COLOR);
+    drawWindowBorder();
 
-    if (DebugMode::debugMode())
+    if (DeveloperMode::isActive())
     {
         DrawFPS(0, 0);
     }
@@ -375,9 +133,5 @@ void GameScene::update()
 
 void GameScene::deinitialize()
 {
-    // Unload fonts
-    UnloadFont(GuiGetFont());
-
-    // Unload texture atlas
-    textures_.unloadAtlas();
+    renderer_.deinit();
 }

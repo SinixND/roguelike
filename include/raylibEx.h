@@ -11,7 +11,50 @@
 //=====================================
 class RectangleEx
 {
+    float left_;
+    float top_;
+    float right_;
+    float bottom_;
+    float width_;
+    float height_;
+
 public:
+    RectangleEx() = default;
+
+    RectangleEx(float left, float top, float width = 1, float height = 1)
+        : left_(left)
+        , top_(top)
+        , right_(left + width - 1)
+        , bottom_(top + height - 1)
+        , width_(width)
+        , height_(height)
+    {
+        setLeft(left);
+        setTop(top);
+        resizeWidthRight(width);
+        resizeHeightBottom(height);
+    }
+
+    RectangleEx(Vector2 topLeft, Vector2 bottomRight = {0, 0})
+        : left_(topLeft.x)
+        , top_(topLeft.y)
+        , right_(bottomRight.x)
+        , bottom_(bottomRight.y)
+        , width_(bottomRight.x - topLeft.x + 1)
+        , height_(bottomRight.y - topLeft.y + 1)
+    {
+    }
+
+    RectangleEx(Rectangle rectangle)
+        : left_(rectangle.x)
+        , top_(rectangle.y)
+        , right_(rectangle.x + rectangle.width - 1)
+        , bottom_(rectangle.y + rectangle.height - 1)
+        , width_(rectangle.width)
+        , height_(rectangle.height)
+    {
+    }
+
     float left() const { return left_; }
 
     RectangleEx& setLeft(float left)
@@ -138,50 +181,6 @@ public:
             height_};
     }
 
-    RectangleEx() = default;
-
-    RectangleEx(float left, float top, float width = 1, float height = 1)
-        : left_(left)
-        , top_(top)
-        , right_(left + width - 1)
-        , bottom_(top + height - 1)
-        , width_(width)
-        , height_(height)
-    {
-        setLeft(left);
-        setTop(top);
-        resizeWidthRight(width);
-        resizeHeightBottom(height);
-    }
-
-    RectangleEx(Vector2 topLeft, Vector2 bottomRight = {0, 0})
-        : left_(topLeft.x)
-        , top_(topLeft.y)
-        , right_(bottomRight.x)
-        , bottom_(bottomRight.y)
-        , width_(bottomRight.x - topLeft.x + 1)
-        , height_(bottomRight.y - topLeft.y + 1)
-    {
-    }
-
-    RectangleEx(Rectangle rectangle)
-        : left_(rectangle.x)
-        , top_(rectangle.y)
-        , right_(rectangle.x + rectangle.width - 1)
-        , bottom_(rectangle.y + rectangle.height - 1)
-        , width_(rectangle.width)
-        , height_(rectangle.height)
-    {
-    }
-
-private:
-    float left_;
-    float top_;
-    float right_;
-    float bottom_;
-    float width_;
-    float height_;
-
 private:
     void updateWidth()
     {
@@ -218,32 +217,6 @@ struct Vector2I
 {
     int x;
     int y;
-
-    Vector2I& operator+=(Vector2I const& right)
-    {
-        this->x += right.x;
-        this->y += right.y;
-        return *this;
-    }
-
-    Vector2I& operator-=(Vector2I const& right)
-    {
-        this->x -= right.x;
-        this->y -= right.y;
-        return *this;
-    }
-};
-
-struct Matrix2x2
-{
-    float m11, m12;
-    float m21, m22;
-};
-
-struct Matrix2x2I
-{
-    int m11, m12;
-    int m21, m22;
 };
 
 struct RectangleExI
@@ -302,6 +275,18 @@ struct RectangleExI
         }
     }
 };
+
+struct Matrix2x2
+{
+    float m11, m12;
+    float m21, m22;
+};
+
+struct Matrix2x2I
+{
+    int m11, m12;
+    int m21, m22;
+};
 //=====================================
 
 // Functions
@@ -319,12 +304,12 @@ inline Vector2 GetDisplaySize()
     }
 }
 
-inline int Vector2Sum(Vector2I V)
+inline int Vector2Sum(Vector2I const& V)
 {
     return abs(V.x) + abs(V.y);
 }
 
-inline Vector2 GetMainDirection(Vector2 from, Vector2 to)
+inline Vector2 GetMainDirection(Vector2 const& from, Vector2 const& to)
 {
     Vector2 v{Vector2Subtract(to, from)};
 
@@ -335,7 +320,7 @@ inline Vector2 GetMainDirection(Vector2 from, Vector2 to)
     return Vector2Normalize(v);
 }
 
-inline Rectangle GetRenderRec()
+inline Rectangle GetWindowRec()
 {
     return Rectangle{
         0,
@@ -372,17 +357,44 @@ inline Vector2I GetMax(Vector2I V1, Vector2I V2)
         (V1.y > V2.y ? V1.y : V2.y)};
 }
 
-inline bool CheckCollisionPointRectangleEx(Vector2I tilePosition, RectangleExI const& rectangle)
+inline bool IsKeyPressedRepeat(int key, float delay, float tick)
 {
-    bool isColliding = false;
+    static float dtDelay{0};
+    static float dtTick{tick};
 
-    if ((tilePosition.x >= rectangle.left) && (tilePosition.x < rectangle.right) && (tilePosition.y >= rectangle.top) && (tilePosition.y < rectangle.bottom))
+    if (IsKeyDown(key))
     {
-        isColliding = true;
+        // Start measuring delay
+        dtDelay += GetFrameTime();
+
+        // If delay exceeded
+        if (dtDelay > delay)
+        {
+            // Avoid huge dtDelay value
+            dtDelay = delay;
+
+            // Start measuring ticks
+            dtTick += GetFrameTime();
+
+            // If tick exceeded (includes initial trigger)
+            if (dtTick > tick)
+            {
+                // Reset tick
+                dtTick -= tick;
+
+                // Confirm exceeded tick
+                return true;
+            }
+        }
+    }
+    else
+    {
+        dtDelay = 0;
+        dtTick = tick;
     }
 
-    return isColliding;
-}
+    return IsKeyPressed(key);
+};
 //=====================================
 
 // Function Overloads
@@ -432,7 +444,7 @@ RMAPI Vector2I Vector2Scale(Vector2I v, int scale)
         v.y * scale};
 }
 
-// Check whether two given vectors are almost equal
+// Check whether two given integer vectors are equal
 RMAPI int Vector2Equals(Vector2I v1, Vector2I v2)
 {
     return ((v1.x == v2.x) && (v1.y == v2.y));
@@ -452,6 +464,15 @@ RMAPI Vector2 Vector2Transform(Matrix2x2 M, Vector2 V)
         ((M.m21 * V.x) + (M.m22 * V.y))};
 }
 
+inline bool CheckCollisionPointRec(Vector2I point, RectangleExI const& rec)
+{
+    return (
+        (point.x >= rec.left)
+        && (point.x < rec.right)
+        && (point.y >= rec.top)
+        && (point.y < rec.bottom));
+}
+
 inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)
 {
     return CheckCollisionPointRec(point, rec.rectangle());
@@ -460,18 +481,18 @@ inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)
 
 // Operator Overloads
 //=====================================
-inline Vector2& operator+=(Vector2& left, Vector2 const& right)
+inline Vector2& operator+=(Vector2& lhs, Vector2 const& rhs)
 {
-    left.x += right.x;
-    left.y += right.y;
-    return left;
+    lhs.x += rhs.x;
+    lhs.y += rhs.y;
+    return lhs;
 }
 
-inline Vector2& operator-=(Vector2& left, Vector2 const& right)
+inline Vector2& operator-=(Vector2& lhs, Vector2 const& rhs)
 {
-    left.x -= right.x;
-    left.y -= right.y;
-    return left;
+    lhs.x -= rhs.x;
+    lhs.y -= rhs.y;
+    return lhs;
 }
 
 inline bool operator==(Vector2 lhs, Vector2 rhs)
@@ -479,9 +500,23 @@ inline bool operator==(Vector2 lhs, Vector2 rhs)
     return Vector2Equals(lhs, rhs);
 }
 
-inline bool operator==(Vector2I lhs, Vector2I rhs)
+inline Vector2I& operator+=(Vector2I& lhs, Vector2I const& rhs)
 {
-    return Vector2Equals(lhs, rhs);
+    lhs.x += rhs.x;
+    lhs.y += rhs.y;
+    return lhs;
+}
+
+inline Vector2I& operator-=(Vector2I& lhs, Vector2I const& rhs)
+{
+    lhs.x -= rhs.x;
+    lhs.y -= rhs.y;
+    return lhs;
+}
+
+inline bool operator==(Vector2I const& lhs, Vector2I const& rhs)
+{
+    return ((lhs.x == rhs.x) && (lhs.y == rhs.y));
 }
 //=====================================
 

@@ -1,62 +1,36 @@
 #ifndef IG20231203204746
 #define IG20231203204746
 
-#include "CheatMode.h"
-#include "GameObject.h"
-#include "Graphic.h"
+#include "Cursor.h"
+#include "GameCamera.h"
 #include "IScene.h"
-#include "LayerID.h"
-#include "Position.h"
-#include "Publisher.h"
-#include "RenderID.h"
-#include "Textures.h"
+#include "Input.h"
+#include "Panels.h"
+#include "Renderer.h"
 #include "World.h"
-#include "raylibEx.h"
-#include <raylib.h>
-#include <raymath.h>
 
 class GameScene : public snx::IScene
 {
-private:
-    const float BORDER_WIDTH{1};
-    const Color BORDER_COLOR{GRAY};
-    const Color BACKGROUND_COLOR{BLACK};
+    Panels panels_{};
+    GameCamera camera_{};
+    Renderer renderer_{};
 
-    CheatMode cheatMode_{};
-    Textures textures_{};
+    Input inputHandler_{};
 
-    RectangleEx panelTileInfo_{};
-    RectangleEx panelInfo_{};
-    RectangleEx panelStatus_{};
-    RectangleEx panelLog_{};
-    RectangleEx panelMap_{};
-    RectangleEx panelMapExtended_{};
+    Cursor cursor_{};
 
-    Camera2D camera_{};
-
-    GameObject cursor_{
-        PositionComponent(),
-        GraphicComponent(
-            RenderID::CURSOR,
-            LayerID::UI)};
-
-    World gameWorld_{};
-
-    bool isInputBlocked_{false};
-
-    // Event handler
-    Publisher publisher_{};
+    World world_{};
 
 public:
-    void initialize() override;
+    void initialize();
     void update() override;
-    void deinitialize() override;
+    void deinitialize();
 
 private:
-    void processInput() override;
-    void updateState() override;
-    void renderOutput() override;
-    void postOutput() override;
+    void processInput();
+    void updateState();
+    void renderOutput();
+    void postOutput();
 };
 
 #endif

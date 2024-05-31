@@ -11,47 +11,60 @@ using SubscriberList = std::forward_list<std::function<void()>>;
 
 // Subject / Publisher / Event / Sender
 // Can pushlish multiple events / Can hold multiple subscribers (per event)
-class Publisher
+namespace snx
 {
-public:
-    // Event is the 'key' that we want to handle.
-    // 'subscriber' is the subscriber to be added for the event
-    static void addSubscriber(Event event, std::function<void()> subscriber)
+    class Publisher
     {
-        // Check if event list exists
-        auto it = eventToSubscribers_.find(event);
+        static inline std::unordered_map<Event, SubscriberList> eventToSubscriberLists_{{}};
 
-        if (it == eventToSubscribers_.end())
+    public:
+        // Event is the 'key' that we want to handle.
+        // 'subscriber' is the action triggered by the event
+        static void addSubscriber(Event event, std::function<void()> subscriber)
         {
-            eventToSubscribers_[event] = SubscriberList();
+            ensureList(event);
+
+            eventToSubscriberLists_[event].push_front(subscriber);
         }
 
-        // Add  subscriber to the appropriate list.
-        eventToSubscribers_[event].push_front(subscriber);
-    }
-
-    static void notifyAll()
-    {
-        // Iterate all subscribers
-        for (auto& list : eventToSubscribers_)
+        // Execute all subscribers for given event
+        static void notify(Event event)
         {
-            for (auto& subscriber : list.second)
+            for (auto& subscriber : eventToSubscriberLists_[event])
             {
                 subscriber();
             }
         }
-    }
 
-    static void notify(Event event)
-    {
-        for (auto& subscriber : eventToSubscribers_[event])
+        // Exectue all subscribers event agnostic
+        static void notifyAll()
         {
-            subscriber();
+            // Iterate all subscribers
+            for (auto& mapping : eventToSubscriberLists_)
+            {
+                notifyAllSubscribers(mapping.second);
+            }
         }
-    }
 
-private:
-    static inline std::unordered_map<Event, SubscriberList> eventToSubscribers_{{}};
-};
+    private:
+        // Ensure subscriber list exists for given event
+        static void ensureList(Event event)
+        {
+            if (eventToSubscriberLists_.find(event) == eventToSubscriberLists_.end())
+            {
+                eventToSubscriberLists_[event] = SubscriberList();
+            }
+        }
+
+        // Execute all subscribers in subscriber list
+        static void notifyAllSubscribers(std::forward_list<std::function<void()>>& subscriberList)
+        {
+            for (auto& subscriber : subscriberList)
+            {
+                subscriber();
+            }
+        }
+    };
+}
 
 #endif

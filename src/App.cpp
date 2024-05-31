@@ -1,6 +1,5 @@
 #include "App.h"
-#include "FontProperties.h"
-#include "VSync.h"
+
 #include <raygui.h>
 #include <raylib.h>
 
@@ -22,31 +21,33 @@ void applicationLoop(void* arg_)
 
 void App::init()
 {
+    //* TODO: Import configs from user file
+
     // Raylib flags
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    if (VSync::VSYNC_ACTIVE)
+    if (config.vSync())
     {
         SetConfigFlags(FLAG_VSYNC_HINT);
     }
 
     // Initialize window
-    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Roguelike");
+    InitWindow(config.windowWidth(), config.windowHeight(), "Roguelike");
 
     // Raylib Settings
-    SetWindowIcon(favicon);
-    SetWindowMinSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    SetWindowIcon(favicon_);
+    SetWindowMinSize(config.windowWidth(), config.windowHeight());
     SetExitKey(KEY_F4);
-    SetTargetFPS(FPS_TARGET);
+    SetTargetFPS(fpsTarget_);
 
     // Fonts
     GuiSetFont(LoadFont("resources/fonts/LiberationMono-Regular.ttf"));
-    GuiSetStyle(DEFAULT, TEXT_SIZE, FontProperties::FONT_SIZE);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, fontSize_);
 
     // Scene
-    gameScene.initialize();
+    gameScene_.initialize();
 }
 
-void toggleFullscreen()
+void updateFullscreen()
 {
     if (IsKeyPressed(KEY_F11))
     {
@@ -71,9 +72,9 @@ void App::run()
 #else
     while (!(WindowShouldClose()))
     {
-        toggleFullscreen();
+        updateFullscreen();
 
-        activeScene->update();
+        activeScene_->update();
     }
 #endif
     //=================================
@@ -81,6 +82,6 @@ void App::run()
 
 void App::deinit()
 {
-    gameScene.deinitialize();
+    gameScene_.deinitialize();
     CloseWindow(); // Close window and opengl context
 }

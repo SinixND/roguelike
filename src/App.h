@@ -1,6 +1,7 @@
 #ifndef IG20240519210141
 #define IG20240519210141
 
+#include "AppConfig.h"
 #include "GameScene.h"
 #include "IScene.h"
 #include <raylib.h>
@@ -17,25 +18,25 @@ struct emscriptenArgs
 
 class App
 {
+    static inline AppConfig config{};
+
 public:
     void init();
     void run();
     void deinit();
 
 private:
-    // Application window
-    int const WINDOW_WIDTH{800};
-    int const WINDOW_HEIGHT{450};
-    int const FPS_TARGET{245};
+    int const fpsTarget_{300};
+    float const fontSize_{20};
 
     // Raylib settings
-    Image const favicon{LoadImage("resources/favicon/favicon.png")};
+    Image const favicon_{LoadImage("resources/favicon/favicon.png")};
 
     // Scenes
-    GameScene gameScene{};
+    GameScene gameScene_{};
 
     // Set default scene
-    snx::IScene* activeScene{&gameScene};
+    snx::IScene* activeScene_{&gameScene_};
 };
 
 #endif
