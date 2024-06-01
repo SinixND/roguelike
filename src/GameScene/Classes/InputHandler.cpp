@@ -6,17 +6,19 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-void InputHandler::check(Hero* hero)
+void InputHandler::check()
 {
     // Store last key pressed
-    static int keyCached{};
     int keyPressed{GetKeyPressed()};
 
     if (keyPressed)
     {
         keyCached = keyPressed;
     }
+}
 
+void InputHandler::update(Hero* hero)
+{
     if (!IsKeyPressedRepeat(keyCached, INPUT_DELAY, INPUT_TICK))
     {
         return;
@@ -30,7 +32,10 @@ void InputHandler::check(Hero* hero)
         // Default action (without shift)
         if (!IsKeyDown(KEY_LEFT_SHIFT))
         {
-            hero->movment().trigger(Directions::V_UP);
+            hero->triggerMovement(
+                Directions::V_UP,
+                &hero->movement(),
+                &hero->energy());
         }
 
         // Alternate action if shift is held
@@ -43,7 +48,10 @@ void InputHandler::check(Hero* hero)
         // Default action (without shift)
         if (!IsKeyDown(KEY_LEFT_SHIFT))
         {
-            hero->movment().trigger(Directions::V_LEFT);
+            hero->triggerMovement(
+                Directions::V_LEFT,
+                &hero->movement(),
+                &hero->energy());
         }
 
         // Alternate action if shift is held
@@ -56,7 +64,10 @@ void InputHandler::check(Hero* hero)
         // Default action (without shift)
         if (!IsKeyDown(KEY_LEFT_SHIFT))
         {
-            hero->movment().trigger(Directions::V_DOWN);
+            hero->triggerMovement(
+                Directions::V_DOWN,
+                &hero->movement(),
+                &hero->energy());
         }
 
         // Alternate action if shift is held
@@ -69,7 +80,10 @@ void InputHandler::check(Hero* hero)
         // Default action (without shift)
         if (!IsKeyDown(KEY_LEFT_SHIFT))
         {
-            hero->movment().trigger(Directions::V_RIGHT);
+            hero->triggerMovement(
+                Directions::V_RIGHT,
+                &hero->movement(),
+                &hero->energy());
         }
 
         // Alternate action if shift is held

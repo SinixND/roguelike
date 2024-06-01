@@ -70,16 +70,15 @@ Platforms: Linux, Windows, Browser
 
 
 ### Keyboard
-| Control                           | Function            |
-| --------------------------------- | ------------------- |
-| WASD / Arrow keys                 | Cursor movement     |
-| L_SHIFT                           | Fast cursor movment |
-| CTRL + 0 (both numpad and normal) | Reset Zoom          |
-| ESCAPE / CAPS_LOCK                | Deselect            |
-| F1                                | Toggle cheat mode   |
-| F4                                | Exit                |
-| F11                               | Maximize window     |
-| H                                 | Center on hero      |
+| Control                           | Function                |
+| --------------------------------- | ----------------------- |
+| WASD / Arrow keys                 | Hero movement           |
+| L_SHIFT                           | Continuous hero movment |
+| CTRL + 0 (both numpad and normal) | Reset Zoom              |
+| F1                                | Toggle developer mode   |
+| F4                                | Exit                    |
+| F11                               | Maximize window         |
+| H                                 | Center on hero          |
 
 
 ### Touch

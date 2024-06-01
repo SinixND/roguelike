@@ -3,7 +3,6 @@
 #include "Cursor.h"
 #include "DeveloperMode.h"
 #include "Event.h"
-#include "PanelData.h"
 #include "PublisherStatic.h"
 #include "World.h"
 #include "raylibEx.h"
@@ -19,6 +18,7 @@ void GameScene::initialize()
 
     world_.init();
 
+    // Setup events
     snx::Publisher::addSubscriber(
         Event::windowResized,
         [&]()
@@ -28,6 +28,16 @@ void GameScene::initialize()
         Event::panelsResized,
         [&]()
         { camera_.init(panels_.map().center()); });
+
+    snx::Publisher::addSubscriber(
+        Event::actionInProgress,
+        [&]()
+        { actionInProgress_ = true; });
+
+    snx::Publisher::addSubscriber(
+        Event::actionFinished,
+        [&]()
+        { actionInProgress_ = false; });
 }
 
 void GameScene::processInput()
@@ -38,12 +48,17 @@ void GameScene::processInput()
         cursor_.toggle();
     }
 
-    if (cursor_.isActive())
+    cursor_.update(camera_.get(), world_.hero().position().renderPosition());
+
+    inputHandler_.check();
+
+    // Block input handling if hero misses energy
+    if (!world_.hero().energy().isFull())
     {
-        cursor_.update(camera_.get());
+        return;
     }
 
-    inputHandler_.check(&world_.hero());
+    inputHandler_.update(&world_.hero());
 }
 
 void GameScene::updateState()
@@ -53,13 +68,25 @@ void GameScene::updateState()
         snx::Publisher::notify(Event::windowResized);
     }
 
+    // Regenerate energy if no action in progress
+    if (!actionInProgress_)
+    {
+        while (true)
+        {
+            if (world_.hero().energy().regenerate())
+            {
+                break;
+            }
+        }
+    }
+
     // Update hero movment
-    world_.hero().movment().update(world_.hero().position());
+    world_.hero().movement().update(world_.hero().position());
 }
 
 void GameScene::renderOutput()
 {
-    // Draw panel contents
+    // Draw map panel content
     BeginMode2D(camera_.get());
     BeginScissorMode(
         panels_.map().left(),
@@ -84,31 +111,9 @@ void GameScene::renderOutput()
     EndScissorMode();
     EndMode2D();
 
-    // Draw panel borders
-    DrawRectangleLinesEx(
-        panels_.tileInfo().rectangle(),
-        PANEL_BORDER_WEIGHT,
-        DARKGRAY);
+    panels_.drawLogPanelContent();
 
-    DrawRectangleLinesEx(
-        panels_.info().rectangle(),
-        PANEL_BORDER_WEIGHT,
-        DARKGRAY);
-
-    DrawRectangleLinesEx(
-        panels_.status().rectangle(),
-        PANEL_BORDER_WEIGHT,
-        DARKGRAY);
-
-    DrawRectangleLinesEx(
-        panels_.log().rectangle(),
-        PANEL_BORDER_WEIGHT,
-        DARKGRAY);
-
-    DrawRectangleLinesEx(
-        panels_.map().rectangle(),
-        PANEL_BORDER_WEIGHT,
-        DARKGRAY);
+    panels_.drawPanelBorders();
 }
 
 void GameScene::postOutput()

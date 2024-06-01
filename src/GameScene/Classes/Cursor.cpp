@@ -16,7 +16,13 @@ void Cursor::toggle()
     HideCursor();
 }
 
-void Cursor::update(Camera2D const& camera)
+void Cursor::update(Camera2D const& camera, Vector2 const& heroPosition)
 {
-    position_.changeTo(UnitConversion::getMouseTile(camera));
+    if (isActive_)
+    {
+        position_.changeTo(UnitConversion::getMouseTile(camera));
+        return;
+    }
+
+    position_.changeTo(heroPosition);
 }

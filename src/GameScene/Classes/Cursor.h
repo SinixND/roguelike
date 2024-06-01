@@ -19,7 +19,7 @@ public:
     bool isActive() { return isActive_; }
     void toggle();
 
-    void update(Camera2D const& camera);
+    void update(Camera2D const& camera, Vector2 const& heroPosition);
 };
 
 #endif

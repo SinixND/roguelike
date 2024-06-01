@@ -27,7 +27,6 @@ public:
 
 private:
     int const fpsTarget_{300};
-    float const fontSize_{20};
 
     // Raylib settings
     Image const favicon_{LoadImage("resources/favicon/favicon.png")};

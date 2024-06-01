@@ -5,8 +5,11 @@
 
 class InputHandler
 {
+    int keyCached{};
+
 public:
-    void check(Hero* hero);
+    void check();
+    void update(Hero* hero);
 };
 
 #endif

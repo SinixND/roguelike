@@ -19,6 +19,9 @@ public:
     RectangleEx const& status() { return status_; }
     RectangleEx const& log() { return log_; }
     RectangleEx const& map() { return map_; }
+
+    void drawLogPanelContent();
+    void drawPanelBorders();
 };
 
 #endif

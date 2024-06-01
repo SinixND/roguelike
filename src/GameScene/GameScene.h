@@ -22,6 +22,8 @@ class GameScene : public snx::IScene
 
     World world_{};
 
+    bool actionInProgress_{false};
+
 public:
     void initialize();
     void update() override;

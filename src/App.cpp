@@ -1,5 +1,9 @@
 #include "App.h"
 
+#include "DeveloperMode.h"
+#include "Event.h"
+#include "GameFont.h"
+#include "PublisherStatic.h"
 #include <raygui.h>
 #include <raylib.h>
 
@@ -40,8 +44,8 @@ void App::init()
     SetTargetFPS(fpsTarget_);
 
     // Fonts
-    GuiSetFont(LoadFont("resources/fonts/LiberationMono-Regular.ttf"));
-    GuiSetStyle(DEFAULT, TEXT_SIZE, fontSize_);
+    GameFont::load();
+    GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::fontSize);
 
     // Scene
     gameScene_.initialize();
@@ -59,8 +63,17 @@ void updateFullscreen()
         {
             MaximizeWindow();
         }
+
+        snx::Publisher::notify(Event::windowResized);
     }
 }
+void updateDeveloperMode()
+{
+    if (IsKeyPressed(KEY_F1))
+    {
+        DeveloperMode::toggle();
+    }
+};
 
 void App::run()
 {
@@ -73,6 +86,7 @@ void App::run()
     while (!(WindowShouldClose()))
     {
         updateFullscreen();
+        updateDeveloperMode();
 
         activeScene_->update();
     }
@@ -82,6 +96,7 @@ void App::run()
 
 void App::deinit()
 {
+    GameFont::unload();
     gameScene_.deinitialize();
     CloseWindow(); // Close window and opengl context
 }

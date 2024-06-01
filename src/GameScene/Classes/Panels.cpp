@@ -1,9 +1,12 @@
 #include "Panels.h"
 
 #include "Event.h"
+#include "GameFont.h"
+#include "Logger.h"
 #include "PanelData.h"
 #include "PublisherStatic.h"
 #include <raylib.h>
+#include <string>
 
 void Panels::init()
 {
@@ -33,4 +36,51 @@ void Panels::init()
         .setTop(status_.bottom());
 
     snx::Publisher::notify(Event::panelsResized);
+}
+
+void Panels::drawLogPanelContent()
+{
+    auto textSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
+    auto lines{(log_.height() / (1.5 * textSize)) - 1};
+    for (int i{0}; i < lines; ++i)
+    {
+        std::string message{snx::Logger::getMessage(i)};
+
+        DrawTextEx(
+            GameFont::font(),
+            message.c_str(),
+            {log_.left() + (textSize / 2),
+             log_.bottom() - (textSize * 1.5f) - (i * 1.5f * textSize)},
+            textSize,
+            0,
+            LIGHTGRAY);
+    }
+}
+
+void Panels::drawPanelBorders()
+{
+    DrawRectangleLinesEx(
+        tileInfo_.rectangle(),
+        PANEL_BORDER_WEIGHT,
+        DARKGRAY);
+
+    DrawRectangleLinesEx(
+        info_.rectangle(),
+        PANEL_BORDER_WEIGHT,
+        DARKGRAY);
+
+    DrawRectangleLinesEx(
+        status_.rectangle(),
+        PANEL_BORDER_WEIGHT,
+        DARKGRAY);
+
+    DrawRectangleLinesEx(
+        log_.rectangle(),
+        PANEL_BORDER_WEIGHT,
+        DARKGRAY);
+
+    DrawRectangleLinesEx(
+        map_.rectangle(),
+        PANEL_BORDER_WEIGHT,
+        DARKGRAY);
 }
