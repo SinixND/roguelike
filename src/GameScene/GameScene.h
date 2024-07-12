@@ -3,11 +3,11 @@
 
 #include "Cursor.h"
 #include "GameCamera.h"
+#include "Hero.h"
 #include "IScene.h"
 #include "InputHandler.h"
 #include "Panels.h"
 #include "Renderer.h"
-#include "World.h"
 
 class GameScene : public snx::IScene
 {
@@ -19,8 +19,7 @@ class GameScene : public snx::IScene
     InputHandler inputHandler_{};
 
     Cursor cursor_{};
-
-    World world_{};
+    Hero hero_;
 
     bool actionInProgress_{false};
 

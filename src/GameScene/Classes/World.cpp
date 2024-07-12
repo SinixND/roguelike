@@ -2,5 +2,4 @@
 
 void World::init()
 {
-    hero_.init();
 }

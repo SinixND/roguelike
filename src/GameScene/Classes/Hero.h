@@ -12,7 +12,7 @@ class Hero
     Movement movement_{};
     Energy energy_{};
     Position position_{};
-    RenderID renderID_{RenderID::HERO};
+    RenderID renderID_{RenderID::hero};
 
 public:
     void init();
@@ -20,7 +20,7 @@ public:
     Movement& movement() { return movement_; }
     Energy& energy() { return energy_; }
     Position& position() { return position_; };
-    RenderID const& renderID() const { return renderID_; };
+    RenderID renderID() { return renderID_; };
 
     void triggerMovement(Vector2I const& direction, Movement* movement, Energy* energy);
 };

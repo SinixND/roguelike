@@ -6,7 +6,7 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-void InputHandler::check()
+void InputHandler::getInput()
 {
     // Store last key pressed
     int keyPressed{GetKeyPressed()};

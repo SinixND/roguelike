@@ -15,7 +15,7 @@ namespace snx
         virtual void erase(Key const& key) = 0;
         virtual void clear() = 0;
         virtual bool contains(Key const& key) const = 0;
-        virtual std::vector<Key> keys() = 0;
+        virtual std::unordered_set<Key>& keys() = 0;
         virtual ~ISparseSet() = default;
     };
 
@@ -124,11 +124,9 @@ namespace snx
             return values_;
         }
 
-        std::vector<Key> keys() override
+        std::unordered_set<Key>& keys() override
         {
-            std::vector<Key> keys{keys_.begin(), keys_.end()};
-
-            return keys;
+            return keys_;
         }
 
     private:

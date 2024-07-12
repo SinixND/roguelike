@@ -8,7 +8,7 @@ class InputHandler
     int keyCached{};
 
 public:
-    void check();
+    void getInput();
     void update(Hero* hero);
 };
 

@@ -11,16 +11,16 @@ void Renderer::init()
     textures_.loadAtlas(TextureData::TEXTURE_ATLAS_FILE);
 
     // Register textures
-    textures_.registerTexture(RenderID::INVISIBLE, {0, 0});
-    textures_.registerTexture(RenderID::CURSOR, {35, 0});
-    textures_.registerTexture(RenderID::HERO, {70, 0});
-    textures_.registerTexture(RenderID::WALL, {105, 0});
-    textures_.registerTexture(RenderID::FLOOR, {0, 35});
-    textures_.registerTexture(RenderID::REACHABLE, {35, 35});
-    textures_.registerTexture(RenderID::PATH, {70, 35});
-    textures_.registerTexture(RenderID::ATTACKABLE, {105, 35});
-    textures_.registerTexture(RenderID::SUPPORTABLE, {0, 70});
-    textures_.registerTexture(RenderID::NEXT_LEVEL, {35, 70});
+    textures_.registerTexture(RenderID::invisible, {0, 0});
+    textures_.registerTexture(RenderID::cursor, {35, 0});
+    textures_.registerTexture(RenderID::hero, {70, 0});
+    textures_.registerTexture(RenderID::wall, {105, 0});
+    textures_.registerTexture(RenderID::floor, {0, 35});
+    textures_.registerTexture(RenderID::reachable, {35, 35});
+    textures_.registerTexture(RenderID::path, {70, 35});
+    textures_.registerTexture(RenderID::attackable, {105, 35});
+    textures_.registerTexture(RenderID::supportable, {0, 70});
+    textures_.registerTexture(RenderID::nextLevel, {35, 70});
 }
 
 void Renderer::render(RenderID renderID, Vector2 const& renderPosition, Color const& tint)

@@ -3,9 +3,9 @@
 
 enum class VisibilityID
 {
-    VISIBLE,
-    SEEN,
-    UNSEEN,
+    unseen,
+    seen,
+    visible,
 };
 
 #endif

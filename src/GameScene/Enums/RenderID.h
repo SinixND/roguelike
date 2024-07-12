@@ -3,16 +3,16 @@
 
 enum class RenderID
 {
-    INVISIBLE,
-    HERO,
-    CURSOR,
-    WALL,
-    FLOOR,
-    REACHABLE,
-    PATH,
-    ATTACKABLE,
-    SUPPORTABLE,
-    NEXT_LEVEL,
+    invisible,
+    hero,
+    cursor,
+    wall,
+    floor,
+    reachable,
+    path,
+    attackable,
+    supportable,
+    nextLevel,
 };
 
 #endif

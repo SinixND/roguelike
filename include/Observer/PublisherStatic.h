@@ -13,7 +13,8 @@ using SubscriberList = std::forward_list<std::function<void()>>;
 // Can pushlish multiple events / Can hold multiple subscribers (per event)
 namespace snx
 {
-    class Publisher
+    // Publisher
+    class EventHandler
     {
         static inline std::unordered_map<Event, SubscriberList> eventToSubscriberLists_{{}};
 

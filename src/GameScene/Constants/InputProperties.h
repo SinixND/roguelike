@@ -5,6 +5,6 @@
 float constexpr INPUT_DELAY{0.25f};
 
 // time in seconds between input repetition
-float constexpr INPUT_TICK{0.15f};
+float constexpr INPUT_TICK{0.05f};
 
 #endif

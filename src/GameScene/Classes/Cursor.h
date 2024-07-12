@@ -8,13 +8,13 @@
 class Cursor
 {
     Position position_{};
-    RenderID renderID_{RenderID::CURSOR};
+    RenderID renderID_{RenderID::cursor};
     bool isActive_{false};
 
 public:
     Position& position() { return position_; }
 
-    RenderID const& renderID() const { return renderID_; }
+    RenderID renderID() { return renderID_; }
 
     bool isActive() { return isActive_; }
     void toggle();
