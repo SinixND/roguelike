@@ -19,7 +19,7 @@ void Movement::trigger(Vector2I const& direction)
         snx::Logger::log("Movement started\n");
     }
 
-    snx::EventHandler::notify(Event::actionInProgress);
+    snx::Publisher::notify(Event::actionInProgress);
 };
 
 void Movement::update(Position& position)
@@ -49,5 +49,5 @@ void Movement::update(Position& position)
     {
         snx::Logger::log("Movement finished\n");
     }
-    snx::EventHandler::notify(Event::actionFinished);
+    snx::Publisher::notify(Event::actionFinished);
 };

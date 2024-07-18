@@ -18,22 +18,22 @@ void GameScene::initialize()
     hero_.init();
 
     // Setup events
-    snx::EventHandler::addSubscriber(
+    snx::Publisher::addSubscriber(
         Event::windowResized,
         [&]()
         { panels_.init(); });
 
-    snx::EventHandler::addSubscriber(
+    snx::Publisher::addSubscriber(
         Event::panelsResized,
         [&]()
         { camera_.init(panels_.map().center()); });
 
-    snx::EventHandler::addSubscriber(
+    snx::Publisher::addSubscriber(
         Event::actionInProgress,
         [&]()
         { actionInProgress_ = true; });
 
-    snx::EventHandler::addSubscriber(
+    snx::Publisher::addSubscriber(
         Event::actionFinished,
         [&]()
         { actionInProgress_ = false; });
@@ -64,7 +64,7 @@ void GameScene::updateState()
 {
     if (IsWindowResized())
     {
-        snx::EventHandler::notify(Event::windowResized);
+        snx::Publisher::notify(Event::windowResized);
     }
 
     // Regenerate energy if no action in progress

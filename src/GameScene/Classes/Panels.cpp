@@ -35,7 +35,7 @@ void Panels::init()
         .setBottom(log_.top())
         .setTop(status_.bottom());
 
-    snx::EventHandler::notify(Event::panelsResized);
+    snx::Publisher::notify(Event::panelsResized);
 }
 
 void Panels::drawLogPanelContent()

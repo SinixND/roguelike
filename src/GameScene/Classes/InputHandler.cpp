@@ -27,6 +27,7 @@ void InputHandler::update(Hero* hero)
     switch (keyCached)
     {
     case KEY_W:
+    case KEY_K:
     case KEY_UP:
     {
         // Default action (without shift)
@@ -43,6 +44,7 @@ void InputHandler::update(Hero* hero)
     break;
 
     case KEY_A:
+    case KEY_H:
     case KEY_LEFT:
     {
         // Default action (without shift)
@@ -59,6 +61,7 @@ void InputHandler::update(Hero* hero)
     break;
 
     case KEY_S:
+    case KEY_J:
     case KEY_DOWN:
     {
         // Default action (without shift)
@@ -75,6 +78,7 @@ void InputHandler::update(Hero* hero)
     break;
 
     case KEY_D:
+    case KEY_L:
     case KEY_RIGHT:
     {
         // Default action (without shift)

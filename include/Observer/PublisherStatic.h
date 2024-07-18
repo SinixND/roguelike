@@ -14,7 +14,7 @@ using SubscriberList = std::forward_list<std::function<void()>>;
 namespace snx
 {
     // Publisher
-    class EventHandler
+    class Publisher
     {
         static inline std::unordered_map<Event, SubscriberList> eventToSubscriberLists_{{}};
 
