@@ -15,6 +15,8 @@ void GameScene::initialize()
     camera_.init(panels_.map().center());
     renderer_.init();
 
+    inputHandler_.setDefaultInputMappings();
+
     hero_.init();
 
     // Setup events
@@ -49,7 +51,7 @@ void GameScene::processInput()
 
     cursor_.update(camera_.get(), hero_.position().renderPosition());
 
-    inputHandler_.getInput();
+    inputHandler_.handleInput();
 
     // Block input handling if hero misses energy
     if (!hero_.energy().isFull())

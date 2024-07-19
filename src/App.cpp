@@ -80,7 +80,7 @@ void App::run()
     // Main app loop
     //=================================
 #ifdef __EMSCRIPTEN__
-    emscriptenArgs arg{activeScene};
+    emscriptenArgs arg{activeScene_};
     emscripten_set_main_loop_arg(applicationLoop, &arg, 0, 1);
 #else
     while (!(WindowShouldClose()))

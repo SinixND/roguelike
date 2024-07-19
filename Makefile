@@ -9,7 +9,7 @@ WIN_LIBRARIES 		:= $(LIBRARIES) opengl32 gdi32 winmm
 ifdef TERMUX_VERSION
 LIBRARIES 			+= #log
 else
-LIBRARIES 			+= gtest benchmark 
+LIBRARIES 			+= gtest benchmark
 endif
 
 ### set compile flags
@@ -31,7 +31,7 @@ MAKEFLAGS 			:= #-j
 #######################################
 ### set the used compiler to g++ or clang++
 CXX 				:= clang++
-WIN_CXX 			:= /bin/x86_64-w64-mingw32-g++ 
+WIN_CXX 			:= /bin/x86_64-w64-mingw32-g++
 
 ### set the binary file extension
 BINARY_EXT 			:= exe
@@ -48,11 +48,11 @@ WIN_DEP_EXT 		:= win.d
 
 ### set the respective folders from structure
 ### set VPATH as std dir to look for compile targets
-VPATH 				:= $(shell find . -type d) 
+VPATH 				:= $(shell find . -type d)
 ### here go all source files (with the $(SRC_EXT) extension) and project specific header files
 SRC_DIRS 			:= ./src
 ### here go prject independend header files
-LOC_INC_DIR 		:= ./include 
+LOC_INC_DIR 		:= ./include
 ### here go external header files
 EXT_INC_DIR 		:= ./include/external
 ### here go library files
@@ -67,22 +67,22 @@ TEST_DIR 			:= ./test
 WEB_DIR 			:= ./web
 
 ### set the locations of header files
-SYS_INC_DIR 		:= /usr/local/include /usr/include 
-WIN_SYS_INC_DIR 	:= /usr/x86_64-w64-mingw32/include 
+SYS_INC_DIR 		:= /usr/local/include /usr/include
+WIN_SYS_INC_DIR 	:= /usr/x86_64-w64-mingw32/include
 ifdef TERMUX_VERSION
-	SYS_INC_DIR := $(PREFIX)/usr/include 
+	SYS_INC_DIR := $(PREFIX)/include
 endif
-EXT_INC_DIRS 		:= $(shell find $(EXT_INC_DIR) -wholename "**" -type d) 
-LOC_INC_DIRS 		:= $(shell find . -wholename "*include*" -type d) 
-LOC_INC_DIRS 		+= $(shell find . -wholename "*src*" -type d) 
+EXT_INC_DIRS 		:= $(shell find $(EXT_INC_DIR) -wholename "**" -type d)
+LOC_INC_DIRS 		:= $(shell find . -wholename "*include*" -type d)
+LOC_INC_DIRS 		+= $(shell find . -wholename "*src*" -type d)
 
 ### set the locations of all possible libraries used
-SYS_LIB_DIR 		:= /usr/local/lib /usr/lib 
-WIN_SYS_LIB_DIR 	:= /usr/x86_64-w64-mingw32/lib 
+SYS_LIB_DIR 		:= /usr/local/lib /usr/lib
+WIN_SYS_LIB_DIR 	:= /usr/x86_64-w64-mingw32/lib
 ifdef TERMUX_VERSION
-	SYS_LIB_DIR := $(PREFIX)/usr/lib 
+	SYS_LIB_DIR := $(PREFIX)/lib
 endif
-LOC_LIB_DIRS 		:= $(shell find $(LOC_LIB_DIR) -type d) 
+LOC_LIB_DIRS 		:= $(shell find $(LOC_LIB_DIR) -type d)
 
 ### set raylib and emscripten directory as needed
 RAYLIB_DIR 			:= /usr/lib/raylib/src
@@ -106,7 +106,7 @@ LD_FLAGS 			+= $(addprefix -l,$(LIBRARIES))
 WIN_LD_FLAGS 		:= $(addprefix -l,$(WIN_LIBRARIES))
 
 ### make library flags by prefixing every provided path with -L; this might take a while for the first time, but will NOT be repeated every time
-SYS_LIB_FLAGS 		:= $(addprefix -L,$(SYS_LIB_DIR)) 
+SYS_LIB_FLAGS 		:= $(addprefix -L,$(SYS_LIB_DIR))
 SYS_LIB_FLAGS		+= $(addprefix -L,$(RAYLIB_DIR))
 WIN_SYS_LIB_FLAGS 	:= $(addprefix -L,$(WIN_SYS_LIB_DIR))
 LOC_LIB_FLAGS 		:= $(addprefix -L,$(LOC_LIB_DIRS))
@@ -149,7 +149,7 @@ endif
 
 
 ### default rule by convention
-all: debug 
+all: debug
 ifndef TERMUX_VERSION
 all: #test
 endif
@@ -174,12 +174,12 @@ benchmark: $(BIN_DIR)/benchmark.$(BINARY_EXT)
 
 ### rule for release build process with binary as prerequisite
 release: CXX_FLAGS += -O2
-release: build 
+release: build
 
 publish: clean release web windows
 
 ### rule for native build process with binary as prerequisite
-build: $(BIN_DIR)/$(BINARY).$(BINARY_EXT) 
+build: $(BIN_DIR)/$(BINARY).$(BINARY_EXT)
 
 ifndef TERMUX_VERSION
 #build: $(TEST_DIR)/test.$(BINARY_EXT) $(TEST_DIR)/benchmark.$(BINARY_EXT)
@@ -192,7 +192,7 @@ $(BIN_DIR)/$(BINARY).$(BINARY_EXT): $(OBJS)
 ### $^ (all dependencies, all right of ":")
 	$(info )
 	$(info === Link main ===)
-	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS) 
+	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
 ### LINK TEST
 $(BIN_DIR)/test.$(BINARY_EXT): $(TEST_OBJS)
@@ -216,13 +216,13 @@ $(OBJ_DIR)/%.$(OBJ_EXT): %.$(SRC_EXT)
 	$(info === Compile main ===)
 	$(CXX) -o $@  -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
-### COMPILE TEST 
+### COMPILE TEST
 $(TEST_DIR)/test.$(OBJ_EXT): test.$(SRC_EXT)
 	$(info )
 	$(info === Compile test ===)
 	$(CXX) -o $@  -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
-### COMPILE BENCHMARK 
+### COMPILE BENCHMARK
 $(TEST_DIR)/benchmark.$(OBJ_EXT): benchmark.$(SRC_EXT)
 	$(info )
 	$(info === Compile benchmark ===)
@@ -237,7 +237,7 @@ web:
 
 
 ### rule for windows build process
-windows: $(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT) 
+windows: $(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT)
 
 $(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT): $(WIN_OBJS)
 	$(info )
@@ -252,9 +252,9 @@ $(OBJ_DIR)/%.$(WIN_OBJ_EXT): %.$(SRC_EXT)
 
 ### clear dynamically created directories
 clean:
-	rm -rf $(shell find . -type f -wholename "*.$(BINARY_EXT)") 
-	rm -rf $(shell find . -type f -wholename "*.$(OBJ_EXT)") 
-	rm -rf $(shell find . -type f -wholename "*.$(DEP_EXT)") 
+	rm -rf $(shell find . -type f -wholename "*.$(BINARY_EXT)")
+	rm -rf $(shell find . -type f -wholename "*.$(OBJ_EXT)")
+	rm -rf $(shell find . -type f -wholename "*.$(DEP_EXT)")
 
 
 ### clean dynamically created directories before building fresh

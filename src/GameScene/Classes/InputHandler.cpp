@@ -2,33 +2,128 @@
 
 #include "Directions.h"
 #include "Hero.h"
-#include "InputProperties.h"
-#include "raylibEx.h"
+#include "HeroActionID.h"
 #include <raylib.h>
 
-void InputHandler::getInput()
+void InputHandler::bind(int key, HeroActionID action)
 {
-    // Store last key pressed
-    int keyPressed{GetKeyPressed()};
+    keyToHeroActionID_.insert(std::make_pair(key, action));
+}
 
-    if (keyPressed)
+void InputHandler::setDefaultInputMappings()
+{
+    bind(KEY_NULL, HeroActionID::none);
+
+    bind(KEY_W, HeroActionID::moveUp);
+    bind(KEY_K, HeroActionID::moveUp);
+    bind(KEY_UP, HeroActionID::moveUp);
+
+    bind(KEY_A, HeroActionID::moveLeft);
+    bind(KEY_K, HeroActionID::moveLeft);
+    bind(KEY_LEFT, HeroActionID::moveLeft);
+
+    bind(KEY_S, HeroActionID::moveDown);
+    bind(KEY_J, HeroActionID::moveDown);
+    bind(KEY_DOWN, HeroActionID::moveDown);
+
+    bind(KEY_D, HeroActionID::moveRight);
+    bind(KEY_L, HeroActionID::moveRight);
+    bind(KEY_RIGHT, HeroActionID::moveRight);
+};
+
+
+void InputHandler::handleInput()
+{
+    if (handleKey()) return;
+    if (handleGesture()) return;
+}
+
+bool InputHandler::handleKey()
+{
+    heroAction_ = keyToHeroActionID_[GetKeyPressed()];
+
+    if (heroAction_ == HeroActionID::none)
     {
-        keyCached = keyPressed;
+        return false;
     }
+
+    return true;
+}
+
+bool InputHandler::handleGesture()
+{
+    static int currentGesture = GESTURE_NONE;
+    static int lastGesture = GESTURE_NONE;
+
+    // Update gesture
+    lastGesture = currentGesture;
+    currentGesture = GetGestureDetected();
+
+    if (currentGesture != lastGesture)
+    {
+        // Store gesture string
+        switch (currentGesture)
+        {
+        //case GESTURE_TAP:
+            //break;
+
+        //case GESTURE_DOUBLETAP:
+            //break;
+
+        //case GESTURE_HOLD:
+            //break;
+
+        //case GESTURE_DRAG:
+            //break;
+
+        case GESTURE_SWIPE_UP:
+            heroAction_ = HeroActionID::moveUp;
+            break;
+
+        case GESTURE_SWIPE_LEFT:
+            heroAction_ = HeroActionID::moveLeft;
+            break;
+
+        case GESTURE_SWIPE_DOWN:
+            heroAction_ = HeroActionID::moveDown;
+            break;
+
+        case GESTURE_SWIPE_RIGHT:
+            heroAction_ = HeroActionID::moveRight;
+            break;
+
+        //case GESTURE_PINCH_IN:
+            //break;
+
+        //case GESTURE_PINCH_OUT:
+            //break;
+
+        case GESTURE_NONE:
+        default:
+            heroAction_ = HeroActionID::none;
+            break;
+
+        }
+    }
+
+    if (heroAction_ == HeroActionID::none)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 void InputHandler::update(Hero* hero)
 {
-    if (!IsKeyPressedRepeat(keyCached, INPUT_DELAY, INPUT_TICK))
+    if (heroAction_ == HeroActionID::none)
     {
         return;
     }
 
-    switch (keyCached)
+    switch (heroAction_)
     {
-    case KEY_W:
-    case KEY_K:
-    case KEY_UP:
+    case HeroActionID::moveUp:
     {
         // Default action (without shift)
         if (!IsKeyDown(KEY_LEFT_SHIFT))
@@ -43,9 +138,7 @@ void InputHandler::update(Hero* hero)
     }
     break;
 
-    case KEY_A:
-    case KEY_H:
-    case KEY_LEFT:
+    case HeroActionID::moveLeft:
     {
         // Default action (without shift)
         if (!IsKeyDown(KEY_LEFT_SHIFT))
@@ -60,9 +153,7 @@ void InputHandler::update(Hero* hero)
     }
     break;
 
-    case KEY_S:
-    case KEY_J:
-    case KEY_DOWN:
+    case HeroActionID::moveDown:
     {
         // Default action (without shift)
         if (!IsKeyDown(KEY_LEFT_SHIFT))
@@ -77,9 +168,7 @@ void InputHandler::update(Hero* hero)
     }
     break;
 
-    case KEY_D:
-    case KEY_L:
-    case KEY_RIGHT:
+    case HeroActionID::moveRight:
     {
         // Default action (without shift)
         if (!IsKeyDown(KEY_LEFT_SHIFT))
