@@ -8,6 +8,7 @@
 #include "InputHandler.h"
 #include "Panels.h"
 #include "Renderer.h"
+#include "World.h"
 
 class GameScene : public snx::IScene
 {
@@ -17,6 +18,8 @@ class GameScene : public snx::IScene
     Renderer renderer_{};
 
     InputHandler inputHandler_{};
+
+    World world_{};
 
     Cursor cursor_{};
     Hero hero_;

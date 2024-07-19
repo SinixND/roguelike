@@ -4,7 +4,9 @@
 #include "DeveloperMode.h"
 #include "Event.h"
 #include "PublisherStatic.h"
+#include "Tiles.h"
 #include "raylibEx.h"
+#include <cstddef>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -95,6 +97,25 @@ void GameScene::renderOutput()
         panels_.map().width(),
         panels_.map().height());
 
+    // World
+    // Draw map
+    Tiles& tiles = world_.currentMap();
+    auto renderIDs{tiles.renderID()};
+    auto renderPositions{tiles.position()};
+    auto tileCount{renderPositions.size()};
+
+    for (size_t i{0}; i < tileCount; ++i)
+    {
+        renderer_.render(renderIDs[i], renderPositions[i].renderPosition());
+    }
+
+    // Units
+    // Draw hero
+    renderer_.render(
+        hero_.renderID(),
+        hero_.position().renderPosition());
+
+    // UI
     // Draw cursor
     if (cursor_.isActive())
     {
@@ -102,12 +123,6 @@ void GameScene::renderOutput()
             cursor_.renderID(),
             cursor_.position().renderPosition());
     }
-
-    // Draw world
-    // Draw hero
-    renderer_.render(
-        hero_.renderID(),
-        hero_.position().renderPosition());
 
     EndScissorMode();
     EndMode2D();

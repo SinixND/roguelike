@@ -4,7 +4,9 @@
 #include "RenderID.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
+#include <algorithm>
 #include <string>
+#include <vector>
 
 void Tiles::insert(
     Vector2I const& tilePosition,
@@ -19,7 +21,9 @@ void Tiles::insert(
     visibilityID_.insert(tilePosition, VisibilityID::unseen);
     isSolid_.insert(tilePosition, isSolid);
     blocksVision_.insert(tilePosition, blocksVision);
-};
+
+    updateMapSize(tilePosition);
+}
 
 void Tiles::erase(Vector2I const& tilePosition)
 {
@@ -29,34 +33,53 @@ void Tiles::erase(Vector2I const& tilePosition)
     visibilityID_.erase(tilePosition);
     isSolid_.erase(tilePosition);
     blocksVision_.erase(tilePosition);
-};
+}
+
+std::vector<Position>& Tiles::position()
+{
+    return position_.values();
+}
 
 Position& Tiles::position(Vector2I const& tilePosition)
 {
     return *position_.at(tilePosition);
-};
+}
 
 std::string const& Tiles::tag(Vector2I const& tilePosition)
 {
     return *tag_.at(tilePosition);
-};
+}
+
+std::vector<RenderID> const& Tiles::renderID()
+{
+    return renderID_.values();
+}
 
 RenderID Tiles::renderID(Vector2I const& tilePosition)
 {
     return *renderID_.at(tilePosition);
-};
+}
 
 VisibilityID Tiles::visibilityID(Vector2I const& tilePosition)
 {
     return *visibilityID_.at(tilePosition);
-};
+}
 
 bool Tiles::isSolid(Vector2I const& tilePosition)
 {
     return *isSolid_.at(tilePosition);
-};
+}
 
 bool Tiles::blocksVision(Vector2I const& tilePosition)
 {
     return *blocksVision_.at(tilePosition);
-};
+}
+
+void Tiles::updateMapSize(Vector2I const& tilePosition)
+{
+    mapSize_ = RectangleExI{
+        std::min(tilePosition.x, mapSize_.left),
+        std::max(tilePosition.x, mapSize_.right),
+        std::min(tilePosition.y, mapSize_.top),
+        std::max(tilePosition.y, mapSize_.bottom)};
+}

@@ -16,7 +16,10 @@
 
 
 ## Refactor Composition instead of Inheritance
-Refactor with (Interface) Composition when another version of the same type (:interface) is needed:
+- Refactor with (Interface) Composition when another version of the same type (:interface) is needed:
+
+## General
+- Prefer reference over pointer wherever possible
 
 1) Old:
 ```cpp

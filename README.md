@@ -5,6 +5,9 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
+- [ ] Re-Implement map
+
+- [ ] Prefer reference over pointer wherever possible
 - [ ] Change "notify" to "publish"
 - [ ] Realize viewport/camera system
 - [ ] Implement zoom
@@ -21,8 +24,6 @@ Platforms: Linux, Windows, Browser
 - [ ] Keep filtered list of map tiles to render
 - [ ] Character triggers edgePan
 - [ ] Changeable key bindings
-    - Does GameScene(?) hold Buttons that get funcitons assigned? (https://gameprogrammingpatterns.com/command.html)
-    - CHOSEN: Actions (will not change) look for appropriate input (could be changed)
 
 
 ## Longterm
