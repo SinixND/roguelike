@@ -5,18 +5,16 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Re-Implement map
-
 - [ ] Prefer reference over pointer wherever possible
-- [ ] Change "notify" to "publish"
+- [x] Change "notify" to "publish"
+
 - [ ] Realize viewport/camera system
+- [ ] Add input to center on hero 
 - [ ] Implement zoom
 - [ ] Edge pan if player model goes out of deadzone area
 - [ ] Implement movment (replace hold-to-move by L_SHIFT to move-until-something happens)
 - [ ] Implement vision (fog of war: unseen, seen, visible)
 - [ ] Print tile info in panel
-- [ ] Add logger
-    - Print the action in log panel
 
 
 ## Shortterm
@@ -100,4 +98,4 @@ Not implemented yet
 - [ ] Check movement functions in regards to game phases (obsolete after movement system change)
 - [x] Modified parameters -> pointer
 - [x] Observer pattern for event communication
-- [ ] Add input to center on hero (obsolete after camera movement change -> remove left over things)
+- [x] Add logger
