@@ -29,7 +29,7 @@ namespace snx
         }
 
         // Execute all subscribers for given event
-        static void notify(Event event)
+        static void publish(Event event)
         {
             for (auto& subscriber : eventToSubscriberLists_[event])
             {
@@ -38,7 +38,7 @@ namespace snx
         }
 
         // Exectue all subscribers event agnostic
-        static void notifyAll()
+        static void publishAll()
         {
             // Iterate all subscribers
             for (auto& mapping : eventToSubscriberLists_)

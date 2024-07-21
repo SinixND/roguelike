@@ -64,7 +64,7 @@ void updateFullscreen()
             MaximizeWindow();
         }
 
-        snx::Publisher::notify(Event::windowResized);
+        snx::Publisher::publish(Event::windowResized);
     }
 }
 void updateDeveloperMode()

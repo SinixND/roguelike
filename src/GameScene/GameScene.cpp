@@ -68,7 +68,7 @@ void GameScene::updateState()
 {
     if (IsWindowResized())
     {
-        snx::Publisher::notify(Event::windowResized);
+        snx::Publisher::publish(Event::windowResized);
     }
 
     // Regenerate energy if no action in progress
