@@ -61,14 +61,14 @@ void GameScene::processInput()
         return;
     }
 
-    inputHandler_.update(&hero_);
+    inputHandler_.update(hero_);
 }
 
 void GameScene::updateState()
 {
     if (IsWindowResized())
     {
-        snx::Publisher::notify(Event::windowResized);
+        snx::Publisher::publish(Event::windowResized);
     }
 
     // Regenerate energy if no action in progress
@@ -100,8 +100,8 @@ void GameScene::renderOutput()
     // World
     // Draw map
     Tiles& tiles = world_.currentMap();
-    auto renderIDs{tiles.renderID()};
-    auto renderPositions{tiles.position()};
+    auto& renderIDs{tiles.renderID()};
+    auto& renderPositions{tiles.position()};
     auto tileCount{renderPositions.size()};
 
     for (size_t i{0}; i < tileCount; ++i)

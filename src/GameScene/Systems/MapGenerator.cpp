@@ -14,18 +14,18 @@
 namespace MapGenerator
 {
     void addTile(
-        Tiles* tiles,
+        Tiles& tiles,
         std::string tag,
         Vector2I const& tilePosition,
         RenderID renderID,
         bool isSolid,
         bool blocksVision)
     {
-        tiles->insert(tilePosition, renderID, tag, isSolid, blocksVision);
+        tiles.insert(tilePosition, renderID, tag, isSolid, blocksVision);
     }
 
     void addTiles(
-        Tiles* tiles,
+        Tiles& tiles,
         std::string tag,
         RectangleExI const& rectangle,
         RenderID renderID,
@@ -50,7 +50,7 @@ namespace MapGenerator
     }
 
     // Add room (floor with surrounding walls)
-    void addRoom(Tiles* tiles, RectangleExI const& room)
+    void addRoom(Tiles& tiles, RectangleExI const& room)
     {
         if (room.width < 2 || room.height < 2)
         {
@@ -123,7 +123,7 @@ namespace MapGenerator
             false);
     }
 
-    void createGridRooms(Tiles* tiles, int level)
+    void createGridRooms(Tiles& tiles, int level)
     {
         static std::array<Vector2I, 4> const directions{
             Directions::V_LEFT,
@@ -189,15 +189,16 @@ namespace MapGenerator
         Tiles startRoom{};
 
         addRoom(
-            &startRoom,
+            startRoom,
             RectangleExI{
                 Vector2I{
                     0,
                     0},
                 150,
                 150});
+
         addRoom(
-            &startRoom,
+            startRoom,
             RectangleExI{
                 Vector2I{
                     0,
@@ -207,7 +208,7 @@ namespace MapGenerator
 
         // Add walls
         addTiles(
-            &startRoom,
+            startRoom,
             "Wall",
             RectangleExI{
                 -1,
@@ -219,7 +220,7 @@ namespace MapGenerator
             true);
 
         addTiles(
-            &startRoom,
+            startRoom,
             "Wall",
             RectangleExI{
                 -2,
@@ -231,7 +232,7 @@ namespace MapGenerator
             true);
 
         addTiles(
-            &startRoom,
+            startRoom,
             "Wall",
             RectangleExI{
                 2,
@@ -244,7 +245,7 @@ namespace MapGenerator
 
         // Add next level trigger
         addTile(
-            &startRoom,
+            startRoom,
             "Stairs",
             Vector2I{
                 0,
@@ -264,7 +265,7 @@ namespace MapGenerator
         switch (1) //* RNG::random(1, 2)
         {
         case 1:
-            createGridRooms(&newMap, level);
+            createGridRooms(newMap, level);
             break;
 
         default:

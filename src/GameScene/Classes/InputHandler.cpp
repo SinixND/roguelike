@@ -114,7 +114,7 @@ bool InputHandler::handleGesture()
     return true;
 }
 
-void InputHandler::update(Hero* hero)
+void InputHandler::update(Hero& hero)
 {
     if (heroAction_ == HeroActionID::none)
     {
@@ -128,10 +128,10 @@ void InputHandler::update(Hero* hero)
         // Default action (without shift)
         if (!IsKeyDown(KEY_LEFT_SHIFT))
         {
-            hero->triggerMovement(
+            hero.triggerMovement(
                 Directions::V_UP,
-                &hero->movement(),
-                &hero->energy());
+                hero.movement(),
+                hero.energy());
         }
 
         // Alternate action if shift is held
@@ -143,10 +143,10 @@ void InputHandler::update(Hero* hero)
         // Default action (without shift)
         if (!IsKeyDown(KEY_LEFT_SHIFT))
         {
-            hero->triggerMovement(
+            hero.triggerMovement(
                 Directions::V_LEFT,
-                &hero->movement(),
-                &hero->energy());
+                hero.movement(),
+                hero.energy());
         }
 
         // Alternate action if shift is held
@@ -158,10 +158,10 @@ void InputHandler::update(Hero* hero)
         // Default action (without shift)
         if (!IsKeyDown(KEY_LEFT_SHIFT))
         {
-            hero->triggerMovement(
+            hero.triggerMovement(
                 Directions::V_DOWN,
-                &hero->movement(),
-                &hero->energy());
+                hero.movement(),
+                hero.energy());
         }
 
         // Alternate action if shift is held
@@ -173,10 +173,10 @@ void InputHandler::update(Hero* hero)
         // Default action (without shift)
         if (!IsKeyDown(KEY_LEFT_SHIFT))
         {
-            hero->triggerMovement(
+            hero.triggerMovement(
                 Directions::V_RIGHT,
-                &hero->movement(),
-                &hero->energy());
+                hero.movement(),
+                hero.energy());
         }
 
         // Alternate action if shift is held

@@ -24,12 +24,12 @@ namespace snx
         : public ISparseSet<Key>
     {
     public:
-        Type* insert(Key const& key, Type const& value = Type{})
+        Type& insert(Key const& key, Type const& value = Type{})
         {
             if (contains(key))
             {
                 values_[keyToIndex_[key]] = value;
-                return &values_[keyToIndex_[key]];
+                return values_[keyToIndex_[key]];
             }
 
             // Add new key to used keys
@@ -47,7 +47,7 @@ namespace snx
             // Add valueIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.insert(std::make_pair(valueIndex, key));
 
-            return &values_[keyToIndex_[key]];
+            return values_[keyToIndex_[key]];
         }
 
         void erase(Key const& key) override
