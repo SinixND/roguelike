@@ -11,10 +11,13 @@ void Hero::init()
     energy_.setRegenRate(10);
 }
 
-void Hero::triggerMovement(Vector2I const& direction, Movement* movement, Energy* energy)
+void Hero::triggerMovement(
+    Vector2I const& direction, 
+    Movement& movement, 
+    Energy& energy)
 {
-    if (energy->consume(50))
+    if (energy.consume(50))
     {
-        movement->trigger(direction);
+        movement.trigger(direction);
     }
 }

@@ -22,7 +22,10 @@ public:
     Position& position() { return position_; };
     RenderID renderID() { return renderID_; };
 
-    void triggerMovement(Vector2I const& direction, Movement* movement, Energy* energy);
+    void triggerMovement(
+        Vector2I const& direction, 
+        Movement& movement, 
+        Energy& energy);
 };
 
 #endif
