@@ -13,7 +13,7 @@ class World
     // Filtered tiles for efficiency
     Tiles tilesToRender_{};
 
-    Tiles* currentMap_{&maps_.back()};
+    Tiles& currentMap_{maps_.back()};
 
     int maxMapLevel_{};
     int currentMapLevel_{};
@@ -22,7 +22,7 @@ class World
     void setCurrentMap(int level);
 
 public:
-    Tiles& currentMap() { return *currentMap_; };
+    Tiles& currentMap() { return currentMap_; };
     int currentMapLevel() { return currentMapLevel_; }
 
     void increaseMapLevel();

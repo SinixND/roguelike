@@ -23,9 +23,9 @@ public:
         textureAtlas_ = LoadTexture((texturePath + filename).c_str());
     }
 
-    Texture2D* getTextureAtlas()
+    Texture2D& getTextureAtlas()
     {
-        return &textureAtlas_;
+        return textureAtlas_;
     }
 
     void registerTexture(RenderID textureID, Vector2 position)

@@ -34,5 +34,5 @@ void World::addNewMap()
 
 void World::setCurrentMap(int level)
 {
-    currentMap_ = &maps_[level];
+    currentMap_ = maps_[level];
 }

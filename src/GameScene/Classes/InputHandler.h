@@ -17,7 +17,7 @@ class InputHandler
 public:
     void setDefaultInputMappings();
     void handleInput();
-    void update(Hero* hero);
+    void update(Hero& hero);
 };
 
 #endif
