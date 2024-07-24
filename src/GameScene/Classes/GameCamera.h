@@ -14,10 +14,10 @@ public:
     Camera2D const& get() const { return camera_; }
 
     // Screen offset to draw target at
-    void setOffset(Vector2 const& offset) { camera_.offset = offset; }
+    void setOffset(Vector2 const& offset);
     // World position to draw at offset
-    void setTarget(Vector2 const& target) { camera_.target = target; };
-    void setZoom(float zoom) { camera_.zoom = zoom; }
+    void setTarget(Vector2 const& target);
+    void setZoom(float zoom);
 };
 
 #endif

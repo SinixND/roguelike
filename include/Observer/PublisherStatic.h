@@ -21,11 +21,16 @@ namespace snx
     public:
         // Event is the 'key' that we want to handle.
         // 'subscriber' is the action triggered by the event
-        static void addSubscriber(Event event, std::function<void()> subscriber)
+        static void addSubscriber(Event event, std::function<void()> subscriber, bool fireOnCreation = false)
         {
             ensureList(event);
 
             eventToSubscriberLists_[event].push_front(subscriber);
+
+            if (fireOnCreation)
+            {
+                publish(event);
+            }
         }
 
         // Execute all subscribers for given event

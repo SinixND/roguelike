@@ -109,14 +109,14 @@ namespace snx
             return keys_.contains(key);
         }
 
-        Type* at(Key const& key)
+        Type& at(Key const& key)
         {
-            if (!contains(key))
-            {
-                return nullptr;
-            }
+            // if (!contains(key))
+            // {
+            //     return nullptr;
+            // }
 
-            return &values_[keyToIndex_[key]];
+            return values_[keyToIndex_.at(key)];
         }
 
         std::vector<Type>& values()

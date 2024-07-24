@@ -13,7 +13,7 @@
 // #include <emscripten/emscripten.h>
 // #endif
 
-int main(/* int argc, char **argv */)
+int main(/* int argc, char** argv */)
 {
     App application{};
 

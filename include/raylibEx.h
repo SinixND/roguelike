@@ -468,9 +468,9 @@ inline bool CheckCollisionPointRec(Vector2I point, RectangleExI const& rec)
 {
     return (
         (point.x >= rec.left)
-        && (point.x < rec.right)
+        && (point.x <= rec.right)
         && (point.y >= rec.top)
-        && (point.y < rec.bottom));
+        && (point.y <= rec.bottom));
 }
 
 inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)

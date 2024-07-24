@@ -4,7 +4,7 @@
 class Energy
 {
     int maxEnergy_{};
-    int energy_{};
+    int currentEnergy_{};
     int regenRate_{};
 
 public:
@@ -12,11 +12,11 @@ public:
     void setRegenRate(int rate) { regenRate_ = rate; }
 
     // Consumes all energy if no parameter provided and returns false if current energy level is not sufficient
-    bool consume(int energy = 0);
+    bool consume(int energy = -1);
 
     // Returns true if energy full
     bool regenerate();
-    int isFull() const { return energy_ == maxEnergy_; }
+    int isFull() const { return currentEnergy_ == maxEnergy_; }
 };
 
 #endif

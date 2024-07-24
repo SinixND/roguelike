@@ -5,6 +5,7 @@
 #include "RenderID.h"
 #include "Tiles.h"
 #include "Utility.h"
+#include "VisibilityID.h"
 #include "raylibEx.h"
 #include <array>
 #include <raylib.h>
@@ -18,10 +19,11 @@ namespace MapGenerator
         std::string tag,
         Vector2I const& tilePosition,
         RenderID renderID,
+        VisibilityID visibilityID,
         bool isSolid,
         bool blocksVision)
     {
-        tiles.insert(tilePosition, renderID, tag, isSolid, blocksVision);
+        tiles.insert(tilePosition, renderID, tag, visibilityID, isSolid, blocksVision);
     }
 
     void addTiles(
@@ -29,6 +31,7 @@ namespace MapGenerator
         std::string tag,
         RectangleExI const& rectangle,
         RenderID renderID,
+        VisibilityID visibilityID,
         bool isSolid,
         bool blocksVision)
     {
@@ -43,6 +46,7 @@ namespace MapGenerator
                         rectangle.left + x,
                         rectangle.top + y},
                     renderID,
+                    visibilityID,
                     isSolid,
                     blocksVision);
             }
@@ -67,6 +71,7 @@ namespace MapGenerator
                 room.width - 1,
                 1},
             RenderID::wall,
+            VisibilityID::invisible,
             true,
             true);
 
@@ -80,6 +85,7 @@ namespace MapGenerator
                 1,
                 room.height - 1},
             RenderID::wall,
+            VisibilityID::invisible,
             true,
             true);
 
@@ -93,6 +99,7 @@ namespace MapGenerator
                 room.width - 1,
                 1},
             RenderID::wall,
+            VisibilityID::invisible,
             true,
             true);
 
@@ -106,6 +113,7 @@ namespace MapGenerator
                 1,
                 room.height - 1},
             RenderID::wall,
+            VisibilityID::invisible,
             true,
             true);
 
@@ -119,6 +127,7 @@ namespace MapGenerator
                 room.width - 2,
                 room.height - 2},
             RenderID::floor,
+            VisibilityID::invisible,
             false,
             false);
     }
@@ -179,6 +188,7 @@ namespace MapGenerator
                     oldRoomPosition,
                     roomPosition},
                 RenderID::floor,
+                VisibilityID::invisible,
                 false,
                 false);
         }
@@ -216,6 +226,7 @@ namespace MapGenerator
                 3,
                 1},
             RenderID::wall,
+            VisibilityID::invisible,
             true,
             true);
 
@@ -228,6 +239,7 @@ namespace MapGenerator
                 1,
                 2},
             RenderID::wall,
+            VisibilityID::invisible,
             true,
             true);
 
@@ -240,6 +252,7 @@ namespace MapGenerator
                 1,
                 2},
             RenderID::wall,
+            VisibilityID::invisible,
             true,
             true);
 
@@ -251,6 +264,7 @@ namespace MapGenerator
                 0,
                 -5},
             RenderID::nextLevel,
+            VisibilityID::invisible,
             false,
             false);
 

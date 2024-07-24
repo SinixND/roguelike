@@ -3,16 +3,16 @@
 
 bool Energy::consume(int energy)
 {
-    if (!energy)
+    if (energy < 0)
     {
         // Consume all energy
-        energy_ = 0;
+        currentEnergy_ = 0;
         return true;
     }
-    else if (energy < energy_)
+    else if (energy < currentEnergy_)
     {
         // Partial energy consumption valid
-        energy_ -= energy;
+        currentEnergy_ -= energy;
         return true;
     }
 
@@ -22,18 +22,18 @@ bool Energy::consume(int energy)
 
 bool Energy::regenerate()
 {
-    if (energy_ >= maxEnergy_)
+    if (currentEnergy_ >= maxEnergy_)
     {
         return true;
     }
 
     // Regen energy until full
-    energy_ += regenRate_;
+    currentEnergy_ += regenRate_;
 
-    if (energy_ > maxEnergy_)
+    if (currentEnergy_ > maxEnergy_)
     {
         // Ensure energy does not exceed maxEnergy
-        energy_ = maxEnergy_;
+        currentEnergy_ = maxEnergy_;
     }
     return false;
 }

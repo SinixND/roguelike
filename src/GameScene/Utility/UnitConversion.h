@@ -9,7 +9,7 @@
 namespace UnitConversion
 {
     // This file contains functions to convert between
-    // - screen position (float/pixel, absolut)
+    // - screen position (float/pixel, absolute)
     // - world position (float/pixel, relative: considers camera)
     // - tile position (int/position, relative: considers camera)
 

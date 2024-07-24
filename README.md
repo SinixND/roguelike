@@ -5,21 +5,18 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Prefer reference over pointer wherever possible
-- [x] Change "notify" to "publish"
-
+- [ ] Keep filtered list of map tiles to render
 - [ ] Realize viewport/camera system
 - [ ] Add input to center on hero 
 - [ ] Implement zoom
 - [ ] Edge pan if player model goes out of deadzone area
 - [ ] Implement movment (replace hold-to-move by L_SHIFT to move-until-something happens)
 - [ ] Implement vision (fog of war: unseen, seen, visible)
-- [ ] Print tile info in panel
+- [ ] Print tile info in panel (under cursor)
 
 
 ## Shortterm
 - [ ] Fire event on camera change to trigger tile filter recalculation
-- [ ] Keep filtered list of map tiles to render
 - [ ] Character triggers edgePan
 - [ ] Changeable key bindings
 

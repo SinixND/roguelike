@@ -8,6 +8,7 @@ enum class Event
     windowResized,
     actionInProgress,
     actionFinished,
+    cameraChanged,
 };
 
 #endif

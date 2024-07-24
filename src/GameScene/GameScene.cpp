@@ -5,8 +5,8 @@
 #include "Event.h"
 #include "PublisherStatic.h"
 #include "Tiles.h"
+#include "UnitConversion.h"
 #include "raylibEx.h"
-#include <cstddef>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -41,6 +41,21 @@ void GameScene::initialize()
         Event::actionFinished,
         [&]()
         { actionInProgress_ = false; });
+
+    // snx::Publisher::addSubscriber(
+    //     Event::cameraChanged,
+    //     [&]()
+    //     { world_.currentMap().updateTilesToRender(
+    //           camera_,
+    //           panels_.map()); },
+    //     true);
+
+    // snx::Publisher::addSubscriber(
+    //     Event::panelsResized,
+    //     [&]()
+    //     { world_.currentMap().updateTilesToRender(
+    //           camera_,
+    //           panels_.map()); });
 }
 
 void GameScene::processInput()
@@ -99,14 +114,28 @@ void GameScene::renderOutput()
 
     // World
     // Draw map
-    Tiles& tiles = world_.currentMap();
-    auto& renderIDs{tiles.renderID()};
-    auto& renderPositions{tiles.position()};
-    auto tileCount{renderPositions.size()};
+    RectangleExI renderRectangle{
+        Vector2SubtractValue(
+            UnitConversion::screenToTilePosition(
+                panels_.map().topLeft(),
+                camera_.get()),
+            1),
+        Vector2AddValue(
+            UnitConversion::screenToTilePosition(
+                panels_.map().bottomRight(),
+                camera_.get()),
+            1)};
 
-    for (size_t i{0}; i < tileCount; ++i)
+    for (auto& position : world_.currentMap().positions())
     {
-        renderer_.render(renderIDs[i], renderPositions[i].renderPosition());
+        if (CheckCollisionPointRec(position.tilePosition(), renderRectangle))
+        {
+            continue;
+        }
+
+        renderer_.render(
+            world_.currentMap().renderID(position.tilePosition()),
+            position.renderPosition());
     }
 
     // Units
