@@ -26,16 +26,30 @@ class GameScene : public snx::IScene
 
     bool actionInProgress_{false};
 
+    // Filtered tiles for efficiency
+    struct TilesToRender {
+        std::vector<Vector2> renderPositions{};
+        std::vector<RenderID> renderIDs{};
+        std::vector<VisibilityID> visibilityIDs{};
+    };
+
+    TilesToRender tilesToRender_{};
+
+    void processInput();
+    void updateState();
+    void renderOutput();
+    void postOutput();
+
 public:
     void initialize();
     void update() override;
     void deinitialize();
 
-private:
-    void processInput();
-    void updateState();
-    void renderOutput();
-    void postOutput();
+    std::vector<Vector2I> tilePositionsToRender();
+
+    void initTilesToRender();
+
+    // void updateTilesToRender();
 };
 
 #endif

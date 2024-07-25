@@ -10,9 +10,6 @@ class World
 {
     std::vector<Tiles> maps_{MapGenerator::createStartRoom()};
 
-    // Filtered tiles for efficiency
-    Tiles tilesToRender_{};
-
     Tiles& currentMap_{maps_.back()};
 
     int maxMapLevel_{};
@@ -27,8 +24,6 @@ public:
 
     void increaseMapLevel();
     void decreaseMapLevel();
-
-    Tiles& tilesToRender() { return tilesToRender_; }
 };
 
 #endif

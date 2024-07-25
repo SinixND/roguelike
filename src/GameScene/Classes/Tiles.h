@@ -1,6 +1,7 @@
 #ifndef IG20240602211712
 #define IG20240602211712
 
+#include "GameCamera.h"
 #include "Position.h"
 #include "RenderID.h"
 #include "DenseMap.h"
@@ -14,7 +15,6 @@
 
 class Tiles
 {
-    size_t tileCount_{};
     RectangleExI mapSize_{};
 
     snx::DenseMap<Vector2I, Position> positions_{};
@@ -50,18 +50,6 @@ public:
     bool blocksVision(Vector2I const& tilePosition);
 
     void updateMapSize(Vector2I const& tilePosition);
-
-    size_t tileCount() { return tileCount_; }
-
-    // TilesToRender& tilesToRender() { return tilesToRender_; }
-    //* Add if less expensive update function is needed
-    // void initTilesToRender(
-    //     GameCamera const& gameCamera,
-    //     RectangleEx const& mapPanel);
-
-    // void updateTilesToRender(
-    //     GameCamera const& gameCamera,
-    //     RectangleEx const& mapPanel);
 };
 
 #endif

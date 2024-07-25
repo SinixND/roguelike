@@ -1,5 +1,6 @@
 #include "Tiles.h"
 
+#include "GameCamera.h"
 #include "Position.h"
 #include "RenderID.h"
 #include "VisibilityID.h"
@@ -32,7 +33,6 @@ void Tiles::insert(
     }
 
     updateMapSize(tilePosition);
-    ++tileCount_;
 }
 
 void Tiles::erase(Vector2I const& tilePosition)
@@ -88,9 +88,9 @@ bool Tiles::blocksVision(Vector2I const& tilePosition)
 void Tiles::updateMapSize(Vector2I const& tilePosition)
 {
     mapSize_ = RectangleExI{
-        std::min(tilePosition.x, mapSize_.left),
-        std::max(tilePosition.x, mapSize_.right),
-        std::min(tilePosition.y, mapSize_.top),
-        std::max(tilePosition.y, mapSize_.bottom)};
+        std::min(tilePosition.x, mapSize_.left()),
+        std::max(tilePosition.x, mapSize_.right()),
+        std::min(tilePosition.y, mapSize_.top()),
+        std::max(tilePosition.y, mapSize_.bottom())};
 }
 

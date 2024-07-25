@@ -15,6 +15,8 @@ namespace snx
         virtual void clear() = 0;
         virtual bool contains(Key const& key) const = 0;
         // virtual std::vector<Key>& keys() = 0;
+        virtual size_t size() const = 0;
+
         virtual ~IDenseMap() = default;
     };
 
@@ -35,7 +37,7 @@ namespace snx
             // keys_.insert(key);
 
             // Get new list index for value
-            size_t valueIndex = values_.size();
+            size_t valueIndex = size();
 
             // Add new value to list
             values_.push_back(value);
@@ -61,10 +63,10 @@ namespace snx
             size_t keptValueIndex{};
 
             // Replace removed value with last value before popping (if more than one value exists) to keep values contiguous
-            if (values_.size() > 1)
+            if (size() > 1)
             {
                 // Get index of (kept) last value that replaces removed value
-                keptValueIndex = values_.size() - 1;
+                keptValueIndex = size() - 1;
 
                 // Get key of replacing/kept value
                 Key keptkey = indexToKey_[keptValueIndex];
@@ -89,7 +91,7 @@ namespace snx
             values_.pop_back();
 
             // Remove removed value from mapping
-            indexToKey_.erase(values_.size());
+            indexToKey_.erase(size());
 
             // Remove key from used keys
             // keys_.erase(key);
@@ -122,6 +124,11 @@ namespace snx
         // {
             // return keys_;
         // }
+
+        size_t size() const override
+        {
+            return values_.size();
+        };
 
     private:
         // Vector index is used as value key

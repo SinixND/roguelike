@@ -35,16 +35,16 @@ namespace MapGenerator
         bool isSolid,
         bool blocksVision)
     {
-        for (int x{0}; x < rectangle.width; ++x)
+        for (int x{0}; x < rectangle.width(); ++x)
         {
-            for (int y{0}; y < rectangle.height; ++y)
+            for (int y{0}; y < rectangle.height(); ++y)
             {
                 addTile(
                     tiles,
                     tag,
                     Vector2I{
-                        rectangle.left + x,
-                        rectangle.top + y},
+                        rectangle.left() + x,
+                        rectangle.top() + y},
                     renderID,
                     visibilityID,
                     isSolid,
@@ -56,7 +56,7 @@ namespace MapGenerator
     // Add room (floor with surrounding walls)
     void addRoom(Tiles& tiles, RectangleExI const& room)
     {
-        if (room.width < 2 || room.height < 2)
+        if (room.width() < 2 || room.height() < 2)
         {
             return;
         }
@@ -66,9 +66,9 @@ namespace MapGenerator
             tiles,
             "Wall",
             RectangleExI{
-                room.left,
-                room.top,
-                room.width - 1,
+                room.left(),
+                room.top(),
+                room.width() - 1,
                 1},
             RenderID::wall,
             VisibilityID::invisible,
@@ -80,10 +80,10 @@ namespace MapGenerator
             tiles,
             "Wall",
             RectangleExI{
-                room.right,
-                room.top,
+                room.right(),
+                room.top(),
                 1,
-                room.height - 1},
+                room.height() - 1},
             RenderID::wall,
             VisibilityID::invisible,
             true,
@@ -94,9 +94,9 @@ namespace MapGenerator
             tiles,
             "Wall",
             RectangleExI{
-                room.left + 1,
-                room.bottom,
-                room.width - 1,
+                room.left() + 1,
+                room.bottom(),
+                room.width() - 1,
                 1},
             RenderID::wall,
             VisibilityID::invisible,
@@ -108,10 +108,10 @@ namespace MapGenerator
             tiles,
             "Wall",
             RectangleExI{
-                room.left,
-                room.top + 1,
+                room.left(),
+                room.top() + 1,
                 1,
-                room.height - 1},
+                room.height() - 1},
             RenderID::wall,
             VisibilityID::invisible,
             true,
@@ -122,10 +122,10 @@ namespace MapGenerator
             tiles,
             "Floor",
             RectangleExI{
-                room.left + 1,
-                room.top + 1,
-                room.width - 2,
-                room.height - 2},
+                room.left() + 1,
+                room.top() + 1,
+                room.width() - 2,
+                room.height() - 2},
             RenderID::floor,
             VisibilityID::invisible,
             false,
@@ -204,8 +204,8 @@ namespace MapGenerator
                 Vector2I{
                     0,
                     0},
-                150,
-                150});
+                151,
+                151});
 
         addRoom(
             startRoom,

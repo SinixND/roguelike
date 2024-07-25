@@ -4,8 +4,10 @@
 #include <cmath>
 #include <cstddef>
 #include <functional>
+#include <iostream>
 #include <raylib.h>
 #include <raymath.h>
+#include <string>
 
 // Typedefs
 //=====================================
@@ -219,60 +221,214 @@ struct Vector2I
     int y;
 };
 
-struct RectangleExI
+class RectangleExI
 {
-    int left;
-    int top;
-    int right;
-    int bottom;
+    int left_;
+    int top_;
+    int right_;
+    int bottom_;
+    int width_;
+    int height_;
 
-    int width;
-    int height;
+public:
+    RectangleExI() = default;
 
-    RectangleExI(int left = 0, int top = 0, int width = 1, int height = 1)
-        : left(left)
-        , top(top)
-        , right(left + width - 1)
-        , bottom(top + height - 1)
-        , width(width)
-        , height(height)
+    RectangleExI(int left, int top, int width = 1, int height = 1)
+        : left_(left)
+        , top_(top)
+        , right_(left + width - 1)
+        , bottom_(top + height - 1)
+        , width_(width)
+        , height_(height)
+    {
+        setLeft(left);
+        setTop(top);
+        resizeWidthRight(width);
+        resizeHeightBottom(height);
+    }
+
+    RectangleExI(Vector2I topLeft, Vector2I bottomRight = {0, 0})
+        : left_(topLeft.x)
+        , top_(topLeft.y)
+        , right_(bottomRight.x)
+        , bottom_(bottomRight.y)
+        , width_(bottomRight.x - topLeft.x + 1)
+        , height_(bottomRight.y - topLeft.y + 1)
     {
     }
 
+    // Only odd values for width/height
     RectangleExI(Vector2I center, int width, int height)
-        : left(center.x - (width / 2))
-        , top(center.y - (height / 2))
-        , right(center.x + (width / 2))
-        , bottom(center.y + (height / 2))
-        , width(width)
-        , height(height)
+        : left_(center.x - (width / 2))
+        , top_(center.y - (height / 2))
+        , right_(center.x + (width / 2))
+        , bottom_(center.y + (height / 2))
+
     {
+        if(
+                !(width % 2)
+                || !(height % 2))
+        {
+            std::cout << "[ERROR] Width (" << width << ") or height (" << height << ")invalid; Must be odd value!\n";
+
+        }
     }
 
-    RectangleExI(Vector2I from, Vector2I to)
-        : left(from.x)
-        , top(from.y)
-        , right(to.x)
-        , bottom(to.y)
-        , width(to.x - from.x + 1)
-        , height(to.y - from.y + 1)
-    {
-        // Verify left < right, top < bottom and width/height > 0
-        if (left > right)
-        {
-            int temp = left;
-            left = right;
-            right = temp;
-            width = right - left + 1;
-        }
+    int left() const { return left_; }
 
-        if (top > bottom)
-        {
-            int temp = top;
-            top = bottom;
-            bottom = temp;
-            height = bottom - top + 1;
-        }
+    RectangleExI& setLeft(int left)
+    {
+        left_ = left;
+        updateWidth();
+        return *this;
+    }
+
+    RectangleExI& offsetLeft(int left)
+    {
+        left_ += left;
+        updateWidth();
+        return *this;
+    }
+
+    int right() const { return right_; }
+
+    RectangleExI& setRight(int right)
+    {
+        right_ = right;
+        updateWidth();
+        return *this;
+    }
+
+    RectangleExI& offsetRight(int right)
+    {
+        right_ += right;
+        updateWidth();
+        return *this;
+    }
+
+    int top() const { return top_; }
+
+    RectangleExI& setTop(int top)
+    {
+        top_ = top;
+        updateHeight();
+        return *this;
+    }
+
+    RectangleExI& offsetTop(int top)
+    {
+        top_ += top;
+        updateHeight();
+        return *this;
+    }
+
+    int bottom() const { return bottom_; }
+
+    RectangleExI& setBottom(int bottom)
+    {
+        bottom_ = bottom;
+        updateHeight();
+        return *this;
+    }
+
+    RectangleExI& offsetBottom(int bottom)
+    {
+        bottom_ += bottom;
+        updateHeight();
+        return *this;
+    }
+
+    int width() const { return width_; }
+
+    RectangleExI& resizeWidthRight(int width)
+    {
+        width_ = width;
+        updateRight();
+        return *this;
+    }
+
+    RectangleExI& resizeWidthLeft(int width)
+    {
+        width_ = width;
+        updateLeft();
+        return *this;
+    }
+
+    int height() const { return height_; }
+
+    RectangleExI& resizeHeightBottom(int height)
+    {
+        height_ = height;
+        updateBottom();
+        return *this;
+    }
+
+    RectangleExI& resizeHeightTop(int height)
+    {
+        height_ = height;
+        updateTop();
+        return *this;
+    }
+
+    Vector2I topLeft() const
+    {
+        return Vector2I{
+            left_,
+            top_};
+    }
+
+    Vector2I bottomRight() const
+    {
+        return Vector2I{
+            right_,
+            bottom_};
+    }
+
+    Vector2I center() const
+    {
+        return Vector2I{
+            (left_ + (width_ / 2)),
+            (top_ + (height_ / 2))};
+    }
+
+    Rectangle rectangle() const
+    {
+        return Rectangle{
+            static_cast<float>(left_),
+            static_cast<float>(top_),
+            static_cast<float>(width_),
+            static_cast<float>(height_)};
+    }
+
+private:
+    void updateWidth()
+    {
+        width_ = right_ - left_ + 1;
+    }
+
+    void updateHeight()
+    {
+        height_ = bottom_ - top_ + 1;
+    }
+
+    void updateLeft()
+    {
+        left_ = right_ - width_ + 1;
+    }
+
+    void updateTop()
+    {
+        top_ = bottom_ - height_ + 1;
+    }
+
+    void updateRight()
+    {
+        right_ = left_ + width_ - 1;
+    }
+
+    void updateBottom()
+    {
+        bottom_ = top_ + height_ - 1;
     }
 };
 
@@ -467,10 +623,10 @@ RMAPI Vector2 Vector2Transform(Matrix2x2 M, Vector2 V)
 inline bool CheckCollisionPointRec(Vector2I point, RectangleExI const& rec)
 {
     return (
-        (point.x >= rec.left)
-        && (point.x <= rec.right)
-        && (point.y >= rec.top)
-        && (point.y <= rec.bottom));
+        (point.x >= rec.left())
+        && (point.x <= rec.right())
+        && (point.y >= rec.top())
+        && (point.y <= rec.bottom()));
 }
 
 inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)

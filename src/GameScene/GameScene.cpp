@@ -42,20 +42,18 @@ void GameScene::initialize()
         [&]()
         { actionInProgress_ = false; });
 
-    // snx::Publisher::addSubscriber(
-    //     Event::cameraChanged,
-    //     [&]()
-    //     { world_.currentMap().updateTilesToRender(
-    //           camera_,
-    //           panels_.map()); },
-    //     true);
+    snx::Publisher::addSubscriber(
+        Event::cameraChanged,
+        [&]()
+        { initTilesToRender(
+); },
+        true);
 
-    // snx::Publisher::addSubscriber(
-    //     Event::panelsResized,
-    //     [&]()
-    //     { world_.currentMap().updateTilesToRender(
-    //           camera_,
-    //           panels_.map()); });
+    snx::Publisher::addSubscriber(
+        Event::panelsResized,
+        [&]()
+        { initTilesToRender(
+); });
 }
 
 void GameScene::processInput()
@@ -114,28 +112,11 @@ void GameScene::renderOutput()
 
     // World
     // Draw map
-    RectangleExI renderRectangle{
-        Vector2SubtractValue(
-            UnitConversion::screenToTilePosition(
-                panels_.map().topLeft(),
-                camera_.get()),
-            1),
-        Vector2AddValue(
-            UnitConversion::screenToTilePosition(
-                panels_.map().bottomRight(),
-                camera_.get()),
-            1)};
-
-    for (auto& position : world_.currentMap().positions())
+    for (size_t i{0}; i < tilesToRender_.renderPositions.size(); ++i)
     {
-        if (CheckCollisionPointRec(position.tilePosition(), renderRectangle))
-        {
-            continue;
-        }
-
         renderer_.render(
-            world_.currentMap().renderID(position.tilePosition()),
-            position.renderPosition());
+           tilesToRender_.renderIDs[i],
+            tilesToRender_.renderPositions[i]);
     }
 
     // Units
@@ -194,3 +175,74 @@ void GameScene::deinitialize()
 {
     renderer_.deinit();
 }
+
+RectangleExI getRenderRectangle(
+    GameCamera const& gameCamera,
+    RectangleEx const& mapPanel)
+{
+    return RectangleExI{
+        Vector2SubtractValue(
+            UnitConversion::screenToTilePosition(
+                mapPanel.topLeft(),
+                gameCamera.get()),
+            1),
+        Vector2AddValue(
+            UnitConversion::screenToTilePosition(
+                mapPanel.bottomRight(),
+                gameCamera.get()),
+            1)};
+}
+
+std::vector<Vector2I> GameScene::tilePositionsToRender(
+    GameCamera const& gameCamera,
+    RectangleEx const& mapPanel)
+{
+    RectangleExI renderRectangle{getRenderRectangle(gameCamera, mapPanel)};
+    Vector2I tilePosition{renderRectangle.topLeft()};
+    std::vector<Vector2I> tilePositions{};
+
+    for (int x{0}; x < renderRectangle.width(); ++x)
+    {
+        for (int y{0}; y < renderRectangle.height(); ++y)
+        {
+            Vector2I position{tilePosition.x + x, tilePosition.y + y};
+
+            if (
+                !visibilityIDs_.contains(position)
+                || (visibilityIDs_[position] == VisibilityID::invisible))
+            {
+                continue;
+            }
+
+            tilePositions.push_back(position);
+        }
+    }
+
+    return tilePositions;
+};
+
+void GameScene::initTilesToRender(
+    GameCamera const& gameCamera,
+    RectangleEx const& mapPanel)
+{
+    std::vector<Vector2I> tilePositions{tilePositionsToRender(
+            gameCamera,
+            mapPanel)};
+
+    for (auto& tilePosition : tilePositions)
+    {
+        tilesToRender_.renderPositions.push_back(
+            positions_[tilePosition].renderPosition());
+
+        tilesToRender_.renderIDs.push_back(
+            renderIDs_[tilePosition]);
+
+        tilesToRender_.visibilityIDs.push_back(
+            visibilityIDs_[tilePosition]);
+    }
+};
+
+// void GameScene::updateTilesToRender(std::vector<Vector2I>  const& tilePositions)
+// {
+//
+// }
