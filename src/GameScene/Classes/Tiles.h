@@ -3,7 +3,7 @@
 
 #include "Position.h"
 #include "RenderID.h"
-#include "SparseSet.h"
+#include "DenseMap.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
 #include <cstddef>
@@ -17,10 +17,10 @@ class Tiles
     size_t tileCount_{};
     RectangleExI mapSize_{};
 
-    snx::SparseSet<Vector2I, Position> positions_{};
-    snx::SparseSet<Vector2I, RenderID> renderIDs_{};
-    snx::SparseSet<Vector2I, std::string> tags_{};
-    snx::SparseSet<Vector2I, VisibilityID> visibilityIDs_{};
+    snx::DenseMap<Vector2I, Position> positions_{};
+    snx::DenseMap<Vector2I, RenderID> renderIDs_{};
+    snx::DenseMap<Vector2I, std::string> tags_{};
+    snx::DenseMap<Vector2I, VisibilityID> visibilityIDs_{};
     std::unordered_set<Vector2I> isSolids_{};
     std::unordered_set<Vector2I> blocksVisions_{};
 

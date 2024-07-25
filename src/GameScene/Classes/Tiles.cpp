@@ -52,12 +52,12 @@ std::vector<Position> const& Tiles::positions()
 
 Position const& Tiles::position(Vector2I const& tilePosition)
 {
-    return positions_.at(tilePosition);
+    return positions_[tilePosition];
 }
 
 std::string const& Tiles::tag(Vector2I const& tilePosition)
 {
-    return tags_.at(tilePosition);
+    return tags_[tilePosition];
 }
 
 std::vector<RenderID> const& Tiles::renderIDs()
@@ -67,12 +67,12 @@ std::vector<RenderID> const& Tiles::renderIDs()
 
 RenderID Tiles::renderID(Vector2I const& tilePosition)
 {
-    return renderIDs_.at(tilePosition);
+    return renderIDs_[tilePosition];
 }
 
 VisibilityID Tiles::visibilityID(Vector2I const& tilePosition)
 {
-    return visibilityIDs_.at(tilePosition);
+    return visibilityIDs_[tilePosition];
 }
 
 bool Tiles::isSolid(Vector2I const& tilePosition)
@@ -94,96 +94,3 @@ void Tiles::updateMapSize(Vector2I const& tilePosition)
         std::max(tilePosition.y, mapSize_.bottom)};
 }
 
-// void Tiles::updateTilesToRender(
-//     GameCamera const& gameCamera,
-//     RectangleEx const& mapPanel)
-// {
-//     snx::BM::start("updateTilesToRender");
-//     RectangleExI renderRectangle{
-//         Vector2SubtractValue(
-//             UnitConversion::screenToTilePosition(
-//                 mapPanel.topLeft(),
-//                 gameCamera.get()),
-//             1),
-//         Vector2AddValue(
-//             UnitConversion::screenToTilePosition(
-//                 mapPanel.bottomRight(),
-//                 gameCamera.get()),
-//             1)};
-
-//     /*
-//     // for (size_t i{0}; i < tileCount_; ++i)
-//     for (auto tilePosition : positions_.keys())
-//     {
-//         bool conditionMet{CheckCollisionPointRec(tilePosition, renderRectangle)};
-//         bool existsInList{tilesToRender_.positions_.keys().contains(tilePosition)};
-
-//         // Skip if condition is met and is in list
-//         if (conditionMet && existsInList)
-//         {
-//             continue;
-//         }
-
-//         // Add if does not exist yet
-//         else if (conditionMet)
-//         {
-//             tilesToRender_.positions_.insert(
-//                 tilePosition,
-//                 *positions_.at(tilePosition));
-
-//             tilesToRender_.renderIDs_.insert(
-//                 tilePosition,
-//                 *renderIDs_.at(tilePosition));
-
-//             tilesToRender_.visibilityIDs_.insert(
-//                 tilePosition,
-//                 *visibilityIDs_.at(tilePosition));
-//         }
-
-//         // Delete if condiiton not met
-//         else if (existsInList)
-//         {
-//             tilesToRender_.positions_.erase(
-//                 tilePosition);
-
-//             tilesToRender_.renderIDs_.erase(
-//                 tilePosition);
-
-//             tilesToRender_.visibilityIDs_.erase(
-//                 tilePosition);
-//         }
-
-//         tilesToRender_.tileCount_ = tilesToRender_.positions_.keys().size();
-//     }
-//     */
-
-//     // Reset
-//     tilesToRender_ = TilesToRender();
-
-//     for (auto x{renderRectangle.left}; x <= renderRectangle.right; ++x)
-//     {
-//         for (auto y{renderRectangle.top}; y <= renderRectangle.bottom; ++y)
-//         {
-//             Vector2I tilePosition{x, y};
-
-//             // if (!positions_.contains(tilePosition))
-//             // {
-//             //     continue;
-//             // }
-
-//             tilesToRender_.renderPositions_.push_back(
-//                 positions_.at(tilePosition)->renderPosition());
-
-//             tilesToRender_.renderIDs_.push_back(
-//                 *renderIDs_.at(tilePosition));
-
-//             tilesToRender_.visibilityIDs_.push_back(
-//                 *visibilityIDs_.at(tilePosition));
-//         }
-//     }
-
-//     tilesToRender_.tileCount_ = tilesToRender_.visibilityIDs_.size();
-//     std::cout << tilesToRender_.tileCount_ << "\n";
-
-//     snx::BM::end("updateTilesToRender");
-// }

@@ -3,25 +3,24 @@
 
 #include <cstddef>
 #include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 namespace snx
 {
     template <typename Key>
-    class ISparseSet
+    class IDenseMap
     {
     public:
         virtual void erase(Key const& key) = 0;
         virtual void clear() = 0;
         virtual bool contains(Key const& key) const = 0;
-        virtual std::unordered_set<Key>& keys() = 0;
-        virtual ~ISparseSet() = default;
+        // virtual std::vector<Key>& keys() = 0;
+        virtual ~IDenseMap() = default;
     };
 
     template <typename Key, typename Type>
-    class SparseSet
-        : public ISparseSet<Key>
+    class DenseMap
+        : public IDenseMap<Key>
     {
     public:
         Type& insert(Key const& key, Type const& value = Type{})
@@ -33,7 +32,7 @@ namespace snx
             }
 
             // Add new key to used keys
-            keys_.insert(key);
+            // keys_.insert(key);
 
             // Get new list index for value
             size_t valueIndex = values_.size();
@@ -93,7 +92,7 @@ namespace snx
             indexToKey_.erase(values_.size());
 
             // Remove key from used keys
-            keys_.erase(key);
+            // keys_.erase(key);
         }
 
         void clear() override
@@ -101,22 +100,17 @@ namespace snx
             values_.clear();
             keyToIndex_.clear();
             indexToKey_.clear();
-            keys_.clear();
+            // keys_.clear();
         }
 
         bool contains(Key const& key) const override
         {
-            return keys_.contains(key);
+            return keyToIndex_.find(key) != keyToIndex_.end();
         }
 
-        Type& at(Key const& key)
+        Type& operator[](Key const& key)
         {
-            // if (!contains(key))
-            // {
-            //     return nullptr;
-            // }
-
-            return values_[keyToIndex_.at(key)];
+            return values_[keyToIndex_[key]];
         }
 
         std::vector<Type>& values()
@@ -124,16 +118,23 @@ namespace snx
             return values_;
         }
 
-        std::unordered_set<Key>& keys() override
-        {
-            return keys_;
-        }
+        // std::vector<Key>& keys() override
+        // {
+            // return keys_;
+        // }
 
     private:
-        std::vector<Type> values_{};                   // Vector index is used as value key
-        std::unordered_map<Key, size_t> keyToIndex_{}; // Key is used to identify value
-        std::unordered_map<size_t, Key> indexToKey_{}; // Store a index (value) to key mapping (internal use only)
-        std::unordered_set<Key> keys_{};               // Set of all keys in use
+        // Vector index is used as value key
+        std::vector<Type> values_{};
+
+        // Key is used to identify value
+        std::unordered_map<Key, size_t> keyToIndex_{};
+
+        // Store a index (value) to key mapping (internal use only)
+        std::unordered_map<size_t, Key> indexToKey_{};
+
+        // Vector of all keys in use
+        // std::vector<Key> keys_{};
     };
 }
 
