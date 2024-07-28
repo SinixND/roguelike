@@ -1,11 +1,13 @@
 #include "Tiles.h"
 
+#include "DenseMap.h"
 #include "GameCamera.h"
 #include "Position.h"
 #include "RenderID.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
 #include <algorithm>
+#include <cstddef>
 #include <string>
 #include <vector>
 
@@ -35,20 +37,17 @@ void Tiles::insert(
     updateMapSize(tilePosition);
 }
 
-void Tiles::erase(Vector2I const& tilePosition)
-{
-    positions_.erase(tilePosition);
-    renderIDs_.erase(tilePosition);
-    tags_.erase(tilePosition);
-    visibilityIDs_.erase(tilePosition);
-    isSolids_.erase(tilePosition);
-    blocksVisions_.erase(tilePosition);
-}
+// void Tiles::erase(Vector2I const& tilePosition)
+// {
+//     positions_.erase(tilePosition);
+//     renderIDs_.erase(tilePosition);
+//     tags_.erase(tilePosition);
+//     visibilityIDs_.erase(tilePosition);
+//     isSolids_.erase(tilePosition);
+//     blocksVisions_.erase(tilePosition);
+// }
 
-std::vector<Position> const& Tiles::positions()
-{
-    return positions_.values();
-}
+snx::DenseMap<Vector2I, Position>& Tiles::positions() { return positions_; };
 
 Position const& Tiles::position(Vector2I const& tilePosition)
 {
@@ -60,14 +59,19 @@ std::string const& Tiles::tag(Vector2I const& tilePosition)
     return tags_[tilePosition];
 }
 
-std::vector<RenderID> const& Tiles::renderIDs()
+snx::DenseMap<Vector2I, RenderID>& Tiles::renderIDs()
 {
-    return renderIDs_.values();
-}
+    return renderIDs_;
+};
 
 RenderID Tiles::renderID(Vector2I const& tilePosition)
 {
     return renderIDs_[tilePosition];
+}
+
+snx::DenseMap<Vector2I, VisibilityID>& Tiles::visibilityIDs()
+{
+    return visibilityIDs_;
 }
 
 VisibilityID Tiles::visibilityID(Vector2I const& tilePosition)
@@ -88,9 +92,20 @@ bool Tiles::blocksVision(Vector2I const& tilePosition)
 void Tiles::updateMapSize(Vector2I const& tilePosition)
 {
     mapSize_ = RectangleExI{
-        std::min(tilePosition.x, mapSize_.left()),
-        std::max(tilePosition.x, mapSize_.right()),
-        std::min(tilePosition.y, mapSize_.top()),
-        std::max(tilePosition.y, mapSize_.bottom())};
+        Vector2I{
+            std::min(tilePosition.x, mapSize_.left()),
+            std::min(tilePosition.y, mapSize_.top())},
+        Vector2I{
+            std::max(tilePosition.x, mapSize_.right()),
+            std::max(tilePosition.y, mapSize_.bottom())}};
+};
+
+size_t Tiles::size()
+{
+    return positions_.size();
 }
 
+RectangleExI Tiles::mapSize()
+{
+    return mapSize_;
+}

@@ -9,13 +9,12 @@
 namespace UnitConversion
 {
     // This file contains functions to convert between
-    // - screen position (float/pixel, absolute)
-    // - world position (float/pixel, relative: considers camera)
     // - tile position (int/position, relative: considers camera)
+    // - world position (float/pixel, relative: considers camera)
+    // - screen position (float/pixel, absolute)
 
-    // World coordinates
     // World pixel to tile position
-    inline Vector2I worldToPosition(Vector2 pixel)
+    inline Vector2I worldToTile(Vector2 pixel)
     {
         return Vector2I{
             static_cast<int>(std::floor((pixel.x + (TileData::TILE_SIZE / 2)) / TileData::TILE_SIZE)),
@@ -23,24 +22,23 @@ namespace UnitConversion
     }
 
     // Tile position to world pixel
-    inline Vector2 positionToWorld(Vector2I position)
+    inline Vector2 tileToWorld(Vector2I position)
     {
         return Vector2{
             (position.x * TileData::TILE_SIZE),
             (position.y * TileData::TILE_SIZE)};
     }
 
-    // Screen coordinates
     // Screen pixel to world pixel to tile position
-    inline Vector2I screenToTilePosition(Vector2 pixel, Camera2D const& camera)
+    inline Vector2I screenToTile(Vector2 pixel, Camera2D const& camera)
     {
         Vector2 worldPixel{GetScreenToWorld2D(pixel, camera)};
 
-        return worldToPosition(worldPixel);
+        return worldToTile(worldPixel);
     }
 
     // Tile position to world pixel to screen pixel
-    inline Vector2 tilePositionToScreen(Vector2I position, Camera2D const& camera)
+    inline Vector2 tileToScreen(Vector2I position, Camera2D const& camera)
     {
         Vector2 worldPixel{
             position.x * TileData::TILE_SIZE,
@@ -49,10 +47,9 @@ namespace UnitConversion
         return GetWorldToScreen2D(worldPixel, camera);
     }
 
-    // Screen pixel to world pixel to tile position
     inline Vector2I getMouseTile(Camera2D const& camera)
     {
-        return screenToTilePosition(GetMousePosition(), camera);
+        return screenToTile(GetMousePosition(), camera);
     }
 }
 

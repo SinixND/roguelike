@@ -6,14 +6,14 @@
 
 void Hero::init()
 {
-    movement_.setSpeed(10);
+    movement_.setSpeed(20);
     energy_.setMaxEnergy(100);
     energy_.setRegenRate(10);
 }
 
 void Hero::triggerMovement(
-    Vector2I const& direction, 
-    Movement& movement, 
+    Vector2I const& direction,
+    Movement& movement,
     Energy& energy)
 {
     if (energy.consume(50))

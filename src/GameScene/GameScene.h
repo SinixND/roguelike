@@ -8,13 +8,16 @@
 #include "InputHandler.h"
 #include "Panels.h"
 #include "Renderer.h"
+#include "TilesToRender.h"
 #include "World.h"
+#include "raylibEx.h"
+#include <raylib.h>
+#include <vector>
 
 class GameScene : public snx::IScene
 {
-
     Panels panels_{};
-    GameCamera camera_{};
+    GameCamera gameCamera_{};
     Renderer renderer_{};
 
     InputHandler inputHandler_{};
@@ -26,19 +29,17 @@ class GameScene : public snx::IScene
 
     bool actionInProgress_{false};
 
-    // Filtered tiles for efficiency
-    struct TilesToRender {
-        std::vector<Vector2> renderPositions{};
-        std::vector<RenderID> renderIDs{};
-        std::vector<VisibilityID> visibilityIDs{};
-    };
-
     TilesToRender tilesToRender_{};
+    RenderTexture2D renderTextureMap_{};
 
+private:
     void processInput();
     void updateState();
     void renderOutput();
     void postOutput();
+
+    RectangleExI renderRectangleExI();
+    void initRenderTextureMap();
 
 public:
     void initialize();

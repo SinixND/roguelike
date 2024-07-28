@@ -26,7 +26,7 @@ public:
 
     Vector2I tilePosition() const
     {
-        return UnitConversion::worldToPosition(position_);
+        return UnitConversion::worldToTile(position_);
     }
 
     void changeTo(Vector2 const& renderPosition)
@@ -36,7 +36,7 @@ public:
 
     void changeTo(Vector2I const& tilePosition)
     {
-        position_ = UnitConversion::positionToWorld(tilePosition);
+        position_ = UnitConversion::tileToWorld(tilePosition);
     }
 
     void move(Vector2 const& offset)

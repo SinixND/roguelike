@@ -1,8 +1,10 @@
 #ifndef IG20240203171045
 #define IG20240203171045
 
+#include <cassert>
 #include <cmath>
 #include <cstddef>
+#include <format>
 #include <functional>
 #include <iostream>
 #include <raylib.h>
@@ -263,14 +265,15 @@ public:
         , top_(center.y - (height / 2))
         , right_(center.x + (width / 2))
         , bottom_(center.y + (height / 2))
-
+        , width_(width)
+        , height_(height)
     {
-        if(
-                !(width % 2)
-                || !(height % 2))
+        if (
+            !(width % 2)
+            || !(height % 2))
         {
-            std::cout << "[ERROR] Width (" << width << ") or height (" << height << ")invalid; Must be odd value!\n";
-
+            std::cerr << "[ERROR] Width (" << width << ") or height (" << height << ")invalid; Must be odd value!\n";
+            assert(0);
         }
     }
 
