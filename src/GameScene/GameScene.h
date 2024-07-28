@@ -30,7 +30,6 @@ class GameScene : public snx::IScene
     bool actionInProgress_{false};
 
     TilesToRender tilesToRender_{};
-    RenderTexture2D renderTextureMap_{};
 
 private:
     void processInput();
@@ -39,18 +38,14 @@ private:
     void postOutput();
 
     RectangleExI renderRectangleExI();
-    void initRenderTextureMap();
+    std::vector<Vector2I> tilePositionsToRender();
+    void initTilesToRender();
+    // void updateTilesToRender();
 
 public:
     void initialize();
     void update() override;
     void deinitialize();
-
-    std::vector<Vector2I> tilePositionsToRender();
-
-    void initTilesToRender();
-
-    // void updateTilesToRender();
 };
 
 #endif

@@ -1,7 +1,6 @@
 #include "Tiles.h"
 
 #include "DenseMap.h"
-#include "GameCamera.h"
 #include "Position.h"
 #include "RenderID.h"
 #include "VisibilityID.h"
@@ -9,7 +8,6 @@
 #include <algorithm>
 #include <cstddef>
 #include <string>
-#include <vector>
 
 void Tiles::insert(
     Vector2I const& tilePosition,

@@ -8,7 +8,6 @@
 #include "Panels.h"
 #include "PublisherStatic.h"
 #include "Renderer.h"
-#include "TileData.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
 #include "VisibilityID.h"
@@ -28,8 +27,6 @@ void GameScene::initialize()
     inputHandler_.setDefaultInputMappings();
 
     hero_.init();
-
-    initRenderTextureMap();
 
     // Setup events
     snx::Publisher::addSubscriber(
@@ -120,56 +117,46 @@ void GameScene::renderOutput()
 
     // World
     // Draw map
-    DrawTextureRec(
-        renderTextureMap_.texture,
-        Rectangle{
-            0,
-            0,
-            static_cast<float>(renderTextureMap_.texture.width),
-            static_cast<float>(-renderTextureMap_.texture.height)},
-        // Vector2{0, 0},
-        Vector2{
-            -renderTextureMap_.texture.width / 2.0f,
-            -renderTextureMap_.texture.height / 2.0f},
-        WHITE);
+    auto& map{world_.currentMap()};
+    auto renderRectangle{renderRectangleExI()};
 
-    // auto& map{world_.currentMap()};
+    for (size_t i{0}; i < map.size(); ++i)
+    {
+        if (
+            !CheckCollisionPointRec(map.positions().values()[i].tilePosition(), renderRectangle)
+            // || map.visibilityIDs().values()[i] == VisibilityID::invisible
+        )
+        {
+            continue;
+        }
 
-    // for (size_t i{0}; i < map.size(); ++i)
-    // {
-    //     if (
-    //         !CheckCollisionPointRec(map.positions().values()[i].tilePosition(), renderRectangleExI())
-    //         // || map.visibilityIDs().values()[i] == VisibilityID::invisible
-    //     )
-    //     {
-    //         continue;
-    //     }
+        Color tint{WHITE};
 
-    //     Color tint{WHITE};
+        // Set tint alpha per visibility
+        switch (tilesToRender_.visibilityIDs()[i])
+        {
+        case VisibilityID::visible:
+            tint = ColorAlpha(tint, 1.0);
+            break;
+        case VisibilityID::seen:
+            tint = ColorAlpha(tint, 0.5);
+            break;
+        default:
+            break;
+        }
 
-    //     // Set tint alpha per visibility
-    //     switch (tilesToRender_.visibilityIDs()[i])
-    //     {
-    //     case VisibilityID::visible:
-    //         tint = ColorAlpha(tint, 1.0);
-    //         break;
-    //     case VisibilityID::seen:
-    //         tint = ColorAlpha(tint, 0.5);
-    //         break;
-    //     default:
-    //         break;
-    //     }
+        // To Debug:
+        tint = ColorAlpha(tint, 1.0);
 
-    //     // To Debug:
-    //     tint = ColorAlpha(tint, 1.0);
+        renderer_.render(
+            map.renderIDs().values()[i],
+            map.positions().values()[i].renderPosition(),
+            tint);
+    }
 
-    //             renderer_.render(
-    //                 map.renderIDs().values()[i],
-    //                 map.positions().values()[i].renderPosition(),
-    //                 tint);
-    // }
+    // size_t tileCount{tilesToRender_.renderPositions().size()};
 
-    // for (size_t i{0}; i < tilesToRender_.renderPositions().size(); ++i)
+    // for (size_t i{0}; i < tileCount; ++i)
     // {
     //     Color tint{WHITE};
 
@@ -186,6 +173,7 @@ void GameScene::renderOutput()
     //         break;
     //     }
 
+    //     // For debug
     //     tint = ColorAlpha(tint, 1.0);
 
     //     renderer_.render(
@@ -281,7 +269,8 @@ std::vector<Vector2I> GameScene::tilePositionsToRender()
 
             if (
                 !currentMap.visibilityIDs().contains(tilePositionToCheck)
-                || (currentMap.visibilityIDs()[tilePositionToCheck] == VisibilityID::invisible))
+                // || (currentMap.visibilityIDs()[tilePositionToCheck] == VisibilityID::invisible)
+            )
             {
                 continue;
             }
@@ -309,29 +298,3 @@ void GameScene::initTilesToRender()
 // {
 //
 // }
-
-void GameScene::initRenderTextureMap()
-{
-    auto& map{world_.currentMap()};
-
-    renderTextureMap_ = LoadRenderTexture(
-        (map.mapSize().width() * TileData::TILE_SIZE),
-        (map.mapSize().height() * TileData::TILE_SIZE));
-
-    BeginTextureMode(renderTextureMap_);
-
-    ClearBackground(BG_COLOR);
-
-    for (size_t i{0}; i < map.size(); ++i)
-    {
-        renderer_.render(
-            map.renderIDs().values()[i],
-            Vector2Add(
-                map.positions().values()[i].renderPosition(),
-                Vector2{
-                    ((map.mapSize().width() * TileData::TILE_SIZE) / 2),
-                    ((map.mapSize().height() * TileData::TILE_SIZE) / 2)}));
-    }
-
-    EndTextureMode();
-}
