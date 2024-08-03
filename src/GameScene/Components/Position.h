@@ -2,6 +2,7 @@
 #define IG20240227231122
 
 #include "UnitConversion.h"
+#include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
@@ -32,16 +33,19 @@ public:
     void changeTo(Vector2 const& renderPosition)
     {
         position_ = renderPosition;
+        snx::PublisherStatic::publish(Event::positionChanged);
     }
 
     void changeTo(Vector2I const& tilePosition)
     {
         position_ = UnitConversion::tileToWorld(tilePosition);
+        snx::PublisherStatic::publish(Event::positionChanged);
     }
 
     void move(Vector2 const& offset)
     {
         position_ += offset;
+        snx::PublisherStatic::publish(Event::positionChanged);
     }
 };
 

@@ -4,11 +4,12 @@
 enum class Event
 {
     null = 0,
-    panelsResized,
-    windowResized,
-    actionInProgress,
     actionFinished,
+    actionInProgress,
     cameraChanged,
+    panelsResized,
+    positionChanged,
+    windowResized,
 };
 
 #endif

@@ -32,9 +32,6 @@ class App
     snx::IScene* activeScene_{&gameScene_};
 
 public:
-    static inline snx::Publisher<std::function<void()>> eventDispatcher{};
-
-public:
     void init();
     void run();
     void deinit();

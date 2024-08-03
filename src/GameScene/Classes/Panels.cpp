@@ -1,6 +1,5 @@
 #include "Panels.h"
 
-#include "GameScene.h"
 #include "Event.h"
 #include "GameFont.h"
 #include "Logger.h"
@@ -36,7 +35,7 @@ void Panels::init()
         .setBottom(log_.top())
         .setTop(status_.bottom());
 
-    GameScene::eventDispatcher.publish(Event::panelsResized);
+    snx::PublisherStatic::publish(Event::panelsResized);
 }
 
 void Panels::drawLogPanelContent()

@@ -1,6 +1,5 @@
 #include "GameScene.h"
 
-#include "App.h"
 #include "Benchmark.h"
 #include "Colors.h"
 #include "Cursor.h"
@@ -31,38 +30,48 @@ void GameScene::initialize()
     hero_.init();
 
     // Setup events
-    App::eventDispatcher.addSubscriber(
+    // App::eventDispatcher.addSubscriber(
+    snx::PublisherStatic::addSubscriber(
         Event::windowResized,
         [&]()
         { panels_.init(); });
 
-    eventDispatcher.addSubscriber(
+    // eventDispatcher.addSubscriber(
+    snx::PublisherStatic::addSubscriber(
         Event::panelsResized,
         [&]()
         { gameCamera_.init(panels_.map().center()); });
 
-    eventDispatcher.addSubscriber(
-    //snx::PublisherStatic::addSubscriber(
+    // eventDispatcher.addSubscriber(
+    snx::PublisherStatic::addSubscriber(
         Event::actionInProgress,
         [&]()
         { actionInProgress_ = true; });
 
-    eventDispatcher.addSubscriber(
-    // snx::PublisherStatic::addSubscriber(
+    // eventDispatcher.addSubscriber(
+    snx::PublisherStatic::addSubscriber(
         Event::actionFinished,
         [&]()
         { actionInProgress_ = false; });
 
-    eventDispatcher.addSubscriber(
+    // eventDispatcher.addSubscriber(
+    snx::PublisherStatic::addSubscriber(
         Event::cameraChanged,
         [&]()
         { initTilesToRender(); },
         true);
 
-    eventDispatcher.addSubscriber(
+    // eventDispatcher.addSubscriber(
+    snx::PublisherStatic::addSubscriber(
         Event::panelsResized,
         [&]()
         { initTilesToRender(); });
+
+    // eventDispatcher.addSubscriber(
+    snx::PublisherStatic::addSubscriber(
+        Event::positionChanged,
+        [&]()
+        { gameCamera_.setTarget(hero_.position().renderPosition()); });
 }
 
 void GameScene::processInput()

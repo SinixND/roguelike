@@ -1,6 +1,5 @@
 #include "Movement.h"
 
-#include "GameScene.h"
 #include "DeveloperMode.h"
 #include "Event.h"
 #include "Logger.h"
@@ -20,7 +19,7 @@ void Movement::trigger(Vector2I const& direction)
         snx::Logger::log("Movement started\n");
     }
 
-    GameScene::eventDispatcher.publish(Event::actionInProgress);
+    snx::PublisherStatic::publish(Event::actionInProgress);
 };
 
 void Movement::update(Position& position)
@@ -50,5 +49,5 @@ void Movement::update(Position& position)
     {
         snx::Logger::log("Movement finished\n");
     }
-    GameScene::eventDispatcher.publish(Event::actionFinished);
+    snx::PublisherStatic::publish(Event::actionFinished);
 };

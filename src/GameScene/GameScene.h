@@ -11,7 +11,6 @@
 #include "TilesToRender.h"
 #include "World.h"
 #include "raylibEx.h"
-#include "Publisher.h"
 #include <raylib.h>
 #include <vector>
 
@@ -42,9 +41,6 @@ private:
     std::vector<Vector2I> tilePositionsToRender();
     void initTilesToRender();
     // void updateTilesToRender();
-
-public:
-    static inline snx::Publisher<std::function<void()>> eventDispatcher{};
 
 public:
     void initialize();

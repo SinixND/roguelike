@@ -67,7 +67,7 @@ void updateWindow()
 
     if (IsWindowResized())
     {
-        App::eventDispatcher.publish(Event::windowResized);
+        snx::PublisherStatic::publish(Event::windowResized);
     }
 }
 
