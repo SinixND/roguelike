@@ -28,7 +28,7 @@ namespace snx
             starts_.at(bmNameToStart) = std::chrono::high_resolution_clock::now();
         }
 
-        static void end(std::string bmNameToEnd = "")
+        static void stop(std::string bmNameToEnd = "")
         {
             auto end = std::chrono::high_resolution_clock::now();
 
@@ -65,7 +65,7 @@ namespace snx
 
         static void restart(std::string bmNameToEnd, std::string bmNameToStart)
         {
-            end(bmNameToEnd);
+            stop(bmNameToEnd);
             start(bmNameToStart);
         }
     };

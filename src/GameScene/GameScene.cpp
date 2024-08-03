@@ -1,6 +1,8 @@
 #include "GameScene.h"
 
-#include "Constants/Colors.h"
+#include "App.h"
+#include "Benchmark.h"
+#include "Colors.h"
 #include "Cursor.h"
 #include "DeveloperMode.h"
 #include "Event.h"
@@ -29,33 +31,35 @@ void GameScene::initialize()
     hero_.init();
 
     // Setup events
-    snx::Publisher::addSubscriber(
+    App::eventDispatcher.addSubscriber(
         Event::windowResized,
         [&]()
         { panels_.init(); });
 
-    snx::Publisher::addSubscriber(
+    eventDispatcher.addSubscriber(
         Event::panelsResized,
         [&]()
         { gameCamera_.init(panels_.map().center()); });
 
-    snx::Publisher::addSubscriber(
+    eventDispatcher.addSubscriber(
+    //snx::PublisherStatic::addSubscriber(
         Event::actionInProgress,
         [&]()
         { actionInProgress_ = true; });
 
-    snx::Publisher::addSubscriber(
+    eventDispatcher.addSubscriber(
+    // snx::PublisherStatic::addSubscriber(
         Event::actionFinished,
         [&]()
         { actionInProgress_ = false; });
 
-    snx::Publisher::addSubscriber(
+    eventDispatcher.addSubscriber(
         Event::cameraChanged,
         [&]()
         { initTilesToRender(); },
         true);
 
-    snx::Publisher::addSubscriber(
+    eventDispatcher.addSubscriber(
         Event::panelsResized,
         [&]()
         { initTilesToRender(); });
@@ -84,11 +88,6 @@ void GameScene::processInput()
 
 void GameScene::updateState()
 {
-    if (IsWindowResized())
-    {
-        snx::Publisher::publish(Event::windowResized);
-    }
-
     // Regenerate energy if no action in progress
     if (!actionInProgress_)
     {
@@ -117,70 +116,78 @@ void GameScene::renderOutput()
 
     // World
     // Draw map
-    auto& map{world_.currentMap()};
-    auto renderRectangle{renderRectangleExI()};
-
-    for (size_t i{0}; i < map.size(); ++i)
+    // Iterate whole map (1) or filtered list (0)
+    snx::BM::start("Draw Map");
+    if (1)
     {
-        if (
-            !CheckCollisionPointRec(map.positions().values()[i].tilePosition(), renderRectangle)
-            // || map.visibilityIDs().values()[i] == VisibilityID::invisible
-        )
-        {
-            continue;
-        }
+        auto& map{world_.currentMap()};
+        auto renderRectangle{renderRectangleExI()};
 
-        Color tint{WHITE};
-
-        // Set tint alpha per visibility
-        switch (tilesToRender_.visibilityIDs()[i])
+        for (size_t i{0}; i < map.size(); ++i)
         {
-        case VisibilityID::visible:
+            if (
+                !CheckCollisionPointRec(map.positions().values()[i].tilePosition(), renderRectangle)
+                // || map.visibilityIDs().values()[i] == VisibilityID::invisible
+            )
+            {
+                continue;
+            }
+
+            Color tint{WHITE};
+
+            // Set tint alpha per visibility
+            switch (map.visibilityIDs().values()[i])
+            {
+            case VisibilityID::visible:
+                tint = ColorAlpha(tint, 1.0);
+                break;
+            case VisibilityID::seen:
+                tint = ColorAlpha(tint, 0.5);
+                break;
+            default:
+                break;
+            }
+
+            // To Debug:
             tint = ColorAlpha(tint, 1.0);
-            break;
-        case VisibilityID::seen:
-            tint = ColorAlpha(tint, 0.5);
-            break;
-        default:
-            break;
+
+            renderer_.render(
+                map.renderIDs().values()[i],
+                map.positions().values()[i].renderPosition(),
+                tint);
         }
-
-        // To Debug:
-        tint = ColorAlpha(tint, 1.0);
-
-        renderer_.render(
-            map.renderIDs().values()[i],
-            map.positions().values()[i].renderPosition(),
-            tint);
     }
+    else
+    {
+        size_t tileCount{tilesToRender_.renderPositions().size()};
 
-    // size_t tileCount{tilesToRender_.renderPositions().size()};
+        for (size_t i{0}; i < tileCount; ++i)
+        {
+            Color tint{WHITE};
 
-    // for (size_t i{0}; i < tileCount; ++i)
-    // {
-    //     Color tint{WHITE};
+            // Set tint alpha per visibility
+            switch (tilesToRender_.visibilityIDs()[i])
+            {
+            case VisibilityID::visible:
+                tint = ColorAlpha(tint, 1.0);
+                break;
+            case VisibilityID::seen:
+                tint = ColorAlpha(tint, 0.5);
+                break;
+            default:
+                break;
+            }
 
-    //     // Set tint alpha per visibility
-    //     switch (tilesToRender_.visibilityIDs()[i])
-    //     {
-    //     case VisibilityID::visible:
-    //         tint = ColorAlpha(tint, 1.0);
-    //         break;
-    //     case VisibilityID::seen:
-    //         tint = ColorAlpha(tint, 0.5);
-    //         break;
-    //     default:
-    //         break;
-    //     }
+            // For debug
+            tint = ColorAlpha(tint, 1.0);
 
-    //     // For debug
-    //     tint = ColorAlpha(tint, 1.0);
-
-    //     renderer_.render(
-    //         tilesToRender_.renderIDs()[i],
-    //         tilesToRender_.renderPositions()[i],
-    //         tint);
-    // }
+            renderer_.render(
+                tilesToRender_.renderIDs()[i],
+                tilesToRender_.renderPositions()[i],
+                tint);
+        }
+    }
+    snx::BM::stop("Draw Map");
 
     // Units
     // Draw hero

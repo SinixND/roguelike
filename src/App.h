@@ -20,12 +20,6 @@ class App
 {
     static inline AppConfig config{};
 
-public:
-    void init();
-    void run();
-    void deinit();
-
-private:
     int const fpsTarget_{300};
 
     // Raylib settings
@@ -36,6 +30,14 @@ private:
 
     // Set default scene
     snx::IScene* activeScene_{&gameScene_};
+
+public:
+    static inline snx::Publisher<std::function<void()>> eventDispatcher{};
+
+public:
+    void init();
+    void run();
+    void deinit();
 };
 
 #endif

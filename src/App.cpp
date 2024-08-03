@@ -51,7 +51,7 @@ void App::init()
     gameScene_.initialize();
 }
 
-void updateFullscreen()
+void updateWindow()
 {
     if (IsKeyPressed(KEY_F11))
     {
@@ -63,10 +63,14 @@ void updateFullscreen()
         {
             MaximizeWindow();
         }
+    }
 
-        snx::Publisher::publish(Event::windowResized);
+    if (IsWindowResized())
+    {
+        App::eventDispatcher.publish(Event::windowResized);
     }
 }
+
 void updateDeveloperMode()
 {
     if (IsKeyPressed(KEY_F1))
@@ -85,7 +89,7 @@ void App::run()
 #else
     while (!(WindowShouldClose()))
     {
-        updateFullscreen();
+        updateWindow();
         updateDeveloperMode();
 
         activeScene_->update();
