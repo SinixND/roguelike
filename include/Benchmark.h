@@ -48,25 +48,22 @@ namespace snx
                 durations_.at(bmNameToEnd) += (end - starts_[bmNameToEnd]).count();
                 ++measurementCounts_.at(bmNameToEnd);
             }
+        }
 
-            auto average = (durations_.at(bmNameToEnd) / measurementCounts_.at(bmNameToEnd));
+        static void report(std::string bmName)
+        {
+            auto average = (durations_.at(bmName) / measurementCounts_.at(bmName));
             std::cout
                 << "\""
-                << bmNameToEnd
+                << bmName
                 << "\""
                 << ": "
                 << average * 10E-6
                 << " ms / "
                 << 1 / (average * 10E-9)
                 << " 1/s over "
-                << measurementCounts_.at(bmNameToEnd)
+                << measurementCounts_.at(bmName)
                 << " iterations\n";
-        }
-
-        static void restart(std::string bmNameToEnd, std::string bmNameToStart)
-        {
-            stop(bmNameToEnd);
-            start(bmNameToStart);
         }
     };
 };

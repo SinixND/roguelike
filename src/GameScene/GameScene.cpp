@@ -1,6 +1,5 @@
 #include "GameScene.h"
 
-#include "Benchmark.h"
 #include "Colors.h"
 #include "Cursor.h"
 #include "DeveloperMode.h"
@@ -14,6 +13,7 @@
 #include "VisibilityID.h"
 #include "raylibEx.h"
 #include <cstddef>
+#include <iostream>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -126,16 +126,21 @@ void GameScene::renderOutput()
     // World
     // Draw map
     // Iterate whole map (1) or filtered list (0)
-    snx::BM::start("Draw Map");
-    if (1)
+    if (0)
     {
+        // snx::BM::start("Iterate Map");
         auto& map{world_.currentMap()};
         auto renderRectangle{renderRectangleExI()};
+        auto& renderIDs{map.renderIDs().values()};
+        auto& positions{map.positions().values()};
+        auto& visibilityIDs{map.visibilityIDs().values()};
 
+        std::cout << "Map size: " << map.size() << "\n";
         for (size_t i{0}; i < map.size(); ++i)
         {
+            // snx::BM::start("Map loop");
             if (
-                !CheckCollisionPointRec(map.positions().values()[i].tilePosition(), renderRectangle)
+                !CheckCollisionPointRec(positions[i].tilePosition(), renderRectangle)
                 // || map.visibilityIDs().values()[i] == VisibilityID::invisible
             )
             {
@@ -145,7 +150,7 @@ void GameScene::renderOutput()
             Color tint{WHITE};
 
             // Set tint alpha per visibility
-            switch (map.visibilityIDs().values()[i])
+            switch (visibilityIDs[i])
             {
             case VisibilityID::visible:
                 tint = ColorAlpha(tint, 1.0);
@@ -161,21 +166,31 @@ void GameScene::renderOutput()
             tint = ColorAlpha(tint, 1.0);
 
             renderer_.render(
-                map.renderIDs().values()[i],
-                map.positions().values()[i].renderPosition(),
+                renderIDs[i],
+                positions[i].renderPosition(),
                 tint);
+            // snx::BM::stop("Map loop");
         }
+        // snx::BM::stop("Iterate Map");
+        // snx::BM::report("Iterate Map");
+        // snx::BM::report("Map loop");
     }
     else
     {
+        // snx::BM::start("Iterate Filtered");
         size_t tileCount{tilesToRender_.renderPositions().size()};
+        auto const& renderIDs{tilesToRender_.renderIDs()};
+        auto const& renderPositions{tilesToRender_.renderPositions()};
+        auto const& visibilityIDs{tilesToRender_.visibilityIDs()};
 
+        std::cout << "Tile count: " << tileCount << "\n";
         for (size_t i{0}; i < tileCount; ++i)
         {
+            // snx::BM::start("Filtered loop");
             Color tint{WHITE};
 
             // Set tint alpha per visibility
-            switch (tilesToRender_.visibilityIDs()[i])
+            switch (visibilityIDs[i])
             {
             case VisibilityID::visible:
                 tint = ColorAlpha(tint, 1.0);
@@ -191,12 +206,15 @@ void GameScene::renderOutput()
             tint = ColorAlpha(tint, 1.0);
 
             renderer_.render(
-                tilesToRender_.renderIDs()[i],
-                tilesToRender_.renderPositions()[i],
+                renderIDs[i],
+                renderPositions[i],
                 tint);
+            // snx::BM::stop("Filtered loop");
         }
+        // snx::BM::stop("Iterate Filtered");
+        // snx::BM::report("Iterate Filtered");
+        // snx::BM::report("Filtered loop");
     }
-    snx::BM::stop("Draw Map");
 
     // Units
     // Draw hero
