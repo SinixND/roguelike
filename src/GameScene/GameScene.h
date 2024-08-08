@@ -12,7 +12,6 @@
 #include "World.h"
 #include "raylibEx.h"
 #include <raylib.h>
-#include <vector>
 
 class GameScene : public snx::IScene
 {
@@ -38,8 +37,8 @@ private:
     void postOutput();
 
     RectangleExI renderRectangleExI();
-    std::vector<Vector2I> tilePositionsToRender();
-    void initTilesToRender();
+    // std::vector<Vector2I> tilePositionsToRender();
+    // void initTilesToRender();
     // void updateTilesToRender();
 
 public:

@@ -5,19 +5,13 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Keep filtered list of map tiles to render
-- [ ] Realize viewport/camera system
-- [ ] Add input to center on hero 
-- [ ] Implement zoom
-- [ ] Edge pan if player model goes out of deadzone area
+- [ ] Implement collision
 - [ ] Implement movment (replace hold-to-move by L_SHIFT to move-until-something happens)
 - [ ] Implement vision (fog of war: unseen, seen, visible)
-- [ ] Print tile info in panel (under cursor)
+- [ ] Print tile info in panel (under cursor, floating? only special tiles?)
 
 
 ## Shortterm
-- [ ] Fire event on camera change to trigger tile filter recalculation
-- [ ] Character triggers edgePan
 - [ ] Changeable key bindings
 
 
@@ -34,6 +28,7 @@ Platforms: Linux, Windows, Browser
 - [ ] Add touch support
 - [ ] Save/Load for Account > Character > CurrentRun
 - [ ] Account settings via lua
+- [ ] Implement zoom?
 
 
 ## Continuous
@@ -44,6 +39,7 @@ Platforms: Linux, Windows, Browser
 
 # Ideas
 - [ ] Lua/Jinx settings file?
+- [ ] Chunkwise map rendering (RenderTexture; pre-calculation multi-threaded; web compatible?; FogOfWar as Overlay?)
 
 
 # Notes
@@ -96,3 +92,9 @@ Not implemented yet
 - [x] Modified parameters -> pointer
 - [x] Observer pattern for event communication
 - [x] Add logger
+- [x] Keep filtered list of map tiles to render
+    - [x] Fire event on camera change to trigger tile filter recalculation
+- [x] Implement viewport/camera system (-> raylib)
+- [ ] Add input to center on hero (obsolete, camera follows hero)
+- [ ] Edge pan if player model goes out of deadzone area (obsolete, camera follows hero)
+- [ ] Character triggers edgePan (obsolete, camera follows hero)

@@ -85,7 +85,7 @@ void App::run()
     //=================================
 #ifdef __EMSCRIPTEN__
     emscriptenArgs arg{activeScene_};
-    emscripten_set_main_loop_arg(applicationLoop, &arg, 0, 1);
+    emscripten_set_main_loop_arg(applicationLoop, &arg, 60 /*FPS*/, 1 /*Simulate infinite loop*/);
 #else
     while (!(WindowShouldClose()))
     {
