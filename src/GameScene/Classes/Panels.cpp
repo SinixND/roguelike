@@ -44,11 +44,9 @@ void Panels::drawLogPanelContent()
     auto lines{(log_.height() / (1.5 * textSize)) - 1};
     for (int i{0}; i < lines; ++i)
     {
-        std::string message{snx::Logger::getMessage(i)};
-
         DrawTextEx(
             GameFont::font(),
-            message.c_str(),
+            snx::Logger::getMessage(i).c_str(),
             {log_.left() + (textSize / 2),
              log_.bottom() - (textSize * 1.5f) - (i * 1.5f * textSize)},
             textSize,

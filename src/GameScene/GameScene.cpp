@@ -29,49 +29,73 @@ void GameScene::initialize()
 
     hero_.init();
 
+    TileFilters::initTilesToRender(
+        tilesToRender_, 
+        world_.currentMap(), 
+        renderRectangleExI());
+
     // Setup events
     // App::eventDispatcher.addSubscriber(
     snx::PublisherStatic::addSubscriber(
         Event::windowResized,
-        [&]()
-        { panels_.init(); });
+        [&]() 
+        { 
+            panels_.init(); 
+        });
 
     // eventDispatcher.addSubscriber(
     snx::PublisherStatic::addSubscriber(
         Event::panelsResized,
-        [&]()
-        { gameCamera_.init(panels_.map().center()); });
+        [&]() 
+        { 
+            gameCamera_.init(panels_.map().center()); 
+        });
 
     // eventDispatcher.addSubscriber(
     snx::PublisherStatic::addSubscriber(
         Event::actionInProgress,
-        [&]()
-        { actionInProgress_ = true; });
+        [&]() 
+        { 
+            actionInProgress_ = true; 
+        });
 
     // eventDispatcher.addSubscriber(
     snx::PublisherStatic::addSubscriber(
         Event::actionFinished,
         [&]()
-        { actionInProgress_ = false; });
+        { 
+            actionInProgress_ = false; 
+        });
 
     // eventDispatcher.addSubscriber(
     snx::PublisherStatic::addSubscriber(
         Event::cameraChanged,
         [&]()
-        { initTilesToRender(); },
-        true);
+        { 
+            TileFilters::initTilesToRender(
+                tilesToRender_, 
+                world_.currentMap(), 
+                renderRectangleExI());
+        });
 
     // eventDispatcher.addSubscriber(
     snx::PublisherStatic::addSubscriber(
         Event::panelsResized,
         [&]()
-        { initTilesToRender(); });
+        { 
+            TileFilters::initTilesToRender(
+                tilesToRender_, 
+                world_.currentMap(), 
+                renderRectangleExI());
+        });
 
     // eventDispatcher.addSubscriber(
     snx::PublisherStatic::addSubscriber(
         Event::positionChanged,
         [&]()
-        { gameCamera_.setTarget(hero_.position().renderPosition()); });
+        { 
+            gameCamera_.setTarget(hero_.position().renderPosition()); 
+        });
 }
 
 void GameScene::processInput()
@@ -287,48 +311,3 @@ RectangleExI GameScene::renderRectangleExI()
                 gameCamera_.get()),
             1)};
 }
-
-std::vector<Vector2I> GameScene::tilePositionsToRender()
-{
-    Tiles& currentMap{world_.currentMap()};
-    RectangleExI renderRect{renderRectangleExI()};
-    Vector2I initialTilePositionToCheck{renderRect.topLeft()};
-    std::vector<Vector2I> tilePositionsToReturn{};
-
-    for (int x{0}; x < renderRect.width(); ++x)
-    {
-        for (int y{0}; y < renderRect.height(); ++y)
-        {
-            Vector2I tilePositionToCheck{initialTilePositionToCheck.x + x, initialTilePositionToCheck.y + y};
-
-            if (
-                !currentMap.visibilityIDs().contains(tilePositionToCheck)
-                // || (currentMap.visibilityIDs()[tilePositionToCheck] == VisibilityID::invisible)
-            )
-            {
-                continue;
-            }
-
-            tilePositionsToReturn.push_back(tilePositionToCheck);
-        }
-    }
-
-    return tilePositionsToReturn;
-};
-
-void GameScene::initTilesToRender()
-{
-    tilesToRender_.clear();
-    std::vector<Vector2I> tilePositions{tilePositionsToRender()};
-    Tiles& currentMap{world_.currentMap()};
-
-    for (auto& tilePosition : tilePositions)
-    {
-        tilesToRender_.insert(currentMap, tilePosition);
-    }
-};
-
-// void GameScene::updateTilesToRender(std::vector<Vector2I>  const& tilePositions)
-// {
-//
-// }

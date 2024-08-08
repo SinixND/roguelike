@@ -38,8 +38,8 @@ private:
     void postOutput();
 
     RectangleExI renderRectangleExI();
-    std::vector<Vector2I> tilePositionsToRender();
-    void initTilesToRender();
+    // std::vector<Vector2I> tilePositionsToRender();
+    // void initTilesToRender();
     // void updateTilesToRender();
 
 public:
