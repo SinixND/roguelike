@@ -1,8 +1,16 @@
 #include "Energy.h"
-#include "Logger.h"
+
+#include "Debugger.h"
+#include "DeveloperMode.h"
+#include <string>
 
 bool Energy::consume(int energy)
 {
+    if (DeveloperMode::isActive())
+    {
+        snx::debug("Consume " + std::to_string(energy) + " energy.\n");
+    }
+
     if (energy < 0)
     {
         // Consume all energy
@@ -29,6 +37,10 @@ bool Energy::regenerate()
 
     // Regen energy until full
     currentEnergy_ += regenRate_;
+    if (DeveloperMode::isActive())
+    {
+        snx::debug("Regenerate " + std::to_string(regenRate_) + " energy.\n");
+    }
 
     if (currentEnergy_ > maxEnergy_)
     {

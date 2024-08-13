@@ -1,8 +1,8 @@
 #ifndef IG20240227231122
 #define IG20240227231122
 
-#include "UnitConversion.h"
 #include "PublisherStatic.h"
+#include "UnitConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
@@ -20,7 +20,7 @@ public:
 
     explicit Position(Vector2I const& tilePosition)
     {
-        changeTo(tilePosition);
+        position_ = UnitConversion::tileToWorld(tilePosition);
     }
 
     Vector2 const& renderPosition() const { return position_; }

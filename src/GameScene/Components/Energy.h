@@ -1,6 +1,10 @@
 #ifndef IG20240601002118
 #define IG20240601002118
 
+#include "Debugger.h"
+#include "DeveloperMode.h"
+#include <string>
+
 class Energy
 {
     int maxEnergy_{};
@@ -16,7 +20,10 @@ public:
 
     // Returns true if energy full
     bool regenerate();
-    int isFull() const { return currentEnergy_ == maxEnergy_; }
+    int isFull()
+    {
+        return !(currentEnergy_ < maxEnergy_);
+    }
 };
 
 #endif

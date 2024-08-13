@@ -5,7 +5,6 @@
 #include "Movement.h"
 #include "Position.h"
 #include "RenderID.h"
-#include "raylibEx.h"
 
 class Hero
 {
@@ -21,11 +20,6 @@ public:
     Energy& energy() { return energy_; }
     Position& position() { return position_; };
     RenderID renderID() { return renderID_; };
-
-    void triggerMovement(
-        Vector2I const& direction, 
-        Movement& movement, 
-        Energy& energy);
 };
 
 #endif

@@ -2,6 +2,7 @@
 
 #include "Colors.h"
 #include "Cursor.h"
+#include "Debugger.h"
 #include "DeveloperMode.h"
 #include "Event.h"
 #include "GameCamera.h"
@@ -100,15 +101,14 @@ void GameScene::processInput()
 
     cursor_.update(gameCamera_.get(), hero_.position().renderPosition());
 
-    inputHandler_.handleInput();
-
     // Block input handling if hero misses energy
     if (!hero_.energy().isFull())
     {
         return;
     }
 
-    inputHandler_.update(hero_);
+    // Stores keyboard and gesture input
+    inputHandler_.takeInput();
 }
 
 void GameScene::updateState()
@@ -125,8 +125,23 @@ void GameScene::updateState()
         }
     }
 
+    inputHandler_.triggerInput(hero_);
+
+    // Check collision before starting movement
+    if (hero_.movement().isTriggered())
+    {
+        if (world_.currentMap().isSolid(
+                // Next tilePosition hero moves to
+                Vector2Add(
+                    hero_.position().tilePosition(),
+                    hero_.movement().direction())))
+        {
+            hero_.movement().abortMovement();
+        }
+    }
+
     // Update hero movment
-    hero_.movement().update(hero_.position());
+    hero_.movement().update(hero_.position(), hero_.energy());
 }
 
 void GameScene::renderOutput()
@@ -201,7 +216,6 @@ void GameScene::postOutput()
 
 void GameScene::update()
 {
-
     processInput();
     updateState();
 
@@ -214,7 +228,7 @@ void GameScene::update()
     // Draw simple frame
     drawWindowBorder();
 
-    if (DeveloperMode::isActive())
+    // if (DeveloperMode::isActive())
     {
         DrawFPS(0, 0);
     }

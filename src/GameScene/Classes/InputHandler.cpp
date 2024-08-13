@@ -2,47 +2,43 @@
 
 #include "Directions.h"
 #include "Hero.h"
-#include "HeroActionID.h"
+#include "InputActionID.h"
 #include <raylib.h>
+#include <utility>
 
-void InputHandler::bind(int key, HeroActionID action)
+// private
+void InputHandler::bind(int key, InputActionID action)
 {
-    keyToHeroActionID_.insert(std::make_pair(key, action));
+    keyToInputActionID_.insert(std::make_pair(key, action));
 }
 
 void InputHandler::setDefaultInputMappings()
 {
-    bind(KEY_NULL, HeroActionID::none);
+    bind(KEY_NULL, InputActionID::none);
 
-    bind(KEY_W, HeroActionID::moveUp);
-    bind(KEY_K, HeroActionID::moveUp);
-    bind(KEY_UP, HeroActionID::moveUp);
+    bind(KEY_W, InputActionID::actUp);
+    bind(KEY_K, InputActionID::actUp);
+    bind(KEY_UP, InputActionID::actUp);
 
-    bind(KEY_A, HeroActionID::moveLeft);
-    bind(KEY_K, HeroActionID::moveLeft);
-    bind(KEY_LEFT, HeroActionID::moveLeft);
+    bind(KEY_A, InputActionID::actLeft);
+    bind(KEY_K, InputActionID::actLeft);
+    bind(KEY_LEFT, InputActionID::actLeft);
 
-    bind(KEY_S, HeroActionID::moveDown);
-    bind(KEY_J, HeroActionID::moveDown);
-    bind(KEY_DOWN, HeroActionID::moveDown);
+    bind(KEY_S, InputActionID::actDown);
+    bind(KEY_J, InputActionID::actDown);
+    bind(KEY_DOWN, InputActionID::actDown);
 
-    bind(KEY_D, HeroActionID::moveRight);
-    bind(KEY_L, HeroActionID::moveRight);
-    bind(KEY_RIGHT, HeroActionID::moveRight);
+    bind(KEY_D, InputActionID::actRight);
+    bind(KEY_L, InputActionID::actRight);
+    bind(KEY_RIGHT, InputActionID::actRight);
 };
 
-
-void InputHandler::handleInput()
+bool InputHandler::takeInputKey()
 {
-    if (handleKey()) return;
-    if (handleGesture()) return;
-}
+    // Get action mapped to key. If no key pressed, set null-action
+    inputAction_ = keyToInputActionID_[GetKeyPressed()];
 
-bool InputHandler::handleKey()
-{
-    heroAction_ = keyToHeroActionID_[GetKeyPressed()];
-
-    if (heroAction_ == HeroActionID::none)
+    if (inputAction_ == InputActionID::none)
     {
         return false;
     }
@@ -50,7 +46,7 @@ bool InputHandler::handleKey()
     return true;
 }
 
-bool InputHandler::handleGesture()
+bool InputHandler::takeInputGesture()
 {
     static int currentGesture = GESTURE_NONE;
     static int lastGesture = GESTURE_NONE;
@@ -64,49 +60,48 @@ bool InputHandler::handleGesture()
         // Store gesture string
         switch (currentGesture)
         {
-        //case GESTURE_TAP:
-            //break;
-
-        //case GESTURE_DOUBLETAP:
-            //break;
-
-        //case GESTURE_HOLD:
-            //break;
-
-        //case GESTURE_DRAG:
-            //break;
-
         case GESTURE_SWIPE_UP:
-            heroAction_ = HeroActionID::moveUp;
+            inputAction_ = InputActionID::actUp;
             break;
 
         case GESTURE_SWIPE_LEFT:
-            heroAction_ = HeroActionID::moveLeft;
+            inputAction_ = InputActionID::actLeft;
             break;
 
         case GESTURE_SWIPE_DOWN:
-            heroAction_ = HeroActionID::moveDown;
+            inputAction_ = InputActionID::actDown;
             break;
 
         case GESTURE_SWIPE_RIGHT:
-            heroAction_ = HeroActionID::moveRight;
+            inputAction_ = InputActionID::actRight;
             break;
 
-        //case GESTURE_PINCH_IN:
-            //break;
+        case GESTURE_TAP:
+            break;
 
-        //case GESTURE_PINCH_OUT:
-            //break;
+        case GESTURE_DOUBLETAP:
+            break;
+
+        case GESTURE_HOLD:
+            break;
+
+        case GESTURE_DRAG:
+            break;
+
+        case GESTURE_PINCH_IN:
+            break;
+
+        case GESTURE_PINCH_OUT:
+            break;
 
         case GESTURE_NONE:
         default:
-            heroAction_ = HeroActionID::none;
+            inputAction_ = InputActionID::none;
             break;
-
         }
     }
 
-    if (heroAction_ == HeroActionID::none)
+    if (inputAction_ == InputActionID::none)
     {
         return false;
     }
@@ -114,76 +109,84 @@ bool InputHandler::handleGesture()
     return true;
 }
 
-void InputHandler::update(Hero& hero)
+// public
+void InputHandler::takeInput()
 {
-    if (heroAction_ == HeroActionID::none)
+    if (takeInputKey())
     {
         return;
     }
 
-    switch (heroAction_)
-    {
-    case HeroActionID::moveUp:
-    {
-        // Default action (without shift)
-        if (!IsKeyDown(KEY_LEFT_SHIFT))
-        {
-            hero.triggerMovement(
-                Directions::V_UP,
-                hero.movement(),
-                hero.energy());
-        }
+    takeInputGesture();
+}
 
-        // Alternate action if shift is held
+void InputHandler::triggerInput(Hero& hero)
+{
+    if (inputAction_ == InputActionID::none)
+    {
+        return;
+    }
+
+    bool continuousMovement = false;
+
+    switch (inputAction_)
+    {
+    case InputActionID::actUp:
+    {
+        // if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))
+        // {
+        //     continuousMovement = true;
+        // }
+
+        hero.movement().trigger(
+            Directions::V_UP,
+            continuousMovement);
     }
     break;
 
-    case HeroActionID::moveLeft:
+    case InputActionID::actLeft:
     {
-        // Default action (without shift)
-        if (!IsKeyDown(KEY_LEFT_SHIFT))
-        {
-            hero.triggerMovement(
-                Directions::V_LEFT,
-                hero.movement(),
-                hero.energy());
-        }
+        // if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))
+        // {
+        //     continuousMovement = true;
+        // }
 
-        // Alternate action if shift is held
+        hero.movement().trigger(
+            Directions::V_LEFT,
+            continuousMovement);
     }
     break;
 
-    case HeroActionID::moveDown:
+    case InputActionID::actDown:
     {
-        // Default action (without shift)
-        if (!IsKeyDown(KEY_LEFT_SHIFT))
-        {
-            hero.triggerMovement(
-                Directions::V_DOWN,
-                hero.movement(),
-                hero.energy());
-        }
+        // if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))
+        // {
+        //     continuousMovement = true;
+        // }
 
-        // Alternate action if shift is held
+        hero.movement().trigger(
+            Directions::V_DOWN,
+            continuousMovement);
     }
     break;
 
-    case HeroActionID::moveRight:
+    case InputActionID::actRight:
     {
-        // Default action (without shift)
-        if (!IsKeyDown(KEY_LEFT_SHIFT))
-        {
-            hero.triggerMovement(
-                Directions::V_RIGHT,
-                hero.movement(),
-                hero.energy());
-        }
+        // if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))
+        // {
+        //     continuousMovement = true;
+        // }
 
-        // Alternate action if shift is held
+        hero.movement().trigger(
+            Directions::V_RIGHT,
+            continuousMovement);
     }
     break;
 
     default:
         break;
     }
+
+    // Reset
+    inputAction_ = InputActionID::none;
 }
