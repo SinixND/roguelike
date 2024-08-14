@@ -7,36 +7,57 @@
 #include <utility>
 
 // private
-void InputHandler::bind(int key, InputActionID action)
+void InputHandler::bindKey(int key, InputActionID action)
 {
     keyToInputActionID_.insert(std::make_pair(key, action));
 }
 
+void InputHandler::bindModifierKey(int key, InputActionID action)
+{
+    inputActionIDToModifierKey_.insert(std::make_pair( action, key));
+}
+
 void InputHandler::setDefaultInputMappings()
 {
-    bind(KEY_NULL, InputActionID::none);
+    bindKey(KEY_NULL, InputActionID::none);
 
-    bind(KEY_W, InputActionID::actUp);
-    bind(KEY_K, InputActionID::actUp);
-    bind(KEY_UP, InputActionID::actUp);
+    bindKey(KEY_W, InputActionID::actUp);
+    bindKey(KEY_K, InputActionID::actUp);
+    bindKey(KEY_UP, InputActionID::actUp);
 
-    bind(KEY_A, InputActionID::actLeft);
-    bind(KEY_K, InputActionID::actLeft);
-    bind(KEY_LEFT, InputActionID::actLeft);
+    bindKey(KEY_A, InputActionID::actLeft);
+    bindKey(KEY_K, InputActionID::actLeft);
+    bindKey(KEY_LEFT, InputActionID::actLeft);
 
-    bind(KEY_S, InputActionID::actDown);
-    bind(KEY_J, InputActionID::actDown);
-    bind(KEY_DOWN, InputActionID::actDown);
+    bindKey(KEY_S, InputActionID::actDown);
+    bindKey(KEY_J, InputActionID::actDown);
+    bindKey(KEY_DOWN, InputActionID::actDown);
 
-    bind(KEY_D, InputActionID::actRight);
-    bind(KEY_L, InputActionID::actRight);
-    bind(KEY_RIGHT, InputActionID::actRight);
+    bindKey(KEY_D, InputActionID::actRight);
+    bindKey(KEY_L, InputActionID::actRight);
+    bindKey(KEY_RIGHT, InputActionID::actRight);
+
+    bindModifierKey(KEY_LEFT_SHIFT, InputActionID::modShift);
 };
 
 bool InputHandler::takeInputKey()
 {
+    // static int key{GetKeyPressed()};
+    //
+    // if (IsKeyUp(key))
+    // {
+    //     key = KEY_NULL;
+    // }
+    //
     // Get action mapped to key. If no key pressed, set null-action
+    // if (IsKeyDown(key))
+    // {
+    //     inputAction_ = keyToInputActionID_[key];
+    // }
     inputAction_ = keyToInputActionID_[GetKeyPressed()];
+
+    // Check modifiers
+    modifierShift_ = IsKeyDown(inputActionIDToModifierKey_[InputActionID::modShift]);
 
     if (inputAction_ == InputActionID::none)
     {
@@ -127,59 +148,37 @@ void InputHandler::triggerInput(Hero& hero)
         return;
     }
 
-    bool continuousMovement = false;
-
     switch (inputAction_)
     {
     case InputActionID::actUp:
     {
-        // if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))
-        // {
-        //     continuousMovement = true;
-        // }
-
         hero.movement().trigger(
             Directions::V_UP,
-            continuousMovement);
+            modifierShift_);
     }
     break;
 
     case InputActionID::actLeft:
     {
-        // if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))
-        // {
-        //     continuousMovement = true;
-        // }
-
         hero.movement().trigger(
             Directions::V_LEFT,
-            continuousMovement);
+            modifierShift_);
     }
     break;
 
     case InputActionID::actDown:
     {
-        // if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))
-        // {
-        //     continuousMovement = true;
-        // }
-
         hero.movement().trigger(
             Directions::V_DOWN,
-            continuousMovement);
+            modifierShift_);
     }
     break;
 
     case InputActionID::actRight:
     {
-        // if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))
-        // {
-        //     continuousMovement = true;
-        // }
-
         hero.movement().trigger(
             Directions::V_RIGHT,
-            continuousMovement);
+            modifierShift_);
     }
     break;
 

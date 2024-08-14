@@ -28,13 +28,7 @@ public:
     void setSpeed(float speed) { speed_ = speed; }
 
     bool isTriggered() const { return isTriggered_; }
-    void abortMovement() { 
-        isTriggered_ = false; 
-    if (DeveloperMode::isActive())
-    {
-        snx::debug("Movement aborted\n");
-    }
-    }
+    void abortMovement(); 
     void trigger(
         Vector2I const& direction,
         bool continuous = false);

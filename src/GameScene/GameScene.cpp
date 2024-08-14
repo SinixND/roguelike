@@ -2,8 +2,6 @@
 
 #include "Colors.h"
 #include "Cursor.h"
-#include "Debugger.h"
-#include "DeveloperMode.h"
 #include "Event.h"
 #include "GameCamera.h"
 #include "Panels.h"
@@ -136,6 +134,11 @@ void GameScene::updateState()
                     hero_.position().tilePosition(),
                     hero_.movement().direction())))
         {
+            if (DeveloperMode::isActive())
+            {
+                snx::debug("Detected collision");
+            }
+
             hero_.movement().abortMovement();
         }
     }

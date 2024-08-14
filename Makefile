@@ -15,7 +15,7 @@ endif
 ### set compile flags
 # -MMD			provides dependency information (header files) for make in .d files
 # -pg			ADD FOR gprof analysis TO BOTH COMPILE AND LINK COMMAND!!
-#  -MJ			Compilation database (compile_commands.json)
+# -MJ			clang only: compile-database
 
 CXX_FLAGS		:= -std=c++2a
 debug: CXX_FLAGS 	+= -g -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -MMD -O0 #-Wfatal-errors
@@ -156,17 +156,15 @@ all: #test
 endif
 
 
-bear: 
-	$(MAKE) clean
+bear: clean
 	bear -- make
 
-dtb:
-	@ sed -e '1s/^/[\n/' -e '$$s/,$$/\n]/' $(OBJ_DIR)/*.o.json > compile_commands.json
-	# @sed -e '1s/^/[\'$$'\n''/' -e '$$s/,$$/\'$$'\n'']/' $(OBJ_DIR)/*.o.json > compile_commands.json
+dtb: 
+	$(shell sed -e '1s/^/[\n/' -e '$$s/,$$/\n]/' $(OBJ_DIR)/*.o.json > compile_commands.json)
+#	$(shell sed -e '1s/^/[\'$$'\n''/' -e '$$s/,$$/\'$$'\n'']/' $(OBJ_DIR)/*.o.json > compile_commands.json)
 
 
-debug: 
-	$(MAKE) build
+debug: build dtb
 
 
 ### exclude main object file to avoid multiple definitions of main
@@ -181,18 +179,12 @@ benchmark: $(BIN_DIR)/benchmark.$(BINARY_EXT)
 
 ### rule for release build process with binary as prerequisite
 release: CXX_FLAGS += -O2
-release: 
-	$(MAKE) build
+release: build
 
-publish: 
-	$(MAKE) clean 
-	$(MAKE) release 
-	$(MAKE) web 
-	$(MAKE) windows
+publish: clean release web windows
 
 ### rule for native build process with binary as prerequisite
 build: $(BIN_DIR)/$(BINARY).$(BINARY_EXT)
-	$(MAKE) dtb
 
 ifndef TERMUX_VERSION
 #build: $(TEST_DIR)/test.$(BINARY_EXT) $(TEST_DIR)/benchmark.$(BINARY_EXT)
@@ -227,13 +219,14 @@ $(OBJ_DIR)/%.$(OBJ_EXT): %.$(SRC_EXT)
 ### $@ (target, left of ":")
 	$(info )
 	$(info === Compile main ===)
-	$(CXX) -o $@  -c $< -MJ $@.json $(CXX_FLAGS) $(INC_FLAGS) 
+#	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
+	$(CXX) -o $@ -c $< -MJ $@.json $(CXX_FLAGS) $(INC_FLAGS)
 
 ### COMPILE TEST
 $(TEST_DIR)/test.$(OBJ_EXT): test.$(SRC_EXT)
 	$(info )
 	$(info === Compile test ===)
-	$(CXX) -o $@  -c $< $(CXX_FLAGS) $(INC_FLAGS)
+	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
 ### COMPILE BENCHMARK
 $(TEST_DIR)/benchmark.$(OBJ_EXT): benchmark.$(SRC_EXT)
@@ -246,7 +239,7 @@ $(TEST_DIR)/benchmark.$(OBJ_EXT): benchmark.$(SRC_EXT)
 web:
 	$(info )
 	$(info === Compile web ===)
-	emcc -o web/$(BINARY).html $(SRCS) $(CXX_FLAGS) -Os -Wall -L$(RAYLIB_DIR)/web -lraylib -lpthread $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) --preload-file resources/  --shell-file $(RAYLIB_DIR)/minshell.html -sUSE_GLFW=3 -D__EMSCRIPTEN__ -DPLATFORM_WEB
+	emcc -o web/$(BINARY).html $(SRCS) $(CXX_FLAGS) -Os -Wall -L$(RAYLIB_DIR)/web -lraylib -lpthread $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) --preload-file resources/ --shell-file $(RAYLIB_DIR)/minshell.html -sUSE_GLFW=3 -D__EMSCRIPTEN__ -DPLATFORM_WEB
 
 
 ### rule for windows build process
@@ -265,20 +258,16 @@ $(OBJ_DIR)/%.$(WIN_OBJ_EXT): %.$(SRC_EXT)
 
 ### clear dynamically created directories
 clean:
-	rm -rf build/*
-	rm -rf bin/*
-	# rm -rf $(shell find . -type f -wholename "*.$(DEP_EXT)")
+	rm -rf $(OBJ_DIR)/*
+	rm -rf $(BIN_DIR)/*
 
 
 ### clean dynamically created directories before building fresh
-rebuild: 
-	$(MAKE) clean 
-	$(MAKE) debug
+rebuild: clean debug
 
 
 ### run binary file after building
-run: 
-	$(MAKE) build
+run: build
 	$(BIN_DIR)/$(BINARY).$(BINARY_EXT)
 
 

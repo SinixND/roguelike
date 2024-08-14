@@ -52,6 +52,16 @@ void Movement::stopMovement()
     }
 }
 
+void Movement::abortMovement()
+{
+    isTriggered_ = false;
+    isContinuous_ = false;
+    if (DeveloperMode::isActive())
+    {
+        snx::debug("Movement aborted\n");
+    }
+}
+
 void Movement::update(Position& heroPosition, Energy& heroEnergy)
 {
     // Start movement
@@ -62,6 +72,7 @@ void Movement::update(Position& heroPosition, Energy& heroEnergy)
         setInProgress();
     }
 
+    // Check if action is ongoing
     if (!isInProgress_)
     {
         return;
@@ -81,15 +92,16 @@ void Movement::update(Position& heroPosition, Energy& heroEnergy)
 
     // Move by remaining distance until TILE_SIZE
     heroPosition.move(
-            Vector2ClampValue(
-                distance,
-                0,
-                TileData::TILE_SIZE - (cumulativeDistanceMoved_ - length)));
+        Vector2ClampValue(
+            distance,
+            0,
+            TileData::TILE_SIZE - (cumulativeDistanceMoved_ - length)));
 
     // === Moved one tile ===
 
     // Reset cumulativeDistanceMoved
     cumulativeDistanceMoved_ = 0;
+    isInProgress_ = false;
 
     snx::PublisherStatic::publish(Event::actionFinished);
 

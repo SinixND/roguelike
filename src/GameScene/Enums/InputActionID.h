@@ -4,10 +4,13 @@
 enum class InputActionID
 {
     none = 0,
+    // Actions
     actUp,
     actLeft,
     actDown,
     actRight,
+    // Modifiers
+    modShift,
 };
 
 // inline auto constexpr operator#(InputActionID id) noexcept
