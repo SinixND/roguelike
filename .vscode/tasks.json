@@ -1,44 +1,37 @@
 {
-  "tasks": [
-    {
-      "type": "shell",
-      "label": "make project cppdbg",
-      "command": "make",
-      "args": [],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [
-        "$gcc"
-      ],
-      "group": "build"
-    },
-    {
-      "type": "shell",
-      "label": "make project lldb",
-      "command": "make",
-      "args": [],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [
-        "$gcc"
-      ],
-      "group": "build"
-    },
-    {
-      "type": "shell",
-      "label": "make test",
-      "command": "make test",
-      "args": [],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [
-        "$gcc"
-      ],
-      "group": "build"
-    }
-  ],
-  "version": "2.0.0"
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Make",
+            "command": "make",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+        },
+        {
+            "type": "shell",
+            "label": "Make debug",
+            "command": "make debug",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+        },
+        {
+            "type": "shell",
+            "label": "Make release",
+            "command": "make release",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+        },
+        {
+            "type": "shell",
+            "label": "Make test",
+            "command": "make test",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+        }
+    ],
+    "version": "2.0.0"
 }

@@ -1,69 +1,53 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "make project cppdbg",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${workspaceFolder}/bin/main.exe",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "setupCommands": [
+    "version": "0.2.0",
+    "configurations": [
         {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
+            "name": "Build (cppdbg)",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Make",
+            "program": "${workspaceFolder}/bin/main.exe",
         },
         {
-          "description": "Set Disassembly Flavor to Intel",
-          "text": "-gdb-set disassembly-flavor intel",
-          "ignoreFailures": true
-        }
-      ],
-      "preLaunchTask": "make project cppdbg",
-      "miDebuggerPath": "/usr/bin/gdb",
-      "internalConsoleOptions": "neverOpen"
-    },
-    {
-      "name": "make project lldb",
-      "type": "lldb",
-      "request": "launch",
-      "program": "${workspaceFolder}/bin/main.exe",
-      "args": [],
-      "cwd": "${workspaceFolder}",
-      "preLaunchTask": "make project lldb",
-      "internalConsoleOptions": "neverOpen"
-    },
-    {
-      "name": "make test",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${workspaceFolder}/test/test.exe",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
+            "name": "Build debug (cppdbg)",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Make debug",
+            "program": "${workspaceFolder}/bin/debug/main.exe",
         },
         {
-          "description": "Set Disassembly Flavor to Intel",
-          "text": "-gdb-set disassembly-flavor intel",
-          "ignoreFailures": true
+            "name": "Build debug (lldb)",
+            "type": "lldb",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Make debug",
+            "program": "${workspaceFolder}/bin/debug/main.exe",
+        },
+        {
+            "name": "Build release (cppdbg)",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Make release",
+            "program": "${workspaceFolder}/bin/release/main.exe",
+        },
+        {
+            "name": "Build release (lldb)",
+            "type": "lldb",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Make release",
+            "program": "${workspaceFolder}/bin/release/main.exe",
+        },
+        {
+            "name": "Build test (cppdbg)",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Make test",
+            "program": "${workspaceFolder}/test/test.exe",
         }
-      ],
-      "preLaunchTask": "make test",
-      "miDebuggerPath": "/usr/bin/gdb",
-      "internalConsoleOptions": "neverOpen"
-    }
-  ]
+    ]
 }

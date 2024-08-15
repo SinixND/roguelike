@@ -1,21 +1,20 @@
 #include "GameScene.h"
 
+#include "Chunk.h"
+#include "ChunksToRender.h"
 #include "Colors.h"
 #include "Cursor.h"
+#include "Debugger.h"
+#include "DeveloperMode.h"
 #include "Event.h"
 #include "GameCamera.h"
 #include "Panels.h"
 #include "PublisherStatic.h"
 #include "Renderer.h"
-#include "TileFilters.h"
-#include "UnitConversion.h"
-#include "VisibilityID.h"
 #include "raylibEx.h"
-#include <cstddef>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
-#include <vector>
 
 void GameScene::initialize()
 {
@@ -27,10 +26,7 @@ void GameScene::initialize()
 
     hero_.init();
 
-    TileFilters::initTilesToRender(
-        tilesToRender_,
-        world_.currentMap(),
-        renderRectangleExI());
+    chunksToRender_.init(world_.currentMap(), renderer_);
 
     // Setup events
     snx::PublisherStatic::addSubscriber(
@@ -62,27 +58,7 @@ void GameScene::initialize()
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::cameraChanged,
-        [&]()
-        {
-            TileFilters::initTilesToRender(
-                tilesToRender_,
-                world_.currentMap(),
-                renderRectangleExI());
-        });
-
-    snx::PublisherStatic::addSubscriber(
-        Event::panelsResized,
-        [&]()
-        {
-            TileFilters::initTilesToRender(
-                tilesToRender_,
-                world_.currentMap(),
-                renderRectangleExI());
-        });
-
-    snx::PublisherStatic::addSubscriber(
-        Event::positionChanged,
+        Event::heroPositionChanged,
         [&]()
         {
             gameCamera_.setTarget(hero_.position().renderPosition());
@@ -159,6 +135,7 @@ void GameScene::renderOutput()
 
     // World
     // Draw map
+    /*
     size_t tileCount{tilesToRender_.renderPositions().size()};
     auto const& renderIDs{tilesToRender_.renderIDs()};
     auto const& renderPositions{tilesToRender_.renderPositions()};
@@ -188,6 +165,11 @@ void GameScene::renderOutput()
             renderIDs[i],
             renderPositions[i],
             tint);
+    }
+    */
+    for (Chunk& chunk : chunksToRender_.chunks())
+    {
+        renderer_.renderChunk(chunk);
     }
 
     // Units
@@ -246,17 +228,17 @@ void GameScene::deinitialize()
     renderer_.deinit();
 }
 
-RectangleExI GameScene::renderRectangleExI()
-{
-    return RectangleExI{
-        Vector2SubtractValue(
-            UnitConversion::screenToTile(
-                panels_.map().topLeft(),
-                gameCamera_.get()),
-            1),
-        Vector2AddValue(
-            UnitConversion::screenToTile(
-                panels_.map().bottomRight(),
-                gameCamera_.get()),
-            1)};
-}
+// RectangleExI GameScene::renderRectangleExI()
+// {
+//     return RectangleExI{
+//         Vector2SubtractValue(
+//             UnitConversion::screenToTile(
+//                 panels_.map().topLeft(),
+//                 gameCamera_.get()),
+//             1),
+//         Vector2AddValue(
+//             UnitConversion::screenToTile(
+//                 panels_.map().bottomRight(),
+//                 gameCamera_.get()),
+//             1)};
+// }

@@ -1,6 +1,7 @@
 #ifndef IG20240215012142
 #define IG20240215012142
 
+#include "ChunkData.h"
 #include "TileData.h"
 #include "raylib.h"
 #include "raylibEx.h"
@@ -12,9 +13,10 @@ namespace UnitConversion
     // - tile position (int/position, relative: considers camera)
     // - world position (float/pixel, relative: considers camera)
     // - screen position (float/pixel, absolute)
+    // - chunk position (int/position), relative: considers camera)
 
     // World pixel to tile position
-    inline Vector2I worldToTile(Vector2 pixel)
+    inline Vector2I worldToTile(Vector2 const& pixel)
     {
         return Vector2I{
             static_cast<int>(std::floor((pixel.x + (TileData::TILE_SIZE / 2)) / TileData::TILE_SIZE)),
@@ -22,15 +24,15 @@ namespace UnitConversion
     }
 
     // Tile position to world pixel
-    inline Vector2 tileToWorld(Vector2I position)
+    inline Vector2 tileToWorld(Vector2I const& tilePosition)
     {
         return Vector2{
-            (position.x * TileData::TILE_SIZE),
-            (position.y * TileData::TILE_SIZE)};
+            (tilePosition.x * TileData::TILE_SIZE),
+            (tilePosition.y * TileData::TILE_SIZE)};
     }
 
     // Screen pixel to world pixel to tile position
-    inline Vector2I screenToTile(Vector2 pixel, Camera2D const& camera)
+    inline Vector2I screenToTile(Vector2 const& pixel, Camera2D const& camera)
     {
         Vector2 worldPixel{GetScreenToWorld2D(pixel, camera)};
 
@@ -38,11 +40,11 @@ namespace UnitConversion
     }
 
     // Tile position to world pixel to screen pixel
-    inline Vector2 tileToScreen(Vector2I position, Camera2D const& camera)
+    inline Vector2 tileToScreen(Vector2I const& tilePosition, Camera2D const& camera)
     {
         Vector2 worldPixel{
-            position.x * TileData::TILE_SIZE,
-            position.y * TileData::TILE_SIZE};
+            tilePosition.x * TileData::TILE_SIZE,
+            tilePosition.y * TileData::TILE_SIZE};
 
         return GetWorldToScreen2D(worldPixel, camera);
     }
@@ -50,6 +52,14 @@ namespace UnitConversion
     inline Vector2I getMouseTile(Camera2D const& camera)
     {
         return screenToTile(GetMousePosition(), camera);
+    }
+
+    // Tile position to chunk position
+    inline Vector2I tileToChunk(Vector2I const& tilePosition)
+    {
+        return Vector2I{
+            static_cast<int>(std::round(tilePosition.x / ChunkData::CHUNK_SIZE_I) * ChunkData::CHUNK_SIZE_I),
+            static_cast<int>(std::round(tilePosition.y / ChunkData::CHUNK_SIZE_I) * ChunkData::CHUNK_SIZE_I)};
     }
 }
 

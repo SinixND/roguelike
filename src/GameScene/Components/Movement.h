@@ -28,7 +28,7 @@ public:
     void setSpeed(float speed) { speed_ = speed; }
 
     bool isTriggered() const { return isTriggered_; }
-    void abortMovement(); 
+    void abortMovement();
     void trigger(
         Vector2I const& direction,
         bool continuous = false);

@@ -5,6 +5,7 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
+    - [ ] Improve rendering (reduce render calls)
     - [ ] Implement vision (fog of war: unseen, seen, visible)
     - [ ] Print tile info in panel (under cursor, floating? only special tiles?)
 
@@ -45,25 +46,25 @@
 ## Controls
 
 ### Mouse
-    | Control     | Function                           |
-    | ----------- | ---------------------------------- |
-    | RMB         | Toggle cursor  |
+    | Control | Function      |
+    | ------- | ------------- |
+    | RMB     | Toggle cursor |
 
 
 ### Keyboard
-    | Control                           | Function                |
-    | --------------------------------- | ----------------------- |
-    | WASD / Arrow keys / hjkl                | Directional input           |
-    | L_SHIFT                           | Continuous hero movment |
-    | F1                                | Toggle developer mode   |
-    | F4                                | Exit                    |
-    | F11                               | Toggle Maximize window  |
+    | Control                  | Function                |
+    | ------------------------ | ----------------------- |
+    | WASD / Arrow keys / hjkl | Directional input       |
+    | L_SHIFT                  | Continuous hero movment |
+    | F1                       | Toggle developer mode   |
+    | F4                       | Exit                    |
+    | F11                      | Toggle Maximize window  |
 
 
 ### Touch
-    | Control     | Function                           |
-    | ----------- | ---------------------------------- |
-    | SWIPE_(DIR)         | Directional input |
+    | Control     | Function          |
+    | ----------- | ----------------- |
+    | SWIPE_(DIR) | Directional input |
 
 ## Maptypes:
     - Cellular Automata (dungeon)

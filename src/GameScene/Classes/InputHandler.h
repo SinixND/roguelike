@@ -12,7 +12,7 @@ class InputHandler
     bool modifierShift_{};
 
     std::unordered_map<int, InputActionID> keyToInputActionID_{};
-    std::unordered_map< InputActionID, int> inputActionIDToModifierKey_{};
+    std::unordered_map<InputActionID, int> inputActionIDToModifierKey_{};
 
     void bindKey(int key, InputActionID action);
     void bindModifierKey(int key, InputActionID action);

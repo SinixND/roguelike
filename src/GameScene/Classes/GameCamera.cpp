@@ -1,7 +1,7 @@
 #include "GameCamera.h"
 
-#include "GameScene.h"
 #include "Event.h"
+#include "GameScene.h"
 #include "PublisherStatic.h"
 
 #include <raylib.h>

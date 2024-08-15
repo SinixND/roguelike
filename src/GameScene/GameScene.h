@@ -1,6 +1,7 @@
 #ifndef IG20231203204746
 #define IG20231203204746
 
+#include "ChunksToRender.h"
 #include "Cursor.h"
 #include "GameCamera.h"
 #include "Hero.h"
@@ -8,9 +9,7 @@
 #include "InputHandler.h"
 #include "Panels.h"
 #include "Renderer.h"
-#include "TilesToRender.h"
 #include "World.h"
-#include "raylibEx.h"
 #include <raylib.h>
 
 class GameScene : public snx::IScene
@@ -28,7 +27,7 @@ class GameScene : public snx::IScene
 
     bool actionInProgress_{false};
 
-    TilesToRender tilesToRender_{};
+    ChunksToRender chunksToRender_{};
 
 private:
     void processInput();
@@ -36,10 +35,7 @@ private:
     void renderOutput();
     void postOutput();
 
-    RectangleExI renderRectangleExI();
-    // std::vector<Vector2I> tilePositionsToRender();
-    // void initTilesToRender();
-    // void updateTilesToRender();
+    // RectangleExI renderRectangleExI();
 
 public:
     void initialize();

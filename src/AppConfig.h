@@ -2,6 +2,7 @@
 #define IG20240529010632
 
 #include <raylib.h>
+
 // Configs imported from user file
 class AppConfig
 {

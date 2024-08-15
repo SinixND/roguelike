@@ -14,7 +14,7 @@ void InputHandler::bindKey(int key, InputActionID action)
 
 void InputHandler::bindModifierKey(int key, InputActionID action)
 {
-    inputActionIDToModifierKey_.insert(std::make_pair( action, key));
+    inputActionIDToModifierKey_.insert(std::make_pair(action, key));
 }
 
 void InputHandler::setDefaultInputMappings()

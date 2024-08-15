@@ -9,14 +9,14 @@
 namespace snx
 {
     // List of subscribers (lambdas)
-    template<typename FType>
+    template <typename FType>
     using SubList = std::forward_list<FType>;
 
     // Subject / Publisher / Event / Sender
     // Can pushlish multiple events / Can hold multiple subscribers (per event)
 
     // Publisher
-    template<typename FType>
+    template <typename FType>
     class Publisher
     {
         std::unordered_map<Event, SubList<FType>> eventToSubscriberLists_{{}};

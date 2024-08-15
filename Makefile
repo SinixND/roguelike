@@ -17,11 +17,14 @@ endif
 # -pg			ADD FOR gprof analysis TO BOTH COMPILE AND LINK COMMAND!!
 # -MJ			clang only: compile-database
 
-CXX_FLAGS		:= -std=c++2a
-debug: CXX_FLAGS 	+= -g -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -MMD -O0 #-Wfatal-errors
+CXX_FLAGS		:= -std=c++20 -MMD
+
+debug: CXX_FLAGS 	+= -DDEBUG -g -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -O0 #-Wfatal-errors
 ifndef TERMUX_VERSION
 debug: CXX_FLAGS 	+= -pg
 endif
+release: CXX_FLAGS 	+= -O2 -DNDEBUG
+benchmark: CXX_FLAGS += -O3 -DNDEBUG
 
 ### set the projects label, used for the binary (eg. main.exe, root .cpp file needs same name)
 BINARY 				:= main
@@ -60,8 +63,12 @@ EXT_INC_DIR 		:= ./include/external
 LOC_LIB_DIR 		:= ./lib
 ### here the object files will be outputted
 OBJ_DIR 			:= ./build
+OBJ_DIR_DEBUG 		:= ./build/debug
+OBJ_DIR_RELEASE 	:= ./build/release
 ### here the binary file will be outputted
 BIN_DIR 			:= ./bin
+BIN_DIR_DEBUG 		:= ./bin/debug
+BIN_DIR_RELEASE 	:= ./bin/release
 ### define folder for test files
 TEST_DIR 			:= ./test
 ### define folder for web content to export
@@ -134,7 +141,8 @@ SRC_NAMES 			:= $(patsubst %.$(SRC_EXT),%,$(SRC_NAMES))
 ### make list of object files need for linker command by changing ending of all source files to .o;
 ### (patsubst pattern,replacement,target)
 ### IMPORTANT for linker dependency, so they are found as compile rule
-OBJS 				:= $(patsubst %,$(OBJ_DIR)/%.$(OBJ_EXT),$(SRC_NAMES))
+OBJS_DEBUG 				:= $(patsubst %,$(OBJ_DIR_DEBUG)/%.$(OBJ_EXT),$(SRC_NAMES))
+OBJS_RELEASE 				:= $(patsubst %,$(OBJ_DIR_RELEASE)/%.$(OBJ_EXT),$(SRC_NAMES))
 WIN_OBJS 			:= $(patsubst %,$(OBJ_DIR)/%.$(WIN_OBJ_EXT),$(SRC_NAMES))
 TEST_OBJS 			:= $(TEST_DIR)/test.$(OBJ_EXT) $(patsubst $(OBJ_DIR)/$(BINARY).o,,$(OBJS))
 BM_OBJS 			:= $(TEST_DIR)/benchmark.$(OBJ_EXT) $(patsubst $(OBJ_DIR)/$(BINARY).o,,$(OBJS))
@@ -142,8 +150,8 @@ BM_OBJS 			:= $(TEST_DIR)/benchmark.$(OBJ_EXT) $(patsubst $(OBJ_DIR)/$(BINARY).o
 DEPS 				:= $(patsubst $(OBJ_DIR)/%.$(OBJ_EXT),$(OBJ_DIR)/%.$(DEP_EXT),$(OBJS))
 WIN_DEPS 			:= $(patsubst $(OBJ_DIR)/%.$(WIN_OBJ_EXT),$(OBJ_DIR)/%.$(WIN_DEP_EXT),$(WIN_OBJS))
 
-### Non-file (.phony)targets (or rules)
-.PHONY: all debug release web windows publish build rebuild run clean dtb
+### Non-file (.phony)targets (aka. rules)
+.PHONY: all init clean debug release debug_run release_run web windows publish dtb
 ifndef TERMUX_VERSION
 .PHONY: bear test benchmark
 endif
@@ -156,15 +164,73 @@ all: #test
 endif
 
 
-bear: clean
-	bear -- make
+### Create necessary folders
+init:
+	@mkdir -p $(BIN_DIR_DEBUG)
+	@mkdir -p $(BIN_DIR_RELEASE)
+	@mkdir -p $(OBJ_DIR_DEBUG)
+	@mkdir -p $(OBJ_DIR_RELEASE)
+	@mkdir -p $(EXT_INC_DIR)
+	@mkdir -p $(LOC_LIB_DIR)
+	$(info )
+	$(info === Initialized folders ===)
+
+
+### clear dynamically created directories
+clean:
+	@rm -rf $(OBJ_DIR)/*.o
+	@rm -rf $(OBJ_DIR)/*.d
+	@rm -rf $(OBJ_DIR)/*.json
+	@rm -rf $(BIN_DIR)/*.exe
+	$(info )
+	$(info === Cleaned folders ===)
+
+
+debug: $(BIN_DIR_DEBUG)/$(BINARY).$(BINARY_EXT)
+	@$(MAKE) dtb
+
+
+### rule for release build process with binary as prerequisite
+release: $(BIN_DIR_RELEASE)/$(BINARY).$(BINARY_EXT)
+	@$(MAKE) dtb
+
+
+# ### rule for native build process with binary as prerequisite
+# build: prep
+# build: $(BIN_DIR)/$(BINARY).$(BINARY_EXT)
+
+ifndef TERMUX_VERSION
+#build: $(TEST_DIR)/test.$(BINARY_EXT) $(TEST_DIR)/benchmark.$(BINARY_EXT)
+endif
+
+
+### run binary file after building
+debug_run: debug
+	$(BIN_DIR_DEBUG)/$(BINARY).$(BINARY_EXT)
+
+
+release_run: release
+	$(BIN_DIR_RELEASE)/$(BINARY).$(BINARY_EXT)
+
+
+### rule for web build process
+web:
+	$(info )
+	$(info === Compile web ===)
+	emcc -o web/$(BINARY).html $(SRCS) $(CXX_FLAGS) -Os -Wall -L$(RAYLIB_DIR)/web -lraylib -lpthread $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) --preload-file resources/ --shell-file $(RAYLIB_DIR)/minshell.html -sUSE_GLFW=3 -D__EMSCRIPTEN__ -DPLATFORM_WEB
+
+
+### rule for windows build process
+windows: $(BIN_DIR_RELEASE)/$(BINARY).$(WIN_BINARY_EXT)
+
+
+### rule for complete compilation, ready to publish
+publish: clean
+	$(MAKE) release web windows
+
 
 dtb: 
-	$(shell sed -e '1s/^/[\n/' -e '$$s/,$$/\n]/' $(OBJ_DIR)/*.o.json > compile_commands.json)
-#	$(shell sed -e '1s/^/[\'$$'\n''/' -e '$$s/,$$/\'$$'\n'']/' $(OBJ_DIR)/*.o.json > compile_commands.json)
-
-
-debug: build dtb
+	$(shell sed -e '1s/^/[\n/' -e '$$s/,$$/\n]/' $(OBJ_DIR_DEBUG)/*.o.json > compile_commands.json)
 
 
 ### exclude main object file to avoid multiple definitions of main
@@ -172,55 +238,32 @@ test: $(BIN_DIR)/test.$(BINARY_EXT)
 	$(BIN_DIR)/test.$(BINARY_EXT)
 
 
-benchmark: CXX_FLAGS += -O3 -DNDEBUG
 benchmark: $(BIN_DIR)/benchmark.$(BINARY_EXT)
 	$(BIN_DIR)/benchmark.$(BINARY_EXT)
 
 
-### rule for release build process with binary as prerequisite
-release: CXX_FLAGS += -O2
-release: build
-
-publish: clean release web windows
-
-### rule for native build process with binary as prerequisite
-build: $(BIN_DIR)/$(BINARY).$(BINARY_EXT)
-
-ifndef TERMUX_VERSION
-#build: $(TEST_DIR)/test.$(BINARY_EXT) $(TEST_DIR)/benchmark.$(BINARY_EXT)
-endif
-
-# === LINKER COMMANDS ===
-### MAKE binary file FROM object files
-$(BIN_DIR)/$(BINARY).$(BINARY_EXT): $(OBJS)
-### $@ (target, left of ":")
-### $^ (all dependencies, all right of ":")
-	$(info )
-	$(info === Link main ===)
-	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
-
-### LINK TEST
-$(BIN_DIR)/test.$(BINARY_EXT): $(TEST_OBJS)
-	$(info )
-	$(info === Link test ===)
-	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
-
-### LINK BENCHMARK
-$(BIN_DIR)/benchmark.$(BINARY_EXT): $(BM_OBJS)
-	$(info )
-	$(info === Link benchmark ===)
-	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
-
-
 # === COMPILER COMMANDS ===
 ### MAKE object files FROM source files; "%" pattern-matches (need pair of)
-$(OBJ_DIR)/%.$(OBJ_EXT): %.$(SRC_EXT)
+$(OBJ_DIR_DEBUG)/%.$(OBJ_EXT): %.$(SRC_EXT) 
 ### $< (first dependency, first right of ":")
 ### $@ (target, left of ":")
 	$(info )
 	$(info === Compile main ===)
 #	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
 	$(CXX) -o $@ -c $< -MJ $@.json $(CXX_FLAGS) $(INC_FLAGS)
+
+$(OBJ_DIR_RELEASE)/%.$(OBJ_EXT): %.$(SRC_EXT) 
+### $< (first dependency, first right of ":")
+### $@ (target, left of ":")
+	$(info )
+	$(info === Compile main ===)
+	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
+
+### COMPILE WINDOWS
+$(OBJ_DIR_RELEASE)/%.$(WIN_OBJ_EXT): %.$(SRC_EXT)
+	$(info )
+	$(info === Compile windows ===)
+	$(WIN_CXX) -o $@ -c $< $(CXX_FLAGS) $(WIN_INC_FLAGS) -I$(RAYLIB_DIR)
 
 ### COMPILE TEST
 $(TEST_DIR)/test.$(OBJ_EXT): test.$(SRC_EXT)
@@ -235,40 +278,39 @@ $(TEST_DIR)/benchmark.$(OBJ_EXT): benchmark.$(SRC_EXT)
 	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
 
-### rule for web build process
-web:
+# === LINKER COMMANDS ===
+### MAKE binary file FROM object files
+$(BIN_DIR_DEBUG)/$(BINARY).$(BINARY_EXT): $(OBJS_DEBUG)
+### $@ (target, left of ":")
+### $^ (all dependencies, all right of ":")
 	$(info )
-	$(info === Compile web ===)
-	emcc -o web/$(BINARY).html $(SRCS) $(CXX_FLAGS) -Os -Wall -L$(RAYLIB_DIR)/web -lraylib -lpthread $(LOC_INC_FLAGS) -I$(RAYLIB_DIR) --preload-file resources/ --shell-file $(RAYLIB_DIR)/minshell.html -sUSE_GLFW=3 -D__EMSCRIPTEN__ -DPLATFORM_WEB
+	$(info === Link main ===)
+	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
+$(BIN_DIR_RELEASE)/$(BINARY).$(BINARY_EXT): $(OBJS_RELEASE)
+### $@ (target, left of ":")
+### $^ (all dependencies, all right of ":")
+	$(info )
+	$(info === Link main ===)
+	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
-### rule for windows build process
-windows: $(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT)
-
-$(BIN_DIR)/$(BINARY).$(WIN_BINARY_EXT): $(WIN_OBJS)
+### LINK WINDOWS
+$(BIN_DIR_RELEASE)/$(BINARY).$(WIN_BINARY_EXT): $(WIN_OBJS)
 	$(info )
 	$(info === Link windows ===)
 	$(WIN_CXX) -o $@ $^ $(WIN_LD_FLAGS) $(WIN_LIB_FLAGS) -L$(WIN_RAYLIB_DIR) $(WIN_LD_FLAGS) -static -static-libgcc -static-libstdc++
 
-$(OBJ_DIR)/%.$(WIN_OBJ_EXT): %.$(SRC_EXT)
+### LINK TEST
+$(BIN_DIR)/test.$(BINARY_EXT): $(TEST_OBJS)
 	$(info )
-	$(info === Compile windows ===)
-	$(WIN_CXX) -o $@ -c $< $(CXX_FLAGS) $(WIN_INC_FLAGS) -I$(RAYLIB_DIR)
+	$(info === Link test ===)
+	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
-
-### clear dynamically created directories
-clean:
-	rm -rf $(OBJ_DIR)/*
-	rm -rf $(BIN_DIR)/*
-
-
-### clean dynamically created directories before building fresh
-rebuild: clean debug
-
-
-### run binary file after building
-run: build
-	$(BIN_DIR)/$(BINARY).$(BINARY_EXT)
+### LINK BENCHMARK
+$(BIN_DIR)/benchmark.$(BINARY_EXT): $(BM_OBJS)
+	$(info )
+	$(info === Link benchmark ===)
+	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
 
 ### "-" surpresses error for initial missing .d files
