@@ -1,7 +1,5 @@
 #include "Movement.h"
 
-#include "Debugger.h"
-#include "DeveloperMode.h"
 #include "Energy.h"
 #include "Event.h"
 #include "Position.h"
@@ -19,13 +17,6 @@ void Movement::trigger(Vector2I const& direction, bool continuous)
     currentVelocity_ = Vector2Scale(direction, (speed_ * TileData::TILE_SIZE));
 
     isTriggered_ = true;
-
-    // snx::PublisherStatic::publish(Event::actionInProgress);
-
-    if (DeveloperMode::isActive())
-    {
-        snx::debug("Movement triggered\n");
-    }
 }
 
 void Movement::setInProgress()
@@ -34,32 +25,19 @@ void Movement::setInProgress()
     isInProgress_ = true;
 
     snx::PublisherStatic::publish(Event::actionInProgress);
-
-    if (DeveloperMode::isActive())
-    {
-        snx::debug("Movement in progress\n");
-    }
 }
+
 void Movement::stopMovement()
 {
     isInProgress_ = false;
     isContinuous_ = false;
     currentVelocity_ = Vector2{0, 0};
-
-    if (DeveloperMode::isActive())
-    {
-        snx::debug("Movement stopped\n");
-    }
 }
 
 void Movement::abortMovement()
 {
     isTriggered_ = false;
     isContinuous_ = false;
-    if (DeveloperMode::isActive())
-    {
-        snx::debug("Movement aborted\n");
-    }
 }
 
 void Movement::update(Position& heroPosition, Energy& heroEnergy)

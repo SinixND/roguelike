@@ -4,7 +4,6 @@
 #include "ChunksToRender.h"
 #include "Colors.h"
 #include "Cursor.h"
-#include "Debugger.h"
 #include "DeveloperMode.h"
 #include "Event.h"
 #include "GameCamera.h"
@@ -15,6 +14,9 @@
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
+
+#ifdef DEBUG
+#endif
 
 void GameScene::initialize()
 {
@@ -110,11 +112,6 @@ void GameScene::updateState()
                     hero_.position().tilePosition(),
                     hero_.movement().direction())))
         {
-            if (DeveloperMode::isActive())
-            {
-                snx::debug("Detected collision");
-            }
-
             hero_.movement().abortMovement();
         }
     }
@@ -135,38 +132,6 @@ void GameScene::renderOutput()
 
     // World
     // Draw map
-    /*
-    size_t tileCount{tilesToRender_.renderPositions().size()};
-    auto const& renderIDs{tilesToRender_.renderIDs()};
-    auto const& renderPositions{tilesToRender_.renderPositions()};
-    auto const& visibilityIDs{tilesToRender_.visibilityIDs()};
-
-    for (size_t i{0}; i < tileCount; ++i)
-    {
-        Color tint{WHITE};
-
-        // Set tint alpha per visibility
-        switch (visibilityIDs[i])
-        {
-        case VisibilityID::visible:
-            tint = ColorAlpha(tint, 1.0);
-            break;
-        case VisibilityID::seen:
-            tint = ColorAlpha(tint, 0.5);
-            break;
-        default:
-            break;
-        }
-
-        // For debug
-        tint = ColorAlpha(tint, 1.0);
-
-        renderer_.render(
-            renderIDs[i],
-            renderPositions[i],
-            tint);
-    }
-    */
     for (Chunk& chunk : chunksToRender_.chunks())
     {
         renderer_.renderChunk(chunk);
@@ -213,7 +178,7 @@ void GameScene::update()
     // Draw simple frame
     drawWindowBorder();
 
-    // if (DeveloperMode::isActive())
+    if (DeveloperMode::isActive())
     {
         DrawFPS(0, 0);
     }

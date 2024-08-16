@@ -30,7 +30,7 @@ namespace snx
     private:
         static inline std::random_device rd_{};
 
-        // get 8 integers of random numbers from std::random_device for our seed
+        // Get 8 integers of random numbers from std::random_device for our seed
         static inline std::seed_seq ss_{
             rd_(),
             rd_(),

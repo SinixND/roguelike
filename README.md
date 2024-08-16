@@ -5,7 +5,6 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-    - [ ] Improve rendering (reduce render calls)
     - [ ] Implement vision (fog of war: unseen, seen, visible)
     - [ ] Print tile info in panel (under cursor, floating? only special tiles?)
 
@@ -98,3 +97,4 @@
     - [ ] Character triggers edgePan (obsolete, camera follows hero)
     - [x] Implement collision
     - [x] Implement movment (replace hold-to-move by L_SHIFT to move-until-something happens)
+    - [x] Improve rendering (reduce render calls by chunking map)

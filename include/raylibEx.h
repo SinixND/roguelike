@@ -4,12 +4,10 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
-#include <format>
 #include <functional>
 #include <iostream>
 #include <raylib.h>
 #include <raymath.h>
-#include <string>
 
 // Typedefs
 //=====================================
@@ -268,6 +266,7 @@ public:
         , width_(width)
         , height_(height)
     {
+#ifdef DEBUG
         if (
             !(width % 2)
             || !(height % 2))
@@ -275,6 +274,7 @@ public:
             std::cerr << "[ERROR] Width (" << width << ") or height (" << height << ")invalid; Must be odd value!\n";
             assert(0);
         }
+#endif
     }
 
     int left() const { return left_; }
@@ -450,7 +450,7 @@ struct Matrix2x2I
 
 // Functions
 //=====================================
-// in fullscreen mode we can't use GetScreenWidth/Height, so make a function that gets the right data for each mode
+// In fullscreen mode we can't use GetScreenWidth/Height, so make a function that gets the right data for each mode
 inline Vector2 GetDisplaySize()
 {
     if (IsWindowFullscreen())

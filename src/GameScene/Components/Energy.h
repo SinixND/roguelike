@@ -1,10 +1,6 @@
 #ifndef IG20240601002118
 #define IG20240601002118
 
-#include "Debugger.h"
-#include "DeveloperMode.h"
-#include <string>
-
 class Energy
 {
     int maxEnergy_{};

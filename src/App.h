@@ -6,7 +6,7 @@
 #include "IScene.h"
 #include <raylib.h>
 
-#ifdef __EMSCRIPTEN__
+#ifdef EMSCRIPTEN
 // Emscripten compatible app loop
 //=====================================
 struct emscriptenArgs

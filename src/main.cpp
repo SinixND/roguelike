@@ -9,7 +9,7 @@
 #include <raygui.h>
 // #include <raylibEx.h>
 
-// #ifdef __EMSCRIPTEN__
+// #ifdef EMSCRIPTEN
 // #include <emscripten/emscripten.h>
 // #endif
 
