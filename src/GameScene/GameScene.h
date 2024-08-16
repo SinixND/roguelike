@@ -28,6 +28,7 @@ class GameScene : public snx::IScene
     bool actionInProgress_{false};
 
     ChunksToRender chunksToRender_{};
+    // VisibilityToRender VisibilityToRender_{};
 
 private:
     void processInput();

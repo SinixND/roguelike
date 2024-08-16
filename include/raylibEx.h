@@ -1,6 +1,7 @@
 #ifndef IG20240203171045
 #define IG20240203171045
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstddef>
@@ -635,6 +636,60 @@ inline bool CheckCollisionPointRec(Vector2I point, RectangleExI const& rec)
 inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)
 {
     return CheckCollisionPointRec(point, rec.rectangle());
+}
+
+// 0 = colinear, >0 (positive) = CW, <0 (negative) = CCW
+inline int GetOrientation(Vector2 const& p1, Vector2 const& p2, Vector2 const& p3)
+{
+    // https://www.geeksforgeeks.org/orientation-3-ordered-points/
+    return (p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y);
+}
+
+inline bool CheckCollisionLines(Vector2 const& s1, Vector2 const& s2, Vector2 const& t1, Vector2 const& t2)
+{
+    // https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
+    // REQUIREMENT:
+    //  - Orientation of s1-s2-t(1) and s1-s2-t(2) differs
+    //  AND
+    //  - Orientation of t1-t2-s(1) and t1-t2-(s2) differs
+    // CONCLUSION: No collision if
+    //  - one orientation is colinear (0) := edges do not block
+    //  OR
+    //  - one orientation pair is equal
+
+    int st1{GetOrientation(s1, s2, t1)};
+    int st2{GetOrientation(s1, s2, t2)};
+
+    int ts1{GetOrientation(t1, t2, s1)};
+    int ts2{GetOrientation(t1, t2, s2)};
+
+    if (
+        // Colinear orientations (:= hit edge)
+        !st1
+        || !st2
+        || !ts1
+        || !ts2
+        // No intersection
+        || (st1 == st2)
+        || (ts1 == ts2))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+inline bool CheckCollisionLineRec(Vector2 const& s1, Vector2 const& s2, RectangleEx const& rectangle)
+{
+    // Check collsion of line with Rectangle diagonals
+    if (
+        CheckCollisionLines(s1, s2, rectangle.topLeft(), rectangle.bottomRight())
+        || CheckCollisionLines(s1, s2, Vector2(rectangle.left(), rectangle.bottom()), Vector2(rectangle.right(), rectangle.top())))
+    {
+        return true;
+    }
+
+    return false;
 }
 //=====================================
 
