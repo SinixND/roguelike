@@ -48,9 +48,11 @@ public:
 
     snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs();
     VisibilityID visibilityID(Vector2I const& tilePosition);
+    void setVisibilityID(Vector2I const& tilePosition, VisibilityID visibilityID);
 
     bool isSolid(Vector2I const& tilePosition);
 
+    std::unordered_set<Vector2I> const& blocksVisions();
     bool blocksVision(Vector2I const& tilePosition);
 
     RectangleExI mapSize();

@@ -65,8 +65,13 @@ void Movement::update(Position& heroPosition, Energy& heroEnergy)
     if (cumulativeDistanceMoved_ < TileData::TILE_SIZE)
     {
         heroPosition.move(distance);
-        snx::PublisherStatic::publish(Event::heroPositionChanged);
+        snx::PublisherStatic::publish(Event::heroMoved);
         return;
+    }
+
+    if (cumulativeDistanceMoved_ > TileData::TILE_SIZE_HALF)
+    {
+        snx::PublisherStatic::publish(Event::heroPositionChanged);
     }
 
     // Move by remaining distance until TILE_SIZE
@@ -75,7 +80,7 @@ void Movement::update(Position& heroPosition, Energy& heroEnergy)
             distance,
             0,
             TileData::TILE_SIZE - (cumulativeDistanceMoved_ - length)));
-    snx::PublisherStatic::publish(Event::heroPositionChanged);
+    snx::PublisherStatic::publish(Event::heroMoved);
 
     // === Moved one tile ===
 

@@ -10,7 +10,10 @@
 #include "Panels.h"
 #include "PublisherStatic.h"
 #include "Renderer.h"
+#include "TileData.h"
+#include "UnitConversion.h"
 #include "raylibEx.h"
+#include <cstddef>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -60,11 +63,23 @@ void GameScene::initialize()
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::heroPositionChanged,
+        Event::heroMoved,
         [&]()
         {
             gameCamera_.setTarget(hero_.position().renderPosition());
         });
+
+    snx::PublisherStatic::addSubscriber(
+        Event::heroPositionChanged,
+        [&]()
+        {
+            // visibility_.update(
+            //     world_.currentMap(),
+            //     panels_.map(),
+            //     gameCamera_.get(),
+            //     hero_.position().tilePosition());
+        },
+        true);
 }
 
 void GameScene::processInput()
@@ -135,6 +150,75 @@ void GameScene::renderOutput()
     for (Chunk& chunk : chunksToRender_.chunks())
     {
         renderer_.renderChunk(chunk);
+    }
+
+    // Visibility
+    for (size_t i{0}; i < world_.currentMap().size(); ++i)
+    {
+        auto tilePos{world_.currentMap().positions().values()[i].renderPosition()};
+        if (!CheckCollisionPointRec(GetWorldToScreen2D(tilePos, gameCamera_.get()), panels_.map()))
+        {
+            continue;
+        }
+
+        // for every corner
+        bool visible{false};
+        for (auto newPoint : {
+                 Vector2Add(tilePos, Vector2{TileData::TILE_SIZE_HALF, TileData::TILE_SIZE_HALF}),
+                 Vector2Add(tilePos, Vector2{-TileData::TILE_SIZE_HALF, TileData::TILE_SIZE_HALF}),
+                 Vector2Add(tilePos, Vector2{TileData::TILE_SIZE_HALF, -TileData::TILE_SIZE_HALF}),
+                 Vector2Add(tilePos, Vector2{-TileData::TILE_SIZE_HALF, -TileData::TILE_SIZE_HALF}),
+             })
+        {
+            // for every wall
+            bool collision{false};
+            for (auto& solidPos : world_.currentMap().blocksVisions())
+            {
+                RectangleEx solidRec{UnitConversion::tileToWorld(solidPos), TileData::TILE_SIZE, TileData::TILE_SIZE};
+                // check collision with ray
+                if (CheckCollisionLineRec(hero_.position().renderPosition(), newPoint, solidRec))
+                {
+                    collision = true;
+                    continue;
+                }
+            }
+
+            if (!collision)
+            {
+                visible = true;
+                break;
+            }
+        }
+
+        if (visible)
+        {
+            continue;
+        }
+
+        DrawRectangleV(
+            Vector2Subtract(tilePos, TileData::TILE_CENTER),
+            TileData::TILE_DIMENSIONS,
+            BG_COLOR);
+
+        //     Color fogColor{BG_COLOR};
+        //     switch (world_.currentMap().visibilityIDs().values()[i])
+        //     {
+        //     case VisibilityID::invisible:
+        //         fogColor = ColorAlpha(fogColor, 1);
+        //         break;
+        //     case VisibilityID::seen:
+        //         fogColor = ColorAlpha(fogColor, 0.5);
+        //         break;
+        //     case VisibilityID::visible:
+        //     default:
+        //         fogColor = ColorAlpha(fogColor, 0);
+        //         break;
+        //     }
+
+        //     DrawRectangleV(
+        //         world_.currentMap().positions().values()[i].renderPosition(),
+        //         TileData::TILE_DIMENSIONS,
+        //         fogColor);
     }
 
     // Units

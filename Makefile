@@ -166,8 +166,9 @@ WIN_OBJS 				:= $(patsubst %,$(OBJ_DIR_RELEASE)/%.$(WIN_OBJ_EXT),$(SRC_NAMES))
 TEST_OBJS 				:= $(TEST_DIR)/test.$(OBJ_EXT) $(patsubst $(OBJ_DIR)/$(BINARY).o,,$(OBJS))
 BM_OBJS 				:= $(TEST_DIR)/benchmark.$(OBJ_EXT) $(patsubst $(OBJ_DIR)/$(BINARY).o,,$(OBJS))
 ### Make list of dependency files
-DEPS_DEBUG 				:= $(patsubst $(OBJ_DIR_DEBUG)/%.$(OBJ_EXT),$(OBJ_DIR_DEBUG)/%.$(DEP_EXT),$(OBJS))
-DEPS_RELEASE 			:= $(patsubst $(OBJ_DIR_RELEASE)/%.$(OBJ_EXT),$(OBJ_DIR_RELEASE)/%.$(DEP_EXT),$(OBJS))
+# DEPS 					:= $(patsubst $(OBJ_DIR)/%.$(OBJ_EXT),$(OBJ_DIR)/%.$(DEP_EXT),$(OBJS))
+DEPS_DEBUG 				:= $(patsubst $(OBJ_DIR_DEBUG)/%.$(OBJ_EXT),$(OBJ_DIR_DEBUG)/%.$(DEP_EXT),$(OBJS_DEBUG))
+DEPS_RELEASE 			:= $(patsubst $(OBJ_DIR_RELEASE)/%.$(OBJ_EXT),$(OBJ_DIR_RELEASE)/%.$(DEP_EXT),$(OBJS_RELEASE))
 WIN_DEPS 				:= $(patsubst $(OBJ_DIR_RELEASE)/%.$(WIN_OBJ_EXT),$(OBJ_DIR_RELEASE)/%.$(WIN_DEP_EXT),$(WIN_OBJS))
 
 ### Non-file (.phony)targets (aka. rules)

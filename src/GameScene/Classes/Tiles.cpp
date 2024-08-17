@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <string>
+#include <unordered_set>
 
 void Tiles::insert(
     Vector2I const& tilePosition,
@@ -76,10 +77,21 @@ VisibilityID Tiles::visibilityID(Vector2I const& tilePosition)
 {
     return visibilityIDs_[tilePosition];
 }
+void Tiles::setVisibilityID(
+    Vector2I const& tilePosition,
+    VisibilityID visibilityID)
+{
+    visibilityIDs_[tilePosition] = visibilityID;
+}
 
 bool Tiles::isSolid(Vector2I const& tilePosition)
 {
     return isSolids_.contains(tilePosition);
+}
+
+std::unordered_set<Vector2I> const& Tiles::blocksVisions()
+{
+    return blocksVisions_;
 }
 
 bool Tiles::blocksVision(Vector2I const& tilePosition)

@@ -6,11 +6,12 @@ test
 test
 bin
 .vscode
-*.json
 *.out
+*.json
 *.txt
 perf.*
 callgrind*
 vgcore*
 .clangd
 .clang-tidy
+cachegrind*

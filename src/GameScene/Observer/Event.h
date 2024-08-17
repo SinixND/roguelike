@@ -8,6 +8,7 @@ enum class Event
     actionInProgress,
     cameraChanged,
     panelsResized,
+    heroMoved,
     heroPositionChanged,
     windowResized,
 };

@@ -19,8 +19,8 @@ namespace UnitConversion
     inline Vector2I worldToTile(Vector2 const& pixel)
     {
         return Vector2I{
-            static_cast<int>(std::floor((pixel.x + (TileData::TILE_SIZE / 2)) / TileData::TILE_SIZE)),
-            static_cast<int>(std::floor((pixel.y + (TileData::TILE_SIZE / 2)) / TileData::TILE_SIZE))};
+            static_cast<int>(std::floor((pixel.x + (TileData::TILE_SIZE_HALF)) / TileData::TILE_SIZE)),
+            static_cast<int>(std::floor((pixel.y + (TileData::TILE_SIZE_HALF)) / TileData::TILE_SIZE))};
     }
 
     // Tile position to world pixel

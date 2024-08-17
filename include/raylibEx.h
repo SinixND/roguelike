@@ -1,10 +1,10 @@
 #ifndef IG20240203171045
 #define IG20240203171045
 
-#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstddef>
+#include <cstdlib>
 #include <functional>
 #include <iostream>
 #include <raylib.h>
@@ -14,12 +14,12 @@
 //=====================================
 class RectangleEx
 {
-    float left_;
-    float top_;
-    float right_;
-    float bottom_;
-    float width_;
-    float height_;
+    float left_{};
+    float top_{};
+    float right_{};
+    float bottom_{};
+    float width_{};
+    float height_{};
 
 public:
     RectangleEx() = default;
@@ -45,6 +45,16 @@ public:
         , bottom_(bottomRight.y)
         , width_(bottomRight.x - topLeft.x + 1)
         , height_(bottomRight.y - topLeft.y + 1)
+    {
+    }
+
+    RectangleEx(Vector2 center, float width, float height)
+        : left_(center.x - (width / 2))
+        , top_(center.y - (height / 2))
+        , right_(center.x + (width / 2))
+        , bottom_(center.y + (height / 2))
+        , width_(width)
+        , height_(height)
     {
     }
 
@@ -224,12 +234,12 @@ struct Vector2I
 
 class RectangleExI
 {
-    int left_;
-    int top_;
-    int right_;
-    int bottom_;
-    int width_;
-    int height_;
+    int left_{};
+    int top_{};
+    int right_{};
+    int bottom_{};
+    int width_{};
+    int height_{};
 
 public:
     RectangleExI() = default;
@@ -642,7 +652,8 @@ inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)
 inline int GetOrientation(Vector2 const& p1, Vector2 const& p2, Vector2 const& p3)
 {
     // https://www.geeksforgeeks.org/orientation-3-ordered-points/
-    return (p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y);
+    auto i{(p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y)};
+    return i / abs(i);
 }
 
 inline bool CheckCollisionLines(Vector2 const& s1, Vector2 const& s2, Vector2 const& t1, Vector2 const& t2)
@@ -653,7 +664,7 @@ inline bool CheckCollisionLines(Vector2 const& s1, Vector2 const& s2, Vector2 co
     //  AND
     //  - Orientation of t1-t2-s(1) and t1-t2-(s2) differs
     // CONCLUSION: No collision if
-    //  - one orientation is colinear (0) := edges do not block
+    //  - one orientation is colinear (0) := line ends do not block
     //  OR
     //  - one orientation pair is equal
 
@@ -664,11 +675,8 @@ inline bool CheckCollisionLines(Vector2 const& s1, Vector2 const& s2, Vector2 co
     int ts2{GetOrientation(t1, t2, s2)};
 
     if (
-        // Colinear orientations (:= hit edge)
-        !st1
-        || !st2
-        || !ts1
-        || !ts2
+        // Colinear orientations (:= hit line end once)
+        !(st1 * st2 * ts1 * ts2)
         // No intersection
         || (st1 == st2)
         || (ts1 == ts2))
@@ -686,6 +694,13 @@ inline bool CheckCollisionLineRec(Vector2 const& s1, Vector2 const& s2, Rectangl
         CheckCollisionLines(s1, s2, rectangle.topLeft(), rectangle.bottomRight())
         || CheckCollisionLines(s1, s2, Vector2(rectangle.left(), rectangle.bottom()), Vector2(rectangle.right(), rectangle.top())))
     {
+        // BeginDrawing();
+        // BeginMode2D(Camera2D{{291, 196}, {0, 0}, 0, 1});
+        // ClearBackground(BLACK);
+        // DrawLineV(s1, s2, RED);
+        // DrawRectangleLinesEx(rectangle.rectangle(), 1, RED);
+        // EndMode2D();
+        // EndDrawing();
         return true;
     }
 
@@ -736,14 +751,18 @@ inline bool operator==(Vector2I const& lhs, Vector2I const& rhs)
 
 // Hash overloads
 //=====================================
+// https://en.wikipedia.org/wiki/List_of_prime_numbers
+int constexpr PRIME{2946901};
+
 template <>
 struct std::hash<Vector2>
 {
     size_t operator()(Vector2 V) const noexcept
     {
-        size_t h1 = std::hash<double>()(V.x);
-        size_t h2 = std::hash<double>()(V.y);
-        return (h1 ^ (h2 << 1));
+        // size_t h1 = std::hash<float>()(V.x);
+        // size_t h2 = std::hash<float>()(V.y);
+        // return (h1 ^ (h2 << 1));
+        return (PRIME + std::hash<float>()(V.x)) * PRIME + std::hash<float>()(V.y);
     }
 };
 
@@ -752,9 +771,10 @@ struct std::hash<Vector2I>
 {
     size_t operator()(Vector2I V) const noexcept
     {
-        size_t h1 = std::hash<int>()(V.x);
-        size_t h2 = std::hash<int>()(V.y);
-        return (h1 ^ (h2 << 1));
+        // size_t h1 = std::hash<int>()(V.x);
+        // size_t h2 = std::hash<int>()(V.y);
+        // return (h1 ^ (h2 << 1));
+        return (PRIME + std::hash<int>()(V.x)) * PRIME + std::hash<int>()(V.y);
     }
 };
 //=====================================

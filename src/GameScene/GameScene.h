@@ -9,6 +9,7 @@
 #include "InputHandler.h"
 #include "Panels.h"
 #include "Renderer.h"
+#include "Visibility.h"
 #include "World.h"
 #include <raylib.h>
 
@@ -28,7 +29,7 @@ class GameScene : public snx::IScene
     bool actionInProgress_{false};
 
     ChunksToRender chunksToRender_{};
-    // VisibilityToRender VisibilityToRender_{};
+    Visibility visibility_{};
 
 private:
     void processInput();
