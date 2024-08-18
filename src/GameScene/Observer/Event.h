@@ -11,6 +11,7 @@ enum class Event
     heroMoved,
     heroPositionChanged,
     windowResized,
+    cursorPositionChanged,
 };
 
 #endif

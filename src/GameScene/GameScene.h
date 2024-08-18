@@ -40,6 +40,9 @@ private:
     // RectangleExI renderRectangleExI();
 
 public:
+#ifdef DEBUG
+    static inline Camera2D gcam{};
+#endif
     void initialize();
     void update() override;
     void deinitialize();

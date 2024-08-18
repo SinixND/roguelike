@@ -4,19 +4,21 @@
 #include "ChunksToRender.h"
 #include "Colors.h"
 #include "Cursor.h"
+#include "Debugger.h"
 #include "DeveloperMode.h"
 #include "Event.h"
 #include "GameCamera.h"
+#include "Logger.h"
 #include "Panels.h"
 #include "PublisherStatic.h"
 #include "Renderer.h"
-#include "TileData.h"
 #include "UnitConversion.h"
+#include "VisibilityID.h"
 #include "raylibEx.h"
-#include <cstddef>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
+#include <string>
 
 #ifdef DEBUG
 #endif
@@ -80,6 +82,54 @@ void GameScene::initialize()
             //     hero_.position().tilePosition());
         },
         true);
+
+#ifdef DEBUG
+    snx::PublisherStatic::addSubscriber(
+        Event::cursorPositionChanged,
+        [&]()
+        {
+            Vector2I cursorPos{cursor_.position().tilePosition()};
+
+            snx::dbg::cliLog(
+                "\nTag: "
+                + world_.currentMap().tag(cursorPos)
+                + "\n");
+
+            snx::dbg::cliLog(
+                "TilePosition: "
+                + std::to_string(cursorPos.x)
+                + ", "
+                + std::to_string(cursorPos.y)
+                + "\n");
+
+            snx::dbg::cliLog(
+                "RenderPosition: "
+                + std::to_string(world_.currentMap().position(cursorPos).renderPosition().x)
+                + ", "
+                + std::to_string(world_.currentMap().position(cursorPos).renderPosition().y)
+                + "\n");
+
+            snx::dbg::cliLog(
+                "RenderID: "
+                + std::to_string(int(world_.currentMap().renderID(cursorPos)))
+                + "\n");
+
+            snx::dbg::cliLog(
+                "VisibilityID: "
+                + std::to_string(int(world_.currentMap().visibilityID(cursorPos)))
+                + "\n");
+
+            snx::dbg::cliLog(
+                "IsSolid: "
+                + std::to_string(world_.currentMap().isSolid(cursorPos))
+                + "\n");
+
+            snx::dbg::cliLog(
+                "BlocksVision: "
+                + std::to_string(world_.currentMap().blocksVision(cursorPos))
+                + "\n");
+        });
+#endif
 }
 
 void GameScene::processInput()
@@ -133,6 +183,15 @@ void GameScene::updateState()
 
     // Update hero movment
     hero_.movement().update(hero_.position(), hero_.energy());
+
+#ifdef DEBUG
+    snx::dbg::cam() = gameCamera_.get();
+#endif
+    // Visibility
+    visibility_.update(
+        world_.currentMap(),
+        panels_.map(),
+        hero_.position().tilePosition());
 }
 
 void GameScene::renderOutput()
@@ -153,73 +212,30 @@ void GameScene::renderOutput()
     }
 
     // Visibility
-    for (size_t i{0}; i < world_.currentMap().size(); ++i)
-    {
-        auto tilePos{world_.currentMap().positions().values()[i].renderPosition()};
-        if (!CheckCollisionPointRec(GetWorldToScreen2D(tilePos, gameCamera_.get()), panels_.map()))
-        {
-            continue;
-        }
-
-        // for every corner
-        bool visible{false};
-        for (auto newPoint : {
-                 Vector2Add(tilePos, Vector2{TileData::TILE_SIZE_HALF, TileData::TILE_SIZE_HALF}),
-                 Vector2Add(tilePos, Vector2{-TileData::TILE_SIZE_HALF, TileData::TILE_SIZE_HALF}),
-                 Vector2Add(tilePos, Vector2{TileData::TILE_SIZE_HALF, -TileData::TILE_SIZE_HALF}),
-                 Vector2Add(tilePos, Vector2{-TileData::TILE_SIZE_HALF, -TileData::TILE_SIZE_HALF}),
-             })
-        {
-            // for every wall
-            bool collision{false};
-            for (auto& solidPos : world_.currentMap().blocksVisions())
-            {
-                RectangleEx solidRec{UnitConversion::tileToWorld(solidPos), TileData::TILE_SIZE, TileData::TILE_SIZE};
-                // check collision with ray
-                if (CheckCollisionLineRec(hero_.position().renderPosition(), newPoint, solidRec))
-                {
-                    collision = true;
-                    continue;
-                }
-            }
-
-            if (!collision)
-            {
-                visible = true;
-                break;
-            }
-        }
-
-        if (visible)
-        {
-            continue;
-        }
-
-        DrawRectangleV(
-            Vector2Subtract(tilePos, TileData::TILE_CENTER),
-            TileData::TILE_DIMENSIONS,
-            BG_COLOR);
-
-        //     Color fogColor{BG_COLOR};
-        //     switch (world_.currentMap().visibilityIDs().values()[i])
-        //     {
-        //     case VisibilityID::invisible:
-        //         fogColor = ColorAlpha(fogColor, 1);
-        //         break;
-        //     case VisibilityID::seen:
-        //         fogColor = ColorAlpha(fogColor, 0.5);
-        //         break;
-        //     case VisibilityID::visible:
-        //     default:
-        //         fogColor = ColorAlpha(fogColor, 0);
-        //         break;
-        //     }
-
-        //     DrawRectangleV(
-        //         world_.currentMap().positions().values()[i].renderPosition(),
-        //         TileData::TILE_DIMENSIONS,
-        //         fogColor);
-    }
+    // Vector2I topLeft{UnitConversion::screenToTile(panels_.map().topLeft(), gameCamera_.get())};
+    // Vector2I bottomRight{UnitConversion::screenToTile(panels_.map().bottomRight(), gameCamera_.get())};
+    // float alpha{1};
+    //
+    // for (int x{topLeft.x}; x <= bottomRight.x; ++x)
+    // {
+    //     for (int y{topLeft.y}; y <= bottomRight.y; ++y)
+    //     {
+    //         switch (world_.currentMap().visibilityID(Vector2I{x, y}))
+    //         {
+    //         case VisibilityID::visible:
+    //             alpha = 0;
+    //             break;
+    //         case VisibilityID::seen:
+    //             alpha = 0.5;
+    //             break;
+    //         default:
+    //         case VisibilityID::invisible:
+    //             break;
+    //         }
+    //
+    //         renderer_.renderVisibility(UnitConversion::tileToWorld(Vector2I{x, y}), alpha);
+    //     }
+    // }
 
     // Units
     // Draw hero

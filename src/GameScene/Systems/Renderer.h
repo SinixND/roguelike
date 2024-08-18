@@ -15,6 +15,7 @@ public:
     void render(RenderID renderID, Vector2 const& renderPosition, Color const& tint = WHITE);
     void renderChunk(Chunk& chunk);
     void renderToChunk(RenderID renderID, Vector2 const& renderPosition, Chunk& chunk, Color const& tint = WHITE);
+    void renderVisibility(Vector2 const& renderPosition, float alpha);
     void deinit();
 };
 

@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "TileData.h"
 #include <raylib.h>
+#include <raymath.h>
 
 void Renderer::init()
 {
@@ -85,6 +86,15 @@ void Renderer::renderToChunk(RenderID renderID, Vector2 const& renderPosition, C
         TileData::TILE_CENTER,
         0,
         tint);
+}
+void Renderer::renderVisibility(Vector2 const& renderPosition, float alpha)
+{
+    DrawRectangleV(
+        Vector2SubtractValue(
+            renderPosition,
+            TileData::TILE_SIZE_HALF),
+        TileData::TILE_DIMENSIONS,
+        ColorAlpha(BLACK, alpha));
 }
 
 void Renderer::deinit()

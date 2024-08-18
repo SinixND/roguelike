@@ -1,78 +1,54 @@
 #ifndef IG20240816170849
 #define IG20240816170849
 
+// https://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/
+
 #include "Tiles.h"
 #include "raylibEx.h"
 #include <raylib.h>
-#include <unordered_map>
-#include <vector>
 
-/*
-Idea:
-- have solid Rectangles
-- iterate corners
-- if ray intersects solid rectangle diagonal
-        point is invisible (0)
-    else
-        point is visible (1)
-- check every tile
-    sum corner visibilities
-        if sum is ...
-            CHOICE 1: > 1 -> tile is visible (<- Tiles.method()?) := convex corner is invisible!
-            CHOICE 2: > 0 -> tile is visible (<- Tiles.method()?) := convex corner is visible!
-        else
-            tile is invis (<- Tiles.method()?)
-
-*/
 
 class Visibility
 {
-    struct Visibilities
+    class Shadow
     {
-        std::vector<Vector2I> invisible{};
-        std::vector<Vector2I> visibile{};
+        float slopeLeft_{};
+        float slopeRight_{};
+
+    public:
+        Shadow(Vector2I const& octantPosition);
+
+        float slopeLeft() { return slopeLeft_; }
+        void setSlopeLeft(Vector2I const& octantPosition);
+        void setSlopeLeft(float slopeLeft);
+
+        float slopeRight() { return slopeRight_; }
+        void setSlopeRight(Vector2I const& octantPosition);
+        void setSlopeRight(float slopeRigt);
+
+        // Get x at left slope for height of top-left octant tile corner
+        float getLeftAtTop(Vector2I const& octantPosition);
+        // Get x at left slope for height of octant position
+        float getLeft(int octantPositionHeight);
+
+
+        // Get x at right slope for height of bottom-right octant tile corner
+        float getRightAtBottom(Vector2I const& octantPosition);
+        //
+        // Get x at right slope for height of octant position
+        float getRight(int octantPositionHeight);
     };
 
-    Visibilities visibilities_{};
-
-    std::vector<Vector2> cornersToCheck_{};
-
-    // false = no visible corner, true = at least one visible corner
-    // unordered_set is sufficient, if tile gets visible at first visible corner
-    std::unordered_map<Vector2I, bool> tilesToCheck_{};
-
-    std::vector<RectangleEx> solidRectangles_{};
-
 private:
-    void importMapData(
-        Tiles& map,
-        RectangleEx const& mapPanel,
-        Camera2D const& camera);
+    void calculateOctant(int octant, Tiles& map, Vector2I const& heroPosition, int range);
 
-    void importSolidRectangles(
-        Tiles& map,
-        RectangleEx const& mapPanel,
-        Camera2D const& camera);
+    void addShadow(
+        std::vector<Shadow>& shadowLine,
+        Vector2I const& octantPosition);
 
-    void setTargetsToCheck(
-        RectangleEx const& mapPanel,
-        Camera2D const& camera);
-
-    // erases invisible corners
-    void checkCorners(Vector2I const& heroPosition, Camera2D const& camera);
-    void calculateVisiblity();
-    void exportVisiblity(Tiles& map);
-
-    void reset();
 
 public:
-    void update(
-        Tiles& map,
-        RectangleEx const& mapPanel,
-        Camera2D const& camera,
-        Vector2I const& heroPosition);
-
-    Visibilities const& visibilities() { return visibilities_; }
+    void update(Tiles& map, RectangleEx const& mapPanel, Vector2I const& heroPosition);
 };
 
 #endif

@@ -694,13 +694,6 @@ inline bool CheckCollisionLineRec(Vector2 const& s1, Vector2 const& s2, Rectangl
         CheckCollisionLines(s1, s2, rectangle.topLeft(), rectangle.bottomRight())
         || CheckCollisionLines(s1, s2, Vector2(rectangle.left(), rectangle.bottom()), Vector2(rectangle.right(), rectangle.top())))
     {
-        // BeginDrawing();
-        // BeginMode2D(Camera2D{{291, 196}, {0, 0}, 0, 1});
-        // ClearBackground(BLACK);
-        // DrawLineV(s1, s2, RED);
-        // DrawRectangleLinesEx(rectangle.rectangle(), 1, RED);
-        // EndMode2D();
-        // EndDrawing();
         return true;
     }
 

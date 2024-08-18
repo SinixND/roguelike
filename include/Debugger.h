@@ -4,16 +4,26 @@
 #include <chrono>
 #include <format>
 #include <iostream>
+#include <raylib.h>
 #include <string>
 
+#include "Singleton.h"
 namespace snx
 {
-    inline void debug(std::string msg)
+    struct dbg : public snx::Singleton<dbg>
     {
-        auto now = std::chrono::system_clock::now();
-        std::string formatted_time = std::format("{0:%T}", now);
-        std::cout << formatted_time << ": " << msg << std::endl;
-    }
+        static inline Camera2D cam_{};
+
+    public:
+        static Camera2D& cam() { return instance().cam_; }
+
+        static void cliLog(std::string msg)
+        {
+            auto now = std::chrono::system_clock::now();
+            std::string formatted_time = std::format("{0:%T}", now);
+            std::cout << formatted_time << ": " << msg << std::endl;
+        }
+    };
 }
 
 #endif

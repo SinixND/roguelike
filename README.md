@@ -5,7 +5,8 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-    - [ ] Implement vision (fog of war: unseen, seen, visible)
+    - [x] Implement vision (fog of war: unseen, seen, visible)
+    - [ ] Update Rendering process
     - [ ] Print tile info in panel (under cursor, floating? only special tiles?)
 
 

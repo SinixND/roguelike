@@ -2,10 +2,12 @@
 #define IG20240215012142
 
 #include "ChunkData.h"
+#include "Debugger.h"
 #include "TileData.h"
 #include "raylib.h"
 #include "raylibEx.h"
 #include <cmath>
+#include <string>
 
 namespace UnitConversion
 {
@@ -60,6 +62,43 @@ namespace UnitConversion
         return Vector2I{
             static_cast<int>(std::round(tilePosition.x / ChunkData::CHUNK_SIZE_I) * ChunkData::CHUNK_SIZE_I),
             static_cast<int>(std::round(tilePosition.y / ChunkData::CHUNK_SIZE_I) * ChunkData::CHUNK_SIZE_I)};
+    }
+
+    // Octant position to tile position
+    // https://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/
+    // Coordinates within octanct are usual cartesian
+    // Octant[0] is from 0,1 (top) to 1,1 (top-right)
+    inline Vector2I transformFromOctant(Vector2I const& octantPosition, int octant)
+    {
+        switch (octant)
+        {
+        case 0:
+            return Vector2I(octantPosition.x, -octantPosition.y);
+        case 1:
+            return Vector2I(octantPosition.y, -octantPosition.x);
+        case 2:
+            return Vector2I(octantPosition.y, octantPosition.x);
+        case 3:
+            return Vector2I(octantPosition.x, octantPosition.y);
+        case 4:
+            return Vector2I(-octantPosition.x, octantPosition.y);
+        case 5:
+            return Vector2I(-octantPosition.y, octantPosition.x);
+        case 6:
+            return Vector2I(-octantPosition.y, -octantPosition.x);
+        default:
+        case 7:
+            return Vector2I(-octantPosition.x, -octantPosition.y);
+        }
+    }
+
+    inline Vector2I octantToTile(Vector2I const& octantPosition, int octant, Vector2I const& origin)
+    {
+#ifdef DEBUG
+        // auto v = Vector2Add(origin, transformFromOctant(octantPosition, octant));
+        // snx::dbg::cliLog("Octant[" + std::to_string(octant) + "]: " + std::to_string(octantPosition.x) + ", " + std::to_string(octantPosition.y) + " to Tile: " + std::to_string(v.x) + ", " + std::to_string(v.y) + "\n");
+#endif
+        return Vector2Add(origin, transformFromOctant(octantPosition, octant));
     }
 }
 
