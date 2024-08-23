@@ -6,7 +6,10 @@
 # TODOs
 ## Active (Rework features that existed before Restructuring)
     - [x] Implement vision (fog of war: unseen, seen, visible)
+      - [ ] Utilize hot/cold data
+      - [ ] Use shaders (send matrix/vector of shadows by SetShaderValue()) and render one big black overlay with applied shader?
     - [ ] Update Rendering process
+        - [ ] world position top-left?
     - [ ] Print tile info in panel (under cursor, floating? only special tiles?)
 
 
