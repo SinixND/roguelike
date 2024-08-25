@@ -2,12 +2,11 @@
 #define IG20240215012142
 
 #include "ChunkData.h"
-#include "Debugger.h"
 #include "TileData.h"
 #include "raylib.h"
 #include "raylibEx.h"
 #include <cmath>
-#include <string>
+#include <raymath.h>
 
 namespace UnitConversion
 {
@@ -20,9 +19,15 @@ namespace UnitConversion
     // World pixel to tile position
     inline Vector2I worldToTile(Vector2 const& pixel)
     {
+        // World position is center of tile
         return Vector2I{
             static_cast<int>(std::floor((pixel.x + (TileData::TILE_SIZE_HALF)) / TileData::TILE_SIZE)),
             static_cast<int>(std::floor((pixel.y + (TileData::TILE_SIZE_HALF)) / TileData::TILE_SIZE))};
+
+        // World position is top-left of tile
+        // return Vector2I{
+        //     static_cast<int>(std::floor(pixel.x / TileData::TILE_SIZE)),
+        //     static_cast<int>(std::floor(pixel.y / TileData::TILE_SIZE))};
     }
 
     // Tile position to world pixel
@@ -44,9 +49,7 @@ namespace UnitConversion
     // Tile position to world pixel to screen pixel
     inline Vector2 tileToScreen(Vector2I const& tilePosition, Camera2D const& camera)
     {
-        Vector2 worldPixel{
-            tilePosition.x * TileData::TILE_SIZE,
-            tilePosition.y * TileData::TILE_SIZE};
+        Vector2 worldPixel{tileToWorld(tilePosition)};
 
         return GetWorldToScreen2D(worldPixel, camera);
     }
@@ -92,14 +95,40 @@ namespace UnitConversion
         }
     }
 
+    inline Vector2 transformFromOctant(Vector2 const& octantPosition, int octant)
+    {
+        switch (octant)
+        {
+        case 0:
+            return Vector2(octantPosition.x, -octantPosition.y);
+        case 1:
+            return Vector2(octantPosition.y, -octantPosition.x);
+        case 2:
+            return Vector2(octantPosition.y, octantPosition.x);
+        case 3:
+            return Vector2(octantPosition.x, octantPosition.y);
+        case 4:
+            return Vector2(-octantPosition.x, octantPosition.y);
+        case 5:
+            return Vector2(-octantPosition.y, octantPosition.x);
+        case 6:
+            return Vector2(-octantPosition.y, -octantPosition.x);
+        default:
+        case 7:
+            return Vector2(-octantPosition.x, -octantPosition.y);
+        }
+    }
+
     inline Vector2I octantToTile(Vector2I const& octantPosition, int octant, Vector2I const& origin)
     {
-#ifdef DEBUG
-        // auto v = Vector2Add(origin, transformFromOctant(octantPosition, octant));
-        // snx::dbg::cliLog("Octant[" + std::to_string(octant) + "]: " + std::to_string(octantPosition.x) + ", " + std::to_string(octantPosition.y) + " to Tile: " + std::to_string(v.x) + ", " + std::to_string(v.y) + "\n");
-#endif
         return Vector2Add(origin, transformFromOctant(octantPosition, octant));
     }
+
+    inline Vector2 octantToWorld(Vector2 const& octantPosition, int octant, Vector2I const& origin)
+    {
+        return Vector2Add(tileToWorld(origin), transformFromOctant(octantPosition, octant));
+    }
+
 }
 
 #endif

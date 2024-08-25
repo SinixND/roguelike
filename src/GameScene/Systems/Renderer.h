@@ -12,10 +12,9 @@ class Renderer
 
 public:
     void init();
-    void render(RenderID renderID, Vector2 const& renderPosition, Color const& tint = WHITE);
+    void render(RenderID renderID, Vector2 const& worldPosition, Color const& tint = WHITE);
     void renderChunk(Chunk& chunk);
-    void renderToChunk(RenderID renderID, Vector2 const& renderPosition, Chunk& chunk, Color const& tint = WHITE);
-    void renderVisibility(Vector2 const& renderPosition, float alpha);
+    void renderToChunk(RenderID renderID, Vector2 const& worldPosition, Chunk& chunk, Color const& tint = WHITE);
     void deinit();
 };
 

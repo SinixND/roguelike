@@ -7,7 +7,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make",
-            "program": "${workspaceFolder}/bin/main.exe",
+            "program": "${workspaceFolder}/bin/debug/main.exe",
         },
         {
             "name": "Build debug (cppdbg)",

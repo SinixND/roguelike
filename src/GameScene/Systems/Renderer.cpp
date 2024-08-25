@@ -26,7 +26,7 @@ void Renderer::init()
     textures_.registerTexture(RenderID::nextLevel, {35, 70});
 }
 
-void Renderer::render(RenderID renderID, Vector2 const& renderPosition, Color const& tint)
+void Renderer::render(RenderID renderID, Vector2 const& worldPosition, Color const& tint)
 {
     // Use 0.5f pixel offset to avoid texture bleeding
     DrawTexturePro(
@@ -37,8 +37,8 @@ void Renderer::render(RenderID renderID, Vector2 const& renderPosition, Color co
             TextureData::TEXTURE_SIZE - (2 * 0.5f),
             TextureData::TEXTURE_SIZE - (2 * 0.5f)},
         Rectangle{
-            renderPosition.x,
-            renderPosition.y,
+            worldPosition.x,
+            worldPosition.y,
             TileData::TILE_SIZE,
             TileData::TILE_SIZE},
         TileData::TILE_CENTER,
@@ -49,7 +49,7 @@ void Renderer::render(RenderID renderID, Vector2 const& renderPosition, Color co
 void Renderer::renderChunk(Chunk& chunk)
 {
     RenderTexture& renderTexture{chunk.renderTexture()};
-    Vector2 renderPosition{chunk.position().renderPosition()};
+    Vector2 worldPosition{chunk.position().worldPosition()};
 
     DrawTexturePro(
         renderTexture.texture,
@@ -59,8 +59,8 @@ void Renderer::renderChunk(Chunk& chunk)
             static_cast<float>(renderTexture.texture.width),
             static_cast<float>(-renderTexture.texture.height)},
         Rectangle{
-            renderPosition.x,
-            renderPosition.y,
+            worldPosition.x,
+            worldPosition.y,
             ChunkData::CHUNK_SIZE_F,
             ChunkData::CHUNK_SIZE_F},
         ChunkData::CHUNK_CENTER,
@@ -68,7 +68,7 @@ void Renderer::renderChunk(Chunk& chunk)
         WHITE);
 }
 
-void Renderer::renderToChunk(RenderID renderID, Vector2 const& renderPosition, Chunk& chunk, Color const& tint)
+void Renderer::renderToChunk(RenderID renderID, Vector2 const& worldPosition, Chunk& chunk, Color const& tint)
 {
     // Use 0.5f pixel offset to avoid texture bleeding
     DrawTexturePro(
@@ -79,22 +79,13 @@ void Renderer::renderToChunk(RenderID renderID, Vector2 const& renderPosition, C
             TextureData::TEXTURE_SIZE - (2 * 0.5f),
             TextureData::TEXTURE_SIZE - (2 * 0.5f)},
         Rectangle{
-            renderPosition.x - chunk.position().renderPosition().x + (ChunkData::CHUNK_SIZE_F / 2),
-            renderPosition.y - chunk.position().renderPosition().y + (ChunkData::CHUNK_SIZE_F / 2),
+            worldPosition.x - chunk.position().worldPosition().x + (ChunkData::CHUNK_SIZE_F / 2),
+            worldPosition.y - chunk.position().worldPosition().y + (ChunkData::CHUNK_SIZE_F / 2),
             TileData::TILE_SIZE,
             TileData::TILE_SIZE},
         TileData::TILE_CENTER,
         0,
         tint);
-}
-void Renderer::renderVisibility(Vector2 const& renderPosition, float alpha)
-{
-    DrawRectangleV(
-        Vector2SubtractValue(
-            renderPosition,
-            TileData::TILE_SIZE_HALF),
-        TileData::TILE_DIMENSIONS,
-        ColorAlpha(BLACK, alpha));
 }
 
 void Renderer::deinit()

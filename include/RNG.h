@@ -7,9 +7,25 @@ namespace snx
 {
     class RNG
     {
-    public:
+        static inline std::random_device rd_{};
+
+        // Get 8 integers of random numbers from std::random_device for our seed
+        static inline std::seed_seq ss_{
+            rd_(),
+            rd_(),
+            rd_(),
+            rd_(),
+            rd_(),
+            rd_(),
+            rd_(),
+            rd_()};
+
+        static inline std::mt19937 rng_{ss_};
+
+    private:
         static inline std::mt19937& rng() { return rng_; }
 
+    public:
         static inline void seed(int seed)
         {
             rng().seed(seed);
@@ -26,22 +42,6 @@ namespace snx
 
             return distribution(rng());
         }
-
-    private:
-        static inline std::random_device rd_{};
-
-        // Get 8 integers of random numbers from std::random_device for our seed
-        static inline std::seed_seq ss_{
-            rd_(),
-            rd_(),
-            rd_(),
-            rd_(),
-            rd_(),
-            rd_(),
-            rd_(),
-            rd_()};
-
-        static inline std::mt19937 rng_{ss_};
     };
 }
 #endif

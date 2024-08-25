@@ -1,6 +1,7 @@
 #include "Visibility.h"
 
 #include "Debugger.h"
+#include "RNG.h"
 #include "TileData.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
@@ -8,8 +9,8 @@
 #include "raylibEx.h"
 #include <cassert>
 #include <cstddef>
+#include <cstdlib>
 #include <raylib.h>
-#include <string>
 #include <vector>
 
 // Visibility::Shadow
@@ -78,7 +79,7 @@ void Visibility::addShadow(
     for (; i < shadowLine.size(); ++i)
     {
         //          ||__old_
-        // -new--|          
+        // -new--|
         if (shadowNewRight < shadowLine[i].getLeftAtTop(octantPosition))
         {
             // New ends before current
@@ -155,15 +156,13 @@ void Visibility::addShadow(
     }
 }
 
-void Visibility::calculateOctant(int octant, Tiles& map, Vector2I const& heroPosition, int range)
+void Visibility::calculateShadowsInOctant(
+    int octant,
+    Tiles& map,
+    Vector2I const& heroPosition,
+    int range)
 {
-    // 2nd octant row(y = 1) is visible -> neighbour tiles (N) to hero (H)
     // !!! Coordinates are usual cartesian !!!
-    //
-    //   0 1 2
-    // 2 - - - // <- shadowline(s)
-    // 1 N N
-    // 0 H
 #ifdef DEBUG
     // BeginDrawing();
     // BeginMode2D(snx::dbg::cam());
@@ -190,6 +189,7 @@ void Visibility::calculateOctant(int octant, Tiles& map, Vector2I const& heroPos
             // DrawCircleLinesV(UnitConversion::tileToWorld(UnitConversion::octantToTile({octX, octY}, octant, heroPosition)), 3, WHITE);
             // EndMode2D();
             // EndDrawing();
+            [[maybe_unused]] Color dbgColor{Color(snx::RNG::random(1, 255), snx::RNG::random(1, 255), snx::RNG::random(1, 255), 255)};
 #endif
             // Check visibility by intersection with shadow line elements
             bool isVisible{true};
@@ -197,11 +197,27 @@ void Visibility::calculateOctant(int octant, Tiles& map, Vector2I const& heroPos
             for (Shadow& shadow : shadowLine)
             {
 #ifdef DEBUG
-                // BeginDrawing();
-                // BeginMode2D(snx::dbg::cam());
-                // DrawLineEx({shadow.getLeft({int(octX * TileData::TILE_SIZE), int(octY * TileData::TILE_SIZE)}), octY * TileData::TILE_SIZE + 0.5f * TileData::TILE_SIZE}, {shadow.getRight({int(octX * TileData::TILE_SIZE), int(octY * TileData::TILE_SIZE)}), octY * TileData::TILE_SIZE + 0.5f * TileData::TILE_SIZE}, 2, RED);
-                // EndMode2D();
-                // EndDrawing();
+                BeginDrawing();
+                BeginMode2D(snx::dbg::cam());
+                // Draw shadow
+                DrawLineEx(
+                    UnitConversion::octantToWorld(
+                        {shadow.getLeft(int(octY * TileData::TILE_SIZE)),
+                         octY * TileData::TILE_SIZE + 0.5f * TileData::TILE_SIZE},
+                        octant,
+                        heroPosition),
+                    UnitConversion::octantToWorld(
+                        {shadow.getRight(int(octY * TileData::TILE_SIZE)),
+                         octY * TileData::TILE_SIZE + 0.5f * TileData::TILE_SIZE},
+                        octant,
+                        heroPosition),
+                    2,
+                    dbgColor);
+
+                // Draw left shadow slope
+                // Draw right shadow slope
+                EndMode2D();
+                EndDrawing();
 #endif
                 // NOTE: x = y / m
                 // If top-left tile corner is left (<) from slopeLeft (at same hight = tileTop)
@@ -223,53 +239,44 @@ void Visibility::calculateOctant(int octant, Tiles& map, Vector2I const& heroPos
                 break;
             }
 
-            VisibilityID tileVisiblityOld{
-                map.visibilityID(
-                    UnitConversion::octantToTile(
-                        Vector2I{
-                            octX,
-                            octY},
-                        octant,
-                        heroPosition))};
+            Vector2I octantPosition{octX, octY};
+
+            Vector2I tilePosition{
+                UnitConversion::octantToTile(
+                    octantPosition,
+                    octant,
+                    heroPosition)};
 
             // Update visibility
+            VisibilityID tileVisiblityOld{map.visibilityID(tilePosition)};
+
             if (isVisible)
             {
+                // Tile IS visible
                 map.setVisibilityID(
-                    UnitConversion::octantToTile(
-                        Vector2I{
-                            octX,
-                            octY},
-                        octant,
-                        heroPosition),
+                    tilePosition,
                     VisibilityID::visible);
             }
             else
             {
                 if (tileVisiblityOld == VisibilityID::visible)
                 {
+                    // Tile WAS visible
                     map.setVisibilityID(
-                        UnitConversion::octantToTile(
-                            Vector2I{
-                                octX,
-                                octY},
-                            octant,
-                            heroPosition),
+                        tilePosition,
                         VisibilityID::seen);
                 }
             }
 
-            // Update shadows
-            if (map.blocksVision(UnitConversion::octantToTile(
-                    Vector2I{octX, octY},
-                    octant,
-                    heroPosition)))
+            // Update shadow line
+            if (map.blocksVision(tilePosition))
             {
-                addShadow(shadowLine, Vector2I{octX, octY});
+                addShadow(shadowLine, octantPosition);
             }
         }
     }
 }
+
 void Visibility::update(
     Tiles& map,
     RectangleEx const& mapPanel,
@@ -300,6 +307,10 @@ void Visibility::update(
             range = rangeY;
         }
 
-        calculateOctant(octant, map, heroPosition, range);
+        calculateShadowsInOctant(
+            octant,
+            map,
+            heroPosition,
+            range);
     }
 }

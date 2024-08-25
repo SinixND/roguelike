@@ -35,7 +35,7 @@ void ChunksToRender::init(Tiles& map, Renderer& renderer)
                 Vector2I tilePosition{x, y};
                 renderer.renderToChunk(
                     map.renderID(tilePosition),
-                    map.position(tilePosition).renderPosition(),
+                    map.position(tilePosition).worldPosition(),
                     chunk);
             }
         }

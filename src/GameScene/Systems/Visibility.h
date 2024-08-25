@@ -6,7 +6,7 @@
 #include "Tiles.h"
 #include "raylibEx.h"
 #include <raylib.h>
-
+#include <vector>
 
 class Visibility
 {
@@ -31,7 +31,6 @@ class Visibility
         // Get x at left slope for height of octant position
         float getLeft(int octantPositionHeight);
 
-
         // Get x at right slope for height of bottom-right octant tile corner
         float getRightAtBottom(Vector2I const& octantPosition);
         //
@@ -40,15 +39,23 @@ class Visibility
     };
 
 private:
-    void calculateOctant(int octant, Tiles& map, Vector2I const& heroPosition, int range);
+    void calculateShadowsInOctant(
+        int octant,
+        Tiles& map,
+        Vector2I const& heroPosition,
+        int range);
 
     void addShadow(
         std::vector<Shadow>& shadowLine,
         Vector2I const& octantPosition);
 
-
 public:
-    void update(Tiles& map, RectangleEx const& mapPanel, Vector2I const& heroPosition);
+    void init(RectangleEx const& mapPanel);
+
+    void update(
+        Tiles& map,
+        RectangleEx const& mapPanel,
+        Vector2I const& heroPosition);
 };
 
 #endif
