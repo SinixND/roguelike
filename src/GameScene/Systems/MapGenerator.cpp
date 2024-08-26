@@ -21,9 +21,9 @@ namespace MapGenerator
         RenderID renderID,
         VisibilityID visibilityID,
         bool isSolid,
-        bool blocksVision)
+        bool isOpaque)
     {
-        tiles.insert(tilePosition, renderID, tag, visibilityID, isSolid, blocksVision);
+        tiles.insert(tilePosition, renderID, tag, visibilityID, isSolid, isOpaque);
     }
 
     void addTiles(
@@ -33,7 +33,7 @@ namespace MapGenerator
         RenderID renderID,
         VisibilityID visibilityID,
         bool isSolid,
-        bool blocksVision)
+        bool isOpaque)
     {
         for (int x{0}; x < rectangle.width(); ++x)
         {
@@ -48,7 +48,7 @@ namespace MapGenerator
                     renderID,
                     visibilityID,
                     isSolid,
-                    blocksVision);
+                    isOpaque);
             }
         }
     }
@@ -194,6 +194,136 @@ namespace MapGenerator
         }
     }
 
+    Tiles createTestRoom()
+    {
+        Tiles testRoom{};
+
+        // Rooms
+        addRoom(
+            testRoom,
+            RectangleExI{
+                Vector2I{
+                    -75,
+                    -75},
+                151,
+                151});
+
+        addRoom(
+            testRoom,
+            RectangleExI{
+                Vector2I{
+                    0,
+                    0},
+                15,
+                15});
+
+        addRoom(
+            testRoom,
+            RectangleExI{
+                -7,
+                2,
+                7,
+                4});
+
+        addRoom(
+            testRoom,
+            RectangleExI{
+                3,
+                -5,
+                3,
+                5});
+
+        // Add walls
+        addTiles(
+            testRoom,
+            "Wall",
+            RectangleExI{
+                1,
+                0,
+                1,
+                8},
+            RenderID::wall,
+            VisibilityID::invisible,
+            true,
+            true);
+
+        addTiles(
+            testRoom,
+            "Floor",
+            RectangleExI{
+                4,
+                -5,
+                1,
+                5},
+            RenderID::floor,
+            VisibilityID::invisible,
+            false,
+            false);
+
+        addTiles(
+            testRoom,
+            "Floor",
+            RectangleExI{
+                3,
+                -4,
+                3,
+                1},
+            RenderID::floor,
+            VisibilityID::invisible,
+            false,
+            false);
+
+        addTiles(
+            testRoom,
+            "Floor",
+            RectangleExI{
+                3,
+                -2,
+                3,
+                1},
+            RenderID::floor,
+            VisibilityID::invisible,
+            false,
+            false);
+
+        // Tiles
+        addTile(
+            testRoom,
+            "Wall",
+            Vector2I{
+                0,
+                -1},
+            RenderID::wall,
+            VisibilityID::invisible,
+            true,
+            true);
+
+        addTile(
+            testRoom,
+            "Floor",
+            Vector2I{
+                -6,
+                5},
+            RenderID::floor,
+            VisibilityID::invisible,
+            false,
+            false);
+
+        // Next level trigger
+        addTile(
+            testRoom,
+            "Stairs",
+            Vector2I{
+                0,
+                -5},
+            RenderID::nextLevel,
+            VisibilityID::invisible,
+            false,
+            false);
+
+        return testRoom;
+    }
+
     Tiles createStartRoom()
     {
         Tiles startRoom{};
@@ -204,57 +334,8 @@ namespace MapGenerator
                 Vector2I{
                     0,
                     0},
-                151,
-                151});
-
-        addRoom(
-            startRoom,
-            RectangleExI{
-                Vector2I{
-                    0,
-                    0},
                 15,
                 15});
-
-        // Add walls
-        addTiles(
-            startRoom,
-            "Wall",
-            RectangleExI{
-                -1,
-                2,
-                3,
-                1},
-            RenderID::wall,
-            VisibilityID::invisible,
-            true,
-            true);
-
-        addTiles(
-            startRoom,
-            "Wall",
-            RectangleExI{
-                -2,
-                0,
-                1,
-                2},
-            RenderID::wall,
-            VisibilityID::invisible,
-            true,
-            true);
-
-        addTiles(
-            startRoom,
-            "Wall",
-            RectangleExI{
-                2,
-                0,
-                1,
-                2},
-            RenderID::wall,
-            VisibilityID::invisible,
-            true,
-            true);
 
         // Add next level trigger
         addTile(

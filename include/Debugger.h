@@ -10,18 +10,39 @@
 #include "Singleton.h"
 namespace snx
 {
-    struct dbg : public snx::Singleton<dbg>
+    class debug : public snx::Singleton<debug>
     {
         static inline Camera2D cam_{};
 
     public:
         static Camera2D& cam() { return instance().cam_; }
 
-        static void cliLog(std::string msg)
+        template <typename Arg>
+        static void cliPrint(Arg arg)
+        {
+            std::cout << arg;
+        }
+
+        template <typename Arg, typename... Args>
+        static void cliPrint(Arg arg, Args... args)
+        {
+            cliPrint(arg);
+            cliPrint(args...);
+        }
+
+        template <typename Arg>
+        static void cliLog(Arg arg)
         {
             auto now = std::chrono::system_clock::now();
             std::string formatted_time = std::format("{0:%T}", now);
-            std::cout << formatted_time << ": " << msg << std::endl;
+            std::cout << "[" << formatted_time << "] " << arg;
+        }
+
+        template <typename Arg, typename... Args>
+        static void cliLog(Arg arg, Args... args)
+        {
+            cliLog(arg);
+            cliPrint(args...);
         }
     };
 }

@@ -5,6 +5,7 @@
 
 namespace MapGenerator
 {
+    Tiles createTestRoom();
     Tiles createStartRoom();
     Tiles createRandomMap(int level);
 }

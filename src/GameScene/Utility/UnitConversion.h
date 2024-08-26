@@ -70,65 +70,73 @@ namespace UnitConversion
     // Octant position to tile position
     // https://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/
     // Coordinates within octanct are usual cartesian
-    // Octant[0] is from 0,1 (top) to 1,1 (top-right)
-    inline Vector2I transformFromOctant(Vector2I const& octantPosition, int octant)
+    // Octant[0] is from 0,1 (top) to 1,1 (top-right), going CW
+    template <typename Type>
+    inline Type transformFromOctant(Type const& octantPosition, int octant)
     {
         switch (octant)
         {
         case 0:
-            return Vector2I(octantPosition.x, -octantPosition.y);
+            return Type(octantPosition.x, -octantPosition.y);
         case 1:
-            return Vector2I(octantPosition.y, -octantPosition.x);
+            return Type(octantPosition.y, -octantPosition.x);
         case 2:
-            return Vector2I(octantPosition.y, octantPosition.x);
+            return Type(octantPosition.y, octantPosition.x);
         case 3:
-            return Vector2I(octantPosition.x, octantPosition.y);
+            return Type(octantPosition.x, octantPosition.y);
         case 4:
-            return Vector2I(-octantPosition.x, octantPosition.y);
+            return Type(-octantPosition.x, octantPosition.y);
         case 5:
-            return Vector2I(-octantPosition.y, octantPosition.x);
+            return Type(-octantPosition.y, octantPosition.x);
         case 6:
-            return Vector2I(-octantPosition.y, -octantPosition.x);
+            return Type(-octantPosition.y, -octantPosition.x);
         default:
         case 7:
-            return Vector2I(-octantPosition.x, -octantPosition.y);
-        }
-    }
-
-    inline Vector2 transformFromOctant(Vector2 const& octantPosition, int octant)
-    {
-        switch (octant)
-        {
-        case 0:
-            return Vector2(octantPosition.x, -octantPosition.y);
-        case 1:
-            return Vector2(octantPosition.y, -octantPosition.x);
-        case 2:
-            return Vector2(octantPosition.y, octantPosition.x);
-        case 3:
-            return Vector2(octantPosition.x, octantPosition.y);
-        case 4:
-            return Vector2(-octantPosition.x, octantPosition.y);
-        case 5:
-            return Vector2(-octantPosition.y, octantPosition.x);
-        case 6:
-            return Vector2(-octantPosition.y, -octantPosition.x);
-        default:
-        case 7:
-            return Vector2(-octantPosition.x, -octantPosition.y);
+            return Type(-octantPosition.x, -octantPosition.y);
         }
     }
 
     inline Vector2I octantToTile(Vector2I const& octantPosition, int octant, Vector2I const& origin)
     {
-        return Vector2Add(origin, transformFromOctant(octantPosition, octant));
+        return Vector2Add(origin, transformFromOctant<Vector2I>(octantPosition, octant));
     }
 
     inline Vector2 octantToWorld(Vector2 const& octantPosition, int octant, Vector2I const& origin)
     {
-        return Vector2Add(tileToWorld(origin), transformFromOctant(octantPosition, octant));
+        return Vector2Add(tileToWorld(origin), transformFromOctant<Vector2>(octantPosition, octant));
     }
 
+/*
+    // Quarter position to tile position
+    // Coordinates within quarter are usual cartesian
+    // Quarter[0] is top-right, going CW
+    template <typename Type>
+    inline Type transformFromQuarter(Type const& quarterPosition, int quarter)
+    {
+        switch (quarter)
+        {
+        case 0:
+            return Type(quarterPosition.x, -quarterPosition.y);
+        case 1:
+            return Type(quarterPosition.y, quarterPosition.x);
+        case 2:
+            return Type(-quarterPosition.x, quarterPosition.y);
+        default:
+        case 3:
+            return Type(-quarterPosition.y, -quarterPosition.x);
+        }
+    }
+
+    inline Vector2I quarterToTile(Vector2I const& quarterPosition, int quarter, Vector2I const& origin)
+    {
+        return Vector2Add(origin, transformFromQuarter<Vector2I>(quarterPosition, quarter));
+    }
+
+    inline Vector2 quarterToWorld(Vector2 const& quarterPosition, int quarter, Vector2I const& origin)
+    {
+        return Vector2Add(tileToWorld(origin), transformFromQuarter<Vector2>(quarterPosition, quarter));
+    }
+    */
 }
 
 #endif

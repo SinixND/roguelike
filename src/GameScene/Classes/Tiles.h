@@ -18,7 +18,7 @@ class Tiles
     snx::DenseMap<Vector2I, std::string> tags_{};
     snx::DenseMap<Vector2I, VisibilityID> visibilityIDs_{};
     std::unordered_set<Vector2I> isSolids_{};
-    std::unordered_set<Vector2I> blocksVisions_{};
+    std::unordered_set<Vector2I> isOpaques_{};
 
     RectangleExI mapSize_{};
 
@@ -32,7 +32,7 @@ public:
         std::string const& tag,
         VisibilityID visibilityID = VisibilityID::invisible,
         bool isSolid = false,
-        bool blocksVision = false);
+        bool isOpaque = false);
 
     // void erase(Vector2I const& tilePosition);
 
@@ -52,8 +52,8 @@ public:
 
     bool isSolid(Vector2I const& tilePosition);
 
-    std::unordered_set<Vector2I> const& blocksVisions();
-    bool blocksVision(Vector2I const& tilePosition);
+    std::unordered_set<Vector2I> const& isOpaques();
+    bool isOpaque(Vector2I const& tilePosition);
 
     RectangleExI mapSize();
 };

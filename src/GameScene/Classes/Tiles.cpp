@@ -16,7 +16,7 @@ void Tiles::insert(
     std::string const& tag,
     VisibilityID visibilityID,
     bool isSolid,
-    bool blocksVision)
+    bool isOpaque)
 {
     positions_.insert(tilePosition, Position{tilePosition});
     renderIDs_.insert(tilePosition, renderID);
@@ -27,10 +27,18 @@ void Tiles::insert(
     {
         isSolids_.insert(tilePosition);
     }
-
-    if (blocksVision)
+    else
     {
-        blocksVisions_.insert(tilePosition);
+        isSolids_.erase(tilePosition);
+    }
+
+    if (isOpaque)
+    {
+        isOpaques_.insert(tilePosition);
+    }
+    else
+    {
+        isOpaques_.erase(tilePosition);
     }
 
     updateMapSize(tilePosition);
@@ -43,7 +51,7 @@ void Tiles::insert(
 //     tags_.erase(tilePosition);
 //     visibilityIDs_.erase(tilePosition);
 //     isSolids_.erase(tilePosition);
-//     blocksVisions_.erase(tilePosition);
+//     isOpaques_.erase(tilePosition);
 // }
 
 snx::DenseMap<Vector2I, Position>& Tiles::positions() { return positions_; };
@@ -89,14 +97,14 @@ bool Tiles::isSolid(Vector2I const& tilePosition)
     return isSolids_.contains(tilePosition);
 }
 
-std::unordered_set<Vector2I> const& Tiles::blocksVisions()
+std::unordered_set<Vector2I> const& Tiles::isOpaques()
 {
-    return blocksVisions_;
+    return isOpaques_;
 }
 
-bool Tiles::blocksVision(Vector2I const& tilePosition)
+bool Tiles::isOpaque(Vector2I const& tilePosition)
 {
-    return blocksVisions_.contains(tilePosition);
+    return isOpaques_.contains(tilePosition);
 }
 
 void Tiles::updateMapSize(Vector2I const& tilePosition)

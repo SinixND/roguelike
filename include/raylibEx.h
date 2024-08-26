@@ -742,8 +742,9 @@ inline bool operator==(Vector2I const& lhs, Vector2I const& rhs)
 }
 //=====================================
 
-// Hash overloads
+// Overloads
 //=====================================
+// hash
 // https://en.wikipedia.org/wiki/List_of_prime_numbers
 int constexpr PRIME{2946901};
 
@@ -770,5 +771,24 @@ struct std::hash<Vector2I>
         return (PRIME + std::hash<int>()(V.x)) * PRIME + std::hash<int>()(V.y);
     }
 };
+
+// ostream
+inline std::ostream& operator<<(std::ostream& os, Vector2 const& v) { 
+    return os 
+        << "(" 
+        << v.x 
+        << ", " 
+        << v.y 
+        << ")";
+}
+
+inline std::ostream& operator<<(std::ostream& os, Vector2I const& v) { 
+    return os 
+        << "(" 
+        << v.x 
+        << ", " 
+        << v.y 
+        << ")";
+}
 //=====================================
 #endif

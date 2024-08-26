@@ -44,7 +44,7 @@ release: CXX_FLAGS 		+= -O2
 release: CFLAGS			+= -DNDEBUG
 
 web: CXX_FLAGS			+= -Os -Wall 
-web: CFLAGS				+= --preload-file resources/ --shell-file $(RAYLIB_DIR)/minshell.html -sUSE_GLFW=3 -DEMSCRIPTEN -DPLATFORM_WEB
+web: CFLAGS				+= --preload-file resources/ --shell-file $(RAYLIB_DIR)/minshell.html -sUSE_GLFW=3 -DEMSCRIPTEN -DPLATFORM_WEB -DNDEBUG
 
 windows: CFLAGS			+= -static -static-libgcc -static-libstdc++
 

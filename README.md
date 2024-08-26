@@ -5,10 +5,8 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-    - [x] Implement vision (fog of war: unseen, seen, visible)
-      - [ ] Use shaders (send matrix/vector of shadows by SetShaderValue()) and render one big black overlay with applied shader?
-    - [ ] Update Rendering process
-        - [ ] world position top-left?
+    - [ ] Hold shift to keep moving (abort if key not down!)
+    - [ ] Check at FoV artifacts (consider 1,0 in fov calculation!)
     - [ ] Print tile info in panel (under cursor, floating? only special tiles?)
 
 
@@ -30,6 +28,7 @@
     - [ ] Save/Load for Account > Character > CurrentRun
     - [ ] Account settings via lua
     - [ ] Implement zoom?
+    - [ ] Change world position from center to (usual) top-left?
 
 
 ## Continuous
@@ -40,7 +39,8 @@
 
 # Ideas
     - [ ] Lua/Jinx settings file?
-    - [ ] Chunkwise map rendering (RenderTexture; pre-calculation multi-threaded; web compatible?; FogOfWar as Overlay?)
+    - [ ] Chunkwise map rendering (RenderTexture; pre-calculation multi-threaded; web compatible?)
+    - [ ] Use shaders (send matrix/vector of shadows by SetShaderValue()) and render one big black overlay with applied shader?
 
 
 # Notes
@@ -101,3 +101,4 @@
     - [x] Implement collision
     - [x] Implement movment (replace hold-to-move by L_SHIFT to move-until-something happens)
     - [x] Improve rendering (reduce render calls by chunking map)
+    - [x] Implement vision (fog of war: unseen, seen, visible)

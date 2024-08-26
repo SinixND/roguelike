@@ -93,43 +93,43 @@ void GameScene::initialize()
         {
             Vector2I cursorPos{cursor_.position().tilePosition()};
 
-            snx::dbg::cliLog(
+            snx::debug::cliLog(
                 "\nTag: "
                 + world_.currentMap().tag(cursorPos)
                 + "\n");
 
-            snx::dbg::cliLog(
+            snx::debug::cliLog(
                 "TilePosition: "
                 + std::to_string(cursorPos.x)
                 + ", "
                 + std::to_string(cursorPos.y)
                 + "\n");
 
-            snx::dbg::cliLog(
+            snx::debug::cliLog(
                 "WorldPosition: "
                 + std::to_string(world_.currentMap().position(cursorPos).worldPosition().x)
                 + ", "
                 + std::to_string(world_.currentMap().position(cursorPos).worldPosition().y)
                 + "\n");
 
-            snx::dbg::cliLog(
+            snx::debug::cliLog(
                 "RenderID: "
                 + std::to_string(int(world_.currentMap().renderID(cursorPos)))
                 + "\n");
 
-            snx::dbg::cliLog(
+            snx::debug::cliLog(
                 "VisibilityID: "
                 + std::to_string(int(world_.currentMap().visibilityID(cursorPos)))
                 + "\n");
 
-            snx::dbg::cliLog(
+            snx::debug::cliLog(
                 "IsSolid: "
                 + std::to_string(world_.currentMap().isSolid(cursorPos))
                 + "\n");
 
-            snx::dbg::cliLog(
-                "BlocksVision: "
-                + std::to_string(world_.currentMap().blocksVision(cursorPos))
+            snx::debug::cliLog(
+                "IsOpaque: "
+                + std::to_string(world_.currentMap().isOpaque(cursorPos))
                 + "\n");
         });
 #endif
@@ -188,7 +188,7 @@ void GameScene::updateState()
     hero_.movement().update(hero_.position(), hero_.energy());
 
 #ifdef DEBUG
-    snx::dbg::cam() = gameCamera_.get();
+    snx::debug::cam() = gameCamera_.get();
 #endif
 }
 
@@ -221,12 +221,23 @@ void GameScene::renderOutput()
             switch (currentMap.visibilityID(tilePosition))
             {
             case VisibilityID::invisible:
+#ifdef DEBUG
+                DrawRectangleV(
+                    Vector2SubtractValue(
+                        currentMap.position(tilePosition).worldPosition(),
+                        TileData::TILE_SIZE_HALF),
+                    TileData::TILE_DIMENSIONS,
+                    ColorAlpha(
+                        RED,
+                        0.5));
+#else
                 DrawRectangleV(
                     Vector2SubtractValue(
                         currentMap.position(tilePosition).worldPosition(),
                         TileData::TILE_SIZE_HALF),
                     TileData::TILE_DIMENSIONS,
                     BLACK);
+#endif
                 break;
 
             case VisibilityID::seen:
