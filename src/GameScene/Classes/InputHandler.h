@@ -9,7 +9,7 @@ class InputHandler
 {
     InputActionID inputAction_{InputActionID::none};
 
-    bool modifierShift_{};
+    bool modifier_{};
 
     std::unordered_map<int, InputActionID> keyToInputActionID_{};
     std::unordered_map<InputActionID, int> inputActionIDToModifierKey_{};
@@ -22,7 +22,8 @@ class InputHandler
 public:
     void setDefaultInputMappings();
     void takeInput();
-    void triggerInput(Hero& hero);
+    void triggerAction(Hero& hero);
+    void simulateInput(int key);
 };
 
 #endif

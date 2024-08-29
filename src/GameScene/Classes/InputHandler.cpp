@@ -1,9 +1,12 @@
 #include "InputHandler.h"
 
+#include "Debugger.h"
 #include "Directions.h"
 #include "Hero.h"
 #include "InputActionID.h"
+#include "Logger.h"
 #include <raylib.h>
+#include <string>
 #include <utility>
 
 // private
@@ -37,27 +40,29 @@ void InputHandler::setDefaultInputMappings()
     bindKey(KEY_L, InputActionID::actRight);
     bindKey(KEY_RIGHT, InputActionID::actRight);
 
-    bindModifierKey(KEY_LEFT_SHIFT, InputActionID::modShift);
+    bindModifierKey(KEY_LEFT_SHIFT, InputActionID::mod);
 };
 
 bool InputHandler::takeInputKey()
 {
-    // static int key{GetKeyPressed()};
-    //
-    // if (IsKeyUp(key))
-    // {
-    //     key = KEY_NULL;
-    // }
-    //
-    // Get action mapped to key. If no key pressed, set null-action
-    // if (IsKeyDown(key))
-    // {
-    //     inputAction_ = keyToInputActionID_[key];
-    // }
-    inputAction_ = keyToInputActionID_[GetKeyPressed()];
+    static int currentKey = KEY_NULL;
+    static int lastKey = KEY_NULL;
+
+    // Update key pressed
+    // Set lastKey only to valid inputs (associated with actions)
+    lastKey = (currentKey) ? currentKey : lastKey;
+    currentKey = GetKeyPressed();
 
     // Check modifiers
-    modifierShift_ = IsKeyDown(inputActionIDToModifierKey_[InputActionID::modShift]);
+    modifier_ = IsKeyDown(inputActionIDToModifierKey_[InputActionID::mod]);
+
+    // Repeat last key if no input but modifier down
+    if (modifier_ && !currentKey)
+    {
+        currentKey = lastKey;
+    }
+
+    inputAction_ = keyToInputActionID_[currentKey];
 
     if (inputAction_ == InputActionID::none)
     {
@@ -73,8 +78,29 @@ bool InputHandler::takeInputGesture()
     static int lastGesture = GESTURE_NONE;
 
     // Update gesture
-    lastGesture = currentGesture;
+    // Set lastGesture only to valid inputs (associated with actions)
+    lastGesture = (
+            currentGesture == GESTURE_SWIPE_UP
+            || currentGesture == GESTURE_SWIPE_LEFT
+            || currentGesture == GESTURE_SWIPE_DOWN
+            || currentGesture == GESTURE_SWIPE_RIGHT
+            ) ? currentGesture : lastGesture;
+
     currentGesture = GetGestureDetected();
+
+    // Check modifiers
+    modifier_ = IsGestureDetected(GESTURE_HOLD);
+
+    // Repeat last gesture if no input but modifier down
+    if (modifier_ && !(
+            currentGesture == GESTURE_SWIPE_UP
+            || currentGesture == GESTURE_SWIPE_LEFT
+            || currentGesture == GESTURE_SWIPE_DOWN
+            || currentGesture == GESTURE_SWIPE_RIGHT
+        ))
+    {
+        currentGesture = lastGesture;
+    }
 
     if (currentGesture != lastGesture)
     {
@@ -141,7 +167,7 @@ void InputHandler::takeInput()
     takeInputGesture();
 }
 
-void InputHandler::triggerInput(Hero& hero)
+void InputHandler::triggerAction(Hero& hero)
 {
     if (inputAction_ == InputActionID::none)
     {
@@ -154,7 +180,7 @@ void InputHandler::triggerInput(Hero& hero)
     {
         hero.movement().trigger(
             Directions::V_UP,
-            modifierShift_);
+            modifier_);
     }
     break;
 
@@ -162,7 +188,7 @@ void InputHandler::triggerInput(Hero& hero)
     {
         hero.movement().trigger(
             Directions::V_LEFT,
-            modifierShift_);
+            modifier_);
     }
     break;
 
@@ -170,7 +196,7 @@ void InputHandler::triggerInput(Hero& hero)
     {
         hero.movement().trigger(
             Directions::V_DOWN,
-            modifierShift_);
+            modifier_);
     }
     break;
 
@@ -178,7 +204,7 @@ void InputHandler::triggerInput(Hero& hero)
     {
         hero.movement().trigger(
             Directions::V_RIGHT,
-            modifierShift_);
+            modifier_);
     }
     break;
 
@@ -189,3 +215,8 @@ void InputHandler::triggerInput(Hero& hero)
     // Reset
     inputAction_ = InputActionID::none;
 }
+
+//     void InputHandler::simulateInput(int key)
+// {
+//     
+// }

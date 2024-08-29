@@ -91,11 +91,11 @@ void Movement::update(Position& heroPosition, Energy& heroEnergy)
     snx::PublisherStatic::publish(Event::actionFinished);
 
     // ReTrigger continuous movment
-    if (isContinuous_)
-    {
-        isTriggered_ = true;
-        return;
-    }
+    // if (isContinuous_)
+    // {
+    //     isTriggered_ = true;
+    //     return;
+    // }
 
     stopMovement();
 }

@@ -5,8 +5,10 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-    - [ ] Hold shift to keep moving (abort if key not down!)
-    - [ ] Check at FoV artifacts (consider 1,0 in fov calculation!)
+    - [ ] Pathfind movement by clicking or tapding
+    - [ ] Improve rendering 
+      - [x] reduce render calls by chunking map
+      - [ ] improve visibility rendering (take care of artifacts (slight offset): render shadow as texture like map tiles)
     - [ ] Print tile info in panel (under cursor, floating? only special tiles?)
 
 
@@ -100,5 +102,5 @@
     - [ ] Character triggers edgePan (obsolete, camera follows hero)
     - [x] Implement collision
     - [x] Implement movment (replace hold-to-move by L_SHIFT to move-until-something happens)
-    - [x] Improve rendering (reduce render calls by chunking map)
     - [x] Implement vision (fog of war: unseen, seen, visible)
+    - [x] Hold shift to keep moving (abort if key not down!)

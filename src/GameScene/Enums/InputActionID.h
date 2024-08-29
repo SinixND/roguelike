@@ -10,7 +10,7 @@ enum class InputActionID
     actDown,
     actRight,
     // Modifiers
-    modShift,
+    mod,
 };
 
 // inline auto constexpr operator#(InputActionID id) noexcept

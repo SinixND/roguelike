@@ -169,7 +169,7 @@ void GameScene::updateState()
         }
     }
 
-    inputHandler_.triggerInput(hero_);
+    inputHandler_.triggerAction(hero_);
 
     // Check collision before starting movement
     if (hero_.movement().isTriggered())
@@ -221,23 +221,26 @@ void GameScene::renderOutput()
             switch (currentMap.visibilityID(tilePosition))
             {
             case VisibilityID::invisible:
-#ifdef DEBUG
-                DrawRectangleV(
-                    Vector2SubtractValue(
-                        currentMap.position(tilePosition).worldPosition(),
-                        TileData::TILE_SIZE_HALF),
-                    TileData::TILE_DIMENSIONS,
-                    ColorAlpha(
-                        RED,
-                        0.5));
-#else
-                DrawRectangleV(
-                    Vector2SubtractValue(
-                        currentMap.position(tilePosition).worldPosition(),
-                        TileData::TILE_SIZE_HALF),
-                    TileData::TILE_DIMENSIONS,
-                    BLACK);
-#endif
+                if (DeveloperMode::isActive())
+                {
+                    DrawRectangleV(
+                        Vector2SubtractValue(
+                            currentMap.position(tilePosition).worldPosition(),
+                            TileData::TILE_SIZE_HALF),
+                        TileData::TILE_DIMENSIONS,
+                        ColorAlpha(
+                            RED,
+                            0.5));
+                }
+                else
+                {
+                    DrawRectangleV(
+                        Vector2SubtractValue(
+                            currentMap.position(tilePosition).worldPosition(),
+                            TileData::TILE_SIZE_HALF),
+                        TileData::TILE_DIMENSIONS,
+                        BLACK);
+                }
                 break;
 
             case VisibilityID::seen:
