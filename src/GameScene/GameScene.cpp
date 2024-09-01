@@ -137,26 +137,20 @@ void GameScene::initialize()
 
 void GameScene::processInput()
 {
-    // Mouse input
-    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
-    {
-        cursor_.toggle();
-    }
-
-    cursor_.update(gameCamera_.get(), hero_.position().worldPosition());
-
     // Block input handling if hero misses energy
     if (!hero_.energy().isFull())
     {
         return;
     }
 
-    // Stores keyboard and gesture input
-    inputHandler_.takeInput();
+    // Take input from mouse, keys and gestures
+    inputHandler_.takeInput(cursor_.isActive());
 }
 
 void GameScene::updateState()
 {
+    cursor_.update(gameCamera_.get(), hero_.position().worldPosition());
+
     // Regenerate energy if no action in progress
     if (!actionInProgress_)
     {
@@ -169,7 +163,10 @@ void GameScene::updateState()
         }
     }
 
-    inputHandler_.triggerAction(hero_);
+    inputHandler_.triggerAction(
+        hero_,
+        cursor_,
+        world_.currentMap());
 
     // Check collision before starting movement
     if (hero_.movement().isTriggered())
@@ -244,6 +241,19 @@ void GameScene::renderOutput()
                 break;
 
             case VisibilityID::seen:
+                if (DeveloperMode::isActive())
+                {
+                DrawRectangleV(
+                    Vector2SubtractValue(
+                        currentMap.position(tilePosition).worldPosition(),
+                        TileData::TILE_SIZE_HALF),
+                    TileData::TILE_DIMENSIONS,
+                    ColorAlpha(
+                        BLUE,
+                        0.5));
+                }
+                else
+                {
                 DrawRectangleV(
                     Vector2SubtractValue(
                         currentMap.position(tilePosition).worldPosition(),
@@ -252,6 +262,7 @@ void GameScene::renderOutput()
                     ColorAlpha(
                         BLACK,
                         0.5));
+                }
                 break;
 
             default:

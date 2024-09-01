@@ -8,15 +8,56 @@
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
+#include <vector>
 
-void Movement::trigger(Vector2I const& direction, bool continuous)
+void Movement::trigger(Vector2I const& direction)
 {
     direction_ = direction;
-    isContinuous_ = continuous;
 
     currentVelocity_ = Vector2Scale(direction, (speed_ * TileData::TILE_SIZE));
 
     isTriggered_ = true;
+}
+
+void Movement::trigger(std::vector<Vector2I> const& path)
+{
+    if (path.empty())
+    {
+        return;
+    }
+
+    path_ = path;
+
+    processPath();
+}
+
+void Movement::processPath()
+{
+    Vector2I direction{
+        // Vector2Normalize(
+        Vector2Subtract(
+            path_.rbegin()[1],
+            path_.rbegin()[0])
+        // )
+    };
+
+    trigger(direction);
+
+    // Remove tilePosition moved from
+    path_.pop_back();
+
+    // Clear path guided movement if target reched (path_.size() == 1 (target))
+    if (path_.size() <= 1)
+    {
+        path_.clear();
+    }
+}
+
+void Movement::processTrigger(Energy& heroEnergy)
+{
+    isTriggered_ = false;
+    heroEnergy.consume(50);
+    setInProgress();
 }
 
 void Movement::setInProgress()
@@ -30,27 +71,31 @@ void Movement::setInProgress()
 void Movement::stopMovement()
 {
     isInProgress_ = false;
-    isContinuous_ = false;
     currentVelocity_ = Vector2{0, 0};
 }
 
 void Movement::abortMovement()
 {
     isTriggered_ = false;
-    isContinuous_ = false;
+    path_.clear();
 }
 
 void Movement::update(Position& heroPosition, Energy& heroEnergy)
 {
     // Start movement
-    if (isTriggered_)
+    // - Either on non-empty path
+    if (!isTriggered_ && !isInProgress_ && !path_.empty())
     {
-        isTriggered_ = false;
-        heroEnergy.consume(50);
-        setInProgress();
+        processPath();
     }
 
-    // Check if action is ongoing
+    // - Or on trigger
+    if (isTriggered_)
+    {
+        processTrigger(heroEnergy);
+    }
+
+    // Check if action is in progress
     if (!isInProgress_)
     {
         return;
@@ -86,16 +131,8 @@ void Movement::update(Position& heroPosition, Energy& heroEnergy)
 
     // Reset cumulativeDistanceMoved
     cumulativeDistanceMoved_ = 0;
-    isInProgress_ = false;
 
     snx::PublisherStatic::publish(Event::actionFinished);
-
-    // ReTrigger continuous movment
-    // if (isContinuous_)
-    // {
-    //     isTriggered_ = true;
-    //     return;
-    // }
 
     stopMovement();
 }

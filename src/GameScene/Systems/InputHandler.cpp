@@ -1,18 +1,23 @@
 #include "InputHandler.h"
 
-#include "Debugger.h"
+#include "Cursor.h"
 #include "Directions.h"
 #include "Hero.h"
 #include "InputActionID.h"
-#include "Logger.h"
+#include "Pathfinder.h"
+#include "Tiles.h"
 #include <raylib.h>
-#include <string>
 #include <utility>
 
 // private
 void InputHandler::bindKey(int key, InputActionID action)
 {
     keyToInputActionID_.insert(std::make_pair(key, action));
+}
+
+void InputHandler::bindMouseButton(int key, InputActionID action)
+{
+    mouseButtonToInputActionID_.insert(std::make_pair(key, action));
 }
 
 void InputHandler::bindModifierKey(int key, InputActionID action)
@@ -41,7 +46,35 @@ void InputHandler::setDefaultInputMappings()
     bindKey(KEY_RIGHT, InputActionID::actRight);
 
     bindModifierKey(KEY_LEFT_SHIFT, InputActionID::mod);
-};
+
+    bindMouseButton(MOUSE_BUTTON_RIGHT, InputActionID::cursorToggle);
+    bindMouseButton(MOUSE_BUTTON_LEFT, InputActionID::moveToTarget);
+}
+
+bool InputHandler::takeInputMouse(bool isCursorActive)
+{
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
+    {
+        inputAction_ = mouseButtonToInputActionID_[MOUSE_BUTTON_RIGHT];
+    }
+
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        inputAction_ = mouseButtonToInputActionID_[MOUSE_BUTTON_LEFT];
+    }
+
+    // Check if input is invalid (need exception for mouse toggle action)
+    if (
+        inputAction_ == InputActionID::none
+        || (!(inputAction_ == InputActionID::cursorToggle)
+            && !isCursorActive))
+    {
+
+        return false;
+    }
+
+    return true;
+}
 
 bool InputHandler::takeInputKey()
 {
@@ -57,7 +90,11 @@ bool InputHandler::takeInputKey()
     modifier_ = IsKeyDown(inputActionIDToModifierKey_[InputActionID::mod]);
 
     // Repeat last key if no input but modifier down
-    if (modifier_ && !currentKey)
+#ifdef TERMUX
+    if ((modifier_ && !currentKey))
+#else
+    if ((modifier_ && !currentKey) || IsKeyPressedRepeat(lastKey))
+#endif
     {
         currentKey = lastKey;
     }
@@ -79,12 +116,12 @@ bool InputHandler::takeInputGesture()
 
     // Update gesture
     // Set lastGesture only to valid inputs (associated with actions)
-    lastGesture = (
-            currentGesture == GESTURE_SWIPE_UP
-            || currentGesture == GESTURE_SWIPE_LEFT
-            || currentGesture == GESTURE_SWIPE_DOWN
-            || currentGesture == GESTURE_SWIPE_RIGHT
-            ) ? currentGesture : lastGesture;
+    lastGesture = (currentGesture == GESTURE_SWIPE_UP
+                   || currentGesture == GESTURE_SWIPE_LEFT
+                   || currentGesture == GESTURE_SWIPE_DOWN
+                   || currentGesture == GESTURE_SWIPE_RIGHT)
+                      ? currentGesture
+                      : lastGesture;
 
     currentGesture = GetGestureDetected();
 
@@ -92,12 +129,7 @@ bool InputHandler::takeInputGesture()
     modifier_ = IsGestureDetected(GESTURE_HOLD);
 
     // Repeat last gesture if no input but modifier down
-    if (modifier_ && !(
-            currentGesture == GESTURE_SWIPE_UP
-            || currentGesture == GESTURE_SWIPE_LEFT
-            || currentGesture == GESTURE_SWIPE_DOWN
-            || currentGesture == GESTURE_SWIPE_RIGHT
-        ))
+    if (modifier_ && !(currentGesture == GESTURE_SWIPE_UP || currentGesture == GESTURE_SWIPE_LEFT || currentGesture == GESTURE_SWIPE_DOWN || currentGesture == GESTURE_SWIPE_RIGHT))
     {
         currentGesture = lastGesture;
     }
@@ -157,8 +189,13 @@ bool InputHandler::takeInputGesture()
 }
 
 // public
-void InputHandler::takeInput()
+void InputHandler::takeInput(bool isCursorActive)
 {
+    if (takeInputMouse(isCursorActive))
+    {
+        return;
+    }
+
     if (takeInputKey())
     {
         return;
@@ -167,7 +204,7 @@ void InputHandler::takeInput()
     takeInputGesture();
 }
 
-void InputHandler::triggerAction(Hero& hero)
+void InputHandler::triggerAction(Hero& hero, Cursor& cursor, Tiles& map)
 {
     if (inputAction_ == InputActionID::none)
     {
@@ -179,32 +216,43 @@ void InputHandler::triggerAction(Hero& hero)
     case InputActionID::actUp:
     {
         hero.movement().trigger(
-            Directions::V_UP,
-            modifier_);
+            Directions::V_UP);
     }
     break;
 
     case InputActionID::actLeft:
     {
         hero.movement().trigger(
-            Directions::V_LEFT,
-            modifier_);
+            Directions::V_LEFT);
     }
     break;
 
     case InputActionID::actDown:
     {
         hero.movement().trigger(
-            Directions::V_DOWN,
-            modifier_);
+            Directions::V_DOWN);
     }
     break;
 
     case InputActionID::actRight:
     {
         hero.movement().trigger(
-            Directions::V_RIGHT,
-            modifier_);
+            Directions::V_RIGHT);
+    }
+    break;
+
+    case InputActionID::cursorToggle:
+    {
+        cursor.toggle();
+    }
+    break;
+
+    case InputActionID::moveToTarget:
+    {
+        hero.movement().trigger(Pathfinder::findPath(
+            map,
+            hero.position().tilePosition(),
+            cursor.position().tilePosition()));
     }
     break;
 
@@ -215,8 +263,3 @@ void InputHandler::triggerAction(Hero& hero)
     // Reset
     inputAction_ = InputActionID::none;
 }
-
-//     void InputHandler::simulateInput(int key)
-// {
-//     
-// }

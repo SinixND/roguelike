@@ -12,11 +12,11 @@ void Cursor::toggle()
 
     if (isActive_)
     {
-        ShowCursor();
+        HideCursor();
         return;
     }
 
-    HideCursor();
+    ShowCursor();
 }
 
 void Cursor::update(Camera2D const& camera, Vector2 const& heroPosition)

@@ -9,6 +9,8 @@ enum class InputActionID
     actLeft,
     actDown,
     actRight,
+    cursorToggle,
+    moveToTarget,
     // Modifiers
     mod,
 };

@@ -38,7 +38,7 @@ public:
         resizeHeightBottom(height);
     }
 
-    RectangleEx(Vector2 topLeft, Vector2 bottomRight = {0, 0})
+    RectangleEx(Vector2 const& topLeft, Vector2 const& bottomRight = {0, 0})
         : left_(topLeft.x)
         , top_(topLeft.y)
         , right_(bottomRight.x)
@@ -48,7 +48,7 @@ public:
     {
     }
 
-    RectangleEx(Vector2 center, float width, float height)
+    RectangleEx(Vector2 const& center, float width, float height)
         : left_(center.x - (width / 2))
         , top_(center.y - (height / 2))
         , right_(center.x + (width / 2))
@@ -258,7 +258,7 @@ public:
         resizeHeightBottom(height);
     }
 
-    RectangleExI(Vector2I topLeft, Vector2I bottomRight = {0, 0})
+    RectangleExI(Vector2I const& topLeft, Vector2I const& bottomRight = {0, 0})
         : left_(topLeft.x)
         , top_(topLeft.y)
         , right_(bottomRight.x)
@@ -269,7 +269,7 @@ public:
     }
 
     // Only odd values for width/height
-    RectangleExI(Vector2I center, int width, int height)
+    RectangleExI(Vector2I const& center, int width, int height)
         : left_(center.x - (width / 2))
         , top_(center.y - (height / 2))
         , right_(center.x + (width / 2))
@@ -459,125 +459,17 @@ struct Matrix2x2I
 };
 //=====================================
 
-// Functions
-//=====================================
-// In fullscreen mode we can't use GetScreenWidth/Height, so make a function that gets the right data for each mode
-inline Vector2 GetDisplaySize()
-{
-    if (IsWindowFullscreen())
-    {
-        return Vector2{static_cast<float>(GetMonitorWidth(GetCurrentMonitor())), static_cast<float>(GetMonitorHeight(GetCurrentMonitor()))};
-    }
-    else
-    {
-        return Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
-    }
-}
-
-inline int Vector2Sum(Vector2I const& V)
-{
-    return abs(V.x) + abs(V.y);
-}
-
-inline Vector2 GetMainDirection(Vector2 const& from, Vector2 const& to)
-{
-    Vector2 v{Vector2Subtract(to, from)};
-
-    (abs(v.x) > abs(v.y))
-        ? (v.y = 0)
-        : (v.x = 0);
-
-    return Vector2Normalize(v);
-}
-
-inline Rectangle GetWindowRec()
-{
-    return Rectangle{
-        0,
-        0,
-        static_cast<float>(GetRenderWidth()),
-        static_cast<float>(GetRenderHeight())};
-}
-
-inline Vector2 ConvertToVector2(Vector2I V)
-{
-    return Vector2{
-        static_cast<float>(V.x),
-        static_cast<float>(V.y)};
-}
-
-inline Vector2I ConvertToVector2I(Vector2 V)
-{
-    return Vector2I{
-        static_cast<int>(V.x),
-        static_cast<int>(V.y)};
-}
-
-inline Vector2I GetMin(Vector2I V1, Vector2I V2)
-{
-    return Vector2I{
-        (V1.x < V2.x ? V1.x : V2.x),
-        (V1.y < V2.y ? V1.y : V2.y)};
-}
-
-inline Vector2I GetMax(Vector2I V1, Vector2I V2)
-{
-    return Vector2I{
-        (V1.x > V2.x ? V1.x : V2.x),
-        (V1.y > V2.y ? V1.y : V2.y)};
-}
-
-inline bool IsKeyPressedRepeat(int key, float delay, float tick)
-{
-    static float dtDelay{0};
-    static float dtTick{tick};
-
-    if (IsKeyDown(key))
-    {
-        // Start measuring delay
-        dtDelay += GetFrameTime();
-
-        // If delay exceeded
-        if (dtDelay > delay)
-        {
-            // Avoid huge dtDelay value
-            dtDelay = delay;
-
-            // Start measuring ticks
-            dtTick += GetFrameTime();
-
-            // If tick exceeded (includes initial trigger)
-            if (dtTick > tick)
-            {
-                // Reset tick
-                dtTick -= tick;
-
-                // Confirm exceeded tick
-                return true;
-            }
-        }
-    }
-    else
-    {
-        dtDelay = 0;
-        dtTick = tick;
-    }
-
-    return IsKeyPressed(key);
-};
-//=====================================
-
 // Function Overloads
 //=====================================
 // Add two vectors (v1 + v2)
-RMAPI Vector2I Vector2Add(Vector2I v1, Vector2I v2)
+RMAPI Vector2I Vector2Add(Vector2I const& v1, Vector2I const& v2)
 {
     return Vector2I{
         v1.x + v2.x,
         v1.y + v2.y};
 }
 
-RMAPI Vector2I Vector2AddValue(Vector2I v1, int value)
+RMAPI Vector2I Vector2AddValue(Vector2I const& v1, int value)
 {
     return Vector2I{
         v1.x + value,
@@ -585,14 +477,14 @@ RMAPI Vector2I Vector2AddValue(Vector2I v1, int value)
 }
 
 // Subtract two vectors (v1 - v2)
-RMAPI Vector2I Vector2Subtract(Vector2I v1, Vector2I v2)
+RMAPI Vector2I Vector2Subtract(Vector2I const& v1, Vector2I const& v2)
 {
     return Vector2I{
         v1.x - v2.x,
         v1.y - v2.y};
 }
 
-RMAPI Vector2I Vector2SubtractValue(Vector2I v1, int value)
+RMAPI Vector2I Vector2SubtractValue(Vector2I const& v1, int value)
 {
     return Vector2I{
         v1.x - value,
@@ -600,14 +492,14 @@ RMAPI Vector2I Vector2SubtractValue(Vector2I v1, int value)
 }
 
 // Scale vector (multiply by value)
-RMAPI Vector2 Vector2Scale(Vector2I v, float scale)
+RMAPI Vector2 Vector2Scale(Vector2I const& v, float scale)
 {
     return Vector2{
         v.x * scale,
         v.y * scale};
 }
 
-RMAPI Vector2I Vector2Scale(Vector2I v, int scale)
+RMAPI Vector2I Vector2Scale(Vector2I const& v, int scale)
 {
     return Vector2I{
         v.x * scale,
@@ -615,26 +507,48 @@ RMAPI Vector2I Vector2Scale(Vector2I v, int scale)
 }
 
 // Check whether two given integer vectors are equal
-RMAPI int Vector2Equals(Vector2I v1, Vector2I v2)
+RMAPI int Vector2Equals(Vector2I const& v1, Vector2I const& v2)
 {
     return ((v1.x == v2.x) && (v1.y == v2.y));
 }
 
-RMAPI Vector2I Vector2Transform(Matrix2x2I M, Vector2I V)
+RMAPI Vector2I Vector2Transform(Matrix2x2I const& M, Vector2I const& v)
 {
     return Vector2I{
-        ((M.m11 * V.x) + (M.m12 * V.y)),
-        ((M.m21 * V.x) + (M.m22 * V.y))};
+        ((M.m11 * v.x) + (M.m12 * v.y)),
+        ((M.m21 * v.x) + (M.m22 * v.y))};
 }
 
-RMAPI Vector2 Vector2Transform(Matrix2x2 M, Vector2 V)
+RMAPI Vector2 Vector2Transform(Matrix2x2 const& M, Vector2 const& v)
 {
     return Vector2{
-        ((M.m11 * V.x) + (M.m12 * V.y)),
-        ((M.m21 * V.x) + (M.m22 * V.y))};
+        ((M.m11 * v.x) + (M.m12 * v.y)),
+        ((M.m21 * v.x) + (M.m22 * v.y))};
 }
 
-inline bool CheckCollisionPointRec(Vector2I point, RectangleExI const& rec)
+RMAPI Vector2I Vector2Negate(Vector2I const& v)
+{
+    return Vector2I{-v.x, -v.y};
+}
+
+RMAPI int Vector2Distance(Vector2I const& start, Vector2I const& target)
+{
+    return (abs(target.x - start.x) + abs(target.y - start.y));
+}
+
+RMAPI Vector2I Vector2Normalize(Vector2I const& v)
+{
+    return Vector2I{
+        ((v.x) ? v.x / abs(v.x) : v.x),
+        ((v.y) ? v.y / abs(v.y) : v.y)};
+}
+
+RMAPI int Vector2Length(Vector2I const& v)
+{
+    return (abs(v.x) + abs(v.y));
+}
+
+inline bool CheckCollisionPointRec(Vector2I const& point, RectangleExI const& rec)
 {
     return (
         (point.x >= rec.left())
@@ -643,7 +557,7 @@ inline bool CheckCollisionPointRec(Vector2I point, RectangleExI const& rec)
         && (point.y <= rec.bottom()));
 }
 
-inline bool CheckCollisionPointRec(Vector2 point, RectangleEx rec)
+inline bool CheckCollisionPointRec(Vector2 const& point, RectangleEx rec)
 {
     return CheckCollisionPointRec(point, rec.rectangle());
 }
@@ -701,6 +615,125 @@ inline bool CheckCollisionLineRec(Vector2 const& s1, Vector2 const& s2, Rectangl
 }
 //=====================================
 
+// Functions
+//=====================================
+// In fullscreen mode we can't use GetScreenWidth/Height, so make a function that gets the right data for each mode
+inline Vector2 GetDisplaySize()
+{
+    if (IsWindowFullscreen())
+    {
+        return Vector2{static_cast<float>(GetMonitorWidth(GetCurrentMonitor())), static_cast<float>(GetMonitorHeight(GetCurrentMonitor()))};
+    }
+    else
+    {
+        return Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
+    }
+}
+
+inline int Vector2Sum(Vector2I const& v)
+{
+    return abs(v.x) + abs(v.y);
+}
+
+inline Vector2 GetMainDirection(Vector2 const& from, Vector2 const& to)
+{
+    Vector2 v{Vector2Subtract(to, from)};
+
+    (abs(v.x) > abs(v.y))
+        ? (v.y = 0)
+        : (v.x = 0);
+
+    return Vector2Normalize(v);
+}
+
+inline Vector2I GetMainDirection(Vector2I const& from, Vector2I const& to)
+{
+    Vector2I v{Vector2Subtract(to, from)};
+
+    (abs(v.x) > abs(v.y))
+        ? (v.y = 0)
+        : (v.x = 0);
+
+    return Vector2Normalize(v);
+}
+
+inline Rectangle GetWindowRec()
+{
+    return Rectangle{
+        0,
+        0,
+        static_cast<float>(GetRenderWidth()),
+        static_cast<float>(GetRenderHeight())};
+}
+
+inline Vector2 ConvertToVector2(Vector2I const& v)
+{
+    return Vector2{
+        static_cast<float>(v.x),
+        static_cast<float>(v.y)};
+}
+
+inline Vector2I ConvertToVector2I(Vector2 v)
+{
+    return Vector2I{
+        static_cast<int>(v.x),
+        static_cast<int>(v.y)};
+}
+
+inline Vector2I GetMin(Vector2I const& v1, Vector2I const& v2)
+{
+    return Vector2I{
+        (v1.x < v2.x ? v1.x : v2.x),
+        (v1.y < v2.y ? v1.y : v2.y)};
+}
+
+inline Vector2I GetMax(Vector2I const& v1, Vector2I const& v2)
+{
+    return Vector2I{
+        (v1.x > v2.x ? v1.x : v2.x),
+        (v1.y > v2.y ? v1.y : v2.y)};
+}
+
+inline bool IsKeyPressedRepeat(int key, float delay, float tick)
+{
+    static float dtDelay{0};
+    static float dtTick{tick};
+
+    if (IsKeyDown(key))
+    {
+        // Start measuring delay
+        dtDelay += GetFrameTime();
+
+        // If delay exceeded
+        if (dtDelay > delay)
+        {
+            // Avoid huge dtDelay value
+            dtDelay = delay;
+
+            // Start measuring ticks
+            dtTick += GetFrameTime();
+
+            // If tick exceeded (includes initial trigger)
+            if (dtTick > tick)
+            {
+                // Reset tick
+                dtTick -= tick;
+
+                // Confirm exceeded tick
+                return true;
+            }
+        }
+    }
+    else
+    {
+        dtDelay = 0;
+        dtTick = tick;
+    }
+
+    return IsKeyPressed(key);
+};
+//=====================================
+
 // Operator Overloads
 //=====================================
 inline Vector2& operator+=(Vector2& lhs, Vector2 const& rhs)
@@ -717,7 +750,7 @@ inline Vector2& operator-=(Vector2& lhs, Vector2 const& rhs)
     return lhs;
 }
 
-inline bool operator==(Vector2 lhs, Vector2 rhs)
+inline bool operator==(Vector2 const& lhs, Vector2 const& rhs)
 {
     return Vector2Equals(lhs, rhs);
 }
@@ -751,44 +784,46 @@ int constexpr PRIME{2946901};
 template <>
 struct std::hash<Vector2>
 {
-    size_t operator()(Vector2 V) const noexcept
+    size_t operator()(Vector2 const& v) const noexcept
     {
-        // size_t h1 = std::hash<float>()(V.x);
-        // size_t h2 = std::hash<float>()(V.y);
+        // size_t h1 = std::hash<float>()(v.x);
+        // size_t h2 = std::hash<float>()(v.y);
         // return (h1 ^ (h2 << 1));
-        return (PRIME + std::hash<float>()(V.x)) * PRIME + std::hash<float>()(V.y);
+        return (PRIME + std::hash<float>()(v.x)) * PRIME + std::hash<float>()(v.y);
     }
 };
 
 template <>
 struct std::hash<Vector2I>
 {
-    size_t operator()(Vector2I V) const noexcept
+    size_t operator()(Vector2I const& v) const noexcept
     {
-        // size_t h1 = std::hash<int>()(V.x);
-        // size_t h2 = std::hash<int>()(V.y);
+        // size_t h1 = std::hash<int>()(v.x);
+        // size_t h2 = std::hash<int>()(v.y);
         // return (h1 ^ (h2 << 1));
-        return (PRIME + std::hash<int>()(V.x)) * PRIME + std::hash<int>()(V.y);
+        return (PRIME + std::hash<int>()(v.x)) * PRIME + std::hash<int>()(v.y);
     }
 };
 
 // ostream
-inline std::ostream& operator<<(std::ostream& os, Vector2 const& v) { 
-    return os 
-        << "(" 
-        << v.x 
-        << ", " 
-        << v.y 
-        << ")";
+inline std::ostream& operator<<(std::ostream& os, Vector2 const& v)
+{
+    return os
+           << "("
+           << v.x
+           << ", "
+           << v.y
+           << ")";
 }
 
-inline std::ostream& operator<<(std::ostream& os, Vector2I const& v) { 
-    return os 
-        << "(" 
-        << v.x 
-        << ", " 
-        << v.y 
-        << ")";
+inline std::ostream& operator<<(std::ostream& os, Vector2I const& v)
+{
+    return os
+           << "("
+           << v.x
+           << ", "
+           << v.y
+           << ")";
 }
 //=====================================
 #endif

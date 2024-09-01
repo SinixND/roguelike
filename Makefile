@@ -39,6 +39,9 @@ debug: CFLAGS			+= -DDEBUG
 ifndef TERMUX_VERSION
 debug: CXX_FLAGS 		+= -pg
 endif
+ifdef TERMUX_VERSION
+CFLAGS					+= -DTERMUX
+endif
 
 release: CXX_FLAGS 		+= -O2
 release: CFLAGS			+= -DNDEBUG
@@ -241,6 +244,8 @@ run_release: release
 
 ### Rule for web build process
 web:
+	$(info )
+	$(info === Compile web ===)
 	emcc -o web/$(BINARY).html $(SRCS) $(CXX_FLAGS) $(WEB_LIB_FLAGS) $(WEB_LD_FLAGS) $(LOC_INC_FLAGS) $(WEB_SYS_INC_FLAGS) $(CFLAGS)
 
 

@@ -5,7 +5,8 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-    - [ ] Pathfind movement by clicking or tapding
+    - [ ] Pathfind movement by clicking or taping
+        - [ ] Keep list(s) of lowest weight tiles to check (currently set contains only one entry per weight, but if key is position, cant sort by weight)
     - [ ] Improve rendering 
       - [x] reduce render calls by chunking map
       - [ ] improve visibility rendering (take care of artifacts (slight offset): render shadow as texture like map tiles)
@@ -13,20 +14,19 @@
 
 
 ## Shortterm
-    - [ ] Changeable key bindings
 
 
 ## Longterm
+    - [ ] Map change
+    - [ ] Add enemy
+    - World holds list of Units
+    - [ ] Changeable key bindings
     - [ ] Add rogue theme (ASCII)
     - Floor : '.'
     - Wall  : '#'
     - Hero  : '@'
     - Stairs: '%'
-    - [ ] Map change
-    - [ ] Add enemy
-    - World holds list of Units
     - [ ] (Hold) KEY to show map overview
-    - [ ] Add touch support
     - [ ] Save/Load for Account > Character > CurrentRun
     - [ ] Account settings via lua
     - [ ] Implement zoom?
