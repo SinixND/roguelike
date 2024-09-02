@@ -5,6 +5,7 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
+    - [ ] Add viewport size to gameCamera to spare one argument to functions that need "isInMapPanel" validation
     - [ ] Pathfind movement by clicking or taping
         - [ ] Keep list(s) of lowest weight tiles to check (currently set contains only one entry per weight, but if key is position, cant sort by weight)
     - [ ] Improve rendering 
