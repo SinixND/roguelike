@@ -6,6 +6,7 @@
 #include "InputActionID.h"
 #include "Pathfinder.h"
 #include "Tiles.h"
+#include "raylibEx.h"
 #include <raylib.h>
 #include <utility>
 
@@ -204,7 +205,12 @@ void InputHandler::takeInput(bool isCursorActive)
     takeInputGesture();
 }
 
-void InputHandler::triggerAction(Hero& hero, Cursor& cursor, Tiles& map)
+void InputHandler::triggerAction(
+    Hero& hero,
+    Cursor& cursor,
+    Tiles& map,
+    RectangleEx const& mapPanel,
+    Camera2D const& camera)
 {
     if (inputAction_ == InputActionID::none)
     {
@@ -252,7 +258,9 @@ void InputHandler::triggerAction(Hero& hero, Cursor& cursor, Tiles& map)
         hero.movement().trigger(Pathfinder::findPath(
             map,
             hero.position().tilePosition(),
-            cursor.position().tilePosition()));
+            cursor.position().tilePosition(),
+            mapPanel,
+            camera));
     }
     break;
 

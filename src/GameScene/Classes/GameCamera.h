@@ -11,7 +11,7 @@ class GameCamera
 public:
     void init(Vector2 const& offset);
 
-    Camera2D const& get() const { return camera_; }
+    Camera2D const& camera() const { return camera_; }
 
     // Screen offset to draw target at
     void setOffset(Vector2 const& offset);

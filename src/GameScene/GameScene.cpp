@@ -149,7 +149,7 @@ void GameScene::processInput()
 
 void GameScene::updateState()
 {
-    cursor_.update(gameCamera_.get(), hero_.position().worldPosition());
+    cursor_.update(gameCamera_.camera(), hero_.position().worldPosition());
 
     // Regenerate energy if no action in progress
     if (!actionInProgress_)
@@ -166,7 +166,9 @@ void GameScene::updateState()
     inputHandler_.triggerAction(
         hero_,
         cursor_,
-        world_.currentMap());
+        world_.currentMap(),
+        panels_.map(),
+        gameCamera_.camera());
 
     // Check collision before starting movement
     if (hero_.movement().isTriggered())
@@ -185,14 +187,14 @@ void GameScene::updateState()
     hero_.movement().update(hero_.position(), hero_.energy());
 
 #ifdef DEBUG
-    snx::debug::cam() = gameCamera_.get();
+    snx::debug::cam() = gameCamera_.camera();
 #endif
 }
 
 void GameScene::renderOutput()
 {
     // Draw map panel content
-    BeginMode2D(gameCamera_.get());
+    BeginMode2D(gameCamera_.camera());
     BeginScissorMode(
         panels_.map().left(),
         panels_.map().top(),
@@ -210,9 +212,9 @@ void GameScene::renderOutput()
     Tiles& currentMap{world_.currentMap()};
     auto panelBottomRight{panels_.map().bottomRight()};
 
-    for (int x{UnitConversion::screenToTile(panels_.map().topLeft(), gameCamera_.get()).x}; x <= UnitConversion::screenToTile(panelBottomRight, gameCamera_.get()).x; ++x)
+    for (int x{UnitConversion::screenToTile(panels_.map().topLeft(), gameCamera_.camera()).x}; x <= UnitConversion::screenToTile(panelBottomRight, gameCamera_.camera()).x; ++x)
     {
-        for (int y{UnitConversion::screenToTile(panels_.map().topLeft(), gameCamera_.get()).y}; y <= UnitConversion::screenToTile(panelBottomRight, gameCamera_.get()).y; ++y)
+        for (int y{UnitConversion::screenToTile(panels_.map().topLeft(), gameCamera_.camera()).y}; y <= UnitConversion::screenToTile(panelBottomRight, gameCamera_.camera()).y; ++y)
         {
             Vector2I tilePosition{x, y};
             switch (currentMap.visibilityID(tilePosition))
@@ -243,25 +245,25 @@ void GameScene::renderOutput()
             case VisibilityID::seen:
                 if (DeveloperMode::isActive())
                 {
-                DrawRectangleV(
-                    Vector2SubtractValue(
-                        currentMap.position(tilePosition).worldPosition(),
-                        TileData::TILE_SIZE_HALF),
-                    TileData::TILE_DIMENSIONS,
-                    ColorAlpha(
-                        BLUE,
-                        0.5));
+                    DrawRectangleV(
+                        Vector2SubtractValue(
+                            currentMap.position(tilePosition).worldPosition(),
+                            TileData::TILE_SIZE_HALF),
+                        TileData::TILE_DIMENSIONS,
+                        ColorAlpha(
+                            BLUE,
+                            0.5));
                 }
                 else
                 {
-                DrawRectangleV(
-                    Vector2SubtractValue(
-                        currentMap.position(tilePosition).worldPosition(),
-                        TileData::TILE_SIZE_HALF),
-                    TileData::TILE_DIMENSIONS,
-                    ColorAlpha(
-                        BLACK,
-                        0.5));
+                    DrawRectangleV(
+                        Vector2SubtractValue(
+                            currentMap.position(tilePosition).worldPosition(),
+                            TileData::TILE_SIZE_HALF),
+                        TileData::TILE_DIMENSIONS,
+                        ColorAlpha(
+                            BLACK,
+                            0.5));
                 }
                 break;
 

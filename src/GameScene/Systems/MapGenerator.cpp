@@ -300,6 +300,39 @@ namespace MapGenerator
 
         addTile(
             testRoom,
+            "Wall",
+            Vector2I{
+                5,
+                6},
+            RenderID::wall,
+            VisibilityID::invisible,
+            true,
+            true);
+
+        addTile(
+            testRoom,
+            "Wall",
+            Vector2I{
+                6,
+                5},
+            RenderID::wall,
+            VisibilityID::invisible,
+            true,
+            true);
+
+        addTile(
+            testRoom,
+            "Wall",
+            Vector2I{
+                5,
+                5},
+            RenderID::wall,
+            VisibilityID::invisible,
+            true,
+            true);
+
+        addTile(
+            testRoom,
             "Floor",
             Vector2I{
                 -6,

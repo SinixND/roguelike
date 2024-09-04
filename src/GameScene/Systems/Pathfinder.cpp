@@ -1,90 +1,42 @@
 #include "Pathfinder.h"
 
-#include "Debugger.h"
 #include "Directions.h"
+#include "RatedTile.h"
 #include "Tiles.h"
+#include "UnitConversion.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
+#include <forward_list>
+#include <map>
 #include <raylib.h>
 #include <raymath.h>
-#include <map>
 #include <unordered_set>
 #include <vector>
 
-class WeightedTile
-{
-    Vector2I tilePosition_{};
-    int absoluteDistanceToTarget_{};
-    int stepsNeeded_{};
-    WeightedTile* ancestor_{};
-
-public:
-    WeightedTile(
-        Vector2I const& tilePosition,
-        Vector2I const& target,
-        int stepsNeeded,
-        WeightedTile* ancestor)
-        : tilePosition_(tilePosition)
-        , absoluteDistanceToTarget_(Vector2Distance(tilePosition, target))
-        , stepsNeeded_(stepsNeeded)
-        , ancestor_(ancestor)
-    {
-    }
-
-    Vector2I const& tilePosition() const { return tilePosition_; }
-
-    int stepsNeeded() const { return stepsNeeded_; }
-
-    WeightedTile* ancestor() const { return ancestor_; }
-
-    int weight() const { return (2 * absoluteDistanceToTarget_) + stepsNeeded_; }
-
-    void reconstructPath(std::vector<Vector2I>& path) 
-    { 
-        // Add this to path
-        path.push_back(tilePosition_);
-
-        // Abort at root/start
-        if (!ancestor_)
-        {
-            return;
-        }
-
-        // Add ancestor to path
-        ancestor_->reconstructPath(path);
-    }
-};
-
-// Adds three new neighbours of all tiles in current best weight to weighting list, then deleting current weight in map and restarting with new best weight, until target is found or no weight  left to check
-bool checkWeightingList(
-    int weight,
-    std::vector<WeightedTile>& weightedTiles,
-    std::map<int, std::vector<WeightedTile*>>& weightingList,
+// Adds three new neighbours for all tiles of current best rating to the rating list,
+// then deleting current rating in map
+// and restarting with new best rating,
+// until target is found or no rating left to check
+bool checkRatingList(
+    int rating,
+    std::forward_list<RatedTile>& ratedTiles,
+    std::map<int, std::vector<RatedTile*>>& ratingList,
     std::unordered_set<Vector2I>& tilesToIgnore,
     Tiles& map,
     Vector2I const& target,
+    RectangleEx const& mapPanel,
+    Camera2D const& camera,
     std::vector<Vector2I>& path)
 {
-    // Check all tiles in vector for current best weight before choosing new best weight
-    for (WeightedTile* currentTile : weightingList[weight])
+    // Check all tiles in vector for current best rating before choosing new best rating
+    for (auto currentTile : ratingList[rating])
     {
-#ifdef DEBUG
-    BeginDrawing();
-    BeginMode2D(snx::debug::cam());
-
-    DrawCircleV(UnitConversion::tileToWorld(currentTile->tilePosition()), 2, RED);
-
-    EndMode2D();
-    EndDrawing();
-#endif
-
         // Test all four directions for currentTile
         for (Vector2I const& direction : {
-                Directions::V_UP,
-                Directions::V_LEFT,
-                Directions::V_DOWN,
-                Directions::V_RIGHT
-             })
+                 Directions::V_RIGHT,
+                 Directions::V_DOWN,
+                 Directions::V_LEFT,
+                 Directions::V_UP})
         {
             // Calculate new tilePosition
             Vector2I newTilePosition{
@@ -92,34 +44,34 @@ bool checkWeightingList(
                     direction,
                     currentTile->tilePosition())};
 
+            // Needs to be in map panel
+            if (!CheckCollisionPointRec(UnitConversion::tileToScreen(newTilePosition, camera), mapPanel))
+            {
+                continue;
+            }
+
             // Ignore ancestor
             if (
-                currentTile->ancestor() 
+                currentTile->ancestor()
                 && Vector2Equals(
-                    newTilePosition, 
+                    newTilePosition,
                     currentTile->ancestor()->tilePosition()))
             {
                 continue;
             }
 
-        // Vector2I const& tilePosition,
-        // Vector2I const& target,
-        // int stepsNeeded,
-        // WeightedTile* ancestor)
-            WeightedTile newWeightedTile{
+            RatedTile newRatedTile{
                 newTilePosition,
                 target,
-                currentTile->stepsNeeded() + 1,
                 currentTile};
 
             // If Target found
             if (
                 Vector2Equals(
-                    newTilePosition, 
-                    target)
-            )
+                    newTilePosition,
+                    target))
             {
-                newWeightedTile.reconstructPath(path);
+                newRatedTile.reconstructPath(path);
 
                 return true;
             }
@@ -139,37 +91,41 @@ bool checkWeightingList(
                 || map.isSolid(newTilePosition)
                 || !map.positions().contains(newTilePosition))
             {
-                // Add to ignore set so it doesn't get checked again
+                // Invalid! Add to ignore set so it doesn't get checked again
                 tilesToIgnore.insert(newTilePosition);
 
                 continue;
             }
 
-            // Create new weightedTile in vector
-            weightedTiles.push_back(newWeightedTile);
+            // Create new ratedTile in vector
+            ratedTiles.push_front(newRatedTile);
 
-            // Add newWeightedTile
-            weightingList[newWeightedTile.weight()].push_back(&weightedTiles.back());
+            // Add newRatedTile
+            ratingList[newRatedTile.rating()].push_back(&ratedTiles.front());
+
+            // Valid! Add to ignore set so it doesn't get checked again
+            tilesToIgnore.insert(newTilePosition);
         }
-
-        // Current tile has been checked
-        tilesToIgnore.insert(currentTile->tilePosition());
     }
 
-    // All tiles with same weight have been checked -> remove key
-    weightingList.erase(weight);
+    // All tiles with same rating have been checked -> remove key
+    ratingList.erase(rating);
 
-    // Check new best weighted tiles
-    if (!weightingList.empty())
-    {
-        checkWeightingList(
-            weightingList.begin()->first,
-            weightedTiles,
-            weightingList,
+    // Check new best rated tiles
+    if (
+        !ratingList.empty()
+        && checkRatingList(
+            ratingList.begin()->first,
+            ratedTiles,
+            ratingList,
             tilesToIgnore,
             map,
             target,
-            path);
+            mapPanel,
+            camera,
+            path))
+    {
+        return true;
     }
 
     return false;
@@ -178,7 +134,9 @@ bool checkWeightingList(
 std::vector<Vector2I> Pathfinder::findPath(
     Tiles& map,
     Vector2I const& start,
-    Vector2I const& target)
+    Vector2I const& target,
+    RectangleEx const& mapPanel,
+    Camera2D const& camera)
 {
     std::vector<Vector2I> path{};
 
@@ -197,30 +155,31 @@ std::vector<Vector2I> Pathfinder::findPath(
     }
 
     // Create tile to start
-    WeightedTile firstTile{
+    RatedTile firstTile{
         start,
         target,
-        0,
         nullptr};
 
-    // Vector of weighted tiles (persistent for ancestor pointers)
-    std::vector<WeightedTile> weightedTiles{firstTile};
+    // Vector of rated tiles (persistent for ancestor pointers)
+    std::forward_list<RatedTile> ratedTiles{firstTile};
 
-    // Map of tile pointers, sorted by weight (lowest first)
-    std::map<int, std::vector<WeightedTile*>> weightingList{};
+    // Map of tile pointers, sorted by rating (lowest first)
+    std::map<int, std::vector<RatedTile*>> ratingList{};
 
-    weightingList[firstTile.weight()].push_back(&weightedTiles.back());
+    ratingList[firstTile.rating()].push_back(&ratedTiles.front());
 
     // List of ignored tiles to avoid double checks
     std::unordered_set<Vector2I> tilesToIgnore{};
 
-    checkWeightingList(
-        firstTile.weight(),
-        weightedTiles,
-        weightingList,
+    checkRatingList(
+        firstTile.rating(),
+        ratedTiles,
+        ratingList,
         tilesToIgnore,
         map,
         target,
+        mapPanel,
+        camera,
         path);
 
     // Path is either empty or has at least 2 entries (target and start)

@@ -5,6 +5,8 @@
 #include "Hero.h"
 #include "InputActionID.h"
 #include "Tiles.h"
+#include "raylibEx.h"
+#include <raylib.h>
 #include <unordered_map>
 
 class InputHandler
@@ -33,7 +35,12 @@ class InputHandler
 public:
     void setDefaultInputMappings();
     void takeInput(bool isCursorActive);
-    void triggerAction(Hero& hero, Cursor& cursor, Tiles& map);
+    void triggerAction(
+        Hero& hero,
+        Cursor& cursor,
+        Tiles& map,
+        RectangleEx const& mapPanel,
+        Camera2D const& camera);
 };
 
 #endif
