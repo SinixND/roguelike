@@ -3,19 +3,20 @@
 #include "Chunk.h"
 #include "ChunksToRender.h"
 #include "Colors.h"
+#include "Constants/TileData.h"
 #include "Cursor.h"
 #include "Debugger.h"
 #include "DeveloperMode.h"
+#include "Enums/RenderID.h"
 #include "Event.h"
+#include "Fog.h"
 #include "GameCamera.h"
 #include "Panels.h"
 #include "PublisherStatic.h"
 #include "Renderer.h"
-#include "TileData.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
 #include "Visibility.h"
-#include "VisibilityID.h"
 #include "raylibEx.h"
 #include <raygui.h>
 #include <raylib.h>
@@ -80,7 +81,7 @@ void GameScene::initialize()
             // Visibility
             visibility_.update(
                 world_.currentMap(),
-                panels_.map(),
+                gameCamera_.viewportOnScreen(),
                 hero_.position().tilePosition());
         },
         true);
@@ -148,7 +149,9 @@ void GameScene::processInput()
 
 void GameScene::updateState()
 {
-    cursor_.update(gameCamera_.camera(), hero_.position().worldPosition());
+    cursor_.update(
+        gameCamera_.camera(),
+        hero_.position().worldPosition());
 
     // Regenerate energy if no action in progress
     if (!actionInProgress_)
@@ -182,7 +185,9 @@ void GameScene::updateState()
     }
 
     // Update hero movment
-    hero_.movement().update(hero_.position(), hero_.energy());
+    hero_.movement().update(
+        hero_.position(),
+        hero_.energy());
 
 #ifdef DEBUG
     snx::debug::cam() = gameCamera_.camera();
@@ -194,10 +199,10 @@ void GameScene::renderOutput()
     // Draw map panel content
     BeginMode2D(gameCamera_.camera());
     BeginScissorMode(
-        panels_.map().left(),
-        panels_.map().top(),
-        panels_.map().width(),
-        panels_.map().height());
+        gameCamera_.viewportOnScreen().left(),
+        gameCamera_.viewportOnScreen().top(),
+        gameCamera_.viewportOnScreen().width(),
+        gameCamera_.viewportOnScreen().height());
 
     // World
     // Draw map
@@ -207,12 +212,52 @@ void GameScene::renderOutput()
     }
 
     // Visibility
-    Tiles& currentMap{world_.currentMap()};
-    auto panelBottomRight{panels_.map().bottomRight()};
-
-    for (int x{UnitConversion::screenToTile(panels_.map().topLeft(), gameCamera_.camera()).x}; x <= UnitConversion::screenToTile(panelBottomRight, gameCamera_.camera()).x; ++x)
+    for (Fog const& fog : visibility_.fogsToRender())
     {
-        for (int y{UnitConversion::screenToTile(panels_.map().topLeft(), gameCamera_.camera()).y}; y <= UnitConversion::screenToTile(panelBottomRight, gameCamera_.camera()).y; ++y)
+        Color tint{};
+
+#ifdef DEBUG
+        if (fog.isFogOpaque())
+        {
+            tint = ColorAlpha(RED, 0.5f);
+        }
+        else
+        {
+            tint = ColorAlpha(BLUE, 0.5f);
+        }
+
+        DrawRectangleV(
+            Vector2SubtractValue(
+                UnitConversion::tileToWorld(fog.tilePosition()),
+                TileData::TILE_SIZE_HALF),
+            TileData::TILE_DIMENSIONS,
+            tint);
+#else
+        if (fog.isFogOpaque())
+        {
+            tint = BLACK;
+        }
+        else
+        {
+            tint = ColorAlpha(BLACK, 0.5f);
+        }
+
+        DrawRectangleV(
+            Vector2SubtractValue(
+                UnitConversion::tileToWorld(fog.tilePosition()),
+                TileData::TILE_SIZE_HALF),
+            TileData::TILE_DIMENSIONS,
+            tint);
+#endif
+    }
+
+    /*
+    Tiles& currentMap{world_.currentMap()};
+    Vector2I viewportBottomRight{camera_.viewportInTiles().bottomRight()};
+
+    for (int x{gameCamera_.viewportInTiles().topLeft().x}; x <= viewportBottomRight.x; ++x)
+    {
+        for (int y{gameCamera_.viewportOnScreen()->topLeft().y}; y <= viewportBottomRight.y; ++y)
         {
             Vector2I tilePosition{x, y};
             switch (currentMap.visibilityID(tilePosition))
@@ -271,6 +316,7 @@ void GameScene::renderOutput()
             }
         }
     }
+    */
 
     // Units
     // Draw hero
@@ -327,4 +373,3 @@ void GameScene::deinitialize()
 {
     renderer_.deinit();
 }
-

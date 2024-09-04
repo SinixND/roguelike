@@ -5,6 +5,7 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
+- [ ] Split Visibiltiy.cpp into smaller, more concise functions
 - [ ] Improve rendering 
   - [x] reduce render calls by chunking map
   - [ ] improve visibility rendering (take care of artifacts (slight offset): render shadow as texture like map tiles)

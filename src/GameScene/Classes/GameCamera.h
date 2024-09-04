@@ -1,6 +1,7 @@
 #ifndef IG20240531171525
 #define IG20240531171525
 
+#include "UnitConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -14,7 +15,17 @@ public:
     void init(RectangleEx const& viewport);
 
     Camera2D const& camera() const { return camera_; }
-    RectangleEx const* viewport() const { return viewport_; }
+    RectangleEx const& viewportOnScreen() const { return *viewport_; }
+    RectangleExI const viewportInTiles() const
+    {
+        return RectangleExI{
+            UnitConversion::screenToTile(
+                viewport_->topLeft(),
+                camera_),
+            UnitConversion::screenToTile(
+                viewport_->bottomRight(),
+                camera_)};
+    }
 
     // Screen offset to draw target at
     void setOffset(Vector2 const& offset);

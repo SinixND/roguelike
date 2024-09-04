@@ -48,9 +48,9 @@ bool checkRatingList(
             if (
                 !CheckCollisionPointRec(
                     UnitConversion::tileToScreen(
-                        newTilePosition, 
-                        gameCamera.camera()), 
-                    *gameCamera.viewport()))
+                        newTilePosition,
+                        gameCamera.camera()),
+                    gameCamera.viewportOnScreen()))
             {
                 continue;
             }

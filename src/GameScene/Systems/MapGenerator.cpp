@@ -23,7 +23,7 @@ namespace MapGenerator
         bool isSolid,
         bool isOpaque)
     {
-        tiles.insert(tilePosition, renderID, tag, visibilityID, isSolid, isOpaque);
+        tiles.set(tilePosition, renderID, tag, visibilityID, isSolid, isOpaque);
     }
 
     void addTiles(

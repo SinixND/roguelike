@@ -1,82 +1,19 @@
 #include "Visibility.h"
 
 #include "Debugger.h"
+#include "Fog.h"
+#include "Shadow.h"
 #include "TileData.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
-#include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <cstdlib>
 #include <raylib.h>
 #include <raymath.h>
-#include <string>
 #include <vector>
-
-// Visibility::Shadow
-
-Visibility::Shadow::Shadow(Vector2I const& octantPosition)
-{
-    setSlopeLeft(octantPosition);
-    setSlopeRight(octantPosition);
-}
-
-void Visibility::Shadow::setSlopeLeft(Vector2I const& octantPosition)
-{
-    slopeLeft_ = (octantPosition.y + 0.5f) / (octantPosition.x - 0.5f);
-}
-
-void Visibility::Shadow::setSlopeLeft(float slopeLeft)
-{
-    slopeLeft_ = slopeLeft;
-}
-
-void Visibility::Shadow::setSlopeRight(Vector2I const& octantPosition)
-{
-    // slopeRight_ = (octantPosition.y - 0.5f) / (octantPosition.x + 0.5f);
-    slopeRight_ = std::max(EPSILON, (octantPosition.y - 0.5f) / (octantPosition.x + 0.5f));
-}
-
-void Visibility::Shadow::setSlopeRight(float slopeRight)
-{
-    slopeRight_ = slopeRight;
-}
-
-float Visibility::Shadow::getLeftAtTop(Vector2I const& octantPosition)
-{
-    return (octantPosition.y + 0.5f) / slopeLeft_;
-}
-
-float Visibility::Shadow::getLeftAtBottom(Vector2I const& octantPosition)
-{
-    return (octantPosition.y - 0.5f) / slopeLeft_;
-}
-
-float Visibility::Shadow::getLeft(int octantPositionHeight)
-{
-    // NOTE: x = y / m
-    return (octantPositionHeight) / slopeLeft_;
-}
-
-float Visibility::Shadow::getRightAtTop(Vector2I const& octantPosition)
-{
-    return (octantPosition.y + 0.5f) / slopeRight_;
-}
-
-float Visibility::Shadow::getRightAtBottom(Vector2I const& octantPosition)
-{
-    return (octantPosition.y - 0.5f) / slopeRight_;
-}
-
-float Visibility::Shadow::getRight(int octantPositionHeight)
-{
-    // NOTE: x = y / m
-    return (octantPositionHeight) / slopeRight_;
-}
-
-// Visibility
 
 void Visibility::addShadow(
     std::vector<Shadow>& shadowline,
@@ -292,10 +229,24 @@ void Visibility::calculateVisibilitiesInOctant(
                         map.setVisibilityID(
                             tilePosition,
                             VisibilityID::seen);
+
+                        // Add non opaque fog
+                        fogsToRender_[tilePosition] = Fog{tilePosition, false};
+                    }
+                    else if (tileVisiblityOld == VisibilityID::seen)
+                    {
+                        // Add non opaque fog
+                        fogsToRender_[tilePosition] = Fog{tilePosition, false};
+                    }
+                    else
+                    {
+                        // Add opaque fog
+                        fogsToRender_[tilePosition] = Fog{tilePosition, true};
                     }
 
                     continue;
-                }
+                } // Max shadow
+
                 // isTileVisible(); //-> bool isVisible
                 // Check visibility by intersection with shadow line elements
                 bool isVisible{true};
@@ -309,7 +260,6 @@ void Visibility::calculateVisibilitiesInOctant(
                         || (shadow.getRightAtBottom(octantPosition)) < (octX + 0.5f))
                     {
                         // top-left/bottom-right corner not in shadow -> visible (variable unchanged)
-
 #ifdef DEBUG
                         snx::debug::cliLog(
                             "Tile is (partly) visible",
@@ -325,7 +275,7 @@ void Visibility::calculateVisibilitiesInOctant(
                         "\n");
 #endif
                     break;
-                }
+                } // Shadowline
 
                 // Update visibility
                 // updateVisibility();
@@ -342,167 +292,50 @@ void Visibility::calculateVisibilitiesInOctant(
                     map.setVisibilityID(
                         tilePosition,
                         VisibilityID::seen);
+
+                    // Add non opaque fog
+                    fogsToRender_[tilePosition] = Fog{tilePosition, false};
                 }
-            }
+                else if (tileVisiblityOld == VisibilityID::seen)
+                {
+                    // Add non opaque fog
+                    fogsToRender_[tilePosition] = Fog{tilePosition, false};
+                }
+                else
+                {
+                    // Add opaque fog
+                    fogsToRender_[tilePosition] = Fog{tilePosition, true};
+                }
+            } // Octant tiles only
 
             // Update shadow line
             // updateShadowline(map, tilePosition);
-            if (map.isOpaque(tilePosition))
+            if (!map.isOpaque(tilePosition))
             {
+                continue;
+            }
 #ifdef DEBUG
-                snx::debug::cliLog(
-                    "Tile is opaque, add shadow...",
-                    "\n");
+            snx::debug::cliLog(
+                "Tile is opaque, add shadow...",
+                "\n");
 #endif
-                addShadow(shadowline, octantPosition);
-            }
-        }
-    }
+            addShadow(shadowline, octantPosition);
+        } // Octant column
+    } // Octant row
 }
-
-/*
-void Visibility::calculateVisibilitiesInDiagonal(
-        int quadXMin,
-        int quadXMax,
-        int quadYMin,
-        int quadYMax,
-        std::vector<Shadow>& shadowline,
-        Tiles& map,
-        int quarter,
-        Vector2I const& heroPosition)
-{
-    for (int quadX = quadXMin, quadY = quadYMax; quadY >= quadYMin && quadX <= quadXMax; ++quadX, --quadY)
-    {
-        Vector2I quarterPosition{quadX, quadY};
-
-        Vector2I tilePosition{
-            UnitConversion::quarterToTile(
-                    quarterPosition,
-                    quarter,
-                    heroPosition)};
-
-        VisibilityID tileVisiblityOld{map.visibilityID(tilePosition)};
-
-        // Skip test (-> set invis) if shadowline already covers whole quarter
-        // isShadowMax();
-        if (
-                shadowline.size()
-                && shadowline[0].slopeLeft() < 0
-                && shadowline[0].slopeRight() < 0
-           )
-        {
-            if (tileVisiblityOld == VisibilityID::visible)
-            {
-                // Tile WAS visible
-                map.setVisibilityID(
-                        tilePosition,
-                        VisibilityID::seen);
-            }
-
-            continue;
-        }
-
-        // Update only quarter tiles. First row (y = 0) needed for correct visibility
-        if (!quadY)
-        {
-            // isTileVisible(); //-> bool isVisible
-            //
-            // Check visibility by intersection with shadow line elements
-            bool isVisible{true};
-
-            for (Shadow& shadow : shadowline)
-            {
-                // If top-left tile corner is left (<) from slopeLeft (at same height = tileTop)
-                // OR
-                // If slopeRight is left (<) from bottom-right tile corner (at same height = tileBottom)
-                if ((quadX - 0.5f) < (shadow.getLeftAtTop(quarterPosition))
-                        || (shadow.getRightAtBottom(quarterPosition)) < (quadX + 0.5f))
-                {
-                    // top-left/bottom-right corner not in shadow -> visible (variable unchanged)
-                    continue;
-                }
-
-                isVisible = false;
-                break;
-            }
-
-            // Update visibility
-            // updateVisibility();
-            if (isVisible)
-            {
-                // Tile IS visible
-                map.setVisibilityID(
-                        tilePosition,
-                        VisibilityID::visible);
-            }
-            else if (tileVisiblityOld == VisibilityID::visible)
-            {
-                // Tile WAS visible
-                map.setVisibilityID(
-                        tilePosition,
-                        VisibilityID::seen);
-            }
-        }
-
-        // Update shadow line
-        // updateShadowline(map, tilePosition);
-        if (map.isOpaque(tilePosition))
-        {
-            addShadow(shadowline, quarterPosition);
-        }
-    }
-}
-
-void Visibility::calculateVisibilitiesInQuarter(
-        int quarter,
-        Tiles& map,
-        Vector2I const& heroPosition,
-        int width,
-        int height)
-{
-    // !!! Coordinates are usual cartesian !!!
-    std::vector<Shadow> shadowline{};
-
-    // Iterate diagonals until height reached
-    for (int quadY = 1; quadY < height; ++quadY)
-    {
-        calculateVisibilitiesInDiagonal(
-                0,
-                width,
-                0,
-                quadY,
-                shadowline,
-                map,
-                quarter,
-                heroPosition);
-    }
-
-    // Iterate remaining diagonals
-    for (int quadXMin = 1; quadXMin < width; ++quadXMin)
-    {
-        calculateVisibilitiesInDiagonal(
-                quadXMin,
-                width - 1,
-                0,
-                height - 1,
-                shadowline,
-                map,
-                quarter,
-                heroPosition);
-    }
-}
-*/
 
 void Visibility::update(
     Tiles& map,
-    RectangleEx const& mapPanel,
+    RectangleEx const& viewport,
     Vector2I const& heroPosition)
 {
     // Input
-    int sectorWidth{2 + static_cast<int>((mapPanel.width() / 2) / TileData::TILE_SIZE)};
-    int sectorHeight{2 + static_cast<int>((mapPanel.height() / 2) / TileData::TILE_SIZE)};
+    int sectorWidth{2 + static_cast<int>((viewport.width() / 2) / TileData::TILE_SIZE)};
+    int sectorHeight{2 + static_cast<int>((viewport.height() / 2) / TileData::TILE_SIZE)};
 
     // Init
+    fogsToRender_.clear();
+
     map.setVisibilityID(
         heroPosition,
         VisibilityID::visible);
@@ -534,33 +367,13 @@ void Visibility::update(
             heroPosition,
             range);
     }
-
-    /*
-        // Iterate quarters
-        // Orientation dependent width/height (horizontal, vertical)
-        int width{};
-        int height{};
-
-        for (int quarter{0}; quarter <= 3; ++quarter)
-        {
-            // Set width/height for quarter
-            if (quarter % 2)
-            {
-                width = sectorHeight;
-                height = sectorWidth;
-            }
-            else // even incl. 0
-            {
-                width = sectorWidth;
-                height = sectorHeight;
-            }
-
-            calculateVisibilitiesInQuarter(
-                    quarter,
-                    map,
-                    heroPosition,
-                    width,
-                    height);
-        }
-    */
+    for (Fog const& fog : fogsToRender_.values())
+    {
+        snx::debug::cliLog(
+                "Fog", 
+                fog.tilePosition(), 
+                ": ", 
+                (fog.isFogOpaque()) ? "invis" : "seen",
+                "\n");
+    }
 }

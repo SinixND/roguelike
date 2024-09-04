@@ -17,6 +17,8 @@ public:
     RectangleExI const& corners() { return corners_; }
     Position const& position() { return position_; }
 
+    Chunk() = default;
+
     Chunk(RenderTexture const& renderTexture, Position const& position)
         : renderTexture_(renderTexture)
         , corners_(RectangleExI{

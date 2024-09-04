@@ -10,7 +10,7 @@
 #include <string>
 #include <unordered_set>
 
-void Tiles::insert(
+void Tiles::set(
     Vector2I const& tilePosition,
     RenderID renderID,
     std::string const& tag,
@@ -18,10 +18,10 @@ void Tiles::insert(
     bool isSolid,
     bool isOpaque)
 {
-    positions_.insert(tilePosition, Position{tilePosition});
-    renderIDs_.insert(tilePosition, renderID);
-    tags_.insert(tilePosition, tag);
-    visibilityIDs_.insert(tilePosition, visibilityID);
+    positions_[tilePosition] = Position{tilePosition};
+    renderIDs_[tilePosition] = renderID;
+    tags_[tilePosition] = tag;
+    visibilityIDs_[tilePosition] = visibilityID;
 
     if (isSolid)
     {

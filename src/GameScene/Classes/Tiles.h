@@ -26,7 +26,8 @@ private:
     void updateMapSize(Vector2I const& tilePosition);
 
 public:
-    void insert(
+    // Overwrites
+    void set(
         Vector2I const& tilePosition,
         RenderID renderID,
         std::string const& tag,

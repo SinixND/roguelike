@@ -14,19 +14,18 @@ void Renderer::init()
     textures_.loadAtlas(TextureData::TEXTURE_ATLAS_FILE);
 
     // Register textures
-    textures_.registerTexture(RenderID::invisible, {0, 0});
+    textures_.registerTexture(RenderID::none, {0, 0});
     textures_.registerTexture(RenderID::cursor, {35, 0});
     textures_.registerTexture(RenderID::hero, {70, 0});
     textures_.registerTexture(RenderID::wall, {105, 0});
     textures_.registerTexture(RenderID::floor, {0, 35});
-    textures_.registerTexture(RenderID::reachable, {35, 35});
-    textures_.registerTexture(RenderID::path, {70, 35});
-    textures_.registerTexture(RenderID::attackable, {105, 35});
-    textures_.registerTexture(RenderID::supportable, {0, 70});
-    textures_.registerTexture(RenderID::nextLevel, {35, 70});
+    textures_.registerTexture(RenderID::nextLevel, {35, 35});
 }
 
-void Renderer::render(RenderID renderID, Vector2 const& worldPosition, Color const& tint)
+void Renderer::render(
+    RenderID renderID,
+    Vector2 const& worldPosition,
+    Color const& tint)
 {
     // Use 0.5f pixel offset to avoid texture bleeding
     DrawTexturePro(
@@ -68,7 +67,11 @@ void Renderer::renderChunk(Chunk& chunk)
         WHITE);
 }
 
-void Renderer::renderToChunk(RenderID renderID, Vector2 const& worldPosition, Chunk& chunk, Color const& tint)
+void Renderer::renderToChunk(
+    RenderID renderID,
+    Vector2 const& worldPosition,
+    Chunk& chunk,
+    Color const& tint)
 {
     // Use 0.5f pixel offset to avoid texture bleeding
     DrawTexturePro(

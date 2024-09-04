@@ -11,9 +11,9 @@ namespace snx
     class IDenseMap
     {
     public:
-        virtual void erase(Key const& key) = 0;
-        virtual void clear() = 0;
         virtual bool contains(Key const& key) const = 0;
+        virtual void clear() = 0;
+        virtual void erase(Key const& key) = 0;
         // virtual std::vector<Key>& keys() = 0;
         virtual size_t size() const = 0;
 
@@ -25,12 +25,17 @@ namespace snx
         : public IDenseMap<Key>
     {
     public:
-        Type& insert(Key const& key, Type const& value = Type{})
+        bool contains(Key const& key) const override
+        {
+            return keyToIndex_.find(key) != keyToIndex_.end();
+        }
+
+        // Does NOT overwrite
+        void insert(Key const& key, Type const& value = Type{})
         {
             if (contains(key))
             {
-                values_[keyToIndex_[key]] = value;
-                return values_[keyToIndex_[key]];
+                return;
             }
 
             // Add new key to used keys
@@ -47,7 +52,35 @@ namespace snx
 
             // Add valueIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.insert(std::make_pair(valueIndex, key));
+        }
 
+        template<typename... Args>
+        void emplace(Key const& key, Args&&... args)
+        {
+            if (contains(key))
+            {
+                return;
+            }
+
+            // Add new key to used keys
+            // keys_.insert(key);
+
+            // Get new list index for value
+            size_t valueIndex = size();
+
+            // Create and Add new value to list
+            values_.push_back(Type{std::forward<Args>(args)...});
+
+            // Add key to valueIndex mapping
+            keyToIndex_.insert(std::make_pair(key, valueIndex));
+
+            // Add valueIndex to key mapping (internal use only to keep list contiguous)
+            indexToKey_.insert(std::make_pair(valueIndex, key));
+        }
+
+        Type& operator[](Key const& key)
+        {
+            insert(key);
             return values_[keyToIndex_[key]];
         }
 
@@ -103,16 +136,6 @@ namespace snx
             keyToIndex_.clear();
             indexToKey_.clear();
             // keys_.clear();
-        }
-
-        bool contains(Key const& key) const override
-        {
-            return keyToIndex_.find(key) != keyToIndex_.end();
-        }
-
-        Type& operator[](Key const& key)
-        {
-            return values_[keyToIndex_[key]];
         }
 
         std::vector<Type>& values()
