@@ -5,7 +5,6 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Add viewport size to gameCamera to reduce arguments
 - [ ] Improve rendering 
   - [x] reduce render calls by chunking map
   - [ ] improve visibility rendering (take care of artifacts (slight offset): render shadow as texture like map tiles)
@@ -104,3 +103,4 @@
 - [x] Implement vision (fog of war: unseen, seen, visible)
 - [x] Hold shift to keep moving (abort if key not down!)
 - [x] Pathfind movement by clicking or taping
+- [x] Add viewport size to gameCamera to reduce arguments

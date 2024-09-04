@@ -1,6 +1,7 @@
 #ifndef IG20240901143710
 #define IG20240901143710
 
+#include "GameCamera.h"
 #include "Tiles.h"
 #include "raylibEx.h"
 #include <raylib.h>
@@ -12,8 +13,7 @@ namespace Pathfinder
         Tiles& map,
         Vector2I const& start,
         Vector2I const& target,
-        RectangleEx const& mapPanel,
-        Camera2D const& camera);
+        GameCamera const& gameCamera);
 }
 
 #endif

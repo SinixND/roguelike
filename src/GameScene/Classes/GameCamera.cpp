@@ -5,13 +5,16 @@
 
 #include <raylib.h>
 
-void GameCamera::init(Vector2 const& offset)
+void GameCamera::init(RectangleEx const& viewport)
 {
     camera_ = Camera2D{
-        offset,
+        viewport.center(),
         Vector2{0, 0},
         0,
         1};
+
+        updateViewport(viewport);
+
     snx::PublisherStatic::publish(Event::cameraChanged);
 }
 
@@ -31,4 +34,9 @@ void GameCamera::setZoom(float zoom)
 {
     camera_.zoom = zoom;
     snx::PublisherStatic::publish(Event::cameraChanged);
+}
+
+void GameCamera::updateViewport(RectangleEx const& viewport)
+{
+    viewport_ = &viewport;
 }

@@ -2,10 +2,10 @@
 #define IG20240531194629
 
 #include "Cursor.h"
+#include "GameCamera.h"
 #include "Hero.h"
 #include "InputActionID.h"
 #include "Tiles.h"
-#include "raylibEx.h"
 #include <raylib.h>
 #include <unordered_map>
 
@@ -39,8 +39,7 @@ public:
         Hero& hero,
         Cursor& cursor,
         Tiles& map,
-        RectangleEx const& mapPanel,
-        Camera2D const& camera);
+        GameCamera const& gameCamera);
 };
 
 #endif

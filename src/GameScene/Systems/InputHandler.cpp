@@ -2,11 +2,11 @@
 
 #include "Cursor.h"
 #include "Directions.h"
+#include "GameCamera.h"
 #include "Hero.h"
 #include "InputActionID.h"
 #include "Pathfinder.h"
 #include "Tiles.h"
-#include "raylibEx.h"
 #include <raylib.h>
 #include <utility>
 
@@ -209,8 +209,7 @@ void InputHandler::triggerAction(
     Hero& hero,
     Cursor& cursor,
     Tiles& map,
-    RectangleEx const& mapPanel,
-    Camera2D const& camera)
+    GameCamera const& gameCamera)
 {
     if (inputAction_ == InputActionID::none)
     {
@@ -259,8 +258,7 @@ void InputHandler::triggerAction(
             map,
             hero.position().tilePosition(),
             cursor.position().tilePosition(),
-            mapPanel,
-            camera));
+            gameCamera));
     }
     break;
 

@@ -1,6 +1,7 @@
 #include "Pathfinder.h"
 
 #include "Directions.h"
+#include "GameCamera.h"
 #include "RatedTile.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
@@ -24,8 +25,7 @@ bool checkRatingList(
     std::unordered_set<Vector2I>& tilesToIgnore,
     Tiles& map,
     Vector2I const& target,
-    RectangleEx const& mapPanel,
-    Camera2D const& camera,
+    GameCamera const& gameCamera,
     std::vector<Vector2I>& path)
 {
     // Check all tiles in vector for current best rating before choosing new best rating
@@ -45,7 +45,12 @@ bool checkRatingList(
                     currentTile->tilePosition())};
 
             // Needs to be in map panel
-            if (!CheckCollisionPointRec(UnitConversion::tileToScreen(newTilePosition, camera), mapPanel))
+            if (
+                !CheckCollisionPointRec(
+                    UnitConversion::tileToScreen(
+                        newTilePosition, 
+                        gameCamera.camera()), 
+                    *gameCamera.viewport()))
             {
                 continue;
             }
@@ -121,8 +126,7 @@ bool checkRatingList(
             tilesToIgnore,
             map,
             target,
-            mapPanel,
-            camera,
+            gameCamera,
             path))
     {
         return true;
@@ -135,8 +139,7 @@ std::vector<Vector2I> Pathfinder::findPath(
     Tiles& map,
     Vector2I const& start,
     Vector2I const& target,
-    RectangleEx const& mapPanel,
-    Camera2D const& camera)
+    GameCamera const& gameCamera)
 {
     std::vector<Vector2I> path{};
 
@@ -178,8 +181,7 @@ std::vector<Vector2I> Pathfinder::findPath(
         tilesToIgnore,
         map,
         target,
-        mapPanel,
-        camera,
+        gameCamera,
         path);
 
     // Path is either empty or has at least 2 entries (target and start)

@@ -28,7 +28,7 @@
 void GameScene::initialize()
 {
     panels_.init();
-    gameCamera_.init(panels_.map().center());
+    gameCamera_.init(panels_.map());
     renderer_.init();
 
     inputHandler_.setDefaultInputMappings();
@@ -36,7 +36,6 @@ void GameScene::initialize()
     hero_.init();
 
     chunksToRender_.init(world_.currentMap(), renderer_);
-    // visibility_.init(panels_.map());
 
     // Setup events
     snx::PublisherStatic::addSubscriber(
@@ -50,7 +49,7 @@ void GameScene::initialize()
         Event::panelsResized,
         [&]()
         {
-            gameCamera_.init(panels_.map().center());
+            gameCamera_.init(panels_.map());
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -167,8 +166,7 @@ void GameScene::updateState()
         hero_,
         cursor_,
         world_.currentMap(),
-        panels_.map(),
-        gameCamera_.camera());
+        gameCamera_);
 
     // Check collision before starting movement
     if (hero_.movement().isTriggered())
@@ -330,17 +328,3 @@ void GameScene::deinitialize()
     renderer_.deinit();
 }
 
-// RectangleExI GameScene::renderRectangleExI()
-// {
-//     return RectangleExI{
-//         Vector2SubtractValue(
-//             UnitConversion::screenToTile(
-//                 panels_.map().topLeft(),
-//                 gameCamera_.get()),
-//             1),
-//         Vector2AddValue(
-//             UnitConversion::screenToTile(
-//                 panels_.map().bottomRight(),
-//                 gameCamera_.get()),
-//             1)};
-// }
