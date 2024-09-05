@@ -1,19 +1,19 @@
 #include "GameScene.h"
+// #define DEBUG_TILEINFO
+// #define DEBUG_FOG
 
 #include "Chunk.h"
 #include "ChunksToRender.h"
 #include "Colors.h"
-#include "Constants/TileData.h"
 #include "Cursor.h"
 #include "Debugger.h"
 #include "DeveloperMode.h"
-#include "Enums/RenderID.h"
 #include "Event.h"
-#include "Fog.h"
 #include "GameCamera.h"
 #include "Panels.h"
 #include "PublisherStatic.h"
 #include "Renderer.h"
+#include "TileData.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
 #include "Visibility.h"
@@ -21,9 +21,9 @@
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
-#include <string>
 
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_TILEINFO)
+#include <string>
 #endif
 
 void GameScene::initialize()
@@ -44,13 +44,11 @@ void GameScene::initialize()
         [&]()
         {
             panels_.init();
-        });
-
-    snx::PublisherStatic::addSubscriber(
-        Event::panelsResized,
-        [&]()
-        {
             gameCamera_.init(panels_.map());
+            visibility_.update(
+                world_.currentMap(),
+                gameCamera_.viewportOnScreen(),
+                hero_.position().tilePosition());
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -86,7 +84,7 @@ void GameScene::initialize()
         },
         true);
 
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_TILEINFO)
     snx::PublisherStatic::addSubscriber(
         Event::cursorPositionChanged,
         [&]()
@@ -216,7 +214,7 @@ void GameScene::renderOutput()
     {
         Color tint{};
 
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_FOG)
         if (fog.isFogOpaque())
         {
             tint = ColorAlpha(RED, 0.5f);
@@ -250,73 +248,6 @@ void GameScene::renderOutput()
             tint);
 #endif
     }
-
-    /*
-    Tiles& currentMap{world_.currentMap()};
-    Vector2I viewportBottomRight{camera_.viewportInTiles().bottomRight()};
-
-    for (int x{gameCamera_.viewportInTiles().topLeft().x}; x <= viewportBottomRight.x; ++x)
-    {
-        for (int y{gameCamera_.viewportOnScreen()->topLeft().y}; y <= viewportBottomRight.y; ++y)
-        {
-            Vector2I tilePosition{x, y};
-            switch (currentMap.visibilityID(tilePosition))
-            {
-            case VisibilityID::invisible:
-                if (DeveloperMode::isActive())
-                {
-                    DrawRectangleV(
-                        Vector2SubtractValue(
-                            currentMap.position(tilePosition).worldPosition(),
-                            TileData::TILE_SIZE_HALF),
-                        TileData::TILE_DIMENSIONS,
-                        ColorAlpha(
-                            RED,
-                            0.5));
-                }
-                else
-                {
-                    DrawRectangleV(
-                        Vector2SubtractValue(
-                            currentMap.position(tilePosition).worldPosition(),
-                            TileData::TILE_SIZE_HALF),
-                        TileData::TILE_DIMENSIONS,
-                        BLACK);
-                }
-                break;
-
-            case VisibilityID::seen:
-                if (DeveloperMode::isActive())
-                {
-                    DrawRectangleV(
-                        Vector2SubtractValue(
-                            currentMap.position(tilePosition).worldPosition(),
-                            TileData::TILE_SIZE_HALF),
-                        TileData::TILE_DIMENSIONS,
-                        ColorAlpha(
-                            BLUE,
-                            0.5));
-                }
-                else
-                {
-                    DrawRectangleV(
-                        Vector2SubtractValue(
-                            currentMap.position(tilePosition).worldPosition(),
-                            TileData::TILE_SIZE_HALF),
-                        TileData::TILE_DIMENSIONS,
-                        ColorAlpha(
-                            BLACK,
-                            0.5));
-                }
-                break;
-
-            default:
-            case VisibilityID::visible:
-                break;
-            }
-        }
-    }
-    */
 
     // Units
     // Draw hero

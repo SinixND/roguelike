@@ -8,6 +8,7 @@
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make",
             "program": "${workspaceFolder}/bin/debug/main.exe",
+            "stopAtEntry": true,
         },
         {
             "name": "Build (lldb)",
@@ -24,6 +25,7 @@
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make debug",
             "program": "${workspaceFolder}/bin/debug/main.exe",
+            "stopAtEntry": true,
         },
         {
             "name": "Build debug (lldb)",
@@ -40,6 +42,7 @@
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make release",
             "program": "${workspaceFolder}/bin/release/main.exe",
+            "stopAtEntry": true,
         },
         {
             "name": "Build release (lldb)",
@@ -56,6 +59,7 @@
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make test",
             "program": "${workspaceFolder}/test/test.exe",
+            "stopAtEntry": true,
         }
     ]
 }

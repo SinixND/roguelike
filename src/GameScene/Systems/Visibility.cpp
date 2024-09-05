@@ -1,13 +1,12 @@
 #include "Visibility.h"
 
 #include "Debugger.h"
-#include "Fog.h"
-#include "Shadow.h"
 #include "TileData.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
+#include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <cstdlib>
@@ -15,6 +14,67 @@
 #include <raymath.h>
 #include <vector>
 
+// Shadow
+Shadow::Shadow(Vector2I const& octantPosition)
+{
+    setSlopeLeft(octantPosition);
+    setSlopeRight(octantPosition);
+}
+
+void Shadow::setSlopeLeft(Vector2I const& octantPosition)
+{
+    slopeLeft_ = (octantPosition.y + 0.5f) / (octantPosition.x - 0.5f);
+}
+
+void Shadow::setSlopeLeft(float slopeLeft)
+{
+    slopeLeft_ = slopeLeft;
+}
+
+void Shadow::setSlopeRight(Vector2I const& octantPosition)
+{
+    // slopeRight_ = (octantPosition.y - 0.5f) / (octantPosition.x + 0.5f);
+    slopeRight_ = std::max(EPSILON, (octantPosition.y - 0.5f) / (octantPosition.x + 0.5f));
+}
+
+void Shadow::setSlopeRight(float slopeRight)
+{
+    slopeRight_ = slopeRight;
+}
+
+float Shadow::getLeftAtTop(Vector2I const& octantPosition)
+{
+    return (octantPosition.y + 0.5f) / slopeLeft_;
+}
+
+float Shadow::getLeftAtBottom(Vector2I const& octantPosition)
+{
+    return (octantPosition.y - 0.5f) / slopeLeft_;
+}
+
+float Shadow::getLeft(int octantPositionHeight)
+{
+    // NOTE: x = y / m
+    return (octantPositionHeight) / slopeLeft_;
+}
+
+float Shadow::getRightAtTop(Vector2I const& octantPosition)
+{
+    return (octantPosition.y + 0.5f) / slopeRight_;
+}
+
+float Shadow::getRightAtBottom(Vector2I const& octantPosition)
+{
+    return (octantPosition.y - 0.5f) / slopeRight_;
+}
+
+float Shadow::getRight(int octantPositionHeight)
+{
+    // NOTE: x = y / m
+    return (octantPositionHeight) / slopeRight_;
+}
+
+// Visibility
 void Visibility::addShadow(
     std::vector<Shadow>& shadowline,
     Vector2I const& sectorPosition)
@@ -370,10 +430,10 @@ void Visibility::update(
     for (Fog const& fog : fogsToRender_.values())
     {
         snx::debug::cliLog(
-                "Fog", 
-                fog.tilePosition(), 
-                ": ", 
-                (fog.isFogOpaque()) ? "invis" : "seen",
-                "\n");
+            "Fog",
+            fog.tilePosition(),
+            ": ",
+            (fog.isFogOpaque()) ? "invis" : "seen",
+            "\n");
     }
 }

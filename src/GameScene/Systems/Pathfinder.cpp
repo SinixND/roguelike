@@ -1,8 +1,8 @@
 #include "Pathfinder.h"
+// #define DEBUG_PATHFINDER
 
 #include "Directions.h"
 #include "GameCamera.h"
-#include "RatedTile.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
 #include "VisibilityID.h"
@@ -14,6 +14,42 @@
 #include <unordered_set>
 #include <vector>
 
+#if defined(DEBUG) && defined(DEBUG_PATHFINDER)
+#include "Debugger.h"
+#include <format>
+#include <string>
+#endif
+
+// RatedTile
+// Heuristic used to rate tiles
+// bias > 1: prioritize short path
+// bias < 1: prioritize closer to target
+float constexpr bias{1.1};
+
+float RatedTile::rating() const
+{
+    return
+        // Distance to target
+        Vector2Length(distanceToTarget_)
+        + bias * stepsNeeded();
+}
+
+void RatedTile::reconstructPath(std::vector<Vector2I>& path)
+{
+    // Add this to path
+    path.push_back(tilePosition_);
+
+    // Abort at root/start
+    if (!ancestor_)
+    {
+        return;
+    }
+
+    // Add ancestor to path
+    ancestor_->reconstructPath(path);
+}
+
+// Pathfinder
 // Adds three new neighbours for all tiles of current best rating to the rating list,
 // then deleting current rating in map
 // and restarting with new best rating,
@@ -28,8 +64,13 @@ bool checkRatingList(
     GameCamera const& gameCamera,
     std::vector<Vector2I>& path)
 {
+    // Buffer rated tiles
+    std::vector<RatedTile*> tileList{ratingList[rating]};
+    ratingList.erase(rating);
+
     // Check all tiles in vector for current best rating before choosing new best rating
-    for (auto currentTile : ratingList[rating])
+    for (RatedTile* currentTile : tileList)
+    // for (RatedTile* currentTile : ratingList[rating])
     {
         // Test all four directions for currentTile
         for (Vector2I const& direction : {
@@ -68,6 +109,7 @@ bool checkRatingList(
             RatedTile newRatedTile{
                 newTilePosition,
                 target,
+                currentTile->stepsNeeded() + 1,
                 currentTile};
 
             // If Target found
@@ -110,11 +152,14 @@ bool checkRatingList(
 
             // Valid! Add to ignore set so it doesn't get checked again
             tilesToIgnore.insert(newTilePosition);
+#if defined(DEBUG) && defined(DEBUG_PATHFINDER)
+            DrawText(std::format("{:.1f}", newRatedTile.rating()).c_str(), UnitConversion::tileToScreen(newTilePosition, snx::debug::cam()).x - 10, UnitConversion::tileToScreen(newTilePosition, snx::debug::cam()).y - 5, 10, WHITE);
+#endif
         }
     }
 
     // All tiles with same rating have been checked -> remove key
-    ratingList.erase(rating);
+    // ratingList.erase(rating);
 
     // Check new best rated tiles
     if (
@@ -141,6 +186,9 @@ std::vector<Vector2I> Pathfinder::findPath(
     Vector2I const& target,
     GameCamera const& gameCamera)
 {
+#if defined(DEBUG) && defined(DEBUG_PATHFINDER)
+    BeginDrawing();
+#endif
     std::vector<Vector2I> path{};
 
     // Return empty path if target is
@@ -161,6 +209,7 @@ std::vector<Vector2I> Pathfinder::findPath(
     RatedTile firstTile{
         start,
         target,
+        0,
         nullptr};
 
     // Vector of rated tiles (persistent for ancestor pointers)
@@ -172,7 +221,7 @@ std::vector<Vector2I> Pathfinder::findPath(
     ratingList[firstTile.rating()].push_back(&ratedTiles.front());
 
     // List of ignored tiles to avoid double checks
-    std::unordered_set<Vector2I> tilesToIgnore{};
+    std::unordered_set<Vector2I> tilesToIgnore{start};
 
     checkRatingList(
         firstTile.rating(),
@@ -184,6 +233,9 @@ std::vector<Vector2I> Pathfinder::findPath(
         gameCamera,
         path);
 
-    // Path is either empty or has at least 2 entries (target and start)
+// Path is either empty or has at least 2 entries (target and start)
+#if defined(DEBUG) && defined(DEBUG_PATHFINDER)
+    EndDrawing();
+#endif
     return path;
 }

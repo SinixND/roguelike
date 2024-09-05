@@ -7,6 +7,38 @@
 #include <raylib.h>
 #include <vector>
 
+class RatedTile
+{
+    Vector2I tilePosition_{};
+    Vector2I distanceToTarget_{};
+    int stepsNeeded_{};
+    RatedTile* ancestor_{};
+
+public:
+    RatedTile(
+        Vector2I const& tilePosition,
+        Vector2I const& target,
+        int stepsNeeded,
+        RatedTile* ancestor)
+        : tilePosition_(tilePosition)
+        , distanceToTarget_(Vector2Subtract(target, tilePosition))
+        , stepsNeeded_(stepsNeeded)
+        , ancestor_(ancestor)
+    {
+    }
+
+    Vector2I const& tilePosition() const { return tilePosition_; }
+
+    int stepsNeeded() const { return stepsNeeded_; }
+
+    RatedTile* ancestor() const { return ancestor_; }
+
+    // Heuristic used to rate tiles
+    float rating() const;
+
+    void reconstructPath(std::vector<Vector2I>& path);
+};
+
 namespace Pathfinder
 {
     std::vector<Vector2I> findPath(
