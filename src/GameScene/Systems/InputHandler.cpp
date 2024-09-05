@@ -96,6 +96,7 @@ bool InputHandler::takeInputKey()
 #else
     if ((modifier_ && !currentKey) || IsKeyPressedRepeat(lastKey))
 #endif
+
     {
         currentKey = lastKey;
     }

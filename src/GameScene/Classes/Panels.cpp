@@ -1,10 +1,10 @@
 #include "Panels.h"
 
-#include "Event.h"
+// #include "Event.h"
 #include "GameFont.h"
 #include "Logger.h"
 #include "PanelData.h"
-#include "PublisherStatic.h"
+// #include "PublisherStatic.h"
 #include <raylib.h>
 #include <string>
 
@@ -35,7 +35,7 @@ void Panels::init()
         .setBottom(log_.top())
         .setTop(status_.bottom());
 
-    snx::PublisherStatic::publish(Event::panelsResized);
+    // snx::PublisherStatic::publish(Event::panelsResized);
 }
 
 void Panels::drawLogPanelContent()

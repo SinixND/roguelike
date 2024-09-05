@@ -7,15 +7,17 @@
 #include <raylib.h>
 #include <string>
 
+#include "GameCamera.h"
 #include "Singleton.h"
+
 namespace snx
 {
     class debug : public snx::Singleton<debug>
     {
-        static inline Camera2D cam_{};
+        static inline GameCamera gcam_{};
 
     public:
-        static Camera2D& cam() { return instance().cam_; }
+        static GameCamera& gcam() { return instance().gcam_; }
 
         template <typename Arg>
         static void cliPrint(Arg arg)

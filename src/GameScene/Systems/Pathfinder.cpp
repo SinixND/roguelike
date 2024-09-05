@@ -13,7 +13,6 @@
 #include <raymath.h>
 #include <unordered_set>
 #include <vector>
-
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
 #include "Debugger.h"
 #include <format>
@@ -24,7 +23,7 @@
 // Heuristic used to rate tiles
 // bias > 1: prioritize short path
 // bias < 1: prioritize closer to target
-float constexpr bias{1.1};
+float constexpr bias{2};
 
 float RatedTile::rating() const
 {
@@ -64,7 +63,7 @@ bool checkRatingList(
     GameCamera const& gameCamera,
     std::vector<Vector2I>& path)
 {
-    // Buffer rated tiles
+    // Buffer rated tiles to allow neighbours with same rating
     std::vector<RatedTile*> tileList{ratingList[rating]};
     ratingList.erase(rating);
 
@@ -153,7 +152,7 @@ bool checkRatingList(
             // Valid! Add to ignore set so it doesn't get checked again
             tilesToIgnore.insert(newTilePosition);
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
-            DrawText(std::format("{:.1f}", newRatedTile.rating()).c_str(), UnitConversion::tileToScreen(newTilePosition, snx::debug::cam()).x - 10, UnitConversion::tileToScreen(newTilePosition, snx::debug::cam()).y - 5, 10, WHITE);
+            DrawText(std::format("{:.0f}", newRatedTile.rating()).c_str(), UnitConversion::tileToScreen(newTilePosition, snx::debug::gcam().camera()).x - 10, UnitConversion::tileToScreen(newTilePosition, snx::debug::gcam().camera()).y - 5, 10, WHITE);
 #endif
         }
     }
@@ -189,6 +188,7 @@ std::vector<Vector2I> Pathfinder::findPath(
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
     BeginDrawing();
 #endif
+
     std::vector<Vector2I> path{};
 
     // Return empty path if target is
@@ -233,9 +233,14 @@ std::vector<Vector2I> Pathfinder::findPath(
         gameCamera,
         path);
 
-// Path is either empty or has at least 2 entries (target and start)
+    // Path is either empty or has at least 2 entries (target and start)
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
+    for (auto& position : path)
+    {
+        DrawCircleV(UnitConversion::tileToScreen(position, snx::debug::gcam().camera()), 5, ColorAlpha(GREEN, 0.5));
+    }
     EndDrawing();
 #endif
+
     return path;
 }

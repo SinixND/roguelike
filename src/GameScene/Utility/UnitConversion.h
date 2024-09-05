@@ -106,37 +106,10 @@ namespace UnitConversion
         return Vector2Add(tileToWorld(origin), transformFromOctant<Vector2>(octantPosition, octant));
     }
 
-/*
-    // Quarter position to tile position
-    // Coordinates within quarter are usual cartesian
-    // Quarter[0] is top-right, going CW
-    template <typename Type>
-    inline Type transformFromQuarter(Type const& quarterPosition, int quarter)
+    inline Vector2 octantToScreen(Vector2 const& octantPosition, int octant, Vector2I const& origin, Camera2D const& camera)
     {
-        switch (quarter)
-        {
-        case 0:
-            return Type(quarterPosition.x, -quarterPosition.y);
-        case 1:
-            return Type(quarterPosition.y, quarterPosition.x);
-        case 2:
-            return Type(-quarterPosition.x, quarterPosition.y);
-        default:
-        case 3:
-            return Type(-quarterPosition.y, -quarterPosition.x);
-        }
+        return GetWorldToScreen2D(octantToWorld(octantPosition, octant, origin), camera);
     }
-
-    inline Vector2I quarterToTile(Vector2I const& quarterPosition, int quarter, Vector2I const& origin)
-    {
-        return Vector2Add(origin, transformFromQuarter<Vector2I>(quarterPosition, quarter));
-    }
-
-    inline Vector2 quarterToWorld(Vector2 const& quarterPosition, int quarter, Vector2I const& origin)
-    {
-        return Vector2Add(tileToWorld(origin), transformFromQuarter<Vector2>(quarterPosition, quarter));
-    }
-    */
 }
 
 #endif

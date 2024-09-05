@@ -5,7 +5,6 @@
 #include "GameScene.h"
 #include "IScene.h"
 #include <raylib.h>
-
 #ifdef EMSCRIPTEN
 // Emscripten compatible app loop
 //=====================================

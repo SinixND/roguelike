@@ -21,7 +21,6 @@
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
-
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
 #include <string>
 #endif
@@ -30,6 +29,9 @@ void GameScene::initialize()
 {
     panels_.init();
     gameCamera_.init(panels_.map());
+#ifdef DEBUG
+    snx::debug::gcam() = gameCamera_;
+#endif
     renderer_.init();
 
     inputHandler_.setDefaultInputMappings();
@@ -49,7 +51,8 @@ void GameScene::initialize()
                 world_.currentMap(),
                 gameCamera_.viewportOnScreen(),
                 hero_.position().tilePosition());
-        });
+        },
+        true);
 
     snx::PublisherStatic::addSubscriber(
         Event::actionInProgress,
@@ -83,7 +86,6 @@ void GameScene::initialize()
                 hero_.position().tilePosition());
         },
         true);
-
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
     snx::PublisherStatic::addSubscriber(
         Event::cursorPositionChanged,
@@ -186,9 +188,8 @@ void GameScene::updateState()
     hero_.movement().update(
         hero_.position(),
         hero_.energy());
-
 #ifdef DEBUG
-    snx::debug::cam() = gameCamera_.camera();
+    snx::debug::gcam() = gameCamera_;
 #endif
 }
 
@@ -213,7 +214,6 @@ void GameScene::renderOutput()
     for (Fog const& fog : visibility_.fogsToRender())
     {
         Color tint{};
-
 #if defined(DEBUG) && defined(DEBUG_FOG)
         if (fog.isFogOpaque())
         {

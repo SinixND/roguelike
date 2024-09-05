@@ -17,27 +17,27 @@ class Shadow
 public:
     Shadow(Vector2I const& octantPosition);
 
-    float slopeLeft() { return slopeLeft_; }
+    float slopeLeft() const { return slopeLeft_; }
     void setSlopeLeft(Vector2I const& octantPosition);
     void setSlopeLeft(float slopeLeft);
 
-    float slopeRight() { return slopeRight_; }
+    float slopeRight() const { return slopeRight_; }
     void setSlopeRight(Vector2I const& octantPosition);
-    void setSlopeRight(float slopeRigt);
+    void setSlopeRight(float slopeRight);
 
     // Get x at left slope for height of top-left octant tile corner
-    float getLeftAtTop(Vector2I const& octantPosition);
+    float getLeftAtTop(Vector2I const& octantPosition) const;
     // Get x at left slope for height of bottom-right octant tile corner
-    float getLeftAtBottom(Vector2I const& octantPosition);
+    float getLeftAtBottom(Vector2I const& octantPosition) const;
     // Get x at left slope for height of octant position
-    float getLeft(int octantPositionHeight);
+    float getLeft(int octantPositionHeight) const;
 
     // Get x at right slope for height of top-left octant tile corner
-    float getRightAtTop(Vector2I const& octantPosition);
+    float getRightAtTop(Vector2I const& octantPosition) const;
     // Get x at right slope for height of bottom-right octant tile corner
-    float getRightAtBottom(Vector2I const& octantPosition);
+    float getRightAtBottom(Vector2I const& octantPosition) const;
     // Get x at right slope for height of octant position
-    float getRight(int octantPositionHeight);
+    float getRight(int octantPositionHeight) const;
 };
 
 class Fog
@@ -75,7 +75,7 @@ private:
 
     void addShadow(
         std::vector<Shadow>& shadowline,
-        Vector2I const& sectorPosition);
+        Vector2I const& octantPosition);
 
 public:
     std::vector<Fog>& fogsToRender() { return fogsToRender_.values(); }

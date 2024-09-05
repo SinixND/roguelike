@@ -1,6 +1,7 @@
 #include "Visibility.h"
+// #define DEBUG_SHADOW
+// #define DEBUG_FOG
 
-#include "Debugger.h"
 #include "TileData.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
@@ -13,6 +14,9 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <vector>
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
+#include "Debugger.h"
+#endif
 
 // Shadow
 Shadow::Shadow(Vector2I const& octantPosition)
@@ -42,54 +46,105 @@ void Shadow::setSlopeRight(float slopeRight)
     slopeRight_ = slopeRight;
 }
 
-float Shadow::getLeftAtTop(Vector2I const& octantPosition)
+float Shadow::getLeftAtTop(Vector2I const& octantPosition) const
 {
     return (octantPosition.y + 0.5f) / slopeLeft_;
 }
 
-float Shadow::getLeftAtBottom(Vector2I const& octantPosition)
+float Shadow::getLeftAtBottom(Vector2I const& octantPosition) const
 {
     return (octantPosition.y - 0.5f) / slopeLeft_;
 }
 
-float Shadow::getLeft(int octantPositionHeight)
+float Shadow::getLeft(int octantPositionHeight) const
 {
     // NOTE: x = y / m
     return (octantPositionHeight) / slopeLeft_;
 }
 
-float Shadow::getRightAtTop(Vector2I const& octantPosition)
+float Shadow::getRightAtTop(Vector2I const& octantPosition) const
 {
     return (octantPosition.y + 0.5f) / slopeRight_;
 }
 
-float Shadow::getRightAtBottom(Vector2I const& octantPosition)
+float Shadow::getRightAtBottom(Vector2I const& octantPosition) const
 {
     return (octantPosition.y - 0.5f) / slopeRight_;
 }
 
-float Shadow::getRight(int octantPositionHeight)
+float Shadow::getRight(int octantPositionHeight) const
 {
     // NOTE: x = y / m
     return (octantPositionHeight) / slopeRight_;
 }
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
+void drawShadow(
+    Shadow const& shadowNew,
+    Vector2I const& octantPosition,
+    int octant,
+    Vector2I const& origin,
+    float maxHeight)
+{
+    // BeginDrawing();
+
+    // Draw left shadow projection
+    DrawLineEx(
+        UnitConversion::octantToScreen(
+            Vector2{
+                shadowNew.getLeftAtTop(octantPosition) * TileData::TILE_SIZE,
+                (octantPosition.y * TileData::TILE_SIZE) + TileData::TILE_SIZE_HALF},
+            octant,
+            origin,
+            snx::debug::gcam().camera()),
+        UnitConversion::octantToScreen(
+            Vector2{
+                shadowNew.getLeft(maxHeight * TileData::TILE_SIZE),
+                maxHeight * TileData::TILE_SIZE},
+            octant,
+            origin,
+            snx::debug::gcam().camera()),
+        1,
+        YELLOW);
+
+    // Draw right shadow projection
+    DrawLineEx(
+        UnitConversion::octantToScreen(
+            Vector2{
+                shadowNew.getRightAtBottom(octantPosition) * TileData::TILE_SIZE,
+                (octantPosition.y * TileData::TILE_SIZE) - TileData::TILE_SIZE_HALF},
+            octant,
+            origin,
+            snx::debug::gcam().camera()),
+        UnitConversion::octantToScreen(
+            Vector2{
+                shadowNew.getRight(maxHeight * TileData::TILE_SIZE),
+                maxHeight * TileData::TILE_SIZE},
+            octant,
+            origin,
+            snx::debug::gcam().camera()),
+        1,
+        YELLOW);
+
+    // EndDrawing();
+}
+#endif
 
 // Visibility
 void Visibility::addShadow(
     std::vector<Shadow>& shadowline,
-    Vector2I const& sectorPosition)
+    Vector2I const& octantPosition)
 {
-    Shadow shadowNew{sectorPosition};
+    Shadow shadowNew{octantPosition};
 
-    float shadowNewLeftAtTop{shadowNew.getLeftAtTop(sectorPosition)};
-    float shadowNewRightAtBottom{shadowNew.getRightAtBottom(sectorPosition)};
+    float shadowNewLeftAtTop{shadowNew.getLeftAtTop(octantPosition)};
+    float shadowNewRightAtBottom{shadowNew.getRightAtBottom(octantPosition)};
 
     int shadowContainingLeftEnd{-1};
     int shadowContainingRightEnd{-1};
 
     for (size_t i{0}; i < shadowline.size(); ++i)
     {
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
         snx::debug::cliLog(
             "Compare new shadow(",
             shadowNew.slopeLeft(),
@@ -103,9 +158,10 @@ void Visibility::addShadow(
             shadowline[i].slopeRight(),
             "):\n");
 #endif
+
         //           ||__old_
         // -new--|
-        if (shadowNewRightAtBottom < shadowline[i].getLeftAtBottom(sectorPosition))
+        if (shadowNewRightAtBottom < shadowline[i].getLeftAtBottom(octantPosition))
         {
             // New ends before current
             continue;
@@ -113,7 +169,7 @@ void Visibility::addShadow(
 
         // _old__||
         //            |--new-
-        if (shadowline[i].getRightAtTop(sectorPosition) < shadowNewLeftAtTop)
+        if (shadowline[i].getRightAtTop(octantPosition) < shadowNewLeftAtTop)
         {
             // Current ends before new
             continue;
@@ -122,8 +178,8 @@ void Visibility::addShadow(
         // ||__old_   _old__||
         //  |--new-   -new--|
         if (
-            shadowline[i].getLeftAtTop(sectorPosition) <= shadowNewLeftAtTop
-            && shadowNewRightAtBottom <= shadowline[i].getRightAtBottom(sectorPosition))
+            shadowline[i].getLeftAtTop(octantPosition) <= shadowNewLeftAtTop
+            && shadowNewRightAtBottom <= shadowline[i].getRightAtBottom(octantPosition))
         {
             // Old contains new
             shadowContainingLeftEnd = i;
@@ -134,19 +190,20 @@ void Visibility::addShadow(
         //        ||__old_   _old__||
         // |--new-   -new--|
         if (
-            shadowNewLeftAtTop < shadowline[i].getLeftAtTop(sectorPosition)
-            && shadowline[i].getLeftAtBottom(sectorPosition) <= shadowNewRightAtBottom
-            && shadowNewRightAtBottom <= shadowline[i].getRightAtBottom(sectorPosition))
+            shadowNewLeftAtTop < shadowline[i].getLeftAtTop(octantPosition)
+            && shadowline[i].getLeftAtBottom(octantPosition) <= shadowNewRightAtBottom
+            && shadowNewRightAtBottom <= shadowline[i].getRightAtBottom(octantPosition))
         {
             // Merge shadows if another shadow contains left end already
             if (shadowContainingLeftEnd > -1)
             {
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
                 snx::debug::cliLog("Merge: Extend shadow[", i, "] to the right\n");
 #endif
+
                 // Adjust remaining
                 shadowline[shadowContainingLeftEnd].setSlopeRight(shadowline[i].slopeRight());
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
                 snx::debug::cliLog(
                     "New shadow is (",
                     shadowline[shadowContainingLeftEnd].slopeLeft(),
@@ -161,11 +218,12 @@ void Visibility::addShadow(
             }
 
             // Extend old to left
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
             snx::debug::cliLog("Extend left\n");
 #endif
+
             shadowline[i].setSlopeLeft(shadowNew.slopeLeft());
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
             snx::debug::cliLog(
                 "New shadow is (",
                 shadowline[i].slopeLeft(),
@@ -180,19 +238,20 @@ void Visibility::addShadow(
         // ||__old_   _old__||
         //          |--new-   -new--|
         if (
-            shadowline[i].getLeftAtTop(sectorPosition) <= shadowNewLeftAtTop
-            && shadowNewLeftAtTop <= shadowline[i].getRightAtTop(sectorPosition)
-            && shadowline[i].getRightAtBottom(sectorPosition) < shadowNewRightAtBottom)
+            shadowline[i].getLeftAtTop(octantPosition) <= shadowNewLeftAtTop
+            && shadowNewLeftAtTop <= shadowline[i].getRightAtTop(octantPosition)
+            && shadowline[i].getRightAtBottom(octantPosition) < shadowNewRightAtBottom)
         {
             // Merge shadows if another shadow contains right end already
             if (shadowContainingRightEnd > -1)
             {
                 // Adjust remaining
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
                 snx::debug::cliLog("Merge: Extend shadow[", i, "] to the left\n");
 #endif
+
                 shadowline[shadowContainingRightEnd].setSlopeLeft(shadowline[i].slopeLeft());
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
                 snx::debug::cliLog(
                     "New shadow is (",
                     shadowline[shadowContainingLeftEnd].slopeLeft(),
@@ -207,11 +266,12 @@ void Visibility::addShadow(
             }
 
             // Extend old to right
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
             snx::debug::cliLog("Extend right\n");
 #endif
+
             shadowline[i].setSlopeRight(shadowNew.slopeRight());
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
             snx::debug::cliLog(
                 "New shadow is (",
                 shadowline[i].slopeLeft(),
@@ -229,9 +289,10 @@ void Visibility::addShadow(
     if ((shadowContainingLeftEnd + shadowContainingRightEnd) < -1)
     {
         // Add new shadow to shadow line
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
         snx::debug::cliLog("Create new shadow\n");
 #endif
+
         shadowline.push_back(shadowNew);
     }
 }
@@ -245,6 +306,9 @@ void Visibility::calculateVisibilitiesInOctant(
     // !!! Coordinates are usual cartesian !!!
     std::vector<Shadow> shadowline{};
 
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
+    BeginDrawing();
+#endif
     // Iterate octant
     for (int octY{0}; octY < range; ++octY)
     {
@@ -257,14 +321,15 @@ void Visibility::calculateVisibilitiesInOctant(
                     octantPosition,
                     octant,
                     heroPosition)};
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
             snx::debug::cliLog(
-                "SectorPosition",
+                "octantPosition",
                 octantPosition,
                 ", TilePosition",
                 tilePosition,
                 "\n");
 #endif
+
             VisibilityID tileVisiblityOld{map.visibilityID(tilePosition)};
 
             // < : Update only octant tiles including diagonal tiles (spare last row tile needed for correct diagonal visiblity)
@@ -277,12 +342,12 @@ void Visibility::calculateVisibilitiesInOctant(
                     && shadowline[0].slopeLeft() < 0
                     && shadowline[0].slopeRight() < 1)
                 {
-
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
                     snx::debug::cliLog(
                         "Shadow is max.",
                         "\n");
 #endif
+
                     if (tileVisiblityOld == VisibilityID::visible)
                     {
                         // Tile WAS visible
@@ -320,20 +385,22 @@ void Visibility::calculateVisibilitiesInOctant(
                         || (shadow.getRightAtBottom(octantPosition)) < (octX + 0.5f))
                     {
                         // top-left/bottom-right corner not in shadow -> visible (variable unchanged)
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
                         snx::debug::cliLog(
                             "Tile is (partly) visible",
                             "\n");
 #endif
+
                         continue;
                     }
 
                     isVisible = false;
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
                     snx::debug::cliLog(
                         "Tile is invisible",
                         "\n");
 #endif
+
                     break;
                 } // Shadowline
 
@@ -374,14 +441,25 @@ void Visibility::calculateVisibilitiesInOctant(
             {
                 continue;
             }
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
             snx::debug::cliLog(
                 "Tile is opaque, add shadow...",
                 "\n");
+
+            drawShadow(
+                Shadow{octantPosition},
+                octantPosition,
+                octant,
+                heroPosition,
+                range);
 #endif
+
             addShadow(shadowline, octantPosition);
         } // Octant column
     } // Octant row
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
+    EndDrawing();
+#endif
 }
 
 void Visibility::update(
@@ -390,8 +468,8 @@ void Visibility::update(
     Vector2I const& heroPosition)
 {
     // Input
-    int sectorWidth{2 + static_cast<int>((viewport.width() / 2) / TileData::TILE_SIZE)};
-    int sectorHeight{2 + static_cast<int>((viewport.height() / 2) / TileData::TILE_SIZE)};
+    int octantWidth{2 + static_cast<int>((viewport.width() / 2) / TileData::TILE_SIZE)};
+    int octantHeight{2 + static_cast<int>((viewport.height() / 2) / TileData::TILE_SIZE)};
 
     // Init
     fogsToRender_.clear();
@@ -409,24 +487,26 @@ void Visibility::update(
         // Set range for octant
         if (((octant + 1) / 2) % 2) // := f tt ff tt f
         {
-            range = sectorWidth;
+            range = octantWidth;
         }
         else
         {
-            range = sectorHeight;
+            range = octantHeight;
         }
-#ifdef DEBUG
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
         snx::debug::cliPrint(
             "\nOctant: ",
             octant,
             "\n\n");
 #endif
+
         calculateVisibilitiesInOctant(
             octant,
             map,
             heroPosition,
             range);
     }
+#if defined(DEBUG) && defined(DEBUG_FOG)
     for (Fog const& fog : fogsToRender_.values())
     {
         snx::debug::cliLog(
@@ -436,4 +516,5 @@ void Visibility::update(
             (fog.isFogOpaque()) ? "invis" : "seen",
             "\n");
     }
+#endif
 }

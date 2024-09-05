@@ -6,11 +6,9 @@
 #include "PublisherStatic.h"
 #include <raygui.h>
 #include <raylib.h>
-
 #ifdef EMSCRIPTEN
 #include <emscripten/emscripten.h>
 #endif
-
 #ifdef EMSCRIPTEN
 // Emscripten compatible app loop
 //=====================================
@@ -95,6 +93,7 @@ void App::run()
         activeScene_->update();
     }
 #endif
+
     //=================================
 }
 

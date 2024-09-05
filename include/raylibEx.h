@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdlib>
+#include <format>
 #include <functional>
 #include <iostream>
 #include <raylib.h>
@@ -278,13 +279,7 @@ public:
         , height_(height)
     {
 #ifdef DEBUG
-        if (
-            !(width % 2)
-            || !(height % 2))
-        {
-            std::cerr << "[ERROR] Width (" << width << ") or height (" << height << ")invalid; Must be odd value!\n";
-            assert(0);
-        }
+        assert((width % 2) && (height % 2) && "[ERROR] Width or height invalid; Must be odd value!");
 #endif
     }
 
@@ -693,45 +688,6 @@ inline Vector2I GetMax(Vector2I const& v1, Vector2I const& v2)
         (v1.x > v2.x ? v1.x : v2.x),
         (v1.y > v2.y ? v1.y : v2.y)};
 }
-
-inline bool IsKeyPressedRepeat(int key, float delay, float tick)
-{
-    static float dtDelay{0};
-    static float dtTick{tick};
-
-    if (IsKeyDown(key))
-    {
-        // Start measuring delay
-        dtDelay += GetFrameTime();
-
-        // If delay exceeded
-        if (dtDelay > delay)
-        {
-            // Avoid huge dtDelay value
-            dtDelay = delay;
-
-            // Start measuring ticks
-            dtTick += GetFrameTime();
-
-            // If tick exceeded (includes initial trigger)
-            if (dtTick > tick)
-            {
-                // Reset tick
-                dtTick -= tick;
-
-                // Confirm exceeded tick
-                return true;
-            }
-        }
-    }
-    else
-    {
-        dtDelay = 0;
-        dtTick = tick;
-    }
-
-    return IsKeyPressed(key);
-};
 //=====================================
 
 // Operator Overloads

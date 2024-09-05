@@ -54,7 +54,7 @@ namespace snx
             indexToKey_.insert(std::make_pair(valueIndex, key));
         }
 
-        template<typename... Args>
+        template <typename... Args>
         void emplace(Key const& key, Args&&... args)
         {
             if (contains(key))
