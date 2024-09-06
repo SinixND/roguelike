@@ -630,10 +630,8 @@ inline int Vector2Sum(Vector2I const& v)
     return abs(v.x) + abs(v.y);
 }
 
-inline Vector2 Vector2MainDirection(Vector2 const& from, Vector2 const& to)
+inline Vector2 Vector2MainDirection(Vector2 v)
 {
-    Vector2 v{Vector2Subtract(to, from)};
-
     (abs(v.x) > abs(v.y))
         ? (v.y = 0)
         : (v.x = 0);
@@ -641,15 +639,27 @@ inline Vector2 Vector2MainDirection(Vector2 const& from, Vector2 const& to)
     return Vector2Normalize(v);
 }
 
-inline Vector2I Vector2MainDirection(Vector2I const& from, Vector2I const& to)
+inline Vector2I Vector2MainDirection(Vector2I v)
 {
-    Vector2I v{Vector2Subtract(to, from)};
-
     (abs(v.x) > abs(v.y))
         ? (v.y = 0)
         : (v.x = 0);
 
     return Vector2Normalize(v);
+}
+
+inline Vector2 Vector2MainDirection(Vector2 const& from, Vector2 const& to)
+{
+    Vector2 v{Vector2Subtract(to, from)};
+
+    return Vector2MainDirection(v);
+}
+
+inline Vector2I Vector2MainDirection(Vector2I const& from, Vector2I const& to)
+{
+    Vector2I v{Vector2Subtract(to, from)};
+
+    return Vector2MainDirection(v);
 }
 
 inline Rectangle GetWindowRec()

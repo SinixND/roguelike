@@ -1,10 +1,13 @@
 #include "Renderer.h"
+
 #include "Chunk.h"
 #include "ChunkData.h"
 #include "RenderID.h"
 #include "TextureData.h"
 #include "Textures.h"
 #include "TileData.h"
+#include "UnitConversion.h"
+#include "Visibility.h"
 #include <raylib.h>
 #include <raymath.h>
 
@@ -91,6 +94,36 @@ void Renderer::renderToChunk(
         tint);
 }
 
+void Renderer::renderFog(Fog const& fog)
+{
+    Color tint{};
+#if defined(DEBUG) && defined(DEBUG_FOG)
+    if (fog.isFogOpaque())
+    {
+        tint = ColorAlpha(RED, 0.5f);
+    }
+    else
+    {
+        tint = ColorAlpha(BLUE, 0.5f);
+    }
+#else
+    if (fog.isFogOpaque())
+    {
+        tint = BLACK;
+    }
+    else
+    {
+        tint = ColorAlpha(BLACK, 0.5f);
+    }
+#endif
+
+    DrawRectangleV(
+        Vector2SubtractValue(
+            UnitConversion::tileToWorld(fog.tilePosition()),
+            TileData::TILE_SIZE_HALF),
+        TileData::TILE_DIMENSIONS,
+        tint);
+}
 void Renderer::deinit()
 {
     textures_.unloadAtlas();

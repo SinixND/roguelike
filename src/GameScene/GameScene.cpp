@@ -10,12 +10,11 @@
 #include "DeveloperMode.h"
 #include "Event.h"
 #include "GameCamera.h"
+#include "Logger.h"
 #include "Panels.h"
 #include "PublisherStatic.h"
 #include "Renderer.h"
-#include "TileData.h"
 #include "Tiles.h"
-#include "UnitConversion.h"
 #include "Visibility.h"
 #include "raylibEx.h"
 #include <raygui.h>
@@ -46,13 +45,19 @@ void GameScene::initialize()
         [&]()
         {
             panels_.init();
+        },
+        true);
+
+    snx::PublisherStatic::addSubscriber(
+        Event::panelsResized,
+        [&]()
+        {
             gameCamera_.init(panels_.map());
             visibility_.update(
                 world_.currentMap(),
                 gameCamera_.viewportOnScreen(),
                 hero_.position().tilePosition());
-        },
-        true);
+        });
 
     snx::PublisherStatic::addSubscriber(
         Event::actionInProgress,
@@ -133,6 +138,8 @@ void GameScene::initialize()
                 + "\n");
         });
 #endif
+
+    snx::Logger::log("Game screen initialized...");
 }
 
 void GameScene::processInput()
@@ -213,40 +220,7 @@ void GameScene::renderOutput()
     // Visibility
     for (Fog const& fog : visibility_.fogsToRender())
     {
-        Color tint{};
-#if defined(DEBUG) && defined(DEBUG_FOG)
-        if (fog.isFogOpaque())
-        {
-            tint = ColorAlpha(RED, 0.5f);
-        }
-        else
-        {
-            tint = ColorAlpha(BLUE, 0.5f);
-        }
-
-        DrawRectangleV(
-            Vector2SubtractValue(
-                UnitConversion::tileToWorld(fog.tilePosition()),
-                TileData::TILE_SIZE_HALF),
-            TileData::TILE_DIMENSIONS,
-            tint);
-#else
-        if (fog.isFogOpaque())
-        {
-            tint = BLACK;
-        }
-        else
-        {
-            tint = ColorAlpha(BLACK, 0.5f);
-        }
-
-        DrawRectangleV(
-            Vector2SubtractValue(
-                UnitConversion::tileToWorld(fog.tilePosition()),
-                TileData::TILE_SIZE_HALF),
-            TileData::TILE_DIMENSIONS,
-            tint);
-#endif
+        renderer_.renderFog(fog);
     }
 
     // Units

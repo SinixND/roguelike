@@ -73,7 +73,7 @@ private:
         Vector2I const& heroPosition,
         int range);
 
-    void addShadow(
+    void updateShadowline(
         std::vector<Shadow>& shadowline,
         Vector2I const& octantPosition);
 

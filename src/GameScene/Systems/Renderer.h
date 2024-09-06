@@ -4,6 +4,7 @@
 #include "Chunk.h"
 #include "RenderID.h"
 #include "Textures.h"
+#include "Visibility.h"
 #include <raylib.h>
 
 class Renderer
@@ -12,6 +13,7 @@ class Renderer
 
 public:
     void init();
+
     void render(
         RenderID renderID,
         Vector2 const& worldPosition,
@@ -24,6 +26,8 @@ public:
         Vector2 const& worldPosition,
         Chunk& chunk,
         Color const& tint = WHITE);
+
+    void renderFog(Fog const& fog);
 
     void deinit();
 };

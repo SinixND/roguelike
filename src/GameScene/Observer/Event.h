@@ -7,7 +7,7 @@ enum class Event
     actionFinished,
     actionInProgress,
     cameraChanged,
-    // panelsResized,
+    panelsResized,
     heroMoved,
     heroPositionChanged,
     windowResized,

@@ -2,6 +2,7 @@
 
 #include "Event.h"
 #include "PublisherStatic.h"
+#include "raylibEx.h"
 
 #include <raylib.h>
 
@@ -13,7 +14,7 @@ void GameCamera::init(RectangleEx const& viewport)
         0,
         1};
 
-        updateViewport(viewport);
+    updateViewport(viewport);
 
     snx::PublisherStatic::publish(Event::cameraChanged);
 }

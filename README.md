@@ -5,20 +5,20 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Split Visibiltiy.cpp into smaller, more concise functions
-- [ ] Improve rendering 
-  - [x] reduce render calls by chunking map
-  - [ ] improve visibility rendering (take care of artifacts (slight offset): render shadow as texture like map tiles)
-- [ ] Print tile info in panel (under cursor, floating? only special tiles?)
+- [ ] Print tile info in panel (under cursor, only special tiles!)
+- [ ] Map change
 
 
 ## Shortterm
-- [ ] Map change
 - [ ] Add enemy
     - [ ]World holds list of Units
 
 
 ## Longterm
+- [ ] Improve rendering 
+  - [x] reduce render calls by chunking map
+  - [ ] improve visibility rendering (take care of artifacts (slight offset): render shadow as texture like map tiles?)
+- [ ] Split inactive and active map tiles
 - [ ] Changeable key bindings
 - [ ] Add rogue theme (ASCII)
 - Floor : '.'

@@ -7,7 +7,9 @@
 #include "InputActionID.h"
 #include "Pathfinder.h"
 #include "Tiles.h"
+#include "raylibEx.h"
 #include <raylib.h>
+#include <raymath.h>
 #include <utility>
 
 // private
@@ -117,24 +119,16 @@ bool InputHandler::takeInputGesture()
     static int lastGesture = GESTURE_NONE;
 
     // Update gesture
-    // Set lastGesture only to valid inputs (associated with actions)
-    lastGesture = (currentGesture == GESTURE_SWIPE_UP
-                   || currentGesture == GESTURE_SWIPE_LEFT
-                   || currentGesture == GESTURE_SWIPE_DOWN
-                   || currentGesture == GESTURE_SWIPE_RIGHT)
-                      ? currentGesture
-                      : lastGesture;
+    // GESTURE_DRAG is detected continuously
+    if (currentGesture != GESTURE_DRAG)
+    {
+        lastGesture = currentGesture;
+    }
 
     currentGesture = GetGestureDetected();
 
     // Check modifiers
-    modifier_ = IsGestureDetected(GESTURE_HOLD);
-
-    // Repeat last gesture if no input but modifier down
-    if (modifier_ && !(currentGesture == GESTURE_SWIPE_UP || currentGesture == GESTURE_SWIPE_LEFT || currentGesture == GESTURE_SWIPE_DOWN || currentGesture == GESTURE_SWIPE_RIGHT))
-    {
-        currentGesture = lastGesture;
-    }
+    modifier_ = IsGestureDetected(GESTURE_DRAG);
 
     if (currentGesture != lastGesture)
     {
@@ -142,43 +136,82 @@ bool InputHandler::takeInputGesture()
         switch (currentGesture)
         {
         case GESTURE_SWIPE_UP:
+        {
             inputAction_ = InputActionID::actUp;
             break;
+        }
 
         case GESTURE_SWIPE_LEFT:
+        {
             inputAction_ = InputActionID::actLeft;
             break;
+        }
 
         case GESTURE_SWIPE_DOWN:
+        {
             inputAction_ = InputActionID::actDown;
             break;
+        }
 
         case GESTURE_SWIPE_RIGHT:
+        {
             inputAction_ = InputActionID::actRight;
             break;
+        }
 
         case GESTURE_TAP:
+        {
             break;
+        }
 
         case GESTURE_DOUBLETAP:
+        {
             break;
+        }
 
         case GESTURE_HOLD:
+        {
             break;
+        }
 
         case GESTURE_DRAG:
+        {
+            Vector2 direction = Vector2MainDirection(GetGestureDragVector());
+            if (Vector2Equals(direction, {0, -1}))
+            {
+                inputAction_ = InputActionID::actUp;
+            }
+            else if (Vector2Equals(direction, {-1, 0}))
+            {
+                inputAction_ = InputActionID::actLeft;
+            }
+            else if (Vector2Equals(direction, {0, 1}))
+            {
+                inputAction_ = InputActionID::actDown;
+            }
+            else if (Vector2Equals(direction, {1, 0}))
+            {
+                inputAction_ = InputActionID::actRight;
+            }
             break;
+        }
 
         case GESTURE_PINCH_IN:
+        {
             break;
+        }
 
         case GESTURE_PINCH_OUT:
+        {
             break;
+        }
 
         case GESTURE_NONE:
         default:
+        {
             inputAction_ = InputActionID::none;
             break;
+        }
         }
     }
 
@@ -193,17 +226,19 @@ bool InputHandler::takeInputGesture()
 // public
 void InputHandler::takeInput(bool isCursorActive)
 {
-    if (takeInputMouse(isCursorActive))
-    {
-        return;
-    }
-
     if (takeInputKey())
     {
         return;
     }
 
-    takeInputGesture();
+    if (takeInputMouse(isCursorActive))
+    {
+        return;
+    }
+    else
+    {
+        takeInputGesture();
+    }
 }
 
 void InputHandler::triggerAction(

@@ -1,5 +1,5 @@
 #include "Pathfinder.h"
-// #define DEBUG_PATHFINDER
+#define DEBUG_PATHFINDER
 
 #include "Directions.h"
 #include "GameCamera.h"

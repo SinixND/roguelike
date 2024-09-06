@@ -130,7 +130,7 @@ void drawShadow(
 #endif
 
 // Visibility
-void Visibility::addShadow(
+void Visibility::updateShadowline(
     std::vector<Shadow>& shadowline,
     Vector2I const& octantPosition)
 {
@@ -372,7 +372,6 @@ void Visibility::calculateVisibilitiesInOctant(
                     continue;
                 } // Max shadow
 
-                // isTileVisible(); //-> bool isVisible
                 // Check visibility by intersection with shadow line elements
                 bool isVisible{true};
 
@@ -405,7 +404,6 @@ void Visibility::calculateVisibilitiesInOctant(
                 } // Shadowline
 
                 // Update visibility
-                // updateVisibility();
                 if (isVisible)
                 {
                     // Tile IS visible
@@ -454,7 +452,7 @@ void Visibility::calculateVisibilitiesInOctant(
                 range);
 #endif
 
-            addShadow(shadowline, octantPosition);
+            updateShadowline(shadowline, octantPosition);
         } // Octant column
     } // Octant row
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
