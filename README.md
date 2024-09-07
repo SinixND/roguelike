@@ -5,7 +5,8 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Print tile info in panel (under cursor, only special tiles!)
+- [x] Print tile info in panel (under cursor, only special tiles!)
+    - [ ] Split inactive and active map tiles
 - [ ] Map change
 
 
@@ -18,7 +19,6 @@
 - [ ] Improve rendering 
   - [x] reduce render calls by chunking map
   - [ ] improve visibility rendering (take care of artifacts (slight offset): render shadow as texture like map tiles?)
-- [ ] Split inactive and active map tiles
 - [ ] Changeable key bindings
 - [ ] Add rogue theme (ASCII)
 - Floor : '.'

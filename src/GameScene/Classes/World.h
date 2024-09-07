@@ -1,6 +1,7 @@
 #ifndef IG20240531191635
 #define IG20240531191635
 
+#include "Map.h"
 #include "MapGenerator.h"
 #include "Tiles.h"
 #include <vector>
@@ -9,7 +10,7 @@
 class World
 {
     // std::vector<Tiles> maps_{MapGenerator::createStartRoom()};
-    std::vector<Tiles> maps_{MapGenerator::createTestRoom()};
+    std::vector<Map> maps_{MapGenerator::createTestRoom()};
 
     Tiles& currentMap_{maps_.back()};
 
