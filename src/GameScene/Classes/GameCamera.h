@@ -12,7 +12,9 @@ class GameCamera
     RectangleEx const* viewport_{};
 
 public:
-    void init(RectangleEx const& viewport);
+    void init(
+        RectangleEx const& viewport,
+        Vector2 const& heroPosition);
 
     Camera2D const& camera() const { return camera_; }
     RectangleEx const& viewportOnScreen() const { return *viewport_; }

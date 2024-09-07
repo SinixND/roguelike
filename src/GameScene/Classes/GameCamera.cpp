@@ -6,15 +6,15 @@
 
 #include <raylib.h>
 
-void GameCamera::init(RectangleEx const& viewport)
+void GameCamera::init(RectangleEx const& viewport, Vector2 const& heroPosition)
 {
+    updateViewport(viewport);
+
     camera_ = Camera2D{
         viewport.center(),
-        Vector2{0, 0},
+        heroPosition,
         0,
         1};
-
-    updateViewport(viewport);
 
     snx::PublisherStatic::publish(Event::cameraChanged);
 }

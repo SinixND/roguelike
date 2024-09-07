@@ -1,7 +1,9 @@
 #ifndef IG20240531174000
 #define IG20240531174000
 
+#include "Tiles.h"
 #include "raylibEx.h"
+#include <string>
 
 class Panels
 {
@@ -21,6 +23,7 @@ public:
     RectangleEx const& map() { return map_; }
 
     void drawLogPanelContent();
+    void drawTileInfoPanelContent(Tiles& map, Vector2I const& cursorPosition);
     void drawPanelBorders();
 };
 

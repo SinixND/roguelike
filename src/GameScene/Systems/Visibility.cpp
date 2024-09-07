@@ -462,12 +462,12 @@ void Visibility::calculateVisibilitiesInOctant(
 
 void Visibility::update(
     Tiles& map,
-    RectangleEx const& viewport,
+    RectangleExI const& viewportInTiles,
     Vector2I const& heroPosition)
 {
     // Input
-    int octantWidth{2 + static_cast<int>((viewport.width() / 2) / TileData::TILE_SIZE)};
-    int octantHeight{2 + static_cast<int>((viewport.height() / 2) / TileData::TILE_SIZE)};
+    int octantWidth{1 + (viewportInTiles.width() / 2)};
+    int octantHeight{1 + (viewportInTiles.height() / 2)};
 
     // Init
     fogsToRender_.clear();

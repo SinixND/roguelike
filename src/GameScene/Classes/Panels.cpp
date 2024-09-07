@@ -5,7 +5,10 @@
 #include "Logger.h"
 #include "PanelData.h"
 #include "PublisherStatic.h"
+#include "Tiles.h"
+#include "raylibEx.h"
 #include <raylib.h>
+#include <raymath.h>
 #include <string>
 
 void Panels::init()
@@ -53,6 +56,29 @@ void Panels::drawLogPanelContent()
             0,
             LIGHTGRAY);
     }
+}
+
+void Panels::drawTileInfoPanelContent(Tiles& map, Vector2I const& cursorPosition)
+{
+    if (!map.positions().contains(cursorPosition))
+    {
+        return;
+    }
+
+    // Draw tag from tile under cursor
+    char const* tag{TextFormat("[%s]", map.tag(cursorPosition).c_str())};
+
+    int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
+
+    DrawTextEx(
+        GameFont::font(),
+        tag,
+        Vector2AddValue(
+            tileInfo_.topLeft(),
+            fontSize),
+        fontSize,
+        GuiGetStyle(DEFAULT, TEXT_SPACING),
+        LIGHTGRAY);
 }
 
 void Panels::drawPanelBorders()

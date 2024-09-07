@@ -82,7 +82,7 @@ public:
 
     void update(
         Tiles& map,
-        RectangleEx const& viewport,
+        RectangleExI const& viewport,
         Vector2I const& heroPosition);
 };
 

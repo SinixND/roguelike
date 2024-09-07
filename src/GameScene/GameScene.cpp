@@ -27,15 +27,18 @@
 void GameScene::initialize()
 {
     panels_.init();
-    gameCamera_.init(panels_.map());
+
+    hero_.init();
+
+    gameCamera_.init(
+        panels_.map(),
+        hero_.position().worldPosition());
 #ifdef DEBUG
     snx::debug::gcam() = gameCamera_;
 #endif
     renderer_.init();
 
     inputHandler_.setDefaultInputMappings();
-
-    hero_.init();
 
     chunksToRender_.init(world_.currentMap(), renderer_);
 
@@ -52,10 +55,10 @@ void GameScene::initialize()
         Event::panelsResized,
         [&]()
         {
-            gameCamera_.init(panels_.map());
+            gameCamera_.init(panels_.map(), hero_.position().worldPosition());
             visibility_.update(
                 world_.currentMap(),
-                gameCamera_.viewportOnScreen(),
+                gameCamera_.viewportInTiles(),
                 hero_.position().tilePosition());
         });
 
@@ -87,7 +90,7 @@ void GameScene::initialize()
             // Visibility
             visibility_.update(
                 world_.currentMap(),
-                gameCamera_.viewportOnScreen(),
+                gameCamera_.viewportInTiles(),
                 hero_.position().tilePosition());
         },
         true);
@@ -242,6 +245,7 @@ void GameScene::renderOutput()
     EndMode2D();
 
     panels_.drawLogPanelContent();
+    panels_.drawTileInfoPanelContent(world_.currentMap(), cursor_.position().tilePosition());
 
     panels_.drawPanelBorders();
 }
