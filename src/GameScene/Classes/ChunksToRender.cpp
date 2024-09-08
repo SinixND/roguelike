@@ -13,6 +13,14 @@
 
 void ChunksToRender::init(Tiles& map, Renderer& renderer)
 {
+    // Reset
+    for (Chunk& chunk : chunks())
+    {
+        UnloadRenderTexture(chunk.renderTexture());
+    }
+
+    chunksToRender_.clear();
+
     // Create necessary chunks
     for (auto const& position : map.positions().values())
     {
@@ -51,14 +59,12 @@ void ChunksToRender::verifyRequiredChunk(Vector2I const& tilePosition)
     // If clause needed due to LoadRenderTexture() call
     if (!chunksToRender_.contains(chunkPosition))
     {
-        chunksToRender_.insert(
-            chunkPosition,
-            Chunk{
-                RenderTexture{
-                    LoadRenderTexture(
-                        ChunkData::CHUNK_SIZE_F,
-                        ChunkData::CHUNK_SIZE_F)},
-                Position{chunkPosition}});
+    chunksToRender_.emplace(
+        chunkPosition,
+        LoadRenderTexture(
+            ChunkData::CHUNK_SIZE_F,
+            ChunkData::CHUNK_SIZE_F),
+        Position{chunkPosition});
     }
 }
 

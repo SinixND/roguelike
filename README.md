@@ -5,15 +5,12 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [x] Print tile info in panel (under cursor, only special tiles!)
-    - [ ] Split inactive and active map tiles
-- [ ] Map change
+- [ ] Add enemy
+    - [ ]World holds list of Units
 
 
 ## Shortterm
 - [ ] Setup docker
-- [ ] Add enemy
-    - [ ]World holds list of Units
 
 
 ## Longterm
@@ -41,7 +38,6 @@
 # Ideas
 - [ ] (Hold) KEY to show map overview
 - [ ] Lua/Jinx settings file?
-- [ ] Chunkwise map rendering (RenderTexture; pre-calculation multi-threaded; web compatible?)
 - [ ] Use shaders (send matrix/vector of shadows by SetShaderValue()) and render one big black overlay with applied shader?
 
 
@@ -112,3 +108,6 @@
 - [x] Hold shift to keep moving (abort if key not down!)
 - [x] Pathfind movement by clicking or taping
 - [x] Add viewport size to gameCamera to reduce arguments
+- [x] Print tile info in panel (under cursor, only special tiles!)
+- [x] Split inactive and active map tiles
+- [x] Map change

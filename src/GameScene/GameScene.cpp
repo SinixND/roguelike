@@ -113,6 +113,13 @@ void GameScene::setupEvents()
             snx::Logger::log("Enter next Level...");
 
             world_.increaseMapLevel();
+
+            hero_.position().changeTo(Vector2I{0, 0});
+
+            chunksToRender_.init(world_.currentMap().tiles(), renderer_);
+
+            snx::PublisherStatic::publish(Event::heroMoved);
+            snx::PublisherStatic::publish(Event::heroPositionChanged);
         });
 
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
