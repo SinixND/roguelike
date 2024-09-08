@@ -48,6 +48,7 @@ void ChunksToRender::verifyRequiredChunk(Vector2I const& tilePosition)
 {
     Vector2I chunkPosition{UnitConversion::tileToChunk(tilePosition)};
 
+    // If clause needed due to LoadRenderTexture() call
     if (!chunksToRender_.contains(chunkPosition))
     {
         chunksToRender_.insert(

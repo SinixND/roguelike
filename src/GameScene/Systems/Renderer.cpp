@@ -97,6 +97,7 @@ void Renderer::renderToChunk(
 void Renderer::renderFog(Fog const& fog)
 {
     Color tint{};
+
 #if defined(DEBUG) && defined(DEBUG_FOG)
     if (fog.isFogOpaque())
     {

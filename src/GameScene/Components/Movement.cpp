@@ -10,6 +10,10 @@
 #include <raymath.h>
 #include <vector>
 
+Vector2I const& Movement::direction() const { return direction_; }
+void Movement::setSpeed(float speed) { speed_ = speed; }
+
+bool Movement::isTriggered() const { return isTriggered_; }
 void Movement::trigger(Vector2I const& direction)
 {
     direction_ = direction;

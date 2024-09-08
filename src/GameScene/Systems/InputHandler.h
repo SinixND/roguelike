@@ -5,7 +5,7 @@
 #include "GameCamera.h"
 #include "Hero.h"
 #include "InputActionID.h"
-#include "Tiles.h"
+#include "Map.h"
 #include <raylib.h>
 #include <unordered_map>
 
@@ -38,7 +38,7 @@ public:
     void triggerAction(
         Hero& hero,
         Cursor& cursor,
-        Tiles& map,
+        Map& map,
         GameCamera const& gameCamera);
 };
 

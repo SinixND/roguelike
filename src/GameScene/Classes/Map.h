@@ -1,18 +1,17 @@
 #ifndef IG20240907173344
 #define IG20240907173344
 
+#include "Objects.h"
 #include "Tiles.h"
-#include "TilesActive.h"
-#include <vector>
 
 class Map
 {
-    std::vector<Tiles> passive_{};
-    std::vector<TilesActive> active_{};
+    Tiles tiles_{};
+    Objects objects_{};
 
 public:
-    std::vector<Tiles>& passive() { return passive_; };
-    std::vector<TilesActive>& active() { return active_; };
+    Tiles& tiles() { return tiles_; };
+    Objects& objects() { return objects_; };
 };
 
 #endif

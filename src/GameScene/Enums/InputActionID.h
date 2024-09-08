@@ -11,6 +11,7 @@ enum class InputActionID
     actRight,
     cursorToggle,
     moveToTarget,
+    interact,
     // Modifiers
     mod,
 };

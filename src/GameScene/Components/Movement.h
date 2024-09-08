@@ -32,10 +32,10 @@ private:
     void processPath();
 
 public:
-    Vector2I const& direction() { return direction_; }
-    void setSpeed(float speed) { speed_ = speed; }
+    Vector2I const& direction() const;
+    void setSpeed(float speed);
 
-    bool isTriggered() const { return isTriggered_; }
+    bool isTriggered() const;
 
     // Unsets isTriggered_ and clears path_
     void abortMovement();

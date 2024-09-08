@@ -1,8 +1,12 @@
 #include "World.h"
 
+#include "Map.h"
 #include "MapGenerator.h"
 
 // Public:
+Map& World::currentMap() { return *currentMap_; };
+int World::currentMapLevel() { return currentMapLevel_; }
+
 void World::increaseMapLevel()
 {
     if (currentMapLevel_ == maxMapLevel_)
@@ -34,5 +38,5 @@ void World::addNewMap()
 
 void World::setCurrentMap(int level)
 {
-    currentMap_ = maps_[level];
+    currentMap_ = &maps_[level];
 }

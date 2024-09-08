@@ -30,7 +30,7 @@ namespace snx
             return keyToIndex_.find(key) != keyToIndex_.end();
         }
 
-        // Does NOT overwrite
+        // Does NOT overwrite existing
         void insert(Key const& key, Type const& value = Type{})
         {
             if (contains(key))
@@ -54,6 +54,14 @@ namespace snx
             indexToKey_.insert(std::make_pair(valueIndex, key));
         }
 
+        // Creates or overwrites existing
+        void set(Key const& key, Type const& value)
+        {
+            insert(key);
+            values_[keyToIndex_[key]] = value;
+        }
+
+        // Does NOT overwrite existing
         template <typename... Args>
         void emplace(Key const& key, Args&&... args)
         {
@@ -80,7 +88,6 @@ namespace snx
 
         Type& operator[](Key const& key)
         {
-            insert(key);
             return values_[keyToIndex_[key]];
         }
 

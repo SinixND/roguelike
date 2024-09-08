@@ -12,11 +12,9 @@ class Cursor
     bool isActive_{false};
 
 public:
-    Position& position() { return position_; }
-
-    RenderID renderID() { return renderID_; }
-
-    bool isActive() { return isActive_; }
+    Position& position();
+    RenderID renderID();
+    bool isActive();
     void toggle();
 
     void update(Camera2D const& camera, Vector2 const& heroPosition);

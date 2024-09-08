@@ -8,18 +8,15 @@ class Energy
     int regenRate_{};
 
 public:
-    void setMaxEnergy(int maxEnergy) { maxEnergy_ = maxEnergy; }
-    void setRegenRate(int rate) { regenRate_ = rate; }
+    void setMaxEnergy(int maxEnergy);
+    void setRegenRate(int rate);
 
     // Consumes all energy if no parameter provided and returns false if current energy level is not sufficient
     bool consume(int energy = -1);
 
     // Returns true if energy full
     bool regenerate();
-    int isFull()
-    {
-        return !(currentEnergy_ < maxEnergy_);
-    }
+    int isFull();
 };
 
 #endif

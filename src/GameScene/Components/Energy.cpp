@@ -1,5 +1,8 @@
 #include "Energy.h"
 
+void Energy::setMaxEnergy(int maxEnergy) { maxEnergy_ = maxEnergy; }
+void Energy::setRegenRate(int rate) { regenRate_ = rate; }
+
 bool Energy::consume(int energy)
 {
     if (energy < 0)
@@ -35,4 +38,9 @@ bool Energy::regenerate()
         currentEnergy_ = maxEnergy_;
     }
     return false;
+}
+
+int Energy::isFull()
+{
+    return !(currentEnergy_ < maxEnergy_);
 }

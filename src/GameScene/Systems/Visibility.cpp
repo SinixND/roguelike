@@ -2,7 +2,6 @@
 // #define DEBUG_SHADOW
 // #define DEBUG_FOG
 
-#include "TileData.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
 #include "VisibilityID.h"
@@ -14,8 +13,10 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <vector>
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
 #include "Debugger.h"
+#include "TileData.h"
 #endif
 
 // Shadow
@@ -24,6 +25,8 @@ Shadow::Shadow(Vector2I const& octantPosition)
     setSlopeLeft(octantPosition);
     setSlopeRight(octantPosition);
 }
+
+float Shadow::slopeLeft() const { return slopeLeft_; }
 
 void Shadow::setSlopeLeft(Vector2I const& octantPosition)
 {
@@ -34,6 +37,8 @@ void Shadow::setSlopeLeft(float slopeLeft)
 {
     slopeLeft_ = slopeLeft;
 }
+
+float Shadow::slopeRight() const { return slopeRight_; }
 
 void Shadow::setSlopeRight(Vector2I const& octantPosition)
 {
@@ -77,6 +82,19 @@ float Shadow::getRight(int octantPositionHeight) const
     // NOTE: x = y / m
     return (octantPositionHeight) / slopeRight_;
 }
+
+// Fog
+Vector2I const& Fog::tilePosition() const { return tilePosition_; }
+
+void Fog::setTilePosition(Vector2I const& tilePosition) { tilePosition_ = tilePosition; }
+
+bool Fog::isFogOpaque() const { return isFogOpaque_; }
+
+void Fog::setFogOpaque(bool isFogOpaque) { isFogOpaque_ = isFogOpaque; }
+
+// Visibility
+std::vector<Fog>& Visibility::fogsToRender() { return fogsToRender_.values(); }
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
 void drawShadow(
     Shadow const& shadowNew,
@@ -129,7 +147,6 @@ void drawShadow(
 }
 #endif
 
-// Visibility
 void Visibility::updateShadowline(
     std::vector<Shadow>& shadowline,
     Vector2I const& octantPosition)
@@ -203,6 +220,7 @@ void Visibility::updateShadowline(
 
                 // Adjust remaining
                 shadowline[shadowContainingLeftEnd].setSlopeRight(shadowline[i].slopeRight());
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
                 snx::debug::cliLog(
                     "New shadow is (",
@@ -223,6 +241,7 @@ void Visibility::updateShadowline(
 #endif
 
             shadowline[i].setSlopeLeft(shadowNew.slopeLeft());
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
             snx::debug::cliLog(
                 "New shadow is (",
@@ -251,6 +270,7 @@ void Visibility::updateShadowline(
 #endif
 
                 shadowline[shadowContainingRightEnd].setSlopeLeft(shadowline[i].slopeLeft());
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
                 snx::debug::cliLog(
                     "New shadow is (",
@@ -271,6 +291,7 @@ void Visibility::updateShadowline(
 #endif
 
             shadowline[i].setSlopeRight(shadowNew.slopeRight());
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
             snx::debug::cliLog(
                 "New shadow is (",
@@ -299,7 +320,7 @@ void Visibility::updateShadowline(
 
 void Visibility::calculateVisibilitiesInOctant(
     int octant,
-    Tiles& map,
+    Tiles& tiles,
     Vector2I const& heroPosition,
     int range)
 {
@@ -309,6 +330,7 @@ void Visibility::calculateVisibilitiesInOctant(
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
     BeginDrawing();
 #endif
+
     // Iterate octant
     for (int octY{0}; octY < range; ++octY)
     {
@@ -321,6 +343,7 @@ void Visibility::calculateVisibilitiesInOctant(
                     octantPosition,
                     octant,
                     heroPosition)};
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
             snx::debug::cliLog(
                 "octantPosition",
@@ -330,18 +353,18 @@ void Visibility::calculateVisibilitiesInOctant(
                 "\n");
 #endif
 
-            VisibilityID tileVisiblityOld{map.visibilityID(tilePosition)};
+            VisibilityID tileVisiblityOld{tiles.visibilityID(tilePosition)};
 
             // < : Update only octant tiles including diagonal tiles (spare last row tile needed for correct diagonal visiblity)
             if (octX <= octY)
             {
                 // Skip test (-> set invis) if shadowline already covers whole octant
-                // isShadowMax();
                 if (
                     shadowline.size()
                     && shadowline[0].slopeLeft() < 0
                     && shadowline[0].slopeRight() < 1)
                 {
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
                     snx::debug::cliLog(
                         "Shadow is max.",
@@ -351,22 +374,22 @@ void Visibility::calculateVisibilitiesInOctant(
                     if (tileVisiblityOld == VisibilityID::visible)
                     {
                         // Tile WAS visible
-                        map.setVisibilityID(
+                        tiles.setVisibilityID(
                             tilePosition,
                             VisibilityID::seen);
 
                         // Add non opaque fog
-                        fogsToRender_[tilePosition] = Fog{tilePosition, false};
+                        fogsToRender_.set(tilePosition, Fog{tilePosition, false});
                     }
                     else if (tileVisiblityOld == VisibilityID::seen)
                     {
                         // Add non opaque fog
-                        fogsToRender_[tilePosition] = Fog{tilePosition, false};
+                        fogsToRender_.set(tilePosition, Fog{tilePosition, false});
                     }
                     else
                     {
                         // Add opaque fog
-                        fogsToRender_[tilePosition] = Fog{tilePosition, true};
+                        fogsToRender_.set(tilePosition, Fog{tilePosition, true});
                     }
 
                     continue;
@@ -384,6 +407,7 @@ void Visibility::calculateVisibilitiesInOctant(
                         || (shadow.getRightAtBottom(octantPosition)) < (octX + 0.5f))
                     {
                         // top-left/bottom-right corner not in shadow -> visible (variable unchanged)
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
                         snx::debug::cliLog(
                             "Tile is (partly) visible",
@@ -394,6 +418,7 @@ void Visibility::calculateVisibilitiesInOctant(
                     }
 
                     isVisible = false;
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
                     snx::debug::cliLog(
                         "Tile is invisible",
@@ -407,38 +432,39 @@ void Visibility::calculateVisibilitiesInOctant(
                 if (isVisible)
                 {
                     // Tile IS visible
-                    map.setVisibilityID(
+                    tiles.setVisibilityID(
                         tilePosition,
                         VisibilityID::visible);
                 }
                 else if (tileVisiblityOld == VisibilityID::visible)
                 {
                     // Tile WAS visible
-                    map.setVisibilityID(
+                    tiles.setVisibilityID(
                         tilePosition,
                         VisibilityID::seen);
 
                     // Add non opaque fog
-                    fogsToRender_[tilePosition] = Fog{tilePosition, false};
+                    fogsToRender_.set(tilePosition, Fog{tilePosition, false});
                 }
                 else if (tileVisiblityOld == VisibilityID::seen)
                 {
                     // Add non opaque fog
-                    fogsToRender_[tilePosition] = Fog{tilePosition, false};
+                    fogsToRender_.set(tilePosition, Fog{tilePosition, false});
                 }
                 else
                 {
                     // Add opaque fog
-                    fogsToRender_[tilePosition] = Fog{tilePosition, true};
+                    fogsToRender_.set(tilePosition, Fog{tilePosition, true});
                 }
             } // Octant tiles only
 
             // Update shadow line
             // updateShadowline(map, tilePosition);
-            if (!map.isOpaque(tilePosition))
+            if (!tiles.isOpaque(tilePosition))
             {
                 continue;
             }
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
             snx::debug::cliLog(
                 "Tile is opaque, add shadow...",
@@ -455,6 +481,7 @@ void Visibility::calculateVisibilitiesInOctant(
             updateShadowline(shadowline, octantPosition);
         } // Octant column
     } // Octant row
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
     EndDrawing();
 #endif
@@ -466,8 +493,8 @@ void Visibility::update(
     Vector2I const& heroPosition)
 {
     // Input
-    int octantWidth{1 + (viewportInTiles.width() / 2)};
-    int octantHeight{1 + (viewportInTiles.height() / 2)};
+    int octantWidth{2 + (viewportInTiles.width() / 2)};
+    int octantHeight{2 + (viewportInTiles.height() / 2)};
 
     // Init
     fogsToRender_.clear();
@@ -491,6 +518,7 @@ void Visibility::update(
         {
             range = octantHeight;
         }
+
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
         snx::debug::cliPrint(
             "\nOctant: ",
@@ -504,6 +532,7 @@ void Visibility::update(
             heroPosition,
             range);
     }
+
 #if defined(DEBUG) && defined(DEBUG_FOG)
     for (Fog const& fog : fogsToRender_.values())
     {

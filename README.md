@@ -11,6 +11,7 @@
 
 
 ## Shortterm
+- [ ] Setup docker
 - [ ] Add enemy
     - [ ]World holds list of Units
 
@@ -49,9 +50,10 @@
 ## Controls
 
 ### Mouse
-| Control | Function      |
-| ------- | ------------- |
-| RMB     | Toggle cursor |
+| Control | Function       |
+| ------- | -------------- |
+| RMB     | Toggle cursor  |
+| LMB     | Move to cursor |
 
 
 ### Keyboard
@@ -59,15 +61,17 @@
 | ------------------------ | ----------------------- |
 | WASD / Arrow keys / hjkl | Directional input       |
 | L_SHIFT                  | Continuous hero movment |
+| SPACE                    | Interact                |
 | F1                       | Toggle developer mode   |
 | F4                       | Exit                    |
 | F11                      | Toggle Maximize window  |
 
 
 ### Touch
-| Control     | Function          |
-| ----------- | ----------------- |
-| SWIPE_(DIR) | Directional input |
+| Control     | Function                |
+| ----------- | ----------------------- |
+| SWIPE_(DIR) | Directional input       |
+| DRAG        | Continuous hero movment |
 
 ## Maptypes:
 - Cellular Automata (dungeon)
@@ -76,6 +80,9 @@
 - Extend side -> new room wall
 - Random border match
 - Quad tree ()
+
+## Docker:
+[Install docker](https://itsfoss.com/install-docker-arch-linux/)
 
 # Implemented
 - [x] Compile for linux & windows

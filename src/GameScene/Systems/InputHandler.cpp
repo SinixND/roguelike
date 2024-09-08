@@ -5,8 +5,10 @@
 #include "GameCamera.h"
 #include "Hero.h"
 #include "InputActionID.h"
+#include "Logger.h"
+#include "Map.h"
 #include "Pathfinder.h"
-#include "Tiles.h"
+#include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
@@ -47,6 +49,8 @@ void InputHandler::setDefaultInputMappings()
     bindKey(KEY_D, InputActionID::actRight);
     bindKey(KEY_L, InputActionID::actRight);
     bindKey(KEY_RIGHT, InputActionID::actRight);
+
+    bindKey(KEY_SPACE, InputActionID::interact);
 
     bindModifierKey(KEY_LEFT_SHIFT, InputActionID::mod);
 
@@ -98,7 +102,6 @@ bool InputHandler::takeInputKey()
 #else
     if ((modifier_ && !currentKey) || IsKeyPressedRepeat(lastKey))
 #endif
-
     {
         currentKey = lastKey;
     }
@@ -244,7 +247,7 @@ void InputHandler::takeInput(bool isCursorActive)
 void InputHandler::triggerAction(
     Hero& hero,
     Cursor& cursor,
-    Tiles& map,
+    Map& map,
     GameCamera const& gameCamera)
 {
     if (inputAction_ == InputActionID::none)
@@ -291,10 +294,24 @@ void InputHandler::triggerAction(
     case InputActionID::moveToTarget:
     {
         hero.movement().trigger(Pathfinder::findPath(
-            map,
+            map.tiles(),
             hero.position().tilePosition(),
             cursor.position().tilePosition(),
             gameCamera));
+    }
+    break;
+
+    case InputActionID::interact:
+    {
+        Vector2I heroTilePosition{hero.position().tilePosition()};
+
+        if (!map.objects().events().contains(heroTilePosition))
+        {
+            snx::Logger::log("Nothing to do...");
+            break;
+        }
+
+        snx::PublisherStatic::publish(map.objects().event(heroTilePosition));
     }
     break;
 

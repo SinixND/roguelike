@@ -17,11 +17,11 @@ class Shadow
 public:
     Shadow(Vector2I const& octantPosition);
 
-    float slopeLeft() const { return slopeLeft_; }
+    float slopeLeft() const;
     void setSlopeLeft(Vector2I const& octantPosition);
     void setSlopeLeft(float slopeLeft);
 
-    float slopeRight() const { return slopeRight_; }
+    float slopeRight() const;
     void setSlopeRight(Vector2I const& octantPosition);
     void setSlopeRight(float slopeRight);
 
@@ -46,11 +46,11 @@ class Fog
     bool isFogOpaque_{};
 
 public:
-    Vector2I const& tilePosition() const { return tilePosition_; }
-    void setTilePosition(Vector2I const& tilePosition) { tilePosition_ = tilePosition; }
+    Vector2I const& tilePosition() const;
+    void setTilePosition(Vector2I const& tilePosition);
 
-    bool isFogOpaque() const { return isFogOpaque_; }
-    void setFogOpaque(bool isFogOpaque) { isFogOpaque_ = isFogOpaque; }
+    bool isFogOpaque() const;
+    void setFogOpaque(bool isFogOpaque);
 
     Fog() = default;
 
@@ -78,7 +78,7 @@ private:
         Vector2I const& octantPosition);
 
 public:
-    std::vector<Fog>& fogsToRender() { return fogsToRender_.values(); }
+    std::vector<Fog>& fogsToRender();
 
     void update(
         Tiles& map,

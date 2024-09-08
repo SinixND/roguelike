@@ -3,13 +3,19 @@
 #include "Event.h"
 #include "GameFont.h"
 #include "Logger.h"
+#include "Objects.h"
 #include "PanelData.h"
 #include "PublisherStatic.h"
-#include "Tiles.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
 #include <string>
+
+RectangleEx const& Panels::tileInfo() const { return tileInfo_; }
+RectangleEx const& Panels::info() const { return info_; }
+RectangleEx const& Panels::status() const { return status_; }
+RectangleEx const& Panels::log() const { return log_; }
+RectangleEx const& Panels::map() const { return map_; }
 
 void Panels::init()
 {
@@ -58,15 +64,15 @@ void Panels::drawLogPanelContent()
     }
 }
 
-void Panels::drawTileInfoPanelContent(Tiles& map, Vector2I const& cursorPosition)
+void Panels::drawTileInfoPanelContent(Objects& objects, Vector2I const& cursorPosition)
 {
-    if (!map.positions().contains(cursorPosition))
+    if (!objects.tags().contains(cursorPosition))
     {
         return;
     }
 
     // Draw tag from tile under cursor
-    char const* tag{TextFormat("[%s]", map.tag(cursorPosition).c_str())};
+    char const* tag{TextFormat("[%s]", objects.tag(cursorPosition).c_str())};
 
     int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
 

@@ -13,6 +13,7 @@
 #include <raymath.h>
 #include <unordered_set>
 #include <vector>
+
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
 #include "Debugger.h"
 #include <format>
@@ -58,7 +59,7 @@ bool checkRatingList(
     std::forward_list<RatedTile>& ratedTiles,
     std::map<int, std::vector<RatedTile*>>& ratingList,
     std::unordered_set<Vector2I>& tilesToIgnore,
-    Tiles& map,
+    Tiles& tiles,
     Vector2I const& target,
     GameCamera const& gameCamera,
     std::vector<Vector2I>& path)
@@ -133,9 +134,9 @@ bool checkRatingList(
             // - Not accessible
             // - Not in map
             if (
-                (map.visibilityID(newTilePosition) == VisibilityID::invisible)
-                || map.isSolid(newTilePosition)
-                || !map.positions().contains(newTilePosition))
+                (tiles.visibilityID(newTilePosition) == VisibilityID::invisible)
+                || tiles.isSolid(newTilePosition)
+                || !tiles.positions().contains(newTilePosition))
             {
                 // Invalid! Add to ignore set so it doesn't get checked again
                 tilesToIgnore.insert(newTilePosition);
@@ -151,6 +152,7 @@ bool checkRatingList(
 
             // Valid! Add to ignore set so it doesn't get checked again
             tilesToIgnore.insert(newTilePosition);
+
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
             DrawText(std::format("{:.0f}", newRatedTile.rating()).c_str(), UnitConversion::tileToScreen(newTilePosition, snx::debug::gcam().camera()).x - 10, UnitConversion::tileToScreen(newTilePosition, snx::debug::gcam().camera()).y - 5, 10, WHITE);
 #endif
@@ -168,7 +170,7 @@ bool checkRatingList(
             ratedTiles,
             ratingList,
             tilesToIgnore,
-            map,
+            tiles,
             target,
             gameCamera,
             path))
@@ -180,7 +182,7 @@ bool checkRatingList(
 }
 
 std::vector<Vector2I> Pathfinder::findPath(
-    Tiles& map,
+    Tiles& tiles,
     Vector2I const& start,
     Vector2I const& target,
     GameCamera const& gameCamera)
@@ -197,9 +199,9 @@ std::vector<Vector2I> Pathfinder::findPath(
     // - Not in map
     // - Equal to start
     if (
-        (map.visibilityID(target) == VisibilityID::invisible)
-        || map.isSolid(target)
-        || !map.positions().contains(target)
+        (tiles.visibilityID(target) == VisibilityID::invisible)
+        || tiles.isSolid(target)
+        || !tiles.positions().contains(target)
         || Vector2Equals(start, target))
     {
         return path;
@@ -228,7 +230,7 @@ std::vector<Vector2I> Pathfinder::findPath(
         ratedTiles,
         ratingList,
         tilesToIgnore,
-        map,
+        tiles,
         target,
         gameCamera,
         path);

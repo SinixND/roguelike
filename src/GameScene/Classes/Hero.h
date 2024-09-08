@@ -16,10 +16,10 @@ class Hero
 public:
     void init();
 
-    Movement& movement() { return movement_; }
-    Energy& energy() { return energy_; }
-    Position& position() { return position_; };
-    RenderID renderID() { return renderID_; };
+    Movement& movement();
+    Energy& energy();
+    Position& position();
+    RenderID renderID();
 };
 
 #endif

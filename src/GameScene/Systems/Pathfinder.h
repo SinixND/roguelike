@@ -42,7 +42,7 @@ public:
 namespace Pathfinder
 {
     std::vector<Vector2I> findPath(
-        Tiles& map,
+        Tiles& tiles,
         Vector2I const& start,
         Vector2I const& target,
         GameCamera const& gameCamera);

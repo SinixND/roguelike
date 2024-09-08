@@ -3,7 +3,6 @@
 
 #include "Map.h"
 #include "MapGenerator.h"
-#include "Tiles.h"
 #include <vector>
 
 // World holds maps which are identified by a mapLevel (int)
@@ -12,7 +11,7 @@ class World
     // std::vector<Tiles> maps_{MapGenerator::createStartRoom()};
     std::vector<Map> maps_{MapGenerator::createTestRoom()};
 
-    Tiles& currentMap_{maps_.back()};
+    Map* currentMap_{&maps_.back()};
 
     int maxMapLevel_{};
     int currentMapLevel_{};
@@ -21,8 +20,8 @@ class World
     void setCurrentMap(int level);
 
 public:
-    Tiles& currentMap() { return currentMap_; };
-    int currentMapLevel() { return currentMapLevel_; }
+    Map& currentMap();
+    int currentMapLevel();
 
     void increaseMapLevel();
     void decreaseMapLevel();

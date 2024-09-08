@@ -7,21 +7,26 @@
 #include "raylibEx.h"
 #include <algorithm>
 #include <cstddef>
-#include <string>
 #include <unordered_set>
 
 void Tiles::set(
     Vector2I const& tilePosition,
     RenderID renderID,
-    std::string const& tag,
-    VisibilityID visibilityID,
     bool isSolid,
-    bool isOpaque)
+    bool isOpaque,
+    VisibilityID visibilityID)
 {
-    positions_[tilePosition] = Position{tilePosition};
-    renderIDs_[tilePosition] = renderID;
-    tags_[tilePosition] = tag;
-    visibilityIDs_[tilePosition] = visibilityID;
+    positions_.set(
+        tilePosition,
+        Position{tilePosition});
+
+    renderIDs_.set(
+        tilePosition,
+        renderID);
+
+    visibilityIDs_.set(
+        tilePosition,
+        visibilityID);
 
     if (isSolid)
     {
@@ -54,22 +59,20 @@ void Tiles::set(
 //     isOpaques_.erase(tilePosition);
 // }
 
-snx::DenseMap<Vector2I, Position>& Tiles::positions() { return positions_; };
+snx::DenseMap<Vector2I, Position>& Tiles::positions()
+{
+    return positions_;
+}
 
 Position const& Tiles::position(Vector2I const& tilePosition)
 {
     return positions_[tilePosition];
 }
 
-std::string const& Tiles::tag(Vector2I const& tilePosition)
-{
-    return tags_[tilePosition];
-}
-
 snx::DenseMap<Vector2I, RenderID>& Tiles::renderIDs()
 {
     return renderIDs_;
-};
+}
 
 RenderID Tiles::renderID(Vector2I const& tilePosition)
 {
@@ -89,7 +92,7 @@ void Tiles::setVisibilityID(
     Vector2I const& tilePosition,
     VisibilityID visibilityID)
 {
-    visibilityIDs_[tilePosition] = visibilityID;
+    visibilityIDs_.set(tilePosition, visibilityID);
 }
 
 bool Tiles::isSolid(Vector2I const& tilePosition)
@@ -116,7 +119,7 @@ void Tiles::updateMapSize(Vector2I const& tilePosition)
         Vector2I{
             std::max(tilePosition.x, mapSize_.right()),
             std::max(tilePosition.y, mapSize_.bottom())}};
-};
+}
 
 size_t Tiles::size()
 {

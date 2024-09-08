@@ -1,9 +1,8 @@
 #ifndef IG20240531174000
 #define IG20240531174000
 
-#include "Tiles.h"
+#include "Objects.h"
 #include "raylibEx.h"
-#include <string>
 
 class Panels
 {
@@ -14,16 +13,16 @@ class Panels
     RectangleEx map_{};
 
 public:
+    RectangleEx const& tileInfo() const;
+    RectangleEx const& info() const;
+    RectangleEx const& status() const;
+    RectangleEx const& log() const;
+    RectangleEx const& map() const;
+
     void init();
 
-    RectangleEx const& tileInfo() { return tileInfo_; }
-    RectangleEx const& info() { return info_; }
-    RectangleEx const& status() { return status_; }
-    RectangleEx const& log() { return log_; }
-    RectangleEx const& map() { return map_; }
-
     void drawLogPanelContent();
-    void drawTileInfoPanelContent(Tiles& map, Vector2I const& cursorPosition);
+    void drawTileInfoPanelContent(Objects& objects, Vector2I const& cursorPosition);
     void drawPanelBorders();
 };
 

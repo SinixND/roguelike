@@ -37,13 +37,14 @@ private:
     void renderOutput();
     void postOutput();
 
-    // RectangleExI renderRectangleExI();
+    void setupEvents();
 
-public:
 #ifdef DEBUG
+public:
     static inline Camera2D gcam{};
 #endif
 
+public:
     void initialize();
     void update() override;
     void deinitialize();
