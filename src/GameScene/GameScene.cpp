@@ -17,6 +17,7 @@
 #include "Renderer.h"
 #include "Visibility.h"
 #include "raylibEx.h"
+#include <cstddef>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -274,12 +275,21 @@ void GameScene::renderOutput()
     }
 
     // Draw objects
-    auto objects{world_.currentMap().objects()};
+    auto& objects{world_.currentMap().objects()};
     for (Position const& position : objects.positions().values())
     {
         renderer_.render(
             objects.renderID(position.tilePosition()),
             position.worldPosition());
+    }
+
+    // Draw enemies
+    auto& enemies{world_.currentMap().enemies()};
+    for (size_t id : enemies.ids().values())
+    {
+        renderer_.render(
+            enemies.renderID(id),
+            enemies.position(id).worldPosition());
     }
 
     // Visibility

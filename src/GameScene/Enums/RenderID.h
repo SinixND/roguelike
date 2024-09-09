@@ -4,15 +4,22 @@
 enum class RenderID
 {
     none,
-    hero,
+    // UI
     cursor,
+    // Tiles
     wall,
     floor,
-    reachable,
-    path,
-    attackable,
-    supportable,
+    // Objects
     nextLevel,
+    // Units
+    hero,
+    // Enemies
+    goblin,
+    // Misc
+    // reachable,
+    // path,
+    // attackable,
+    // supportable,
 };
 
 #endif

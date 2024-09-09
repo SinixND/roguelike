@@ -32,6 +32,13 @@ private:
     void processPath();
 
 public:
+    Movement() = default;
+
+    Movement(float speed) 
+        : speed_(speed)
+    {
+    }
+
     Vector2I const& direction() const;
     void setSpeed(float speed);
 

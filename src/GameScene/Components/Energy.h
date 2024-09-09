@@ -8,6 +8,14 @@ class Energy
     int regenRate_{};
 
 public:
+    Energy() = default;
+
+    Energy(int maxEnergy, int regenRate)
+        : maxEnergy_(maxEnergy)
+        , regenRate_(regenRate)
+    {
+    }
+
     void setMaxEnergy(int maxEnergy);
     void setRegenRate(int rate);
 

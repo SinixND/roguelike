@@ -22,22 +22,22 @@ void Panels::init()
     tileInfo_
         .setRight(static_cast<int>(GetRenderWidth()))
         .setBottom(static_cast<int>(GetRenderHeight()))
-        .resizeWidthLeft(INFO_PANEL_WIDTH)
-        .resizeHeightTop(LOG_PANEL_HEIGHT);
+        .resizeWidthLeft(PanelData::INFO_PANEL_WIDTH)
+        .resizeHeightTop(PanelData::LOG_PANEL_HEIGHT);
 
     info_
         .setRight(static_cast<int>(GetRenderWidth()))
         .setBottom(tileInfo_.top())
-        .resizeWidthLeft(INFO_PANEL_WIDTH);
+        .resizeWidthLeft(PanelData::INFO_PANEL_WIDTH);
 
     status_
         .setRight(tileInfo_.left())
-        .setBottom(STATUS_PANEL_HEIGHT);
+        .setBottom(PanelData::STATUS_PANEL_HEIGHT);
 
     log_
         .setRight(tileInfo_.left())
         .setBottom(static_cast<int>(GetRenderHeight()))
-        .resizeHeightTop(LOG_PANEL_HEIGHT);
+        .resizeHeightTop(PanelData::LOG_PANEL_HEIGHT);
 
     map_
         .setRight(tileInfo_.left())
@@ -91,26 +91,26 @@ void Panels::drawPanelBorders()
 {
     DrawRectangleLinesEx(
         tileInfo_.rectangle(),
-        PANEL_BORDER_WEIGHT,
+        PanelData::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     DrawRectangleLinesEx(
         info_.rectangle(),
-        PANEL_BORDER_WEIGHT,
+        PanelData::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     DrawRectangleLinesEx(
         status_.rectangle(),
-        PANEL_BORDER_WEIGHT,
+        PanelData::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     DrawRectangleLinesEx(
         log_.rectangle(),
-        PANEL_BORDER_WEIGHT,
+        PanelData::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 
     DrawRectangleLinesEx(
         map_.rectangle(),
-        PANEL_BORDER_WEIGHT,
+        PanelData::PANEL_BORDER_WEIGHT,
         DARKGRAY);
 }

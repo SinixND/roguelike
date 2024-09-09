@@ -23,6 +23,7 @@ void Renderer::init()
     textures_.registerTexture(RenderID::wall, {105, 0});
     textures_.registerTexture(RenderID::floor, {0, 35});
     textures_.registerTexture(RenderID::nextLevel, {35, 35});
+    textures_.registerTexture(RenderID::goblin, {70, 35});
 }
 
 void Renderer::render(

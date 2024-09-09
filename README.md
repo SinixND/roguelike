@@ -6,7 +6,7 @@
 # TODOs
 ## Active (Rework features that existed before Restructuring)
 - [ ] Add enemy
-    - [ ]World holds list of Units
+    - [ ] Map holds list of Units
 
 
 ## Shortterm

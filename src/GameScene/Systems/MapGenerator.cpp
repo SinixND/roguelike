@@ -132,12 +132,6 @@ namespace MapGenerator
     {
         Map map{};
 
-        static std::array<Vector2I, 4> const directions{
-            Directions::V_LEFT,
-            Directions::V_RIGHT,
-            Directions::V_UP,
-            Directions::V_DOWN};
-
         Vector2I roomPosition{0, 0};
         int const roomWidth{15};
         int maxRoomOffset{(2 + level) * roomWidth};
@@ -160,7 +154,7 @@ namespace MapGenerator
             Vector2I oldRoomPosition{roomPosition};
 
             // Choose random direction
-            Vector2I direction{directions[snx::RNG::random(0, 3)]};
+            Vector2I direction{Directions::directions[snx::RNG::random(0, 3)]};
 
             // Update new room position
             roomPosition += Vector2Scale(direction, roomWidth);
