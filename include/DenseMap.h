@@ -1,6 +1,7 @@
 #ifndef IG20240128195657
 #define IG20240128195657
 
+#include <cassert>
 #include <cstddef>
 #include <unordered_map>
 #include <vector>
@@ -52,6 +53,7 @@ namespace snx
 
             // Add valueIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.insert(std::make_pair(valueIndex, key));
+            assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
         }
 
         // Creates or overwrites existing
@@ -59,6 +61,7 @@ namespace snx
         {
             insert(key);
             values_[keyToIndex_[key]] = value;
+            assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
         }
 
         // Does NOT overwrite existing
@@ -84,6 +87,7 @@ namespace snx
 
             // Add valueIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.insert(std::make_pair(valueIndex, key));
+            assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
         }
 
         Type& operator[](Key const& key)

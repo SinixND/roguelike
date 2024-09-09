@@ -69,7 +69,7 @@ private:
     // If any part of tile is visible -> whole tile is visible (so that "tunnel walls" stay visible)
     void calculateVisibilitiesInOctant(
         int octant,
-        Tiles& map,
+        Tiles& tiles,
         Vector2I const& heroPosition,
         int range);
 
@@ -81,7 +81,7 @@ public:
     std::vector<Fog>& fogsToRender();
 
     void update(
-        Tiles& map,
+        Tiles& tiles,
         RectangleExI const& viewport,
         Vector2I const& heroPosition);
 };

@@ -16,12 +16,12 @@ class Enemies
 {
     snx::IdManager idManager_{};
 
-    snx::DenseMap<size_t, size_t> ids_{};
     snx::DenseMap<size_t, RenderID> renderIDs_{};
     snx::DenseMap<size_t, AI> ais_{};
     snx::DenseMap<size_t, Movement> movements_{};
     snx::DenseMap<size_t, Energy> energies_{};
     snx::DenseMap<size_t, Position> positions_{};
+    snx::DenseMap<Vector2I, size_t> ids_{};
 
     Vector2I getRandomPosition(Tiles& tiles);
 
@@ -38,8 +38,6 @@ public:
     void init(int mapLevel, Tiles& tiles);
     void update();
 
-    snx::DenseMap<size_t, size_t>& ids();
-
     snx::DenseMap<size_t, Movement>& movements();
     Movement& movement(size_t id);
 
@@ -54,6 +52,8 @@ public:
 
     snx::DenseMap<size_t, AI>& ais();
     AI& ai(size_t id);
+
+    snx::DenseMap<Vector2I, size_t>& ids();
 };
 
 #endif

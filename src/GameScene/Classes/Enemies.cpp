@@ -9,7 +9,6 @@
 #include "Position.h"
 #include "RNG.h"
 #include "RenderID.h"
-#include "TileData.h"
 #include "Tiles.h"
 #include "raylibEx.h"
 #include <cstddef>
@@ -19,22 +18,23 @@ Vector2I Enemies::getRandomPosition(Tiles& tiles)
     // bool isPositionValid{false};
     RectangleExI const& mapSize{tiles.mapSize()};
 
+    Vector2I randomPosition{};
+
     // while (!isPositionValid)
     while (true)
     {
-        Vector2I randomPosition{
-            snx::RNG::random(
-                static_cast<int>(mapSize.left() / TileData::TILE_SIZE),
-                static_cast<int>(mapSize.right() / TileData::TILE_SIZE)),
-            snx::RNG::random(
-                static_cast<int>(mapSize.top() / TileData::TILE_SIZE),
-                static_cast<int>(mapSize.bottom() / TileData::TILE_SIZE))};
+        randomPosition.x = snx::RNG::random(
+            mapSize.left(),
+            mapSize.right());
+
+        randomPosition.y = snx::RNG::random(
+            mapSize.top(),
+            mapSize.bottom());
 
         if (
             tiles.positions().contains(randomPosition)
             && !tiles.isSolid(randomPosition)
-            // && !positions_.contains(randomPosition)
-        )
+            && !ids_.contains(randomPosition))
         {
             // isPositionValid = true;
             return randomPosition;
@@ -52,12 +52,12 @@ void Enemies::insert(
     Energy const& energy,
     Tiles& tiles)
 {
-    ids_.insert(id);
     renderIDs_.insert(id, renderID);
     ais_.insert(id, ai);
     movements_.insert(id, movement);
     energies_.insert(id, energy);
     positions_.insert(id, Position{getRandomPosition(tiles)});
+    ids_.insert(positions_[id].tilePosition());
 }
 
 void Enemies::create(RenderID enemyID, Tiles& tiles)
@@ -87,15 +87,13 @@ void Enemies::create(RenderID enemyID, Tiles& tiles)
 
 void Enemies::init(int mapLevel, Tiles& tiles)
 {
-    while (static_cast<int>(renderIDs_.size()) < (mapLevel + 1))
+    while (static_cast<int>(renderIDs_.size()) < ((mapLevel + 1) * 5))
     {
         create(RenderID::goblin, tiles);
     }
 }
 
 void Enemies::update() {}
-
-snx::DenseMap<size_t, size_t>& Enemies::ids() { return ids_; }
 
 snx::DenseMap<size_t, Movement>& Enemies::movements() { return movements_; }
 Movement& Enemies::movement(size_t id) { return movements_[id]; }
@@ -111,3 +109,5 @@ RenderID Enemies::renderID(size_t id) { return renderIDs_[id]; }
 
 snx::DenseMap<size_t, AI>& Enemies::ais() { return ais_; }
 AI& Enemies::ai(size_t id) { return ais_[id]; }
+
+snx::DenseMap<Vector2I, size_t>& Enemies::ids() { return ids_; }

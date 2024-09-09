@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#define DEBUG_VISIBILITY
 
 #include "Chunk.h"
 #include "ChunkData.h"
@@ -99,7 +100,7 @@ void Renderer::renderFog(Fog const& fog)
 {
     Color tint{};
 
-#if defined(DEBUG) && defined(DEBUG_FOG)
+#if defined(DEBUG) && defined(DEBUG_VISIBILITY)
     if (fog.isFogOpaque())
     {
         tint = ColorAlpha(RED, 0.5f);

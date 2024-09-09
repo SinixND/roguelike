@@ -1,7 +1,7 @@
 #ifndef IG20231203204746
 #define IG20231203204746
 
-#include "ChunksToRender.h"
+#include "Chunks.h"
 #include "Cursor.h"
 #include "GameCamera.h"
 #include "Hero.h"
@@ -28,7 +28,7 @@ class GameScene : public snx::IScene
 
     bool actionInProgress_{false};
 
-    ChunksToRender chunksToRender_{};
+    Chunks tileChunks_{};
     Visibility visibility_{};
 
 private:

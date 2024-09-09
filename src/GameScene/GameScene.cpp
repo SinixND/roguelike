@@ -1,11 +1,10 @@
 #include "GameScene.h"
-// #define DEBUG_TILEINFO
+#define DEBUG_TILEINFO
 // #define DEBUG_FOG
 
 #include "Chunk.h"
-#include "ChunksToRender.h"
+#include "Chunks.h"
 #include "Colors.h"
-#include "Components/Position.h"
 #include "Cursor.h"
 #include "Debugger.h"
 #include "DeveloperMode.h"
@@ -13,6 +12,7 @@
 #include "GameCamera.h"
 #include "Logger.h"
 #include "Panels.h"
+#include "Position.h"
 #include "PublisherStatic.h"
 #include "Renderer.h"
 #include "Visibility.h"
@@ -22,6 +22,10 @@
 #include <raylib.h>
 #include <raymath.h>
 
+#ifdef DEBUG
+#include "RNG.h"
+#endif
+
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
 #include "Objects.h"
 #include <string>
@@ -29,6 +33,10 @@
 
 void GameScene::initialize()
 {
+#ifdef DEBUG
+    snx::RNG::seed(1);
+#endif
+
     panels_.init();
 
     hero_.init();
@@ -45,12 +53,14 @@ void GameScene::initialize()
 
     inputHandler_.setDefaultInputMappings();
 
-    chunksToRender_.init(world_.currentMap().tiles(), renderer_);
+    tileChunks_.init(world_.currentMap().tiles(), renderer_);
 
     // Setup events
     setupEvents();
 
-    snx::Logger::log("Game screen initialized...");
+#ifdef DEBUG
+    snx::PublisherStatic::publish(Event::nextLevel);
+#endif
 }
 
 void GameScene::setupEvents()
@@ -117,7 +127,7 @@ void GameScene::setupEvents()
 
             hero_.position().changeTo(Vector2I{0, 0});
 
-            chunksToRender_.init(world_.currentMap().tiles(), renderer_);
+            tileChunks_.init(world_.currentMap().tiles(), renderer_);
 
             snx::PublisherStatic::publish(Event::heroMoved);
             snx::PublisherStatic::publish(Event::heroPositionChanged);
@@ -269,7 +279,7 @@ void GameScene::renderOutput()
     // World
     // Draw map
     // Draw tiles
-    for (Chunk& chunk : chunksToRender_.chunks())
+    for (Chunk& chunk : tileChunks_.chunks().values())
     {
         renderer_.renderChunk(chunk);
     }

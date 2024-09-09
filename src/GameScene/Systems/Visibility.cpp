@@ -15,8 +15,11 @@
 #include <vector>
 
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
-#include "Debugger.h"
 #include "TileData.h"
+#endif
+
+#if defined(DEBUG) && defined(DEBUG_FOG)
+#include "Debugger.h"
 #endif
 
 // Shadow
@@ -488,7 +491,7 @@ void Visibility::calculateVisibilitiesInOctant(
 }
 
 void Visibility::update(
-    Tiles& map,
+    Tiles& tiles,
     RectangleExI const& viewportInTiles,
     Vector2I const& heroPosition)
 {
@@ -499,7 +502,7 @@ void Visibility::update(
     // Init
     fogsToRender_.clear();
 
-    map.setVisibilityID(
+    tiles.setVisibilityID(
         heroPosition,
         VisibilityID::visible);
 
@@ -528,7 +531,7 @@ void Visibility::update(
 
         calculateVisibilitiesInOctant(
             octant,
-            map,
+            tiles,
             heroPosition,
             range);
     }

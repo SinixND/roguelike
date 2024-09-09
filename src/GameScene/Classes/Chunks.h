@@ -7,19 +7,18 @@
 #include "Tiles.h"
 #include "raylibEx.h"
 #include <raylib.h>
-#include <vector>
 
-class ChunksToRender
+class Chunks
 {
-    snx::DenseMap<Vector2I, Chunk> chunksToRender_{};
+    snx::DenseMap<Vector2I, Chunk> chunks_{};
 
 public:
-    void init(Tiles& map, Renderer& renderer);
+    void init(Tiles& tiles, Renderer& renderer);
 
     // Verify chunk exists for tilePosition
     void verifyRequiredChunk(Vector2I const& tilePosition);
     RenderTexture& chunk(Vector2I const& tilePosition);
-    std::vector<Chunk>& chunks();
+    snx::DenseMap<Vector2I, Chunk>& chunks();
 };
 
 #endif

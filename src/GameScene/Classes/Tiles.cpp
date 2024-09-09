@@ -93,6 +93,7 @@ void Tiles::setVisibilityID(
     VisibilityID visibilityID)
 {
     visibilityIDs_.set(tilePosition, visibilityID);
+    // Better: // visibilityIDs_[tilePosition] = visibilityID;
 }
 
 bool Tiles::isSolid(Vector2I const& tilePosition)
