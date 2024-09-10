@@ -6,6 +6,7 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
+// Contains one renderTexture and its dimensions as a RectangleExI (tile coordinates)
 class Chunk
 {
     RenderTexture renderTexture_{};

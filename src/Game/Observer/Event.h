@@ -4,14 +4,16 @@
 enum class Event
 {
     null = 0,
+    // Application interaction
+    windowResized,
+    panelsResized,
+    cameraChanged,
+    cursorPositionChanged,
+    // Game events
     actionFinished,
     actionInProgress,
-    cameraChanged,
-    panelsResized,
     heroMoved,
     heroPositionChanged,
-    windowResized,
-    cursorPositionChanged,
     nextLevel,
 };
 
