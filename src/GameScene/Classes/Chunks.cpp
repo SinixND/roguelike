@@ -79,9 +79,7 @@ void Chunks::verifyRequiredChunk(Vector2I const& tilePosition)
 
 RenderTexture& Chunks::chunk(Vector2I const& tilePosition)
 {
-    verifyRequiredChunk(tilePosition);
-
-    return chunks_[tilePosition].renderTexture();
+    return chunks_[UnitConversion::tileToChunk(tilePosition)].renderTexture();
 }
 
 snx::DenseMap<Vector2I, Chunk>& Chunks::chunks()

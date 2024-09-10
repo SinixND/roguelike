@@ -96,7 +96,7 @@ bool Fog::isFogOpaque() const { return isFogOpaque_; }
 void Fog::setFogOpaque(bool isFogOpaque) { isFogOpaque_ = isFogOpaque; }
 
 // Visibility
-std::vector<Fog>& Visibility::fogsToRender() { return fogsToRender_.values(); }
+std::vector<Fog>& Visibility::fogsToRender() { return fogs_.values(); }
 
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
 void drawShadow(
@@ -382,17 +382,17 @@ void Visibility::calculateVisibilitiesInOctant(
                             VisibilityID::seen);
 
                         // Add non opaque fog
-                        fogsToRender_.set(tilePosition, Fog{tilePosition, false});
+                        fogs_[tilePosition].setFogOpaque(false);
                     }
                     else if (tileVisiblityOld == VisibilityID::seen)
                     {
                         // Add non opaque fog
-                        fogsToRender_.set(tilePosition, Fog{tilePosition, false});
+                        fogs_[tilePosition].setFogOpaque(false);
                     }
                     else
                     {
                         // Add opaque fog
-                        fogsToRender_.set(tilePosition, Fog{tilePosition, true});
+                        fogs_[tilePosition].setFogOpaque(true);
                     }
 
                     continue;
@@ -447,17 +447,17 @@ void Visibility::calculateVisibilitiesInOctant(
                         VisibilityID::seen);
 
                     // Add non opaque fog
-                    fogsToRender_.set(tilePosition, Fog{tilePosition, false});
+                    fogs_[tilePosition].setFogOpaque(false);
                 }
                 else if (tileVisiblityOld == VisibilityID::seen)
                 {
                     // Add non opaque fog
-                    fogsToRender_.set(tilePosition, Fog{tilePosition, false});
+                    fogs_[tilePosition].setFogOpaque(false);
                 }
                 else
                 {
                     // Add opaque fog
-                    fogsToRender_.set(tilePosition, Fog{tilePosition, true});
+                    fogs_[tilePosition].setFogOpaque(true);
                 }
             } // Octant tiles only
 
@@ -500,7 +500,7 @@ void Visibility::update(
     int octantHeight{2 + (viewportInTiles.height() / 2)};
 
     // Init
-    fogsToRender_.clear();
+    fogs_.clear();
 
     tiles.setVisibilityID(
         heroPosition,

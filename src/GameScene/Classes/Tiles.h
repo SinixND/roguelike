@@ -24,6 +24,16 @@ private:
     void updateMapSize(Vector2I const& tilePosition);
 
 public:
+    // Access or create
+    void set(
+        Vector2I const& tilePosition,
+        RenderID renderID,
+        bool isSolid = false,
+        bool isOpaque = false,
+        VisibilityID visibilityID = VisibilityID::invisible);
+
+    // void erase(Vector2I const& tilePosition);
+
     snx::DenseMap<Vector2I, Position>& positions();
     Position const& position(Vector2I const& tilePosition);
 
@@ -40,16 +50,6 @@ public:
     bool isOpaque(Vector2I const& tilePosition);
 
     RectangleExI mapSize();
-
-    // Overwrites
-    void set(
-        Vector2I const& tilePosition,
-        RenderID renderID,
-        bool isSolid = false,
-        bool isOpaque = false,
-        VisibilityID visibilityID = VisibilityID::invisible);
-
-    // void erase(Vector2I const& tilePosition);
 
     size_t size();
 };

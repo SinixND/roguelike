@@ -26,17 +26,22 @@ namespace snx
         : public IDenseMap<Key>
     {
     public:
-        bool contains(Key const& key) const override
-        {
-            return keyToIndex_.find(key) != keyToIndex_.end();
-        }
+        // ITERATORS
 
+        // CAPACITY
+        // Return size of DenseMap
+        size_t size() const override
+        {
+            return values_.size();
+        };
+
+        // MODIFIERS
         // Does NOT overwrite existing
-        void insert(Key const& key, Type const& value = Type{})
+        Type& insert(Key const& key, Type const& value = Type{})
         {
             if (contains(key))
             {
-                return;
+                return at(key);
             }
 
             // Add new key to used keys
@@ -54,23 +59,16 @@ namespace snx
             // Add valueIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.insert(std::make_pair(valueIndex, key));
             assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
-        }
-
-        // Creates or overwrites existing
-        void set(Key const& key, Type const& value)
-        {
-            insert(key);
-            values_[keyToIndex_[key]] = value;
-            assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
+            return at(key);
         }
 
         // Does NOT overwrite existing
         template <typename... Args>
-        void emplace(Key const& key, Args&&... args)
+        Type& emplace(Key const& key, Args&&... args)
         {
             if (contains(key))
             {
-                return;
+                return at(key);
             }
 
             // Add new key to used keys
@@ -88,13 +86,16 @@ namespace snx
             // Add valueIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.insert(std::make_pair(valueIndex, key));
             assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
+            return at(key);
         }
 
-        Type& operator[](Key const& key)
-        {
-            return values_[keyToIndex_[key]];
-        }
+        // Overwrites existing (technically redundant function -> for convenience)
+        // void set(Key const& key, Type const& value)
+        // {
+        //     at(key) = value;
+        // }
 
+        // Moves last value to gap
         void erase(Key const& key) override
         {
             if (!contains(key))
@@ -141,6 +142,7 @@ namespace snx
             // keys_.erase(key);
         }
 
+        // Empty all containers
         void clear() override
         {
             values_.clear();
@@ -149,6 +151,26 @@ namespace snx
             // keys_.clear();
         }
 
+        // LOOKUP
+        // Access
+        Type& at(Key const& key)
+        {
+            return values_.at(keyToIndex_.at(key));
+        }
+
+        // Access or insert
+        Type& operator[](Key const& key)
+        {
+            insert(key);
+            return at(key);
+        }
+
+        bool contains(Key const& key) const override
+        {
+            return keyToIndex_.find(key) != keyToIndex_.end();
+        }
+
+        // Return vector (contiguous memory)
         std::vector<Type>& values()
         {
             return values_;
@@ -158,11 +180,6 @@ namespace snx
         // {
         // return keys_;
         // }
-
-        size_t size() const override
-        {
-            return values_.size();
-        };
 
     private:
         // Vector index is used as value key

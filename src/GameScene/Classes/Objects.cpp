@@ -14,21 +14,13 @@ void Objects::set(
     std::string const& tag,
     Event event)
 {
-    positions_.set(
-        tilePosition,
-        Position{tilePosition});
+    positions_[tilePosition].changeTo(tilePosition);
 
-    renderIDs_.set(
-        tilePosition,
-        renderID);
+    renderIDs_[tilePosition] = renderID;
 
-    tags_.set(
-        tilePosition,
-        tag);
+    tags_[tilePosition] = tag;
 
-    events_.set(
-        tilePosition,
-        event);
+    events_[tilePosition] = event;
 }
 
 snx::DenseMap<Vector2I, Position>& Objects::positions()

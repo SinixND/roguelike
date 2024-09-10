@@ -16,6 +16,7 @@
 
 namespace MapGenerator
 {
+    // Access or insert 
     void addTile(
         Tiles& tiles,
         Vector2I const& tilePosition,

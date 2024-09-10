@@ -63,7 +63,7 @@ public:
 
 class Visibility
 {
-    snx::DenseMap<Vector2I, Fog> fogsToRender_{};
+    snx::DenseMap<Vector2I, Fog> fogs_{};
 
 private:
     // If any part of tile is visible -> whole tile is visible (so that "tunnel walls" stay visible)

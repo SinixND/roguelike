@@ -16,17 +16,11 @@ void Tiles::set(
     bool isOpaque,
     VisibilityID visibilityID)
 {
-    positions_.set(
-        tilePosition,
-        Position{tilePosition});
+    positions_[tilePosition].changeTo(tilePosition);
 
-    renderIDs_.set(
-        tilePosition,
-        renderID);
+    renderIDs_[tilePosition] = renderID;
 
-    visibilityIDs_.set(
-        tilePosition,
-        visibilityID);
+    visibilityIDs_[tilePosition] = visibilityID;
 
     if (isSolid)
     {
@@ -92,8 +86,7 @@ void Tiles::setVisibilityID(
     Vector2I const& tilePosition,
     VisibilityID visibilityID)
 {
-    visibilityIDs_.set(tilePosition, visibilityID);
-    // Better: // visibilityIDs_[tilePosition] = visibilityID;
+    visibilityIDs_.at(tilePosition) = visibilityID;
 }
 
 bool Tiles::isSolid(Vector2I const& tilePosition)
