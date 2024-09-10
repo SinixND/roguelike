@@ -1,10 +1,10 @@
 #include "Hero.h"
 
 #include "Energy.h"
+#include "HeroData.h"
 #include "Movement.h"
 #include "Position.h"
 #include "RenderID.h"
-#include "HeroData.h"
 
 Movement& Hero::movement() { return movement_; }
 Energy& Hero::energy() { return energy_; }

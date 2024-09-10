@@ -8,26 +8,22 @@
 #include <cmath>
 #include <raymath.h>
 
+// This file contains functions to convert between
+// - tile (int/position, game codrdinates)
+// - world (float/pixel, game coordinates)
+// - chunk (int/position, game coordinates)
+// Camera transforms between game and screen coordinates
+// - screen (float/pixel, screen coordinates)
+
 namespace UnitConversion
 {
-    // This file contains functions to convert between
-    // - tile position (int/position, relative: considers camera)
-    // - world position (float/pixel, relative: considers camera)
-    // - screen position (float/pixel, absolute)
-    // - chunk position (int/position), relative: considers camera)
-
     // World pixel to tile position
     inline Vector2I worldToTile(Vector2 const& pixel)
     {
-        // World position is center of tile
+        // World pixel is center of tile
         return Vector2I{
             static_cast<int>(std::floor((pixel.x + (TileData::TILE_SIZE_HALF)) / TileData::TILE_SIZE)),
             static_cast<int>(std::floor((pixel.y + (TileData::TILE_SIZE_HALF)) / TileData::TILE_SIZE))};
-
-        // World position is top-left of tile
-        // return Vector2I{
-        //     static_cast<int>(std::floor(pixel.x / TileData::TILE_SIZE)),
-        //     static_cast<int>(std::floor(pixel.y / TileData::TILE_SIZE))};
     }
 
     // Tile position to world pixel
@@ -63,8 +59,8 @@ namespace UnitConversion
     inline Vector2I tileToChunk(Vector2I const& tilePosition)
     {
         return Vector2I{
-            static_cast<int>(std::round(tilePosition.x / ChunkData::CHUNK_SIZE_I) * ChunkData::CHUNK_SIZE_I),
-            static_cast<int>(std::round(tilePosition.y / ChunkData::CHUNK_SIZE_I) * ChunkData::CHUNK_SIZE_I)};
+            static_cast<int>(std::floor(tilePosition.x / static_cast<float>(ChunkData::CHUNK_SIZE_I))) * ChunkData::CHUNK_SIZE_I,
+            static_cast<int>(std::floor(tilePosition.y / static_cast<float>(ChunkData::CHUNK_SIZE_I))) * ChunkData::CHUNK_SIZE_I};
     }
 
     // Octant position to tile position

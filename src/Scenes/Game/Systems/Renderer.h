@@ -16,16 +16,16 @@ public:
 
     void render(
         RenderID renderID,
-        Vector2 const& worldPosition,
+        Vector2 const& worldPixel,
         Color const& tint = WHITE);
-
-    void renderChunk(Chunk& chunk);
 
     void renderToChunk(
         RenderID renderID,
-        Vector2 const& worldPosition,
+        Vector2 const& worldPixel,
         Chunk& chunk,
         Color const& tint = WHITE);
+
+    void renderChunk(Chunk& chunk);
 
     void renderFog(Fog const& fog);
 

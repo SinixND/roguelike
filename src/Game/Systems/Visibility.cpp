@@ -2,6 +2,7 @@
 // #define DEBUG_SHADOW
 // #define DEBUG_FOG
 
+#include "DenseMap.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
 #include "VisibilityID.h"
@@ -321,6 +322,30 @@ void Visibility::updateShadowline(
     }
 }
 
+void setFog(VisibilityID tileVisibilityOld, Tiles& tiles, snx::DenseMap<Vector2I, Fog>& fogs, Vector2I const& tilePosition)
+{
+    if (tileVisibilityOld == VisibilityID::visible)
+    {
+        // Tile WAS visible
+        tiles.setVisibilityID(
+            tilePosition,
+            VisibilityID::seen);
+
+        // Add non opaque fog
+        fogs[tilePosition] = Fog{tilePosition, false};
+    }
+    else if (tileVisibilityOld == VisibilityID::seen)
+    {
+        // Add non opaque fog
+        fogs[tilePosition] = Fog{tilePosition, false};
+    }
+    else
+    {
+        // Add opaque fog
+        fogs[tilePosition] = Fog{tilePosition, true};
+    }
+}
+
 void Visibility::calculateVisibilitiesInOctant(
     int octant,
     Tiles& tiles,
@@ -356,9 +381,9 @@ void Visibility::calculateVisibilitiesInOctant(
                 "\n");
 #endif
 
-            VisibilityID tileVisiblityOld{tiles.visibilityID(tilePosition)};
+            VisibilityID tileVisibilityOld{tiles.visibilityID(tilePosition)};
 
-            // < : Update only octant tiles including diagonal tiles (spare last row tile needed for correct diagonal visiblity)
+            // < : Update only octant tiles including diagonal tiles (spare last row tile needed for correct diagonal visibility)
             if (octX <= octY)
             {
                 // Skip test (-> set invis) if shadowline already covers whole octant
@@ -374,26 +399,7 @@ void Visibility::calculateVisibilitiesInOctant(
                         "\n");
 #endif
 
-                    if (tileVisiblityOld == VisibilityID::visible)
-                    {
-                        // Tile WAS visible
-                        tiles.setVisibilityID(
-                            tilePosition,
-                            VisibilityID::seen);
-
-                        // Add non opaque fog
-                        fogs_[tilePosition].setFogOpaque(false);
-                    }
-                    else if (tileVisiblityOld == VisibilityID::seen)
-                    {
-                        // Add non opaque fog
-                        fogs_[tilePosition].setFogOpaque(false);
-                    }
-                    else
-                    {
-                        // Add opaque fog
-                        fogs_[tilePosition].setFogOpaque(true);
-                    }
+                    setFog(tileVisibilityOld, tiles, fogs_, tilePosition);
 
                     continue;
                 } // Max shadow
@@ -439,25 +445,9 @@ void Visibility::calculateVisibilitiesInOctant(
                         tilePosition,
                         VisibilityID::visible);
                 }
-                else if (tileVisiblityOld == VisibilityID::visible)
-                {
-                    // Tile WAS visible
-                    tiles.setVisibilityID(
-                        tilePosition,
-                        VisibilityID::seen);
-
-                    // Add non opaque fog
-                    fogs_[tilePosition].setFogOpaque(false);
-                }
-                else if (tileVisiblityOld == VisibilityID::seen)
-                {
-                    // Add non opaque fog
-                    fogs_[tilePosition].setFogOpaque(false);
-                }
                 else
                 {
-                    // Add opaque fog
-                    fogs_[tilePosition].setFogOpaque(true);
+                    setFog(tileVisibilityOld, tiles, fogs_, tilePosition);
                 }
             } // Octant tiles only
 

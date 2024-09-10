@@ -14,9 +14,6 @@
 
 
 ## Longterm
-- [ ] Improve rendering 
-  - [x] reduce render calls by chunking map
-  - [ ] improve visibility rendering (take care of artifacts (slight offset): render shadow as texture like map tiles?)
 - [ ] Changeable key bindings
 - [ ] Add rogue theme (ASCII)
 - Floor : '.'
@@ -111,3 +108,4 @@
 - [x] Print tile info in panel (under cursor, only special tiles!)
 - [x] Split inactive and active map tiles
 - [x] Map change
+- [x] Reduce render calls by chunking map

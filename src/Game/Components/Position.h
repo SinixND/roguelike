@@ -22,16 +22,16 @@ public:
         position_ = UnitConversion::tileToWorld(tilePosition);
     }
 
-    Vector2 const& worldPosition() const { return position_; }
+    Vector2 const& worldPixel() const { return position_; }
 
     Vector2I tilePosition() const
     {
         return UnitConversion::worldToTile(position_);
     }
 
-    void changeTo(Vector2 const& worldPosition)
+    void changeTo(Vector2 const& worldPixel)
     {
-        position_ = worldPosition;
+        position_ = worldPixel;
     }
 
     void changeTo(Vector2I const& tilePosition)

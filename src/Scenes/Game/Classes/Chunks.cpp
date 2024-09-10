@@ -41,18 +41,15 @@ void Chunks::init(Tiles& tiles, Renderer& renderer)
             for (int y{chunkSize.top() - 1}; y < (chunkSize.bottom() + 2); ++y)
             {
                 Vector2I tilePosition{x, y};
-                if (tilePosition == Vector2I{-8, 0})
+
+                if (!tiles.renderIDs().contains(tilePosition))
                 {
-                    [[maybe_unused]] int dbg{};
+                    continue;
                 }
-                // if (!tiles.renderIDs().contains(tilePosition))
-                // {
-                //     continue;
-                // }
 
                 renderer.renderToChunk(
                     tiles.renderID(tilePosition),
-                    tiles.position(tilePosition).worldPosition(),
+                    tiles.position(tilePosition).worldPixel(),
                     chunk);
             }
         }
@@ -65,7 +62,7 @@ void Chunks::verifyRequiredChunk(Vector2I const& tilePosition)
 {
     Vector2I chunkPosition{UnitConversion::tileToChunk(tilePosition)};
 
-    // If clause needed due to LoadRenderTexture() call
+    // If clause is needed due to LoadRenderTexture() call
     if (!chunks_.contains(chunkPosition))
     {
         chunks_.emplace(
@@ -77,10 +74,10 @@ void Chunks::verifyRequiredChunk(Vector2I const& tilePosition)
     }
 }
 
-RenderTexture& Chunks::chunk(Vector2I const& tilePosition)
-{
-    return chunks_[UnitConversion::tileToChunk(tilePosition)].renderTexture();
-}
+// Chunk& Chunks::chunk(Vector2I const& tilePosition)
+// {
+//     return chunks_.at(UnitConversion::tileToChunk(tilePosition));
+// }
 
 snx::DenseMap<Vector2I, Chunk>& Chunks::chunks()
 {

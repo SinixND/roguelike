@@ -6,7 +6,11 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-// Contains one renderTexture and its dimensions as a RectangleExI (tile coordinates)
+// Contains
+// - one renderTexture
+// - its dimensions as a RectangleExI (tile coordinates)
+// - center position
+
 class Chunk
 {
     RenderTexture renderTexture_{};
@@ -23,7 +27,8 @@ public:
     Chunk(RenderTexture const& renderTexture, Position const& position)
         : renderTexture_(renderTexture)
         , corners_(RectangleExI{
-              position.tilePosition(),
+              position.tilePosition().x,
+              position.tilePosition().y,
               ChunkData::CHUNK_SIZE_I,
               ChunkData::CHUNK_SIZE_I})
         , position_(position)

@@ -34,7 +34,7 @@ private:
 public:
     Movement() = default;
 
-    Movement(float speed) 
+    Movement(float speed)
         : speed_(speed)
     {
     }

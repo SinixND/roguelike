@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#define DEBUG_CHUNKS
 #define DEBUG_VISIBILITY
 
 #include "Chunk.h"
@@ -29,7 +30,7 @@ void Renderer::init()
 
 void Renderer::render(
     RenderID renderID,
-    Vector2 const& worldPosition,
+    Vector2 const& worldPixel,
     Color const& tint)
 {
     // Use 0.5f pixel offset to avoid texture bleeding
@@ -41,40 +42,19 @@ void Renderer::render(
             TextureData::TEXTURE_SIZE - (2 * 0.5f),
             TextureData::TEXTURE_SIZE - (2 * 0.5f)},
         Rectangle{
-            worldPosition.x,
-            worldPosition.y,
+            worldPixel.x,
+            worldPixel.y,
             TileData::TILE_SIZE,
             TileData::TILE_SIZE},
-        TileData::TILE_CENTER,
+        // TileData::TILE_CENTER,
+        Vector2{0,0},
         0,
         tint);
 }
 
-void Renderer::renderChunk(Chunk& chunk)
-{
-    RenderTexture& renderTexture{chunk.renderTexture()};
-    Vector2 worldPosition{chunk.position().worldPosition()};
-
-    DrawTexturePro(
-        renderTexture.texture,
-        Rectangle{
-            0,
-            0,
-            static_cast<float>(renderTexture.texture.width),
-            static_cast<float>(-renderTexture.texture.height)},
-        Rectangle{
-            worldPosition.x,
-            worldPosition.y,
-            ChunkData::CHUNK_SIZE_F,
-            ChunkData::CHUNK_SIZE_F},
-        ChunkData::CHUNK_CENTER,
-        0,
-        WHITE);
-}
-
 void Renderer::renderToChunk(
     RenderID renderID,
-    Vector2 const& worldPosition,
+    Vector2 const& worldPixel,
     Chunk& chunk,
     Color const& tint)
 {
@@ -87,13 +67,44 @@ void Renderer::renderToChunk(
             TextureData::TEXTURE_SIZE - (2 * 0.5f),
             TextureData::TEXTURE_SIZE - (2 * 0.5f)},
         Rectangle{
-            worldPosition.x - chunk.position().worldPosition().x + (ChunkData::CHUNK_SIZE_F / 2),
-            worldPosition.y - chunk.position().worldPosition().y + (ChunkData::CHUNK_SIZE_F / 2),
+            worldPixel.x - chunk.position().worldPixel().x,
+            worldPixel.y - chunk.position().worldPixel().y,
             TileData::TILE_SIZE,
             TileData::TILE_SIZE},
-        TileData::TILE_CENTER,
+        // TileData::TILE_CENTER,
+        Vector2{0,0},
         0,
         tint);
+}
+
+void Renderer::renderChunk(Chunk& chunk)
+{
+    DrawTexturePro(
+        chunk.renderTexture().texture,
+        Rectangle{
+            0,
+            0,
+            static_cast<float>(chunk.renderTexture().texture.width),
+            static_cast<float>(-chunk.renderTexture().texture.height)},
+        Rectangle{
+            chunk.position().worldPixel().x,
+            chunk.position().worldPixel().y,
+            ChunkData::CHUNK_SIZE_F,
+            ChunkData::CHUNK_SIZE_F},
+        Vector2{0, 0},
+        0,
+        WHITE);
+
+#if defined(DEBUG) && defined(DEBUG_CHUNKS)
+    DrawRectangleLinesEx(
+        Rectangle{
+            chunk.position().worldPixel().x,
+            chunk.position().worldPixel().y,
+            ChunkData::CHUNK_SIZE_F,
+            ChunkData::CHUNK_SIZE_F},
+        3.0f,
+        YELLOW);
+#endif
 }
 
 void Renderer::renderFog(Fog const& fog)
@@ -121,9 +132,9 @@ void Renderer::renderFog(Fog const& fog)
 #endif
 
     DrawRectangleV(
-        Vector2SubtractValue(
+        // Vector2SubtractValue(
             UnitConversion::tileToWorld(fog.tilePosition()),
-            TileData::TILE_SIZE_HALF),
+            // TileData::TILE_SIZE_HALF),
         TileData::TILE_DIMENSIONS,
         tint);
 }

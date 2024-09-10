@@ -2,6 +2,7 @@
 #define IG20240414161039
 
 #include "raylibEx.h"
+#include <array>
 #include <raylib.h>
 
 namespace Directions

@@ -8,6 +8,7 @@ namespace ChunkData
 {
     // Odd number of tiles to have dedicated center
     int constexpr CHUNK_SIZE_I{25};
+    // int constexpr CHUNK_SIZE_HALF_I{CHUNK_SIZE_I / 2};
     float constexpr CHUNK_SIZE_F{CHUNK_SIZE_I * TileData::TILE_SIZE};
     Vector2 constexpr CHUNK_CENTER{CHUNK_SIZE_F / 2, CHUNK_SIZE_F / 2};
 }

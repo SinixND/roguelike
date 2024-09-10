@@ -43,7 +43,7 @@ void GameScene::initialize()
 
     gameCamera_.init(
         panels_.map(),
-        hero_.position().worldPosition());
+        hero_.position().worldPixel());
 
 #ifdef DEBUG
     snx::debug::gcam() = gameCamera_;
@@ -77,7 +77,7 @@ void GameScene::setupEvents()
         Event::panelsResized,
         [&]()
         {
-            gameCamera_.init(panels_.map(), hero_.position().worldPosition());
+            gameCamera_.init(panels_.map(), hero_.position().worldPixel());
             visibility_.update(
                 world_.currentMap().tiles(),
                 gameCamera_.viewportInTiles(),
@@ -102,7 +102,7 @@ void GameScene::setupEvents()
         Event::heroMoved,
         [&]()
         {
-            gameCamera_.setTarget(hero_.position().worldPosition());
+            gameCamera_.setTarget(hero_.position().worldPixel());
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -156,10 +156,10 @@ void GameScene::setupEvents()
                 + "\n");
 
             snx::debug::cliLog(
-                "WorldPosition: "
-                + std::to_string(world_.currentMap().tiles().position(cursorPos).worldPosition().x)
+                "WorldPixel: "
+                + std::to_string(world_.currentMap().tiles().position(cursorPos).worldPixel().x)
                 + ", "
-                + std::to_string(world_.currentMap().tiles().position(cursorPos).worldPosition().y)
+                + std::to_string(world_.currentMap().tiles().position(cursorPos).worldPixel().y)
                 + "\n");
 
             snx::debug::cliLog(
@@ -223,7 +223,7 @@ void GameScene::updateState()
 {
     cursor_.update(
         gameCamera_.camera(),
-        hero_.position().worldPosition());
+        hero_.position().worldPixel());
 
     // Regenerate energy if no action in progress
     if (!actionInProgress_)
@@ -246,11 +246,13 @@ void GameScene::updateState()
     // Check collision before starting movement
     if (hero_.movement().isTriggered())
     {
-        if (world_.currentMap().tiles().isSolid(
+        if (
+            world_.currentMap().tiles().isSolid(
                 // Next tilePosition hero moves to
                 Vector2Add(
                     hero_.position().tilePosition(),
-                    hero_.movement().direction())))
+                    hero_.movement().direction()))
+            || world_.currentMap().enemies().ids().contains(hero_.position().tilePosition()))
         {
             hero_.movement().abortMovement();
         }
@@ -290,7 +292,7 @@ void GameScene::renderOutput()
     {
         renderer_.render(
             objects.renderID(position.tilePosition()),
-            position.worldPosition());
+            position.worldPixel());
     }
 
     // Draw enemies
@@ -299,7 +301,7 @@ void GameScene::renderOutput()
     {
         renderer_.render(
             enemies.renderID(id),
-            enemies.position(id).worldPosition());
+            enemies.position(id).worldPixel());
     }
 
     // Visibility
@@ -312,7 +314,7 @@ void GameScene::renderOutput()
     // Draw hero
     renderer_.render(
         hero_.renderID(),
-        hero_.position().worldPosition());
+        hero_.position().worldPixel());
 
     // UI
     // Draw cursor
@@ -320,7 +322,7 @@ void GameScene::renderOutput()
     {
         renderer_.render(
             cursor_.renderID(),
-            cursor_.position().worldPosition());
+            cursor_.position().worldPixel());
     }
 
     EndScissorMode();

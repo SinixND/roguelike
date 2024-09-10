@@ -17,7 +17,7 @@ public:
 
     // Verify chunk exists for tilePosition
     void verifyRequiredChunk(Vector2I const& tilePosition);
-    RenderTexture& chunk(Vector2I const& tilePosition);
+    // Chunk& chunk(Vector2I const& tilePosition);
     snx::DenseMap<Vector2I, Chunk>& chunks();
 };
 
