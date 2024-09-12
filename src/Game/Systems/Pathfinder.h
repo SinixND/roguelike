@@ -2,7 +2,7 @@
 #define IG20240901143710
 
 #include "GameCamera.h"
-#include "Tiles.h"
+#include "Map.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <vector>
@@ -42,7 +42,7 @@ public:
 namespace Pathfinder
 {
     std::vector<Vector2I> findPath(
-        Tiles& tiles,
+        Map& map,
         Vector2I const& start,
         Vector2I const& target,
         GameCamera const& gameCamera);

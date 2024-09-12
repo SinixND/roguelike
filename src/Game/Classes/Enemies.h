@@ -31,11 +31,18 @@ class Enemies
         AI const& ai,
         Movement const& movement,
         Energy const& energy,
-        Tiles& tiles);
+        Vector2I const& tilePosition);
 
 public:
-    void create(RenderID enemyID, Tiles& tiles);
-    void init(int mapLevel, Tiles& tiles);
+    void create(
+        Tiles& tiles,
+        RenderID enemyID, 
+        Vector2I tilePosition = Vector2I{0, 0});
+
+    void init(
+        int mapLevel, 
+        Tiles& tiles);
+
     void update();
 
     snx::DenseMap<size_t, Movement>& movements();

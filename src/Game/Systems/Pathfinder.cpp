@@ -1,4 +1,6 @@
 #include "Pathfinder.h"
+#include "Map.h"
+#include "TileData.h"
 #define DEBUG_PATHFINDER
 
 #include "Directions.h"
@@ -59,7 +61,7 @@ bool checkRatingList(
     std::forward_list<RatedTile>& ratedTiles,
     std::map<int, std::vector<RatedTile*>>& ratingList,
     std::unordered_set<Vector2I>& tilesToIgnore,
-    Tiles& tiles,
+    Map& map,
     Vector2I const& target,
     GameCamera const& gameCamera,
     std::vector<Vector2I>& path)
@@ -133,10 +135,12 @@ bool checkRatingList(
             // - Is invisible
             // - Not accessible
             // - Not in map
+            // - Enemy present
             if (
-                (tiles.visibilityID(newTilePosition) == VisibilityID::invisible)
-                || tiles.isSolid(newTilePosition)
-                || !tiles.positions().contains(newTilePosition))
+                (map.tiles().visibilityID(newTilePosition) == VisibilityID::invisible)
+                || map.tiles().isSolid(newTilePosition)
+                || !map.tiles().positions().contains(newTilePosition)
+                || map.enemies().ids().contains(newTilePosition))
             {
                 // Invalid! Add to ignore set so it doesn't get checked again
                 tilesToIgnore.insert(newTilePosition);
@@ -154,7 +158,23 @@ bool checkRatingList(
             tilesToIgnore.insert(newTilePosition);
 
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
-            DrawText(std::format("{:.0f}", newRatedTile.rating()).c_str(), UnitConversion::tileToScreen(newTilePosition, snx::debug::gcam().camera()).x - 10, UnitConversion::tileToScreen(newTilePosition, snx::debug::gcam().camera()).y - 5, 10, WHITE);
+            DrawText(
+                std::format(
+                    "{:.0f}",
+                    newRatedTile.rating())
+                    .c_str(),
+                UnitConversion::tileToScreen(
+                    newTilePosition,
+                    snx::debug::gcam().camera())
+                        .x
+                    + 10,
+                UnitConversion::tileToScreen(
+                    newTilePosition,
+                    snx::debug::gcam().camera())
+                        .y
+                    + 10,
+                10,
+                WHITE);
 #endif
         }
     }
@@ -170,7 +190,7 @@ bool checkRatingList(
             ratedTiles,
             ratingList,
             tilesToIgnore,
-            tiles,
+            map,
             target,
             gameCamera,
             path))
@@ -182,7 +202,7 @@ bool checkRatingList(
 }
 
 std::vector<Vector2I> Pathfinder::findPath(
-    Tiles& tiles,
+    Map& map,
     Vector2I const& start,
     Vector2I const& target,
     GameCamera const& gameCamera)
@@ -199,9 +219,9 @@ std::vector<Vector2I> Pathfinder::findPath(
     // - Not in map
     // - Equal to start
     if (
-        (tiles.visibilityID(target) == VisibilityID::invisible)
-        || tiles.isSolid(target)
-        || !tiles.positions().contains(target)
+        (map.tiles().visibilityID(target) == VisibilityID::invisible)
+        || map.tiles().isSolid(target)
+        || !map.tiles().positions().contains(target)
         || Vector2Equals(start, target))
     {
         return path;
@@ -230,7 +250,7 @@ std::vector<Vector2I> Pathfinder::findPath(
         ratedTiles,
         ratingList,
         tilesToIgnore,
-        tiles,
+        map,
         target,
         gameCamera,
         path);
@@ -239,7 +259,16 @@ std::vector<Vector2I> Pathfinder::findPath(
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
     for (auto& position : path)
     {
-        DrawCircleV(UnitConversion::tileToScreen(position, snx::debug::gcam().camera()), 5, ColorAlpha(GREEN, 0.5));
+        DrawCircleV(
+            Vector2Add(
+                UnitConversion::tileToScreen(
+                    position,
+                    snx::debug::gcam().camera()),
+                Vector2{TileData::TILE_SIZE_HALF, TileData::TILE_SIZE_HALF}),
+            5,
+            ColorAlpha(
+                GREEN,
+                0.5));
     }
     EndDrawing();
 #endif

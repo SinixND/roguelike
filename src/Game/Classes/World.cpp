@@ -34,7 +34,6 @@ void World::decreaseMapLevel()
 void World::addNewMap()
 {
     maps_.push_back(MapGenerator::createRandomMap(maxMapLevel_ + 1));
-    maps_.back().enemies().init(currentMapLevel_, maps_.back().tiles());
 }
 
 void World::setCurrentMap(int level)

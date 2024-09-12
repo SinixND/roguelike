@@ -17,7 +17,7 @@ public:
     bool isActive();
     void toggle();
 
-    void update(Camera2D const& camera, Vector2 const& heroPosition);
+    void update(Camera2D const& camera, Vector2I const& heroPosition);
 };
 
 #endif

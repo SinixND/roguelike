@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cstddef>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 namespace snx
@@ -37,6 +38,32 @@ namespace snx
 
         // MODIFIERS
         // Does NOT overwrite existing
+        Type const& insert(Key const& key, Type const& value = Type{}) const
+        {
+            if (contains(key))
+            {
+                return at(key);
+            }
+
+            // Add new key to used keys
+            // keys_.insert(key);
+
+            // Get new list index for value
+            size_t valueIndex = size();
+
+            // Add new value to list
+            values_.push_back(value);
+
+            // Add key to valueIndex mapping
+            keyToIndex_.insert(std::make_pair(key, valueIndex));
+
+            // Add valueIndex to key mapping (internal use only to keep list contiguous)
+            indexToKey_.insert(std::make_pair(valueIndex, key));
+            assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
+            return at(key);
+        }
+
+        // Allow non-const call
         Type& insert(Key const& key, Type const& value = Type{})
         {
             if (contains(key))
@@ -63,6 +90,33 @@ namespace snx
         }
 
         // Does NOT overwrite existing
+        template <typename... Args>
+        Type const& emplace(Key const& key, Args&&... args) const
+        {
+            if (contains(key))
+            {
+                return at(key);
+            }
+
+            // Add new key to used keys
+            // keys_.insert(key);
+
+            // Get new list index for value
+            size_t valueIndex = size();
+
+            // Create and Add new value to list
+            values_.push_back(Type{std::forward<Args>(args)...});
+
+            // Add key to valueIndex mapping
+            keyToIndex_.insert(std::make_pair(key, valueIndex));
+
+            // Add valueIndex to key mapping (internal use only to keep list contiguous)
+            indexToKey_.insert(std::make_pair(valueIndex, key));
+            assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
+            return at(key);
+        }
+
+        // Allow non-const call
         template <typename... Args>
         Type& emplace(Key const& key, Args&&... args)
         {
@@ -153,12 +207,24 @@ namespace snx
 
         // LOOKUP
         // Access
+        Type const& at(Key const& key) const
+        {
+            return values_.at(keyToIndex_.at(key));
+        }
+
+        // Allow non-const call
         Type& at(Key const& key)
         {
             return values_.at(keyToIndex_.at(key));
         }
 
         // Access or insert
+        Type const& operator[](Key const& key) const
+        {
+            insert(key);
+            return at(key);
+        }
+
         Type& operator[](Key const& key)
         {
             insert(key);
@@ -171,6 +237,11 @@ namespace snx
         }
 
         // Return vector (contiguous memory)
+        std::vector<Type> const& values() const
+        {
+            return values_;
+        }
+
         std::vector<Type>& values()
         {
             return values_;

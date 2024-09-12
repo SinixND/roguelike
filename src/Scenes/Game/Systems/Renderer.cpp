@@ -1,5 +1,5 @@
 #include "Renderer.h"
-#define DEBUG_CHUNKS
+// #define DEBUG_CHUNKS
 #define DEBUG_VISIBILITY
 
 #include "Chunk.h"
@@ -47,7 +47,7 @@ void Renderer::render(
             TileData::TILE_SIZE,
             TileData::TILE_SIZE},
         // TileData::TILE_CENTER,
-        Vector2{0,0},
+        Vector2{0, 0},
         0,
         tint);
 }
@@ -72,7 +72,7 @@ void Renderer::renderToChunk(
             TileData::TILE_SIZE,
             TileData::TILE_SIZE},
         // TileData::TILE_CENTER,
-        Vector2{0,0},
+        Vector2{0, 0},
         0,
         tint);
 }
@@ -133,8 +133,8 @@ void Renderer::renderFog(Fog const& fog)
 
     DrawRectangleV(
         // Vector2SubtractValue(
-            UnitConversion::tileToWorld(fog.tilePosition()),
-            // TileData::TILE_SIZE_HALF),
+        UnitConversion::tileToWorld(fog.tilePosition()),
+        // TileData::TILE_SIZE_HALF),
         TileData::TILE_DIMENSIONS,
         tint);
 }

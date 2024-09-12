@@ -27,13 +27,15 @@ void Cursor::toggle()
     ShowCursor();
 }
 
-void Cursor::update(Camera2D const& camera, Vector2 const& heroPosition)
+void Cursor::update(Camera2D const& camera, Vector2I const& heroPosition)
 {
     if (isActive_)
     {
-        if (!Vector2Equals(position_.tilePosition(), UnitConversion::getMouseTile(camera)))
+        Vector2I mouseTile{UnitConversion::screenToTile(GetMousePosition(), camera)};
+
+        if (!Vector2Equals(position_.tilePosition(), mouseTile))
         {
-            position_.changeTo(UnitConversion::getMouseTile(camera));
+            position_.changeTo(mouseTile);
 
             snx::PublisherStatic::publish(Event::cursorPositionChanged);
         }

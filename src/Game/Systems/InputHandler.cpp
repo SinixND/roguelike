@@ -250,8 +250,12 @@ void InputHandler::triggerAction(
     Map& map,
     GameCamera const& gameCamera)
 {
+
     if (inputAction_ == InputActionID::none)
     {
+        // Trigger input agnostic actions
+        hero.movement().trigger();
+
         return;
     }
 
@@ -294,7 +298,7 @@ void InputHandler::triggerAction(
     case InputActionID::moveToTarget:
     {
         hero.movement().trigger(Pathfinder::findPath(
-            map.tiles(),
+            map,
             hero.position().tilePosition(),
             cursor.position().tilePosition(),
             gameCamera));

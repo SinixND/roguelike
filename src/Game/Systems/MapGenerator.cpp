@@ -182,6 +182,9 @@ namespace MapGenerator
                 RenderID::floor);
         }
 
+        // Add enemies
+        map.enemies().init(level, map.tiles());
+
         return map;
     }
 
@@ -316,6 +319,11 @@ namespace MapGenerator
                 -5},
             RenderID::nextLevel,
             Event::nextLevel);
+
+        testRoom.enemies().create(
+            testRoom.tiles(), 
+            RenderID::goblin, 
+            Vector2I{3, 0});
 
         return testRoom;
     }

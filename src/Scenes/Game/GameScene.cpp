@@ -1,9 +1,11 @@
 #include "GameScene.h"
-#define DEBUG_TILEINFO
+#include <cmath>
+// #define DEBUG_TILEINFO
 // #define DEBUG_FOG
 
 #include "Chunk.h"
 #include "Chunks.h"
+#include "Collision.h"
 #include "Colors.h"
 #include "Cursor.h"
 #include "Debugger.h"
@@ -59,7 +61,7 @@ void GameScene::initialize()
     setupEvents();
 
 #ifdef DEBUG
-    snx::PublisherStatic::publish(Event::nextLevel);
+    // snx::PublisherStatic::publish(Event::nextLevel);
 #endif
 }
 
@@ -215,7 +217,7 @@ void GameScene::processInput()
         return;
     }
 
-    // Take input from mouse, keys and gestures
+    // Take input from mouse, keys or gestures
     inputHandler_.takeInput(cursor_.isActive());
 }
 
@@ -223,7 +225,7 @@ void GameScene::updateState()
 {
     cursor_.update(
         gameCamera_.camera(),
-        hero_.position().worldPixel());
+        hero_.position().tilePosition());
 
     // Regenerate energy if no action in progress
     if (!actionInProgress_)
@@ -243,16 +245,15 @@ void GameScene::updateState()
         world_.currentMap(),
         gameCamera_);
 
-    // Check collision before starting movement
+    // Avoid check if no movement in progress
     if (hero_.movement().isTriggered())
     {
-        if (
-            world_.currentMap().tiles().isSolid(
-                // Next tilePosition hero moves to
+        // Check collision before starting movement
+        if (Collision::checkCollision(
+                world_.currentMap(),
                 Vector2Add(
                     hero_.position().tilePosition(),
-                    hero_.movement().direction()))
-            || world_.currentMap().enemies().ids().contains(hero_.position().tilePosition()))
+                    hero_.movement().direction())))
         {
             hero_.movement().abortMovement();
         }
@@ -288,6 +289,7 @@ void GameScene::renderOutput()
 
     // Draw objects
     auto& objects{world_.currentMap().objects()};
+
     for (Position const& position : objects.positions().values())
     {
         renderer_.render(
@@ -297,6 +299,7 @@ void GameScene::renderOutput()
 
     // Draw enemies
     auto& enemies{world_.currentMap().enemies()};
+
     for (size_t id : enemies.ids().values())
     {
         renderer_.render(

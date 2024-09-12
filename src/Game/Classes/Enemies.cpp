@@ -1,6 +1,7 @@
 #include "Enemies.h"
 
 #include "AI.h"
+#include "Debugger.h"
 #include "DenseMap.h"
 #include "EnemyData.h"
 #include "Energy.h"
@@ -50,18 +51,28 @@ void Enemies::insert(
     AI const& ai,
     Movement const& movement,
     Energy const& energy,
-    Tiles& tiles)
+    Vector2I const& tilePosition)
 {
     renderIDs_.insert(id, renderID);
     ais_.insert(id, ai);
     movements_.insert(id, movement);
     energies_.insert(id, energy);
-    positions_.insert(id, Position{getRandomPosition(tiles)});
-    ids_.insert(positions_[id].tilePosition());
+    positions_.insert(id, Position{tilePosition});
+    ids_.insert(tilePosition, id);
 }
 
-void Enemies::create(RenderID enemyID, Tiles& tiles)
+// public:
+void Enemies::create(
+    Tiles& tiles,
+    RenderID enemyID,
+    Vector2I tilePosition)
 {
+    // Allow creating enemy at specified position except {0, 0}
+    if (Vector2Equals(tilePosition, Vector2I{0, 0}))
+    {
+        tilePosition = getRandomPosition(tiles);
+    }
+
     size_t newID{idManager_.requestId()};
 
     switch (enemyID)
@@ -76,7 +87,7 @@ void Enemies::create(RenderID enemyID, Tiles& tiles)
             Energy{
                 EnemyData::GOBLIN_MAX_ENERGY,
                 EnemyData::GOBLIN_REGEN_RATE},
-            tiles);
+            tilePosition);
     }
     break;
 
@@ -89,7 +100,7 @@ void Enemies::init(int mapLevel, Tiles& tiles)
 {
     while (static_cast<int>(renderIDs_.size()) < ((mapLevel + 1) * 5))
     {
-        create(RenderID::goblin, tiles);
+        create(tiles, RenderID::goblin);
     }
 }
 

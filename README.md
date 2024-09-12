@@ -5,6 +5,7 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
+- [ ] Rework const correctness
 - [ ] Add enemy
     - [ ] Map holds list of Units
 

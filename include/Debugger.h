@@ -30,6 +30,7 @@ namespace snx
         {
             cliPrint(arg);
             cliPrint(args...);
+            std::cout << "\n";
         }
 
         template <typename Arg>
@@ -45,6 +46,7 @@ namespace snx
         {
             cliLog(arg);
             cliPrint(args...);
+            std::cout << "\n";
         }
     };
 }

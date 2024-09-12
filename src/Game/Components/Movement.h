@@ -50,6 +50,7 @@ public:
     // Sets direction, currentVelocity and isTriggered_
     void trigger(Vector2I const& direction);
     void trigger(std::vector<Vector2I> const& path);
+    void trigger();
 
     // Moves hero with following steps
     // - Starts movment if trigger set OR trigger not set but path available

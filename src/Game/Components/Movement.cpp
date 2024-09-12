@@ -14,6 +14,7 @@ Vector2I const& Movement::direction() const { return direction_; }
 void Movement::setSpeed(float speed) { speed_ = speed; }
 
 bool Movement::isTriggered() const { return isTriggered_; }
+
 void Movement::trigger(Vector2I const& direction)
 {
     direction_ = direction;
@@ -35,6 +36,14 @@ void Movement::trigger(std::vector<Vector2I> const& path)
     processPath();
 }
 
+void Movement::trigger()
+{
+    if (!isTriggered_ && !isInProgress_ && !path_.empty())
+    {
+        processPath();
+    }
+}
+
 void Movement::processPath()
 {
     Vector2I direction{
@@ -50,7 +59,7 @@ void Movement::processPath()
     // Remove tilePosition moved from
     path_.pop_back();
 
-    // Clear path guided movement if target reched (path_.size() == 1 (target))
+    // Clear path guided movement after last trigger if target reched (path_.size() == 1 (target))
     if (path_.size() <= 1)
     {
         path_.clear();
@@ -86,14 +95,7 @@ void Movement::abortMovement()
 
 void Movement::update(Position& heroPosition, Energy& heroEnergy)
 {
-    // Start movement
-    // - Either on non-empty path
-    if (!isTriggered_ && !isInProgress_ && !path_.empty())
-    {
-        processPath();
-    }
-
-    // - Or on trigger
+    // Start movement on trigger
     if (isTriggered_)
     {
         processTrigger(heroEnergy);
