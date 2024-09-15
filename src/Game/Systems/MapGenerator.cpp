@@ -182,6 +182,26 @@ namespace MapGenerator
                 RenderID::floor);
         }
 
+        // Add previous level trigger
+        addObject(
+            map.objects(),
+            "Ascend",
+            Vector2I{
+                0,
+                0},
+            RenderID::ascend,
+            Event::previousLevel);
+
+        // Add next level trigger
+        // addObject(
+        //     map.objects(),
+        //     "Descend",
+        //     Vector2I{
+        //         0,
+        //         -5},
+        //     RenderID::descend,
+        //     Event::nextLevel);
+
         // Add enemies
         map.enemies().init(level, map.tiles());
 
@@ -313,16 +333,16 @@ namespace MapGenerator
         // Next level trigger
         addObject(
             testRoom.objects(),
-            "Stairs",
+            "Descend",
             Vector2I{
                 0,
                 -5},
-            RenderID::nextLevel,
+            RenderID::descend,
             Event::nextLevel);
 
         testRoom.enemies().create(
-            testRoom.tiles(), 
-            RenderID::goblin, 
+            testRoom.tiles(),
+            RenderID::goblin,
             Vector2I{3, 0});
 
         return testRoom;
@@ -344,11 +364,11 @@ namespace MapGenerator
         // Add next level trigger
         addObject(
             startRoom.objects(),
-            "Stairs",
+            "Descend",
             Vector2I{
                 0,
                 -5},
-            RenderID::nextLevel,
+            RenderID::descend,
             Event::nextLevel);
 
         return startRoom;

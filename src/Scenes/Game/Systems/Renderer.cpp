@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include <string>
 // #define DEBUG_CHUNKS
 #define DEBUG_VISIBILITY
 
@@ -13,10 +14,17 @@
 #include <raylib.h>
 #include <raymath.h>
 
+// private:
+std::string Renderer::textureAtlasFileName()
+{
+    return TextureData::themes[theme_] + ".png";
+}
+
+// public:
 void Renderer::init()
 {
     // Load texture atlas
-    textures_.loadAtlas(TextureData::TEXTURE_ATLAS_FILE);
+    textures_.loadAtlas(textureAtlasFileName());
 
     // Register textures
     textures_.registerTexture(RenderID::none, {0, 0});
@@ -24,8 +32,9 @@ void Renderer::init()
     textures_.registerTexture(RenderID::hero, {70, 0});
     textures_.registerTexture(RenderID::wall, {105, 0});
     textures_.registerTexture(RenderID::floor, {0, 35});
-    textures_.registerTexture(RenderID::nextLevel, {35, 35});
-    textures_.registerTexture(RenderID::goblin, {70, 35});
+    textures_.registerTexture(RenderID::descend, {35, 35});
+    textures_.registerTexture(RenderID::ascend, {70, 35});
+    textures_.registerTexture(RenderID::goblin, {105, 35});
 }
 
 void Renderer::render(
@@ -138,6 +147,12 @@ void Renderer::renderFog(Fog const& fog)
         TileData::TILE_DIMENSIONS,
         tint);
 }
+
+void Renderer::cycleThemes()
+{
+    theme_ = (theme_ < TextureData::themes.size() - 1) ? ++theme_ : 0;
+}
+
 void Renderer::deinit()
 {
     textures_.unloadAtlas();

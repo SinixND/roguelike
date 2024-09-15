@@ -5,11 +5,16 @@
 #include "RenderID.h"
 #include "Textures.h"
 #include "Visibility.h"
+#include <cstddef>
 #include <raylib.h>
+#include <string>
 
 class Renderer
 {
     Textures textures_{};
+    size_t theme_{2};
+
+    std::string textureAtlasFileName();
 
 public:
     void init();
@@ -28,6 +33,8 @@ public:
     void renderChunk(Chunk& chunk);
 
     void renderFog(Fog const& fog);
+
+    void cycleThemes();
 
     void deinit();
 };

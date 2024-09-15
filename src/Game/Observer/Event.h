@@ -9,12 +9,14 @@ enum class Event
     panelsResized,
     cameraChanged,
     cursorPositionChanged,
+    colorThemeChange,
     // Game events
     actionFinished,
     actionInProgress,
     heroMoved,
     heroPositionChanged,
     nextLevel,
+    previousLevel,
 };
 
 #endif

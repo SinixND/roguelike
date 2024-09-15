@@ -16,6 +16,7 @@
 #include "Panels.h"
 #include "Position.h"
 #include "PublisherStatic.h"
+#include "RenderID.h"
 #include "Renderer.h"
 #include "Visibility.h"
 #include "raylibEx.h"
@@ -135,6 +136,40 @@ void GameScene::setupEvents()
             snx::PublisherStatic::publish(Event::heroPositionChanged);
         });
 
+    snx::PublisherStatic::addSubscriber(
+        Event::previousLevel,
+        [&]()
+        {
+            snx::Logger::log("Enter previous Level...");
+
+            world_.decreaseMapLevel();
+
+            for (auto const& position : world_.currentMap().objects().positions().values())
+            {
+                if (!(world_.currentMap().objects().renderID(position.tilePosition()) == RenderID::descend))
+                {
+                    continue;
+                }
+
+                hero_.position().changeTo(position.tilePosition());
+            }
+
+            tileChunks_.init(world_.currentMap().tiles(), renderer_);
+
+            snx::PublisherStatic::publish(Event::heroMoved);
+            snx::PublisherStatic::publish(Event::heroPositionChanged);
+        });
+
+    snx::PublisherStatic::addSubscriber(
+        Event::colorThemeChange,
+        [&]()
+        {
+            renderer_.cycleThemes();
+            renderer_.init();
+
+            tileChunks_.init(world_.currentMap().tiles(), renderer_);
+        });
+
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
     snx::PublisherStatic::addSubscriber(
         Event::cursorPositionChanged,
@@ -211,6 +246,12 @@ void GameScene::setupEvents()
 
 void GameScene::processInput()
 {
+    // Color theme
+    if (IsKeyPressed(KEY_F2))
+    {
+        snx::PublisherStatic::publish(Event::colorThemeChange);
+    }
+
     // Block input handling if hero misses energy
     if (!hero_.energy().isFull())
     {

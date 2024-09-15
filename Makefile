@@ -24,17 +24,18 @@ EMSCRIPTEN_DIR 			:= $(PREFIX)/lib/emscripten/cache/sysroot/include
 endif
 
 ### Set compile flags
-# -MMD			provides dependency information (header files) for make in .d files 
-# -pg			ADD FOR gprof analysis TO BOTH COMPILE AND LINK COMMAND!!
-# -MJ			clang only: compile-database
-# -MP			Multi-threaded compilation
+# -MMD				provides dependency information (header files) for make in .d files 
+# -pg				ADD FOR gprof analysis TO BOTH COMPILE AND LINK COMMAND!!
+# -MJ				clang only: compile-database
+# -MP				Multi-threaded compilation
+# -Wfatal-errors	Stop at first error
 
 ### Default flags
 CXX_FLAGS				:= -std=c++20 -MMD -MP
 CFLAGS 					:=
 
 ### Recipe specific flags 
-debug: CXX_FLAGS 		+= -g -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -O0 #-Wfatal-errors
+debug: CXX_FLAGS 		+= -g -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -O0 -Wfatal-errors
 debug: CFLAGS			+= -DDEBUG
 ifndef TERMUX_VERSION
 debug: CXX_FLAGS 		+= -pg
@@ -58,7 +59,7 @@ benchmark: CFLAGS		+= -DNDEBUG
 BINARY 					:= main
 
 ### Automatically added flags to make command
-MAKEFLAGS 				:= -j --no-print-directory
+MAKEFLAGS 				:= --no-print-directory #-j
 
 #######################################
 ### Set the used compiler to g++ or clang++
@@ -101,6 +102,8 @@ BIN_DIR_RELEASE 		:= ./bin/release
 TEST_DIR 				:= ./test
 ### Define folder for web content to export
 WEB_DIR 				:= ./web
+### Define folder for resource files
+RESOURCE_DIR 				:= ./resources
 
 ### Set the locations of header files
 SYS_INC_DIR 			:= /usr/local/include /usr/include
@@ -196,6 +199,8 @@ init:
 	@mkdir -p $(OBJ_DIR_RELEASE)
 	@mkdir -p $(EXT_INC_DIR)
 	@mkdir -p $(LOC_LIB_DIR)
+	@mkdir -p $(WEB_DIR)
+	@mkdir -p $(RESOURCE_DIR)
 	$(info )
 	$(info === Initialized folders ===)
 

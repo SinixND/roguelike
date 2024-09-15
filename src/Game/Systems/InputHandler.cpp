@@ -1,6 +1,4 @@
 #include "InputHandler.h"
-#include "Debugger.h"
-
 #define DEBUG_GESTURES
 
 #include "Cursor.h"
@@ -143,8 +141,8 @@ bool InputHandler::takeInputGesture()
         {
         case GESTURE_SWIPE_UP:
         {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::debug::cliLog("Triggered SWIPE_UP\n");
+#ifdef DEBUG_GESTURES
+            snx::Logger::log("Triggered SWIPE_UP\n");
 #endif
             inputAction_ = InputActionID::actUp;
             break;
@@ -152,8 +150,8 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_SWIPE_LEFT:
         {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::debug::cliLog("Triggered SWIPE_LEFT\n");
+#ifdef DEBUG_GESTURES
+            snx::Logger::log("Triggered SWIPE_LEFT\n");
 #endif
             inputAction_ = InputActionID::actLeft;
             break;
@@ -161,8 +159,8 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_SWIPE_DOWN:
         {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::debug::cliLog("Triggered SWIPE_DOWN\n");
+#ifdef DEBUG_GESTURES
+            snx::Logger::log("Triggered SWIPE_DOWN\n");
 #endif
             inputAction_ = InputActionID::actDown;
             break;
@@ -170,8 +168,8 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_SWIPE_RIGHT:
         {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::debug::cliLog("Triggered SWIPE_RIGHT\n");
+#ifdef DEBUG_GESTURES
+            snx::Logger::log("Triggered SWIPE_RIGHT\n");
 #endif
             inputAction_ = InputActionID::actRight;
             break;
@@ -179,16 +177,16 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_TAP:
         {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::debug::cliLog("Triggered TAP\n");
+#ifdef DEBUG_GESTURES
+            snx::Logger::log("Triggered TAP\n");
 #endif
             break;
         }
 
         case GESTURE_DOUBLETAP:
         {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::debug::cliLog("Triggered DOUBLETAP\n");
+#ifdef DEBUG_GESTURES
+            snx::Logger::log("Triggered DOUBLETAP\n");
 #endif
             inputAction_ = InputActionID::interact;
             break;
@@ -196,16 +194,16 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_HOLD:
         {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::debug::cliLog("Triggered HOLD\n");
+#ifdef DEBUG_GESTURES
+            snx::Logger::log("Triggered HOLD\n");
 #endif
             break;
         }
 
         case GESTURE_DRAG:
         {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::debug::cliLog("Triggered DRAG\n");
+#ifdef DEBUG_GESTURES
+            snx::Logger::log("Triggered DRAG\n");
 #endif
             Vector2 direction = Vector2MainDirection(GetGestureDragVector());
             if (Vector2Equals(direction, {0, -1}))
@@ -229,16 +227,16 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_PINCH_IN:
         {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::debug::cliLog("Triggered PINCH_IN\n");
+#ifdef DEBUG_GESTURES
+            snx::Logger::log("Triggered PINCH_IN\n");
 #endif
             break;
         }
 
         case GESTURE_PINCH_OUT:
         {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::debug::cliLog("Triggered PINCH_OUT\n");
+#ifdef DEBUG_GESTURES
+            snx::Logger::log("Triggered PINCH_OUT\n");
 #endif
             break;
         }

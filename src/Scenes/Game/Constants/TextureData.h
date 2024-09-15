@@ -3,12 +3,17 @@
 
 #include <raylib.h>
 #include <string>
+#include <vector>
 
 namespace TextureData
 {
-    std::string const TEXTURE_ATLAS_FILE{"TextureAtlas.png"};
+    // Themes
+    std::vector<std::string> const themes{
+        "Default",
+        "Ascii",
+        "AsciiBW"};
+
     float constexpr TEXTURE_SIZE{32};
-    // Vector2 constexpr TEXTURE_DIMENSIONS{TEXTURE_SIZE, TEXTURE_SIZE};
 }
 
 #endif

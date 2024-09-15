@@ -16,7 +16,7 @@ namespace snx
         virtual bool contains(Key const& key) const = 0;
         virtual void clear() = 0;
         virtual void erase(Key const& key) = 0;
-        // virtual std::vector<Key>& keys() = 0;
+        // virtual std::vector<Key> const& keys() = 0;
         virtual size_t size() const = 0;
 
         virtual ~IDenseMap() = default;
@@ -28,43 +28,16 @@ namespace snx
     {
     public:
         // ITERATORS
+        auto begin() { return values_.begin(); }
+        auto end() { return values_.end(); }
 
         // CAPACITY
         // Return size of DenseMap
-        size_t size() const override
-        {
-            return values_.size();
-        };
+        size_t size() const override { return values_.size(); }
 
         // MODIFIERS
         // Does NOT overwrite existing
-        Type const& insert(Key const& key, Type const& value = Type{}) const
-        {
-            if (contains(key))
-            {
-                return at(key);
-            }
-
-            // Add new key to used keys
-            // keys_.insert(key);
-
-            // Get new list index for value
-            size_t valueIndex = size();
-
-            // Add new value to list
-            values_.push_back(value);
-
-            // Add key to valueIndex mapping
-            keyToIndex_.insert(std::make_pair(key, valueIndex));
-
-            // Add valueIndex to key mapping (internal use only to keep list contiguous)
-            indexToKey_.insert(std::make_pair(valueIndex, key));
-            assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
-            return at(key);
-        }
-
-        // Allow non-const call
-        Type& insert(Key const& key, Type const& value = Type{})
+        Type const& insert(Key const& key, Type const& value = Type{}) 
         {
             if (contains(key))
             {
@@ -91,7 +64,7 @@ namespace snx
 
         // Does NOT overwrite existing
         template <typename... Args>
-        Type const& emplace(Key const& key, Args&&... args) const
+        Type const& emplace(Key const& key, Args&&... args)
         {
             if (contains(key))
             {
@@ -115,39 +88,6 @@ namespace snx
             assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
             return at(key);
         }
-
-        // Allow non-const call
-        template <typename... Args>
-        Type& emplace(Key const& key, Args&&... args)
-        {
-            if (contains(key))
-            {
-                return at(key);
-            }
-
-            // Add new key to used keys
-            // keys_.insert(key);
-
-            // Get new list index for value
-            size_t valueIndex = size();
-
-            // Create and Add new value to list
-            values_.push_back(Type{std::forward<Args>(args)...});
-
-            // Add key to valueIndex mapping
-            keyToIndex_.insert(std::make_pair(key, valueIndex));
-
-            // Add valueIndex to key mapping (internal use only to keep list contiguous)
-            indexToKey_.insert(std::make_pair(valueIndex, key));
-            assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
-            return at(key);
-        }
-
-        // Overwrites existing (technically redundant function -> for convenience)
-        // void set(Key const& key, Type const& value)
-        // {
-        //     at(key) = value;
-        // }
 
         // Moves last value to gap
         void erase(Key const& key) override
@@ -207,47 +147,27 @@ namespace snx
 
         // LOOKUP
         // Access
-        Type const& at(Key const& key) const
-        {
-            return values_.at(keyToIndex_.at(key));
-        }
+        Type const& at(Key const& key) const { return values_.at(keyToIndex_.at(key)); }
 
         // Allow non-const call
-        Type& at(Key const& key)
-        {
-            return values_.at(keyToIndex_.at(key));
-        }
+        Type& at(Key const& key) { return const_cast<Type&>(std::as_const(*this).at(key)); }
 
         // Access or insert
-        Type const& operator[](Key const& key) const
-        {
-            insert(key);
-            return at(key);
-        }
-
         Type& operator[](Key const& key)
         {
             insert(key);
             return at(key);
         }
 
-        bool contains(Key const& key) const override
-        {
-            return keyToIndex_.find(key) != keyToIndex_.end();
-        }
+        bool contains(Key const& key) const override { return keyToIndex_.find(key) != keyToIndex_.end(); }
 
         // Return vector (contiguous memory)
-        std::vector<Type> const& values() const
-        {
-            return values_;
-        }
+        std::vector<Type> const& values() const { return values_; }
 
-        std::vector<Type>& values()
-        {
-            return values_;
-        }
+        // Allow non-const call
+        std::vector<Type>& values() { return const_cast<std::vector<Type>&>(std::as_const(*this).values()); }
 
-        // std::vector<Key>& keys() override
+        // std::vector<Key> const& keys() override
         // {
         // return keys_;
         // }

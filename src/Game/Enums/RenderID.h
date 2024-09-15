@@ -10,7 +10,8 @@ enum class RenderID
     wall,
     floor,
     // Objects
-    nextLevel,
+    descend,
+    ascend,
     // Units
     hero,
     // Enemies

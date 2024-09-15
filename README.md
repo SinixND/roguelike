@@ -6,8 +6,12 @@
 # TODOs
 ## Active (Rework features that existed before Restructuring)
 - [ ] Rework const correctness
+    - [ ] Public members for direct access
+    - [ ] Remove auto where possible
 - [ ] Add enemy
-    - [ ] Map holds list of Units
+- [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
+detection range)
+- [ ] Health, Attack
 
 
 ## Shortterm
@@ -57,6 +61,7 @@
 | L_SHIFT                  | Continuous hero movment |
 | SPACE                    | Interact                |
 | F1                       | Toggle developer mode   |
+| F2                       | Cycle color themes      |
 | F4                       | Exit                    |
 | F11                      | Toggle Maximize window  |
 

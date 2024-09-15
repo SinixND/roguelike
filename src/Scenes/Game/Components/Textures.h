@@ -20,6 +20,7 @@ public:
     // Texture atlas
     void loadAtlas(std::string const& filename)
     {
+        unloadAtlas();
         textureAtlas_ = LoadTexture((texturePath + filename).c_str());
     }
 
@@ -33,9 +34,9 @@ public:
         textureIdToAtlasPosition_.insert(std::make_pair(textureID, position));
     }
 
-    Vector2& getTexturePosition(RenderID textureID)
+    Vector2& getTexturePosition(RenderID renderID)
     {
-        return textureIdToAtlasPosition_.at(textureID);
+        return textureIdToAtlasPosition_.at(renderID);
     }
 
     void unloadAtlas()
