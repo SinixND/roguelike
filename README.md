@@ -66,6 +66,7 @@
 | ----------- | ----------------------- |
 | SWIPE_(DIR) | Directional input       |
 | DRAG        | Continuous hero movment |
+| DOUBE_TAP   | Interact                |
 
 ## Maptypes:
 - Cellular Automata (dungeon)
