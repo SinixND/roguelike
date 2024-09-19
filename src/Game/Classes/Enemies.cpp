@@ -68,7 +68,7 @@ void Enemies::create(
     Vector2I tilePosition)
 {
     // Allow creating enemy at specified position except {0, 0}
-    if (Vector2Equals(tilePosition, Vector2I{0, 0}))
+    if (tilePosition == Vector2I{0, 0})
     {
         tilePosition = getRandomPosition(tiles);
     }

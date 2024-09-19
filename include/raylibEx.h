@@ -5,7 +5,6 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdlib>
-#include <format>
 #include <functional>
 #include <iostream>
 #include <raylib.h>
@@ -59,7 +58,7 @@ public:
     {
     }
 
-    RectangleEx(Rectangle rectangle)
+    RectangleEx(Rectangle const& rectangle)
         : left_(rectangle.x)
         , top_(rectangle.y)
         , right_(rectangle.x + rectangle.width - 1)
@@ -502,7 +501,7 @@ RMAPI Vector2I Vector2Scale(Vector2I const& v, int scale)
 }
 
 // Check whether two given integer vectors are equal
-RMAPI int Vector2Equals(Vector2I const& v1, Vector2I const& v2)
+RMAPI bool Vector2Equals(Vector2I const& v1, Vector2I const& v2)
 {
     return ((v1.x == v2.x) && (v1.y == v2.y));
 }
@@ -552,7 +551,7 @@ inline bool CheckCollisionPointRec(Vector2I const& point, RectangleExI const& re
         && (point.y <= rec.bottom()));
 }
 
-inline bool CheckCollisionPointRec(Vector2 const& point, RectangleEx rec)
+inline bool CheckCollisionPointRec(Vector2 const& point, RectangleEx const& rec)
 {
     return CheckCollisionPointRec(point, rec.rectangle());
 }
@@ -650,16 +649,18 @@ inline Vector2I Vector2MainDirection(Vector2I v)
 
 inline Vector2 Vector2MainDirection(Vector2 const& from, Vector2 const& to)
 {
-    Vector2 v{Vector2Subtract(to, from)};
-
-    return Vector2MainDirection(v);
+    return Vector2MainDirection(
+        Vector2Subtract(
+            to, 
+            from));
 }
 
 inline Vector2I Vector2MainDirection(Vector2I const& from, Vector2I const& to)
 {
-    Vector2I v{Vector2Subtract(to, from)};
-
-    return Vector2MainDirection(v);
+    return Vector2MainDirection(
+        Vector2Subtract(
+            to, 
+            from));
 }
 
 inline Rectangle GetWindowRec()
@@ -678,7 +679,7 @@ inline Vector2 ConvertToVector2(Vector2I const& v)
         static_cast<float>(v.y)};
 }
 
-inline Vector2I ConvertToVector2I(Vector2 v)
+inline Vector2I ConvertToVector2I(Vector2 const& v)
 {
     return Vector2I{
         static_cast<int>(v.x),

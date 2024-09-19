@@ -33,7 +33,7 @@ void Cursor::update(Camera2D const& camera, Vector2I const& heroPosition)
     {
         Vector2I mouseTile{UnitConversion::screenToTile(GetMousePosition(), camera)};
 
-        if (!Vector2Equals(position_.tilePosition(), mouseTile))
+        if (!(position_.tilePosition() == mouseTile))
         {
             position_.changeTo(mouseTile);
 

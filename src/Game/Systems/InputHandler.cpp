@@ -206,19 +206,19 @@ bool InputHandler::takeInputGesture()
             snx::Logger::log("Triggered DRAG\n");
 #endif
             Vector2 direction = Vector2MainDirection(GetGestureDragVector());
-            if (Vector2Equals(direction, {0, -1}))
+            if (direction == Vector2{0, -1})
             {
                 inputAction_ = InputActionID::actUp;
             }
-            else if (Vector2Equals(direction, {-1, 0}))
+            else if (direction == Vector2{-1, 0})
             {
                 inputAction_ = InputActionID::actLeft;
             }
-            else if (Vector2Equals(direction, {0, 1}))
+            else if (direction == Vector2{0, 1})
             {
                 inputAction_ = InputActionID::actDown;
             }
-            else if (Vector2Equals(direction, {1, 0}))
+            else if (direction == Vector2{1, 0})
             {
                 inputAction_ = InputActionID::actRight;
             }

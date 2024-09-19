@@ -101,9 +101,7 @@ bool checkRatingList(
             // Ignore ancestor
             if (
                 currentTile->ancestor()
-                && Vector2Equals(
-                    newTilePosition,
-                    currentTile->ancestor()->tilePosition()))
+                && (newTilePosition == currentTile->ancestor()->tilePosition()))
             {
                 continue;
             }
@@ -115,10 +113,7 @@ bool checkRatingList(
                 currentTile};
 
             // If Target found
-            if (
-                Vector2Equals(
-                    newTilePosition,
-                    target))
+            if ((newTilePosition == target))
             {
                 newRatedTile.reconstructPath(path);
 
@@ -222,7 +217,7 @@ std::vector<Vector2I> Pathfinder::findPath(
         (map.tiles().visibilityID(target) == VisibilityID::invisible)
         || map.tiles().isSolid(target)
         || !map.tiles().positions().contains(target)
-        || Vector2Equals(start, target))
+        || (start == target))
     {
         return path;
     }
