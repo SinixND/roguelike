@@ -1,6 +1,7 @@
 #include "Energy.h"
 
 void Energy::setMaxEnergy(int maxEnergy) { maxEnergy_ = maxEnergy; }
+
 void Energy::setRegenRate(int rate) { regenRate_ = rate; }
 
 bool Energy::consume(int energy)
@@ -11,6 +12,7 @@ bool Energy::consume(int energy)
         currentEnergy_ = 0;
         return true;
     }
+
     else if (energy < currentEnergy_)
     {
         // Partial energy consumption valid
@@ -37,10 +39,11 @@ bool Energy::regenerate()
         // Ensure energy does not exceed maxEnergy
         currentEnergy_ = maxEnergy_;
     }
+
     return false;
 }
 
-int Energy::isFull()
+int Energy::isFull() const
 {
     return !(currentEnergy_ < maxEnergy_);
 }

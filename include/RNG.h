@@ -22,25 +22,22 @@ namespace snx
 
         static inline std::mt19937 rng_{ss_};
 
-    private:
-        static inline std::mt19937& rng() { return rng_; }
-
     public:
         static inline void seed(int seed)
         {
-            rng().seed(seed);
+            rng_.seed(seed);
         }
 
         static inline unsigned long random()
         {
-            return rng()();
+            return rng_();
         }
 
         static inline int random(int min, int max)
         {
             std::uniform_int_distribution<int> distribution{min, max};
 
-            return distribution(rng());
+            return distribution(rng_);
         }
     };
 }

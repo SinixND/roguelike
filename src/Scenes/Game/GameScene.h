@@ -31,6 +31,11 @@ class GameScene : public snx::IScene
     Chunks tileChunks_{};
     Visibility visibility_{};
 
+public:
+    void initialize();
+    void update() override;
+    void deinitialize();
+
 private:
     void processInput();
     void updateState();
@@ -43,11 +48,6 @@ private:
 public:
     static inline Camera2D gcam{};
 #endif
-
-public:
-    void initialize();
-    void update() override;
-    void deinitialize();
 };
 
 #endif

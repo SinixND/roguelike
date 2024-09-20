@@ -15,11 +15,24 @@ class AppConfig
     bool vSync_{false};
 
 public:
-    int windowWidth() const { return windowWidth_; }
-    int windowHeight() const { return windowHeight_; }
+    int windowWidth() const
+    {
+        return windowWidth_;
+    }
 
-    bool showFPS() const { return showFPS_; };
-    bool vSync() const { return vSync_; };
+    int windowHeight() const
+    {
+        return windowHeight_;
+    }
+
+    bool showFPS() const
+    {
+        return showFPS_;
+    };
+    bool vSync() const
+    {
+        return vSync_;
+    };
 };
 
 #endif

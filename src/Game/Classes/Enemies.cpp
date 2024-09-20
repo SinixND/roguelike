@@ -1,7 +1,6 @@
 #include "Enemies.h"
 
 #include "AI.h"
-#include "Debugger.h"
 #include "DenseMap.h"
 #include "EnemyData.h"
 #include "Energy.h"
@@ -14,7 +13,7 @@
 #include "raylibEx.h"
 #include <cstddef>
 
-Vector2I Enemies::getRandomPosition(Tiles& tiles)
+Vector2I Enemies::getRandomPosition(Tiles const& tiles)
 {
     // bool isPositionValid{false};
     RectangleExI const& mapSize{tiles.mapSize()};
@@ -61,13 +60,13 @@ void Enemies::insert(
     ids_.insert(tilePosition, id);
 }
 
-// public:
 void Enemies::create(
-    Tiles& tiles,
+    Tiles const& tiles,
     RenderID enemyID,
     Vector2I tilePosition)
 {
     // Allow creating enemy at specified position except {0, 0}
+    // TODO: Rather check for visiblity
     if (tilePosition == Vector2I{0, 0})
     {
         tilePosition = getRandomPosition(tiles);
@@ -89,6 +88,7 @@ void Enemies::create(
                 EnemyData::GOBLIN_REGEN_RATE},
             tilePosition);
     }
+
     break;
 
     default:
@@ -96,7 +96,7 @@ void Enemies::create(
     }
 }
 
-void Enemies::init(int mapLevel, Tiles& tiles)
+void Enemies::init(int mapLevel, Tiles const& tiles)
 {
     while (static_cast<int>(renderIDs_.size()) < ((mapLevel + 1) * 5))
     {
@@ -106,19 +106,82 @@ void Enemies::init(int mapLevel, Tiles& tiles)
 
 void Enemies::update() {}
 
-snx::DenseMap<size_t, Movement>& Enemies::movements() { return movements_; }
-Movement& Enemies::movement(size_t id) { return movements_[id]; }
+snx::DenseMap<size_t, Movement> const& Enemies::movements() const
+{
+    return movements_;
+}
 
-snx::DenseMap<size_t, Energy>& Enemies::energies() { return energies_; }
-Energy& Enemies::energy(size_t id) { return energies_[id]; }
+Movement const& Enemies::movement(size_t id) const
+{
+    return movements_.at(id);
+}
 
-snx::DenseMap<size_t, Position>& Enemies::positions() { return positions_; }
-Position& Enemies::position(size_t id) { return positions_[id]; }
+Movement& Enemies::movement(size_t id)
+{
+    return movements_.at(id);
+}
 
-snx::DenseMap<size_t, RenderID>& Enemies::renderIDs() { return renderIDs_; }
-RenderID Enemies::renderID(size_t id) { return renderIDs_[id]; }
+snx::DenseMap<size_t, Energy> const& Enemies::energies() const
+{
+    return energies_;
+}
 
-snx::DenseMap<size_t, AI>& Enemies::ais() { return ais_; }
-AI& Enemies::ai(size_t id) { return ais_[id]; }
+Energy const& Enemies::energy(size_t id) const
+{
+    return energies_.at(id);
+}
 
-snx::DenseMap<Vector2I, size_t>& Enemies::ids() { return ids_; }
+Energy& Enemies::energy(size_t id)
+{
+    return energies_.at(id);
+}
+
+snx::DenseMap<size_t, Position> const& Enemies::positions() const
+{
+    return positions_;
+}
+
+Position const& Enemies::position(size_t id) const
+{
+    return positions_.at(id);
+}
+
+Position& Enemies::position(size_t id)
+{
+    return positions_.at(id);
+}
+
+snx::DenseMap<size_t, RenderID> const& Enemies::renderIDs() const
+{
+    return renderIDs_;
+}
+
+RenderID Enemies::renderID(size_t id) const
+{
+    return renderIDs_.at(id);
+}
+
+snx::DenseMap<size_t, AI> const& Enemies::ais() const
+{
+    return ais_;
+}
+
+AI const& Enemies::ai(size_t id) const
+{
+    return ais_.at(id);
+}
+
+AI& Enemies::ai(size_t id)
+{
+    return ais_.at(id);
+}
+
+snx::DenseMap<Vector2I, size_t> const& Enemies::ids() const
+{
+    return ids_;
+}
+
+size_t Enemies::id(Vector2I const& tilePosition) const
+{
+    return ids_.at(tilePosition);
+}

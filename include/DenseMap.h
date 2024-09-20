@@ -10,9 +10,8 @@
 namespace snx
 {
     template <typename Key>
-    class IDenseMap
+    struct IDenseMap
     {
-    public:
         virtual bool contains(Key const& key) const = 0;
         virtual void clear() = 0;
         virtual void erase(Key const& key) = 0;
@@ -28,16 +27,26 @@ namespace snx
     {
     public:
         // ITERATORS
-        auto begin() { return values_.begin(); }
-        auto end() { return values_.end(); }
+        auto begin() const
+        {
+            return values_.begin();
+        }
+
+        auto end() const
+        {
+            return values_.end();
+        }
 
         // CAPACITY
         // Return size of DenseMap
-        size_t size() const override { return values_.size(); }
+        size_t size() const override
+        {
+            return values_.size();
+        }
 
         // MODIFIERS
         // Does NOT overwrite existing
-        Type const& insert(Key const& key, Type const& value = Type{}) 
+        Type const& insert(Key const& key, Type const& value = Type{})
         {
             if (contains(key))
             {
@@ -147,10 +156,16 @@ namespace snx
 
         // LOOKUP
         // Access
-        Type const& at(Key const& key) const { return values_.at(keyToIndex_.at(key)); }
+        Type const& at(Key const& key) const
+        {
+            return values_.at(keyToIndex_.at(key));
+        }
 
         // Allow non-const call
-        Type& at(Key const& key) { return const_cast<Type&>(std::as_const(*this).at(key)); }
+        Type& at(Key const& key)
+        {
+            return const_cast<Type&>(std::as_const(*this).at(key));
+        }
 
         // Access or insert
         Type& operator[](Key const& key)
@@ -159,13 +174,30 @@ namespace snx
             return at(key);
         }
 
-        bool contains(Key const& key) const override { return keyToIndex_.find(key) != keyToIndex_.end(); }
+        bool contains(Key const& key) const override
+        {
+            return keyToIndex_.find(key) != keyToIndex_.end();
+        }
 
         // Return vector (contiguous memory)
-        std::vector<Type> const& values() const { return values_; }
+        std::vector<Type> const& values() const
+        {
+            return values_;
+        }
+        // Optional operator
+        // std::vector<Type> const& operator()() const {
+        // return values_;
+        // }
 
         // Allow non-const call
-        std::vector<Type>& values() { return const_cast<std::vector<Type>&>(std::as_const(*this).values()); }
+        std::vector<Type>& values()
+        {
+            return const_cast<std::vector<Type>&>(std::as_const(*this).values());
+        }
+        // Optional operator
+        // std::vector<Type>& operator()() {
+        // return const_cast<std::vector<Type>&>(std::as_const(*this).operator());
+        // }
 
         // std::vector<Key> const& keys() override
         // {
@@ -174,7 +206,8 @@ namespace snx
 
     private:
         // Vector index is used as value key
-        std::vector<Type> values_{};
+        std::vector<Type>
+            values_{};
 
         // Key is used to identify value
         std::unordered_map<Key, size_t> keyToIndex_{};

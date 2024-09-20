@@ -9,7 +9,11 @@ private:
     static inline bool debugMode_{true};
 
 public:
-    static bool isActive() { return instance().debugMode_; }
+    static bool isActive()
+    {
+        return instance().debugMode_;
+    }
+
     static void toggle() { instance().debugMode_ = !instance().debugMode_; }
 };
 

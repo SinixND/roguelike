@@ -26,6 +26,7 @@ void Tiles::set(
     {
         isSolids_.insert(tilePosition);
     }
+
     else
     {
         isSolids_.erase(tilePosition);
@@ -35,6 +36,7 @@ void Tiles::set(
     {
         isOpaques_.insert(tilePosition);
     }
+
     else
     {
         isOpaques_.erase(tilePosition);
@@ -53,35 +55,36 @@ void Tiles::set(
 //     isOpaques_.erase(tilePosition);
 // }
 
-snx::DenseMap<Vector2I, Position>& Tiles::positions()
+snx::DenseMap<Vector2I, Position> const& Tiles::positions() const
 {
     return positions_;
 }
 
-Position const& Tiles::position(Vector2I const& tilePosition)
+Position const& Tiles::position(Vector2I const& tilePosition) const
 {
-    return positions_[tilePosition];
+    return positions_.at(tilePosition);
 }
 
-snx::DenseMap<Vector2I, RenderID>& Tiles::renderIDs()
+snx::DenseMap<Vector2I, RenderID> const& Tiles::renderIDs() const
 {
     return renderIDs_;
 }
 
-RenderID Tiles::renderID(Vector2I const& tilePosition)
+RenderID Tiles::renderID(Vector2I const& tilePosition) const
 {
-    return renderIDs_[tilePosition];
+    return renderIDs_.at(tilePosition);
 }
 
-snx::DenseMap<Vector2I, VisibilityID>& Tiles::visibilityIDs()
+snx::DenseMap<Vector2I, VisibilityID> const& Tiles::visibilityIDs() const
 {
     return visibilityIDs_;
 }
 
-VisibilityID Tiles::visibilityID(Vector2I const& tilePosition)
+VisibilityID Tiles::visibilityID(Vector2I const& tilePosition) const
 {
-    return visibilityIDs_[tilePosition];
+    return visibilityIDs_.at(tilePosition);
 }
+
 void Tiles::setVisibilityID(
     Vector2I const& tilePosition,
     VisibilityID visibilityID)
@@ -89,17 +92,17 @@ void Tiles::setVisibilityID(
     visibilityIDs_.at(tilePosition) = visibilityID;
 }
 
-bool Tiles::isSolid(Vector2I const& tilePosition)
+bool Tiles::isSolid(Vector2I const& tilePosition) const
 {
     return isSolids_.contains(tilePosition);
 }
 
-std::unordered_set<Vector2I> const& Tiles::isOpaques()
+std::unordered_set<Vector2I> const& Tiles::isOpaques() const
 {
     return isOpaques_;
 }
 
-bool Tiles::isOpaque(Vector2I const& tilePosition)
+bool Tiles::isOpaque(Vector2I const& tilePosition) const
 {
     return isOpaques_.contains(tilePosition);
 }
@@ -115,12 +118,12 @@ void Tiles::updateMapSize(Vector2I const& tilePosition)
             std::max(tilePosition.y, mapSize_.bottom())}};
 }
 
-size_t Tiles::size()
+size_t Tiles::size() const
 {
     return positions_.size();
 }
 
-RectangleExI Tiles::mapSize()
+RectangleExI Tiles::mapSize() const
 {
     return mapSize_;
 }

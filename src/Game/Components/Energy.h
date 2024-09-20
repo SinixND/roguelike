@@ -24,7 +24,7 @@ public:
 
     // Returns true if energy full
     bool regenerate();
-    int isFull();
+    int isFull() const;
 };
 
 #endif

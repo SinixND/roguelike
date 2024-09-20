@@ -13,12 +13,11 @@ class Chunks
     snx::DenseMap<Vector2I, Chunk> chunks_{};
 
 public:
-    void init(Tiles& tiles, Renderer& renderer);
+    void init(Tiles const& tiles, Renderer& renderer);
 
     // Verify chunk exists for tilePosition
     void verifyRequiredChunk(Vector2I const& tilePosition);
-    // Chunk& chunk(Vector2I const& tilePosition);
-    snx::DenseMap<Vector2I, Chunk>& chunks();
+    snx::DenseMap<Vector2I, Chunk> const& chunks() const;
 };
 
 #endif

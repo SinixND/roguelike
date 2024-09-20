@@ -11,11 +11,30 @@
 #include <raymath.h>
 #include <string>
 
-RectangleEx const& Panels::tileInfo() const { return tileInfo_; }
-RectangleEx const& Panels::info() const { return info_; }
-RectangleEx const& Panels::status() const { return status_; }
-RectangleEx const& Panels::log() const { return log_; }
-RectangleEx const& Panels::map() const { return map_; }
+RectangleEx const& Panels::tileInfo() const
+{
+    return tileInfo_;
+}
+
+RectangleEx const& Panels::info() const
+{
+    return info_;
+}
+
+RectangleEx const& Panels::status() const
+{
+    return status_;
+}
+
+RectangleEx const& Panels::log() const
+{
+    return log_;
+}
+
+RectangleEx const& Panels::map() const
+{
+    return map_;
+}
 
 void Panels::init()
 {
@@ -47,10 +66,10 @@ void Panels::init()
     snx::PublisherStatic::publish(Event::panelsResized);
 }
 
-void Panels::drawLogPanelContent()
+void Panels::drawLogPanelContent() const
 {
-    auto textSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
-    auto lines{(log_.height() / (1.5 * textSize)) - 1};
+    int textSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
+    double lines{(log_.height() / (1.5 * textSize)) - 1};
     for (int i{0}; i < lines; ++i)
     {
         DrawTextEx(
@@ -64,7 +83,7 @@ void Panels::drawLogPanelContent()
     }
 }
 
-void Panels::drawTileInfoPanelContent(Objects& objects, Vector2I const& cursorPosition)
+void Panels::drawTileInfoPanelContent(Objects const& objects, Vector2I const& cursorPosition) const
 {
     if (!objects.tags().contains(cursorPosition))
     {
@@ -87,7 +106,7 @@ void Panels::drawTileInfoPanelContent(Objects& objects, Vector2I const& cursorPo
         LIGHTGRAY);
 }
 
-void Panels::drawPanelBorders()
+void Panels::drawPanelBorders() const
 {
     DrawRectangleLinesEx(
         tileInfo_.rectangle(),

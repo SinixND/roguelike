@@ -13,25 +13,33 @@
 
 class Chunk
 {
-    RenderTexture renderTexture_{};
     RectangleExI corners_{};
     Position position_{};
 
 public:
-    RenderTexture& renderTexture() { return renderTexture_; }
-    RectangleExI const& corners() { return corners_; }
-    Position const& position() { return position_; }
+    RenderTexture renderTexture_{};
+
+public:
+    RectangleExI const& corners() const
+    {
+        return corners_;
+    }
+
+    Position const& position() const
+    {
+        return position_;
+    }
 
     Chunk() = default;
 
     Chunk(RenderTexture const& renderTexture, Position const& position)
-        : renderTexture_(renderTexture)
-        , corners_(RectangleExI{
+        : corners_(RectangleExI{
               position.tilePosition().x,
               position.tilePosition().y,
               ChunkData::CHUNK_SIZE_I,
               ChunkData::CHUNK_SIZE_I})
         , position_(position)
+        , renderTexture_(renderTexture)
     {
     }
 };

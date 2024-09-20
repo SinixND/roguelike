@@ -30,7 +30,10 @@ Shadow::Shadow(Vector2I const& octantPosition)
     setSlopeRight(octantPosition);
 }
 
-float Shadow::slopeLeft() const { return slopeLeft_; }
+float Shadow::slopeLeft() const
+{
+    return slopeLeft_;
+}
 
 void Shadow::setSlopeLeft(Vector2I const& octantPosition)
 {
@@ -42,7 +45,10 @@ void Shadow::setSlopeLeft(float slopeLeft)
     slopeLeft_ = slopeLeft;
 }
 
-float Shadow::slopeRight() const { return slopeRight_; }
+float Shadow::slopeRight() const
+{
+    return slopeRight_;
+}
 
 void Shadow::setSlopeRight(Vector2I const& octantPosition)
 {
@@ -88,16 +94,25 @@ float Shadow::getRight(int octantPositionHeight) const
 }
 
 // Fog
-Vector2I const& Fog::tilePosition() const { return tilePosition_; }
+Vector2I const& Fog::tilePosition() const
+{
+    return tilePosition_;
+}
 
 void Fog::setTilePosition(Vector2I const& tilePosition) { tilePosition_ = tilePosition; }
 
-bool Fog::isFogOpaque() const { return isFogOpaque_; }
+bool Fog::isFogOpaque() const
+{
+    return isFogOpaque_;
+}
 
 void Fog::setFogOpaque(bool isFogOpaque) { isFogOpaque_ = isFogOpaque; }
 
 // Visibility
-std::vector<Fog>& Visibility::fogsToRender() { return fogs_.values(); }
+snx::DenseMap<Vector2I, Fog> const& Visibility::fogs() const
+{
+    return fogs_;
+}
 
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
 void drawShadow(
@@ -322,7 +337,7 @@ void Visibility::updateShadowline(
     }
 }
 
-void setFog(VisibilityID tileVisibilityOld, Tiles& tiles, snx::DenseMap<Vector2I, Fog>& fogs, Vector2I const& tilePosition)
+void updateVisibilities(VisibilityID tileVisibilityOld, Tiles& tiles, snx::DenseMap<Vector2I, Fog>& fogs, Vector2I const& tilePosition)
 {
     if (tileVisibilityOld == VisibilityID::visible)
     {
@@ -334,11 +349,13 @@ void setFog(VisibilityID tileVisibilityOld, Tiles& tiles, snx::DenseMap<Vector2I
         // Add non opaque fog
         fogs[tilePosition] = Fog{tilePosition, false};
     }
+
     else if (tileVisibilityOld == VisibilityID::seen)
     {
         // Add non opaque fog
         fogs[tilePosition] = Fog{tilePosition, false};
     }
+
     else
     {
         // Add opaque fog
@@ -381,6 +398,11 @@ void Visibility::calculateVisibilitiesInOctant(
                 "\n");
 #endif
 
+            if (!tiles.visibilityIDs().contains(tilePosition))
+            {
+                continue;
+            }
+
             VisibilityID tileVisibilityOld{tiles.visibilityID(tilePosition)};
 
             // < : Update only octant tiles including diagonal tiles (spare last row tile needed for correct diagonal visibility)
@@ -399,7 +421,7 @@ void Visibility::calculateVisibilitiesInOctant(
                         "\n");
 #endif
 
-                    setFog(tileVisibilityOld, tiles, fogs_, tilePosition);
+                    updateVisibilities(tileVisibilityOld, tiles, fogs_, tilePosition);
 
                     continue;
                 } // Max shadow
@@ -445,9 +467,10 @@ void Visibility::calculateVisibilitiesInOctant(
                         tilePosition,
                         VisibilityID::visible);
                 }
+
                 else
                 {
-                    setFog(tileVisibilityOld, tiles, fogs_, tilePosition);
+                    updateVisibilities(tileVisibilityOld, tiles, fogs_, tilePosition);
                 }
             } // Octant tiles only
 
@@ -507,6 +530,7 @@ void Visibility::update(
         {
             range = octantWidth;
         }
+
         else
         {
             range = octantHeight;

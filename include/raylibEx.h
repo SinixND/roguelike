@@ -24,18 +24,19 @@ class RectangleEx
 public:
     RectangleEx() = default;
 
-    RectangleEx(float left, float top, float width = 1, float height = 1)
+    RectangleEx(float left, float top, float width = 0, float height = 0)
         : left_(left)
         , top_(top)
-        , right_(left + width - 1)
-        , bottom_(top + height - 1)
+        , right_(left + width)
+        , bottom_(top + height)
         , width_(width)
         , height_(height)
     {
-        setLeft(left);
-        setTop(top);
-        resizeWidthRight(width);
-        resizeHeightBottom(height);
+        validate();
+        // setLeft(left);
+        // setTop(top);
+        // resizeWidthRight(width);
+        // resizeHeightBottom(height);
     }
 
     RectangleEx(Vector2 const& topLeft, Vector2 const& bottomRight = {0, 0})
@@ -43,9 +44,10 @@ public:
         , top_(topLeft.y)
         , right_(bottomRight.x)
         , bottom_(bottomRight.y)
-        , width_(bottomRight.x - topLeft.x + 1)
-        , height_(bottomRight.y - topLeft.y + 1)
+        , width_(bottomRight.x - topLeft.x)
+        , height_(bottomRight.y - topLeft.y)
     {
+        validate();
     }
 
     RectangleEx(Vector2 const& center, float width, float height)
@@ -56,19 +58,24 @@ public:
         , width_(width)
         , height_(height)
     {
+        validate();
     }
 
     RectangleEx(Rectangle const& rectangle)
         : left_(rectangle.x)
         , top_(rectangle.y)
-        , right_(rectangle.x + rectangle.width - 1)
-        , bottom_(rectangle.y + rectangle.height - 1)
+        , right_(rectangle.x + rectangle.width)
+        , bottom_(rectangle.y + rectangle.height)
         , width_(rectangle.width)
         , height_(rectangle.height)
     {
+        validate();
     }
 
-    float left() const { return left_; }
+    float left() const
+    {
+        return left_;
+    }
 
     RectangleEx& setLeft(float left)
     {
@@ -84,7 +91,10 @@ public:
         return *this;
     }
 
-    float right() const { return right_; }
+    float right() const
+    {
+        return right_;
+    }
 
     RectangleEx& setRight(float right)
     {
@@ -100,7 +110,10 @@ public:
         return *this;
     }
 
-    float top() const { return top_; }
+    float top() const
+    {
+        return top_;
+    }
 
     RectangleEx& setTop(float top)
     {
@@ -116,7 +129,10 @@ public:
         return *this;
     }
 
-    float bottom() const { return bottom_; }
+    float bottom() const
+    {
+        return bottom_;
+    }
 
     RectangleEx& setBottom(float bottom)
     {
@@ -132,7 +148,10 @@ public:
         return *this;
     }
 
-    float width() const { return width_; }
+    float width() const
+    {
+        return width_;
+    }
 
     RectangleEx& resizeWidthRight(float width)
     {
@@ -148,7 +167,10 @@ public:
         return *this;
     }
 
-    float height() const { return height_; }
+    float height() const
+    {
+        return height_;
+    }
 
     RectangleEx& resizeHeightBottom(float height)
     {
@@ -197,32 +219,49 @@ public:
 private:
     void updateWidth()
     {
-        width_ = right_ - left_ + 1;
+        width_ = right_ - left_;
     }
 
     void updateHeight()
     {
-        height_ = bottom_ - top_ + 1;
+        height_ = bottom_ - top_;
     }
 
     void updateLeft()
     {
-        left_ = right_ - width_ + 1;
+        left_ = right_ - width_;
     }
 
     void updateTop()
     {
-        top_ = bottom_ - height_ + 1;
+        top_ = bottom_ - height_;
     }
 
     void updateRight()
     {
-        right_ = left_ + width_ - 1;
+        right_ = left_ + width_;
     }
 
     void updateBottom()
     {
-        bottom_ = top_ + height_ - 1;
+        bottom_ = top_ + height_;
+    }
+
+    void validate()
+    {
+        if (right_ < left_)
+        {
+            float temp{right_};
+            right_ = left_;
+            left_ = temp;
+        }
+
+        if (bottom_ < top_)
+        {
+            float temp{bottom_};
+            bottom_ = top_;
+            top_ = temp;
+        }
     }
 };
 
@@ -252,10 +291,11 @@ public:
         , width_(width)
         , height_(height)
     {
-        setLeft(left);
-        setTop(top);
-        resizeWidthRight(width);
-        resizeHeightBottom(height);
+        validate();
+        // setLeft(left);
+        // setTop(top);
+        // resizeWidthRight(width);
+        // resizeHeightBottom(height);
     }
 
     RectangleExI(Vector2I const& topLeft, Vector2I const& bottomRight = {0, 0})
@@ -266,6 +306,7 @@ public:
         , width_(bottomRight.x - topLeft.x + 1)
         , height_(bottomRight.y - topLeft.y + 1)
     {
+        validate();
     }
 
     // Only odd values for width/height
@@ -277,12 +318,16 @@ public:
         , width_(width)
         , height_(height)
     {
+        validate();
 #ifdef DEBUG
         assert((width % 2) && (height % 2) && "[ERROR] Width or height invalid; Must be odd value!");
 #endif
     }
 
-    int left() const { return left_; }
+    int left() const
+    {
+        return left_;
+    }
 
     RectangleExI& setLeft(int left)
     {
@@ -298,7 +343,10 @@ public:
         return *this;
     }
 
-    int right() const { return right_; }
+    int right() const
+    {
+        return right_;
+    }
 
     RectangleExI& setRight(int right)
     {
@@ -314,7 +362,10 @@ public:
         return *this;
     }
 
-    int top() const { return top_; }
+    int top() const
+    {
+        return top_;
+    }
 
     RectangleExI& setTop(int top)
     {
@@ -330,7 +381,10 @@ public:
         return *this;
     }
 
-    int bottom() const { return bottom_; }
+    int bottom() const
+    {
+        return bottom_;
+    }
 
     RectangleExI& setBottom(int bottom)
     {
@@ -346,7 +400,10 @@ public:
         return *this;
     }
 
-    int width() const { return width_; }
+    int width() const
+    {
+        return width_;
+    }
 
     RectangleExI& resizeWidthRight(int width)
     {
@@ -362,7 +419,10 @@ public:
         return *this;
     }
 
-    int height() const { return height_; }
+    int height() const
+    {
+        return height_;
+    }
 
     RectangleExI& resizeHeightBottom(int height)
     {
@@ -437,6 +497,27 @@ private:
     void updateBottom()
     {
         bottom_ = top_ + height_ - 1;
+    }
+
+    void validate()
+    {
+        if (right_ < left_)
+        {
+            int temp{right_};
+            right_ = left_;
+            left_ = temp;
+
+            updateWidth();
+        }
+
+        if (bottom_ < top_)
+        {
+            int temp{bottom_};
+            bottom_ = top_;
+            top_ = temp;
+
+            updateHeight();
+        }
     }
 };
 
@@ -560,8 +641,8 @@ inline bool CheckCollisionPointRec(Vector2 const& point, RectangleEx const& rec)
 inline int GetOrientation(Vector2 const& p1, Vector2 const& p2, Vector2 const& p3)
 {
     // https://www.geeksforgeeks.org/orientation-3-ordered-points/
-    auto i{(p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y)};
-    return i / abs(i);
+    float n{(p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y)};
+    return n / abs(n);
 }
 
 inline bool CheckCollisionLines(Vector2 const& s1, Vector2 const& s2, Vector2 const& t1, Vector2 const& t2)
@@ -618,6 +699,7 @@ inline Vector2 GetDisplaySize()
     {
         return Vector2{static_cast<float>(GetMonitorWidth(GetCurrentMonitor())), static_cast<float>(GetMonitorHeight(GetCurrentMonitor()))};
     }
+
     else
     {
         return Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
@@ -651,7 +733,7 @@ inline Vector2 Vector2MainDirection(Vector2 const& from, Vector2 const& to)
 {
     return Vector2MainDirection(
         Vector2Subtract(
-            to, 
+            to,
             from));
 }
 
@@ -659,7 +741,7 @@ inline Vector2I Vector2MainDirection(Vector2I const& from, Vector2I const& to)
 {
     return Vector2MainDirection(
         Vector2Subtract(
-            to, 
+            to,
             from));
 }
 

@@ -3,10 +3,10 @@
 #include "Map.h"
 #include "raylibEx.h"
 
-bool Collision::checkCollision(Map& map, Vector2I const& positionToCheck)
+bool Collision::checkCollision(Map const& map, Vector2I const& positionToCheck)
 {
-    return (map.tiles().isSolid(
+    return (map.tiles_.isSolid(
                 // Next tilePosition hero moves to
                 positionToCheck)
-            || map.enemies().ids().contains(positionToCheck));
+            || map.enemies_.ids().contains(positionToCheck));
 }

@@ -5,9 +5,8 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Rework const correctness
-    - [ ] Public members for direct access
-    - [ ] Remove auto where possible
+- [ ] UI "Level", sizes
+- [ ] Add interaction button / two finger tap?
 - [ ] Add enemy
 - [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
 detection range)
@@ -15,6 +14,7 @@ detection range)
 
 
 ## Shortterm
+- [ ] Debug DoubleTap
 - [ ] Setup docker
 
 
@@ -32,8 +32,7 @@ detection range)
 
 
 ## Continuous
-- Map generation
-
+- Check for possible NMNF functions
 - Check for obsolete [[maybe_unused]] and //* comments
 
 
@@ -116,3 +115,4 @@ detection range)
 - [x] Split inactive and active map tiles
 - [x] Map change
 - [x] Reduce render calls by chunking map
+- [x] Rework const correctness (includes: public members for direct access)

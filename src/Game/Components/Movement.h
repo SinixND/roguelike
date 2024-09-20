@@ -21,16 +21,6 @@ class Movement
     // bool isContinuous_{false};
     bool isInProgress_{false};
 
-private:
-    void setInProgress();
-    void stopMovement();
-
-    // Resets trigger, consumes energy and sets InProgress
-    void processTrigger(Energy& heroEnergy);
-
-    // Triggers from and adjusts path
-    void processPath();
-
 public:
     Movement() = default;
 
@@ -60,7 +50,17 @@ public:
     // - Moves for one tile max
     // - Resets inProgress state if move for one tile
     // - Resets currentVelocity
-    void update(Position& heroPosition, Energy& heroEnergy);
+    void update(Position& position, Energy& energy);
+
+private:
+    void setInProgress();
+    void stopMovement();
+
+    // Resets trigger, consumes energy and sets InProgress
+    void processTrigger(Energy& energy);
+
+    // Triggers from and adjusts path
+    void processPath();
 };
 
 #endif

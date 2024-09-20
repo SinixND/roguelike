@@ -16,8 +16,16 @@ public:
         RectangleEx const& viewport,
         Vector2 const& heroPosition);
 
-    Camera2D const& camera() const { return camera_; }
-    RectangleEx const& viewportOnScreen() const { return *viewport_; }
+    Camera2D const& camera() const
+    {
+        return camera_;
+    }
+
+    RectangleEx const& viewportOnScreen() const
+    {
+        return *viewport_;
+    }
+
     RectangleExI const viewportInTiles() const
     {
         return RectangleExI{

@@ -43,6 +43,7 @@ namespace snx
                     bmNameToEnd,
                     1));
             }
+
             else
             {
                 durations_.at(bmNameToEnd) += (end - starts_[bmNameToEnd]).count();

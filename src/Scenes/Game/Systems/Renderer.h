@@ -12,9 +12,9 @@
 class Renderer
 {
     Textures textures_{};
-    size_t theme_{2};
 
-    std::string textureAtlasFileName();
+    // Themes: TextureData::themes
+    size_t theme_{1};
 
 public:
     void init();
@@ -22,21 +22,24 @@ public:
     void render(
         RenderID renderID,
         Vector2 const& worldPixel,
-        Color const& tint = WHITE);
+        Color const& tint = WHITE) const;
 
     void renderToChunk(
         RenderID renderID,
         Vector2 const& worldPixel,
         Chunk& chunk,
-        Color const& tint = WHITE);
+        Color const& tint = WHITE) const;
 
-    void renderChunk(Chunk& chunk);
+    void renderChunk(Chunk const& chunk) const;
 
-    void renderFog(Fog const& fog);
+    void renderFog(Fog const& fog) const;
 
     void cycleThemes();
 
     void deinit();
+
+private:
+    std::string textureAtlasFileName() const;
 };
 
 #endif

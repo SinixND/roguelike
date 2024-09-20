@@ -26,19 +26,19 @@ public:
 
     // void erase(Vector2I const& tilePosition);
 
-    snx::DenseMap<Vector2I, Position>& positions();
-    Position const& position(Vector2I const& tilePosition);
+    snx::DenseMap<Vector2I, Position> const& positions() const;
+    Position const& position(Vector2I const& tilePosition) const;
 
-    snx::DenseMap<Vector2I, std::string>& tags();
-    std::string const& tag(Vector2I const& tilePosition);
+    snx::DenseMap<Vector2I, std::string> const& tags() const;
+    std::string const& tag(Vector2I const& tilePosition) const;
 
-    snx::DenseMap<Vector2I, RenderID>& renderIDs();
-    RenderID renderID(Vector2I const& tilePosition);
+    snx::DenseMap<Vector2I, RenderID> const& renderIDs() const;
+    RenderID renderID(Vector2I const& tilePosition) const;
 
-    snx::DenseMap<Vector2I, Event>& events();
-    Event event(Vector2I const& tilePosition);
+    snx::DenseMap<Vector2I, Event> const& events() const;
+    Event event(Vector2I const& tilePosition) const;
 
-    size_t size();
+    size_t size() const;
 };
 
 #endif

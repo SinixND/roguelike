@@ -9,7 +9,6 @@
 
 class Textures
 {
-private:
     std::string const texturePath{"resources/textures/"};
 
     // Texture atlas
@@ -24,7 +23,7 @@ public:
         textureAtlas_ = LoadTexture((texturePath + filename).c_str());
     }
 
-    Texture2D& getTextureAtlas()
+    Texture2D const& getTextureAtlas() const
     {
         return textureAtlas_;
     }
@@ -34,7 +33,7 @@ public:
         textureIdToAtlasPosition_.insert(std::make_pair(textureID, position));
     }
 
-    Vector2& getTexturePosition(RenderID renderID)
+    Vector2 const& getTexturePosition(RenderID renderID) const
     {
         return textureIdToAtlasPosition_.at(renderID);
     }

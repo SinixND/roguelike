@@ -17,7 +17,10 @@ namespace snx
         static inline GameCamera gcam_{};
 
     public:
-        static GameCamera& gcam() { return instance().gcam_; }
+        static GameCamera& gcam()
+        {
+            return instance().gcam_;
+        }
 
         template <typename Arg>
         static void cliPrint(Arg arg)

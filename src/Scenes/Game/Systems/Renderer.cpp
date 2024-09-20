@@ -14,13 +14,11 @@
 #include <raylib.h>
 #include <raymath.h>
 
-// private:
-std::string Renderer::textureAtlasFileName()
+std::string Renderer::textureAtlasFileName() const
 {
     return TextureData::themes[theme_] + ".png";
 }
 
-// public:
 void Renderer::init()
 {
     // Load texture atlas
@@ -40,7 +38,7 @@ void Renderer::init()
 void Renderer::render(
     RenderID renderID,
     Vector2 const& worldPixel,
-    Color const& tint)
+    Color const& tint) const
 {
     // Use 0.5f pixel offset to avoid texture bleeding
     DrawTexturePro(
@@ -65,7 +63,7 @@ void Renderer::renderToChunk(
     RenderID renderID,
     Vector2 const& worldPixel,
     Chunk& chunk,
-    Color const& tint)
+    Color const& tint) const
 {
     // Use 0.5f pixel offset to avoid texture bleeding
     DrawTexturePro(
@@ -86,15 +84,15 @@ void Renderer::renderToChunk(
         tint);
 }
 
-void Renderer::renderChunk(Chunk& chunk)
+void Renderer::renderChunk(Chunk const& chunk) const
 {
     DrawTexturePro(
-        chunk.renderTexture().texture,
+        chunk.renderTexture_.texture,
         Rectangle{
             0,
             0,
-            static_cast<float>(chunk.renderTexture().texture.width),
-            static_cast<float>(-chunk.renderTexture().texture.height)},
+            static_cast<float>(chunk.renderTexture_.texture.width),
+            static_cast<float>(-chunk.renderTexture_.texture.height)},
         Rectangle{
             chunk.position().worldPixel().x,
             chunk.position().worldPixel().y,
@@ -116,7 +114,7 @@ void Renderer::renderChunk(Chunk& chunk)
 #endif
 }
 
-void Renderer::renderFog(Fog const& fog)
+void Renderer::renderFog(Fog const& fog) const
 {
     Color tint{};
 
@@ -125,6 +123,7 @@ void Renderer::renderFog(Fog const& fog)
     {
         tint = ColorAlpha(RED, 0.5f);
     }
+
     else
     {
         tint = ColorAlpha(BLUE, 0.5f);
@@ -134,6 +133,7 @@ void Renderer::renderFog(Fog const& fog)
     {
         tint = BLACK;
     }
+
     else
     {
         tint = ColorAlpha(BLACK, 0.5f);

@@ -10,9 +10,15 @@ class GameFont
 public:
     static inline float const fontSize{16};
 
-    static Font const& font() { return font_; }
+public:
     static void load() { font_ = LoadFont("resources/fonts/LiberationMono-Regular.ttf"); }
+
     static void unload() { UnloadFont(font_); }
+
+    static Font const& font()
+    {
+        return font_;
+    }
 };
 
 #endif

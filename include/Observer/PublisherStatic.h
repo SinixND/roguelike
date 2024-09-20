@@ -7,7 +7,8 @@
 #include <unordered_map>
 
 // List of subscribers (lambdas)
-using SubscriberList = std::forward_list<std::function<void()>>;
+using LambdaVoid = std::function<void()>;
+using SubscriberList = std::forward_list<LambdaVoid>;
 
 // Subject / Publisher / Event / Sender
 // Can pushlish multiple events / Can hold multiple subscribers (per event)
@@ -21,7 +22,7 @@ namespace snx
     public:
         // Event is the 'key' that we want to handle.
         // 'subscriber' is the action triggered by the event
-        static void addSubscriber(Event event, std::function<void()> subscriber, bool fireOnCreation = false)
+        static void addSubscriber(Event event, LambdaVoid subscriber, bool fireOnCreation = false)
         {
             ensureList(event);
 
@@ -36,7 +37,7 @@ namespace snx
         // Execute all subscribers for given event
         static void publish(Event event)
         {
-            for (auto& subscriber : eventToSubscriberLists_[event])
+            for (LambdaVoid& subscriber : eventToSubscriberLists_[event])
             {
                 subscriber();
             }
@@ -46,9 +47,11 @@ namespace snx
         static void publishAll()
         {
             // Iterate all subscribers
-            for (auto& mapping : eventToSubscriberLists_)
+            for (auto& [event, list] : eventToSubscriberLists_)
+            // for (auto& mapping : eventToSubscriberLists_)
             {
-                notifyAllSubscribers(mapping.second);
+                notifyAllSubscribers(list);
+                // notifyAllSubscribers(mapping.second);
             }
         }
 
@@ -63,9 +66,9 @@ namespace snx
         }
 
         // Execute all subscribers in subscriber list
-        static void notifyAllSubscribers(std::forward_list<std::function<void()>>& subscriberList)
+        static void notifyAllSubscribers(std::forward_list<LambdaVoid>& subscriberList)
         {
-            for (auto& subscriber : subscriberList)
+            for (LambdaVoid& subscriber : subscriberList)
             {
                 subscriber();
             }

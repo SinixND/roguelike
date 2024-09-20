@@ -27,11 +27,20 @@ public:
     {
     }
 
-    Vector2I const& tilePosition() const { return tilePosition_; }
+    Vector2I const& tilePosition() const
+    {
+        return tilePosition_;
+    }
 
-    int stepsNeeded() const { return stepsNeeded_; }
+    int stepsNeeded() const
+    {
+        return stepsNeeded_;
+    }
 
-    RatedTile* ancestor() const { return ancestor_; }
+    RatedTile* ancestor() const
+    {
+        return ancestor_;
+    }
 
     // Heuristic used to rate tiles
     float rating() const;
@@ -42,7 +51,7 @@ public:
 namespace Pathfinder
 {
     std::vector<Vector2I> findPath(
-        Map& map,
+        Map const& map,
         Vector2I const& start,
         Vector2I const& target,
         GameCamera const& gameCamera);

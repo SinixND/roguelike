@@ -28,11 +28,28 @@
             "stopAtEntry": true,
         },
         {
+            "name": "Build debug (cppdbg, fatal)",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Make debug (fatal)",
+            "program": "${workspaceFolder}/bin/debug/main.exe",
+            "stopAtEntry": true,
+        },
+        {
             "name": "Build debug (lldb)",
             "type": "lldb",
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make debug",
+            "program": "${workspaceFolder}/bin/debug/main.exe",
+        },
+        {
+            "name": "Build debug (lldb, fatal)",
+            "type": "lldb",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Make debug (fatal)",
             "program": "${workspaceFolder}/bin/debug/main.exe",
         },
         {

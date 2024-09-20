@@ -4,7 +4,7 @@
 #include "Id.h"
 #include "Singleton.h"
 #include <cassert>
-#include <iostream>
+#include <cstddef>
 #include <limits>
 #include <unordered_set>
 
@@ -12,62 +12,22 @@ namespace snx
 {
     class IdManager : public snx::Singleton<IdManager>
     {
+        static inline size_t const maxId_{std::numeric_limits<Id>::max()};
+        static inline size_t lastId_{0};
         static inline std::unordered_set<Id> activeIds_;
         static inline std::unordered_set<Id> freeIds_;
-
-    private:
-        static Id recycledId() 
-        {
-            size_t id{};
-            auto freeIdsIterator{freeIds_.begin()};
-            id = *freeIdsIterator;
-
-            activeIds_.insert(id);
-            freeIds_.erase(freeIdsIterator);
-
-            return id;
-        }
-
-        static Id incrementedId() 
-        {
-            static size_t maxId = std::numeric_limits<size_t>::max();
-            static size_t lastId{0};
-
-            // Start with id = 1
-            ++lastId;
-
-            assert(lastId < maxId && "ID OVERFLOWING!");
-
-            activeIds_.insert(lastId);
-
-            return lastId;
-        }
 
     public:
         static Id requestId()
         {
             assert(lastId_ < maxId_ && "ID OVERFLOWING!");
 
-            Id id;
-
             if (!freeIds_.empty())
             {
-                auto freeIdsIterator{freeIds_.begin()};
-                id = *freeIdsIterator;
-                activeIds_.insert(id);
-                freeIds_.erase(freeIdsIterator);
-                // std::cout << "Reuse Id:" << id << ", Active: " << activeIds_.size() << ", Free: " << freeIds_.size() << "\n";
-
-                return id;
+                return recycledId();
             }
 
-            // Start with id = 1
-            ++lastId_;
-
-            activeIds_.insert(lastId_);
-
-            // std::cout << "New Id:" << lastId_ << ", Active: " << activeIds_.size() << ", Free: " << freeIds_.size() << "\n";
-            return lastId_;
+            return incrementedId();
         };
 
         static void suspendId(Id id)
@@ -84,8 +44,33 @@ namespace snx
             // std::cout << "Suspend Id:" << id << ", Active: " << activeIds_.size() << ", Free: " << freeIds_.size() << "\n";
         };
 
-        IdManager(Id maxId = std::numeric_limits<Id>::max())
-            : maxId_(maxId){};
+    private:
+        static Id recycledId()
+        {
+            size_t id{};
+            auto freeIdsIterator{freeIds_.begin()};
+            id = *freeIdsIterator;
+
+            activeIds_.insert(id);
+            freeIds_.erase(freeIdsIterator);
+
+            return id;
+        }
+
+        static Id incrementedId()
+        {
+            static size_t maxId = std::numeric_limits<size_t>::max();
+            static size_t lastId{0};
+
+            // Start with id = 1
+            ++lastId;
+
+            assert(lastId < maxId && "ID OVERFLOWING!");
+
+            activeIds_.insert(lastId);
+
+            return lastId;
+        }
     };
 }
 

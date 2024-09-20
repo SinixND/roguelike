@@ -19,6 +19,16 @@ class InputHandler
     std::unordered_map<int, InputActionID> mouseButtonToInputActionID_{};
     std::unordered_map<InputActionID, int> inputActionIDToModifierKey_{};
 
+public:
+    void setDefaultInputMappings();
+    void takeInput(bool isCursorActive);
+    void triggerAction(
+        Hero& hero,
+        Cursor& cursor,
+        Map& map,
+        GameCamera const& gameCamera);
+
+private:
     void bindKey(int key, InputActionID action);
     void bindMouseButton(int key, InputActionID action);
     void bindModifierKey(int key, InputActionID action);
@@ -31,15 +41,6 @@ class InputHandler
 
     // Returns true if input received
     bool takeInputGesture();
-
-public:
-    void setDefaultInputMappings();
-    void takeInput(bool isCursorActive);
-    void triggerAction(
-        Hero& hero,
-        Cursor& cursor,
-        Map& map,
-        GameCamera const& gameCamera);
 };
 
 #endif

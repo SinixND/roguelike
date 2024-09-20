@@ -9,17 +9,17 @@
 namespace snx
 {
     // List of subscribers (lambdas)
-    template <typename FType>
-    using SubList = std::forward_list<FType>;
+    template <typename TFunctor>
+    using SubscriberList = std::forward_list<TFunctor>;
 
     // Subject / Publisher / Event / Sender
     // Can pushlish multiple events / Can hold multiple subscribers (per event)
 
     // Publisher
-    template <typename FType>
+    template <typename TFunctor>
     class Publisher
     {
-        std::unordered_map<Event, SubList<FType>> eventToSubscriberLists_{{}};
+        std::unordered_map<Event, SubscriberList<TFunctor>> eventToSubscriberLists_{{}};
 
     public:
         // Event is the 'key' that we want to handle.
@@ -39,7 +39,7 @@ namespace snx
         // Execute all subscribers for given event
         void publish(Event event)
         {
-            for (auto& subscriber : eventToSubscriberLists_[event])
+            for (TFunctor& subscriber : eventToSubscriberLists_[event])
             {
                 subscriber();
             }
@@ -49,7 +49,7 @@ namespace snx
         void publishAll()
         {
             // Iterate all subscribers
-            for (auto& mapping : eventToSubscriberLists_)
+            for (SubscriberList<TFunctor>& mapping : eventToSubscriberLists_)
             {
                 notifyAllSubscribers(mapping.second);
             }
@@ -61,14 +61,14 @@ namespace snx
         {
             if (eventToSubscriberLists_.find(event) == eventToSubscriberLists_.end())
             {
-                eventToSubscriberLists_[event] = SubList<FType>();
+                eventToSubscriberLists_[event] = SubscriberList<TFunctor>();
             }
         }
 
         // Execute all subscribers in subscriber list
-        void notifyAllSubscribers(SubList<FType>& subscriberList)
+        void notifyAllSubscribers(SubscriberList<TFunctor>& subscriberList)
         {
-            for (auto& subscriber : subscriberList)
+            for (TFunctor& subscriber : subscriberList)
             {
                 subscriber();
             }

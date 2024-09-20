@@ -61,7 +61,7 @@ bool checkRatingList(
     std::forward_list<RatedTile>& ratedTiles,
     std::map<int, std::vector<RatedTile*>>& ratingList,
     std::unordered_set<Vector2I>& tilesToIgnore,
-    Map& map,
+    Map const& map,
     Vector2I const& target,
     GameCamera const& gameCamera,
     std::vector<Vector2I>& path)
@@ -132,10 +132,10 @@ bool checkRatingList(
             // - Not in map
             // - Enemy present
             if (
-                (map.tiles().visibilityID(newTilePosition) == VisibilityID::invisible)
-                || map.tiles().isSolid(newTilePosition)
-                || !map.tiles().positions().contains(newTilePosition)
-                || map.enemies().ids().contains(newTilePosition))
+                (map.tiles_.visibilityID(newTilePosition) == VisibilityID::invisible)
+                || map.tiles_.isSolid(newTilePosition)
+                || !map.tiles_.positions().contains(newTilePosition)
+                || map.enemies_.ids().contains(newTilePosition))
             {
                 // Invalid! Add to ignore set so it doesn't get checked again
                 tilesToIgnore.insert(newTilePosition);
@@ -197,7 +197,7 @@ bool checkRatingList(
 }
 
 std::vector<Vector2I> Pathfinder::findPath(
-    Map& map,
+    Map const& map,
     Vector2I const& start,
     Vector2I const& target,
     GameCamera const& gameCamera)
@@ -214,9 +214,9 @@ std::vector<Vector2I> Pathfinder::findPath(
     // - Not in map
     // - Equal to start
     if (
-        (map.tiles().visibilityID(target) == VisibilityID::invisible)
-        || map.tiles().isSolid(target)
-        || !map.tiles().positions().contains(target)
+        (map.tiles_.visibilityID(target) == VisibilityID::invisible)
+        || map.tiles_.isSolid(target)
+        || !map.tiles_.positions().contains(target)
         || (start == target))
     {
         return path;
@@ -252,7 +252,7 @@ std::vector<Vector2I> Pathfinder::findPath(
 
     // Path is either empty or has at least 2 entries (target and start)
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
-    for (auto& position : path)
+    for (Vector2I const& position : path)
     {
         DrawCircleV(
             Vector2Add(
@@ -265,6 +265,7 @@ std::vector<Vector2I> Pathfinder::findPath(
                 GREEN,
                 0.5));
     }
+
     EndDrawing();
 #endif
 

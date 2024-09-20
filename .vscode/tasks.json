@@ -3,7 +3,7 @@
         {
             "type": "shell",
             "label": "Make",
-            "command": "make",
+            "command": "make -j",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -11,6 +11,14 @@
         {
             "type": "shell",
             "label": "Make debug",
+            "command": "make -j debug",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+        },
+        {
+            "type": "shell",
+            "label": "Make debug (fatal)",
             "command": "make debug",
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -19,7 +27,7 @@
         {
             "type": "shell",
             "label": "Make release",
-            "command": "make release",
+            "command": "make -j release",
             "options": {
                 "cwd": "${workspaceFolder}"
             },

@@ -3,6 +3,7 @@
 // #define DEBUG_TILEINFO
 // #define DEBUG_FOG
 
+#include "/home/arch/coding/git_repos/roguelike/src/Game/Classes/Enemies.h"
 #include "Chunk.h"
 #include "Chunks.h"
 #include "Collision.h"
@@ -13,6 +14,7 @@
 #include "Event.h"
 #include "GameCamera.h"
 #include "Logger.h"
+#include "Objects.h"
 #include "Panels.h"
 #include "Position.h"
 #include "PublisherStatic.h"
@@ -46,7 +48,7 @@ void GameScene::initialize()
 
     gameCamera_.init(
         panels_.map(),
-        hero_.position().worldPixel());
+        hero_.position_.worldPixel());
 
 #ifdef DEBUG
     snx::debug::gcam() = gameCamera_;
@@ -56,7 +58,7 @@ void GameScene::initialize()
 
     inputHandler_.setDefaultInputMappings();
 
-    tileChunks_.init(world_.currentMap().tiles(), renderer_);
+    tileChunks_.init(world_.currentMap().tiles_, renderer_);
 
     // Setup events
     setupEvents();
@@ -80,11 +82,11 @@ void GameScene::setupEvents()
         Event::panelsResized,
         [&]()
         {
-            gameCamera_.init(panels_.map(), hero_.position().worldPixel());
+            gameCamera_.init(panels_.map(), hero_.position_.worldPixel());
             visibility_.update(
-                world_.currentMap().tiles(),
+                world_.currentMap().tiles_,
                 gameCamera_.viewportInTiles(),
-                hero_.position().tilePosition());
+                hero_.position_.tilePosition());
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -105,7 +107,7 @@ void GameScene::setupEvents()
         Event::heroMoved,
         [&]()
         {
-            gameCamera_.setTarget(hero_.position().worldPixel());
+            gameCamera_.setTarget(hero_.position_.worldPixel());
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -114,9 +116,9 @@ void GameScene::setupEvents()
         {
             // Visibility
             visibility_.update(
-                world_.currentMap().tiles(),
+                world_.currentMap().tiles_,
                 gameCamera_.viewportInTiles(),
-                hero_.position().tilePosition());
+                hero_.position_.tilePosition());
         },
         true);
 
@@ -128,9 +130,9 @@ void GameScene::setupEvents()
 
             world_.increaseMapLevel();
 
-            hero_.position().changeTo(Vector2I{0, 0});
+            hero_.position_.changeTo(Vector2I{0, 0});
 
-            tileChunks_.init(world_.currentMap().tiles(), renderer_);
+            tileChunks_.init(world_.currentMap().tiles_, renderer_);
 
             snx::PublisherStatic::publish(Event::heroMoved);
             snx::PublisherStatic::publish(Event::heroPositionChanged);
@@ -144,17 +146,17 @@ void GameScene::setupEvents()
 
             world_.decreaseMapLevel();
 
-            for (auto const& position : world_.currentMap().objects().positions().values())
+            for (Position const& position : world_.currentMap().objects_.positions().values())
             {
-                if (!(world_.currentMap().objects().renderID(position.tilePosition()) == RenderID::descend))
+                if (!(world_.currentMap().objects_.renderID(position.tilePosition()) == RenderID::descend))
                 {
                     continue;
                 }
 
-                hero_.position().changeTo(position.tilePosition());
+                hero_.position_.changeTo(position.tilePosition());
             }
 
-            tileChunks_.init(world_.currentMap().tiles(), renderer_);
+            tileChunks_.init(world_.currentMap().tiles_, renderer_);
 
             snx::PublisherStatic::publish(Event::heroMoved);
             snx::PublisherStatic::publish(Event::heroPositionChanged);
@@ -167,7 +169,7 @@ void GameScene::setupEvents()
             renderer_.cycleThemes();
             renderer_.init();
 
-            tileChunks_.init(world_.currentMap().tiles(), renderer_);
+            tileChunks_.init(world_.currentMap().tiles_, renderer_);
         });
 
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
@@ -175,9 +177,9 @@ void GameScene::setupEvents()
         Event::cursorPositionChanged,
         [&]()
         {
-            Vector2I cursorPos{cursor_.position().tilePosition()};
+            Vector2I cursorPos{cursor_.position_.tilePosition()};
 
-            if (!world_.currentMap().tiles().positions().contains(cursorPos))
+            if (!world_.currentMap().tiles_.positions().contains(cursorPos))
             {
                 return;
             }
@@ -194,32 +196,32 @@ void GameScene::setupEvents()
 
             snx::debug::cliLog(
                 "WorldPixel: "
-                + std::to_string(world_.currentMap().tiles().position(cursorPos).worldPixel().x)
+                + std::to_string(world_.currentMap().tiles_.position(cursorPos).worldPixel().x)
                 + ", "
-                + std::to_string(world_.currentMap().tiles().position(cursorPos).worldPixel().y)
+                + std::to_string(world_.currentMap().tiles_.position(cursorPos).worldPixel().y)
                 + "\n");
 
             snx::debug::cliLog(
                 "RenderID: "
-                + std::to_string(int(world_.currentMap().tiles().renderID(cursorPos)))
+                + std::to_string(int(world_.currentMap().tiles_.renderID(cursorPos)))
                 + "\n");
 
             snx::debug::cliLog(
                 "VisibilityID: "
-                + std::to_string(int(world_.currentMap().tiles().visibilityID(cursorPos)))
+                + std::to_string(int(world_.currentMap().tiles_.visibilityID(cursorPos)))
                 + "\n");
 
             snx::debug::cliLog(
                 "IsSolid: "
-                + std::to_string(world_.currentMap().tiles().isSolid(cursorPos))
+                + std::to_string(world_.currentMap().tiles_.isSolid(cursorPos))
                 + "\n");
 
             snx::debug::cliLog(
                 "IsOpaque: "
-                + std::to_string(world_.currentMap().tiles().isOpaque(cursorPos))
+                + std::to_string(world_.currentMap().tiles_.isOpaque(cursorPos))
                 + "\n");
 
-            if (!world_.currentMap().objects().positions().contains(cursorPos))
+            if (!world_.currentMap().objects_.positions().contains(cursorPos))
             {
                 return;
             }
@@ -228,17 +230,17 @@ void GameScene::setupEvents()
 
             snx::debug::cliLog(
                 "\nTag: "
-                + world_.currentMap().objects().tag(cursorPos)
+                + world_.currentMap().objects_.tag(cursorPos)
                 + "\n");
 
             snx::debug::cliLog(
                 "RenderID: "
-                + std::to_string(int(world_.currentMap().objects().renderID(cursorPos)))
+                + std::to_string(int(world_.currentMap().objects_.renderID(cursorPos)))
                 + "\n");
 
             snx::debug::cliLog(
                 "Event: "
-                + std::to_string(int(world_.currentMap().objects().event(cursorPos)))
+                + std::to_string(int(world_.currentMap().objects_.event(cursorPos)))
                 + "\n");
         });
 #endif
@@ -253,7 +255,7 @@ void GameScene::processInput()
     }
 
     // Block input handling if hero misses energy
-    if (!hero_.energy().isFull())
+    if (!hero_.energy_.isFull())
     {
         return;
     }
@@ -266,14 +268,14 @@ void GameScene::updateState()
 {
     cursor_.update(
         gameCamera_.camera(),
-        hero_.position().tilePosition());
+        hero_.position_.tilePosition());
 
     // Regenerate energy if no action in progress
     if (!actionInProgress_)
     {
         while (true)
         {
-            if (hero_.energy().regenerate())
+            if (hero_.energy_.regenerate())
             {
                 break;
             }
@@ -287,23 +289,23 @@ void GameScene::updateState()
         gameCamera_);
 
     // Avoid check if no movement in progress
-    if (hero_.movement().isTriggered())
+    if (hero_.movement_.isTriggered())
     {
         // Check collision before starting movement
         if (Collision::checkCollision(
                 world_.currentMap(),
                 Vector2Add(
-                    hero_.position().tilePosition(),
-                    hero_.movement().direction())))
+                    hero_.position_.tilePosition(),
+                    hero_.movement_.direction())))
         {
-            hero_.movement().abortMovement();
+            hero_.movement_.abortMovement();
         }
     }
 
     // Update hero movment
-    hero_.movement().update(
-        hero_.position(),
-        hero_.energy());
+    hero_.movement_.update(
+        hero_.position_,
+        hero_.energy_);
 
 #ifdef DEBUG
     snx::debug::gcam() = gameCamera_;
@@ -323,13 +325,13 @@ void GameScene::renderOutput()
     // World
     // Draw map
     // Draw tiles
-    for (Chunk& chunk : tileChunks_.chunks().values())
+    for (Chunk const& chunk : tileChunks_.chunks().values())
     {
         renderer_.renderChunk(chunk);
     }
 
     // Draw objects
-    auto& objects{world_.currentMap().objects()};
+    Objects const& objects{world_.currentMap().objects_};
 
     for (Position const& position : objects.positions().values())
     {
@@ -339,7 +341,7 @@ void GameScene::renderOutput()
     }
 
     // Draw enemies
-    auto& enemies{world_.currentMap().enemies()};
+    Enemies const& enemies{world_.currentMap().enemies_};
 
     for (size_t id : enemies.ids().values())
     {
@@ -349,7 +351,7 @@ void GameScene::renderOutput()
     }
 
     // Visibility
-    for (Fog const& fog : visibility_.fogsToRender())
+    for (Fog const& fog : visibility_.fogs())
     {
         renderer_.renderFog(fog);
     }
@@ -358,7 +360,7 @@ void GameScene::renderOutput()
     // Draw hero
     renderer_.render(
         hero_.renderID(),
-        hero_.position().worldPixel());
+        hero_.position_.worldPixel());
 
     // UI
     // Draw cursor
@@ -366,14 +368,14 @@ void GameScene::renderOutput()
     {
         renderer_.render(
             cursor_.renderID(),
-            cursor_.position().worldPixel());
+            cursor_.position_.worldPixel());
     }
 
     EndScissorMode();
     EndMode2D();
 
     panels_.drawLogPanelContent();
-    panels_.drawTileInfoPanelContent(world_.currentMap().objects(), cursor_.position().tilePosition());
+    panels_.drawTileInfoPanelContent(world_.currentMap().objects_, cursor_.position_.tilePosition());
 
     panels_.drawPanelBorders();
 }

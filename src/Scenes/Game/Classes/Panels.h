@@ -13,17 +13,17 @@ class Panels
     RectangleEx map_{};
 
 public:
+    void init();
+
+    void drawLogPanelContent() const;
+    void drawTileInfoPanelContent(Objects const& objects, Vector2I const& cursorPosition) const;
+    void drawPanelBorders() const;
+
     RectangleEx const& tileInfo() const;
     RectangleEx const& info() const;
     RectangleEx const& status() const;
     RectangleEx const& log() const;
     RectangleEx const& map() const;
-
-    void init();
-
-    void drawLogPanelContent();
-    void drawTileInfoPanelContent(Objects& objects, Vector2I const& cursorPosition);
-    void drawPanelBorders();
 };
 
 #endif

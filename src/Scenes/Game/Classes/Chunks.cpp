@@ -11,12 +11,12 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-void Chunks::init(Tiles& tiles, Renderer& renderer)
+void Chunks::init(Tiles const& tiles, Renderer& renderer)
 {
     // Reset
-    for (Chunk& chunk : chunks().values())
+    for (Chunk const& chunk : chunks().values())
     {
-        UnloadRenderTexture(chunk.renderTexture());
+        UnloadRenderTexture(chunk.renderTexture_);
     }
 
     chunks_.clear();
@@ -32,7 +32,7 @@ void Chunks::init(Tiles& tiles, Renderer& renderer)
     {
         RectangleExI const& chunkSize{chunk.corners()};
 
-        BeginTextureMode(chunk.renderTexture());
+        BeginTextureMode(chunk.renderTexture_);
 
         ClearBackground(BG_COLOR);
 
@@ -62,7 +62,7 @@ void Chunks::verifyRequiredChunk(Vector2I const& tilePosition)
 {
     Vector2I chunkPosition{UnitConversion::tileToChunk(tilePosition)};
 
-    // If clause is needed due to LoadRenderTexture() call
+    // If clause is needed due to exclude unnecessary LoadRenderTexture() calls
     if (!chunks_.contains(chunkPosition))
     {
         chunks_.emplace(
@@ -74,12 +74,7 @@ void Chunks::verifyRequiredChunk(Vector2I const& tilePosition)
     }
 }
 
-// Chunk& Chunks::chunk(Vector2I const& tilePosition)
-// {
-//     return chunks_.at(UnitConversion::tileToChunk(tilePosition));
-// }
-
-snx::DenseMap<Vector2I, Chunk>& Chunks::chunks()
+snx::DenseMap<Vector2I, Chunk> const& Chunks::chunks() const
 {
     return chunks_;
 }

@@ -10,10 +10,17 @@
 #include <raymath.h>
 #include <vector>
 
-Vector2I const& Movement::direction() const { return direction_; }
+Vector2I const& Movement::direction() const
+{
+    return direction_;
+}
+
 void Movement::setSpeed(float speed) { speed_ = speed; }
 
-bool Movement::isTriggered() const { return isTriggered_; }
+bool Movement::isTriggered() const
+{
+    return isTriggered_;
+}
 
 void Movement::trigger(Vector2I const& direction)
 {
@@ -66,10 +73,10 @@ void Movement::processPath()
     }
 }
 
-void Movement::processTrigger(Energy& heroEnergy)
+void Movement::processTrigger(Energy& energy)
 {
     isTriggered_ = false;
-    heroEnergy.consume(50);
+    energy.consume(50);
     setInProgress();
 }
 
@@ -93,12 +100,12 @@ void Movement::abortMovement()
     path_.clear();
 }
 
-void Movement::update(Position& heroPosition, Energy& heroEnergy)
+void Movement::update(Position& position, Energy& energy)
 {
     // Start movement on trigger
     if (isTriggered_)
     {
-        processTrigger(heroEnergy);
+        processTrigger(energy);
     }
 
     // Check if action is in progress
@@ -115,7 +122,7 @@ void Movement::update(Position& heroPosition, Energy& heroEnergy)
     // Move for one tile max
     if (cumulativeDistanceMoved_ < TileData::TILE_SIZE)
     {
-        heroPosition.move(distance);
+        position.move(distance);
         snx::PublisherStatic::publish(Event::heroMoved);
         return;
     }
@@ -126,7 +133,7 @@ void Movement::update(Position& heroPosition, Energy& heroEnergy)
     }
 
     // Move by remaining distance until TILE_SIZE
-    heroPosition.move(
+    position.move(
         Vector2ClampValue(
             distance,
             0,

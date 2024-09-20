@@ -19,15 +19,18 @@ class World
     int maxMapLevel_{};
     int currentMapLevel_{};
 
-    void addNewMap();
-    void setCurrentMap(int level);
-
 public:
+    Map const& currentMap() const;
     Map& currentMap();
-    int currentMapLevel();
+
+    int currentMapLevel() const;
 
     void increaseMapLevel();
     void decreaseMapLevel();
+
+private:
+    void addNewMap();
+    void setCurrentMap(int level);
 };
 
 #endif

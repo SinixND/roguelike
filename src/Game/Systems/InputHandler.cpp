@@ -15,7 +15,6 @@
 #include <raymath.h>
 #include <utility>
 
-// private
 void InputHandler::bindKey(int key, InputActionID action)
 {
     keyToInputActionID_.insert(std::make_pair(key, action));
@@ -210,18 +209,22 @@ bool InputHandler::takeInputGesture()
             {
                 inputAction_ = InputActionID::actUp;
             }
+
             else if (direction == Vector2{-1, 0})
             {
                 inputAction_ = InputActionID::actLeft;
             }
+
             else if (direction == Vector2{0, 1})
             {
                 inputAction_ = InputActionID::actDown;
             }
+
             else if (direction == Vector2{1, 0})
             {
                 inputAction_ = InputActionID::actRight;
             }
+
             break;
         }
 
@@ -258,7 +261,6 @@ bool InputHandler::takeInputGesture()
     return true;
 }
 
-// public
 void InputHandler::takeInput(bool isCursorActive)
 {
     if (takeInputKey())
@@ -270,6 +272,7 @@ void InputHandler::takeInput(bool isCursorActive)
     {
         return;
     }
+
     else
     {
         takeInputGesture();
@@ -286,7 +289,7 @@ void InputHandler::triggerAction(
     if (inputAction_ == InputActionID::none)
     {
         // Trigger input agnostic actions
-        hero.movement().trigger();
+        hero.movement_.trigger();
 
         return;
     }
@@ -295,60 +298,67 @@ void InputHandler::triggerAction(
     {
     case InputActionID::actUp:
     {
-        hero.movement().trigger(
+        hero.movement_.trigger(
             Directions::V_UP);
     }
+
     break;
 
     case InputActionID::actLeft:
     {
-        hero.movement().trigger(
+        hero.movement_.trigger(
             Directions::V_LEFT);
     }
+
     break;
 
     case InputActionID::actDown:
     {
-        hero.movement().trigger(
+        hero.movement_.trigger(
             Directions::V_DOWN);
     }
+
     break;
 
     case InputActionID::actRight:
     {
-        hero.movement().trigger(
+        hero.movement_.trigger(
             Directions::V_RIGHT);
     }
+
     break;
 
     case InputActionID::cursorToggle:
     {
         cursor.toggle();
     }
+
     break;
 
     case InputActionID::moveToTarget:
     {
-        hero.movement().trigger(Pathfinder::findPath(
+        hero.movement_.trigger(Pathfinder::findPath(
             map,
-            hero.position().tilePosition(),
-            cursor.position().tilePosition(),
+            hero.position_.tilePosition(),
+            cursor.position_.tilePosition(),
             gameCamera));
     }
+
     break;
 
     case InputActionID::interact:
     {
-        Vector2I heroTilePosition{hero.position().tilePosition()};
+        Vector2I heroTilePosition{hero.position_.tilePosition()};
 
-        if (!map.objects().events().contains(heroTilePosition))
+        if (!map.objects_.events().contains(heroTilePosition))
         {
             snx::Logger::log("Nothing to do...");
             break;
         }
 
-        snx::PublisherStatic::publish(map.objects().event(heroTilePosition));
+        snx::PublisherStatic::publish(map.objects_.event(heroTilePosition));
     }
+
     break;
 
     default:

@@ -59,6 +59,7 @@ void updateWindow()
         {
             RestoreWindow();
         }
+
         else
         {
             MaximizeWindow();

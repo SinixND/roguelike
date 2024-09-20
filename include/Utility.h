@@ -11,19 +11,6 @@ namespace snx
     {
         targetVector.insert(targetVector.end(), vector.begin(), vector.end());
     }
-
-    inline bool isInVector(Vector2I const& element, std::vector<Vector2I> const& vector)
-    {
-        for (auto& entry : vector)
-        {
-            if (element == entry)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
 
 #endif

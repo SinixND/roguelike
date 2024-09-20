@@ -8,18 +8,18 @@
 
 class Hero
 {
+    RenderID renderID_{RenderID::hero};
+
+public:
     Movement movement_{};
     Energy energy_{};
     Position position_{};
-    RenderID renderID_{RenderID::hero};
 
 public:
     void init();
 
-    Movement& movement();
-    Energy& energy();
-    Position& position();
-    RenderID renderID();
+    // Getter / Setter
+    RenderID renderID() const;
 };
 
 #endif

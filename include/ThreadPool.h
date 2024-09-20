@@ -15,30 +15,6 @@
 // Usage: thread_pool->queueJob([/* =, & */] { /* ... */ });
 class ThreadPool
 {
-public:
-    // Add a new job to the pool; use a lock so that there isn't a data race.
-    void queueJob(const std::function<void()>& job);
-
-    // ThreadPool::Stop will not terminate any currently running jobs, it just waits for them to finish via active_thread.join().
-    void stop();
-
-    // Returns if there are queued jobs left
-    // The isJobQueued() function can be used in a while loop, such that the main thread can wait the threadpool to complete all the tasks before calling the threadpool destructor.
-    bool isJobQueued();
-
-    // Waits for all jobs to finish without stopping threadpool
-    void joinJobs();
-
-    ThreadPool();
-    ~ThreadPool();
-
-private:
-    // Each thread should be running its own infinite loop, constantly waiting for new tasks to grab and run.
-    void start();
-
-    // The infinite loop function. This is a while (true) loop waiting for the task queue to open up.
-    void threadLoop();
-
     // Tells threads to stop looking for jobs
     bool should_terminate = false;
 
@@ -53,6 +29,30 @@ private:
     // Allows to check for active jobs; Needed as threads are always active (waiting for jobs)
     std::mutex active_job_mutex;
     int active_jobs{0};
+
+public:
+    ThreadPool();
+    ~ThreadPool();
+
+    // Add a new job to the pool; use a lock so that there isn't a data race.
+    void queueJob(std::function<void()> const& job);
+
+    // ThreadPool::Stop will not terminate any currently running jobs, it just waits for them to finish via active_thread.join().
+    void stop();
+
+    // Returns if there are queued jobs left
+    // The isJobQueued() function can be used in a while loop, such that the main thread can wait the threadpool to complete all the tasks before calling the threadpool destructor.
+    bool isJobQueued();
+
+    // Waits for all jobs to finish without stopping threadpool
+    void joinJobs();
+
+private:
+    // Each thread should be running its own infinite loop, constantly waiting for new tasks to grab and run.
+    void start();
+
+    // The infinite loop function. This is a while (true) loop waiting for the task queue to open up.
+    void threadLoop();
 };
 
 // ThreadPool.cpp

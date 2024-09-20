@@ -46,12 +46,6 @@ class Fog
     bool isFogOpaque_{};
 
 public:
-    Vector2I const& tilePosition() const;
-    void setTilePosition(Vector2I const& tilePosition);
-
-    bool isFogOpaque() const;
-    void setFogOpaque(bool isFogOpaque);
-
     Fog() = default;
 
     Fog(Vector2I const& tilePosition, bool isFogOpaque)
@@ -59,11 +53,25 @@ public:
         , isFogOpaque_(isFogOpaque)
     {
     }
+
+    Vector2I const& tilePosition() const;
+    void setTilePosition(Vector2I const& tilePosition);
+
+    bool isFogOpaque() const;
+    void setFogOpaque(bool isFogOpaque);
 };
 
 class Visibility
 {
     snx::DenseMap<Vector2I, Fog> fogs_{};
+
+public:
+    void update(
+        Tiles& tiles,
+        RectangleExI const& viewport,
+        Vector2I const& heroPosition);
+
+    snx::DenseMap<Vector2I, Fog> const& fogs() const;
 
 private:
     // If any part of tile is visible -> whole tile is visible (so that "tunnel walls" stay visible)
@@ -76,14 +84,6 @@ private:
     void updateShadowline(
         std::vector<Shadow>& shadowline,
         Vector2I const& octantPosition);
-
-public:
-    std::vector<Fog>& fogsToRender();
-
-    void update(
-        Tiles& tiles,
-        RectangleExI const& viewport,
-        Vector2I const& heroPosition);
 };
 
 #endif

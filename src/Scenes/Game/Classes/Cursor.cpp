@@ -8,11 +8,15 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-Position& Cursor::position() { return position_; }
+RenderID Cursor::renderID() const
+{
+    return renderID_;
+}
 
-RenderID Cursor::renderID() { return renderID_; }
-
-bool Cursor::isActive() { return isActive_; }
+bool Cursor::isActive() const
+{
+    return isActive_;
+}
 
 void Cursor::toggle()
 {

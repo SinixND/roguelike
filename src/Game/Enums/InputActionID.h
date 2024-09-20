@@ -16,7 +16,7 @@ enum class InputActionID
     mod,
 };
 
-// inline auto constexpr operator#(InputActionID id) noexcept
+// inline int constexpr operator#(InputActionID id) noexcept
 // {
 // return static_cast<int>(id);
 // }

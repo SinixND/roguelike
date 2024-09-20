@@ -7,12 +7,11 @@
 #include "RNG.h"
 #include "RenderID.h"
 #include "Tiles.h"
-#include "Utility.h"
 #include "raylibEx.h"
 #include <array>
 #include <raylib.h>
 #include <string>
-#include <vector>
+#include <unordered_set>
 
 namespace MapGenerator
 {
@@ -139,13 +138,13 @@ namespace MapGenerator
 
         // Add first room
         addRoom(
-            map.tiles(),
+            map.tiles_,
             RectangleExI{
                 roomPosition,
                 roomWidth,
                 roomWidth});
 
-        std::vector<Vector2I> usedPositions{roomPosition};
+        std::unordered_set<Vector2I> usedPositions{roomPosition};
 
         // Take random direction and add room
         while (Vector2Sum(roomPosition) < maxRoomOffset)
@@ -161,12 +160,12 @@ namespace MapGenerator
             roomPosition += Vector2Scale(direction, roomWidth);
 
             // Add new room if room position unused
-            if (!snx::isInVector(roomPosition, usedPositions))
+            if (!usedPositions.contains(roomPosition))
             {
-                usedPositions.push_back(roomPosition);
+                usedPositions.insert(roomPosition);
 
                 addRoom(
-                    map.tiles(),
+                    map.tiles_,
                     RectangleExI{
                         roomPosition,
                         roomWidth,
@@ -175,7 +174,7 @@ namespace MapGenerator
 
             // Add connection gap in wall between old and new room
             addTiles(
-                map.tiles(),
+                map.tiles_,
                 RectangleExI{
                     oldRoomPosition,
                     roomPosition},
@@ -184,7 +183,7 @@ namespace MapGenerator
 
         // Add previous level trigger
         addObject(
-            map.objects(),
+            map.objects_,
             "Ascend",
             Vector2I{
                 0,
@@ -194,7 +193,7 @@ namespace MapGenerator
 
         // Add next level trigger
         // addObject(
-        //     map.objects(),
+        //     map.objects_,
         //     "Descend",
         //     Vector2I{
         //         0,
@@ -203,7 +202,7 @@ namespace MapGenerator
         //     Event::nextLevel);
 
         // Add enemies
-        map.enemies().init(level, map.tiles());
+        map.enemies_.init(level, map.tiles_);
 
         return map;
     }
@@ -214,7 +213,7 @@ namespace MapGenerator
 
         // Rooms
         addRoom(
-            testRoom.tiles(),
+            testRoom.tiles_,
             RectangleExI{
                 Vector2I{
                     -75,
@@ -223,7 +222,7 @@ namespace MapGenerator
                 151});
 
         addRoom(
-            testRoom.tiles(),
+            testRoom.tiles_,
             RectangleExI{
                 Vector2I{
                     0,
@@ -232,7 +231,7 @@ namespace MapGenerator
                 15});
 
         addRoom(
-            testRoom.tiles(),
+            testRoom.tiles_,
             RectangleExI{
                 -7,
                 2,
@@ -240,7 +239,7 @@ namespace MapGenerator
                 4});
 
         addRoom(
-            testRoom.tiles(),
+            testRoom.tiles_,
             RectangleExI{
                 3,
                 -5,
@@ -249,7 +248,7 @@ namespace MapGenerator
 
         // Add walls
         addTiles(
-            testRoom.tiles(),
+            testRoom.tiles_,
             RectangleExI{
                 1,
                 0,
@@ -260,7 +259,7 @@ namespace MapGenerator
             true);
 
         addTiles(
-            testRoom.tiles(),
+            testRoom.tiles_,
             RectangleExI{
                 4,
                 -5,
@@ -269,7 +268,7 @@ namespace MapGenerator
             RenderID::floor);
 
         addTiles(
-            testRoom.tiles(),
+            testRoom.tiles_,
             RectangleExI{
                 3,
                 -4,
@@ -278,7 +277,7 @@ namespace MapGenerator
             RenderID::floor);
 
         addTiles(
-            testRoom.tiles(),
+            testRoom.tiles_,
             RectangleExI{
                 3,
                 -2,
@@ -288,7 +287,7 @@ namespace MapGenerator
 
         // Tiles
         addTile(
-            testRoom.tiles(),
+            testRoom.tiles_,
             Vector2I{
                 0,
                 -1},
@@ -297,7 +296,7 @@ namespace MapGenerator
             true);
 
         addTile(
-            testRoom.tiles(),
+            testRoom.tiles_,
             Vector2I{
                 5,
                 6},
@@ -306,7 +305,7 @@ namespace MapGenerator
             true);
 
         addTile(
-            testRoom.tiles(),
+            testRoom.tiles_,
             Vector2I{
                 6,
                 5},
@@ -315,7 +314,7 @@ namespace MapGenerator
             true);
 
         addTile(
-            testRoom.tiles(),
+            testRoom.tiles_,
             Vector2I{
                 5,
                 5},
@@ -324,7 +323,7 @@ namespace MapGenerator
             true);
 
         addTile(
-            testRoom.tiles(),
+            testRoom.tiles_,
             Vector2I{
                 -6,
                 5},
@@ -332,7 +331,7 @@ namespace MapGenerator
 
         // Next level trigger
         addObject(
-            testRoom.objects(),
+            testRoom.objects_,
             "Descend",
             Vector2I{
                 0,
@@ -340,8 +339,8 @@ namespace MapGenerator
             RenderID::descend,
             Event::nextLevel);
 
-        testRoom.enemies().create(
-            testRoom.tiles(),
+        testRoom.enemies_.create(
+            testRoom.tiles_,
             RenderID::goblin,
             Vector2I{3, 0});
 
@@ -353,7 +352,7 @@ namespace MapGenerator
         Map startRoom{};
 
         addRoom(
-            startRoom.tiles(),
+            startRoom.tiles_,
             RectangleExI{
                 Vector2I{
                     0,
@@ -363,7 +362,7 @@ namespace MapGenerator
 
         // Add next level trigger
         addObject(
-            startRoom.objects(),
+            startRoom.objects_,
             "Descend",
             Vector2I{
                 0,

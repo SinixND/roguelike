@@ -3,9 +3,19 @@
 #include "Map.h"
 #include "MapGenerator.h"
 
-// Public:
-Map& World::currentMap() { return *currentMap_; };
-int World::currentMapLevel() { return currentMapLevel_; }
+Map const& World::currentMap() const
+{
+    return *currentMap_;
+};
+Map& World::currentMap()
+{
+    return *currentMap_;
+};
+
+int World::currentMapLevel() const
+{
+    return currentMapLevel_;
+}
 
 void World::increaseMapLevel()
 {
@@ -30,7 +40,6 @@ void World::decreaseMapLevel()
     setCurrentMap(currentMapLevel_);
 }
 
-// Private:
 void World::addNewMap()
 {
     maps_.push_back(MapGenerator::createRandomMap(maxMapLevel_ + 1));
