@@ -14,6 +14,7 @@ detection range)
 
 
 ## Shortterm
+- [ ] Rework Makefile
 - [ ] Debug DoubleTap
 - [ ] Setup docker
 

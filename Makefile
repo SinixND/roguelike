@@ -16,10 +16,14 @@ endif
 
 ### Set library directories as needed
 RAYLIB_DIR 				:= /usr/lib/raylib/src
+RAYLIB_LIB_DEBUG 		:= /usr/lib/raylib/src/debug
+RAYLIB_LIB_RELEASE 		:= /usr/lib/raylib/src/release
 EMSCRIPTEN_DIR			:= /usr/lib/emscripten/cache/sysroot/include
 WIN_RAYLIB_DIR 			:= /usr/x86_64-w64-mingw32/lib/raylib/src
 ifdef TERMUX_VERSION
 RAYLIB_DIR 				:= $(PREFIX)/lib/raylib/src
+RAYLIB_LIB_DEBUG 		:= $(PREFIX)/lib/raylib/src/debug
+RAYLIB_LIB_RELEASE 		:= $(PREFIX)/lib/raylib/src/release
 EMSCRIPTEN_DIR 			:= $(PREFIX)/lib/emscripten/cache/sysroot/include
 endif
 
@@ -138,12 +142,15 @@ WIN_LD_FLAGS 			:= $(addprefix -l,$(WIN_LIBRARIES))
 
 ### Make library flags by prefixing every provided path with -L; this might take a while for the first time, but will NOT be repeated every time
 SYS_LIB_FLAGS 			:= $(addprefix -L,$(SYS_LIB_DIR))
-SYS_LIB_FLAGS			+= $(addprefix -L,$(RAYLIB_DIR))
-WEB_LIB_FLAGS			+= $(addprefix -L,$(RAYLIB_DIR)/web)
+debug: SYS_LIB_FLAGS			+= $(addprefix -L,$(RAYLIB_LIB_DEBUG))
+release: SYS_LIB_FLAGS			+= $(addprefix -L,$(RAYLIB_LIB_RELEASE))
+WEB_LIB_FLAGS			+= $(addprefix -L,$(RAYLIB_LIB_DEBUG)/web)
 WIN_SYS_LIB_FLAGS 		:= $(addprefix -L,$(WIN_SYS_LIB_DIR))
 LOC_LIB_FLAGS 			:= $(addprefix -L,$(LOC_LIB_DIRS))
 
 LIB_FLAGS 				:= $(SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
+debug: LIB_FLAGS 				:= $(SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
+release: LIB_FLAGS 				:= $(SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
 WIN_LIB_FLAGS 			:= $(WIN_SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
 
 ### Make include flags by prefixing every provided path with -I
