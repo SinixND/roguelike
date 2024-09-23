@@ -45,7 +45,7 @@ void App::init()
 
     // Fonts
     GameFont::load();
-    GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::fontSize);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::fontHeight);
 
     // Scene
     gameScene_.initialize();

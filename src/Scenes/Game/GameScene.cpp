@@ -3,7 +3,6 @@
 // #define DEBUG_TILEINFO
 // #define DEBUG_FOG
 
-#include "/home/arch/coding/git_repos/roguelike/src/Game/Classes/Enemies.h"
 #include "Chunk.h"
 #include "Chunks.h"
 #include "Collision.h"
@@ -11,6 +10,7 @@
 #include "Cursor.h"
 #include "Debugger.h"
 #include "DeveloperMode.h"
+#include "Enemies.h"
 #include "Event.h"
 #include "GameCamera.h"
 #include "Logger.h"
@@ -64,7 +64,7 @@ void GameScene::initialize()
     setupEvents();
 
 #ifdef DEBUG
-    // snx::PublisherStatic::publish(Event::nextLevel);
+    snx::PublisherStatic::publish(Event::nextLevel);
 #endif
 }
 

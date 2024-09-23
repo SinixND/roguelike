@@ -68,16 +68,15 @@ void Panels::init()
 
 void Panels::drawLogPanelContent() const
 {
-    int textSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
-    double lines{(log_.height() / (1.5 * textSize)) - 1};
+    int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
+    double lines{(log_.height() / (1.5 * fontSize)) - 1};
     for (int i{0}; i < lines; ++i)
     {
         DrawTextEx(
             GameFont::font(),
             snx::Logger::getMessage(i).c_str(),
-            {log_.left() + (textSize / 2.0f),
-             log_.bottom() - (textSize * 1.5f) - (i * 1.5f * textSize)},
-            textSize,
+            Vector2{log_.left() + (fontSize / 2.0f), log_.bottom() - (fontSize * 1.5f) - (i * 1.5f * fontSize)},
+            fontSize,
             0,
             LIGHTGRAY);
     }
@@ -98,11 +97,11 @@ void Panels::drawTileInfoPanelContent(Objects const& objects, Vector2I const& cu
     DrawTextEx(
         GameFont::font(),
         tag,
-        Vector2AddValue(
-            tileInfo_.topLeft(),
-            fontSize),
+        Vector2{
+            tileInfo_.left() + (fontSize * 0.5f),
+            tileInfo_.top() + (fontSize * 0.5f)},
         fontSize,
-        GuiGetStyle(DEFAULT, TEXT_SPACING),
+        0,
         LIGHTGRAY);
 }
 
