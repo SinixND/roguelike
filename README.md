@@ -5,6 +5,7 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
+- [ ] Split GameScene into Scene/Main and Game
 - [ ] Add interaction button / two finger tap?
 - [ ] Add enemy
 - [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
@@ -13,7 +14,6 @@ detection range)
 
 
 ## Shortterm
-- [ ] Rework Makefile
 - [ ] Debug DoubleTap
 - [ ] Setup docker
 
@@ -116,3 +116,4 @@ detection range)
 - [x] Map change
 - [x] Reduce render calls by chunking map
 - [x] Rework const correctness (includes: public members for direct access)
+- [x] Rework Makefile

@@ -1,361 +1,472 @@
-### Basic funcionality of makefile:
-### $(BINARY) depends on $(OBJS) to be build/linked
-### Make looks for a rule to build $(OBJS)
-### @ (as a prefix to a cli command): suppress cli output; use make -n to debug commands
+#######################################
+### Makefile structure
+# Jump-table for sections
+#######################################
 
-### Label used libraries so the respective -l flags (eg. -lraylib)
-LIBRARIES 				:= raylib
-WEB_LIBRARIES			:= $(LIBRARIES)
-WIN_LIBRARIES 			:= $(LIBRARIES) opengl32 gdi32 winmm
+# LBL_Info
 
-ifdef TERMUX_VERSION
-LIBRARIES 				+= #log
-else
-LIBRARIES 				+= gtest benchmark
-endif
+# LBL_Makeflags
 
-### Set library directories as needed
-RAYLIB_DIR 				:= /usr/lib/raylib/src
-RAYLIB_LIB_DEBUG 		:= /usr/lib/raylib/src/debug
-RAYLIB_LIB_RELEASE 		:= /usr/lib/raylib/src/release
-EMSCRIPTEN_DIR			:= /usr/lib/emscripten/cache/sysroot/include
-WIN_RAYLIB_DIR 			:= /usr/x86_64-w64-mingw32/lib/raylib/src
-ifdef TERMUX_VERSION
-RAYLIB_DIR 				:= $(PREFIX)/lib/raylib/src
-RAYLIB_LIB_DEBUG 		:= $(PREFIX)/lib/raylib/src/debug
-RAYLIB_LIB_RELEASE 		:= $(PREFIX)/lib/raylib/src/release
-EMSCRIPTEN_DIR 			:= $(PREFIX)/lib/emscripten/cache/sysroot/include
-endif
+# LBL_EnvironmentVariables
+# LBL_ProjectDirectories
+# LBL_FileExtensions
 
-### Set compile flags
-# -MMD				provides dependency information (header files) for make in .d files 
-# -pg				ADD FOR gprof analysis TO BOTH COMPILE AND LINK COMMAND!!
-# -MJ				clang only: compile-database
-# -MP				Multi-threaded compilation
-# -Wfatal-errors	Stop at first error
+# LBL_BinaryFiles
+# LBL_SourceFiles
+# LBL_ObjectFiles
+# LBL_DependencyFiles
+# LBL_OtherDirectories_ProjectSpecific
 
-### Default flags
-CXX_FLAGS				:= -std=c++20 -MMD -MP
-CFLAGS 					:=
+# LBL_Libraries
+# LBL_LibraryDirectories
+# LBL_LibraryDirectories_ProjectSpecific
+# LBL_LibraryFlags
 
-### Recipe specific flags 
-debug: CXX_FLAGS 		+= -g -ggdb -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -O0 -Wfatal-errors
-debug: CFLAGS			+= -DDEBUG
-ifndef TERMUX_VERSION
-debug: CXX_FLAGS 		+= -pg
-endif
-ifdef TERMUX_VERSION
-CFLAGS					+= -DTERMUX
-endif
+# LBL_IncludeDirectories
+# LBL_IncludeDirectories_ProjectSpecific
+# LBL_IncludeFlags
 
-release: CXX_FLAGS 		+= -O2
-release: CFLAGS			+= -DNDEBUG
+# LBL_Toolchain
+# LBL_CompileFlags
+# LBL_LinkFlags
 
-web: CXX_FLAGS			+= -Os -Wall 
-web: CFLAGS				+= --preload-file resources/ --shell-file $(RAYLIB_DIR)/minshell.html -sUSE_GLFW=3 -DEMSCRIPTEN -DPLATFORM_WEB -DNDEBUG
+# LBL_Rules
+# LBL_BuildRules
 
-windows: CFLAGS			+= -static -static-libgcc -static-libstdc++
 
-benchmark: CXX_FLAGS 	+= -O2
-benchmark: CFLAGS		+= -DNDEBUG
+#######################################
+### Information
+# LBL_Info
+#######################################
 
-### Set the projects label, used for the binary (eg. main.exe, root .cpp file needs same name)
-BINARY 					:= main
+# Makefile to build arbitrary projects that adhere to the following requirements:
+# - All source files are in ./src or its subfolders
+# - All header files are in ./include or ./src or their subfolders
+# Host OS: linux or termux
+# Target platforms: linux (default), web (with emscripten) or windows (with mingw32)
+
+
+#######################################
+### Makeflags
+# LBL_Makeflags
+#######################################
 
 ### Automatically added flags to make command
 MAKEFLAGS 				:= --no-print-directory #-j
 
+
 #######################################
-### Set the used compiler to g++ or clang++
-CXX 					:= clang++
-WIN_CXX 				:= /bin/x86_64-w64-mingw32-g++
+### Environment variables
+# LBL_EnvironmentVariables
+#######################################
 
-### Set the binary file extension
-BINARY_EXT 				:= exe
-WIN_BINARY_EXT 			:= windows.exe
+### Default host OS
+OS 						?= linux
 
-### Set the used file extension for c-files, usually either .c or .cpp
-SRC_EXT 				:= cpp
-### Set the used file extension for object files, usually .o
-OBJ_EXT 				:= o
-WIN_OBJ_EXT 			:= win.o
-### Set the used file extension for dependency files, usually .d (header/source connection)
-DEP_EXT 				:= d
-WIN_DEP_EXT 			:= win.d
+ifdef TERMUX_VERSION
+    OS 					:= termux
+endif
 
-### Set the respective folders from structure
-### Set VPATH as std dir to look for compile targets
-VPATH 					:= $(shell find . -type d)
+### Default build mode (debug/release)
+BUILD_MODE 				?= debug
+
+### Default target platform (linux/web/windows)
+PLATFORM 				?= linux
+
+
+# LBL_ProjectDirectories
+### Here the (latest) binary file will be output
+BIN_DIR_ROOT 			:= ./bin
+
 ### Here go all source files (with the $(SRC_EXT) extension) and project specific header files
-SRC_DIRS 				:= ./src
-### Here go prject independend header files
-LOC_INC_DIR 			:= ./include
-### Here go external header files
-EXT_INC_DIR 			:= ./include/external
-### Here go library files
-LOC_LIB_DIR 			:= ./lib
+SRC_DIR 				:= ./src
+
+### Here go all (project-)independet header files
+INC_DIR 				:= ./include
+
+### Here go all (project-)independet header files
+LIB_DIR 				:= ./lib
+
 ### Here the object files will be outputted
-OBJ_DIR 				:= ./build
-OBJ_DIR_DEBUG 			:= ./build/debug
-OBJ_DIR_RELEASE 		:= ./build/release
-### Here the binary file will be outputted
-BIN_DIR 				:= ./bin
-BIN_DIR_DEBUG 			:= ./bin/debug
-BIN_DIR_RELEASE 		:= ./bin/release
-### Define folder for test files
-TEST_DIR 				:= ./test
+BUILD_DIR_ROOT 			:= ./build
+
 ### Define folder for web content to export
 WEB_DIR 				:= ./web
+
 ### Define folder for resource files
-RESOURCE_DIR 				:= ./resources
+RESOURCE_DIR 			:= ./resources
 
-### Set the locations of header files
-SYS_INC_DIR 			:= /usr/local/include /usr/include
-WIN_SYS_INC_DIR 		:= /usr/x86_64-w64-mingw32/include
-ifdef TERMUX_VERSION
-	SYS_INC_DIR := $(PREFIX)/include
+
+# LBL_FileExtensions
+### Set the targets file extension
+ifeq ($(PLATFORM),linux)
+    BIN_EXT 			:=
 endif
-EXT_INC_DIRS 			:= $(shell find $(EXT_INC_DIR) -wholename "**" -type d)
-LOC_INC_DIRS 			:= $(shell find . -wholename "*include*" -type d)
-LOC_INC_DIRS 			+= $(shell find . -wholename "*src*" -type d)
-
-### Set the locations of all possible libraries used
-SYS_LIB_DIR 			:= /usr/local/lib /usr/lib
-WIN_SYS_LIB_DIR 		:= /usr/x86_64-w64-mingw32/lib
-ifdef TERMUX_VERSION
-	SYS_LIB_DIR := $(PREFIX)/lib
+ifeq ($(PLATFORM),windows)
+    BIN_EXT 			:= .exe
 endif
-LOC_LIB_DIRS 			:= $(shell find $(LOC_LIB_DIR) -type d)
+ifeq ($(PLATFORM),web)
+    BIN_EXT				:= .html
+endif
+
+### Set the used file extension for source files, usually either .c or .cpp
+SRC_EXT 				:= .cpp
+
+### Set the used file extension for object files, usually .o
+### Distinction to be made for use of '-MJ $@.json' flag in linux debug builds (clang)
+OBJ_EXT_LIN 			:= .o
+OBJ_EXT_WIN				:= .obj
+
+OBJ_EXT					:= $(OBJ_EXT_LIN)
+
+ifeq ($(PLATFORM),windows)
+    OBJ_EXT 			:= $(OBJ_EXT_WIN)
+endif
+
+### Set the used file extension for dependency files, usually .d (header/source connection)
+DEP_EXT 				:= .d
+
+ifeq ($(PLATFORM),windows)
+    DEP_EXT 			:= .dep
+endif
 
 
-### Set linker flags
-LD_FLAGS 				:= -lpthread #-fsanitize=address
 
-#######################
-### DONT EDIT BELOW ###
-#######################
+# LBL_BinaryFiles
+### Name that the created binary should have
+BIN 					:= main
 
-### Make linker flags by prefixing every provided library with -l (should work for most libraries due to convention); probably pkg-config makes duplicates...
-LD_FLAGS 				+= $(addprefix -l,$(LIBRARIES))
-WEB_LD_FLAGS 			:= $(addprefix -l,$(WEB_LIBRARIES))
-WIN_LD_FLAGS 			:= $(addprefix -l,$(WIN_LIBRARIES))
+### Here the debug/release binaries will be output
+    BIN_DIR 			= $(BIN_DIR_ROOT)/$(BUILD_MODE)
 
-### Make library flags by prefixing every provided path with -L; this might take a while for the first time, but will NOT be repeated every time
-SYS_LIB_FLAGS 			:= $(addprefix -L,$(SYS_LIB_DIR))
-debug: SYS_LIB_FLAGS			+= $(addprefix -L,$(RAYLIB_LIB_DEBUG))
-release: SYS_LIB_FLAGS			+= $(addprefix -L,$(RAYLIB_LIB_RELEASE))
-WEB_LIB_FLAGS			+= $(addprefix -L,$(RAYLIB_LIB_DEBUG)/web)
-WIN_SYS_LIB_FLAGS 		:= $(addprefix -L,$(WIN_SYS_LIB_DIR))
-LOC_LIB_FLAGS 			:= $(addprefix -L,$(LOC_LIB_DIRS))
+ifeq ($(PLATFORM),web)
+    BIN_DIR 			= $(WEB_DIR)
+endif
 
-LIB_FLAGS 				:= $(SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
-debug: LIB_FLAGS 				:= $(SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
-release: LIB_FLAGS 				:= $(SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
-WIN_LIB_FLAGS 			:= $(WIN_SYS_LIB_FLAGS) $(LOC_LIB_FLAGS)
 
-### Make include flags by prefixing every provided path with -I
-LOC_INC_FLAGS 			:= $(addprefix -I,$(LOC_INC_DIRS))
-SYS_INC_FLAGS 			:= $(addprefix -I,$(SYS_INC_DIR))
-WIN_SYS_INC_FLAGS		:= $(addprefix -I,$(WIN_SYS_INC_DIR))
-EXT_INC_FLAGS 			:= $(addprefix -isystem,$(EXT_INC_DIRS))
-SYS_INC_FLAGS 			+= $(addprefix -isystem,$(RAYLIB_DIR))
-WEB_SYS_INC_FLAGS 		+= $(addprefix -isystem,$(RAYLIB_DIR))
+# LBL_SourceFiles
+### Get subdirs in ./src
+SRC_DIRS 				= $(shell find . -wholename "*$(SRC_DIR)*" -type d)
 
-INC_FLAGS 				:= $(SYS_INC_FLAGS) $(EXT_INC_FLAGS) $(LOC_INC_FLAGS)
-WIN_INC_FLAGS 			:= $(WIN_SYS_INC_FLAGS) $(EXT_INC_FLAGS) $(LOC_INC_FLAGS)
+### List all source files found in source file directory w/ path from ./;
+SRCS 					:= $(shell find $(SRC_DIR) -wholename "*$(SRC_EXT)" -type f)
+#
+### List all source files found in source file directory w/o path;
+SRC_FILES 					= $(notdir $(SRCS))
 
-### List all source files found in source file directory;
-SRCS 					:= $(shell find $(SRC_DIRS) -wholename "*$(SRC_EXT)" -type f)
-SRC_NAMES 				:= $(shell find $(SRC_DIRS) -wholename "*$(SRC_EXT)" -type f -printf "%f\n")
 ### Strip file extensions to get a list of sourcefile labels
-SRC_NAMES 				:= $(patsubst %.$(SRC_EXT),%,$(SRC_NAMES))
+### (patsubst pattern,replacement,target)
+SRC_NAMES 				= $(patsubst %$(SRC_EXT),%,$(SRC_FILES))
+
+
+# LBL_ObjectFiles
+ifeq ($(BUILD_MODE),debug)
+    BUILD_DIR 			= $(BUILD_DIR_ROOT)/debug
+else
+    BUILD_DIR 			= $(BUILD_DIR_ROOT)/release
+endif
 
 ### Make list of object files need for linker command by changing ending of all source files to .o;
-### (patsubst pattern,replacement,target)
 ### IMPORTANT for linker dependency, so they are found as compile rule
-OBJS_DEBUG 				:= $(patsubst %,$(OBJ_DIR_DEBUG)/%.$(OBJ_EXT),$(SRC_NAMES))
-OBJS_RELEASE 			:= $(patsubst %,$(OBJ_DIR_RELEASE)/%.$(OBJ_EXT),$(SRC_NAMES))
-WIN_OBJS 				:= $(patsubst %,$(OBJ_DIR_RELEASE)/%.$(WIN_OBJ_EXT),$(SRC_NAMES))
-TEST_OBJS 				:= $(TEST_DIR)/test.$(OBJ_EXT) $(patsubst $(OBJ_DIR)/$(BINARY).o,,$(OBJS))
-BM_OBJS 				:= $(TEST_DIR)/benchmark.$(OBJ_EXT) $(patsubst $(OBJ_DIR)/$(BINARY).o,,$(OBJS))
-### Make list of dependency files
-# DEPS 					:= $(patsubst $(OBJ_DIR)/%.$(OBJ_EXT),$(OBJ_DIR)/%.$(DEP_EXT),$(OBJS))
-DEPS_DEBUG 				:= $(patsubst $(OBJ_DIR_DEBUG)/%.$(OBJ_EXT),$(OBJ_DIR_DEBUG)/%.$(DEP_EXT),$(OBJS_DEBUG))
-DEPS_RELEASE 			:= $(patsubst $(OBJ_DIR_RELEASE)/%.$(OBJ_EXT),$(OBJ_DIR_RELEASE)/%.$(DEP_EXT),$(OBJS_RELEASE))
-WIN_DEPS 				:= $(patsubst $(OBJ_DIR_RELEASE)/%.$(WIN_OBJ_EXT),$(OBJ_DIR_RELEASE)/%.$(WIN_DEP_EXT),$(WIN_OBJS))
+OBJS 					= $(patsubst %,$(BUILD_DIR)/%$(OBJ_EXT),$(SRC_NAMES))
 
-### Non-file (.phony)targets (aka. rules)
-.PHONY: all init clean debug release run_debug run_release web windows publish dtb
-ifndef TERMUX_VERSION
-.PHONY: test benchmark
+
+# LBL_DependencyFiles
+### Make list of dependency files
+DEPS 					= $(patsubst $(BUILD_DIR)/%$(OBJ_EXT),$(BUILD_DIR)/%$(DEP_EXT),$(OBJS))
+
+
+# LBL_OtherDirectories
+### Define /usr directory
+ifeq ($(OS),termux)
+    USR					:= $(PREFIX)
+else
+    USR 				:= /usr
+endif
+ifeq ($(PLATFORM),windows)
+    USR					:= /usr/x86_64-w64-mingw32
 endif
 
+# LBL_OtherDirectories_ProjectSpecific
+RAYLIB_SRC_DIR 			= $(USR)/lib/raylib/src
+
+
+#######################################
+### Libraries
+# LBL_Libraries
+#######################################
+
+### Label used libraries so the respective -l flags (eg. -lraylib)
+LIBRARIES 				:= raylib
+ifeq ($(PLATFORM),windows)
+    LIBRARIES 			+= opengl32 gdi32 winmm
+endif
+ifeq ($(OS),termux)
+    LIBRARIES 			+= #log
+endif
+
+
+# LBL_LibraryDirectories
+### Here go library files
+LIB_DIRS 				= $(shell find . -wholename "*$(LIB_DIR)*" -type d)
+
+### Set the locations of system libraries
+ifeq ($(PLATFORM),web)
+else
+    LIB_DIRS 			+= $(USR)/lib
+
+    ifeq ($(OS),linux)
+        LIB_DIRS 		+= $(USR)/local/lib
+    endif
+endif
+
+
+
+# LBL_LibraryDirectories_ProjectSpecific
+ifeq ($(PLATFORM),windows)
+    LIB_DIRS 			+= $(RAYLIB_SRC_DIR)
+else
+    ifeq ($(BUILD_MODE),debug)
+        ifeq ($(PLATFORM),web)
+            LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/debug/web
+        else
+            LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/debug
+        endif
+    else
+        ifeq ($(PLATFORM),web)
+            LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/release/web
+        else
+            LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/release
+        endif
+    endif
+endif
+
+
+# LBL_LibraryFlags
+### Make library flags by prefixing every provided path with -L; this might take a while for the first time, but will NOT be repeated every time
+LIB_FLAGS 				:= $(addprefix -L,$(LIB_DIRS))
+
+
+#######################################
+### Includes
+# LBL_IncludeDirectories
+#######################################
+
+### Recursively add project include folder
+INC_DIRS 				:= $(shell find . -wholename "*$(INC_DIR)*" -type d)
+
+### Recursively add project src folder
+INC_DIRS 				+= $(SRC_DIRS)
+
+### Get the locations of system header files; ignore for emscripten
+ifeq ($(PLATFORM),web)
+	### Emscripten must not use system includes
+    INC_DIRS			+=
+else
+    INC_DIRS 			+= $(USR)/include
+    
+    ifeq ($(OS),linux)
+        INC_DIRS 		+= $(USR)/local/include
+    endif
+endif
+
+
+# LBL_IncludeDirectories_ProjectSpecific
+SYS_INC_DIRS 			+= $(RAYLIB_SRC_DIR)
+
+
+# LBL_IncludeFlags
+### Make include flags by prefixing every provided path
+INC_FLAGS 				= $(addprefix -I,$(INC_DIRS))
+INC_FLAGS 				+= $(addprefix -isystem,$(SYS_INC_DIRS))
+
+
+#######################################
+### Toolchain
+# LBL_Toolchain
+#######################################
+
+ifeq ($(PLATFORM),linux)
+    CXX 				:= clang++
+endif
+ifeq ($(PLATFORM),windows)
+    CXX 				:= /bin/x86_64-w64-mingw32-g++
+endif
+ifeq ($(PLATFORM),web)
+    CXX 				:= em++
+endif
+
+
+# LBL_CompileFlags
+### Set compile flags
+# -MMD 				provides dependency information (header files) for make in .d files 
+# -pg 				ADD FOR gprof analysis TO BOTH COMPILE AND LINK COMMAND!!
+# -MJ 				CLANG ONLY: compile-database
+# -MP 				Multi-threaded compilation
+# -Wfatal-errors 	Stop at first error
+
+### Default flags
+CXX_FLAGS 				:= -std=c++20 -MMD -MP
+
+### Build specific flags 
+ifeq ($(OS),termux)
+    CXX_FLAGS 			+= -DTERMUX
+endif
+ifeq ($(PLATFORM),web)
+    CXX_FLAGS 			+= -Os -Wall -DEMSCRIPTEN -DPLATFORM_WEB
+else
+    ifeq ($(BUILD_MODE),debug)
+        CXX_FLAGS 			+= -g -ggdb -O0 -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -Wfatal-errors -DDEBUG -MJ $@.json
+
+        ifeq ($(OS),linux)
+            CXX_FLAGS 		+= -pg
+        endif
+    else
+        CXX_FLAGS 			+= -O2 -DNDEBUG
+    endif
+endif
+
+
+# LBL_LinkFlags
+### Set link flags
+LD_FLAGS 				:= -lpthread #-fsanitize=address
+
+ifeq ($(PLATFORM),web)
+    LD_FLAGS 			+= --preload-file resources/ -sUSE_GLFW=3
+    ifeq ($(BUILD_MODE),debug)
+        LD_FLAGS 			+= --shell-file $(RAYLIB_SRC_DIR)/shell.html
+    else
+        LD_FLAGS 			+= --shell-file $(RAYLIB_SRC_DIR)/minshell.html
+    endif
+endif
+ifeq ($(PLATFORM),windows)
+    LD_FLAGS 			+= -static -static-libgcc -static-libstdc++
+endif
+
+### Make link flags by prefixing every provided library with -l (should work for most libraries due to convention); probably pkg-config makes duplicates...
+LD_FLAGS 				+= $(addprefix -l,$(LIBRARIES))
+
+
+#######################################
+### Rules
+# LBL_Rules
+#######################################
+
+### Set VPATH as std dir to find sources in subdirs
+# Should not be needed: https://www.cmcrossroads.com/article/basics-vpath-and-vpath
+# VPATH 					:= $(shell find ./$(SRC_DIR) -type d):$(shell find ./$(INC_DIR) -type d)#:$(shell find ./$(BUILD_DIR) -type d)#:$(shell find . -type d)
+# better:
+vpath %$(SRC_EXT) $(SRC_DIRS)
+
+### Non-file (.phony)targets (aka. rules)
+.PHONY: all build clean debug dtb init publish release run web windows all_rules
 
 ### Default rule by convention
 all: debug release
-ifndef TERMUX_VERSION
-all: #test
-endif
 
+all_rules: 
+	@$(MAKE) init 
+	@$(MAKE) debug 
+	@$(MAKE) release 
+	@$(MAKE) web 
+	@$(MAKE) windows 
+	@$(MAKE) publish 
+	@$(MAKE) run
 
-### Create necessary folders
-init:
-	@mkdir -p $(BIN_DIR_DEBUG)
-	@mkdir -p $(BIN_DIR_RELEASE)
-	@mkdir -p $(OBJ_DIR_DEBUG)
-	@mkdir -p $(OBJ_DIR_RELEASE)
-	@mkdir -p $(EXT_INC_DIR)
-	@mkdir -p $(LOC_LIB_DIR)
-	@mkdir -p $(WEB_DIR)
-	@mkdir -p $(RESOURCE_DIR)
-	$(info )
-	$(info === Initialized folders ===)
-
+### Build binary with current config
+build: $(BIN_DIR)/$(BIN)$(BIN_EXT)
+	@cp $(BIN_DIR)/$(BIN)$(BIN_EXT) $(BIN_DIR_ROOT)
 
 ### Clear dynamically created directories
 clean:
-	@rm -rf $(OBJ_DIR)/*.o
-	@rm -rf $(OBJ_DIR)/*.d
-	@rm -rf $(OBJ_DIR_DEBUG)/*.o
-	@rm -rf $(OBJ_DIR_DEBUG)/*.d
-	@rm -rf $(OBJ_DIR_DEBUG)/*.json
-	@rm -rf $(OBJ_DIR_RELEASE)/*.o
-	@rm -rf $(OBJ_DIR_RELEASE)/*.d
-	@rm -rf $(BIN_DIR)/*.exe
-	@rm -rf $(BIN_DIR_DEBUG)/*.exe
-	@rm -rf $(BIN_DIR_RELEASE)/*.exe
 	$(info )
-	$(info === Cleaned folders ===)
+	$(info === Clean ===)
+	@rm -rf $(BIN_DIR_ROOT)/debug/*
+	@rm -rf $(BIN_DIR_ROOT)/release/*
+	@rm -rf $(BUILD_DIR_ROOT)/debug/*
+	@rm -rf $(BUILD_DIR_ROOT)/release/*
+	@rm -rf $(WEB_DIR)/*
 
-
-debug: $(BIN_DIR_DEBUG)/$(BINARY).$(BINARY_EXT)
+### Debug build
+debug: 
 	$(info )
-	$(info === Debug build done ===)
+	$(info === Debug build ===)
+	@$(MAKE) BUILD_MODE=debug build
 	@$(MAKE) -s dtb
 
+### Build compile_commands.json
+dtb: 
+	$(shell sed -e '1s/^/[\n/' -e '$$s/,$$/\n]/' $(BUILD_DIR)/*.o.json > compile_commands.json)
 
-### Rule for release build process with binary as prerequisite
-release: $(BIN_DIR_RELEASE)/$(BINARY).$(BINARY_EXT)
+### Create necessary folders
+init:
 	$(info )
-	$(info === Release build done ===)
-
-
-ifndef TERMUX_VERSION
-#build: $(TEST_DIR)/test.$(BINARY_EXT) $(TEST_DIR)/benchmark.$(BINARY_EXT)
-endif
-
-
-### Run binary file after building
-run_debug: debug
-	@$(BIN_DIR_DEBUG)/$(BINARY).$(BINARY_EXT)
-
-
-run_release: release
-	@$(BIN_DIR_RELEASE)/$(BINARY).$(BINARY_EXT)
-
-
-### Rule for web build process
-web:
-	$(info )
-	$(info === Compile web ===)
-	emcc -o web/$(BINARY).html $(SRCS) $(CXX_FLAGS) $(WEB_LIB_FLAGS) $(WEB_LD_FLAGS) $(LOC_INC_FLAGS) $(WEB_SYS_INC_FLAGS) $(CFLAGS)
-
-
-### Rule for windows build process
-windows: $(BIN_DIR_RELEASE)/$(BINARY).$(WIN_BINARY_EXT)
-	$(info )
-	$(info === Build for windows done ===)
-
+	$(info === Init ===)
+	@mkdir -p $(BIN_DIR_ROOT)/debug
+	@mkdir -p $(BIN_DIR_ROOT)/release
+	@mkdir -p $(BUILD_DIR_ROOT)/debug
+	@mkdir -p $(BUILD_DIR_ROOT)/release
+	@mkdir -p $(WEB_DIR)
 
 ### Rule for complete compilation, ready to publish
 publish: clean
-	$(MAKE) release web windows
+	$(info )
+	$(info === Publish ===)
+	@$(MAKE) -j release web windows
+
+### Rule for release build process with binary as prerequisite
+release: 
+	$(info )
+	$(info === Release build ===)
+	@$(MAKE) BUILD_MODE=release build
+
+### Run binary file after building
+run: 
+	$(BIN_DIR_ROOT)/$(BIN)$(BIN_EXT)
+
+### Rule for web build process
+web: 
+	$(info )
+	$(info === Web build ===)
+	@$(MAKE) BUILD_MODE=release PLATFORM=web build
+
+### Rule for windows build process
+windows: 
+	$(info )
+	$(info === Windows build ===)
+	@$(MAKE) BUILD_MODE=release PLATFORM=windows build
 
 
-dtb: 
-	@$(shell sed -e '1s/^/[\n/' -e '$$s/,$$/\n]/' $(OBJ_DIR_DEBUG)/*.o.json > compile_commands.json)
+# LBL_BuildRules
+### $@ (target, left of ":")
+### $< (first dependency, first right of ":")
+### $^ (all dependencies, all right of ":")
 
-
-### Exclude main object file to avoid multiple definitions of main
-test: $(BIN_DIR)/test.$(BINARY_EXT)
-	@$(BIN_DIR)/test.$(BINARY_EXT)
-
-
-benchmark: $(BIN_DIR)/benchmark.$(BINARY_EXT)
-	@$(BIN_DIR)/benchmark.$(BINARY_EXT)
-
-
-# === COMPILER COMMANDS ===
+# === COMPILER COMMAND ===
 ### MAKE object files FROM source files; "%" pattern-matches (need pair of)
-$(OBJ_DIR_DEBUG)/%.$(OBJ_EXT): %.$(SRC_EXT) 
-### $< (first dependency, first right of ":")
-### $@ (target, left of ":")
+$(BUILD_DIR)/%$(OBJ_EXT_LIN): %$(SRC_EXT) 
 	$(info )
-	$(info === Compile main ===)
-#	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
-	$(CXX) -o $@ -c $< -MJ $@.json $(CXX_FLAGS) $(INC_FLAGS) $(CFLAGS)
+	$(info === Compile: BUILD_MODE=$(BUILD_MODE), PLATFORM=$(PLATFORM) ===)
+	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS) -MJ $@.json 
 
-$(OBJ_DIR_RELEASE)/%.$(OBJ_EXT): %.$(SRC_EXT) 
-### $< (first dependency, first right of ":")
-### $@ (target, left of ":")
+$(BUILD_DIR)/%$(OBJ_EXT_WIN): %$(SRC_EXT) 
 	$(info )
-	$(info === Compile main ===)
-	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS) $(CFLAGS)
-
-### COMPILE WINDOWS
-$(OBJ_DIR_RELEASE)/%.$(WIN_OBJ_EXT): %.$(SRC_EXT)
-	$(info )
-	$(info === Compile windows ===)
-	$(WIN_CXX) -o $@ -c $< $(CXX_FLAGS) $(WIN_INC_FLAGS) -I$(RAYLIB_DIR) $(CFLAGS)
-
-### COMPILE TEST
-$(TEST_DIR)/test.$(OBJ_EXT): test.$(SRC_EXT)
-	$(info )
-	$(info === Compile test ===)
+	$(info === Compile: BUILD_MODE=$(BUILD_MODE), PLATFORM=$(PLATFORM) ===)
 	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
-### COMPILE BENCHMARK
-$(TEST_DIR)/benchmark.$(OBJ_EXT): benchmark.$(SRC_EXT)
-	$(info )
-	$(info === Compile benchmark ===)
-	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
-
-
-# === LINKER COMMANDS ===
+# === LINKER COMMAND ===
 ### MAKE binary file FROM object files
-$(BIN_DIR_DEBUG)/$(BINARY).$(BINARY_EXT): $(OBJS_DEBUG)
-### $@ (target, left of ":")
-### $^ (all dependencies, all right of ":")
+$(BIN_DIR_ROOT)/$(BUILD_MODE)/$(BIN)$(BIN_EXT): $(OBJS)
 	$(info )
-	$(info === Link main ===)
+	$(info === Link: BUILD_MODE=$(BUILD_MODE), PLATFORM=$(PLATFORM) ===)
 	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
-$(BIN_DIR_RELEASE)/$(BINARY).$(BINARY_EXT): $(OBJS_RELEASE)
-### $@ (target, left of ":")
-### $^ (all dependencies, all right of ":")
+# === WEB BUILD COMMAND ===
+### MAKE html file FROM source files
+$(WEB_DIR)/$(BIN)$(BIN_EXT): $(SRS) 
 	$(info )
-	$(info === Link main ===)
-	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
-
-### LINK WINDOWS
-$(BIN_DIR_RELEASE)/$(BINARY).$(WIN_BINARY_EXT): $(WIN_OBJS)
-	$(info )
-	$(info === Link windows ===)
-	$(WIN_CXX) -o $@ $^ $(WIN_LD_FLAGS) $(WIN_LIB_FLAGS) -L$(WIN_RAYLIB_DIR) $(WIN_LD_FLAGS) $(CFLAGS)
-
-### LINK TEST
-$(BIN_DIR)/test.$(BINARY_EXT): $(TEST_OBJS)
-	$(info )
-	$(info === Link test ===)
-	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
-
-### LINK BENCHMARK
-$(BIN_DIR)/benchmark.$(BINARY_EXT): $(BM_OBJS)
-	$(info )
-	$(info === Link benchmark ===)
-	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
-
+	$(info === Build: BUILD_MODE=$(BUILD_MODE), PLATFORM=$(PLATFORM) ===)
+	$(CXX) -o $(BIN_DIR)/$(BIN)$(BIN_EXT) $(SRCS) $(CXX_FLAGS) $(INC_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
 ### "-" surpresses error for initial missing .d files
--include $(DEPS_DEBUG)
--include $(DEPS_RELEASE)
+-include $(DEPS)
