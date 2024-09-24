@@ -14,7 +14,7 @@ void GameCamera::init(RectangleEx const& viewport, Vector2 const& heroPosition)
         viewport.center(),
         heroPosition,
         0,
-        1};
+        0.5};
 
     snx::PublisherStatic::publish(Event::cameraChanged);
 }

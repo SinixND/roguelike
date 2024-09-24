@@ -18,7 +18,7 @@ namespace PanelData
     // Status (top); Number: lines to print
     float const STATUS_PANEL_HEIGHT{
         static_cast<float>(
-            (/*Number of lines to print*/ 2 * (1.5f * GameFont::fontHeight))
+            (/*Number of lines to print*/ 1 * (1.5f * GameFont::fontHeight))
             + (0.5f * GameFont::fontHeight))};
 
     // Log (bottom);

@@ -5,7 +5,6 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] UI "Level", sizes
 - [ ] Add interaction button / two finger tap?
 - [ ] Add enemy
 - [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 

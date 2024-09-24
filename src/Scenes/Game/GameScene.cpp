@@ -376,6 +376,7 @@ void GameScene::renderOutput()
 
     panels_.drawLogPanelContent();
     panels_.drawTileInfoPanelContent(world_.currentMap().objects_, cursor_.position_.tilePosition());
+    panels_.drawStatusPanelContent(world_.currentMapLevel());
 
     panels_.drawPanelBorders();
 }

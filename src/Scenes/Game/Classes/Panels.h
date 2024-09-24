@@ -17,6 +17,8 @@ public:
 
     void drawLogPanelContent() const;
     void drawTileInfoPanelContent(Objects const& objects, Vector2I const& cursorPosition) const;
+    void drawStatusPanelContent(int level) const;
+
     void drawPanelBorders() const;
 
     RectangleEx const& tileInfo() const;
