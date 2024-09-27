@@ -3,28 +3,28 @@
 
 class Energy
 {
-    int maxEnergy_{};
-    int currentEnergy_{};
-    int regenRate_{};
+    int maxEnergy_{10};
+    int currentEnergy_{10};
+    int regenRate_{1};
+    bool isExhausted_{false};
 
 public:
     Energy() = default;
 
-    Energy(int maxEnergy, int regenRate)
-        : maxEnergy_(maxEnergy)
-        , regenRate_(regenRate)
+    Energy(int agility)
+        : regenRate_(agility)
     {
     }
 
     void setMaxEnergy(int maxEnergy);
-    void setRegenRate(int rate);
+    void setRegenRate(int regenRate);
 
-    // Consumes all energy if no parameter provided and returns false if current energy level is not sufficient
+    // Consumes all energy if no parameter provided and returns if there is energy left
     bool consume(int energy = -1);
 
     // Returns true if energy full
     bool regenerate();
-    int isFull() const;
+    int isExhausted() const;
 };
 
 #endif

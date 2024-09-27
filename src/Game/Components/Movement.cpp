@@ -1,5 +1,6 @@
 #include "Movement.h"
 
+#include "Collision.h"
 #include "Energy.h"
 #include "Event.h"
 #include "Position.h"
@@ -15,7 +16,7 @@ Vector2I const& Movement::direction() const
     return direction_;
 }
 
-void Movement::setSpeed(float speed) { speed_ = speed; }
+void Movement::setSpeed(int agility) { speed_ = agility; }
 
 bool Movement::isTriggered() const
 {
@@ -100,8 +101,22 @@ void Movement::abortMovement()
     path_.clear();
 }
 
-void Movement::update(Position& position, Energy& energy)
+void Movement::update(Position& position, Energy& energy, Map const& map)
 {
+    // Avoid check if no movement in progress
+    if (isTriggered())
+    {
+        // Check collision before starting movement
+        if (Collision::checkCollision(
+            map,
+            Vector2Add(
+                position.tilePosition(),
+                direction())))
+        {
+            abortMovement();
+        }
+    }
+
     // Start movement on trigger
     if (isTriggered_)
     {

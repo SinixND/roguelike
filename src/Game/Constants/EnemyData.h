@@ -4,9 +4,8 @@
 namespace EnemyData
 {
     // Goblin
-    int constexpr GOBLIN_MAX_ENERGY{100};
-    int constexpr GOBLIN_REGEN_RATE{10};
-    int constexpr GOBLIN_SPEED{20};
+    int constexpr GOBLIN_MAX_ENERGY{10};
+    int constexpr GOBLIN_BASE_AGILITY{1};
 }
 
 #endif

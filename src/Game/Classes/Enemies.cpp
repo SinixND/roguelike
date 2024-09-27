@@ -82,10 +82,8 @@ void Enemies::create(
             newID,
             RenderID::goblin,
             AI{},
-            Movement{EnemyData::GOBLIN_SPEED},
-            Energy{
-                EnemyData::GOBLIN_MAX_ENERGY,
-                EnemyData::GOBLIN_REGEN_RATE},
+            Movement{EnemyData::GOBLIN_BASE_AGILITY},
+            Energy{EnemyData::GOBLIN_BASE_AGILITY},
             tilePosition);
     }
 
@@ -104,7 +102,17 @@ void Enemies::init(int mapLevel, Tiles const& tiles)
     }
 }
 
-void Enemies::update() {}
+bool Enemies::update() 
+{
+    for(auto& energy : energies_)
+    {
+        if(energy.regenerate())
+        {
+
+        }
+
+    }
+}
 
 snx::DenseMap<size_t, Movement> const& Enemies::movements() const
 {

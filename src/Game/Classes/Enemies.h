@@ -34,7 +34,8 @@ public:
         int mapLevel,
         Tiles const& tiles);
 
-    void update();
+    // Returns if enemy performs an action
+    bool update();
 
     // Getters / Setters
     snx::DenseMap<size_t, Movement> const& movements() const;

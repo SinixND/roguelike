@@ -2,32 +2,35 @@
 
 void Energy::setMaxEnergy(int maxEnergy) { maxEnergy_ = maxEnergy; }
 
-void Energy::setRegenRate(int rate) { regenRate_ = rate; }
+void Energy::setRegenRate(int agility) { regenRate_ = agility; }
 
 bool Energy::consume(int energy)
 {
     if (energy < 0)
     {
-        // Consume all energy
+        // Consume all available energy
         currentEnergy_ = 0;
-        return true;
     }
-
-    else if (energy < currentEnergy_)
+    else
     {
-        // Partial energy consumption valid
+        // Consume energy
         currentEnergy_ -= energy;
-        return true;
     }
 
-    // Not enough energy
-    return false;
+    if (currentEnergy_ <= 0)
+    {
+        isExhausted_ = true;
+        return false;
+    }
+
+    return true;
 }
 
 bool Energy::regenerate()
 {
     if (currentEnergy_ >= maxEnergy_)
     {
+        isExhausted_ = false;
         return true;
     }
 
@@ -38,12 +41,13 @@ bool Energy::regenerate()
     {
         // Ensure energy does not exceed maxEnergy
         currentEnergy_ = maxEnergy_;
+        return true;
     }
 
     return false;
 }
 
-int Energy::isFull() const
+int Energy::isExhausted() const
 {
-    return !(currentEnergy_ < maxEnergy_);
+    return isExhausted_;
 }

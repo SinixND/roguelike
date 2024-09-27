@@ -1,5 +1,4 @@
 #include "GameScene.h"
-#include <cmath>
 // #define DEBUG_TILEINFO
 // #define DEBUG_FOG
 
@@ -255,7 +254,7 @@ void GameScene::processInput()
     }
 
     // Block input handling if hero misses energy
-    if (!hero_.energy_.isFull())
+    if (hero_.energy_.isExhausted())
     {
         return;
     }
@@ -279,6 +278,11 @@ void GameScene::updateState()
             {
                 break;
             }
+
+            if(world_.currentMap().enemies_.update())
+            {
+                break;
+            }
         }
     }
 
@@ -288,24 +292,11 @@ void GameScene::updateState()
         world_.currentMap(),
         gameCamera_);
 
-    // Avoid check if no movement in progress
-    if (hero_.movement_.isTriggered())
-    {
-        // Check collision before starting movement
-        if (Collision::checkCollision(
-                world_.currentMap(),
-                Vector2Add(
-                    hero_.position_.tilePosition(),
-                    hero_.movement_.direction())))
-        {
-            hero_.movement_.abortMovement();
-        }
-    }
-
     // Update hero movment
     hero_.movement_.update(
         hero_.position_,
-        hero_.energy_);
+        hero_.energy_,
+        world_.currentMap());
 
 #ifdef DEBUG
     snx::debug::gcam() = gameCamera_;

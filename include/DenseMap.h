@@ -27,12 +27,12 @@ namespace snx
     {
     public:
         // ITERATORS
-        auto begin() const
+        auto begin()
         {
             return values_.begin();
         }
 
-        auto end() const
+        auto end()
         {
             return values_.end();
         }

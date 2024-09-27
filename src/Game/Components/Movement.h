@@ -7,14 +7,16 @@
 #include <raylib.h>
 #include <vector>
 
+struct Map;
+
 class Movement
 {
     std::vector<Vector2I> path_{};
     Vector2I direction_{};
     Vector2 currentVelocity_{};
 
-    // Speed unit is tiles per second
-    float speed_{};
+    // speed unit is tiles per second
+    int speed_{10};
     float cumulativeDistanceMoved_{};
 
     bool isTriggered_{false};
@@ -24,13 +26,13 @@ class Movement
 public:
     Movement() = default;
 
-    Movement(float speed)
-        : speed_(speed)
+    Movement(int agility)
+        : speed_(10 * agility)
     {
     }
 
     Vector2I const& direction() const;
-    void setSpeed(float speed);
+    void setSpeed(int agility);
 
     bool isTriggered() const;
 
@@ -43,6 +45,7 @@ public:
     void trigger();
 
     // Moves hero with following steps
+    // - Check for collision
     // - Starts movment if trigger set OR trigger not set but path available
     // - Consumes energy,
     // - Sets inProgress state,
@@ -50,7 +53,10 @@ public:
     // - Moves for one tile max
     // - Resets inProgress state if move for one tile
     // - Resets currentVelocity
-    void update(Position& position, Energy& energy);
+void update(
+        Position& position, 
+        Energy& energy, 
+        Map const& map);
 
 private:
     void setInProgress();

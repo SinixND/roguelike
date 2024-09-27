@@ -3,7 +3,6 @@
 #include "Energy.h"
 #include "HeroData.h"
 #include "Movement.h"
-#include "Position.h"
 #include "RenderID.h"
 
 RenderID Hero::renderID() const
@@ -13,7 +12,6 @@ RenderID Hero::renderID() const
 
 void Hero::init()
 {
-    movement_.setSpeed(HeroData::HERO_SPEED);
-    energy_.setMaxEnergy(HeroData::HERO_MAX_ENERGY);
-    energy_.setRegenRate(HeroData::HERO_REGEN_RATE);
+    movement_.setSpeed(10 * HeroData::HERO_BASE_AGILITY);
+    energy_.setRegenRate(HeroData::HERO_BASE_AGILITY);
 }

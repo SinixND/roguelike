@@ -3,9 +3,8 @@
 
 namespace HeroData
 {
-    int constexpr HERO_MAX_ENERGY{100};
-    int constexpr HERO_REGEN_RATE{10};
-    int constexpr HERO_SPEED{20};
+    int constexpr HERO_MAX_ENERGY{10};
+    int constexpr HERO_BASE_AGILITY{1};
 }
 
 #endif
