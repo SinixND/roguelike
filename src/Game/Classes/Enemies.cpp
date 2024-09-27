@@ -102,16 +102,17 @@ void Enemies::init(int mapLevel, Tiles const& tiles)
     }
 }
 
-bool Enemies::update() 
+bool Enemies::update()
 {
-    for(auto& energy : energies_)
-    {
-        if(energy.regenerate())
-        {
+    // for(auto& energy : energies_)
+    // {
+    //     if(energy.regenerate())
+    //     {
 
-        }
+    //     }
 
-    }
+    // }
+    return true;
 }
 
 snx::DenseMap<size_t, Movement> const& Enemies::movements() const

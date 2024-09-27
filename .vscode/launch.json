@@ -7,7 +7,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make",
-            "program": "${workspaceFolder}/bin/debug/main.exe",
+            "program": "${workspaceFolder}/bin/debug/main",
             "stopAtEntry": true,
         },
         {
@@ -16,7 +16,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make",
-            "program": "${workspaceFolder}/bin/debug/main.exe",
+            "program": "${workspaceFolder}/bin/debug/main",
         },
         {
             "name": "Build debug (cppdbg)",
@@ -24,7 +24,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make debug",
-            "program": "${workspaceFolder}/bin/debug/main.exe",
+            "program": "${workspaceFolder}/bin/debug/main",
             "stopAtEntry": true,
         },
         {
@@ -33,7 +33,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make debug (fatal)",
-            "program": "${workspaceFolder}/bin/debug/main.exe",
+            "program": "${workspaceFolder}/bin/debug/main",
             "stopAtEntry": true,
         },
         {
@@ -42,7 +42,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make debug",
-            "program": "${workspaceFolder}/bin/debug/main.exe",
+            "program": "${workspaceFolder}/bin/debug/main",
         },
         {
             "name": "Build debug (lldb, fatal)",
@@ -50,7 +50,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make debug (fatal)",
-            "program": "${workspaceFolder}/bin/debug/main.exe",
+            "program": "${workspaceFolder}/bin/debug/main",
         },
         {
             "name": "Build release (cppdbg)",
@@ -58,7 +58,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make release",
-            "program": "${workspaceFolder}/bin/release/main.exe",
+            "program": "${workspaceFolder}/bin/release/main",
             "stopAtEntry": true,
         },
         {
@@ -67,7 +67,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make release",
-            "program": "${workspaceFolder}/bin/release/main.exe",
+            "program": "${workspaceFolder}/bin/release/main",
         },
         {
             "name": "Build test (cppdbg)",

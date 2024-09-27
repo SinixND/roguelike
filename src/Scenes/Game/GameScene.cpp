@@ -4,7 +4,6 @@
 
 #include "Chunk.h"
 #include "Chunks.h"
-#include "Collision.h"
 #include "Colors.h"
 #include "Cursor.h"
 #include "Debugger.h"
@@ -279,10 +278,10 @@ void GameScene::updateState()
                 break;
             }
 
-            if(world_.currentMap().enemies_.update())
-            {
-                break;
-            }
+            // if(world_.currentMap().enemies_.update())
+            // {
+            //     break;
+            // }
         }
     }
 

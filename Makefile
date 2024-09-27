@@ -51,6 +51,8 @@
 # LBL_Makeflags
 #######################################
 
+VERSION					?= $(shell date --iso=seconds)
+
 ### Automatically added flags to make command
 MAKEFLAGS 				:= --no-print-directory #-j
 
@@ -68,7 +70,7 @@ ifdef TERMUX_VERSION
 endif
 
 ### Default build mode (debug/release)
-BUILD_MODE 				?= debug
+BUILD 				?= debug
 
 ### Default target platform (linux/web/windows)
 PLATFORM 				?= linux
@@ -137,7 +139,7 @@ endif
 BIN 					:= main
 
 ### Here the debug/release binaries will be output
-    BIN_DIR 			= $(BIN_DIR_ROOT)/$(BUILD_MODE)
+    BIN_DIR 			= $(BIN_DIR_ROOT)/$(BUILD)
 
 ifeq ($(PLATFORM),web)
     BIN_DIR 			= $(WEB_DIR)
@@ -160,7 +162,7 @@ SRC_NAMES 				= $(patsubst %$(SRC_EXT),%,$(SRC_FILES))
 
 
 # LBL_ObjectFiles
-ifeq ($(BUILD_MODE),debug)
+ifeq ($(BUILD),debug)
     BUILD_DIR 			= $(BUILD_DIR_ROOT)/debug
 else
     BUILD_DIR 			= $(BUILD_DIR_ROOT)/release
@@ -226,7 +228,7 @@ endif
 ifeq ($(PLATFORM),windows)
     LIB_DIRS 			+= $(RAYLIB_SRC_DIR)
 else
-    ifeq ($(BUILD_MODE),debug)
+    ifeq ($(BUILD),debug)
         ifeq ($(PLATFORM),web)
             LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/debug/web
         else
@@ -306,7 +308,7 @@ endif
 # -Wfatal-errors 	Stop at first error
 
 ### Default flags
-CXX_FLAGS 				:= -std=c++20 -MMD -MP
+CXX_FLAGS 				:= -std=c++20 -MMD -MP -DVERSION=$(VERSION)
 
 ### Build specific flags 
 ifeq ($(OS),termux)
@@ -315,7 +317,7 @@ endif
 ifeq ($(PLATFORM),web)
     CXX_FLAGS 			+= -Os -Wall -DEMSCRIPTEN -DPLATFORM_WEB
 else
-    ifeq ($(BUILD_MODE),debug)
+    ifeq ($(BUILD),debug)
         CXX_FLAGS 			+= -g -ggdb -O0 -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -Wfatal-errors -DDEBUG -MJ $@.json
 
         ifeq ($(OS),linux)
@@ -333,7 +335,7 @@ LD_FLAGS 				:= -lpthread #-fsanitize=address
 
 ifeq ($(PLATFORM),web)
     LD_FLAGS 			+= --preload-file resources/ -sUSE_GLFW=3
-    ifeq ($(BUILD_MODE),debug)
+    ifeq ($(BUILD),debug)
         LD_FLAGS 			+= --shell-file $(RAYLIB_SRC_DIR)/shell.html
     else
         LD_FLAGS 			+= --shell-file $(RAYLIB_SRC_DIR)/minshell.html
@@ -391,7 +393,7 @@ clean:
 debug: 
 	$(info )
 	$(info === Debug build ===)
-	@$(MAKE) BUILD_MODE=debug build
+	@$(MAKE) BUILD=debug build
 	@$(MAKE) -s dtb
 
 ### Build compile_commands.json
@@ -418,7 +420,7 @@ publish: clean
 release: 
 	$(info )
 	$(info === Release build ===)
-	@$(MAKE) BUILD_MODE=release build
+	@$(MAKE) BUILD=release build
 
 ### Run binary file after building
 run: 
@@ -428,13 +430,13 @@ run:
 web: 
 	$(info )
 	$(info === Web build ===)
-	@$(MAKE) BUILD_MODE=release PLATFORM=web build
+	@$(MAKE) BUILD=release PLATFORM=web build
 
 ### Rule for windows build process
 windows: 
 	$(info )
 	$(info === Windows build ===)
-	@$(MAKE) BUILD_MODE=release PLATFORM=windows build
+	@$(MAKE) BUILD=release PLATFORM=windows build
 
 
 # LBL_BuildRules
@@ -446,26 +448,26 @@ windows:
 ### MAKE object files FROM source files; "%" pattern-matches (need pair of)
 $(BUILD_DIR)/%$(OBJ_EXT_LIN): %$(SRC_EXT) 
 	$(info )
-	$(info === Compile: BUILD_MODE=$(BUILD_MODE), PLATFORM=$(PLATFORM) ===)
+	$(info === Compile: BUILD=$(BUILD), PLATFORM=$(PLATFORM) ===)
 	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS) -MJ $@.json 
 
 $(BUILD_DIR)/%$(OBJ_EXT_WIN): %$(SRC_EXT) 
 	$(info )
-	$(info === Compile: BUILD_MODE=$(BUILD_MODE), PLATFORM=$(PLATFORM) ===)
+	$(info === Compile: BUILD=$(BUILD), PLATFORM=$(PLATFORM) ===)
 	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
 # === LINKER COMMAND ===
 ### MAKE binary file FROM object files
-$(BIN_DIR_ROOT)/$(BUILD_MODE)/$(BIN)$(BIN_EXT): $(OBJS)
+$(BIN_DIR_ROOT)/$(BUILD)/$(BIN)$(BIN_EXT): $(OBJS)
 	$(info )
-	$(info === Link: BUILD_MODE=$(BUILD_MODE), PLATFORM=$(PLATFORM) ===)
+	$(info === Link: BUILD=$(BUILD), PLATFORM=$(PLATFORM) ===)
 	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
 # === WEB BUILD COMMAND ===
 ### MAKE html file FROM source files
 $(WEB_DIR)/$(BIN)$(BIN_EXT): $(SRS) 
 	$(info )
-	$(info === Build: BUILD_MODE=$(BUILD_MODE), PLATFORM=$(PLATFORM) ===)
+	$(info === Build: BUILD=$(BUILD), PLATFORM=$(PLATFORM) ===)
 	$(CXX) -o $(BIN_DIR)/$(BIN)$(BIN_EXT) $(SRCS) $(CXX_FLAGS) $(INC_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
 ### "-" surpresses error for initial missing .d files
