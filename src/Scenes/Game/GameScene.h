@@ -44,7 +44,7 @@ private:
 
     void setupEvents();
 
-#ifdef DEBUG
+#if defined(DEBUG)
 public:
     static inline Camera2D gcam{};
 #endif

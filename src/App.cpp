@@ -7,11 +7,11 @@
 #include <raygui.h>
 #include <raylib.h>
 
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN)
 #include <emscripten/emscripten.h>
 #endif
 
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN)
 // Emscripten compatible app loop
 //=====================================
 void applicationLoop(void* arg_)
@@ -84,7 +84,7 @@ void App::run()
 {
     // Main app loop
     //=================================
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN)
     emscriptenArgs arg{activeScene_};
     emscripten_set_main_loop_arg(applicationLoop, &arg, 60 /*FPS*/, 1 /*Simulate infinite loop*/);
 #else

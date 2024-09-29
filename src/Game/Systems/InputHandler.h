@@ -9,6 +9,11 @@
 #include <raylib.h>
 #include <unordered_map>
 
+// Maximum time for tap to trigger
+double constexpr maxTapTime{0.3f};
+// Minimum time for hold to trigger
+double constexpr minHoldTime{0.5f};
+
 class InputHandler
 {
     InputActionID inputAction_{InputActionID::none};

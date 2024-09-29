@@ -8,7 +8,7 @@
 // World holds maps which are identified by a mapLevel (int)
 class World
 {
-#ifdef DEBUG
+#if defined(DEBUG)
     std::vector<Map> maps_{MapGenerator::createTestRoom()};
 #else
     std::vector<Map> maps_{MapGenerator::createStartRoom()};

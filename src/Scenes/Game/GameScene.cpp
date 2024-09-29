@@ -25,7 +25,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-#ifdef DEBUG
+#if defined(DEBUG)
 #include "RNG.h"
 #endif
 
@@ -36,7 +36,7 @@
 
 void GameScene::initialize()
 {
-#ifdef DEBUG
+#if defined(DEBUG)
     snx::RNG::seed(1);
 #endif
 
@@ -48,7 +48,7 @@ void GameScene::initialize()
         panels_.map(),
         hero_.position_.worldPixel());
 
-#ifdef DEBUG
+#if defined(DEBUG)
     snx::debug::gcam() = gameCamera_;
 #endif
 
@@ -61,7 +61,7 @@ void GameScene::initialize()
     // Setup events
     setupEvents();
 
-#ifdef DEBUG
+#if defined(DEBUG)
     snx::PublisherStatic::publish(Event::nextLevel);
 #endif
 }
@@ -297,7 +297,7 @@ void GameScene::updateState()
         hero_.energy_,
         world_.currentMap());
 
-#ifdef DEBUG
+#if defined(DEBUG)
     snx::debug::gcam() = gameCamera_;
 #endif
 }

@@ -319,7 +319,7 @@ public:
         , height_(height)
     {
         validate();
-#ifdef DEBUG
+#if defined(DEBUG)
         assert((width % 2) && (height % 2) && "[ERROR] Width or height invalid; Must be odd value!");
 #endif
     }

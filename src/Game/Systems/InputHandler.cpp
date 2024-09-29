@@ -1,5 +1,4 @@
 #include "InputHandler.h"
-#include "Debugger.h"
 #define DEBUG_GESTURES
 
 #include "Cursor.h"
@@ -98,7 +97,7 @@ bool InputHandler::takeInputKey()
     modifier_ = IsKeyDown(inputActionIDToModifierKey_[InputActionID::mod]);
 
     // Repeat last key if no input but modifier down
-#ifdef TERMUX
+#if defined(TERMUX)
     if ((modifier_ && !currentKey))
 #else
     if ((modifier_ && !currentKey) || IsKeyPressedRepeat(lastKey))
@@ -121,27 +120,24 @@ bool InputHandler::takeInputGesture()
 {
     static int currentGesture = GESTURE_NONE;
     static int lastGesture = GESTURE_NONE;
+    static float holdStartTime{};
 
     // Update gesture
-    // GESTURE_DRAG is detected continuously
-    if (currentGesture != GESTURE_DRAG)
+    // Ignore continuously detected gestures
+    if (currentGesture != GESTURE_DRAG && currentGesture != GESTURE_HOLD)
     {
         lastGesture = currentGesture;
     }
 
     currentGesture = GetGestureDetected();
 
-    // Check modifiers
-    modifier_ = IsGestureDetected(GESTURE_DRAG);
-
     if (currentGesture != lastGesture)
     {
-        // Store gesture string
         switch (currentGesture)
         {
         case GESTURE_SWIPE_UP:
         {
-#ifdef DEBUG_GESTURES
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
             snx::Logger::log("Triggered SWIPE_UP\n");
 #endif
             inputAction_ = InputActionID::actUp;
@@ -150,7 +146,7 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_SWIPE_LEFT:
         {
-#ifdef DEBUG_GESTURES
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
             snx::Logger::log("Triggered SWIPE_LEFT\n");
 #endif
             inputAction_ = InputActionID::actLeft;
@@ -159,7 +155,7 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_SWIPE_DOWN:
         {
-#ifdef DEBUG_GESTURES
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
             snx::Logger::log("Triggered SWIPE_DOWN\n");
 #endif
             inputAction_ = InputActionID::actDown;
@@ -168,7 +164,7 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_SWIPE_RIGHT:
         {
-#ifdef DEBUG_GESTURES
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
             snx::Logger::log("Triggered SWIPE_RIGHT\n");
 #endif
             inputAction_ = InputActionID::actRight;
@@ -177,7 +173,7 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_TAP:
         {
-#ifdef DEBUG_GESTURES
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
             snx::Logger::log("Triggered TAP\n");
 #endif
             break;
@@ -185,7 +181,7 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_DOUBLETAP:
         {
-#ifdef DEBUG_GESTURES
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
             snx::Logger::log("Triggered DOUBLETAP\n");
 #endif
             inputAction_ = InputActionID::interact;
@@ -194,17 +190,25 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_HOLD:
         {
-#ifdef DEBUG_GESTURES
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
             snx::Logger::log("Triggered HOLD\n");
 #endif
+            if ((GetTime() - holdStartTime) > minHoldTime)
+            {
+                // Trigger Hold: move cursor to get info about tile
+            }
+
             break;
         }
 
         case GESTURE_DRAG:
         {
-#ifdef DEBUG_GESTURES
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
             snx::Logger::log("Triggered DRAG\n");
 #endif
+            // Set modifier
+            modifier_ = true;
+
             Vector2 direction = Vector2MainDirection(GetGestureDragVector());
             if (direction == Vector2{0, -1})
             {
@@ -231,7 +235,7 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_PINCH_IN:
         {
-#ifdef DEBUG_GESTURES
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
             snx::Logger::log("Triggered PINCH_IN\n");
 #endif
             break;
@@ -239,7 +243,7 @@ bool InputHandler::takeInputGesture()
 
         case GESTURE_PINCH_OUT:
         {
-#ifdef DEBUG_GESTURES
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
             snx::Logger::log("Triggered PINCH_OUT\n");
 #endif
             break;
@@ -248,10 +252,28 @@ bool InputHandler::takeInputGesture()
         case GESTURE_NONE:
         default:
         {
+            // Check for Tap event
+            if (
+                lastGesture == GESTURE_TAP
+                && (GetTime() - holdStartTime) < maxTapTime)
+            {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered TAP\n");
+#endif
+                inputAction_ = InputActionID::interact;
+                break;
+            }
+
             inputAction_ = InputActionID::none;
             break;
         }
         }
+    }
+
+    // Update hold timer
+    if (currentGesture != GESTURE_HOLD)
+    {
+        holdStartTime = GetTime();
     }
 
     if (inputAction_ == InputActionID::none)

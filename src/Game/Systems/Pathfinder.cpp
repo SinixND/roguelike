@@ -1,7 +1,6 @@
 #include "Pathfinder.h"
 #include "Map.h"
-#include "TileData.h"
-#define DEBUG_PATHFINDER
+// #define DEBUG_PATHFINDER
 
 #include "Directions.h"
 #include "GameCamera.h"
@@ -18,6 +17,7 @@
 
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
 #include "Debugger.h"
+#include "TileData.h"
 #include <format>
 #include <string>
 #endif

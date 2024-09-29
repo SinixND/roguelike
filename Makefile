@@ -70,7 +70,7 @@ ifdef TERMUX_VERSION
 endif
 
 ### Default build mode (debug/release)
-BUILD 				?= debug
+BUILD 					?= debug
 
 ### Default target platform (linux/web/windows)
 PLATFORM 				?= linux
@@ -316,9 +316,14 @@ ifeq ($(OS),termux)
 endif
 ifeq ($(PLATFORM),web)
     CXX_FLAGS 			+= -Os -Wall -DEMSCRIPTEN -DPLATFORM_WEB
+    ifeq ($(BUILD),debug)
+        CXX_FLAGS 			+= -g -Wall -DDEBUG 
+    else
+        CXX_FLAGS 			+= -DNDEBUG
+    endif
 else
     ifeq ($(BUILD),debug)
-        CXX_FLAGS 			+= -g -ggdb -O0 -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -Wfatal-errors -DDEBUG -MJ $@.json
+        CXX_FLAGS 			+= -g -ggdb -O0 -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -Wfatal-errors -DDEBUG 
 
         ifeq ($(OS),linux)
             CXX_FLAGS 		+= -pg
@@ -430,7 +435,7 @@ run:
 web: 
 	$(info )
 	$(info === Web build ===)
-	@$(MAKE) BUILD=release PLATFORM=web build
+	@$(MAKE) BUILD=release PLATFORM=web build -B
 
 ### Rule for windows build process
 windows: 
@@ -456,12 +461,14 @@ $(BUILD_DIR)/%$(OBJ_EXT_WIN): %$(SRC_EXT)
 	$(info === Compile: BUILD=$(BUILD), PLATFORM=$(PLATFORM) ===)
 	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
+
 # === LINKER COMMAND ===
 ### MAKE binary file FROM object files
 $(BIN_DIR_ROOT)/$(BUILD)/$(BIN)$(BIN_EXT): $(OBJS)
 	$(info )
 	$(info === Link: BUILD=$(BUILD), PLATFORM=$(PLATFORM) ===)
 	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
+
 
 # === WEB BUILD COMMAND ===
 ### MAKE html file FROM source files
