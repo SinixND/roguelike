@@ -1,26 +1,30 @@
 #include "Enemies.h"
 
 #include "AI.h"
+#include "Debugger.h"
 #include "DenseMap.h"
 #include "EnemyData.h"
 #include "Energy.h"
+#include "GameCamera.h"
 #include "IdManager.h"
+#include "Map.h"
 #include "Movement.h"
+#include "Pathfinder.h"
 #include "Position.h"
 #include "RNG.h"
 #include "RenderID.h"
 #include "Tiles.h"
+#include "VisibilityID.h"
 #include "raylibEx.h"
 #include <cstddef>
+#include <string>
 
 Vector2I Enemies::getRandomPosition(Tiles const& tiles)
 {
-    // bool isPositionValid{false};
     RectangleExI const& mapSize{tiles.mapSize()};
 
     Vector2I randomPosition{};
 
-    // while (!isPositionValid)
     while (true)
     {
         randomPosition.x = snx::RNG::random(
@@ -33,43 +37,40 @@ Vector2I Enemies::getRandomPosition(Tiles const& tiles)
 
         if (
             tiles.positions().contains(randomPosition)
+            && !(tiles.visibilityID(randomPosition) == VisibilityID::visible)
             && !tiles.isSolid(randomPosition)
             && !ids_.contains(randomPosition))
         {
-            // isPositionValid = true;
             return randomPosition;
         }
     }
-
-    // return randomPosition;
 }
 
 void Enemies::insert(
     size_t id,
     RenderID renderID,
-    AI const& ai,
     Movement const& movement,
     Energy const& energy,
+    int scanRange,
     Vector2I const& tilePosition)
 {
     renderIDs_.insert(id, renderID);
-    ais_.insert(id, ai);
     movements_.insert(id, movement);
     energies_.insert(id, energy);
     positions_.insert(id, Position{tilePosition});
     ids_.insert(tilePosition, id);
+    ais_.insert(id, AI{scanRange});
 }
 
 void Enemies::create(
-    Tiles const& tiles,
+    Map const& map,
     RenderID enemyID,
     Vector2I tilePosition)
 {
-    // Allow creating enemy at specified position except {0, 0}
-    // TODO: Rather check for visiblity
+    // Allow creating enemy at specified position except heroPosition
     if (tilePosition == Vector2I{0, 0})
     {
-        tilePosition = getRandomPosition(tiles);
+        tilePosition = getRandomPosition(map.tiles_);
     }
 
     size_t newID{idManager_.requestId()};
@@ -81,9 +82,9 @@ void Enemies::create(
         insert(
             newID,
             RenderID::goblin,
-            AI{},
             Movement{EnemyData::GOBLIN_BASE_AGILITY},
             Energy{EnemyData::GOBLIN_BASE_AGILITY},
+            EnemyData::GOBLIN_SCAN_RANGE,
             tilePosition);
     }
 
@@ -94,24 +95,65 @@ void Enemies::create(
     }
 }
 
-void Enemies::init(int mapLevel, Tiles const& tiles)
+void Enemies::init(
+    int mapLevel,
+    Map const& map)
 {
     while (static_cast<int>(renderIDs_.size()) < ((mapLevel + 1) * 5))
     {
-        create(tiles, RenderID::goblin);
+        create(
+            map,
+            RenderID::goblin);
     }
 }
 
-bool Enemies::update()
+bool Enemies::update(
+    Map const& map,
+    Vector2I const& heroPosition,
+    GameCamera const& gameCamera)
 {
-    // for(auto& energy : energies_)
-    // {
-    //     if(energy.regenerate())
-    //     {
+    static size_t enemy{0};
 
-    //     }
+    size_t enemies{energies_.size()};
 
-    // }
+    while(enemy < enemies)
+    {
+        snx::debug::cliLog("Enemy #" + std::to_string(enemy) + "\n");
+        if(!energy(enemy).regenerate())
+        {
+            continue;
+        }
+
+        switch(renderID(enemy))
+        {
+            case RenderID::goblin:
+            {
+                Pathfinder::findPath(
+                    map, 
+                    position(enemy).tilePosition(), 
+                    heroPosition, 
+                    gameCamera,
+                    ai(enemy).scanRange());
+                
+                //if path = 0: wait
+                //if path = 1: attack
+                //if path > 1: move
+                //break;
+            }
+            default:
+            break;
+        }
+
+        ++enemy;
+        static int round{0};
+        snx::debug::cliLog("Round #" + std::to_string(round) + "\n");
+    }
+
+    if (enemy == enemies)
+    { 
+        enemy = 0;
+    }
+
     return true;
 }
 

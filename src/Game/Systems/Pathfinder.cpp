@@ -64,6 +64,7 @@ bool checkRatingList(
     Map const& map,
     Vector2I const& target,
     GameCamera const& gameCamera,
+    int maxRange,
     std::vector<Vector2I>& path)
 {
     // Buffer rated tiles to allow neighbours with same rating
@@ -131,11 +132,13 @@ bool checkRatingList(
             // - Not accessible
             // - Not in map
             // - Enemy present
+            // - Steps needed exceed maxRange
             if (
                 (map.tiles_.visibilityID(newTilePosition) == VisibilityID::invisible)
                 || map.tiles_.isSolid(newTilePosition)
                 || !map.tiles_.positions().contains(newTilePosition)
-                || map.enemies_.ids().contains(newTilePosition))
+                || map.enemies_.ids().contains(newTilePosition)
+                || ((maxRange > 0) && (newRatedTile.stepsNeeded() > maxRange)))
             {
                 // Invalid! Add to ignore set so it doesn't get checked again
                 tilesToIgnore.insert(newTilePosition);
@@ -188,6 +191,7 @@ bool checkRatingList(
             map,
             target,
             gameCamera,
+            maxRange,
             path))
     {
         return true;
@@ -200,7 +204,8 @@ std::vector<Vector2I> Pathfinder::findPath(
     Map const& map,
     Vector2I const& start,
     Vector2I const& target,
-    GameCamera const& gameCamera)
+    GameCamera const& gameCamera,
+    int maxRange)
 {
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
     BeginDrawing();
@@ -248,6 +253,7 @@ std::vector<Vector2I> Pathfinder::findPath(
         map,
         target,
         gameCamera,
+        maxRange,
         path);
 
     // Path is either empty or has at least 2 entries (target and start)

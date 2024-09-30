@@ -54,7 +54,8 @@ namespace Pathfinder
         Map const& map,
         Vector2I const& start,
         Vector2I const& target,
-        GameCamera const& gameCamera);
+        GameCamera const& gameCamera,
+        int maxRange = 0);
 }
 
 #endif

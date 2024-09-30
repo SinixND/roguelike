@@ -4,6 +4,7 @@
 #include "AI.h"
 #include "DenseMap.h"
 #include "Energy.h"
+#include "GameCamera.h"
 #include "IdManager.h"
 #include "Movement.h"
 #include "Position.h"
@@ -18,24 +19,29 @@ class Enemies
     snx::IdManager idManager_{};
 
     snx::DenseMap<size_t, RenderID> renderIDs_{};
-    snx::DenseMap<size_t, AI> ais_{};
     snx::DenseMap<size_t, Movement> movements_{};
     snx::DenseMap<size_t, Energy> energies_{};
     snx::DenseMap<size_t, Position> positions_{};
     snx::DenseMap<Vector2I, size_t> ids_{};
+    snx::DenseMap<size_t, AI> ais_{};
 
 public:
+    // Pass heroPosition twice to get random position
     void create(
-        Tiles const& tiles,
+        Map const& map,
         RenderID enemyID,
         Vector2I tilePosition = Vector2I{0, 0});
 
     void init(
         int mapLevel,
-        Tiles const& tiles);
+        Map const& map);
 
-    // Returns if enemy performs an action
-    bool update();
+    // Returns if all enemies have been checked
+    // TODO: consider "day" of last update to handle dying enemies!n!
+    bool update(
+        Map const& map,
+        Vector2I const& heroPosition,
+        GameCamera const& gameCamera);
 
     // Getters / Setters
     snx::DenseMap<size_t, Movement> const& movements() const;
@@ -66,10 +72,10 @@ private:
     void insert(
         size_t id,
         RenderID renderID,
-        AI const& ai,
         Movement const& movement,
         Energy const& energy,
-        Vector2I const& tilePosition);
+        int scanRange,
+        Vector2I const& enemyPosition);
 };
 
 #endif

@@ -202,7 +202,7 @@ namespace MapGenerator
         //     Event::nextLevel);
 
         // Add enemies
-        map.enemies_.init(level, map.tiles_);
+        map.enemies_.init(level, map);
 
         return map;
     }
@@ -340,7 +340,7 @@ namespace MapGenerator
             Event::nextLevel);
 
         testRoom.enemies_.create(
-            testRoom.tiles_,
+            testRoom,
             RenderID::goblin,
             Vector2I{3, 0});
 

@@ -278,10 +278,13 @@ void GameScene::updateState()
                 break;
             }
 
-            // if(world_.currentMap().enemies_.update())
-            // {
-            //     break;
-            // }
+            if(world_.currentMap().enemies_.update(
+                        world_.currentMap(), 
+                        hero_.position_.tilePosition(), 
+                        gameCamera_))
+            {
+                break;
+            }
         }
     }
 
