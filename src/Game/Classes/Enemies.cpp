@@ -18,6 +18,7 @@
 #include "raylibEx.h"
 #include <cstddef>
 #include <string>
+#include <vector>
 
 Vector2I Enemies::getRandomPosition(Tiles const& tiles)
 {
@@ -107,51 +108,97 @@ void Enemies::init(
     }
 }
 
-bool Enemies::update(
+bool Enemies::regenerate()
+{
+    bool isEnemyReady{false};
+
+    for (size_t const& id : ids_.values())
+    {
+        if (energy(id).regenerate())
+        {
+            isEnemyReady = true;
+        }
+    }
+
+    return isEnemyReady;
+}
+
+bool Enemies::checkForAction(
     Map const& map,
     Vector2I const& heroPosition,
     GameCamera const& gameCamera)
 {
-    static size_t enemy{0};
+    size_t idSize{ids_.values().size()};
 
-    size_t enemies{energies_.size()};
+    static size_t i{0};
 
-    while(enemy < enemies)
+    while (i < idSize)
     {
-        snx::debug::cliLog("Enemy #" + std::to_string(enemy) + "\n");
-        if(!energy(enemy).regenerate())
+        size_t id{ids_.values()[i]};
+
+        if (!energy(id).isIdle())
         {
+            // Cant perform action
+            ++i;
             continue;
         }
 
-        switch(renderID(enemy))
+        Vector2I enemyPosition{position(id).tilePosition()};
+
+        switch (renderID(id))
         {
-            case RenderID::goblin:
+        case RenderID::goblin:
+        {
+            std::vector<Vector2I> path{Pathfinder::findPath(
+                map,
+                enemyPosition,
+                heroPosition,
+                gameCamera,
+                false,
+                ai(id).scanRange())};
+
+            size_t pathSize{path.size()};
+
+            if (pathSize == 0)
             {
-                Pathfinder::findPath(
-                    map, 
-                    position(enemy).tilePosition(), 
-                    heroPosition, 
-                    gameCamera,
-                    ai(enemy).scanRange());
-                
-                //if path = 0: wait
-                //if path = 1: attack
-                //if path > 1: move
-                //break;
+                // Wait
+                energy(id).consume();
             }
-            default:
+            // if path = 1: attack
+
+            else if (pathSize > 1)
+            {
+                snx::debug::cliLog("Trigger enemy #" + std::to_string(id) + " move\n");
+                movement(id).trigger(
+                    Vector2Subtract(
+                        path.rbegin()[1],
+                        enemyPosition));
+            }
+        }
+        default:
             break;
         }
 
-        ++enemy;
-        static int round{0};
-        snx::debug::cliLog("Round #" + std::to_string(round) + "\n");
+        // Return after an action has been triggered
+        return false;
     }
 
-    if (enemy == enemies)
-    { 
-        enemy = 0;
+    // All enemies checked
+    i = 0;
+    return true;
+}
+
+bool Enemies::update(
+    Map const& map,
+    Vector2I const& heroPosition)
+{
+    for (size_t const& id : ids_.values())
+    {
+        movement(id).update(
+            position(id),
+            energy(id),
+            map,
+            heroPosition);
     }
 
     return true;

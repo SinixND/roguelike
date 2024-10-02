@@ -36,12 +36,18 @@ public:
         int mapLevel,
         Map const& map);
 
-    // Returns if all enemies have been checked
-    // TODO: consider "day" of last update to handle dying enemies!n!
-    bool update(
+    bool regenerate();
+
+    // Checks consecutively, persistant across game loop iterations
+    bool checkForAction(
         Map const& map,
         Vector2I const& heroPosition,
         GameCamera const& gameCamera);
+
+    // TODO: consider "day" of last update to handle dying enemies!
+    bool update(
+        Map const& map,
+        Vector2I const& heroPosition);
 
     // Getters / Setters
     snx::DenseMap<size_t, Movement> const& movements() const;

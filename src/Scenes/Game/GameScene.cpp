@@ -91,14 +91,14 @@ void GameScene::setupEvents()
         Event::actionInProgress,
         [&]()
         {
-            actionInProgress_ = true;
+            ++actionsInProgress_;
         });
 
     snx::PublisherStatic::addSubscriber(
         Event::actionFinished,
         [&]()
         {
-            actionInProgress_ = false;
+            --actionsInProgress_;
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -132,6 +132,8 @@ void GameScene::setupEvents()
 
             tileChunks_.init(world_.currentMap().tiles_, renderer_);
 
+            ++cycle_;
+
             snx::PublisherStatic::publish(Event::heroMoved);
             snx::PublisherStatic::publish(Event::heroPositionChanged);
         });
@@ -155,6 +157,8 @@ void GameScene::setupEvents()
             }
 
             tileChunks_.init(world_.currentMap().tiles_, renderer_);
+
+            --cycle_;
 
             snx::PublisherStatic::publish(Event::heroMoved);
             snx::PublisherStatic::publish(Event::heroPositionChanged);
@@ -252,14 +256,12 @@ void GameScene::processInput()
         snx::PublisherStatic::publish(Event::colorThemeChange);
     }
 
-    // Block input handling if hero misses energy
-    if (hero_.energy_.isExhausted())
+    // Block input handling if hero is not idle (= full energy)
+    if (hero_.energy_.isIdle())
     {
-        return;
+        // Take input from mouse, keys or gestures
+        inputHandler_.takeInput(cursor_.isActive());
     }
-
-    // Take input from mouse, keys or gestures
-    inputHandler_.takeInput(cursor_.isActive());
 }
 
 void GameScene::updateState()
@@ -268,26 +270,37 @@ void GameScene::updateState()
         gameCamera_.camera(),
         hero_.position_.tilePosition());
 
-    // Regenerate energy if no action in progress
-    if (!actionInProgress_)
+    // Cycle enemies once to check for action
+    bool allEnemiesChecked{false};
+    if (
+        !actionsInProgress_
+        && !hero_.energy_.isIdle())
     {
-        while (true)
-        {
-            if (hero_.energy_.regenerate())
-            {
-                break;
-            }
-
-            if(world_.currentMap().enemies_.update(
-                        world_.currentMap(), 
-                        hero_.position_.tilePosition(), 
-                        gameCamera_))
-            {
-                break;
-            }
-        }
+        allEnemiesChecked = world_.currentMap().enemies_.checkForAction(
+            world_.currentMap(),
+            hero_.position_.tilePosition(),
+            gameCamera_);
     }
 
+    // Regenerate energy if no action in progress
+    if (
+        !actionsInProgress_
+        && !hero_.energy_.isIdle()
+        && allEnemiesChecked)
+    {
+        // Regenerate until one unit becomes idle
+        bool isUnitIdle{false};
+
+        while (!isUnitIdle)
+        {
+            isUnitIdle = hero_.energy_.regenerate();
+            isUnitIdle = world_.currentMap().enemies_.regenerate();
+        }
+
+        allEnemiesChecked = false;
+    }
+
+    // Trigger potential hero action
     inputHandler_.triggerAction(
         hero_,
         cursor_,
@@ -298,7 +311,11 @@ void GameScene::updateState()
     hero_.movement_.update(
         hero_.position_,
         hero_.energy_,
-        world_.currentMap());
+        world_.currentMap(),
+        hero_.position_.tilePosition());
+
+    // Update enemies
+    world_.currentMap().enemies_.update(world_.currentMap(), hero_.position_.tilePosition());
 
 #if defined(DEBUG)
     snx::debug::gcam() = gameCamera_;

@@ -11,6 +11,7 @@
 #include "Renderer.h"
 #include "Visibility.h"
 #include "World.h"
+#include <cstddef>
 #include <raylib.h>
 
 class GameScene : public snx::IScene
@@ -26,10 +27,13 @@ class GameScene : public snx::IScene
     Cursor cursor_{};
     Hero hero_;
 
-    bool actionInProgress_{false};
+    size_t actionsInProgress_{0};
 
     Chunks tileChunks_{};
     Visibility visibility_{};
+
+    // Track game cycle
+    int cycle_{0};
 
 public:
     void initialize();

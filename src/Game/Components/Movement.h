@@ -53,10 +53,11 @@ public:
     // - Moves for one tile max
     // - Resets inProgress state if move for one tile
     // - Resets currentVelocity
-void update(
-        Position& position, 
-        Energy& energy, 
-        Map const& map);
+    void update(
+        Position& position,
+        Energy& energy,
+        Map const& map,
+        Vector2I const& heroPosition);
 
 private:
     void setInProgress();

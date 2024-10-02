@@ -55,6 +55,7 @@ namespace Pathfinder
         Vector2I const& start,
         Vector2I const& target,
         GameCamera const& gameCamera,
+        bool skipInvisibleTiles = true,
         int maxRange = 0);
 }
 

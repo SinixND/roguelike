@@ -6,15 +6,16 @@
 # TODOs
 ## Active (Rework features that existed before Restructuring)
 - [ ] Split GameScene into Scene/Main and Game
-- [ ] Add interaction button / two finger tap?
-- [ ] Add enemy
+- [ ] Add Top level class functions to access member-member functions
+- [ ] Implement "Wait" action
+- [ ] Deactivate cursor trigger game action outside map panel
+- [ ] Add enemy movement
 - [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
 detection range)
 - [ ] Health, Attack
 
 
 ## Shortterm
-- [ ] Debug DoubleTap
 - [ ] Setup docker
 
 
@@ -58,7 +59,7 @@ detection range)
 | ------------------------ | ----------------------- |
 | WASD / Arrow keys / hjkl | Directional input       |
 | L_SHIFT                  | Continuous hero movment |
-| SPACE                    | Interact                |
+| SPACE                    | Interact / Wait         |
 | F1                       | Toggle developer mode   |
 | F2                       | Cycle color themes      |
 | F4                       | Exit                    |
@@ -70,7 +71,7 @@ detection range)
 | ----------- | ----------------------- |
 | SWIPE_(DIR) | Directional input       |
 | DRAG        | Continuous hero movment |
-| DOUBE_TAP   | Interact                |
+| TAP         | Interact / Wait         |
 
 ## Maptypes:
 - Cellular Automata (dungeon)

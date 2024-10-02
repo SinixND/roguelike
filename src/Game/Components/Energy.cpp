@@ -4,6 +4,11 @@ void Energy::setMaxEnergy(int maxEnergy) { maxEnergy_ = maxEnergy; }
 
 void Energy::setRegenRate(int agility) { regenRate_ = agility; }
 
+void Energy::setMax()
+{
+    currentEnergy_ = maxEnergy_;
+};
+
 bool Energy::consume(int energy)
 {
     if (energy < 0)
@@ -19,7 +24,7 @@ bool Energy::consume(int energy)
 
     if (currentEnergy_ <= 0)
     {
-        isExhausted_ = true;
+        isIdle_ = false;
         return false;
     }
 
@@ -30,7 +35,7 @@ bool Energy::regenerate()
 {
     if (currentEnergy_ >= maxEnergy_)
     {
-        isExhausted_ = false;
+        isIdle_ = true;
         return true;
     }
 
@@ -47,7 +52,7 @@ bool Energy::regenerate()
     return false;
 }
 
-int Energy::isExhausted() const
+int Energy::isIdle() const
 {
-    return isExhausted_;
+    return isIdle_;
 }

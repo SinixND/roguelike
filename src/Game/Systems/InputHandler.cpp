@@ -1,5 +1,5 @@
 #include "InputHandler.h"
-#define DEBUG_GESTURES
+// #define DEBUG_GESTURES
 
 #include "Cursor.h"
 #include "Directions.h"

@@ -77,7 +77,7 @@ void Movement::processPath()
 void Movement::processTrigger(Energy& energy)
 {
     isTriggered_ = false;
-    energy.consume(50);
+    energy.consume();
     setInProgress();
 }
 
@@ -101,17 +101,22 @@ void Movement::abortMovement()
     path_.clear();
 }
 
-void Movement::update(Position& position, Energy& energy, Map const& map)
+void Movement::update(
+    Position& position,
+    Energy& energy,
+    Map const& map,
+    Vector2I const& heroPosition)
 {
     // Avoid check if no movement in progress
     if (isTriggered())
     {
         // Check collision before starting movement
         if (Collision::checkCollision(
-            map,
-            Vector2Add(
-                position.tilePosition(),
-                direction())))
+                map,
+                Vector2Add(
+                    position.tilePosition(),
+                    direction()),
+                heroPosition))
         {
             abortMovement();
         }

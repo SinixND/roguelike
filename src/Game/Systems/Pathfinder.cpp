@@ -200,11 +200,13 @@ bool checkRatingList(
     return false;
 }
 
+// Returns path from target (front()) to start (included, back())
 std::vector<Vector2I> Pathfinder::findPath(
     Map const& map,
     Vector2I const& start,
     Vector2I const& target,
     GameCamera const& gameCamera,
+    bool skipInvisibleTiles,
     int maxRange)
 {
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
@@ -219,7 +221,8 @@ std::vector<Vector2I> Pathfinder::findPath(
     // - Not in map
     // - Equal to start
     if (
-        (map.tiles_.visibilityID(target) == VisibilityID::invisible)
+        (skipInvisibleTiles
+         && map.tiles_.visibilityID(target) == VisibilityID::invisible)
         || map.tiles_.isSolid(target)
         || !map.tiles_.positions().contains(target)
         || (start == target))
