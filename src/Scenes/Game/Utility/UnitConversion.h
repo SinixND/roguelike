@@ -5,6 +5,7 @@
 #include "TileData.h"
 #include "raylib.h"
 #include "raylibEx.h"
+#include <cassert>
 #include <cmath>
 #include <raymath.h>
 
@@ -72,23 +73,30 @@ namespace UnitConversion
     {
         switch (octant)
         {
-        case 0:
-            return Type(octantPosition.x, -octantPosition.y);
-        case 1:
-            return Type(octantPosition.y, -octantPosition.x);
-        case 2:
-            return Type(octantPosition.y, octantPosition.x);
-        case 3:
-            return Type(octantPosition.x, octantPosition.y);
-        case 4:
-            return Type(-octantPosition.x, octantPosition.y);
-        case 5:
-            return Type(-octantPosition.y, octantPosition.x);
-        case 6:
-            return Type(-octantPosition.y, -octantPosition.x);
-        default:
-        case 7:
-            return Type(-octantPosition.x, -octantPosition.y);
+            default:
+            case 0:
+                return Type(octantPosition.x, -octantPosition.y);
+
+            case 1:
+                return Type(octantPosition.y, -octantPosition.x);
+
+            case 2:
+                return Type(octantPosition.y, octantPosition.x);
+
+            case 3:
+                return Type(octantPosition.x, octantPosition.y);
+
+            case 4:
+                return Type(-octantPosition.x, octantPosition.y);
+
+            case 5:
+                return Type(-octantPosition.y, octantPosition.x);
+
+            case 6:
+                return Type(-octantPosition.y, -octantPosition.x);
+
+            case 7:
+                return Type(-octantPosition.x, -octantPosition.y);
         }
     }
 

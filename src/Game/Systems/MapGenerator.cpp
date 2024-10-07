@@ -380,12 +380,13 @@ namespace MapGenerator
         // Choose map design
         switch (1) //* RNG::random(1, 2)
         {
-        case 1:
-            newMap = createGridRooms(level);
-            break;
+            default:
+            case 1:
+            {
+                newMap = createGridRooms(level);
 
-        default:
-            break;
+                break;
+            }
         }
 
         return newMap;

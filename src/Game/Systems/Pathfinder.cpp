@@ -2,7 +2,6 @@
 #include "Map.h"
 // #define DEBUG_PATHFINDER
 
-#include "Directions.h"
 #include "GameCamera.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
@@ -73,14 +72,16 @@ bool checkRatingList(
 
     // Check all tiles in vector for current best rating before choosing new best rating
     for (RatedTile* currentTile : tileList)
-    // for (RatedTile* currentTile : ratingList[rating])
     {
-        // Test all four directions for currentTile
+        // Test all four directions for currentTile, prioritise main direction to target
+        Vector2I mainDirection{Vector2MainDirection(currentTile->distanceToTarget())};
+        Vector2I offDirection{Vector2OffDirection(currentTile->distanceToTarget())};
+
         for (Vector2I const& direction : {
-                 Directions::V_RIGHT,
-                 Directions::V_DOWN,
-                 Directions::V_LEFT,
-                 Directions::V_UP})
+                 mainDirection,
+                 offDirection,
+                 Vector2Negate(offDirection),
+                 Vector2Negate(mainDirection)})
         {
             // Calculate new tilePosition
             Vector2I newTilePosition{

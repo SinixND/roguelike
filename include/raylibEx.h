@@ -745,6 +745,40 @@ inline Vector2I Vector2MainDirection(Vector2I const& from, Vector2I const& to)
             from));
 }
 
+inline Vector2 Vector2OffDirection(Vector2 v)
+{
+    (abs(v.x) < abs(v.y))
+        ? (v.y = 0)
+        : (v.x = 0);
+
+    return Vector2Normalize(v);
+}
+
+inline Vector2I Vector2OffDirection(Vector2I v)
+{
+    (abs(v.x) < abs(v.y))
+        ? (v.y = 0)
+        : (v.x = 0);
+
+    return Vector2Normalize(v);
+}
+
+inline Vector2 Vector2OffDirection(Vector2 const& from, Vector2 const& to)
+{
+    return Vector2OffDirection(
+        Vector2Subtract(
+            to,
+            from));
+}
+
+inline Vector2I Vector2OffDirection(Vector2I const& from, Vector2I const& to)
+{
+    return Vector2OffDirection(
+        Vector2Subtract(
+            to,
+            from));
+}
+
 inline Rectangle GetWindowRec()
 {
     return Rectangle{

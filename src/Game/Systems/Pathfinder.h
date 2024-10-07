@@ -32,6 +32,11 @@ public:
         return tilePosition_;
     }
 
+    Vector2I const& distanceToTarget() const
+    {
+        return distanceToTarget_;
+    }
+
     int stepsNeeded() const
     {
         return stepsNeeded_;

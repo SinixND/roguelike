@@ -16,6 +16,7 @@
 #include "Tiles.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
+#include <cassert>
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -78,21 +79,19 @@ void Enemies::create(
 
     switch (enemyID)
     {
-    case RenderID::goblin:
-    {
-        insert(
-            newID,
-            RenderID::goblin,
-            Movement{EnemyData::GOBLIN_BASE_AGILITY},
-            Energy{EnemyData::GOBLIN_BASE_AGILITY},
-            EnemyData::GOBLIN_SCAN_RANGE,
-            tilePosition);
-    }
+        default:
+        case RenderID::goblin:
+        {
+            insert(
+                newID,
+                RenderID::goblin,
+                Movement{EnemyData::GOBLIN_BASE_AGILITY},
+                Energy{EnemyData::GOBLIN_BASE_AGILITY},
+                EnemyData::GOBLIN_SCAN_RANGE,
+                tilePosition);
 
-    break;
-
-    default:
-        break;
+            break;
+        }
     }
 }
 
@@ -147,36 +146,39 @@ bool Enemies::checkForAction(
 
         switch (renderID(id))
         {
-        case RenderID::goblin:
-        {
-            std::vector<Vector2I> path{Pathfinder::findPath(
-                map,
-                enemyPosition,
-                heroPosition,
-                gameCamera,
-                false,
-                ai(id).scanRange())};
-
-            size_t pathSize{path.size()};
-
-            if (pathSize == 0)
+            case RenderID::goblin:
             {
-                // Wait
-                energy(id).consume();
-            }
-            // if path = 1: attack
+                std::vector<Vector2I> path{Pathfinder::findPath(
+                    map,
+                    enemyPosition,
+                    heroPosition,
+                    gameCamera,
+                    false,
+                    ai(id).scanRange())};
 
-            else if (pathSize > 1)
-            {
-                snx::debug::cliLog("Trigger enemy #" + std::to_string(id) + " move\n");
-                movement(id).trigger(
-                    Vector2Subtract(
-                        path.rbegin()[1],
-                        enemyPosition));
+                size_t pathSize{path.size()};
+
+                if (pathSize == 0)
+                {
+                    // Wait
+                    energy(id).consume();
+                }
+                // if path = 1: attack
+
+                else if (pathSize > 1)
+                {
+                    snx::debug::cliLog("Trigger enemy #" + std::to_string(id) + " move\n");
+                    movement(id).trigger(
+                        Vector2Subtract(
+                            path.rbegin()[1],
+                            enemyPosition));
+                }
+
+                break;
             }
-        }
-        default:
-            break;
+
+            default:
+                break;
         }
 
         // Return after an action has been triggered

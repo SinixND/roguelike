@@ -50,7 +50,7 @@ void InputHandler::setDefaultInputMappings()
     bindKey(KEY_L, InputActionID::actRight);
     bindKey(KEY_RIGHT, InputActionID::actRight);
 
-    bindKey(KEY_SPACE, InputActionID::interact);
+    bindKey(KEY_SPACE, InputActionID::actInPlace);
 
     bindModifierKey(KEY_LEFT_SHIFT, InputActionID::mod);
 
@@ -135,138 +135,147 @@ bool InputHandler::takeInputGesture()
     {
         switch (currentGesture)
         {
-        case GESTURE_SWIPE_UP:
-        {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::Logger::log("Triggered SWIPE_UP\n");
-#endif
-            inputAction_ = InputActionID::actUp;
-            break;
-        }
-
-        case GESTURE_SWIPE_LEFT:
-        {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::Logger::log("Triggered SWIPE_LEFT\n");
-#endif
-            inputAction_ = InputActionID::actLeft;
-            break;
-        }
-
-        case GESTURE_SWIPE_DOWN:
-        {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::Logger::log("Triggered SWIPE_DOWN\n");
-#endif
-            inputAction_ = InputActionID::actDown;
-            break;
-        }
-
-        case GESTURE_SWIPE_RIGHT:
-        {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::Logger::log("Triggered SWIPE_RIGHT\n");
-#endif
-            inputAction_ = InputActionID::actRight;
-            break;
-        }
-
-        case GESTURE_TAP:
-        {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::Logger::log("Triggered TAP\n");
-#endif
-            break;
-        }
-
-        case GESTURE_DOUBLETAP:
-        {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::Logger::log("Triggered DOUBLETAP\n");
-#endif
-            inputAction_ = InputActionID::interact;
-            break;
-        }
-
-        case GESTURE_HOLD:
-        {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::Logger::log("Triggered HOLD\n");
-#endif
-            if ((GetTime() - holdStartTime) > minHoldTime)
+            case GESTURE_SWIPE_UP:
             {
-                // Trigger Hold: move cursor to get info about tile
-            }
-
-            break;
-        }
-
-        case GESTURE_DRAG:
-        {
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::Logger::log("Triggered DRAG\n");
+                snx::Logger::log("Triggered SWIPE_UP\n");
 #endif
-            // Set modifier
-            modifier_ = true;
-
-            Vector2 direction = Vector2MainDirection(GetGestureDragVector());
-            if (direction == Vector2{0, -1})
-            {
                 inputAction_ = InputActionID::actUp;
+
+                break;
             }
 
-            else if (direction == Vector2{-1, 0})
+            case GESTURE_SWIPE_LEFT:
             {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered SWIPE_LEFT\n");
+#endif
                 inputAction_ = InputActionID::actLeft;
+
+                break;
             }
 
-            else if (direction == Vector2{0, 1})
+            case GESTURE_SWIPE_DOWN:
             {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered SWIPE_DOWN\n");
+#endif
                 inputAction_ = InputActionID::actDown;
+
+                break;
             }
 
-            else if (direction == Vector2{1, 0})
+            case GESTURE_SWIPE_RIGHT:
             {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered SWIPE_RIGHT\n");
+#endif
                 inputAction_ = InputActionID::actRight;
+
+                break;
             }
 
-            break;
-        }
-
-        case GESTURE_PINCH_IN:
-        {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::Logger::log("Triggered PINCH_IN\n");
-#endif
-            break;
-        }
-
-        case GESTURE_PINCH_OUT:
-        {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-            snx::Logger::log("Triggered PINCH_OUT\n");
-#endif
-            break;
-        }
-
-        case GESTURE_NONE:
-        default:
-        {
-            // Check for Tap event
-            if (
-                lastGesture == GESTURE_TAP
-                && (GetTime() - holdStartTime) < maxTapTime)
+            case GESTURE_TAP:
             {
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
                 snx::Logger::log("Triggered TAP\n");
 #endif
-                inputAction_ = InputActionID::interact;
+
                 break;
             }
 
-            inputAction_ = InputActionID::none;
-            break;
-        }
+            case GESTURE_DOUBLETAP:
+            {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered DOUBLETAP\n");
+#endif
+                inputAction_ = InputActionID::actInPlace;
+
+                break;
+            }
+
+            case GESTURE_HOLD:
+            {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered HOLD\n");
+#endif
+                if ((GetTime() - holdStartTime) > minHoldTime)
+                {
+                    // Trigger Hold: move cursor to get info about tile
+                }
+
+                break;
+            }
+
+            case GESTURE_DRAG:
+            {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered DRAG\n");
+#endif
+                // Set modifier
+                modifier_ = true;
+
+                Vector2 direction = Vector2MainDirection(GetGestureDragVector());
+                if (direction == Vector2{0, -1})
+                {
+                    inputAction_ = InputActionID::actUp;
+                }
+
+                else if (direction == Vector2{-1, 0})
+                {
+                    inputAction_ = InputActionID::actLeft;
+                }
+
+                else if (direction == Vector2{0, 1})
+                {
+                    inputAction_ = InputActionID::actDown;
+                }
+
+                else if (direction == Vector2{1, 0})
+                {
+                    inputAction_ = InputActionID::actRight;
+                }
+
+                break;
+            }
+
+            case GESTURE_PINCH_IN:
+            {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered PINCH_IN\n");
+#endif
+
+                break;
+            }
+
+            case GESTURE_PINCH_OUT:
+            {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered PINCH_OUT\n");
+#endif
+
+                break;
+            }
+
+            default:
+            case GESTURE_NONE:
+            {
+                // Check for Tap event
+                if (
+                    lastGesture == GESTURE_TAP
+                    && (GetTime() - holdStartTime) < maxTapTime)
+                {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                    snx::Logger::log("Triggered TAP\n");
+#endif
+                    inputAction_ = InputActionID::actInPlace;
+                    break;
+                }
+
+                inputAction_ = InputActionID::none;
+
+                break;
+            }
         }
     }
 
@@ -319,73 +328,75 @@ void InputHandler::triggerAction(
 
     switch (inputAction_)
     {
-    case InputActionID::actUp:
-    {
-        hero.movement_.trigger(
-            Directions::V_UP);
-    }
-
-    break;
-
-    case InputActionID::actLeft:
-    {
-        hero.movement_.trigger(
-            Directions::V_LEFT);
-    }
-
-    break;
-
-    case InputActionID::actDown:
-    {
-        hero.movement_.trigger(
-            Directions::V_DOWN);
-    }
-
-    break;
-
-    case InputActionID::actRight:
-    {
-        hero.movement_.trigger(
-            Directions::V_RIGHT);
-    }
-
-    break;
-
-    case InputActionID::cursorToggle:
-    {
-        cursor.toggle();
-    }
-
-    break;
-
-    case InputActionID::moveToTarget:
-    {
-        hero.movement_.trigger(Pathfinder::findPath(
-            map,
-            hero.position_.tilePosition(),
-            cursor.position_.tilePosition(),
-            gameCamera));
-    }
-
-    break;
-
-    case InputActionID::interact:
-    {
-        Vector2I heroTilePosition{hero.position_.tilePosition()};
-
-        if (!map.objects_.events().contains(heroTilePosition))
+        case InputActionID::actUp:
         {
-            snx::Logger::log("Nothing to do...");
+            hero.movement_.trigger(
+                Directions::V_UP);
+
             break;
         }
 
-        snx::PublisherStatic::publish(map.objects_.event(heroTilePosition));
-    }
+        case InputActionID::actLeft:
+        {
+            hero.movement_.trigger(
+                Directions::V_LEFT);
 
-    break;
+            break;
+        }
 
-    default:
-        break;
+        case InputActionID::actDown:
+        {
+            hero.movement_.trigger(
+                Directions::V_DOWN);
+
+            break;
+        }
+
+        case InputActionID::actRight:
+        {
+            hero.movement_.trigger(
+                Directions::V_RIGHT);
+
+            break;
+        }
+
+        case InputActionID::cursorToggle:
+        {
+            cursor.toggle();
+
+            break;
+        }
+
+        case InputActionID::moveToTarget:
+        {
+            hero.movement_.trigger(Pathfinder::findPath(
+                map,
+                hero.position_.tilePosition(),
+                cursor.position_.tilePosition(),
+                gameCamera));
+
+            break;
+        }
+
+        case InputActionID::actInPlace:
+        {
+            Vector2I heroTilePosition{hero.position_.tilePosition()};
+
+            // Wait if nothing to interact
+            if (!map.objects_.events().contains(heroTilePosition))
+            {
+                snx::Logger::log("Wait...");
+                hero.energy_.consume();
+                break;
+            }
+
+            snx::PublisherStatic::publish(map.objects_.event(heroTilePosition));
+
+            break;
+        }
+
+        default:
+            break;
     }
 
     // Reset
