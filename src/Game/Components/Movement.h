@@ -33,8 +33,6 @@ public:
     Vector2I const& direction() const;
     void setSpeed(int speed);
 
-    bool isTriggered() const;
-
     // Unsets isTriggered_ and clears path_
     void abortMovement();
 
@@ -64,10 +62,10 @@ private:
     void stopMovement();
 
     // Resets trigger, consumes energy and sets InProgress
-    void processTrigger(Energy& energy);
+    void activateTrigger(Energy& energy);
 
     // Triggers from and adjusts path
-    void processPath();
+    void triggerPath();
 };
 
 #endif

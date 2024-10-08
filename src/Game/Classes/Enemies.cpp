@@ -135,7 +135,7 @@ bool Enemies::checkForAction(
     {
         size_t enemyId{ids_.values()[i]};
 
-        if (!energy(enemyId).isIdle())
+        if (!energy(enemyId).isReady())
         {
             // Cant perform action
             ++i;

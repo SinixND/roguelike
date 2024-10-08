@@ -256,10 +256,11 @@ void GameScene::processInput()
         snx::PublisherStatic::publish(Event::colorThemeChange);
     }
 
-    // Block input handling if hero is not idle (= full energy)
-    if (hero_.energy().isIdle())
+    // Allow input if hero is ready (= full energy)
+    if (hero_.energy().isReady())
     {
         // Take input from mouse, keys or gestures
+        // Continuous movement done by repeating previous input if modifier is active
         inputHandler_.takeInput(cursor_.isActive());
     }
 }
@@ -275,7 +276,7 @@ void GameScene::updateState()
 
     if (
         !actionsInProgress_
-        && !hero_.energy().isIdle())
+        && !hero_.energy().isReady())
     {
         allEnemiesChecked = world_.currentMap().enemies_.checkForAction(
             world_.currentMap(),
@@ -286,16 +287,17 @@ void GameScene::updateState()
     // Regenerate energy if no action in progress
     if (
         !actionsInProgress_
-        && !hero_.energy().isIdle()
+        && !hero_.energy().isReady()
         && allEnemiesChecked)
     {
-        // Regenerate until one unit becomes idle
-        bool isUnitIdle{false};
+        // Regenerate until one unit becomes ready
+        bool isUnitReady{false};
 
-        while (!isUnitIdle)
+        while (!isUnitReady)
         {
-            isUnitIdle = hero_.energy().regenerate();
-            isUnitIdle = world_.currentMap().enemies_.regenerate() || isUnitIdle;
+            snx::debug::cliLog("Regenerate all\n");
+            isUnitReady = hero_.energy().regenerate();
+            isUnitReady = world_.currentMap().enemies_.regenerate() || isUnitReady;
         }
     }
 

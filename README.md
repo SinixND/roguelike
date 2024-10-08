@@ -9,7 +9,6 @@
 
 
 ## Shortterm
-- [ ] Fix pathfind-movement for hero (not roundbased)
 - [ ] Allow multiple pathfind targets
 - [ ] Split GameScene into Scene/Main and Game
 - [ ] Deactivate cursor trigger game action outside map panel

@@ -318,10 +318,14 @@ void InputHandler::triggerAction(
     Map& map,
     GameCamera const& gameCamera)
 {
+    if (!hero.energy().isReady())
+    {
+        return;
+    }
 
     if (inputAction_ == InputActionID::none)
     {
-        // Trigger input agnostic actions
+        // Trigger input agnostic actions, eg. non-empty path
         hero.movement().trigger();
 
         return;

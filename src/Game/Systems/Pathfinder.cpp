@@ -3,6 +3,7 @@
 // #define DEBUG_PATHFINDER
 
 #include "GameCamera.h"
+#include "RNG.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
 #include "VisibilityID.h"
@@ -76,8 +77,40 @@ bool checkRatingList(
     for (RatedTile* currentTile : tileList)
     {
         // Test all four directions for currentTile, prioritise main direction to target
-        Vector2I mainDirection{Vector2MainDirection(currentTile->distanceToTarget())};
-        Vector2I offDirection{Vector2OffDirection(currentTile->distanceToTarget())};
+        Vector2I distanceToTarget{currentTile->distanceToTarget()};
+        Vector2I mainDirection{};
+        Vector2I offDirection{};
+
+        if (distanceToTarget.x == distanceToTarget.y)
+        {
+            if (snx::RNG::random(0, 1))
+            {
+                mainDirection = Vector2Normalize(
+                    Vector2I{
+                        distanceToTarget.x,
+                        0});
+
+                offDirection = Vector2Normalize(
+                    Vector2I{
+                        0,
+                        distanceToTarget.y});
+            }
+            else
+            {
+                mainDirection = Vector2I{
+                    0,
+                    distanceToTarget.y};
+
+                offDirection = Vector2I{
+                    distanceToTarget.x,
+                    0};
+            }
+        }
+        else
+        {
+            mainDirection = Vector2MainDirection(distanceToTarget);
+            offDirection = Vector2OffDirection(distanceToTarget);
+        }
 
         for (Vector2I const& direction : {
                  mainDirection,
@@ -137,9 +170,9 @@ bool checkRatingList(
             // - Enemy present
             // - Steps needed exceed maxRange
             if (
-                (map.tiles_.visibilityID(newTilePosition) == VisibilityID::invisible)
+                !map.tiles_.positions().contains(newTilePosition)
+                || (map.tiles_.visibilityID(newTilePosition) == VisibilityID::invisible)
                 || map.tiles_.isSolid(newTilePosition)
-                || !map.tiles_.positions().contains(newTilePosition)
                 // || map.enemies_.ids().contains(newTilePosition)
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded() > maxRange)))
             {

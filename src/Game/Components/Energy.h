@@ -6,7 +6,7 @@ class Energy
     int maxEnergy_{10};
     int currentEnergy_{maxEnergy_};
     int regenRate_{1};
-    bool isIdle_{true};
+    bool isReady_{true};
 
 public:
     Energy() = default;
@@ -23,7 +23,7 @@ public:
 
     // Returns true if energy full
     bool regenerate();
-    int isIdle() const;
+    int isReady() const;
 };
 
 #endif

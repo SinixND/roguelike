@@ -17,7 +17,7 @@ bool Energy::consume(int energy)
 
     if (currentEnergy_ <= 0)
     {
-        isIdle_ = false;
+        isReady_ = false;
         return false;
     }
 
@@ -28,7 +28,7 @@ bool Energy::regenerate()
 {
     if (currentEnergy_ >= maxEnergy_)
     {
-        isIdle_ = true;
+        isReady_ = true;
         return true;
     }
 
@@ -45,7 +45,7 @@ bool Energy::regenerate()
     return false;
 }
 
-int Energy::isIdle() const
+int Energy::isReady() const
 {
-    return isIdle_;
+    return isReady_;
 }

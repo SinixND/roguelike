@@ -18,9 +18,12 @@ Vector2I const& Movement::direction() const
 
 void Movement::setSpeed(int speed) { speed_ = speed; }
 
-bool Movement::isTriggered() const
+void Movement::trigger()
 {
-    return isTriggered_;
+    if (!isTriggered_ && !isInProgress_ && !path_.empty())
+    {
+        triggerPath();
+    }
 }
 
 void Movement::trigger(Vector2I const& direction)
@@ -41,18 +44,10 @@ void Movement::trigger(std::vector<Vector2I> const& path)
 
     path_ = path;
 
-    processPath();
+    triggerPath();
 }
 
-void Movement::trigger()
-{
-    if (!isTriggered_ && !isInProgress_ && !path_.empty())
-    {
-        processPath();
-    }
-}
-
-void Movement::processPath()
+void Movement::triggerPath()
 {
     Vector2I movementDirection{
         // Vector2Normalize(
@@ -74,7 +69,7 @@ void Movement::processPath()
     }
 }
 
-void Movement::processTrigger(Energy& energy)
+void Movement::activateTrigger(Energy& energy)
 {
     isTriggered_ = false;
     energy.consume();
@@ -108,7 +103,7 @@ bool Movement::update(
     Position const& heroPosition)
 {
     // Avoid check if no movement in progress
-    if (isTriggered())
+    if (isTriggered_)
     {
         // Check collision before starting movement
         if (Collision::checkCollision(
@@ -125,7 +120,7 @@ bool Movement::update(
     // Start movement on trigger
     if (isTriggered_)
     {
-        processTrigger(energy);
+        activateTrigger(energy);
     }
 
     // Check if action is in progress
