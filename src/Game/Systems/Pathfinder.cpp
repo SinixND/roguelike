@@ -68,6 +68,8 @@ bool checkRatingList(
 {
     // Buffer rated tiles to allow neighbours with same rating
     std::vector<RatedTile*> tileList{ratingList[rating]};
+
+    // All tiles with same rating will be checked -> remove key
     ratingList.erase(rating);
 
     // Check all tiles in vector for current best rating before choosing new best rating
@@ -138,7 +140,7 @@ bool checkRatingList(
                 (map.tiles_.visibilityID(newTilePosition) == VisibilityID::invisible)
                 || map.tiles_.isSolid(newTilePosition)
                 || !map.tiles_.positions().contains(newTilePosition)
-                || map.enemies_.ids().contains(newTilePosition)
+                // || map.enemies_.ids().contains(newTilePosition)
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded() > maxRange)))
             {
                 // Invalid! Add to ignore set so it doesn't get checked again
@@ -178,9 +180,6 @@ bool checkRatingList(
         }
     }
 
-    // All tiles with same rating have been checked -> remove key
-    // ratingList.erase(rating);
-
     // Check new best rated tiles
     if (
         !ratingList.empty()
@@ -201,7 +200,6 @@ bool checkRatingList(
     return false;
 }
 
-// Returns path from target (front()) to start (included, back())
 std::vector<Vector2I> Pathfinder::findPath(
     Map const& map,
     Vector2I const& start,

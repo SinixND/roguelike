@@ -9,8 +9,6 @@
 class Hero
 {
     RenderID renderID_{RenderID::hero};
-
-public:
     Movement movement_{};
     Energy energy_{};
     Position position_{};
@@ -20,6 +18,15 @@ public:
 
     // Getter / Setter
     RenderID renderID() const;
+
+    Movement const& movement() const;
+    Movement& movement();
+
+    Energy const& energy() const;
+    Energy& energy();
+
+    Position const& position() const;
+    Position& position();
 };
 
 #endif

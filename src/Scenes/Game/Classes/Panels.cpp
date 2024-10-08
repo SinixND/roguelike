@@ -66,7 +66,8 @@ void Panels::init()
     snx::PublisherStatic::publish(Event::panelsResized);
 }
 
-void Panels::drawStatusPanelContent(int level) const {
+void Panels::drawStatusPanelContent(int level) const
+{
     // Draw text for current level
     char const* currentLevel{TextFormat("Level %i", level)};
 

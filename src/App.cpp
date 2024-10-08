@@ -78,7 +78,7 @@ void updateDeveloperMode()
     {
         DeveloperMode::toggle();
     }
-};
+}
 
 void App::run()
 {

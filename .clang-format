@@ -175,7 +175,7 @@ ReferenceAlignment: Pointer
 ReflowComments:  true
 RemoveBracesLLVM: false
 RemoveParentheses: Leave
-RemoveSemicolon: false
+RemoveSemicolon: true
 RequiresClausePosition: OwnLine
 RequiresExpressionIndentation: OuterScope
 SeparateDefinitionBlocks: Leave

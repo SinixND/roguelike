@@ -1,13 +1,6 @@
 #include "Energy.h"
 
-void Energy::setMaxEnergy(int maxEnergy) { maxEnergy_ = maxEnergy; }
-
-void Energy::setRegenRate(int agility) { regenRate_ = agility; }
-
-void Energy::setMax()
-{
-    currentEnergy_ = maxEnergy_;
-};
+void Energy::setRegenRate(int regenRate) { regenRate_ = regenRate; }
 
 bool Energy::consume(int energy)
 {

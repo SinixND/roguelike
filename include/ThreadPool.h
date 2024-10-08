@@ -12,7 +12,7 @@
 #include <thread>
 #include <vector>
 
-// Usage: thread_pool->queueJob([/* =, & */] { /* ... */ });
+// Usage: thread_pool->queueJob([/* =, & */] { /* ... */ })
 class ThreadPool
 {
     // Tells threads to stop looking for jobs

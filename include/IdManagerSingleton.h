@@ -28,11 +28,10 @@ namespace snx
             }
 
             return incrementedId();
-        };
+        }
 
         static void suspendId(Id id)
         {
-            // std::cout << "Suspend " << id << "\n";
             if (activeIds_.count(id) < 1)
             {
                 return;
@@ -41,8 +40,7 @@ namespace snx
             auto usedIdsIterator{activeIds_.find(id)};
             freeIds_.insert(*usedIdsIterator);
             activeIds_.erase(usedIdsIterator);
-            // std::cout << "Suspend Id:" << id << ", Active: " << activeIds_.size() << ", Free: " << freeIds_.size() << "\n";
-        };
+        }
 
     private:
         static Id recycledId()

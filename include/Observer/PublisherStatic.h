@@ -48,10 +48,8 @@ namespace snx
         {
             // Iterate all subscribers
             for (auto& [event, list] : eventToSubscriberLists_)
-            // for (auto& mapping : eventToSubscriberLists_)
             {
                 notifyAllSubscribers(list);
-                // notifyAllSubscribers(mapping.second);
             }
         }
 

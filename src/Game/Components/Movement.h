@@ -15,24 +15,23 @@ class Movement
     Vector2I direction_{};
     Vector2 currentVelocity_{};
 
-    // speed unit is tiles per second
-    int speed_{10};
+    // Speed unit is tiles per second
+    int speed_{};
     float cumulativeDistanceMoved_{};
 
     bool isTriggered_{false};
-    // bool isContinuous_{false};
     bool isInProgress_{false};
 
 public:
     Movement() = default;
 
-    Movement(int agility)
-        : speed_(10 * agility)
+    explicit Movement(int speed)
+        : speed_(speed)
     {
     }
 
     Vector2I const& direction() const;
-    void setSpeed(int agility);
+    void setSpeed(int speed);
 
     bool isTriggered() const;
 
@@ -51,13 +50,14 @@ public:
     // - Sets inProgress state,
     // - Skips if action is in progress,
     // - Moves for one tile max
-    // - Resets inProgress state if move for one tile
+    // - Resets inProgress state if moved for one tile
     // - Resets currentVelocity
-    void update(
+    // Returns if tilePosition changed
+    bool update(
         Position& position,
         Energy& energy,
         Map const& map,
-        Vector2I const& heroPosition);
+        Position const& heroPosition);
 
 private:
     void setInProgress();

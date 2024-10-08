@@ -33,10 +33,6 @@ public:
         , height_(height)
     {
         validate();
-        // setLeft(left);
-        // setTop(top);
-        // resizeWidthRight(width);
-        // resizeHeightBottom(height);
     }
 
     RectangleEx(Vector2 const& topLeft, Vector2 const& bottomRight = {0, 0})
@@ -61,7 +57,7 @@ public:
         validate();
     }
 
-    RectangleEx(Rectangle const& rectangle)
+    explicit RectangleEx(Rectangle const& rectangle)
         : left_(rectangle.x)
         , top_(rectangle.y)
         , right_(rectangle.x + rectangle.width)
@@ -292,10 +288,6 @@ public:
         , height_(height)
     {
         validate();
-        // setLeft(left);
-        // setTop(top);
-        // resizeWidthRight(width);
-        // resizeHeightBottom(height);
     }
 
     RectangleExI(Vector2I const& topLeft, Vector2I const& bottomRight = {0, 0})
@@ -869,9 +861,6 @@ struct std::hash<Vector2>
 {
     size_t operator()(Vector2 const& v) const noexcept
     {
-        // size_t h1 = std::hash<float>()(v.x);
-        // size_t h2 = std::hash<float>()(v.y);
-        // return (h1 ^ (h2 << 1));
         return (PRIME + std::hash<float>()(v.x)) * PRIME + std::hash<float>()(v.y);
     }
 };
@@ -881,9 +870,6 @@ struct std::hash<Vector2I>
 {
     size_t operator()(Vector2I const& v) const noexcept
     {
-        // size_t h1 = std::hash<int>()(v.x);
-        // size_t h2 = std::hash<int>()(v.y);
-        // return (h1 ^ (h2 << 1));
         return (PRIME + std::hash<int>()(v.x)) * PRIME + std::hash<int>()(v.y);
     }
 };

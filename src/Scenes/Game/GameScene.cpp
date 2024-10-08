@@ -46,7 +46,7 @@ void GameScene::initialize()
 
     gameCamera_.init(
         panels_.map(),
-        hero_.position_.worldPixel());
+        hero_.position().worldPixel());
 
 #if defined(DEBUG)
     snx::debug::gcam() = gameCamera_;
@@ -80,32 +80,32 @@ void GameScene::setupEvents()
         Event::panelsResized,
         [&]()
         {
-            gameCamera_.init(panels_.map(), hero_.position_.worldPixel());
+            gameCamera_.init(panels_.map(), hero_.position().worldPixel());
             visibility_.update(
                 world_.currentMap().tiles_,
                 gameCamera_.viewportInTiles(),
-                hero_.position_.tilePosition());
+                hero_.position().tilePosition());
         });
 
     snx::PublisherStatic::addSubscriber(
         Event::actionInProgress,
         [&]()
         {
-            ++actionsInProgress_;
+            actionsInProgress_ = true;
         });
 
     snx::PublisherStatic::addSubscriber(
         Event::actionFinished,
         [&]()
         {
-            --actionsInProgress_;
+            actionsInProgress_ = false;
         });
 
     snx::PublisherStatic::addSubscriber(
         Event::heroMoved,
         [&]()
         {
-            gameCamera_.setTarget(hero_.position_.worldPixel());
+            gameCamera_.setTarget(hero_.position().worldPixel());
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -116,7 +116,7 @@ void GameScene::setupEvents()
             visibility_.update(
                 world_.currentMap().tiles_,
                 gameCamera_.viewportInTiles(),
-                hero_.position_.tilePosition());
+                hero_.position().tilePosition());
         },
         true);
 
@@ -128,7 +128,7 @@ void GameScene::setupEvents()
 
             world_.increaseMapLevel();
 
-            hero_.position_.changeTo(Vector2I{0, 0});
+            hero_.position().changeTo(Vector2I{0, 0});
 
             tileChunks_.init(world_.currentMap().tiles_, renderer_);
 
@@ -153,7 +153,7 @@ void GameScene::setupEvents()
                     continue;
                 }
 
-                hero_.position_.changeTo(position.tilePosition());
+                hero_.position().changeTo(position.tilePosition());
             }
 
             tileChunks_.init(world_.currentMap().tiles_, renderer_);
@@ -205,12 +205,12 @@ void GameScene::setupEvents()
 
             snx::debug::cliLog(
                 "RenderID: "
-                + std::to_string(int(world_.currentMap().tiles_.renderID(cursorPos)))
+                + std::to_string(static_cast<int>(world_.currentMap().tiles_.renderID(cursorPos)))
                 + "\n");
 
             snx::debug::cliLog(
                 "VisibilityID: "
-                + std::to_string(int(world_.currentMap().tiles_.visibilityID(cursorPos)))
+                + std::to_string(static_cast<int>(world_.currentMap().tiles_.visibilityID(cursorPos)))
                 + "\n");
 
             snx::debug::cliLog(
@@ -237,12 +237,12 @@ void GameScene::setupEvents()
 
             snx::debug::cliLog(
                 "RenderID: "
-                + std::to_string(int(world_.currentMap().objects_.renderID(cursorPos)))
+                + std::to_string(static_cast<int>(world_.currentMap().objects_.renderID(cursorPos)))
                 + "\n");
 
             snx::debug::cliLog(
                 "Event: "
-                + std::to_string(int(world_.currentMap().objects_.event(cursorPos)))
+                + std::to_string(static_cast<int>(world_.currentMap().objects_.event(cursorPos)))
                 + "\n");
         });
 #endif
@@ -257,7 +257,7 @@ void GameScene::processInput()
     }
 
     // Block input handling if hero is not idle (= full energy)
-    if (hero_.energy_.isIdle())
+    if (hero_.energy().isIdle())
     {
         // Take input from mouse, keys or gestures
         inputHandler_.takeInput(cursor_.isActive());
@@ -268,24 +268,25 @@ void GameScene::updateState()
 {
     cursor_.update(
         gameCamera_.camera(),
-        hero_.position_.tilePosition());
+        hero_.position().tilePosition());
 
     // Cycle enemies once to check for action
     bool allEnemiesChecked{false};
+
     if (
         !actionsInProgress_
-        && !hero_.energy_.isIdle())
+        && !hero_.energy().isIdle())
     {
         allEnemiesChecked = world_.currentMap().enemies_.checkForAction(
             world_.currentMap(),
-            hero_.position_.tilePosition(),
+            hero_.position().tilePosition(),
             gameCamera_);
     }
 
     // Regenerate energy if no action in progress
     if (
         !actionsInProgress_
-        && !hero_.energy_.isIdle()
+        && !hero_.energy().isIdle()
         && allEnemiesChecked)
     {
         // Regenerate until one unit becomes idle
@@ -293,11 +294,9 @@ void GameScene::updateState()
 
         while (!isUnitIdle)
         {
-            isUnitIdle = hero_.energy_.regenerate();
-            isUnitIdle = world_.currentMap().enemies_.regenerate();
+            isUnitIdle = hero_.energy().regenerate();
+            isUnitIdle = world_.currentMap().enemies_.regenerate() || isUnitIdle;
         }
-
-        allEnemiesChecked = false;
     }
 
     // Trigger potential hero action
@@ -308,14 +307,14 @@ void GameScene::updateState()
         gameCamera_);
 
     // Update hero movment
-    hero_.movement_.update(
-        hero_.position_,
-        hero_.energy_,
+    hero_.movement().update(
+        hero_.position(),
+        hero_.energy(),
         world_.currentMap(),
-        hero_.position_.tilePosition());
+        hero_.position());
 
     // Update enemies
-    world_.currentMap().enemies_.update(world_.currentMap(), hero_.position_.tilePosition());
+    world_.currentMap().enemies_.update(world_.currentMap(), hero_.position());
 
 #if defined(DEBUG)
     snx::debug::gcam() = gameCamera_;
@@ -370,7 +369,7 @@ void GameScene::renderOutput()
     // Draw hero
     renderer_.render(
         hero_.renderID(),
-        hero_.position_.worldPixel());
+        hero_.position().worldPixel());
 
     // UI
     // Draw cursor

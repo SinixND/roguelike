@@ -6,11 +6,11 @@
 Map const& World::currentMap() const
 {
     return *currentMap_;
-};
+}
 Map& World::currentMap()
 {
     return *currentMap_;
-};
+}
 
 int World::currentMapLevel() const
 {

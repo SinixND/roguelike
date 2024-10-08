@@ -21,7 +21,7 @@ namespace snx
             {
                 history_.pop_back();
             }
-        };
+        }
 
         static std::string const& getMessage(int number)
         {

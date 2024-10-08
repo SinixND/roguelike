@@ -18,11 +18,11 @@ class Enemies
 {
     snx::IdManager idManager_{};
 
+    snx::DenseMap<Vector2I, size_t> ids_{};
     snx::DenseMap<size_t, RenderID> renderIDs_{};
     snx::DenseMap<size_t, Movement> movements_{};
     snx::DenseMap<size_t, Energy> energies_{};
     snx::DenseMap<size_t, Position> positions_{};
-    snx::DenseMap<Vector2I, size_t> ids_{};
     snx::DenseMap<size_t, AI> ais_{};
 
 public:
@@ -44,10 +44,9 @@ public:
         Vector2I const& heroPosition,
         GameCamera const& gameCamera);
 
-    // TODO: consider "day" of last update to handle dying enemies!
-    bool update(
+    void update(
         Map const& map,
-        Vector2I const& heroPosition);
+        Position const& heroPosition);
 
     // Getters / Setters
     snx::DenseMap<size_t, Movement> const& movements() const;

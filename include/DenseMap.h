@@ -15,7 +15,7 @@ namespace snx
         virtual bool contains(Key const& key) const = 0;
         virtual void clear() = 0;
         virtual void erase(Key const& key) = 0;
-        // virtual std::vector<Key> const& keys() = 0;
+        virtual void changeKey(Key const& from, Key const& to) = 0;
         virtual size_t size() const = 0;
 
         virtual ~IDenseMap() = default;
@@ -63,9 +63,6 @@ namespace snx
                 return at(key);
             }
 
-            // Add new key to used keys
-            // keys_.insert(key);
-
             // Get new list index for value
             size_t valueIndex = size();
 
@@ -89,9 +86,6 @@ namespace snx
             {
                 return at(key);
             }
-
-            // Add new key to used keys
-            // keys_.insert(key);
 
             // Get new list index for value
             size_t valueIndex = size();
@@ -150,9 +144,15 @@ namespace snx
 
             // Remove removed value from mapping
             indexToKey_.erase(size());
+        }
 
-            // Remove key from used keys
-            // keys_.erase(key);
+        void changeKey(Key const& from, Key const& to) override
+        {
+            assert(!contains(to) && "Key already exists, possible loss of data!");
+
+            insert(to, at(from));
+
+            erase(from);
         }
 
         // Empty all containers
@@ -161,7 +161,6 @@ namespace snx
             values_.clear();
             keyToIndex_.clear();
             indexToKey_.clear();
-            // keys_.clear();
         }
 
         // LOOKUP
@@ -209,11 +208,6 @@ namespace snx
         // return const_cast<std::vector<Type>&>(std::as_const(*this).operator());
         // }
 
-        // std::vector<Key> const& keys() override
-        // {
-        // return keys_;
-        // }
-
     private:
         // Vector index is used as value key
         std::vector<Type>
@@ -224,9 +218,6 @@ namespace snx
 
         // Store a index (value) to key mapping (internal use only)
         std::unordered_map<size_t, Key> indexToKey_{};
-
-        // Vector of all keys in use
-        // std::vector<Key> keys_{};
     };
 }
 

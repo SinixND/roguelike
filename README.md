@@ -5,27 +5,24 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Split GameScene into Scene/Main and Game
-- [ ] Add Top level class functions to access member-member functions
-- [ ] Implement "Wait" action
-- [ ] Deactivate cursor trigger game action outside map panel
-- [ ] Add enemy movement
-- [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
-detection range)
-- [ ] Health, Attack
+- [ ] Add attack dummy action for hero
 
 
 ## Shortterm
+- [ ] Fix pathfind-movement for hero (not roundbased)
+- [ ] Allow multiple pathfind targets
+- [ ] Split GameScene into Scene/Main and Game
+- [ ] Deactivate cursor trigger game action outside map panel
+- [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
+detection range)
+- [ ] Health, Attack
+- [ ] Hold to inspect (activate cursor while held)
+
 - [ ] Setup docker
 
 
 ## Longterm
 - [ ] Changeable key bindings
-- [ ] Add rogue theme (ASCII)
-- Floor : '.'
-- Wall  : '#'
-- Hero  : '@'
-- Stairs: '%'
 - [ ] Save/Load for Account > Character > CurrentRun
 - [ ] Account settings via lua
 - [ ] Implement zoom?
@@ -118,3 +115,5 @@ detection range)
 - [x] Reduce render calls by chunking map
 - [x] Rework const correctness (includes: public members for direct access)
 - [x] Rework Makefile
+- [x] Add wait action
+- [x] Add enemy movement

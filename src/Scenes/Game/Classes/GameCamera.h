@@ -39,6 +39,7 @@ public:
 
     // Screen offset to draw target at
     void setOffset(Vector2 const& offset);
+
     // World position to draw at offset
     void setTarget(Vector2 const& target);
     void setZoom(float zoom);

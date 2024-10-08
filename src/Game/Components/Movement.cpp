@@ -16,7 +16,7 @@ Vector2I const& Movement::direction() const
     return direction_;
 }
 
-void Movement::setSpeed(int agility) { speed_ = agility; }
+void Movement::setSpeed(int speed) { speed_ = speed; }
 
 bool Movement::isTriggered() const
 {
@@ -54,7 +54,7 @@ void Movement::trigger()
 
 void Movement::processPath()
 {
-    Vector2I direction{
+    Vector2I movementDirection{
         // Vector2Normalize(
         Vector2Subtract(
             path_.rbegin()[1],
@@ -62,7 +62,7 @@ void Movement::processPath()
         // )
     };
 
-    trigger(direction);
+    trigger(movementDirection);
 
     // Remove tilePosition moved from
     path_.pop_back();
@@ -101,11 +101,11 @@ void Movement::abortMovement()
     path_.clear();
 }
 
-void Movement::update(
+bool Movement::update(
     Position& position,
     Energy& energy,
     Map const& map,
-    Vector2I const& heroPosition)
+    Position const& heroPosition)
 {
     // Avoid check if no movement in progress
     if (isTriggered())
@@ -116,7 +116,7 @@ void Movement::update(
                 Vector2Add(
                     position.tilePosition(),
                     direction()),
-                heroPosition))
+                heroPosition.tilePosition()))
         {
             abortMovement();
         }
@@ -131,41 +131,51 @@ void Movement::update(
     // Check if action is in progress
     if (!isInProgress_)
     {
-        return;
+        return false;
     }
 
     Vector2 distance{Vector2Scale(currentVelocity_, GetFrameTime())};
     float length{Vector2Length(distance)};
+    bool didTilePositionChange{false};
 
     cumulativeDistanceMoved_ += length;
 
-    // Move for one tile max
+    // Check if movement exceeds tile length this frame
     if (cumulativeDistanceMoved_ < TileData::TILE_SIZE)
     {
-        position.move(distance);
-        snx::PublisherStatic::publish(Event::heroMoved);
-        return;
+        didTilePositionChange = position.move(distance);
+    }
+    else
+    {
+        // Move by remaining distance until TILE_SIZE
+        didTilePositionChange = position.move(
+            Vector2ClampValue(
+                distance,
+                0,
+                TileData::TILE_SIZE - (cumulativeDistanceMoved_ - length)));
+
+        // === Moved one tile ===
+        // Reset cumulativeDistanceMoved
+        cumulativeDistanceMoved_ = 0;
+
+        snx::PublisherStatic::publish(Event::actionFinished);
+
+        stopMovement();
     }
 
-    if (cumulativeDistanceMoved_ > TileData::TILE_SIZE_HALF)
+    // Check if unit moving is the hero
+    if (position.worldPixel() != heroPosition.worldPixel())
+    {
+        return didTilePositionChange;
+    }
+
+    // Handle special case for hero
+    snx::PublisherStatic::publish(Event::heroMoved);
+
+    if (didTilePositionChange)
     {
         snx::PublisherStatic::publish(Event::heroPositionChanged);
     }
 
-    // Move by remaining distance until TILE_SIZE
-    position.move(
-        Vector2ClampValue(
-            distance,
-            0,
-            TileData::TILE_SIZE - (cumulativeDistanceMoved_ - length)));
-    snx::PublisherStatic::publish(Event::heroMoved);
-
-    // === Moved one tile ===
-
-    // Reset cumulativeDistanceMoved
-    cumulativeDistanceMoved_ = 0;
-
-    snx::PublisherStatic::publish(Event::actionFinished);
-
-    stopMovement();
+    return didTilePositionChange;
 }

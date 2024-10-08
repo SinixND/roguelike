@@ -7,7 +7,7 @@ class AI
 
 public:
     AI(int scanRange)
-    : scanRange_(scanRange) {};
+        : scanRange_(scanRange){};
 
     int scanRange() const
     {

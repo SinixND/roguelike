@@ -9,6 +9,7 @@ namespace Collision
     // Checks for
     // - solid tiles
     // - enemies
+    // Returns if collision occurs
     bool checkCollision(
         Map const& map,
         Vector2I const& positionToCheck,

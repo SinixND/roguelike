@@ -52,7 +52,6 @@ float Shadow::slopeRight() const
 
 void Shadow::setSlopeRight(Vector2I const& octantPosition)
 {
-    // slopeRight_ = (octantPosition.y - 0.5f) / (octantPosition.x + 0.5f);
     slopeRight_ = std::max(EPSILON, (octantPosition.y - 0.5f) / (octantPosition.x + 0.5f));
 }
 
@@ -99,14 +98,10 @@ Vector2I const& Fog::tilePosition() const
     return tilePosition_;
 }
 
-void Fog::setTilePosition(Vector2I const& tilePosition) { tilePosition_ = tilePosition; }
-
 bool Fog::isFogOpaque() const
 {
     return isFogOpaque_;
 }
-
-void Fog::setFogOpaque(bool isFogOpaque) { isFogOpaque_ = isFogOpaque; }
 
 // Visibility
 snx::DenseMap<Vector2I, Fog> const& Visibility::fogs() const
@@ -122,7 +117,7 @@ void drawShadow(
     Vector2I const& origin,
     float maxHeight)
 {
-    // BeginDrawing();
+    BeginDrawing();
 
     // Draw left shadow projection
     DrawLineEx(
@@ -162,7 +157,7 @@ void drawShadow(
         1,
         YELLOW);
 
-    // EndDrawing();
+    EndDrawing();
 }
 #endif
 
@@ -429,7 +424,7 @@ void Visibility::calculateVisibilitiesInOctant(
                 // Check visibility by intersection with shadow line elements
                 bool isVisible{true};
 
-                for (Shadow& shadow : shadowline)
+                for (Shadow const& shadow : shadowline)
                 {
                     // If top-left tile corner is left (<) from slopeLeft (at same height = tileTop)
                     // OR
@@ -475,7 +470,6 @@ void Visibility::calculateVisibilitiesInOctant(
             } // Octant tiles only
 
             // Update shadow line
-            // updateShadowline(map, tilePosition);
             if (!tiles.isOpaque(tilePosition))
             {
                 continue;

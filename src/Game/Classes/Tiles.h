@@ -29,8 +29,6 @@ public:
         bool isOpaque = false,
         VisibilityID visibilityID = VisibilityID::invisible);
 
-    // void erase(Vector2I const& tilePosition);
-
     snx::DenseMap<Vector2I, Position> const& positions() const;
     Position const& position(Vector2I const& tilePosition) const;
 

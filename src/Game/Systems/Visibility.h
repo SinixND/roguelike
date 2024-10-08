@@ -15,7 +15,7 @@ class Shadow
     float slopeRight_{};
 
 public:
-    Shadow(Vector2I const& octantPosition);
+    explicit Shadow(Vector2I const& octantPosition);
 
     float slopeLeft() const;
     void setSlopeLeft(Vector2I const& octantPosition);
@@ -55,10 +55,8 @@ public:
     }
 
     Vector2I const& tilePosition() const;
-    void setTilePosition(Vector2I const& tilePosition);
 
     bool isFogOpaque() const;
-    void setFogOpaque(bool isFogOpaque);
 };
 
 class Visibility

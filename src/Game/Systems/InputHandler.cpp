@@ -2,6 +2,7 @@
 // #define DEBUG_GESTURES
 
 #include "Cursor.h"
+#include "Debugger.h"
 #include "Directions.h"
 #include "GameCamera.h"
 #include "Hero.h"
@@ -321,7 +322,7 @@ void InputHandler::triggerAction(
     if (inputAction_ == InputActionID::none)
     {
         // Trigger input agnostic actions
-        hero.movement_.trigger();
+        hero.movement().trigger();
 
         return;
     }
@@ -330,7 +331,17 @@ void InputHandler::triggerAction(
     {
         case InputActionID::actUp:
         {
-            hero.movement_.trigger(
+            if (map.enemies_.ids().contains(
+                    Vector2Add(
+                        hero.position().tilePosition(),
+                        Directions::V_UP)))
+            {
+                snx::debug::cliLog("Hero would attack\n");
+                hero.energy().consume();
+                break;
+            }
+
+            hero.movement().trigger(
                 Directions::V_UP);
 
             break;
@@ -338,7 +349,17 @@ void InputHandler::triggerAction(
 
         case InputActionID::actLeft:
         {
-            hero.movement_.trigger(
+            if (map.enemies_.ids().contains(
+                    Vector2Add(
+                        hero.position().tilePosition(),
+                        Directions::V_LEFT)))
+            {
+                snx::debug::cliLog("Hero would attack\n");
+                hero.energy().consume();
+                break;
+            }
+
+            hero.movement().trigger(
                 Directions::V_LEFT);
 
             break;
@@ -346,7 +367,17 @@ void InputHandler::triggerAction(
 
         case InputActionID::actDown:
         {
-            hero.movement_.trigger(
+            if (map.enemies_.ids().contains(
+                    Vector2Add(
+                        hero.position().tilePosition(),
+                        Directions::V_DOWN)))
+            {
+                snx::debug::cliLog("Hero would attack\n");
+                hero.energy().consume();
+                break;
+            }
+
+            hero.movement().trigger(
                 Directions::V_DOWN);
 
             break;
@@ -354,7 +385,17 @@ void InputHandler::triggerAction(
 
         case InputActionID::actRight:
         {
-            hero.movement_.trigger(
+            if (map.enemies_.ids().contains(
+                    Vector2Add(
+                        hero.position().tilePosition(),
+                        Directions::V_RIGHT)))
+            {
+                snx::debug::cliLog("Hero would attack\n");
+                hero.energy().consume();
+                break;
+            }
+
+            hero.movement().trigger(
                 Directions::V_RIGHT);
 
             break;
@@ -369,9 +410,9 @@ void InputHandler::triggerAction(
 
         case InputActionID::moveToTarget:
         {
-            hero.movement_.trigger(Pathfinder::findPath(
+            hero.movement().trigger(Pathfinder::findPath(
                 map,
-                hero.position_.tilePosition(),
+                hero.position().tilePosition(),
                 cursor.position_.tilePosition(),
                 gameCamera));
 
@@ -380,13 +421,13 @@ void InputHandler::triggerAction(
 
         case InputActionID::actInPlace:
         {
-            Vector2I heroTilePosition{hero.position_.tilePosition()};
+            Vector2I heroTilePosition{hero.position().tilePosition()};
 
             // Wait if nothing to interact
             if (!map.objects_.events().contains(heroTilePosition))
             {
                 snx::Logger::log("Wait...");
-                hero.energy_.consume();
+                hero.energy().consume();
                 break;
             }
 

@@ -55,6 +55,8 @@ public:
 
 namespace Pathfinder
 {
+    // Returns path from target (front()) to start (included, back())
+    // Starting tile needed for initial direction
     std::vector<Vector2I> findPath(
         Map const& map,
         Vector2I const& start,

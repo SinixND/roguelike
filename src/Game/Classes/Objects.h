@@ -24,8 +24,6 @@ public:
         std::string const& tag,
         Event event);
 
-    // void erase(Vector2I const& tilePosition);
-
     snx::DenseMap<Vector2I, Position> const& positions() const;
     Position const& position(Vector2I const& tilePosition) const;
 

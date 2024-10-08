@@ -11,14 +11,12 @@ class Energy
 public:
     Energy() = default;
 
-    Energy(int agility)
-        : regenRate_(agility)
+    explicit Energy(int regenRate)
+        : regenRate_(regenRate)
     {
     }
 
-    void setMaxEnergy(int maxEnergy);
     void setRegenRate(int regenRate);
-    void setMax();
 
     // Consumes all energy if no parameter provided and returns if there is energy left
     bool consume(int energy = -1);

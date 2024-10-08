@@ -1,7 +1,6 @@
 #ifndef IG20240317183916
 #define IG20240317183916
 
-#include "raylibEx.h"
 #include <vector>
 
 namespace snx

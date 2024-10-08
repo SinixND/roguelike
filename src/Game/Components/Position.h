@@ -18,34 +18,18 @@ public:
     }
 
     explicit Position(Vector2I const& tilePosition)
+        : position_(UnitConversion::tileToWorld(tilePosition))
     {
-        position_ = UnitConversion::tileToWorld(tilePosition);
     }
 
-    Vector2 const& worldPixel() const
-    {
-        return position_;
-    }
+    Vector2 const& worldPixel() const;
+    Vector2I tilePosition() const;
 
-    Vector2I tilePosition() const
-    {
-        return UnitConversion::worldToTile(position_);
-    }
+    void changeTo(Vector2 const& worldPixel);
+    void changeTo(Vector2I const& tilePosition);
 
-    void changeTo(Vector2 const& worldPixel)
-    {
-        position_ = worldPixel;
-    }
-
-    void changeTo(Vector2I const& tilePosition)
-    {
-        position_ = UnitConversion::tileToWorld(tilePosition);
-    }
-
-    void move(Vector2 const& offset)
-    {
-        position_ += offset;
-    }
+    // Returns if tilePosition changed
+    bool move(Vector2 const& offset);
 };
 
 #endif

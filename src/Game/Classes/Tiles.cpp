@@ -45,16 +45,6 @@ void Tiles::set(
     updateMapSize(tilePosition);
 }
 
-// void Tiles::erase(Vector2I const& tilePosition)
-// {
-//     positions_.erase(tilePosition);
-//     renderIDs_.erase(tilePosition);
-//     tags_.erase(tilePosition);
-//     visibilityIDs_.erase(tilePosition);
-//     isSolids_.erase(tilePosition);
-//     isOpaques_.erase(tilePosition);
-// }
-
 snx::DenseMap<Vector2I, Position> const& Tiles::positions() const
 {
     return positions_;

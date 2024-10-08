@@ -19,7 +19,7 @@ namespace snx
                 GetWindowRec(),
                 BORDER_WIDTH,
                 BORDER_COLOR);
-        };
+        }
 
         virtual ~IScene() = default;
     };
