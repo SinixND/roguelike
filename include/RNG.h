@@ -28,12 +28,13 @@ namespace snx
             rng_.seed(seed);
         }
 
-        static inline unsigned long random()
-        {
-            return rng_();
-        }
+        // static inline unsigned long random()
+        // {
+        //     return rng_();
+        // }
 
-        static inline int random(int min, int max)
+        // Returns 0 or 1 with no arguments provided
+        static inline int random(int min = 0, int max = 1)
         {
             std::uniform_int_distribution<int> distribution{min, max};
 

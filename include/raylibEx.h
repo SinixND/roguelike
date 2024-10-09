@@ -9,6 +9,7 @@
 #include <iostream>
 #include <raylib.h>
 #include <raymath.h>
+#include <utility>
 
 // Typedefs
 //=====================================
@@ -769,6 +770,13 @@ inline Vector2I Vector2OffDirection(Vector2I const& from, Vector2I const& to)
         Vector2Subtract(
             to,
             from));
+}
+
+inline Vector2I Vector2Swap(Vector2I v)
+{
+    std::swap(v.x, v.y);
+
+    return v;
 }
 
 inline Rectangle GetWindowRec()

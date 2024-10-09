@@ -366,19 +366,10 @@ LD_FLAGS 				+= $(addprefix -l,$(LIBRARIES))
 vpath %$(SRC_EXT) $(SRC_DIRS)
 
 ### Non-file (.phony)targets (aka. rules)
-.PHONY: all build clean debug dtb init publish release run web windows all_rules
+.PHONY: all build clean debug dtb init publish release run run_release web windows 
 
 ### Default rule by convention
 all: debug release
-
-all_rules: 
-	@$(MAKE) init 
-	@$(MAKE) debug 
-	@$(MAKE) release 
-	@$(MAKE) web 
-	@$(MAKE) windows 
-	@$(MAKE) publish 
-	@$(MAKE) run
 
 ### Build binary with current config
 build: $(BIN_DIR)/$(BIN)$(BIN_EXT)
@@ -427,9 +418,12 @@ release:
 	$(info === Release build ===)
 	@$(MAKE) BUILD=release build
 
-### Run binary file after building
+### Run binary file
 run: 
-	$(BIN_DIR_ROOT)/$(BIN)$(BIN_EXT)
+	$(BIN_DIR_ROOT)/$(BUILD)/$(BIN)$(BIN_EXT)
+
+run_release:
+	@$(MAKE) BUILD=release run
 
 ### Rule for web build process
 web: 

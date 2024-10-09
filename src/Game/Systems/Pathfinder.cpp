@@ -8,6 +8,7 @@
 #include "UnitConversion.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
+#include <cstdlib>
 #include <forward_list>
 #include <map>
 #include <raylib.h>
@@ -76,14 +77,15 @@ bool checkRatingList(
     // Check all tiles in vector for current best rating before choosing new best rating
     for (RatedTile* currentTile : tileList)
     {
-        // Test all four directions for currentTile, prioritise main direction to target
         Vector2I distanceToTarget{currentTile->distanceToTarget()};
-        Vector2I mainDirection{};
-        Vector2I offDirection{};
+        Vector2I mainDirection{Vector2MainDirection(distanceToTarget)};
+        Vector2I offDirection{Vector2OffDirection(distanceToTarget)};
 
-        if (distanceToTarget.x == distanceToTarget.y)
+        // Handle exceptions
+        // Exception: |x| == |y| -> main is RNG, off is dependent
+        if (abs(distanceToTarget.x) == abs(distanceToTarget.y))
         {
-            if (snx::RNG::random(0, 1))
+            if (snx::RNG::random())
             {
                 mainDirection = Vector2Normalize(
                     Vector2I{
@@ -97,21 +99,33 @@ bool checkRatingList(
             }
             else
             {
-                mainDirection = Vector2I{
-                    0,
-                    distanceToTarget.y};
+                mainDirection = Vector2Normalize(
+                    Vector2I{
+                        0,
+                        distanceToTarget.y});
 
-                offDirection = Vector2I{
-                    distanceToTarget.x,
-                    0};
+                offDirection = Vector2Normalize(
+                    Vector2I{
+                        distanceToTarget.x,
+                        0});
             }
         }
-        else
+
+        // Exception: offDirection == {0 , 0}
+        if (offDirection == Vector2I{0, 0})
         {
-            mainDirection = Vector2MainDirection(distanceToTarget);
-            offDirection = Vector2OffDirection(distanceToTarget);
+
+            if (snx::RNG::random())
+            {
+                offDirection = Vector2Swap(mainDirection);
+            }
+            else
+            {
+                offDirection = Vector2Negate(Vector2Swap(mainDirection));
+            }
         }
 
+        // Test all four directions for currentTile, prioritise main direction to target
         for (Vector2I const& direction : {
                  mainDirection,
                  offDirection,
@@ -164,13 +178,13 @@ bool checkRatingList(
             }
 
             // Skip if tile is invalid:
+            // - Not in map
             // - Is invisible
             // - Not accessible
-            // - Not in map
             // - Enemy present
             // - Steps needed exceed maxRange
             if (
-                !map.tiles_.positions().contains(newTilePosition)
+                !map.tiles_.visibilityIDs().contains(newTilePosition)
                 || (map.tiles_.visibilityID(newTilePosition) == VisibilityID::invisible)
                 || map.tiles_.isSolid(newTilePosition)
                 // || map.enemies_.ids().contains(newTilePosition)
@@ -248,15 +262,15 @@ std::vector<Vector2I> Pathfinder::findPath(
     std::vector<Vector2I> path{};
 
     // Return empty path if target is
+    // - Not in map
     // - Is invisible
     // - Not accessible
-    // - Not in map
     // - Equal to start
     if (
-        (skipInvisibleTiles
-         && map.tiles_.visibilityID(target) == VisibilityID::invisible)
+        !map.tiles_.visibilityIDs().contains(target)
+        || (skipInvisibleTiles
+            && (map.tiles_.visibilityID(target) == VisibilityID::invisible))
         || map.tiles_.isSolid(target)
-        || !map.tiles_.positions().contains(target)
         || (start == target))
     {
         return path;
