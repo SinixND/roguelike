@@ -30,11 +30,8 @@ public:
     {
     }
 
-    Vector2I const& direction() const;
-    void setSpeed(int speed);
-
     // Unsets isTriggered_ and clears path_
-    void abortMovement();
+    void clearMovment();
 
     // Sets direction, currentVelocity and isTriggered_
     void trigger(Vector2I const& direction);
@@ -56,6 +53,9 @@ public:
         Energy& energy,
         Map const& map,
         Position const& heroPosition);
+
+    Vector2I const& direction() const;
+    void setSpeed(int speed);
 
 private:
     void setInProgress();

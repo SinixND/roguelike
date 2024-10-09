@@ -11,13 +11,6 @@
 #include <raymath.h>
 #include <vector>
 
-Vector2I const& Movement::direction() const
-{
-    return direction_;
-}
-
-void Movement::setSpeed(int speed) { speed_ = speed; }
-
 void Movement::trigger()
 {
     if (!isTriggered_ && !isInProgress_ && !path_.empty())
@@ -90,7 +83,7 @@ void Movement::stopMovement()
     currentVelocity_ = Vector2{0, 0};
 }
 
-void Movement::abortMovement()
+void Movement::clearMovment()
 {
     isTriggered_ = false;
     path_.clear();
@@ -113,7 +106,7 @@ bool Movement::update(
                     direction()),
                 heroPosition.tilePosition()))
         {
-            abortMovement();
+            clearMovment();
         }
     }
 
@@ -174,3 +167,10 @@ bool Movement::update(
 
     return didTilePositionChange;
 }
+
+Vector2I const& Movement::direction() const
+{
+    return direction_;
+}
+
+void Movement::setSpeed(int speed) { speed_ = speed; }

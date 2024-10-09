@@ -295,7 +295,6 @@ void GameScene::updateState()
 
         while (!isUnitReady)
         {
-            snx::debug::cliLog("Regenerate all\n");
             isUnitReady = hero_.energy().regenerate();
             isUnitReady = world_.currentMap().enemies_.regenerate() || isUnitReady;
         }

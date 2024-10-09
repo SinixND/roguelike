@@ -5,11 +5,11 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Add attack dummy action for hero
+- [ ] Handle offDirection not rng for diagonal 
+- [ ] Find pathfind bug (head straight to doorway and wait, one enemy is weird, check ancestor)
 
 
 ## Shortterm
-- [ ] Allow multiple pathfind targets
 - [ ] Split GameScene into Scene/Main and Game
 - [ ] Deactivate cursor trigger game action outside map panel
 - [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 

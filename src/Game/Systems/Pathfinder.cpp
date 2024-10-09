@@ -8,6 +8,7 @@
 #include "UnitConversion.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
+#include <cstdlib>
 #include <forward_list>
 #include <map>
 #include <raylib.h>
@@ -81,9 +82,9 @@ bool checkRatingList(
         Vector2I mainDirection{};
         Vector2I offDirection{};
 
-        if (distanceToTarget.x == distanceToTarget.y)
+        if (abs(distanceToTarget.x) == abs(distanceToTarget.y))
         {
-            if (snx::RNG::random(0, 1))
+            if (snx::RNG::random())
             {
                 mainDirection = Vector2Normalize(
                     Vector2I{
@@ -110,6 +111,18 @@ bool checkRatingList(
         {
             mainDirection = Vector2MainDirection(distanceToTarget);
             offDirection = Vector2OffDirection(distanceToTarget);
+
+            if (offDirection == Vector2I{0, 0})
+            {
+                if (snx::RNG::random())
+                {
+                    offDirection = Vector2Swap(mainDirection);
+                }
+                else
+                {
+                    offDirection = Vector2Negate(Vector2Swap(mainDirection));
+                }
+            }
         }
 
         for (Vector2I const& direction : {
@@ -164,16 +177,16 @@ bool checkRatingList(
             }
 
             // Skip if tile is invalid:
+            // - Not in map
             // - Is invisible
             // - Not accessible
-            // - Not in map
             // - Enemy present
             // - Steps needed exceed maxRange
             if (
-                !map.tiles_.positions().contains(newTilePosition)
+                !map.tiles_.visibilityIDs().contains(newTilePosition)
                 || (map.tiles_.visibilityID(newTilePosition) == VisibilityID::invisible)
                 || map.tiles_.isSolid(newTilePosition)
-                // || map.enemies_.ids().contains(newTilePosition)
+                || map.enemies_.ids().contains(newTilePosition)
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded() > maxRange)))
             {
                 // Invalid! Add to ignore set so it doesn't get checked again
@@ -248,15 +261,15 @@ std::vector<Vector2I> Pathfinder::findPath(
     std::vector<Vector2I> path{};
 
     // Return empty path if target is
+    // - Not in map
     // - Is invisible
     // - Not accessible
-    // - Not in map
     // - Equal to start
     if (
-        (skipInvisibleTiles
-         && map.tiles_.visibilityID(target) == VisibilityID::invisible)
+        !map.tiles_.visibilityIDs().contains(target)
+        || (skipInvisibleTiles
+            && (map.tiles_.visibilityID(target) == VisibilityID::invisible))
         || map.tiles_.isSolid(target)
-        || !map.tiles_.positions().contains(target)
         || (start == target))
     {
         return path;
