@@ -5,7 +5,6 @@
 #include "TileData.h"
 #include "raylib.h"
 #include "raylibEx.h"
-#include <cassert>
 #include <cmath>
 #include <raymath.h>
 

@@ -8,7 +8,7 @@ class AppConfig
 {
     // Window dimensions
     int windowWidth_{800};
-    int windowHeight_{450};
+    int windowHeight_{940};
 
     // Fps
     bool showFPS_{true};
@@ -28,11 +28,11 @@ public:
     bool showFPS() const
     {
         return showFPS_;
-    };
+    }
     bool vSync() const
     {
         return vSync_;
-    };
+    }
 };
 
 #endif

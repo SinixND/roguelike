@@ -17,7 +17,6 @@
 #include "Tiles.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
-#include <cassert>
 #include <cstddef>
 #include <vector>
 

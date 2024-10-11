@@ -3,39 +3,29 @@
 
 #include "Chunks.h"
 #include "Cursor.h"
+#include "Game.h"
 #include "GameCamera.h"
-#include "Hero.h"
 #include "IScene.h"
-#include "InputHandler.h"
 #include "Panels.h"
 #include "Renderer.h"
 #include "Visibility.h"
-#include "World.h"
 #include <raylib.h>
 
-class GameScene : public snx::IScene
+class SceneMain : public snx::IScene
 {
+    Game game_{};
+
     Panels panels_{};
     GameCamera gameCamera_{};
     Renderer renderer_{};
 
-    InputHandler inputHandler_{};
-
-    World world_{};
-
     Cursor cursor_{};
-    Hero hero_;
-
-    bool actionsInProgress_{false};
 
     Chunks tileChunks_{};
     Visibility visibility_{};
 
-    // Track game cycle
-    int cycle_{0};
-
 public:
-    void initialize();
+    void init();
     void update() override;
     void deinitialize();
 
@@ -43,9 +33,8 @@ private:
     void processInput();
     void updateState();
     void renderOutput();
-    void postOutput();
 
-    void setupEvents();
+    void setupSceneEvents();
 
 #if defined(DEBUG)
 public:

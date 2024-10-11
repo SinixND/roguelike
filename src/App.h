@@ -2,8 +2,8 @@
 #define IG20240519210141
 
 #include "AppConfig.h"
-#include "GameScene.h"
 #include "IScene.h"
+#include "SceneMain.h"
 #include <raylib.h>
 
 #if defined(EMSCRIPTEN)
@@ -26,10 +26,10 @@ class App
     Image const favicon_{LoadImage("resources/favicon/favicon.png")};
 
     // Scenes
-    GameScene gameScene_{};
+    SceneMain SceneMain_{};
 
     // Set default scene
-    snx::IScene* activeScene_{&gameScene_};
+    snx::IScene* activeScene_{&SceneMain_};
 
 public:
     void init();

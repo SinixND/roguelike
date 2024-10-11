@@ -4,7 +4,6 @@
 #include "GameCamera.h"
 #include "Map.h"
 #include "raylibEx.h"
-#include <cassert>
 #include <raylib.h>
 #include <vector>
 
@@ -26,10 +25,6 @@ public:
         , stepsNeeded_(stepsNeeded)
         , ancestor_(ancestor)
     {
-        if (ancestor_)
-        {
-            assert((Vector2Sum(Vector2Subtract(tilePosition_, ancestor_->tilePosition_)) == 1) && "Ancestor is not adjacent");
-        }
     }
 
     Vector2I const& tilePosition() const

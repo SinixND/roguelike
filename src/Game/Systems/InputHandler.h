@@ -26,11 +26,11 @@ class InputHandler
 
 public:
     void setDefaultInputMappings();
-    void takeInput(bool isCursorActive);
+    void takeInput();
     void triggerAction(
         Hero& hero,
-        Cursor& cursor,
-        Map& map,
+        Cursor const& cursor,
+        Map const& map,
         GameCamera const& gameCamera);
 
 private:
@@ -39,7 +39,7 @@ private:
     void bindModifierKey(int key, InputActionID action);
 
     // Returns true if input received
-    bool takeInputMouse(bool isCursorActive);
+    bool takeInputMouse();
 
     // Returns true if input received
     bool takeInputKey();

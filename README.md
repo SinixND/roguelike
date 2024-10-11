@@ -5,17 +5,14 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Handle offDirection not rng for diagonal 
-- [ ] Find pathfind bug (head straight to doorway and wait, one enemy is weird, check ancestor)
+- [ ] Merge tile info panel with info panel and make sections for Hero -> Enemy (pop-up?) -> Object -> Tile
 
 
 ## Shortterm
-- [ ] Split GameScene into Scene/Main and Game
-- [ ] Deactivate cursor trigger game action outside map panel
+- [ ] Hold to inspect (activate and set cursor position while held -> persistant, should reset itself)
 - [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
 detection range)
 - [ ] Health, Attack
-- [ ] Hold to inspect (activate cursor while held)
 
 - [ ] Setup docker
 
@@ -26,6 +23,7 @@ detection range)
 - [ ] Account settings via lua
 - [ ] Implement zoom?
 - [ ] Change world position from center to (usual) top-left?
+- [ ] (needed?!) Deactivate cursor trigger game action outside map panel 
 
 
 ## Continuous
@@ -116,3 +114,4 @@ detection range)
 - [x] Rework Makefile
 - [x] Add wait action
 - [x] Add enemy movement
+- [x] Split GameScene into Scene/Main and Game

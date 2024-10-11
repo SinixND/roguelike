@@ -8,7 +8,6 @@
 #include "VisibilityID.h"
 #include "raylibEx.h"
 #include <algorithm>
-#include <cassert>
 #include <cstddef>
 #include <cstdlib>
 #include <raylib.h>

@@ -55,11 +55,10 @@ void InputHandler::setDefaultInputMappings()
 
     bindModifierKey(KEY_LEFT_SHIFT, InputActionID::mod);
 
-    bindMouseButton(MOUSE_BUTTON_RIGHT, InputActionID::cursorToggle);
     bindMouseButton(MOUSE_BUTTON_LEFT, InputActionID::moveToTarget);
 }
 
-bool InputHandler::takeInputMouse(bool isCursorActive)
+bool InputHandler::takeInputMouse()
 {
     if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
     {
@@ -72,10 +71,7 @@ bool InputHandler::takeInputMouse(bool isCursorActive)
     }
 
     // Check if input is invalid (need exception for mouse toggle action)
-    if (
-        inputAction_ == InputActionID::none
-        || (!(inputAction_ == InputActionID::cursorToggle)
-            && !isCursorActive))
+    if (inputAction_ == InputActionID::none)
     {
 
         return false;
@@ -294,14 +290,14 @@ bool InputHandler::takeInputGesture()
     return true;
 }
 
-void InputHandler::takeInput(bool isCursorActive)
+void InputHandler::takeInput()
 {
     if (takeInputKey())
     {
         return;
     }
 
-    if (takeInputMouse(isCursorActive))
+    if (takeInputMouse())
     {
         return;
     }
@@ -314,8 +310,8 @@ void InputHandler::takeInput(bool isCursorActive)
 
 void InputHandler::triggerAction(
     Hero& hero,
-    Cursor& cursor,
-    Map& map,
+    Cursor const& cursor,
+    Map const& map,
     GameCamera const& gameCamera)
 {
     if (!hero.energy().isReady())
@@ -401,13 +397,6 @@ void InputHandler::triggerAction(
 
             hero.movement().trigger(
                 Directions::V_RIGHT);
-
-            break;
-        }
-
-        case InputActionID::cursorToggle:
-        {
-            cursor.toggle();
 
             break;
         }

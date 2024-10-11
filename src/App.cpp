@@ -48,7 +48,7 @@ void App::init()
     GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::fontHeight);
 
     // Scene
-    gameScene_.initialize();
+    SceneMain_.init();
 }
 
 void updateWindow()
@@ -102,6 +102,6 @@ void App::run()
 void App::deinit()
 {
     GameFont::unload();
-    gameScene_.deinitialize();
+    SceneMain_.deinitialize();
     CloseWindow(); // Close window and opengl context
 }
