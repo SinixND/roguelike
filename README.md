@@ -5,10 +5,11 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Merge tile info panel with info panel and make sections for Hero -> Enemy (pop-up?) -> Object -> Tile
+- [ ] Update Gesture registration (TAP not registered)
 
 
 ## Shortterm
+- [ ] Merge tile info panel with info panel and make sections for Hero -> Enemy (pop-up?) -> Object -> Tile
 - [ ] Hold to inspect (activate and set cursor position while held -> persistant, should reset itself)
 - [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
 detection range)

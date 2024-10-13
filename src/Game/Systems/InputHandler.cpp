@@ -1,5 +1,6 @@
 #include "InputHandler.h"
-// #define DEBUG_GESTURES
+#include <string>
+#define DEBUG_GESTURES
 
 #include "Cursor.h"
 #include "Debugger.h"
@@ -83,13 +84,10 @@ bool InputHandler::takeInputMouse()
 
 bool InputHandler::takeInputKey()
 {
-    static int currentKey = KEY_NULL;
-    static int lastKey = KEY_NULL;
-
     // Update key pressed
     // Set lastKey only to valid inputs (associated with actions)
-    lastKey = (currentKey) ? currentKey : lastKey;
-    currentKey = GetKeyPressed();
+    lastKey_ = (currentKey_) ? currentKey_ : lastKey_;
+    currentKey_ = GetKeyPressed();
 
     // Check modifiers
     modifier_ = IsKeyDown(inputActionIDToModifierKey_[InputActionID::mod]);
@@ -98,13 +96,13 @@ bool InputHandler::takeInputKey()
 #if defined(TERMUX)
     if ((modifier_ && !currentKey))
 #else
-    if ((modifier_ && !currentKey) || IsKeyPressedRepeat(lastKey))
+    if ((modifier_ && !currentKey_) || IsKeyPressedRepeat(lastKey_))
 #endif
     {
-        currentKey = lastKey;
+        currentKey_ = lastKey_;
     }
 
-    inputAction_ = keyToInputActionID_[currentKey];
+    inputAction_ = keyToInputActionID_[currentKey_];
 
     if (inputAction_ == InputActionID::none)
     {
@@ -116,59 +114,53 @@ bool InputHandler::takeInputKey()
 
 bool InputHandler::takeInputGesture()
 {
-    static int currentGesture = GESTURE_NONE;
-    static int lastGesture = GESTURE_NONE;
-    static float holdStartTime{};
+    // Update gesture (ignore GESTURE_NONE for lastGesture)
+    lastGesture_ = currentGesture_;
+    currentGesture_ = GetGestureDetected();
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+    snx::debug::cliLog(std::to_string(currentGesture_) + "\n");
+#endif
 
-    // Update gesture
-    // Ignore continuously detected gestures
-    if (currentGesture != GESTURE_DRAG && currentGesture != GESTURE_HOLD)
+    // Update hold time
+    if (touchUpTime_ < touchDownTime_)
     {
-        lastGesture = currentGesture;
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+        snx::debug::cliLog("down " + std::to_string(touchDownTime_) + ", up " + std::to_string(touchUpTime_) + "\n");
+#endif
+        touchHoldDuration_ = GetTime() - touchDownTime_;
     }
 
-    currentGesture = GetGestureDetected();
-
-    if (currentGesture != lastGesture)
+    // Detect gesture change
+    if (currentGesture_ != lastGesture_)
     {
-        switch (currentGesture)
+        switch (currentGesture_)
         {
-            case GESTURE_SWIPE_UP:
+            default:
+            case GESTURE_NONE:
             {
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered SWIPE_UP\n");
+                snx::debug::cliLog("Triggered GESTURE_NONE\n");
 #endif
-                inputAction_ = InputActionID::actUp;
-
-                break;
-            }
-
-            case GESTURE_SWIPE_LEFT:
-            {
+                if (lastGesture_ != GESTURE_NONE)
+                {
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered SWIPE_LEFT\n");
+                    snx::debug::cliLog("Triggered TOUCH UP\n");
 #endif
-                inputAction_ = InputActionID::actLeft;
+                    touchUpTime_ = GetTime();
+                }
 
-                break;
-            }
-
-            case GESTURE_SWIPE_DOWN:
-            {
+                // Check for Tap event
+                if ((touchUpTime_ - touchDownTime_) < maxTapTime)
+                {
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered SWIPE_DOWN\n");
+                    snx::Logger::log("Triggered TAP EVENT\n");
+                    snx::debug::cliLog("Triggered TAP EVENT\n");
 #endif
-                inputAction_ = InputActionID::actDown;
+                    inputAction_ = InputActionID::actInPlace;
+                    break;
+                }
 
-                break;
-            }
-
-            case GESTURE_SWIPE_RIGHT:
-            {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered SWIPE_RIGHT\n");
-#endif
-                inputAction_ = InputActionID::actRight;
+                inputAction_ = InputActionID::none;
 
                 break;
             }
@@ -176,8 +168,10 @@ bool InputHandler::takeInputGesture()
             case GESTURE_TAP:
             {
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered TAP\n");
+                snx::debug::cliLog("Triggered GESTURE_TAP (TOUCH DOWN)\n");
 #endif
+                snx::debug::cliLog("Triggered GESTURE_TAP (TOUCH DOWN)\n");
+                touchDownTime_ = GetTime();
 
                 break;
             }
@@ -185,7 +179,8 @@ bool InputHandler::takeInputGesture()
             case GESTURE_DOUBLETAP:
             {
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered DOUBLETAP\n");
+                snx::Logger::log("Triggered GESTURE_DOUBLETAP\n");
+                snx::debug::cliLog("Triggered GESTURE_DOUBLETAP\n");
 #endif
                 inputAction_ = InputActionID::actInPlace;
 
@@ -195,10 +190,14 @@ bool InputHandler::takeInputGesture()
             case GESTURE_HOLD:
             {
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered HOLD\n");
+                snx::debug::cliLog("Triggered GESTURE_HOLD\n");
 #endif
-                if ((GetTime() - holdStartTime) > minHoldTime)
+                if ((touchUpTime_ - touchDownTime_) > minHoldTime)
                 {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                    snx::Logger::log("Triggered HOLD EVENT\n");
+                    snx::debug::cliLog("Triggered HOLD EVENT\n");
+#endif
                     // Trigger Hold: move cursor to get info about tile
                 }
 
@@ -208,7 +207,8 @@ bool InputHandler::takeInputGesture()
             case GESTURE_DRAG:
             {
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered DRAG\n");
+                snx::Logger::log("Triggered GESTURE_DRAG\n");
+                snx::debug::cliLog("Triggered GESTURE_DRAG\n");
 #endif
                 // Set modifier
                 modifier_ = true;
@@ -237,10 +237,55 @@ bool InputHandler::takeInputGesture()
                 break;
             }
 
+            case GESTURE_SWIPE_UP:
+            {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered GESTURE_SWIPE_UP\n");
+                snx::debug::cliLog("Triggered GESTURE_SWIPE_UP\n");
+#endif
+                inputAction_ = InputActionID::actUp;
+
+                break;
+            }
+
+            case GESTURE_SWIPE_LEFT:
+            {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered GESTURE_SWIPE_LEFT\n");
+                snx::debug::cliLog("Triggered GESTURE_SWIPE_LEFT\n");
+#endif
+                inputAction_ = InputActionID::actLeft;
+
+                break;
+            }
+
+            case GESTURE_SWIPE_DOWN:
+            {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered GESTURE_SWIPE_DOWN\n");
+                snx::debug::cliLog("Triggered GESTURE_SWIPE_DOWN\n");
+#endif
+                inputAction_ = InputActionID::actDown;
+
+                break;
+            }
+
+            case GESTURE_SWIPE_RIGHT:
+            {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
+                snx::Logger::log("Triggered GESTURE_SWIPE_RIGHT\n");
+                snx::debug::cliLog("Triggered GESTURE_SWIPE_RIGHT\n");
+#endif
+                inputAction_ = InputActionID::actRight;
+
+                break;
+            }
+
             case GESTURE_PINCH_IN:
             {
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered PINCH_IN\n");
+                snx::Logger::log("Triggered GESTURE_PINCH_IN\n");
+                snx::debug::cliLog("Triggered GESTURE_PINCH_IN\n");
 #endif
 
                 break;
@@ -249,38 +294,13 @@ bool InputHandler::takeInputGesture()
             case GESTURE_PINCH_OUT:
             {
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered PINCH_OUT\n");
+                snx::Logger::log("Triggered GESTURE_PINCH_OUT\n");
+                snx::debug::cliLog("Triggered GESTURE_PINCH_OUT\n");
 #endif
-
-                break;
-            }
-
-            default:
-            case GESTURE_NONE:
-            {
-                // Check for Tap event
-                if (
-                    lastGesture == GESTURE_TAP
-                    && (GetTime() - holdStartTime) < maxTapTime)
-                {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                    snx::Logger::log("Triggered TAP\n");
-#endif
-                    inputAction_ = InputActionID::actInPlace;
-                    break;
-                }
-
-                inputAction_ = InputActionID::none;
 
                 break;
             }
         }
-    }
-
-    // Update hold timer
-    if (currentGesture != GESTURE_HOLD)
-    {
-        holdStartTime = GetTime();
     }
 
     if (inputAction_ == InputActionID::none)

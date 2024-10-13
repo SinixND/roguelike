@@ -128,16 +128,16 @@ bool Enemies::checkForAction(
 {
     size_t idSize{ids_.size()};
 
-    static size_t i{0};
+    static size_t enemiesChecked{0};
 
-    while (i < idSize)
+    while (enemiesChecked < idSize)
     {
-        size_t enemyId{ids_[i]};
+        size_t enemyId{ids_[enemiesChecked]};
 
         if (!energy(enemyId).isReady())
         {
             // Cant perform action
-            ++i;
+            ++enemiesChecked;
             continue;
         }
 
@@ -200,7 +200,7 @@ bool Enemies::checkForAction(
     }
 
     // All enemies checked
-    i = 0;
+    enemiesChecked = 0;
     return true;
 }
 

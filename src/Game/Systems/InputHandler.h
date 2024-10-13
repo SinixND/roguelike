@@ -9,9 +9,9 @@
 #include <raylib.h>
 #include <unordered_map>
 
-// Maximum time for tap to trigger
+// Maximum hold time for tap event to trigger
 double constexpr maxTapTime{0.3f};
-// Minimum time for hold to trigger
+// Minimum hold time for hold event to trigger
 double constexpr minHoldTime{0.5f};
 
 class InputHandler
@@ -23,6 +23,15 @@ class InputHandler
     std::unordered_map<int, InputActionID> keyToInputActionID_{};
     std::unordered_map<int, InputActionID> mouseButtonToInputActionID_{};
     std::unordered_map<InputActionID, int> inputActionIDToModifierKey_{};
+
+    int currentKey_ = KEY_NULL;
+    int lastKey_ = KEY_NULL;
+
+    int currentGesture_ = GESTURE_NONE;
+    int lastGesture_ = GESTURE_NONE;
+    double touchDownTime_{0};
+    double touchUpTime_{0.01};
+    double touchHoldDuration_{};
 
 public:
     void setDefaultInputMappings();
