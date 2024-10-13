@@ -37,3 +37,18 @@ bool Position::move(Vector2 const& offset)
 
     return false;
 }
+
+bool Position::operator==(Position const& rhs) const
+{
+    return this->position_ == rhs.position_;
+}
+
+bool Position::operator==(Vector2 const& rhs) const
+{
+    return this->position_ == rhs;
+}
+
+bool Position::operator==(Vector2I const& rhs) const
+{
+    return this->tilePosition() == rhs;
+}

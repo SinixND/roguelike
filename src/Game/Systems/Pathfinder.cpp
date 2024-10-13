@@ -187,7 +187,7 @@ bool checkRatingList(
                 !map.tiles_.visibilityIDs().contains(newTilePosition)
                 || (map.tiles_.visibilityID(newTilePosition) == VisibilityID::invisible)
                 || map.tiles_.isSolid(newTilePosition)
-                // || map.enemies_.ids().contains(newTilePosition)
+                // || map.enemies_.positions().contains(Position{newTilePosition})
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded() > maxRange)))
             {
                 // Invalid! Add to ignore set so it doesn't get checked again

@@ -1,6 +1,7 @@
 #include "Collision.h"
 
 #include "Map.h"
+#include "Position.h"
 #include "raylibEx.h"
 
 bool Collision::checkCollision(
@@ -11,6 +12,6 @@ bool Collision::checkCollision(
     return (
         // Next tilePosition unit moves to
         map.tiles_.isSolid(positionToCheck)
-        || map.enemies_.ids().contains(positionToCheck)
+        || map.enemies_.positions().contains(Position{positionToCheck})
         || Vector2Equals(positionToCheck, heroPosition));
 }

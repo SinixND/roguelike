@@ -1,6 +1,7 @@
 #ifndef IG20240128195657
 #define IG20240128195657
 
+#include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <unordered_map>
@@ -186,6 +187,11 @@ namespace snx
         bool contains(Key const& key) const override
         {
             return keyToIndex_.find(key) != keyToIndex_.end();
+        }
+
+        bool contains(Type const& value) const
+        {
+            return std::find(values_.begin(), values_.end(), value) != values_.end();
         }
 
         // Return vector (contiguous memory)

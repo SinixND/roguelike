@@ -237,7 +237,7 @@ void SceneMain::renderOutput()
     // Draw enemies
     Enemies const& enemies{game_.world().currentMap().enemies_};
 
-    for (size_t id : enemies.ids().values())
+    for (size_t id : enemies.ids())
     {
         renderer_.render(
             enemies.renderID(id),

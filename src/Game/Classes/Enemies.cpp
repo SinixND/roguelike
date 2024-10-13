@@ -40,7 +40,7 @@ Vector2I Enemies::getRandomPosition(Tiles const& tiles)
             tiles.positions().contains(randomPosition)
             && !(tiles.visibilityID(randomPosition) == VisibilityID::visible)
             && !tiles.isSolid(randomPosition)
-            && !ids_.contains(randomPosition))
+            && !positions_.contains(Position{randomPosition}))
         {
             return randomPosition;
         }
@@ -55,11 +55,11 @@ void Enemies::insert(
     int scanRange,
     Vector2I const& tilePosition)
 {
+    ids_.push_back(id);
     renderIDs_.insert(id, renderID);
     movements_.insert(id, movement);
     energies_.insert(id, energy);
     positions_.insert(id, Position{tilePosition});
-    ids_.insert(tilePosition, id);
     ais_.insert(id, AI{scanRange});
 }
 
@@ -110,7 +110,7 @@ bool Enemies::regenerate()
 {
     bool isEnemyReady{false};
 
-    for (size_t const& enemyId : ids_.values())
+    for (size_t const& enemyId : ids_)
     {
         if (energy(enemyId).regenerate())
         {
@@ -126,13 +126,13 @@ bool Enemies::checkForAction(
     Vector2I const& heroPosition,
     GameCamera const& gameCamera)
 {
-    size_t idSize{ids_.values().size()};
+    size_t idSize{ids_.size()};
 
     static size_t i{0};
 
     while (i < idSize)
     {
-        size_t enemyId{ids_.values()[i]};
+        size_t enemyId{ids_[i]};
 
         if (!energy(enemyId).isReady())
         {
@@ -160,7 +160,6 @@ bool Enemies::checkForAction(
                 if (pathSize == 0)
                 {
                     // Wait
-                    snx::debug::cliLog("Enemy waits\n");
                     energy(enemyId).consume();
                 }
 
@@ -168,7 +167,6 @@ bool Enemies::checkForAction(
                 else if (pathSize == 2)
                 {
                     // Attack
-                    snx::debug::cliLog("Enemy would attack\n");
                     // Perform waiting action until attack is implemented
                     energy(enemyId).consume();
                 }
@@ -177,7 +175,6 @@ bool Enemies::checkForAction(
                     pathSize > 2
                     && !Collision::checkCollision(map, path.rbegin()[1], heroPosition))
                 {
-                    snx::debug::cliLog("Enemy moves\n");
                     movement(enemyId).trigger(
                         Vector2Subtract(
                             path.rbegin()[1],
@@ -188,7 +185,6 @@ bool Enemies::checkForAction(
                 else
                 {
                     // Wait
-                    snx::debug::cliLog("Enemy waits\n");
                     energy(enemyId).consume();
                 }
 
@@ -213,19 +209,13 @@ void Enemies::update(
     Position const& heroPosition)
 {
     // TODO: consider "day" of last update in loop to handle dying enemies!
-    for (size_t const& enemyId : ids_.values())
+    for (size_t const& enemyId : ids_)
     {
-        Vector2I oldPosition{position(enemyId).tilePosition()};
-
-        if (movement(enemyId).update(
-                position(enemyId),
-                energy(enemyId),
-                map,
-                heroPosition))
-        {
-            // Update position key in ids_
-            ids_.changeKey(oldPosition, position(enemyId).tilePosition());
-        }
+        movement(enemyId).update(
+            position(enemyId),
+            energy(enemyId),
+            map,
+            heroPosition);
     }
 }
 
@@ -299,12 +289,7 @@ AI& Enemies::ai(size_t id)
     return ais_.at(id);
 }
 
-snx::DenseMap<Vector2I, size_t> const& Enemies::ids() const
+std::vector<size_t> const& Enemies::ids() const
 {
     return ids_;
-}
-
-size_t Enemies::id(Vector2I const& tilePosition) const
-{
-    return ids_.at(tilePosition);
 }

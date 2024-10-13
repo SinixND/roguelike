@@ -12,13 +12,14 @@
 #include "Tiles.h"
 #include "raylibEx.h"
 #include <cstddef>
+#include <vector>
 
 // SoA class -> provides setters/getters to allow entity-like usage
 class Enemies
 {
     snx::IdManager idManager_{};
 
-    snx::DenseMap<Vector2I, size_t> ids_{};
+    std::vector<size_t> ids_{};
     snx::DenseMap<size_t, RenderID> renderIDs_{};
     snx::DenseMap<size_t, Movement> movements_{};
     snx::DenseMap<size_t, Energy> energies_{};
@@ -68,8 +69,7 @@ public:
     AI const& ai(size_t id) const;
     AI& ai(size_t id);
 
-    snx::DenseMap<Vector2I, size_t> const& ids() const;
-    size_t id(Vector2I const& tilePosition) const;
+    std::vector<size_t> const& ids() const;
 
 private:
     Vector2I getRandomPosition(Tiles const& tiles);

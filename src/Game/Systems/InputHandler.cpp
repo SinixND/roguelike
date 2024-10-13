@@ -10,6 +10,7 @@
 #include "Logger.h"
 #include "Map.h"
 #include "Pathfinder.h"
+#include "Position.h"
 #include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raylib.h>
@@ -331,10 +332,11 @@ void InputHandler::triggerAction(
     {
         case InputActionID::actUp:
         {
-            if (map.enemies_.ids().contains(
-                    Vector2Add(
-                        hero.position().tilePosition(),
-                        Directions::V_UP)))
+            if (map.enemies_.positions().contains(
+                    Position{
+                        Vector2Add(
+                            hero.position().tilePosition(),
+                            Directions::V_UP)}))
             {
                 snx::debug::cliLog("Hero would attack\n");
                 hero.energy().consume();
@@ -349,10 +351,11 @@ void InputHandler::triggerAction(
 
         case InputActionID::actLeft:
         {
-            if (map.enemies_.ids().contains(
-                    Vector2Add(
-                        hero.position().tilePosition(),
-                        Directions::V_LEFT)))
+            if (map.enemies_.positions().contains(
+                    Position{
+                        Vector2Add(
+                            hero.position().tilePosition(),
+                            Directions::V_LEFT)}))
             {
                 snx::debug::cliLog("Hero would attack\n");
                 hero.energy().consume();
@@ -367,10 +370,11 @@ void InputHandler::triggerAction(
 
         case InputActionID::actDown:
         {
-            if (map.enemies_.ids().contains(
-                    Vector2Add(
-                        hero.position().tilePosition(),
-                        Directions::V_DOWN)))
+            if (map.enemies_.positions().contains(
+                    Position{
+                        Vector2Add(
+                            hero.position().tilePosition(),
+                            Directions::V_DOWN)}))
             {
                 snx::debug::cliLog("Hero would attack\n");
                 hero.energy().consume();
@@ -385,10 +389,11 @@ void InputHandler::triggerAction(
 
         case InputActionID::actRight:
         {
-            if (map.enemies_.ids().contains(
-                    Vector2Add(
-                        hero.position().tilePosition(),
-                        Directions::V_RIGHT)))
+            if (map.enemies_.positions().contains(
+                    Position{
+                        Vector2Add(
+                            hero.position().tilePosition(),
+                            Directions::V_RIGHT)}))
             {
                 snx::debug::cliLog("Hero would attack\n");
                 hero.energy().consume();
