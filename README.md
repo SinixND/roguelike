@@ -5,17 +5,16 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Update Gesture registration (TAP not registered)
+- [ ] Merge tile info panel with info panel and make sections for Hero -> Enemy (pop-up?) -> Object -> Tile
 
 
 ## Shortterm
-- [ ] Merge tile info panel with info panel and make sections for Hero -> Enemy (pop-up?) -> Object -> Tile
 - [ ] Hold to inspect (activate and set cursor position while held -> persistant, should reset itself)
+- [ ] Setup docker
 - [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
 detection range)
 - [ ] Health, Attack
 
-- [ ] Setup docker
 
 
 ## Longterm
@@ -66,7 +65,7 @@ detection range)
 | ----------- | ----------------------- |
 | SWIPE_(DIR) | Directional input       |
 | DRAG        | Continuous hero movment |
-| TAP         | Interact / Wait         |
+| DOUBLE TAP  | Interact / Wait         |
 
 ## Maptypes:
 - Cellular Automata (dungeon)
@@ -116,3 +115,4 @@ detection range)
 - [x] Add wait action
 - [x] Add enemy movement
 - [x] Split GameScene into Scene/Main and Game
+- [x] Implement custom gesture registration (raylib has/had issues)

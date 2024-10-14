@@ -2,7 +2,7 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "Make",
+            "label": "Make (-j)",
             "command": "make -j",
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -11,14 +11,6 @@
         {
             "type": "shell",
             "label": "Make debug",
-            "command": "make -j debug",
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-        },
-        {
-            "type": "shell",
-            "label": "Make debug (fatal)",
             "command": "make debug",
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -26,8 +18,16 @@
         },
         {
             "type": "shell",
+            "label": "Make debug (-j)",
+            "command": "make debug -j",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+        },
+        {
+            "type": "shell",
             "label": "Make release",
-            "command": "make -j release",
+            "command": "make release -j",
             "options": {
                 "cwd": "${workspaceFolder}"
             },

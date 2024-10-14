@@ -69,6 +69,7 @@ void Game::setupGameEvents()
 
             snx::PublisherStatic::publish(Event::heroMoved);
             snx::PublisherStatic::publish(Event::heroPositionChanged);
+            snx::PublisherStatic::publish(Event::mapChange);
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -93,6 +94,7 @@ void Game::setupGameEvents()
 
             snx::PublisherStatic::publish(Event::heroMoved);
             snx::PublisherStatic::publish(Event::heroPositionChanged);
+            snx::PublisherStatic::publish(Event::mapChange);
         });
 }
 

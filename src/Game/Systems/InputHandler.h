@@ -12,7 +12,9 @@
 // Maximum hold time for tap event to trigger
 double constexpr maxTapTime{0.3f};
 // Minimum hold time for hold event to trigger
-double constexpr minHoldTime{0.5f};
+double constexpr minHoldTime{0.3f};
+// Maximum time between taps for double tap event to trigger
+double constexpr maxDoubleTapTime{0.3f};
 
 class InputHandler
 {
@@ -29,9 +31,11 @@ class InputHandler
 
     int currentGesture_ = GESTURE_NONE;
     int lastGesture_ = GESTURE_NONE;
+
     double touchDownTime_{0};
     double touchUpTime_{0.01};
     double touchHoldDuration_{};
+    double lastTap_{};
 
 public:
     void setDefaultInputMappings();

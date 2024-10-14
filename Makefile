@@ -373,7 +373,6 @@ all: debug release
 
 ### Build binary with current config
 build: $(BIN_DIR)/$(BIN)$(BIN_EXT)
-	@cp $(BIN_DIR)/$(BIN)$(BIN_EXT) $(BIN_DIR_ROOT)
 
 ### Clear dynamically created directories
 clean:
@@ -410,7 +409,7 @@ init:
 publish: clean
 	$(info )
 	$(info === Publish ===)
-	@$(MAKE) -j release web windows
+	@$(MAKE) debug release web windows -j
 
 ### Rule for release build process with binary as prerequisite
 release: 

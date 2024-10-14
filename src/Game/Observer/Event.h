@@ -9,6 +9,7 @@ enum class Event
     panelsResized,
     cameraChanged,
     cursorPositionChanged,
+    mapChange,
     colorThemeChange,
     // Game events
     actionFinished,

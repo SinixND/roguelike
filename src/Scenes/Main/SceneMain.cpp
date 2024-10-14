@@ -91,13 +91,20 @@ void SceneMain::setupSceneEvents()
         true);
 
     snx::PublisherStatic::addSubscriber(
+        Event::mapChange,
+        [&]()
+        {
+            tileChunks_.init(game_.world().currentMap().tiles_, renderer_);
+        });
+
+    snx::PublisherStatic::addSubscriber(
         Event::colorThemeChange,
         [&]()
         {
             renderer_.cycleThemes();
             renderer_.init();
 
-            tileChunks_.init(game_.world().currentMap().tiles_, renderer_);
+            snx::PublisherStatic::publish(Event::mapChange);
         });
 
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)

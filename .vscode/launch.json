@@ -2,20 +2,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Build (cppdbg)",
+            "name": "Build (cppdbg, -j)",
             "type": "cppdbg",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Make",
+            "preLaunchTask": "Make (-j)",
             "program": "${workspaceFolder}/bin/debug/main",
             "stopAtEntry": true,
         },
         {
-            "name": "Build (lldb)",
+            "name": "Build (lldb, -j)",
             "type": "lldb",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Make",
+            "preLaunchTask": "Make (-j)",
             "program": "${workspaceFolder}/bin/debug/main",
         },
         {
@@ -28,11 +28,11 @@
             "stopAtEntry": true,
         },
         {
-            "name": "Build debug (cppdbg, fatal)",
+            "name": "Build debug (cppdbg, -j)",
             "type": "cppdbg",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Make debug (fatal)",
+            "preLaunchTask": "Make debug (-j)",
             "program": "${workspaceFolder}/bin/debug/main",
             "stopAtEntry": true,
         },
@@ -45,11 +45,11 @@
             "program": "${workspaceFolder}/bin/debug/main",
         },
         {
-            "name": "Build debug (lldb, fatal)",
+            "name": "Build debug (lldb, -j)",
             "type": "lldb",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Make debug (fatal)",
+            "preLaunchTask": "Make debug (-j)",
             "program": "${workspaceFolder}/bin/debug/main",
         },
         {
