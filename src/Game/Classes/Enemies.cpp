@@ -1,8 +1,6 @@
 #include "Enemies.h"
 
 #include "AI.h"
-#include "Collision.h"
-#include "Debugger.h"
 #include "DenseMap.h"
 #include "EnemyData.h"
 #include "Energy.h"
@@ -171,9 +169,7 @@ bool Enemies::checkForAction(
                     energy(enemyId).consume();
                 }
 
-                else if (
-                    pathSize > 2
-                    && !Collision::checkCollision(map, path.rbegin()[1], heroPosition))
+                else if (pathSize > 2)
                 {
                     movement(enemyId).trigger(
                         Vector2Subtract(

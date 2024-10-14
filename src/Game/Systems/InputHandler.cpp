@@ -146,7 +146,8 @@ bool InputHandler::takeInputGesture()
                 touchHoldDuration_ = 0;
 
                 // Check for Tap events
-                if ((touchUpTime_ - touchDownTime_) < maxTapTime)
+                if (lastGesture_ == GESTURE_HOLD
+                    && (touchUpTime_ - touchDownTime_) < maxTapTime)
                 {
                     // Check for double tap
                     if ((touchUpTime_ - lastTap_) < maxDoubleTapTime)
@@ -163,6 +164,7 @@ bool InputHandler::takeInputGesture()
                         snx::Logger::log("Triggered TAP EVENT\n");
                         snx::debug::cliLog("Triggered TAP EVENT\n");
 #endif
+                        inputAction_ = InputActionID::actInPlace;
                     }
 
                     lastTap_ = touchUpTime_;

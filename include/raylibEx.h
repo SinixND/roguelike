@@ -580,6 +580,13 @@ RMAPI bool Vector2Equals(Vector2I const& v1, Vector2I const& v2)
     return ((v1.x == v2.x) && (v1.y == v2.y));
 }
 
+RMAPI Vector2 Vector2Round(Vector2 v)
+{
+    v.x = roundf(v.x);
+    v.y = roundf(v.y);
+    return v;
+}
+
 RMAPI Vector2I Vector2Transform(Matrix2x2I const& M, Vector2I const& v)
 {
     return Vector2I{
@@ -638,30 +645,30 @@ inline int GetOrientation(Vector2 const& p1, Vector2 const& p2, Vector2 const& p
     return n / abs(n);
 }
 
-inline bool CheckCollisionLines(Vector2 const& s1, Vector2 const& s2, Vector2 const& t1, Vector2 const& t2)
+inline bool CheckCollisionLines(Vector2 const& a1, Vector2 const& b1, Vector2 const& c2, Vector2 const& d2)
 {
     // https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
     // REQUIREMENT:
-    //  - Orientation of s1-s2-t(1) and s1-s2-t(2) differs
+    //  - Orientation of a1-b1-c2 and a1-b1-d2 differs
     //  AND
-    //  - Orientation of t1-t2-s(1) and t1-t2-(s2) differs
+    //  - Orientation of c2-d2-a1 and c2-d2-b1 differs
     // CONCLUSION: No collision if
-    //  - one orientation is colinear (0) := line ends do not block
+    //  - one orientation is colinear (0) := touch but no intersection
     //  OR
     //  - one orientation pair is equal
 
-    int st1{GetOrientation(s1, s2, t1)};
-    int st2{GetOrientation(s1, s2, t2)};
+    int abc{GetOrientation(a1, b1, c2)};
+    int abd{GetOrientation(a1, b1, d2)};
 
-    int ts1{GetOrientation(t1, t2, s1)};
-    int ts2{GetOrientation(t1, t2, s2)};
+    int cda{GetOrientation(c2, d2, a1)};
+    int cdb{GetOrientation(c2, d2, b1)};
 
     if (
-        // Colinear orientations (:= hit line end once)
-        !(st1 * st2 * ts1 * ts2)
+        // Colinear orientations
+        !(abc * abd * cda * cdb)
         // No intersection
-        || (st1 == st2)
-        || (ts1 == ts2))
+        || (abc == abd)
+        || (cda == cdb))
     {
         return false;
     }
@@ -669,12 +676,23 @@ inline bool CheckCollisionLines(Vector2 const& s1, Vector2 const& s2, Vector2 co
     return true;
 }
 
-inline bool CheckCollisionLineRec(Vector2 const& s1, Vector2 const& s2, RectangleEx const& rectangle)
+inline bool CheckCollisionLineRec(Vector2 const& a1, Vector2 const& b1, RectangleEx const& rectangle)
 {
     // Check collsion of line with Rectangle diagonals
-    if (
-        CheckCollisionLines(s1, s2, rectangle.topLeft(), rectangle.bottomRight())
-        || CheckCollisionLines(s1, s2, Vector2(rectangle.left(), rectangle.bottom()), Vector2(rectangle.right(), rectangle.top())))
+    if (CheckCollisionLines(
+            a1,
+            b1,
+            rectangle.topLeft(),
+            rectangle.bottomRight())
+        || CheckCollisionLines(
+            a1,
+            b1,
+            Vector2(
+                rectangle.left(),
+                rectangle.bottom()),
+            Vector2(
+                rectangle.right(),
+                rectangle.top())))
     {
         return true;
     }

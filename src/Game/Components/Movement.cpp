@@ -7,6 +7,7 @@
 #include "PublisherStatic.h"
 #include "TileData.h"
 #include "raylibEx.h"
+#include <cmath>
 #include <raylib.h>
 #include <raymath.h>
 #include <vector>
@@ -107,6 +108,8 @@ bool Movement::update(
                 heroPosition.tilePosition()))
         {
             clearMovment();
+            // Wait instead
+            energy.consume();
         }
     }
 
@@ -143,6 +146,9 @@ bool Movement::update(
                 TileData::TILE_SIZE - (cumulativeDistanceMoved_ - length)));
 
         // === Moved one tile ===
+        // Clean precision errors
+        position.changeTo(Vector2Round(position.worldPixel()));
+
         // Reset cumulativeDistanceMoved
         cumulativeDistanceMoved_ = 0;
 

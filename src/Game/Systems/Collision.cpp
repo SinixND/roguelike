@@ -12,6 +12,7 @@ bool Collision::checkCollision(
     return (
         // Next tilePosition unit moves to
         map.tiles_.isSolid(tilePositionToCheck)
+        // || map.objects_.isSolid(tilePositionToCheck)
         || map.enemies_.positions().contains(Position{tilePositionToCheck})
         || Vector2Equals(tilePositionToCheck, heroPosition));
 }

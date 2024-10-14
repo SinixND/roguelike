@@ -5,11 +5,11 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Merge tile info panel with info panel and make sections for Hero -> Enemy (pop-up?) -> Object -> Tile
+- [ ] Hold to inspect (activate and set cursor position while held -> persistant, should reset itself)
 
 
 ## Shortterm
-- [ ] Hold to inspect (activate and set cursor position while held -> persistant, should reset itself)
+- [ ] Merge tile info panel with info panel and make sections for Hero -> Enemy (pop-up?) -> Object -> Tile
 - [ ] Setup docker
 - [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
 detection range)
@@ -61,11 +61,11 @@ detection range)
 
 
 ### Touch
-| Control     | Function                |
-| ----------- | ----------------------- |
-| SWIPE_(DIR) | Directional input       |
-| DRAG        | Continuous hero movment |
-| DOUBLE TAP  | Interact / Wait         |
+| Control      | Function                |
+| ------------ | ----------------------- |
+| SWIPE_(DIR)  | Directional input       |
+| DRAG         | Continuous hero movment |
+| (DOUBLE) TAP | Interact / Wait         |
 
 ## Maptypes:
 - Cellular Automata (dungeon)
