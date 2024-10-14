@@ -8,6 +8,7 @@ enum class Event
     windowResized,
     panelsResized,
     cameraChanged,
+    cursorToggle,
     cursorPositionChanged,
     mapChange,
     colorThemeChange,

@@ -23,7 +23,7 @@ class Game
 public:
     void init();
 
-    void processInput();
+    void processInput(Cursor& cursor);
     void updateState(
         GameCamera const& gameCamera,
         Cursor const& cursor);

@@ -107,6 +107,13 @@ void SceneMain::setupSceneEvents()
             snx::PublisherStatic::publish(Event::mapChange);
         });
 
+    snx::PublisherStatic::addSubscriber(
+        Event::cursorToggle,
+        [&]()
+        {
+            cursor_.toggle();
+        });
+
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
     snx::PublisherStatic::addSubscriber(
         Event::cursorPositionChanged,
@@ -156,27 +163,35 @@ void SceneMain::setupSceneEvents()
                 + std::to_string(game_.world().currentMap().tiles_.isOpaque(cursorPos))
                 + "\n");
 
-            if (!game_.world().currentMap().objects_.positions().contains(cursorPos))
+            if (game_.world().currentMap().objects_.positions().contains(cursorPos))
             {
-                return;
+                snx::debug::cliLog("OBJECT\n");
+
+                snx::debug::cliLog(
+                    "\nTag: "
+                    + game_.world().currentMap().objects_.tag(cursorPos)
+                    + "\n");
+
+                snx::debug::cliLog(
+                    "RenderID: "
+                    + std::to_string(static_cast<int>(game_.world().currentMap().objects_.renderID(cursorPos)))
+                    + "\n");
+
+                snx::debug::cliLog(
+                    "Event: "
+                    + std::to_string(static_cast<int>(game_.world().currentMap().objects_.event(cursorPos)))
+                    + "\n");
             }
 
-            snx::debug::cliLog("OBJECT\n");
+            if (game_.world().currentMap().enemies_.positions().contains(Position{cursorPos}))
+            {
+                snx::debug::cliLog("OBJECT\n");
 
-            snx::debug::cliLog(
-                "\nTag: "
-                + game_.world().currentMap().objects_.tag(cursorPos)
-                + "\n");
-
-            snx::debug::cliLog(
-                "RenderID: "
-                + std::to_string(static_cast<int>(game_.world().currentMap().objects_.renderID(cursorPos)))
-                + "\n");
-
-            snx::debug::cliLog(
-                "Event: "
-                + std::to_string(static_cast<int>(game_.world().currentMap().objects_.event(cursorPos)))
-                + "\n");
+                snx::debug::cliLog(
+                    "Id: "
+                    + std::to_string(static_cast<int>(game_.world().currentMap().enemies_.event(cursorPos)))
+                    + "\n");
+            }
         });
 #endif
 }
@@ -189,13 +204,7 @@ void SceneMain::processInput()
         snx::PublisherStatic::publish(Event::colorThemeChange);
     }
 
-    // Update cursor
-    if (IsKeyPressed(MOUSE_RIGHT_BUTTON))
-    {
-        cursor_.toggle();
-    }
-
-    game_.processInput();
+    game_.processInput(cursor_);
 }
 
 void SceneMain::updateState()

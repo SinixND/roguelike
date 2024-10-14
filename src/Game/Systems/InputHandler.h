@@ -39,7 +39,7 @@ class InputHandler
 
 public:
     void setDefaultInputMappings();
-    void takeInput();
+    void takeInput(bool isCursorActive);
     void triggerAction(
         Hero& hero,
         Cursor const& cursor,
@@ -52,7 +52,7 @@ private:
     void bindModifierKey(int key, InputActionID action);
 
     // Returns true if input received
-    bool takeInputMouse();
+    bool takeInputMouse(bool isCursorActive);
 
     // Returns true if input received
     bool takeInputKey();

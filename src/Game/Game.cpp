@@ -98,14 +98,14 @@ void Game::setupGameEvents()
         });
 }
 
-void Game::processInput()
+void Game::processInput(Cursor& cursor)
 {
     // Allow input if hero is ready (= full energy)
     if (hero_.energy().isReady())
     {
         // Take input from mouse, keys or gestures
         // Continuous movement done by repeating previous input if modifier is active
-        inputHandler_.takeInput();
+        inputHandler_.takeInput(cursor.isActive());
     }
 }
 

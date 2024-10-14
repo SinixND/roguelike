@@ -6,6 +6,7 @@
 #include "Cursor.h"
 #include "Debugger.h"
 #include "Directions.h"
+#include "Event.h"
 #include "GameCamera.h"
 #include "Hero.h"
 #include "InputActionID.h"
@@ -58,10 +59,11 @@ void InputHandler::setDefaultInputMappings()
 
     bindModifierKey(KEY_LEFT_SHIFT, InputActionID::mod);
 
+    bindMouseButton(MOUSE_BUTTON_RIGHT, InputActionID::toggleCursor);
     bindMouseButton(MOUSE_BUTTON_LEFT, InputActionID::moveToTarget);
 }
 
-bool InputHandler::takeInputMouse()
+bool InputHandler::takeInputMouse(bool isCursorActive)
 {
     if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
     {
@@ -74,7 +76,10 @@ bool InputHandler::takeInputMouse()
     }
 
     // Check if input is invalid (need exception for mouse toggle action)
-    if (inputAction_ == InputActionID::none)
+    // Check if input is invalid (need exception for mouse toggle action)
+    if (inputAction_ == InputActionID::none
+        || (!(inputAction_ == InputActionID::toggleCursor)
+            && !isCursorActive))
     {
 
         return false;
@@ -164,7 +169,7 @@ bool InputHandler::takeInputGesture()
                         snx::Logger::log("Triggered TAP EVENT\n");
                         snx::debug::cliLog("Triggered TAP EVENT\n");
 #endif
-                        inputAction_ = InputActionID::actInPlace;
+                        // inputAction_ = InputActionID::actInPlace;
                     }
 
                     lastTap_ = touchUpTime_;
@@ -327,7 +332,8 @@ bool InputHandler::takeInputGesture()
                     snx::Logger::log("Triggered HOLD EVENT\n");
                     snx::debug::cliLog("Triggered HOLD EVENT\n");
 #endif
-                    // Trigger Hold: move cursor to get info about tile
+                    // Get/Set info panel reference to tile/object/enemy at current position
+                    snx::PublisherStatic::publish(Event::cursorPositionChanged);
                 }
 
                 break;
@@ -376,19 +382,19 @@ bool InputHandler::takeInputGesture()
     return true;
 }
 
-void InputHandler::takeInput()
+void InputHandler::takeInput(bool isCursorActive)
 {
     if (takeInputKey())
     {
         return;
     }
 
-    if (takeInputMouse())
+    if (takeInputMouse(isCursorActive))
     {
         return;
     }
 
-    else
+    else if (!isCursorActive)
     {
         takeInputGesture();
     }
@@ -515,6 +521,13 @@ void InputHandler::triggerAction(
             }
 
             snx::PublisherStatic::publish(map.objects_.event(heroTilePosition));
+
+            break;
+        }
+
+        case InputActionID::toggleCursor:
+        {
+            snx::PublisherStatic::publish(Event::cursorToggle);
 
             break;
         }
