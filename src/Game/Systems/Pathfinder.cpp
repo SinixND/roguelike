@@ -157,10 +157,19 @@ bool checkRatingList(
                 continue;
             }
 
+            // Add rating penalty if
+            // - Enemy is present
+            int penalty{0};
+
+            if ( map.enemies_.positions().contains(Position{newTilePosition}))
+            {
+                penalty += 4;
+            }
+
             RatedTile newRatedTile{
                 newTilePosition,
                 target,
-                currentTile->stepsNeeded() + 1,
+                currentTile->stepsNeeded() + (1 + penalty),
                 currentTile};
 
             // If Target found
@@ -181,13 +190,11 @@ bool checkRatingList(
             // - Not in map
             // - Is invisible
             // - Not accessible
-            // - Enemy present
             // - Steps needed exceed maxRange
             if (
                 !map.tiles_.visibilityIDs().contains(newTilePosition)
                 || (map.tiles_.visibilityID(newTilePosition) == VisibilityID::invisible)
                 || map.tiles_.isSolid(newTilePosition)
-                // || map.enemies_.positions().contains(Position{newTilePosition})
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded() > maxRange)))
             {
                 // Invalid! Add to ignore set so it doesn't get checked again

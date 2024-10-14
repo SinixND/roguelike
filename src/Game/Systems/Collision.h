@@ -12,7 +12,7 @@ namespace Collision
     // Returns if collision occurs
     bool checkCollision(
         Map const& map,
-        Vector2I const& positionToCheck,
+        Vector2I const& tilePositionToCheck,
         Vector2I const& heroPosition);
 }
 

@@ -95,7 +95,7 @@ bool InputHandler::takeInputKey()
 
     // Repeat last key if no input but modifier down
 #if defined(TERMUX)
-    if ((modifier_ && !currentKey))
+    if ((modifier_ && !currentKey_))
 #else
     if ((modifier_ && !currentKey_) || IsKeyPressedRepeat(lastKey_))
 #endif
