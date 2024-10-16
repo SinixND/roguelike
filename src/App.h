@@ -7,13 +7,10 @@
 #include <raylib.h>
 
 #if defined(EMSCRIPTEN)
-// Emscripten compatible app loop
-//=====================================
 struct emscriptenArgs
 {
     snx::IScene* activeScene;
 };
-//=====================================
 #endif
 
 class App
@@ -22,13 +19,13 @@ class App
 
     int const fpsTarget_{300};
 
-    // Raylib settings
+    //* Raylib settings
     Image const favicon_{LoadImage("resources/favicon/favicon.png")};
 
-    // Scenes
+    //* Scenes
     SceneMain SceneMain_{};
 
-    // Set default scene
+    //* Set default scene
     snx::IScene* activeScene_{&SceneMain_};
 
 public:

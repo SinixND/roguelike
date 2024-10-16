@@ -6,11 +6,12 @@
 
 class Panels
 {
-    RectangleEx tileInfo_{};
+public:
+    RectangleEx tileInfo{};
     RectangleEx info_{};
-    RectangleEx status_{};
-    RectangleEx log_{};
-    RectangleEx map_{};
+    RectangleEx status{};
+    RectangleEx log{};
+    RectangleEx map{};
 
 public:
     void init();
@@ -20,12 +21,6 @@ public:
     void drawStatusPanelContent(int level) const;
 
     void drawPanelBorders() const;
-
-    RectangleEx const& tileInfo() const;
-    RectangleEx const& info() const;
-    RectangleEx const& status() const;
-    RectangleEx const& log() const;
-    RectangleEx const& map() const;
 };
 
 #endif

@@ -9,7 +9,7 @@ namespace snx
     {
         static inline std::random_device rd_{};
 
-        // Get 8 integers of random numbers from std::random_device for our seed
+        //* Get 8 integers of random numbers from std::random_device for our seed
         static inline std::seed_seq ss_{
             rd_(),
             rd_(),
@@ -28,12 +28,7 @@ namespace snx
             rng_.seed(seed);
         }
 
-        // static inline unsigned long random()
-        // {
-        //     return rng_();
-        // }
-
-        // Returns 0 or 1 with no arguments provided
+        //* Returns 0 or 1 with no arguments provided
         static inline int random(int min = 0, int max = 1)
         {
             std::uniform_int_distribution<int> distribution{min, max};

@@ -23,7 +23,7 @@
             "type": "cppdbg",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Make debug",
+            "preLaunchTask": "Make debug FATAL=yes",
             "program": "${workspaceFolder}/bin/debug/main",
             "stopAtEntry": true,
         },
@@ -41,7 +41,7 @@
             "type": "lldb",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Make debug",
+            "preLaunchTask": "Make debug FATAL=yes",
             "program": "${workspaceFolder}/bin/debug/main",
         },
         {

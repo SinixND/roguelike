@@ -7,7 +7,7 @@
 #include "Hero.h"
 #include "Logger.h"
 #include "Objects.h"
-#include "Position.h"
+#include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "RenderID.h"
 #include "World.h"
@@ -15,7 +15,6 @@
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
-#include <utility>
 
 #if defined(DEBUG)
 #include "RNG.h"
@@ -27,11 +26,11 @@ void Game::init()
     snx::RNG::seed(1);
 #endif
 
-    hero_.init();
+    hero.init();
 
     inputHandler_.setDefaultInputMappings();
 
-    // Setup events
+    //* Setup events
     setupGameEvents();
 
 #if defined(DEBUG)
@@ -61,9 +60,9 @@ void Game::setupGameEvents()
         {
             snx::Logger::log("Enter next Level...");
 
-            world_.increaseMapLevel();
+            world.increaseMapLevel();
 
-            hero_.position().changeTo(Vector2I{0, 0});
+            hero.position.changeTo(Vector2I{0, 0});
 
             ++turn_;
 
@@ -78,16 +77,16 @@ void Game::setupGameEvents()
         {
             snx::Logger::log("Enter previous Level...");
 
-            world_.decreaseMapLevel();
+            world.decreaseMapLevel();
 
-            for (Position const& position : world_.currentMap().objects_.positions().values())
+            for (PositionComponent const& position : world.currentMap->objects.getPositions().values())
             {
-                if (!(world_.currentMap().objects_.renderID(position.tilePosition()) == RenderID::descend))
+                if (!(world.currentMap->objects.getRenderIDs().at(position.tilePosition()) == RenderID::descend))
                 {
                     continue;
                 }
 
-                hero_.position().changeTo(position.tilePosition());
+                hero.position.changeTo(position.tilePosition());
             }
 
             --turn_;
@@ -100,12 +99,12 @@ void Game::setupGameEvents()
 
 void Game::processInput(Cursor& cursor)
 {
-    // Allow input if hero is ready (= full energy)
-    if (hero_.energy().isReady())
+    //* Allow input if hero is ready (= full energy)
+    if (hero.energy.isReady())
     {
-        // Take input from mouse, keys or gestures
-        // Continuous movement done by repeating previous input if modifier is active
-        inputHandler_.takeInput(cursor.isActive());
+        //* Take input from mouse, keys or gestures
+        //* Continuous movement done by repeating previous input if modifier is active
+        inputHandler_.takeInput(cursor.isActive);
     }
 }
 
@@ -113,64 +112,49 @@ void Game::updateState(
     GameCamera const& gameCamera,
     Cursor const& cursor)
 {
-    // Cycle enemies once to check for action
+    //* Cycle enemies once to check for action
     bool allEnemiesChecked{false};
 
     if (
         !actionsInProgress_
-        && !hero_.energy().isReady())
+        && !hero.energy.isReady())
     {
-        allEnemiesChecked = world_.currentMap().enemies_.checkForAction(
-            world_.currentMap(),
-            hero_.position().tilePosition(),
+        allEnemiesChecked = world.currentMap->enemies.checkForAction(
+            *world.currentMap,
+            hero.position.tilePosition(),
             gameCamera);
     }
 
-    // Regenerate energy if no action in progress
+    //* Regenerate energy if no action in progress
     if (
         !actionsInProgress_
-        && !hero_.energy().isReady()
+        && !hero.energy.isReady()
         && allEnemiesChecked)
     {
-        // Regenerate until one unit becomes ready
+        //* Regenerate until one unit becomes ready
         bool isUnitReady{false};
 
         while (!isUnitReady)
         {
-            isUnitReady = hero_.energy().regenerate();
-            isUnitReady = world_.currentMap().enemies_.regenerate() || isUnitReady;
+            isUnitReady = hero.energy.regenerate();
+            isUnitReady = world.currentMap->enemies.regenerate() || isUnitReady;
         }
     }
 
-    // Trigger potential hero action
+    //* Trigger potential hero action
     inputHandler_.triggerAction(
-        hero_,
+        hero,
         cursor,
-        world_.currentMap(),
+        *world.currentMap,
         gameCamera);
 
-    // Update hero movment
-    hero_.movement().update(
-        hero_.position(),
-        hero_.energy(),
-        world_.currentMap(),
-        hero_.position());
+    //* Update hero movment
+    hero.movement.update(
+        hero.position,
+        hero.energy,
+        *world.currentMap,
+        hero.position);
 
-    // Update enemies
-    world_.currentMap().enemies_.update(world_.currentMap(), hero_.position());
-}
-
-Hero const& Game::hero() const
-{
-    return hero_;
-}
-
-World const& Game::world() const
-{
-    return world_;
-}
-
-World& Game::world()
-{
-    return const_cast<World&>(std::as_const(*this).world());
+    //* Update enemies
+    world.currentMap->enemies.update(*world.currentMap, hero.position);
 }

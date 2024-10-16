@@ -1,7 +1,7 @@
-#include "InputHandler.h"
+#include "UserInputSystem.h"
 #include <string>
-// #define DEBUG_GESTURES
-// #define DEBUG_GESTURE_EVENTS
+//* #define DEBUG_GESTURES
+//* #define DEBUG_GESTURE_EVENTS
 
 #include "Cursor.h"
 #include "Debugger.h"
@@ -12,30 +12,30 @@
 #include "InputActionID.h"
 #include "Logger.h"
 #include "Map.h"
-#include "Pathfinder.h"
-#include "Position.h"
+#include "PathfinderSystem.h"
+#include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
 #include <utility>
 
-void InputHandler::bindKey(int key, InputActionID action)
+void UserInputSystem::bindKey(int key, InputActionID action)
 {
     keyToInputActionID_.insert(std::make_pair(key, action));
 }
 
-void InputHandler::bindMouseButton(int key, InputActionID action)
+void UserInputSystem::bindMouseButton(int key, InputActionID action)
 {
     mouseButtonToInputActionID_.insert(std::make_pair(key, action));
 }
 
-void InputHandler::bindModifierKey(int key, InputActionID action)
+void UserInputSystem::bindModifierKey(int key, InputActionID action)
 {
     inputActionIDToModifierKey_.insert(std::make_pair(action, key));
 }
 
-void InputHandler::setDefaultInputMappings()
+void UserInputSystem::setDefaultInputMappings()
 {
     bindKey(KEY_NULL, InputActionID::none);
 
@@ -63,7 +63,7 @@ void InputHandler::setDefaultInputMappings()
     bindMouseButton(MOUSE_BUTTON_LEFT, InputActionID::moveToTarget);
 }
 
-bool InputHandler::takeInputMouse(bool isCursorActive)
+bool UserInputSystem::takeInputMouse(bool isCursorActive)
 {
     if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
     {
@@ -75,8 +75,8 @@ bool InputHandler::takeInputMouse(bool isCursorActive)
         inputAction_ = mouseButtonToInputActionID_[MOUSE_BUTTON_LEFT];
     }
 
-    // Check if input is invalid (need exception for mouse toggle action)
-    // Check if input is invalid (need exception for mouse toggle action)
+    //* Check if input is invalid (need exception for mouse toggle action)
+    //* Check if input is invalid (need exception for mouse toggle action)
     if (inputAction_ == InputActionID::none
         || (!(inputAction_ == InputActionID::toggleCursor)
             && !isCursorActive))
@@ -88,17 +88,17 @@ bool InputHandler::takeInputMouse(bool isCursorActive)
     return true;
 }
 
-bool InputHandler::takeInputKey()
+bool UserInputSystem::takeInputKey()
 {
-    // Update key pressed
-    // Set lastKey only to valid inputs (associated with actions)
+    //* Update key pressed
+    //* Set lastKey only to valid inputs (associated with actions)
     lastKey_ = (currentKey_) ? currentKey_ : lastKey_;
     currentKey_ = GetKeyPressed();
 
-    // Check modifiers
+    //* Check modifiers
     modifier_ = IsKeyDown(inputActionIDToModifierKey_[InputActionID::mod]);
 
-    // Repeat last key if no input but modifier down
+    //* Repeat last key if no input but modifier down
 #if defined(TERMUX)
     if ((modifier_ && !currentKey_))
 #else
@@ -118,18 +118,18 @@ bool InputHandler::takeInputKey()
     return true;
 }
 
-bool InputHandler::takeInputGesture()
+bool UserInputSystem::takeInputGesture()
 {
-    // IMPORTANT NOTE:
-    // Implemented events TAP, DOUBLETAP and HOLD as raylib gesture registration was unreliable
-    // Therefore disabled any functionality of GESTURE_TAP and GESTURE_DOUBLE_TAP
-    // but left in game logging so it gets noticed when it was fixed
+    //* IMPORTANT NOTE:
+    //* Implemented events TAP, DOUBLETAP and HOLD as raylib gesture registration was unreliable
+    //* Therefore disabled any functionality of GESTURE_TAP and GESTURE_DOUBLE_TAP
+    //* but left in game logging so it gets noticed when it was fixed
 
-    // Update gestures
+    //* Update gestures
     lastGesture_ = currentGesture_;
     currentGesture_ = GetGestureDetected();
 
-    // Detect gesture change
+    //* Detect gesture change
     if (currentGesture_ != lastGesture_)
     {
         switch (currentGesture_)
@@ -147,14 +147,14 @@ bool InputHandler::takeInputGesture()
 #endif
                 touchUpTime_ = GetTime();
 
-                // Reset hold duration
+                //* Reset hold duration
                 touchHoldDuration_ = 0;
 
-                // Check for Tap events
+                //* Check for Tap events
                 if (lastGesture_ == GESTURE_HOLD
                     && (touchUpTime_ - touchDownTime_) < maxTapTime)
                 {
-                    // Check for double tap
+                    //* Check for double tap
                     if ((touchUpTime_ - lastTap_) < maxDoubleTapTime)
                     {
 #if defined(DEBUG) && defined(DEBUG_GESTURE_EVENTS)
@@ -184,7 +184,7 @@ bool InputHandler::takeInputGesture()
 
             case GESTURE_TAP:
             {
-                snx::Logger::log("Triggered GESTURE_TAP (TOUCH DOWN EVENT)\n\n");
+                snx::Logger::log("Triggered GESTURE_TAP\n");
                 // touchDownTime_ = GetTime();
 
                 break;
@@ -215,7 +215,7 @@ bool InputHandler::takeInputGesture()
                 snx::Logger::log("Triggered first GESTURE_DRAG\n");
                 snx::debug::cliLog("Triggered first GESTURE_DRAG\n");
 #endif
-                // Set modifier
+                //* Set modifier
                 modifier_ = true;
 
                 Vector2 direction = Vector2MainDirection(GetGestureDragVector());
@@ -308,8 +308,8 @@ bool InputHandler::takeInputGesture()
         }
     }
 
-    // Detect continuous gestures
-    // if (currentGesture_ == lastGesture_)
+    //* Detect continuous gestures
+    //* if (currentGesture_ == lastGesture_)
     else
     {
         switch (currentGesture_)
@@ -332,7 +332,7 @@ bool InputHandler::takeInputGesture()
                     snx::Logger::log("Triggered HOLD EVENT\n");
                     snx::debug::cliLog("Triggered HOLD EVENT\n");
 #endif
-                    // Get/Set info panel reference to tile/object/enemy at current position
+                    //* Get/Set info panel reference to tile/object/enemy at current position
                     snx::PublisherStatic::publish(Event::cursorPositionChanged);
                 }
 
@@ -345,7 +345,7 @@ bool InputHandler::takeInputGesture()
                 snx::Logger::log("Triggered GESTURE_DRAG\n");
                 snx::debug::cliLog("Triggered GESTURE_DRAG\n");
 #endif
-                // Set modifier
+                //* Set modifier
                 modifier_ = true;
 
                 Vector2 direction = Vector2MainDirection(GetGestureDragVector());
@@ -382,7 +382,7 @@ bool InputHandler::takeInputGesture()
     return true;
 }
 
-void InputHandler::takeInput(bool isCursorActive)
+void UserInputSystem::takeInput(bool isCursorActive)
 {
     if (takeInputKey())
     {
@@ -400,21 +400,21 @@ void InputHandler::takeInput(bool isCursorActive)
     }
 }
 
-void InputHandler::triggerAction(
+void UserInputSystem::triggerAction(
     Hero& hero,
     Cursor const& cursor,
     Map const& map,
     GameCamera const& gameCamera)
 {
-    if (!hero.energy().isReady())
+    if (!hero.energy.isReady())
     {
         return;
     }
 
     if (inputAction_ == InputActionID::none)
     {
-        // Trigger input agnostic actions, eg. non-empty path
-        hero.movement().trigger();
+        //* Trigger input agnostic actions, eg. non-empty path
+        hero.movement.trigger();
 
         return;
     }
@@ -423,18 +423,18 @@ void InputHandler::triggerAction(
     {
         case InputActionID::actUp:
         {
-            if (map.enemies_.positions().contains(
-                    Position{
+            if (map.enemies.getPositions().contains(
+                    PositionComponent{
                         Vector2Add(
-                            hero.position().tilePosition(),
+                            hero.position.tilePosition(),
                             Directions::V_UP)}))
             {
                 snx::debug::cliLog("Hero would attack\n");
-                hero.energy().consume();
+                hero.energy.consume();
                 break;
             }
 
-            hero.movement().trigger(
+            hero.movement.trigger(
                 Directions::V_UP);
 
             break;
@@ -442,18 +442,18 @@ void InputHandler::triggerAction(
 
         case InputActionID::actLeft:
         {
-            if (map.enemies_.positions().contains(
-                    Position{
+            if (map.enemies.getPositions().contains(
+                    PositionComponent{
                         Vector2Add(
-                            hero.position().tilePosition(),
+                            hero.position.tilePosition(),
                             Directions::V_LEFT)}))
             {
                 snx::debug::cliLog("Hero would attack\n");
-                hero.energy().consume();
+                hero.energy.consume();
                 break;
             }
 
-            hero.movement().trigger(
+            hero.movement.trigger(
                 Directions::V_LEFT);
 
             break;
@@ -461,18 +461,18 @@ void InputHandler::triggerAction(
 
         case InputActionID::actDown:
         {
-            if (map.enemies_.positions().contains(
-                    Position{
+            if (map.enemies.getPositions().contains(
+                    PositionComponent{
                         Vector2Add(
-                            hero.position().tilePosition(),
+                            hero.position.tilePosition(),
                             Directions::V_DOWN)}))
             {
                 snx::debug::cliLog("Hero would attack\n");
-                hero.energy().consume();
+                hero.energy.consume();
                 break;
             }
 
-            hero.movement().trigger(
+            hero.movement.trigger(
                 Directions::V_DOWN);
 
             break;
@@ -480,18 +480,18 @@ void InputHandler::triggerAction(
 
         case InputActionID::actRight:
         {
-            if (map.enemies_.positions().contains(
-                    Position{
+            if (map.enemies.getPositions().contains(
+                    PositionComponent{
                         Vector2Add(
-                            hero.position().tilePosition(),
+                            hero.position.tilePosition(),
                             Directions::V_RIGHT)}))
             {
                 snx::debug::cliLog("Hero would attack\n");
-                hero.energy().consume();
+                hero.energy.consume();
                 break;
             }
 
-            hero.movement().trigger(
+            hero.movement.trigger(
                 Directions::V_RIGHT);
 
             break;
@@ -499,10 +499,10 @@ void InputHandler::triggerAction(
 
         case InputActionID::moveToTarget:
         {
-            hero.movement().trigger(Pathfinder::findPath(
+            hero.movement.trigger(PathfinderSystem::findPath(
                 map,
-                hero.position().tilePosition(),
-                cursor.position_.tilePosition(),
+                hero.position.tilePosition(),
+                cursor.position.tilePosition(),
                 gameCamera));
 
             break;
@@ -510,17 +510,17 @@ void InputHandler::triggerAction(
 
         case InputActionID::actInPlace:
         {
-            Vector2I heroTilePosition{hero.position().tilePosition()};
+            Vector2I heroTilePosition{hero.position.tilePosition()};
 
-            // Wait if nothing to interact
-            if (!map.objects_.events().contains(heroTilePosition))
+            //* Wait if nothing to interact
+            if (!map.objects.getEvents().contains(heroTilePosition))
             {
                 snx::Logger::log("Wait...");
-                hero.energy().consume();
+                hero.energy.consume();
                 break;
             }
 
-            snx::PublisherStatic::publish(map.objects_.event(heroTilePosition));
+            snx::PublisherStatic::publish(map.objects.getEvents().at(heroTilePosition));
 
             break;
         }
@@ -536,6 +536,6 @@ void InputHandler::triggerAction(
             break;
     }
 
-    // Reset
+    //* Reset
     inputAction_ = InputActionID::none;
 }

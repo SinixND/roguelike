@@ -3,7 +3,7 @@
 
 #include <raylib.h>
 
-const Color BORDER_COLOR{GRAY};
-const Color BG_COLOR{BLACK};
+constexpr Color BORDER_COLOR{GRAY};
+constexpr Color BG_COLOR{BLACK};
 
 #endif

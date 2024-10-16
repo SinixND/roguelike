@@ -3,14 +3,15 @@
 
 #include <raylib.h>
 
-// Configs imported from user file
+//* Configs imported from user file
+
 class AppConfig
 {
-    // Window dimensions
+    //* Window dimensions
     int windowWidth_{800};
     int windowHeight_{940};
 
-    // Fps
+    //* Fps
     bool showFPS_{true};
     bool vSync_{false};
 

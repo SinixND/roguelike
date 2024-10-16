@@ -4,16 +4,16 @@
 #include "Chunk.h"
 #include "RenderID.h"
 #include "Textures.h"
-#include "Visibility.h"
+#include "VisibilitySystem.h"
 #include <cstddef>
 #include <raylib.h>
 #include <string>
 
-class Renderer
+class RenderSystem
 {
     Textures textures_{};
 
-    // Themes: TextureData::themes
+    //* Themes: TextureData::themes
     size_t theme_{1};
 
 public:

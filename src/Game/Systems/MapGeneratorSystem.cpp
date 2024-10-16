@@ -1,4 +1,4 @@
-#include "MapGenerator.h"
+#include "MapGeneratorSystem.h"
 
 #include "Directions.h"
 #include "Event.h"
@@ -13,9 +13,9 @@
 #include <string>
 #include <unordered_set>
 
-namespace MapGenerator
+namespace MapGeneratorSystem
 {
-    // Access or insert
+    //* Access or insert
     void addTile(
         Tiles& tiles,
         Vector2I const& tilePosition,
@@ -59,7 +59,7 @@ namespace MapGenerator
         }
     }
 
-    // Add room (floor with surrounding walls)
+    //* Add room (floor with surrounding walls)
     void addRoom(Tiles& tiles, RectangleExI const& room)
     {
         if (room.width() < 2 || room.height() < 2)
@@ -67,7 +67,7 @@ namespace MapGenerator
             return;
         }
 
-        // Top wall
+        //* Top wall
         addTiles(
             tiles,
             RectangleExI{
@@ -79,7 +79,7 @@ namespace MapGenerator
             true,
             true);
 
-        // Right wall
+        //* Right wall
         addTiles(
             tiles,
             RectangleExI{
@@ -91,7 +91,7 @@ namespace MapGenerator
             true,
             true);
 
-        // Bottom wall
+        //* Bottom wall
         addTiles(
             tiles,
             RectangleExI{
@@ -103,7 +103,7 @@ namespace MapGenerator
             true,
             true);
 
-        // Left wall
+        //* Left wall
         addTiles(
             tiles,
             RectangleExI{
@@ -115,7 +115,7 @@ namespace MapGenerator
             true,
             true);
 
-        // Floor
+        //* Floor
         addTiles(
             tiles,
             RectangleExI{
@@ -136,9 +136,9 @@ namespace MapGenerator
         int const roomWidth{15};
         int maxRoomOffset{(2 + level) * roomWidth};
 
-        // Add first room
+        //* Add first room
         addRoom(
-            map.tiles_,
+            map.tiles,
             RectangleExI{
                 roomPosition,
                 roomWidth,
@@ -146,44 +146,44 @@ namespace MapGenerator
 
         std::unordered_set<Vector2I> usedPositions{roomPosition};
 
-        // Take random direction and add room
+        //* Take random direction and add room
         while (Vector2Sum(roomPosition) < maxRoomOffset)
         {
 
-            // (Update) Old room position used for room connection
+            //* (Update) Old room position used for room connection
             Vector2I oldRoomPosition{roomPosition};
 
-            // Choose random direction
+            //* Choose random direction
             Vector2I direction{Directions::directions[snx::RNG::random(0, 3)]};
 
-            // Update new room position
+            //* Update new room position
             roomPosition += Vector2Scale(direction, roomWidth);
 
-            // Add new room if room position unused
+            //* Add new room if room position unused
             if (!usedPositions.contains(roomPosition))
             {
                 usedPositions.insert(roomPosition);
 
                 addRoom(
-                    map.tiles_,
+                    map.tiles,
                     RectangleExI{
                         roomPosition,
                         roomWidth,
                         roomWidth});
             }
 
-            // Add connection gap in wall between old and new room
+            //* Add connection gap in wall between old and new room
             addTiles(
-                map.tiles_,
+                map.tiles,
                 RectangleExI{
                     oldRoomPosition,
                     roomPosition},
                 RenderID::floor);
         }
 
-        // Add previous level trigger
+        //* Add previous level trigger
         addObject(
-            map.objects_,
+            map.objects,
             "Ascend",
             Vector2I{
                 0,
@@ -201,8 +201,8 @@ namespace MapGenerator
         //     RenderID::descend,
         //     Event::nextLevel);
 
-        // Add enemies
-        map.enemies_.init(level, map);
+        //* Add enemies
+        map.enemies.init(level, map);
 
         return map;
     }
@@ -211,9 +211,9 @@ namespace MapGenerator
     {
         Map testRoom{};
 
-        // Rooms
+        //* Rooms
         addRoom(
-            testRoom.tiles_,
+            testRoom.tiles,
             RectangleExI{
                 Vector2I{
                     -75,
@@ -222,7 +222,7 @@ namespace MapGenerator
                 151});
 
         addRoom(
-            testRoom.tiles_,
+            testRoom.tiles,
             RectangleExI{
                 Vector2I{
                     0,
@@ -231,7 +231,7 @@ namespace MapGenerator
                 15});
 
         addRoom(
-            testRoom.tiles_,
+            testRoom.tiles,
             RectangleExI{
                 -7,
                 2,
@@ -239,16 +239,16 @@ namespace MapGenerator
                 4});
 
         addRoom(
-            testRoom.tiles_,
+            testRoom.tiles,
             RectangleExI{
                 3,
                 -5,
                 3,
                 5});
 
-        // Add walls
+        //* Add walls
         addTiles(
-            testRoom.tiles_,
+            testRoom.tiles,
             RectangleExI{
                 1,
                 0,
@@ -259,7 +259,7 @@ namespace MapGenerator
             true);
 
         addTiles(
-            testRoom.tiles_,
+            testRoom.tiles,
             RectangleExI{
                 4,
                 -5,
@@ -268,7 +268,7 @@ namespace MapGenerator
             RenderID::floor);
 
         addTiles(
-            testRoom.tiles_,
+            testRoom.tiles,
             RectangleExI{
                 3,
                 -4,
@@ -277,7 +277,7 @@ namespace MapGenerator
             RenderID::floor);
 
         addTiles(
-            testRoom.tiles_,
+            testRoom.tiles,
             RectangleExI{
                 3,
                 -2,
@@ -285,9 +285,9 @@ namespace MapGenerator
                 1},
             RenderID::floor);
 
-        // Tiles
+        //* Tiles
         addTile(
-            testRoom.tiles_,
+            testRoom.tiles,
             Vector2I{
                 0,
                 -1},
@@ -296,7 +296,7 @@ namespace MapGenerator
             true);
 
         addTile(
-            testRoom.tiles_,
+            testRoom.tiles,
             Vector2I{
                 5,
                 6},
@@ -305,7 +305,7 @@ namespace MapGenerator
             true);
 
         addTile(
-            testRoom.tiles_,
+            testRoom.tiles,
             Vector2I{
                 6,
                 5},
@@ -314,7 +314,7 @@ namespace MapGenerator
             true);
 
         addTile(
-            testRoom.tiles_,
+            testRoom.tiles,
             Vector2I{
                 5,
                 5},
@@ -323,15 +323,15 @@ namespace MapGenerator
             true);
 
         addTile(
-            testRoom.tiles_,
+            testRoom.tiles,
             Vector2I{
                 -6,
                 5},
             RenderID::floor);
 
-        // Next level trigger
+        //* Next level trigger
         addObject(
-            testRoom.objects_,
+            testRoom.objects,
             "Descend",
             Vector2I{
                 0,
@@ -339,7 +339,7 @@ namespace MapGenerator
             RenderID::descend,
             Event::nextLevel);
 
-        testRoom.enemies_.create(
+        testRoom.enemies.create(
             testRoom,
             RenderID::goblin,
             Vector2I{3, 0});
@@ -352,7 +352,7 @@ namespace MapGenerator
         Map startRoom{};
 
         addRoom(
-            startRoom.tiles_,
+            startRoom.tiles,
             RectangleExI{
                 Vector2I{
                     0,
@@ -360,9 +360,9 @@ namespace MapGenerator
                 15,
                 15});
 
-        // Add next level trigger
+        //* Add next level trigger
         addObject(
-            startRoom.objects_,
+            startRoom.objects,
             "Descend",
             Vector2I{
                 0,
@@ -377,7 +377,7 @@ namespace MapGenerator
     {
         Map newMap{};
 
-        // Choose map design
+        //* Choose map design
         switch (1) //* RNG::random(1, 2)
         {
             default:

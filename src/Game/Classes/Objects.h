@@ -3,40 +3,28 @@
 
 #include "DenseMap.h"
 #include "Event.h"
-#include "Position.h"
+#include "PositionComponent.h"
 #include "RenderID.h"
 #include "raylibEx.h"
-#include <cstddef>
 #include <string>
 
+//* SoA class
+//* Its the clients responsibility to avoid desync caused by individual size modifications of DenseMaps (eg. insert, erase)
 class Objects
 {
-    snx::DenseMap<Vector2I, Position> positions_{};
+public:
+    snx::DenseMap<Vector2I, PositionComponent> positions_{};
     snx::DenseMap<Vector2I, RenderID> renderIDs_{};
     snx::DenseMap<Vector2I, std::string> tags_{};
     snx::DenseMap<Vector2I, Event> events_{};
 
 public:
-    // Access or create
+    //* Access or create
     void set(
         Vector2I const& tilePosition,
         RenderID renderID,
         std::string const& tag,
         Event event);
-
-    snx::DenseMap<Vector2I, Position> const& positions() const;
-    Position const& position(Vector2I const& tilePosition) const;
-
-    snx::DenseMap<Vector2I, std::string> const& tags() const;
-    std::string const& tag(Vector2I const& tilePosition) const;
-
-    snx::DenseMap<Vector2I, RenderID> const& renderIDs() const;
-    RenderID renderID(Vector2I const& tilePosition) const;
-
-    snx::DenseMap<Vector2I, Event> const& events() const;
-    Event event(Vector2I const& tilePosition) const;
-
-    size_t size() const;
 };
 
 #endif

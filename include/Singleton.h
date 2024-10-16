@@ -1,7 +1,7 @@
 #ifndef IG20240315204900
 #define IG20240315204900
 
-// Included as an example of a parameterized macro
+//* Included as an example of a parameterized macro
 #define DISALLOW_COPY_AND_ASSIGN(T) \
     T(T const&) = delete;           \
     T& operator=(T const&) = delete;

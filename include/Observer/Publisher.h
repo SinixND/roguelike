@@ -1,29 +1,30 @@
 #ifndef IG20240803133300
 #define IG20240803133300
 
-#include "Event.h"
 #include <forward_list>
 #include <functional>
 #include <unordered_map>
 
+class Event;
+
 namespace snx
 {
-    // List of subscribers (lambdas)
+    //* List of subscribers (lambdas)
     template <typename TFunctor>
     using SubscriberList = std::forward_list<TFunctor>;
 
-    // Subject / Publisher / Event / Sender
-    // Can pushlish multiple events / Can hold multiple subscribers (per event)
+    //* Subject / Publisher / Event / Sender
+    //* Can pushlish multiple events / Can hold multiple subscribers (per event)
 
-    // Publisher
+    //* Publisher
     template <typename TFunctor>
     class Publisher
     {
         std::unordered_map<Event, SubscriberList<TFunctor>> eventToSubscriberLists_{{}};
 
     public:
-        // Event is the 'key' that we want to handle.
-        // 'subscriber' is the action triggered by the event
+        //* Event is the 'key' that we want to handle.
+        //* 'subscriber' is the action triggered by the event
         void addSubscriber(Event event, std::function<void()> subscriber, bool fireOnCreation = false)
         {
             ensureList(event);
@@ -36,7 +37,7 @@ namespace snx
             }
         }
 
-        // Execute all subscribers for given event
+        //* Execute all subscribers for given event
         void publish(Event event)
         {
             for (TFunctor& subscriber : eventToSubscriberLists_[event])
@@ -45,18 +46,18 @@ namespace snx
             }
         }
 
-        // Exectue all subscribers event agnostic
+        //* Exectue all subscribers event agnostic
         void publishAll()
         {
-            // Iterate all subscribers
-            for (SubscriberList<TFunctor>& mapping : eventToSubscriberLists_)
+            //* Iterate all subscribers
+            for (SubscriberList<TFunctor>& [event, subscriberList] : eventToSubscriberLists_)
             {
-                notifyAllSubscribers(mapping.second);
+                notifyAllSubscribers(subscriberList);
             }
         }
 
     private:
-        // Ensure subscriber list exists for given event
+        //* Ensure subscriber list exists for given event
         void ensureList(Event event)
         {
             if (eventToSubscriberLists_.find(event) == eventToSubscriberLists_.end())
@@ -65,7 +66,7 @@ namespace snx
             }
         }
 
-        // Execute all subscribers in subscriber list
+        //* Execute all subscribers in subscriber list
         void notifyAllSubscribers(SubscriberList<TFunctor>& subscriberList)
         {
             for (TFunctor& subscriber : subscriberList)

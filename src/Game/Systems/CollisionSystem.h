@@ -4,12 +4,12 @@
 #include "Map.h"
 #include "raylibEx.h"
 
-namespace Collision
+namespace CollisionSystem
 {
-    // Checks for
-    // - solid tiles
-    // - enemies
-    // Returns if collision occurs
+    //* Checks for
+    //* - solid tiles
+    //* - enemies
+    //* Returns if collision occurs
     bool checkCollision(
         Map const& map,
         Vector2I const& tilePositionToCheck,

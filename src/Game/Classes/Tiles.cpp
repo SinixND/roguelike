@@ -1,13 +1,13 @@
 #include "Tiles.h"
 
 #include "DenseMap.h"
-#include "Position.h"
+#include "PositionComponent.h"
 #include "RenderID.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
 #include <algorithm>
-#include <cstddef>
 #include <unordered_set>
+#include <utility>
 
 void Tiles::set(
     Vector2I const& tilePosition,
@@ -45,58 +45,6 @@ void Tiles::set(
     updateMapSize(tilePosition);
 }
 
-snx::DenseMap<Vector2I, Position> const& Tiles::positions() const
-{
-    return positions_;
-}
-
-Position const& Tiles::position(Vector2I const& tilePosition) const
-{
-    return positions_.at(tilePosition);
-}
-
-snx::DenseMap<Vector2I, RenderID> const& Tiles::renderIDs() const
-{
-    return renderIDs_;
-}
-
-RenderID Tiles::renderID(Vector2I const& tilePosition) const
-{
-    return renderIDs_.at(tilePosition);
-}
-
-snx::DenseMap<Vector2I, VisibilityID> const& Tiles::visibilityIDs() const
-{
-    return visibilityIDs_;
-}
-
-VisibilityID Tiles::visibilityID(Vector2I const& tilePosition) const
-{
-    return visibilityIDs_.at(tilePosition);
-}
-
-void Tiles::setVisibilityID(
-    Vector2I const& tilePosition,
-    VisibilityID visibilityID)
-{
-    visibilityIDs_.at(tilePosition) = visibilityID;
-}
-
-bool Tiles::isSolid(Vector2I const& tilePosition) const
-{
-    return isSolids_.contains(tilePosition);
-}
-
-std::unordered_set<Vector2I> const& Tiles::isOpaques() const
-{
-    return isOpaques_;
-}
-
-bool Tiles::isOpaque(Vector2I const& tilePosition) const
-{
-    return isOpaques_.contains(tilePosition);
-}
-
 void Tiles::updateMapSize(Vector2I const& tilePosition)
 {
     mapSize_ = RectangleExI{
@@ -108,11 +56,16 @@ void Tiles::updateMapSize(Vector2I const& tilePosition)
             std::max(tilePosition.y, mapSize_.bottom())}};
 }
 
-size_t Tiles::size() const
+bool Tiles::isSolid(Vector2I const& tilePosition) const
 {
-    return positions_.size();
+    return isSolids_.contains(tilePosition);
 }
 
+bool Tiles::isOpaque(Vector2I const& tilePosition) const
+{
+    return isOpaques_.contains(tilePosition);
+}
+    
 RectangleExI Tiles::mapSize() const
 {
     return mapSize_;

@@ -27,7 +27,7 @@ namespace snx
         : public IDenseMap<Key>
     {
     public:
-        // ITERATORS
+        //* ITERATORS
         auto begin() const
         {
             return values_.begin();
@@ -48,103 +48,101 @@ namespace snx
             return values_.end();
         }
 
-        // CAPACITY
-        // Return size of DenseMap
+        //* CAPACITY
+        //* Return size of DenseMap
         size_t size() const override
         {
             return values_.size();
         }
 
-        // MODIFIERS
-        // Does NOT overwrite existing
+        //* MODIFIERS
         Type const& insert(Key const& key, Type const& value = Type{})
         {
-            if (contains(key))
-            {
-                return at(key);
-            }
+            // if (contains(key))
+            // {
+            //     return at(key);
+            // }
 
-            // Get new list index for value
+            //* Get new list index for value
             size_t valueIndex = size();
 
-            // Add new value to list
+            //* Add new value to list
             values_.push_back(value);
 
-            // Add key to valueIndex mapping
+            //* Add key to valueIndex mapping
             keyToIndex_.insert(std::make_pair(key, valueIndex));
 
-            // Add valueIndex to key mapping (internal use only to keep list contiguous)
-            indexToKey_.insert(std::make_pair(valueIndex, key));
+            //* Add valueIndex to key mapping (internal use only to keep list contiguous)
+            indexToKey_.push_back(key);
             assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
             return at(key);
         }
 
-        // Does NOT overwrite existing
         template <typename... Args>
         Type const& emplace(Key const& key, Args&&... args)
         {
-            if (contains(key))
-            {
-                return at(key);
-            }
+            // if (contains(key))
+            // {
+            //     return at(key);
+            // }
 
-            // Get new list index for value
+            //* Get new list index for value
             size_t valueIndex = size();
 
-            // Create and Add new value to list
+            //* Create and Add new value to list
             values_.push_back(Type{std::forward<Args>(args)...});
 
-            // Add key to valueIndex mapping
+            //* Add key to valueIndex mapping
             keyToIndex_.insert(std::make_pair(key, valueIndex));
 
-            // Add valueIndex to key mapping (internal use only to keep list contiguous)
-            indexToKey_.insert(std::make_pair(valueIndex, key));
+            //* Add valueIndex to key mapping (internal use only to keep list contiguous)
+            indexToKey_.push_back(key);
             assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
             return at(key);
         }
 
-        // Moves last value to gap
+        //* Moves last value to gap
         void erase(Key const& key) override
         {
-            if (!contains(key))
-            {
-                return;
-            }
+            // if (!contains(key))
+            // {
+            //     return;
+            // }
 
-            // Get list index of removed value
+            //* Get list index of removed value
             size_t removedValueIndex{keyToIndex_[key]};
             size_t keptValueIndex{};
 
-            // Replace removed value with last value before popping (if more than one value exists) to keep values contiguous
+            //* Replace removed value with last value before popping (if more than one value exists) to keep values contiguous
             if (size() > 1)
             {
-                // Get index of (kept) last value that replaces removed value
+                //* Get index of (kept) last value that replaces removed value
                 keptValueIndex = size() - 1;
 
-                // Get key of replacing/kept value
+                //* Get key of replacing/kept value
                 Key keptkey = indexToKey_[keptValueIndex];
 
-                // Replace (removed) value with kept value (by index) so last entry (duplicate) can be popped (becomes new removed)
+                //* Replace (removed) value with kept value (by index) so last entry (duplicate) can be popped (becomes new removed)
                 values_[removedValueIndex] = values_[keptValueIndex];
 
-                // Update value index after replacement
+                //* Update value index after replacement
                 keptValueIndex = removedValueIndex;
 
-                // Update key to valueIndex mapping for kept key
+                //* Update key to valueIndex mapping for kept key
                 keyToIndex_[keptkey] = keptValueIndex;
 
-                // Update index to key mapping for kept key
+                //* Update index to key mapping for kept key
                 indexToKey_[keptValueIndex] = keptkey;
             }
 
-            // Remove removed key from mapping
+            //* Remove removed key from mapping
             keyToIndex_.erase(key);
 
-            // Remove (duplicate) last value
+            //* Remove (duplicate) last value
             values_.pop_back();
 
-            // Remove removed value from mapping
-            indexToKey_.erase(size());
+            //* Remove removed value from mapping
+            indexToKey_.pop_back();
         }
 
         void changeKey(Key const& from, Key const& to) override
@@ -156,7 +154,7 @@ namespace snx
             erase(from);
         }
 
-        // Empty all containers
+        //* Empty all containers
         void clear() override
         {
             values_.clear();
@@ -164,66 +162,62 @@ namespace snx
             indexToKey_.clear();
         }
 
-        // LOOKUP
-        // Access
+        //* LOOKUP
+        //* Access
         Type const& at(Key const& key) const
         {
             return values_.at(keyToIndex_.at(key));
         }
 
-        // Allow non-const call
+        //* Allow non-const call
         Type& at(Key const& key)
         {
             return const_cast<Type&>(std::as_const(*this).at(key));
         }
 
-        // Access or insert
+        //* Access or insert
         Type& operator[](Key const& key)
         {
-            insert(key);
+            if (!contains(key))
+            {
+                insert(key);
+            }
+
             return at(key);
         }
 
         bool contains(Key const& key) const override
         {
-            return keyToIndex_.find(key) != keyToIndex_.end();
+            return keyToIndex_.contains(key);
         }
 
-        bool contains(Type const& value) const
+        //* Get key for value index
+        Key const& key(size_t index) const
         {
-            return std::find(values_.begin(), values_.end(), value) != values_.end();
+            return indexToKey_.at(index);
         }
 
-        // Return vector (contiguous memory)
+        //* Return vector (contiguous memory)
         std::vector<Type> const& values() const
         {
             return values_;
         }
-        // Optional operator
-        // std::vector<Type> const& operator()() const {
-        // return values_;
-        // }
 
-        // Allow non-const call
+        //* Allow non-const call
         std::vector<Type>& values()
         {
             return const_cast<std::vector<Type>&>(std::as_const(*this).values());
         }
-        // Optional operator
-        // std::vector<Type>& operator()() {
-        // return const_cast<std::vector<Type>&>(std::as_const(*this).operator());
-        // }
 
     private:
-        // Vector index is used as value key
-        std::vector<Type>
-            values_{};
+        //* Vector index is used as value key
+        std::vector<Type> values_{};
 
-        // Key is used to identify value
+        //* Key is used to identify value
         std::unordered_map<Key, size_t> keyToIndex_{};
 
-        // Store a index (value) to key mapping (internal use only)
-        std::unordered_map<size_t, Key> indexToKey_{};
+        //* Store a index (value) to key mapping (internal use for erease() only)
+        std::vector<Key> indexToKey_{};
     };
 }
 

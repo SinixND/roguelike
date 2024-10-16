@@ -2,29 +2,25 @@
 #define IG20240531191635
 
 #include "Map.h"
-#include "MapGenerator.h"
+#include "MapGeneratorSystem.h"
 #include <vector>
 
-// World holds maps which are identified by a mapLevel (int)
+//* World holds maps which are identified by a mapLevel (int)
 class World
 {
 #if defined(DEBUG)
-    std::vector<Map> maps_{MapGenerator::createTestRoom()};
+    std::vector<Map> maps_{MapGeneratorSystem::createTestRoom()};
 #else
-    std::vector<Map> maps_{MapGenerator::createStartRoom()};
+    std::vector<Map> maps_{MapGeneratorSystem::createStartRoom()};
 #endif
 
-    Map* currentMap_{&maps_.back()};
-
     int maxMapLevel_{};
-    int currentMapLevel_{};
 
 public:
-    Map const& currentMap() const;
-    Map& currentMap();
+    Map* currentMap{&maps_.back()};
+    int currentMapLevel{};
 
-    int currentMapLevel() const;
-
+public:
     void increaseMapLevel();
     void decreaseMapLevel();
 

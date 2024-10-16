@@ -11,8 +11,8 @@
 #include <raymath.h>
 #include <utility>
 
-// Typedefs
-//=====================================
+//* Typedefs
+
 class RectangleEx
 {
     float left_{};
@@ -302,7 +302,7 @@ public:
         validate();
     }
 
-    // Only odd values for width/height
+    //* Only odd values for width/height
     RectangleExI(Vector2I const& center, int width, int height)
         : left_(center.x - (width / 2))
         , top_(center.y - (height / 2))
@@ -525,11 +525,10 @@ struct Matrix2x2I
     int m11, m12;
     int m21, m22;
 };
-//=====================================
 
-// Function Overloads
-//=====================================
-// Add two vectors (v1 + v2)
+//* Function Overloads
+
+//* Add two vectors (v1 + v2)
 RMAPI Vector2I Vector2Add(Vector2I const& v1, Vector2I const& v2)
 {
     return Vector2I{
@@ -544,7 +543,7 @@ RMAPI Vector2I Vector2AddValue(Vector2I const& v1, int value)
         v1.y + value};
 }
 
-// Subtract two vectors (v1 - v2)
+//* Subtract two vectors (v1 - v2)
 RMAPI Vector2I Vector2Subtract(Vector2I const& v1, Vector2I const& v2)
 {
     return Vector2I{
@@ -559,7 +558,7 @@ RMAPI Vector2I Vector2SubtractValue(Vector2I const& v1, int value)
         v1.y - value};
 }
 
-// Scale vector (multiply by value)
+//* Scale vector (multiply by value)
 RMAPI Vector2 Vector2Scale(Vector2I const& v, float scale)
 {
     return Vector2{
@@ -574,7 +573,7 @@ RMAPI Vector2I Vector2Scale(Vector2I const& v, int scale)
         v.y * scale};
 }
 
-// Check whether two given integer vectors are equal
+//* Check whether two given integer vectors are equal
 RMAPI bool Vector2Equals(Vector2I const& v1, Vector2I const& v2)
 {
     return ((v1.x == v2.x) && (v1.y == v2.y));
@@ -637,25 +636,25 @@ inline bool CheckCollisionPointRec(Vector2 const& point, RectangleEx const& rec)
     return CheckCollisionPointRec(point, rec.rectangle());
 }
 
-// 0 = colinear, >0 (positive) = CW, <0 (negative) = CCW
+//* 0 = colinear, >0 (positive) = CW, <0 (negative) = CCW
 inline int GetOrientation(Vector2 const& p1, Vector2 const& p2, Vector2 const& p3)
 {
-    // https://www.geeksforgeeks.org/orientation-3-ordered-points/
+    //* https://www.geeksforgeeks.org/orientation-3-ordered-points/
     float n{(p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y)};
     return n / abs(n);
 }
 
 inline bool CheckCollisionLines(Vector2 const& a1, Vector2 const& b1, Vector2 const& c2, Vector2 const& d2)
 {
-    // https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
-    // REQUIREMENT:
-    //  - Orientation of a1-b1-c2 and a1-b1-d2 differs
-    //  AND
-    //  - Orientation of c2-d2-a1 and c2-d2-b1 differs
-    // CONCLUSION: No collision if
-    //  - one orientation is colinear (0) := touch but no intersection
-    //  OR
-    //  - one orientation pair is equal
+    //* https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
+    //* REQUIREMENT:
+    //*  - Orientation of a1-b1-c2 and a1-b1-d2 differs
+    //*  AND
+    //*  - Orientation of c2-d2-a1 and c2-d2-b1 differs
+    //* CONCLUSION: No collision if
+    //*  - one orientation is colinear (0) := touch but no intersection
+    //*  OR
+    //*  - one orientation pair is equal
 
     int abc{GetOrientation(a1, b1, c2)};
     int abd{GetOrientation(a1, b1, d2)};
@@ -664,9 +663,9 @@ inline bool CheckCollisionLines(Vector2 const& a1, Vector2 const& b1, Vector2 co
     int cdb{GetOrientation(c2, d2, b1)};
 
     if (
-        // Colinear orientations
+        //* Colinear orientations
         !(abc * abd * cda * cdb)
-        // No intersection
+        //* No intersection
         || (abc == abd)
         || (cda == cdb))
     {
@@ -678,7 +677,7 @@ inline bool CheckCollisionLines(Vector2 const& a1, Vector2 const& b1, Vector2 co
 
 inline bool CheckCollisionLineRec(Vector2 const& a1, Vector2 const& b1, RectangleEx const& rectangle)
 {
-    // Check collsion of line with Rectangle diagonals
+    //* Check collsion of line with Rectangle diagonals
     if (CheckCollisionLines(
             a1,
             b1,
@@ -699,11 +698,10 @@ inline bool CheckCollisionLineRec(Vector2 const& a1, Vector2 const& b1, Rectangl
 
     return false;
 }
-//=====================================
 
-// Functions
-//=====================================
-// In fullscreen mode we can't use GetScreenWidth/Height, so make a function that gets the right data for each mode
+//* Functions
+
+//* In fullscreen mode we can't use GetScreenWidth/Height, so make a function that gets the right data for each mode
 inline Vector2 GetDisplaySize()
 {
     if (IsWindowFullscreen())
@@ -833,10 +831,9 @@ inline Vector2I GetMax(Vector2I const& v1, Vector2I const& v2)
         (v1.x > v2.x ? v1.x : v2.x),
         (v1.y > v2.y ? v1.y : v2.y)};
 }
-//=====================================
 
-// Operator Overloads
-//=====================================
+//* Operator Overloads
+
 inline Vector2& operator+=(Vector2& lhs, Vector2 const& rhs)
 {
     lhs.x += rhs.x;
@@ -874,18 +871,17 @@ inline bool operator==(Vector2I const& lhs, Vector2I const& rhs)
 {
     return ((lhs.x == rhs.x) && (lhs.y == rhs.y));
 }
-//=====================================
 
-// Overloads
-//=====================================
-// hash
-// https://en.wikipedia.org/wiki/List_of_prime_numbers
+//* Overloads
+
+//* hash
+//* https://en.wikipedia.org/wiki/List_of_prime_numbers
 int constexpr PRIME{2946901};
 
 template <>
 struct std::hash<Vector2>
 {
-    size_t operator()(Vector2 const& v) const noexcept
+    size_t operator()(Vector2 const& v) const
     {
         return (PRIME + std::hash<float>()(v.x)) * PRIME + std::hash<float>()(v.y);
     }
@@ -894,13 +890,13 @@ struct std::hash<Vector2>
 template <>
 struct std::hash<Vector2I>
 {
-    size_t operator()(Vector2I const& v) const noexcept
+    size_t operator()(Vector2I const& v) const
     {
         return (PRIME + std::hash<int>()(v.x)) * PRIME + std::hash<int>()(v.y);
     }
 };
 
-// ostream
+//* ostream
 inline std::ostream& operator<<(std::ostream& os, Vector2 const& v)
 {
     return os
@@ -920,5 +916,4 @@ inline std::ostream& operator<<(std::ostream& os, Vector2I const& v)
            << v.y
            << ")";
 }
-//=====================================
 #endif

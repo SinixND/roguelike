@@ -1,9 +1,9 @@
-#include "Movement.h"
+#include "MovementComponent.h"
 
-#include "Collision.h"
-#include "Energy.h"
+#include "CollisionSystem.h"
+#include "EnergyComponent.h"
 #include "Event.h"
-#include "Position.h"
+#include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "TileData.h"
 #include "raylibEx.h"
@@ -12,7 +12,7 @@
 #include <raymath.h>
 #include <vector>
 
-void Movement::trigger()
+void MovementComponent::trigger()
 {
     if (!isTriggered_ && !isInProgress_ && !path_.empty())
     {
@@ -20,7 +20,7 @@ void Movement::trigger()
     }
 }
 
-void Movement::trigger(Vector2I const& direction)
+void MovementComponent::trigger(Vector2I const& direction)
 {
     direction_ = direction;
 
@@ -29,7 +29,7 @@ void Movement::trigger(Vector2I const& direction)
     isTriggered_ = true;
 }
 
-void Movement::trigger(std::vector<Vector2I> const& path)
+void MovementComponent::trigger(std::vector<Vector2I> const& path)
 {
     if (path.empty())
     {
@@ -41,85 +41,82 @@ void Movement::trigger(std::vector<Vector2I> const& path)
     triggerPath();
 }
 
-void Movement::triggerPath()
+void MovementComponent::triggerPath()
 {
     Vector2I movementDirection{
-        // Vector2Normalize(
         Vector2Subtract(
             path_.rbegin()[1],
-            path_.rbegin()[0])
-        // )
-    };
+            path_.rbegin()[0])};
 
     trigger(movementDirection);
 
-    // Remove tilePosition moved from
+    //* Remove tilePosition moved from
     path_.pop_back();
 
-    // Clear path guided movement after last trigger if target reched (path_.size() == 1 (target))
+    //* Clear path guided movement after last trigger if target reched (path_.size() == 1 (target))
     if (path_.size() <= 1)
     {
         path_.clear();
     }
 }
 
-void Movement::activateTrigger(Energy& energy)
+void MovementComponent::activateTrigger(EnergyComponent& energy)
 {
     isTriggered_ = false;
     energy.consume();
     setInProgress();
 }
 
-void Movement::setInProgress()
+void MovementComponent::setInProgress()
 {
-    // Retrigger movement
+    //* Retrigger movement
     isInProgress_ = true;
 
     snx::PublisherStatic::publish(Event::actionInProgress);
 }
 
-void Movement::stopMovement()
+void MovementComponent::stopMovement()
 {
     isInProgress_ = false;
     currentVelocity_ = Vector2{0, 0};
 }
 
-void Movement::clearMovment()
+void MovementComponent::clearMovment()
 {
     isTriggered_ = false;
     path_.clear();
 }
 
-bool Movement::update(
-    Position& position,
-    Energy& energy,
+bool MovementComponent::update(
+    PositionComponent& position,
+    EnergyComponent& energy,
     Map const& map,
-    Position const& heroPosition)
+    PositionComponent const& heroPosition)
 {
-    // Avoid check if no movement in progress
+    //* Avoid check if no movement in progress
     if (isTriggered_)
     {
-        // Check collision before starting movement
-        if (Collision::checkCollision(
+        //* Check collision before starting movement
+        if (CollisionSystem::checkCollision(
                 map,
                 Vector2Add(
                     position.tilePosition(),
-                    direction()),
+                    direction_),
                 heroPosition.tilePosition()))
         {
             clearMovment();
-            // Wait instead
+            //* Wait instead
             energy.consume();
         }
     }
 
-    // Start movement on trigger
+    //* Start movement on trigger
     if (isTriggered_)
     {
         activateTrigger(energy);
     }
 
-    // Check if action is in progress
+    //* Check if action is in progress
     if (!isInProgress_)
     {
         return false;
@@ -131,25 +128,25 @@ bool Movement::update(
 
     cumulativeDistanceMoved_ += length;
 
-    // Check if movement exceeds tile length this frame
+    //* Check if movement exceeds tile length this frame
     if (cumulativeDistanceMoved_ < TileData::TILE_SIZE)
     {
         didTilePositionChange = position.move(distance);
     }
     else
     {
-        // Move by remaining distance until TILE_SIZE
+        //* Move by remaining distance until TILE_SIZE
         didTilePositionChange = position.move(
             Vector2ClampValue(
                 distance,
                 0,
                 TileData::TILE_SIZE - (cumulativeDistanceMoved_ - length)));
 
-        // === Moved one tile ===
-        // Clean precision errors
+        //* === Moved one tile ===
+        //* Clean precision errors
         position.changeTo(Vector2Round(position.worldPixel()));
 
-        // Reset cumulativeDistanceMoved
+        //* Reset cumulativeDistanceMoved
         cumulativeDistanceMoved_ = 0;
 
         snx::PublisherStatic::publish(Event::actionFinished);
@@ -157,13 +154,13 @@ bool Movement::update(
         stopMovement();
     }
 
-    // Check if unit moving is the hero
+    //* Check if unit moving is the hero
     if (position.worldPixel() != heroPosition.worldPixel())
     {
         return didTilePositionChange;
     }
 
-    // Handle special case for hero
+    //* Handle special case for hero
     snx::PublisherStatic::publish(Event::heroMoved);
 
     if (didTilePositionChange)
@@ -174,9 +171,4 @@ bool Movement::update(
     return didTilePositionChange;
 }
 
-Vector2I const& Movement::direction() const
-{
-    return direction_;
-}
-
-void Movement::setSpeed(int speed) { speed_ = speed; }
+void MovementComponent::setSpeed(int speed) { speed_ = speed; }
