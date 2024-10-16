@@ -1,13 +1,13 @@
 #include "Tiles.h"
 
 #include "DenseMap.h"
-#include "Position.h"
+#include "PositionComponent.h"
 #include "RenderID.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
 #include <algorithm>
-#include <cstddef>
 #include <unordered_set>
+#include <utility>
 
 void Tiles::set(
     Vector2I const& tilePosition,
@@ -45,58 +45,6 @@ void Tiles::set(
     updateMapSize(tilePosition);
 }
 
-snx::DenseMap<Vector2I, Position> const& Tiles::positions() const
-{
-    return positions_;
-}
-
-Position const& Tiles::position(Vector2I const& tilePosition) const
-{
-    return positions_.at(tilePosition);
-}
-
-snx::DenseMap<Vector2I, RenderID> const& Tiles::renderIDs() const
-{
-    return renderIDs_;
-}
-
-RenderID Tiles::renderID(Vector2I const& tilePosition) const
-{
-    return renderIDs_.at(tilePosition);
-}
-
-snx::DenseMap<Vector2I, VisibilityID> const& Tiles::visibilityIDs() const
-{
-    return visibilityIDs_;
-}
-
-VisibilityID Tiles::visibilityID(Vector2I const& tilePosition) const
-{
-    return visibilityIDs_.at(tilePosition);
-}
-
-void Tiles::setVisibilityID(
-    Vector2I const& tilePosition,
-    VisibilityID visibilityID)
-{
-    visibilityIDs_.at(tilePosition) = visibilityID;
-}
-
-bool Tiles::isSolid(Vector2I const& tilePosition) const
-{
-    return isSolids_.contains(tilePosition);
-}
-
-std::unordered_set<Vector2I> const& Tiles::isOpaques() const
-{
-    return isOpaques_;
-}
-
-bool Tiles::isOpaque(Vector2I const& tilePosition) const
-{
-    return isOpaques_.contains(tilePosition);
-}
-
 void Tiles::updateMapSize(Vector2I const& tilePosition)
 {
     mapSize_ = RectangleExI{
@@ -108,9 +56,49 @@ void Tiles::updateMapSize(Vector2I const& tilePosition)
             std::max(tilePosition.y, mapSize_.bottom())}};
 }
 
-size_t Tiles::size() const
+snx::DenseMap<Vector2I, PositionComponent> const& Tiles::getPositions() const
 {
-    return positions_.size();
+    return positions_;
+}
+
+snx::DenseMap<Vector2I, RenderID> const& Tiles::getRenderIDs() const
+{
+    return renderIDs_;
+}
+
+snx::DenseMap<Vector2I, RenderID>& Tiles::getRenderIDs()
+{
+    return const_cast<snx::DenseMap<Vector2I, RenderID>&>(std::as_const(*this).getRenderIDs());
+}
+
+snx::DenseMap<Vector2I, VisibilityID> const& Tiles::getVisibilityIDs() const
+{
+    return visibilityIDs_;
+}
+
+snx::DenseMap<Vector2I, VisibilityID>& Tiles::getVisibilityIDs()
+{
+    return const_cast<snx::DenseMap<Vector2I, VisibilityID>&>(std::as_const(*this).getVisibilityIDs());
+}
+
+std::unordered_set<Vector2I> const& Tiles::getIsSolids() const
+{
+    return isSolids_;
+}
+
+std::unordered_set<Vector2I>& Tiles::getIsSolids()
+{
+    return const_cast<std::unordered_set<Vector2I>&>(std::as_const(*this).getIsSolids());
+}
+
+std::unordered_set<Vector2I> const& Tiles::getIsOpaques() const
+{
+    return isOpaques_;
+}
+
+std::unordered_set<Vector2I>& Tiles::getIsOpaques()
+{
+    return const_cast<std::unordered_set<Vector2I>&>(std::as_const(*this).getIsOpaques());
 }
 
 RectangleExI Tiles::mapSize() const

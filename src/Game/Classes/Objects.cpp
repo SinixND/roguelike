@@ -2,11 +2,11 @@
 
 #include "DenseMap.h"
 #include "Event.h"
-#include "Position.h"
+#include "PositionComponent.h"
 #include "RenderID.h"
 #include "raylibEx.h"
-#include <cstddef>
 #include <string>
+#include <utility>
 
 void Objects::set(
     Vector2I const& tilePosition,
@@ -23,47 +23,37 @@ void Objects::set(
     events_[tilePosition] = event;
 }
 
-snx::DenseMap<Vector2I, Position> const& Objects::positions() const
+snx::DenseMap<Vector2I, PositionComponent> const& Objects::getPositions() const
 {
     return positions_;
 }
 
-Position const& Objects::position(Vector2I const& tilePosition) const
-{
-    return positions_.at(tilePosition);
-}
-
-snx::DenseMap<Vector2I, std::string> const& Objects::tags() const
-{
-    return tags_;
-}
-
-std::string const& Objects::tag(Vector2I const& tilePosition) const
-{
-    return tags_.at(tilePosition);
-}
-
-snx::DenseMap<Vector2I, RenderID> const& Objects::renderIDs() const
+snx::DenseMap<Vector2I, RenderID> const& Objects::getRenderIDs() const
 {
     return renderIDs_;
 }
 
-RenderID Objects::renderID(Vector2I const& tilePosition) const
+snx::DenseMap<Vector2I, RenderID>& Objects::getRenderIDs()
 {
-    return renderIDs_.at(tilePosition);
+    return const_cast<snx::DenseMap<Vector2I, RenderID>&>(std::as_const(*this).getRenderIDs());
 }
 
-snx::DenseMap<Vector2I, Event> const& Objects::events() const
+snx::DenseMap<Vector2I, std::string> const& Objects::getTags() const
+{
+    return tags_;
+}
+
+snx::DenseMap<Vector2I, std::string>& Objects::getTags()
+{
+    return const_cast<snx::DenseMap<Vector2I, std::string>&>(std::as_const(*this).getTags());
+}
+
+snx::DenseMap<Vector2I, Event> const& Objects::getEvents() const
 {
     return events_;
 }
 
-Event Objects::event(Vector2I const& tilePosition) const
+snx::DenseMap<Vector2I, Event>& Objects::getEvents()
 {
-    return events_.at(tilePosition);
-}
-
-size_t Objects::size() const
-{
-    return positions_.size();
+    return const_cast<snx::DenseMap<Vector2I, Event>&>(std::as_const(*this).getEvents());
 }

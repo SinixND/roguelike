@@ -5,17 +5,17 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Hold to inspect (activate and set cursor position while held -> persistant, should reset itself)
-
+check:
+- [ ] Rework Visiblity (should hold Fog?)
+- [ ] Rework MovementComponent... should be system? Should not consume energy, but report if successful
 
 ## Shortterm
+- [ ] Hold to inspect (activate and set cursor position while held -> persistant, should reset itself)
 - [ ] Merge tile info panel with info panel and make sections for Hero -> Enemy (pop-up?) -> Object -> Tile
 - [ ] Setup docker
-- [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
+- [ ] Add/Move/Refactor AI component/behaviour (defensive, offensive, smart, active, passive, 
 detection range)
 - [ ] Health, Attack
-
-
 
 ## Longterm
 - [ ] Changeable key bindings
@@ -24,7 +24,6 @@ detection range)
 - [ ] Implement zoom?
 - [ ] Change world position from center to (usual) top-left?
 - [ ] (needed?!) Deactivate cursor trigger game action outside map panel 
-
 
 ## Continuous
 - Check for possible NMNF functions
@@ -38,15 +37,12 @@ detection range)
 
 
 # Notes
-
 ## Controls
-
 ### Mouse
 | Control | Function       |
 | ------- | -------------- |
 | RMB     | Toggle cursor  |
 | LMB     | Move to cursor |
-
 
 ### Keyboard
 | Control                  | Function                |
@@ -59,13 +55,13 @@ detection range)
 | F4                       | Exit                    |
 | F11                      | Toggle Maximize window  |
 
-
 ### Touch
 | Control      | Function                |
 | ------------ | ----------------------- |
 | SWIPE_(DIR)  | Directional input       |
 | DRAG         | Continuous hero movment |
 | (DOUBLE) TAP | Interact / Wait         |
+
 
 ## Maptypes:
 - Cellular Automata (dungeon)

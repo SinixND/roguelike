@@ -4,16 +4,16 @@
 enum class InputActionID
 {
     none = 0,
-    // Actions
+    //* Actions
     actUp,
     actLeft,
     actDown,
     actRight,
     moveToTarget,
     actInPlace,
-    // Utility
+    //* Utility
     toggleCursor,
-    // Modifiers
+    //* Modifiers
     mod,
 };
 

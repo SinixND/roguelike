@@ -1,14 +1,13 @@
 #ifndef IG20240813212155
 #define IG20240813212155
 
+#include "GameCamera.h"
+#include "Singleton.h"
 #include <chrono>
 #include <format>
 #include <iostream>
 #include <raylib.h>
 #include <string>
-
-#include "GameCamera.h"
-#include "Singleton.h"
 
 namespace snx
 {

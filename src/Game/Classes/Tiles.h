@@ -2,17 +2,19 @@
 #define IG20240602211712
 
 #include "DenseMap.h"
-#include "Position.h"
+#include "PositionComponent.h"
 #include "RenderID.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
-#include <cstddef>
 #include <raylib.h>
 #include <unordered_set>
 
+//* SoA class
+//* Containers need to stay in sync, therefore they are private and direct getters are provided to prevent individual inserts/deletions
 class Tiles
 {
-    snx::DenseMap<Vector2I, Position> positions_{};
+    snx::DenseMap<Vector2I, PositionComponent> positions_{};
+
     snx::DenseMap<Vector2I, RenderID> renderIDs_{};
     snx::DenseMap<Vector2I, VisibilityID> visibilityIDs_{};
     std::unordered_set<Vector2I> isSolids_{};
@@ -21,7 +23,7 @@ class Tiles
     RectangleExI mapSize_{};
 
 public:
-    // Access or create
+    //* Access or create
     void set(
         Vector2I const& tilePosition,
         RenderID renderID,
@@ -29,24 +31,21 @@ public:
         bool isOpaque = false,
         VisibilityID visibilityID = VisibilityID::invisible);
 
-    snx::DenseMap<Vector2I, Position> const& positions() const;
-    Position const& position(Vector2I const& tilePosition) const;
+    snx::DenseMap<Vector2I, PositionComponent> const& getPositions() const;
 
-    snx::DenseMap<Vector2I, RenderID> const& renderIDs() const;
-    RenderID renderID(Vector2I const& tilePosition) const;
+    snx::DenseMap<Vector2I, RenderID> const& getRenderIDs() const;
+    snx::DenseMap<Vector2I, RenderID>& getRenderIDs();
 
-    snx::DenseMap<Vector2I, VisibilityID> const& visibilityIDs() const;
-    VisibilityID visibilityID(Vector2I const& tilePosition) const;
-    void setVisibilityID(Vector2I const& tilePosition, VisibilityID visibilityID);
+    snx::DenseMap<Vector2I, VisibilityID> const& getVisibilityIDs() const;
+    snx::DenseMap<Vector2I, VisibilityID>& getVisibilityIDs();
 
-    bool isSolid(Vector2I const& tilePosition) const;
+    std::unordered_set<Vector2I> const& getIsSolids() const;
+    std::unordered_set<Vector2I>& getIsSolids();
 
-    std::unordered_set<Vector2I> const& isOpaques() const;
-    bool isOpaque(Vector2I const& tilePosition) const;
+    std::unordered_set<Vector2I> const& getIsOpaques() const;
+    std::unordered_set<Vector2I>& getIsOpaques();
 
     RectangleExI mapSize() const;
-
-    size_t size() const;
 
 private:
     void updateMapSize(Vector2I const& tilePosition);

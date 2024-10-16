@@ -1,30 +1,30 @@
-#include "Position.h"
+#include "PositionComponent.h"
 
 #include "UnitConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
-Vector2 const& Position::worldPixel() const
+Vector2 const& PositionComponent::worldPixel() const
 {
     return position_;
 }
 
-Vector2I Position::tilePosition() const
+Vector2I PositionComponent::tilePosition() const
 {
     return UnitConversion::worldToTile(position_);
 }
 
-void Position::changeTo(Vector2 const& worldPixel)
+void PositionComponent::changeTo(Vector2 const& worldPixel)
 {
     position_ = worldPixel;
 }
 
-void Position::changeTo(Vector2I const& tilePosition)
+void PositionComponent::changeTo(Vector2I const& tilePosition)
 {
     position_ = UnitConversion::tileToWorld(tilePosition);
 }
 
-bool Position::move(Vector2 const& offset)
+bool PositionComponent::move(Vector2 const& offset)
 {
     Vector2I oldPosition{tilePosition()};
 
@@ -38,17 +38,17 @@ bool Position::move(Vector2 const& offset)
     return false;
 }
 
-bool Position::operator==(Position const& rhs) const
+bool PositionComponent::operator==(PositionComponent const& rhs) const
 {
     return this->position_ == rhs.position_;
 }
 
-bool Position::operator==(Vector2 const& rhs) const
+bool PositionComponent::operator==(Vector2 const& rhs) const
 {
     return this->position_ == rhs;
 }
 
-bool Position::operator==(Vector2I const& rhs) const
+bool PositionComponent::operator==(Vector2I const& rhs) const
 {
     return this->tilePosition() == rhs;
 }

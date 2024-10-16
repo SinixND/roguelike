@@ -8,25 +8,25 @@
 #include <cmath>
 #include <raymath.h>
 
-// This file contains functions to convert between
-// - tile (int/position, game codrdinates)
-// - world (float/pixel, game coordinates)
-// - chunk (int/position, game coordinates)
-// Camera transforms between game and screen coordinates
-// - screen (float/pixel, screen coordinates)
+//* This file contains functions to convert between
+//* - tile (int/position, game codrdinates)
+//* - world (float/pixel, game coordinates)
+//* - chunk (int/position, game coordinates)
+//* Camera transforms between game and screen coordinates
+//* - screen (float/pixel, screen coordinates)
 
 namespace UnitConversion
 {
-    // World pixel to tile position
+    //* World pixel to tile position
     inline Vector2I worldToTile(Vector2 const& pixel)
     {
-        // World pixel is center of tile
+        //* World pixel is center of tile
         return Vector2I{
             static_cast<int>(std::floor((pixel.x + (TileData::TILE_SIZE_HALF)) / TileData::TILE_SIZE)),
             static_cast<int>(std::floor((pixel.y + (TileData::TILE_SIZE_HALF)) / TileData::TILE_SIZE))};
     }
 
-    // Tile position to world pixel
+    //* Tile position to world pixel
     inline Vector2 tileToWorld(Vector2I const& tilePosition)
     {
         return Vector2{
@@ -34,7 +34,7 @@ namespace UnitConversion
             (tilePosition.y * TileData::TILE_SIZE)};
     }
 
-    // Screen pixel to world pixel to tile position
+    //* Screen pixel to world pixel to tile position
     inline Vector2I screenToTile(Vector2 const& pixel, Camera2D const& camera)
     {
         Vector2 worldPixel{GetScreenToWorld2D(pixel, camera)};
@@ -42,7 +42,7 @@ namespace UnitConversion
         return worldToTile(worldPixel);
     }
 
-    // Tile position to world pixel to screen pixel
+    //* Tile position to world pixel to screen pixel
     inline Vector2 tileToScreen(Vector2I const& tilePosition, Camera2D const& camera)
     {
         Vector2 worldPixel{tileToWorld(tilePosition)};
@@ -55,7 +55,7 @@ namespace UnitConversion
         return screenToTile(GetMousePosition(), camera);
     }
 
-    // Tile position to chunk position
+    //* Tile position to chunk position
     inline Vector2I tileToChunk(Vector2I const& tilePosition)
     {
         return Vector2I{
@@ -63,10 +63,10 @@ namespace UnitConversion
             static_cast<int>(std::floor(tilePosition.y / static_cast<float>(ChunkData::CHUNK_SIZE_I))) * ChunkData::CHUNK_SIZE_I};
     }
 
-    // Octant position to tile position
-    // https://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/
-    // Coordinates within octanct are usual cartesian
-    // Octant[0] is from 0,1 (top) to 1,1 (top-right), going CW
+    //* Octant position to tile position
+    //* https://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/
+    //* Coordinates within octanct are usual cartesian
+    //* Octant[0] is from 0,1 (top) to 1,1 (top-right), going CW
     template <typename Type>
     inline Type transformFromOctant(Type const& octantPosition, int octant)
     {

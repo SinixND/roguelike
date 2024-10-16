@@ -7,8 +7,8 @@
 #include "GameCamera.h"
 #include "IScene.h"
 #include "Panels.h"
-#include "Renderer.h"
-#include "Visibility.h"
+#include "RenderSystem.h"
+#include "VisibilitySystem.h"
 #include <raylib.h>
 
 class SceneMain : public snx::IScene
@@ -17,12 +17,12 @@ class SceneMain : public snx::IScene
 
     Panels panels_{};
     GameCamera gameCamera_{};
-    Renderer renderer_{};
+    RenderSystem renderer_{};
 
     Cursor cursor_{};
 
     Chunks tileChunks_{};
-    Visibility visibility_{};
+    VisibilitySystem visibility_{};
 
 public:
     void init();

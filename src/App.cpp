@@ -12,42 +12,39 @@
 #endif
 
 #if defined(EMSCRIPTEN)
-// Emscripten compatible app loop
-//=====================================
 void applicationLoop(void* arg_)
 {
     emscriptenArgs* arg = (emscriptenArgs*)arg_;
 
     arg->activeScene->update();
 }
-//=====================================
 #endif
 
 void App::init()
 {
     //* TODO: Import configs from user file
 
-    // Raylib flags
+    //* Raylib flags
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     if (config.vSync())
     {
         SetConfigFlags(FLAG_VSYNC_HINT);
     }
 
-    // Initialize window
+    //* Initialize window
     InitWindow(config.windowWidth(), config.windowHeight(), "Roguelike");
 
-    // Raylib Settings
+    //* Raylib Settings
     SetWindowIcon(favicon_);
     SetWindowMinSize(config.windowWidth(), config.windowHeight());
     SetExitKey(KEY_F4);
     SetTargetFPS(fpsTarget_);
 
-    // Fonts
+    //* Fonts
     GameFont::load();
     GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::fontHeight);
 
-    // Scene
+    //* Scene
     SceneMain_.init();
 }
 
@@ -82,8 +79,6 @@ void updateDeveloperMode()
 
 void App::run()
 {
-    // Main app loop
-    //=================================
 #if defined(EMSCRIPTEN)
     emscriptenArgs arg{activeScene_};
     emscripten_set_main_loop_arg(applicationLoop, &arg, 60 /*FPS*/, 1 /*Simulate infinite loop*/);
@@ -96,12 +91,13 @@ void App::run()
         activeScene_->update();
     }
 #endif
-    //=================================
 }
 
 void App::deinit()
 {
     GameFont::unload();
     SceneMain_.deinitialize();
-    CloseWindow(); // Close window and opengl context
+
+    //* Close window and opengl context
+    CloseWindow(); 
 }

@@ -4,35 +4,35 @@
 #include "ChunkData.h"
 #include "Colors.h"
 #include "DenseMap.h"
-#include "Position.h"
-#include "Renderer.h"
+#include "PositionComponent.h"
+#include "RenderSystem.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
-void Chunks::init(Tiles const& tiles, Renderer& renderer)
+void Chunks::init(Tiles const& tiles, RenderSystem& renderer)
 {
-    // Reset
-    for (Chunk const& chunk : chunks().values())
+    //* Reset
+    for (Chunk const& chunk : chunks.values())
     {
-        UnloadRenderTexture(chunk.renderTexture_);
+        UnloadRenderTexture(chunk.renderTexture);
     }
 
-    chunks_.clear();
+    chunks.clear();
 
-    // Create necessary chunks
-    for (Position const& position : tiles.positions().values())
+    //* Create necessary chunks
+    for (PositionComponent const& position : tiles.getPositions().values())
     {
         verifyRequiredChunk(position.tilePosition());
     }
 
-    // Render tiles to chunk
-    for (Chunk& chunk : chunks_.values())
+    //* Render tiles to chunk
+    for (Chunk& chunk : chunks.values())
     {
-        RectangleExI const& chunkSize{chunk.corners()};
+        RectangleExI const& chunkSize{chunk.corners};
 
-        BeginTextureMode(chunk.renderTexture_);
+        BeginTextureMode(chunk.renderTexture);
 
         ClearBackground(BG_COLOR);
 
@@ -42,14 +42,14 @@ void Chunks::init(Tiles const& tiles, Renderer& renderer)
             {
                 Vector2I tilePosition{x, y};
 
-                if (!tiles.renderIDs().contains(tilePosition))
+                if (!tiles.getRenderIDs().contains(tilePosition))
                 {
                     continue;
                 }
 
                 renderer.renderToChunk(
-                    tiles.renderID(tilePosition),
-                    tiles.position(tilePosition).worldPixel(),
+                    tiles.getRenderIDs().at(tilePosition),
+                    tiles.getPositions().at(tilePosition).worldPixel(),
                     chunk);
             }
         }
@@ -62,19 +62,14 @@ void Chunks::verifyRequiredChunk(Vector2I const& tilePosition)
 {
     Vector2I chunkPosition{UnitConversion::tileToChunk(tilePosition)};
 
-    // If clause is needed due to exclude unnecessary LoadRenderTexture() calls
-    if (!chunks_.contains(chunkPosition))
+    //* If clause is needed due to exclude unnecessary LoadRenderTexture() calls
+    if (!chunks.contains(chunkPosition))
     {
-        chunks_.emplace(
+        chunks.emplace(
             chunkPosition,
             LoadRenderTexture(
                 ChunkData::CHUNK_SIZE_F,
                 ChunkData::CHUNK_SIZE_F),
-            Position{chunkPosition});
+            PositionComponent{chunkPosition});
     }
-}
-
-snx::DenseMap<Vector2I, Chunk> const& Chunks::chunks() const
-{
-    return chunks_;
 }

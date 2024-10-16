@@ -2,23 +2,24 @@
 #define IG20241011025951
 
 #include "Hero.h"
-#include "InputHandler.h"
+#include "UserInputSystem.h"
 #include "World.h"
 
-// Externally provided
 class Cursor;
 class GameCamera;
 
 class Game
 {
-    InputHandler inputHandler_{};
-    World world_{};
-    Hero hero_;
+    UserInputSystem inputHandler_{};
 
     bool actionsInProgress_{false};
 
-    // Track game turns
+    //* Track game turns
     int turn_{0};
+
+public:
+    World world{};
+    Hero hero{};
 
 public:
     void init();
@@ -29,11 +30,6 @@ public:
         Cursor const& cursor);
 
     void setupGameEvents();
-
-    Hero const& hero() const;
-
-    World const& world() const;
-    World& world();
 };
 
 #endif

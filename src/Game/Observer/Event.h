@@ -4,7 +4,7 @@
 enum class Event
 {
     null = 0,
-    // Application interaction
+    //* Application interaction
     windowResized,
     panelsResized,
     cameraChanged,
@@ -12,7 +12,7 @@ enum class Event
     cursorPositionChanged,
     mapChange,
     colorThemeChange,
-    // Game events
+    //* Game events
     actionFinished,
     actionInProgress,
     heroMoved,

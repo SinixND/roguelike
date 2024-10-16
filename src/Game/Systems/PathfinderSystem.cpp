@@ -1,8 +1,9 @@
-#include "Pathfinder.h"
-#include "Map.h"
-// #define DEBUG_PATHFINDER
+#include "PathfinderSystem.h"
+//* #define DEBUG_PATHFINDER
 
 #include "GameCamera.h"
+#include "Map.h"
+#include "PositionComponent.h"
 #include "RNG.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
@@ -23,40 +24,40 @@
 #include <string>
 #endif
 
-// RatedTile
-// Heuristic used to rate tiles
-// bias > 1: prioritize short path
-// bias < 1: prioritize closer to target
+//* RatedTile
+//* Heuristic used to rate tiles
+//* bias > 1: prioritize short path
+//* bias < 1: prioritize closer to target
 float constexpr bias{2};
 
 float RatedTile::rating() const
 {
     return
-        // Distance to target
-        Vector2Length(distanceToTarget_)
-        + bias * stepsNeeded();
+        //* Distance to target
+        Vector2Length(distanceToTarget)
+        + bias * stepsNeeded;
 }
 
 void RatedTile::reconstructPath(std::vector<Vector2I>& path)
 {
-    // Add this to path
-    path.push_back(tilePosition_);
+    //* Add this to path
+    path.push_back(tilePosition);
 
-    // Abort at root/start
-    if (!ancestor_)
+    //* Abort at root/start
+    if (!ancestor)
     {
         return;
     }
 
-    // Add ancestor to path
-    ancestor_->reconstructPath(path);
+    //* Add ancestor to path
+    ancestor->reconstructPath(path);
 }
 
-// Pathfinder
-// Adds three new neighbours for all tiles of current best rating to the rating list,
-// then deleting current rating in map
-// and restarting with new best rating,
-// until target is found or no rating left to check
+//* PathfinderSystem
+//* Adds three new neighbours for all tiles of current best rating to the rating list,
+//* then deleting current rating in map
+//* and restarting with new best rating,
+//* until target is found or no rating left to check
 bool checkRatingList(
     int rating,
     std::forward_list<RatedTile>& ratedTiles,
@@ -68,21 +69,21 @@ bool checkRatingList(
     int maxRange,
     std::vector<Vector2I>& path)
 {
-    // Buffer rated tiles to allow neighbours with same rating
+    //* Buffer rated tiles to allow neighbours with same rating
     std::vector<RatedTile*> tileList{ratingList[rating]};
 
-    // All tiles with same rating will be checked -> remove key
+    //* All tiles with same rating will be checked -> remove key
     ratingList.erase(rating);
 
-    // Check all tiles in vector for current best rating before choosing new best rating
+    //* Check all tiles in vector for current best rating before choosing new best rating
     for (RatedTile* currentTile : tileList)
     {
-        Vector2I distanceToTarget{currentTile->distanceToTarget()};
+        Vector2I distanceToTarget{currentTile->distanceToTarget};
         Vector2I mainDirection{Vector2MainDirection(distanceToTarget)};
         Vector2I offDirection{Vector2OffDirection(distanceToTarget)};
 
-        // Handle exceptions
-        // Exception: |x| == |y| -> main is RNG, off is dependent
+        //* Handle exceptions
+        //* Exception: |x| == |y| -> main is RNG, off is dependent
         if (abs(distanceToTarget.x) == abs(distanceToTarget.y))
         {
             if (snx::RNG::random())
@@ -111,7 +112,7 @@ bool checkRatingList(
             }
         }
 
-        // Exception: offDirection == {0 , 0}
+        //* Exception: offDirection == {0 , 0}
         if (offDirection == Vector2I{0, 0})
         {
 
@@ -125,20 +126,20 @@ bool checkRatingList(
             }
         }
 
-        // Test all four directions for currentTile, prioritise main direction to target
+        //* Test all four directions for currentTile, prioritise main direction to target
         for (Vector2I const& direction : {
                  mainDirection,
                  offDirection,
                  Vector2Negate(offDirection),
                  Vector2Negate(mainDirection)})
         {
-            // Calculate new tilePosition
+            //* Calculate new tilePosition
             Vector2I newTilePosition{
                 Vector2Add(
                     direction,
-                    currentTile->tilePosition())};
+                    currentTile->tilePosition)};
 
-            // Needs to be in map panel
+            //* Needs to be in map panel
             if (
                 !CheckCollisionPointRec(
                     UnitConversion::tileToScreen(
@@ -149,19 +150,19 @@ bool checkRatingList(
                 continue;
             }
 
-            // Ignore ancestor
+            //* Ignore ancestor
             if (
-                currentTile->ancestor()
-                && (newTilePosition == currentTile->ancestor()->tilePosition()))
+                currentTile->ancestor
+                && (newTilePosition == currentTile->ancestor->tilePosition))
             {
                 continue;
             }
 
-            // Add rating penalty if
-            // - Enemy is present
+            //* Add rating penalty if
+            //* - Enemy is present
             int penalty{0};
 
-            if ( map.enemies_.positions().contains(Position{newTilePosition}))
+            if (map.enemies.getPositions().contains(PositionComponent{newTilePosition}))
             {
                 penalty += 4;
             }
@@ -169,10 +170,10 @@ bool checkRatingList(
             RatedTile newRatedTile{
                 newTilePosition,
                 target,
-                currentTile->stepsNeeded() + (1 + penalty),
+                currentTile->stepsNeeded + (1 + penalty),
                 currentTile};
 
-            // If Target found
+            //* If Target found
             if ((newTilePosition == target))
             {
                 newRatedTile.reconstructPath(path);
@@ -180,36 +181,36 @@ bool checkRatingList(
                 return true;
             }
 
-            // Skip if is in tilesToIgnore
+            //* Skip if is in tilesToIgnore
             if (tilesToIgnore.contains(newTilePosition))
             {
                 continue;
             }
 
-            // Skip if tile is invalid:
-            // - Not in map
-            // - Is invisible
-            // - Not accessible
-            // - Steps needed exceed maxRange
+            //* Skip if tile is invalid:
+            //* - Not in map
+            //* - Is invisible
+            //* - Not accessible
+            //* - Steps needed exceed maxRange
             if (
-                !map.tiles_.visibilityIDs().contains(newTilePosition)
-                || (map.tiles_.visibilityID(newTilePosition) == VisibilityID::invisible)
-                || map.tiles_.isSolid(newTilePosition)
-                || ((maxRange > 0) && (newRatedTile.stepsNeeded() > maxRange)))
+                !map.tiles.getVisibilityIDs().contains(newTilePosition)
+                || (map.tiles.getVisibilityIDs().at(newTilePosition) == VisibilityID::invisible)
+                || map.tiles.getIsSolids().contains(newTilePosition)
+                || ((maxRange > 0) && (newRatedTile.stepsNeeded > maxRange)))
             {
-                // Invalid! Add to ignore set so it doesn't get checked again
+                //* Invalid! Add to ignore set so it doesn't get checked again
                 tilesToIgnore.insert(newTilePosition);
 
                 continue;
             }
 
-            // Create new ratedTile in vector
+            //* Create new ratedTile in vector
             ratedTiles.push_front(newRatedTile);
 
-            // Add newRatedTile
+            //* Add newRatedTile
             ratingList[newRatedTile.rating()].push_back(&ratedTiles.front());
 
-            // Valid! Add to ignore set so it doesn't get checked again
+            //* Valid! Add to ignore set so it doesn't get checked again
             tilesToIgnore.insert(newTilePosition);
 
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
@@ -234,7 +235,7 @@ bool checkRatingList(
         }
     }
 
-    // Check new best rated tiles
+    //* Check new best rated tiles
     if (
         !ratingList.empty()
         && checkRatingList(
@@ -254,7 +255,7 @@ bool checkRatingList(
     return false;
 }
 
-std::vector<Vector2I> Pathfinder::findPath(
+std::vector<Vector2I> PathfinderSystem::findPath(
     Map const& map,
     Vector2I const& start,
     Vector2I const& target,
@@ -268,37 +269,37 @@ std::vector<Vector2I> Pathfinder::findPath(
 
     std::vector<Vector2I> path{};
 
-    // Return empty path if target is
-    // - Not in map
-    // - Is invisible
-    // - Not accessible
-    // - Equal to start
+    //* Return empty path if target is
+    //* - Not in map
+    //* - Is invisible
+    //* - Not accessible
+    //* - Equal to start
     if (
-        !map.tiles_.visibilityIDs().contains(target)
+        !map.tiles.getVisibilityIDs().contains(target)
         || (skipInvisibleTiles
-            && (map.tiles_.visibilityID(target) == VisibilityID::invisible))
-        || map.tiles_.isSolid(target)
+            && (map.tiles.getVisibilityIDs().at(target) == VisibilityID::invisible))
+        || map.tiles.getIsSolids().contains(target)
         || (start == target))
     {
         return path;
     }
 
-    // Create tile to start
+    //* Create tile to start
     RatedTile firstTile{
         start,
         target,
         0,
         nullptr};
 
-    // Vector of rated tiles (persistent for ancestor pointers)
+    //* Vector of rated tiles (persistent for ancestor pointers)
     std::forward_list<RatedTile> ratedTiles{firstTile};
 
-    // Map of tile pointers, sorted by rating (lowest first)
+    //* Map of tile pointers, sorted by rating (lowest first)
     std::map<int, std::vector<RatedTile*>> ratingList{};
 
     ratingList[firstTile.rating()].push_back(&ratedTiles.front());
 
-    // List of ignored tiles to avoid double checks
+    //* List of ignored tiles to avoid double checks
     std::unordered_set<Vector2I> tilesToIgnore{start};
 
     checkRatingList(
@@ -312,7 +313,7 @@ std::vector<Vector2I> Pathfinder::findPath(
         maxRange,
         path);
 
-    // Path is either empty or has at least 2 entries (target and start)
+    //* Path is either empty or has at least 2 entries (target and start)
 #if defined(DEBUG) && defined(DEBUG_PATHFINDER)
     for (Vector2I const& position : path)
     {

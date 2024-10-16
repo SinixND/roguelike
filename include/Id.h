@@ -1,7 +1,7 @@
 #ifndef IG20231212235144
 #define IG20231212235144
 
-#include <cstddef> // Size_t
+#include <cstddef>
 
 namespace snx
 {

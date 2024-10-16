@@ -4,23 +4,19 @@
 enum class RenderID
 {
     none,
-    // UI
+    //* UI
     cursor,
-    // Tiles
+    //* Tiles
     wall,
     floor,
-    // Objects
+    //* Objects
     descend,
     ascend,
-    // Units
+    //* Units
     hero,
-    // Enemies
+    //* Enemies
     goblin,
-    // Misc
-    // reachable,
-    // path,
-    // attackable,
-    // supportable,
+    //* Misc
 };
 
 #endif

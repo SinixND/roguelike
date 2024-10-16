@@ -2,6 +2,7 @@
 
 #include "Event.h"
 #include "PublisherStatic.h"
+#include "UnitConversion.h"
 #include "raylibEx.h"
 
 #include <raylib.h>
@@ -40,4 +41,25 @@ void GameCamera::setZoom(float zoom)
 void GameCamera::updateViewport(RectangleEx const& viewport)
 {
     viewport_ = &viewport;
+}
+
+Camera2D const& GameCamera::camera() const
+{
+    return camera_;
+}
+
+RectangleEx const& GameCamera::viewportOnScreen() const
+{
+    return *viewport_;
+}
+
+RectangleExI GameCamera::viewportInTiles() const
+{
+    return RectangleExI{
+        UnitConversion::screenToTile(
+            viewport_->topLeft(),
+            camera_),
+        UnitConversion::screenToTile(
+            viewport_->bottomRight(),
+            camera_)};
 }

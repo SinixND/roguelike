@@ -1,6 +1,6 @@
-#include "Renderer.h"
+#include "RenderSystem.h"
 #include <string>
-// #define DEBUG_CHUNKS
+//* #define DEBUG_CHUNKS
 #define DEBUG_VISIBILITY
 
 #include "Chunk.h"
@@ -10,21 +10,21 @@
 #include "Textures.h"
 #include "TileData.h"
 #include "UnitConversion.h"
-#include "Visibility.h"
+#include "VisibilitySystem.h"
 #include <raylib.h>
 #include <raymath.h>
 
-std::string Renderer::textureAtlasFileName() const
+std::string RenderSystem::textureAtlasFileName() const
 {
     return TextureData::themes[theme_] + ".png";
 }
 
-void Renderer::init()
+void RenderSystem::init()
 {
-    // Load texture atlas
+    //* Load texture atlas
     textures_.loadAtlas(textureAtlasFileName());
 
-    // Register textures
+    //* Register textures
     textures_.registerTexture(RenderID::none, {0, 0});
     textures_.registerTexture(RenderID::cursor, {35, 0});
     textures_.registerTexture(RenderID::hero, {70, 0});
@@ -35,12 +35,12 @@ void Renderer::init()
     textures_.registerTexture(RenderID::goblin, {105, 35});
 }
 
-void Renderer::render(
+void RenderSystem::render(
     RenderID renderID,
     Vector2 const& worldPixel,
     Color const& tint) const
 {
-    // Use 0.5f pixel offset to avoid texture bleeding
+    //* Use 0.5f pixel offset to avoid texture bleeding
     DrawTexturePro(
         textures_.getTextureAtlas(),
         Rectangle{
@@ -53,19 +53,19 @@ void Renderer::render(
             worldPixel.y,
             TileData::TILE_SIZE,
             TileData::TILE_SIZE},
-        // TileData::TILE_CENTER,
+        //* TileData::TILE_CENTER,
         Vector2{0, 0},
         0,
         tint);
 }
 
-void Renderer::renderToChunk(
+void RenderSystem::renderToChunk(
     RenderID renderID,
     Vector2 const& worldPixel,
     Chunk& chunk,
     Color const& tint) const
 {
-    // Use 0.5f pixel offset to avoid texture bleeding
+    //* Use 0.5f pixel offset to avoid texture bleeding
     DrawTexturePro(
         textures_.getTextureAtlas(),
         Rectangle{
@@ -74,28 +74,28 @@ void Renderer::renderToChunk(
             TextureData::TEXTURE_SIZE - (2 * 0.5f),
             TextureData::TEXTURE_SIZE - (2 * 0.5f)},
         Rectangle{
-            worldPixel.x - chunk.position().worldPixel().x,
-            worldPixel.y - chunk.position().worldPixel().y,
+            worldPixel.x - chunk.position.worldPixel().x,
+            worldPixel.y - chunk.position.worldPixel().y,
             TileData::TILE_SIZE,
             TileData::TILE_SIZE},
-        // TileData::TILE_CENTER,
+        //* TileData::TILE_CENTER,
         Vector2{0, 0},
         0,
         tint);
 }
 
-void Renderer::renderChunk(Chunk const& chunk) const
+void RenderSystem::renderChunk(Chunk const& chunk) const
 {
     DrawTexturePro(
-        chunk.renderTexture_.texture,
+        chunk.renderTexture.texture,
         Rectangle{
             0,
             0,
-            static_cast<float>(chunk.renderTexture_.texture.width),
-            static_cast<float>(-chunk.renderTexture_.texture.height)},
+            static_cast<float>(chunk.renderTexture.texture.width),
+            static_cast<float>(-chunk.renderTexture.texture.height)},
         Rectangle{
-            chunk.position().worldPixel().x,
-            chunk.position().worldPixel().y,
+            chunk.position.worldPixel().x,
+            chunk.position.worldPixel().y,
             ChunkData::CHUNK_SIZE_F,
             ChunkData::CHUNK_SIZE_F},
         Vector2{0, 0},
@@ -105,8 +105,8 @@ void Renderer::renderChunk(Chunk const& chunk) const
 #if defined(DEBUG) && defined(DEBUG_CHUNKS)
     DrawRectangleLinesEx(
         Rectangle{
-            chunk.position().worldPixel().x,
-            chunk.position().worldPixel().y,
+            chunk.position.worldPixel().x,
+            chunk.position.worldPixel().y,
             ChunkData::CHUNK_SIZE_F,
             ChunkData::CHUNK_SIZE_F},
         3.0f,
@@ -114,12 +114,12 @@ void Renderer::renderChunk(Chunk const& chunk) const
 #endif
 }
 
-void Renderer::renderFog(Fog const& fog) const
+void RenderSystem::renderFog(Fog const& fog) const
 {
     Color tint{};
 
 #if defined(DEBUG) && defined(DEBUG_VISIBILITY)
-    if (fog.isFogOpaque())
+    if (fog.isFogOpaque)
     {
         tint = ColorAlpha(RED, 0.5f);
     }
@@ -129,7 +129,7 @@ void Renderer::renderFog(Fog const& fog) const
         tint = ColorAlpha(BLUE, 0.5f);
     }
 #else
-    if (fog.isFogOpaque())
+    if (fog.isFogOpaque)
     {
         tint = BLACK;
     }
@@ -141,19 +141,19 @@ void Renderer::renderFog(Fog const& fog) const
 #endif
 
     DrawRectangleV(
-        // Vector2SubtractValue(
-        UnitConversion::tileToWorld(fog.tilePosition()),
-        // TileData::TILE_SIZE_HALF),
+        //* Vector2SubtractValue(
+        UnitConversion::tileToWorld(fog.tilePosition),
+        //* TileData::TILE_SIZE_HALF),
         TileData::TILE_DIMENSIONS,
         tint);
 }
 
-void Renderer::cycleThemes()
+void RenderSystem::cycleThemes()
 {
     theme_ = (theme_ < TextureData::themes.size() - 1) ? ++theme_ : 0;
 }
 
-void Renderer::deinit()
+void RenderSystem::deinit()
 {
     textures_.unloadAtlas();
 }

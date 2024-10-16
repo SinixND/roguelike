@@ -9,7 +9,7 @@ class GameFont
 
 public:
     static inline float const fontHeight{16};
-    // raygui font padding is 4
+    //* raygui font padding is 4
     static inline float const fontWidth{fontHeight - 8};
 
 public:

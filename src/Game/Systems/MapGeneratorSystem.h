@@ -3,7 +3,7 @@
 
 #include "Map.h"
 
-namespace MapGenerator
+namespace MapGeneratorSystem
 {
     Map createTestRoom();
     Map createStartRoom();

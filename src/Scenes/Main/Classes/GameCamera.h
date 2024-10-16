@@ -1,11 +1,10 @@
 #ifndef IG20240531171525
 #define IG20240531171525
 
-#include "UnitConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
-// Wrapper class for raylibs Camera2D
+//* Wrapper class for raylibs Camera2D
 class GameCamera
 {
     Camera2D camera_{};
@@ -16,31 +15,14 @@ public:
         RectangleEx const& viewport,
         Vector2 const& heroPosition);
 
-    Camera2D const& camera() const
-    {
-        return camera_;
-    }
+    Camera2D const& camera() const;
+    RectangleEx const& viewportOnScreen() const;
+    RectangleExI viewportInTiles() const;
 
-    RectangleEx const& viewportOnScreen() const
-    {
-        return *viewport_;
-    }
-
-    RectangleExI const viewportInTiles() const
-    {
-        return RectangleExI{
-            UnitConversion::screenToTile(
-                viewport_->topLeft(),
-                camera_),
-            UnitConversion::screenToTile(
-                viewport_->bottomRight(),
-                camera_)};
-    }
-
-    // Screen offset to draw target at
+    //* Screen offset to draw target at
     void setOffset(Vector2 const& offset);
 
-    // World position to draw at offset
+    //* World position to draw at offset
     void setTarget(Vector2 const& target);
     void setZoom(float zoom);
 

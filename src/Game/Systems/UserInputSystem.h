@@ -9,14 +9,14 @@
 #include <raylib.h>
 #include <unordered_map>
 
-// Maximum hold time for tap event to trigger
+//* Maximum hold time for tap event to trigger
 double constexpr maxTapTime{0.3f};
-// Minimum hold time for hold event to trigger
+//* Minimum hold time for hold event to trigger
 double constexpr minHoldTime{0.3f};
-// Maximum time between taps for double tap event to trigger
+//* Maximum time between taps for double tap event to trigger
 double constexpr maxDoubleTapTime{0.3f};
 
-class InputHandler
+class UserInputSystem
 {
     InputActionID inputAction_{InputActionID::none};
 
@@ -51,13 +51,13 @@ private:
     void bindMouseButton(int key, InputActionID action);
     void bindModifierKey(int key, InputActionID action);
 
-    // Returns true if input received
+    //* Returns true if input received
     bool takeInputMouse(bool isCursorActive);
 
-    // Returns true if input received
+    //* Returns true if input received
     bool takeInputKey();
 
-    // Returns true if input received
+    //* Returns true if input received
     bool takeInputGesture();
 };
 

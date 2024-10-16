@@ -5,11 +5,12 @@
 #include "Objects.h"
 #include "Tiles.h"
 
-struct Map
+class Map
 {
-    Tiles tiles_{};
-    Objects objects_{};
-    Enemies enemies_{};
+public:
+    Tiles tiles{};
+    Objects objects{};
+    Enemies enemies{};
 };
 
 #endif

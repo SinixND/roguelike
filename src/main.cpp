@@ -1,8 +1,8 @@
 #include "App.h"
 
-// Only define once
+//* Only define once
 #define RAYGUI_IMPLEMENTATION
-// Required for custom icons set
+//* Required for custom icons set
 #define RAYGUI_CUSTOM_ICONS
 
 #include "../resources/iconset/iconset.rgi.h"

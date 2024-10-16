@@ -1,17 +1,15 @@
-#include "Energy.h"
+#include "EnergyComponent.h"
 
-void Energy::setRegenRate(int regenRate) { regenRate_ = regenRate; }
-
-bool Energy::consume(int energy)
+bool EnergyComponent::consume(int energy)
 {
     if (energy < 0)
     {
-        // Consume all available energy
+        //* Consume all available energy
         currentEnergy_ = 0;
     }
     else
     {
-        // Consume energy
+        //* Consume energy
         currentEnergy_ -= energy;
     }
 
@@ -24,7 +22,7 @@ bool Energy::consume(int energy)
     return true;
 }
 
-bool Energy::regenerate()
+bool EnergyComponent::regenerate()
 {
     if (currentEnergy_ >= maxEnergy_)
     {
@@ -32,12 +30,12 @@ bool Energy::regenerate()
         return true;
     }
 
-    // Regen energy until full
-    currentEnergy_ += regenRate_;
+    //* Regen energy until full
+    currentEnergy_ += regenRate;
 
     if (currentEnergy_ > maxEnergy_)
     {
-        // Ensure energy does not exceed maxEnergy
+        //* Ensure energy does not exceed maxEnergy
         currentEnergy_ = maxEnergy_;
         return true;
     }
@@ -45,7 +43,7 @@ bool Energy::regenerate()
     return false;
 }
 
-int Energy::isReady() const
+int EnergyComponent::isReady() const
 {
     return isReady_;
 }
