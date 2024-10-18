@@ -16,11 +16,11 @@ class Tiles
     RectangleExI mapSize_{};
 
 public:
-    snx::DenseMap<Vector2I, PositionComponent> positions_{};
-    snx::DenseMap<Vector2I, RenderID> renderIDs_{};
-    snx::DenseMap<Vector2I, VisibilityID> visibilityIDs_{};
-    std::unordered_set<Vector2I> isSolids_{};
-    std::unordered_set<Vector2I> isOpaques_{};
+    snx::DenseMap<Vector2I, PositionComponent> positions{};
+    snx::DenseMap<Vector2I, RenderID> renderIDs{};
+    snx::DenseMap<Vector2I, VisibilityID> visibilityIDs{};
+    std::unordered_set<Vector2I> isSolids{};
+    std::unordered_set<Vector2I> isOpaques{};
 
 public:
     //* Access or create

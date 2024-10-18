@@ -5,18 +5,16 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-check:
-- [ ] Rename old private members
-- [ ] Rework MovementComponent... should be system, split component data and system logic? Should not consume energy, but report if successful
-- [ ] Rework Visiblity... should not hold Fog, split into component data (fog) and system?
+- [ ] Hold to inspect (activate and set cursor position while held -> persistant, should reset itself)
+
 
 ## Shortterm
-- [ ] Hold to inspect (activate and set cursor position while held -> persistant, should reset itself)
 - [ ] Merge tile info panel with info panel and make sections for Hero -> Enemy (pop-up?) -> Object -> Tile
 - [ ] Setup docker
 - [ ] Add/Move/Refactor AI component/behaviour (defensive, offensive, smart, active, passive, 
 detection range)
 - [ ] Health, Attack
+
 
 ## Longterm
 - [ ] Changeable key bindings
@@ -25,6 +23,7 @@ detection range)
 - [ ] Implement zoom?
 - [ ] Change world position from center to (usual) top-left?
 - [ ] (needed?!) Deactivate cursor trigger game action outside map panel 
+
 
 ## Continuous
 - Check for possible NMNF functions
@@ -45,6 +44,7 @@ detection range)
 | RMB     | Toggle cursor  |
 | LMB     | Move to cursor |
 
+
 ### Keyboard
 | Control                  | Function                |
 | ------------------------ | ----------------------- |
@@ -55,6 +55,7 @@ detection range)
 | F2                       | Cycle color themes      |
 | F4                       | Exit                    |
 | F11                      | Toggle Maximize window  |
+
 
 ### Touch
 | Control      | Function                |
@@ -72,8 +73,10 @@ detection range)
 - Random border match
 - Quad tree ()
 
+
 ## Docker:
 [Install docker](https://itsfoss.com/install-docker-arch-linux/)
+
 
 # Implemented
 - [x] Compile for linux & windows

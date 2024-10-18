@@ -99,5 +99,5 @@ void App::deinit()
     SceneMain_.deinitialize();
 
     //* Close window and opengl context
-    CloseWindow(); 
+    CloseWindow();
 }

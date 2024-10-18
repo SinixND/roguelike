@@ -161,7 +161,7 @@ bool checkRatingList(
             //* - Enemy is present
             int penalty{0};
 
-            if (map.enemies.ids_.contains(newTilePosition))
+            if (map.enemies.ids.contains(newTilePosition))
             {
                 penalty += 4;
             }
@@ -192,8 +192,8 @@ bool checkRatingList(
             //* - Not accessible
             //* - Steps needed exceed maxRange
             if (
-                !map.tiles.visibilityIDs_.contains(newTilePosition)
-                || (map.tiles.visibilityIDs_.at(newTilePosition) == VisibilityID::invisible)
+                !map.tiles.visibilityIDs.contains(newTilePosition)
+                || (map.tiles.visibilityIDs.at(newTilePosition) == VisibilityID::invisible)
                 || map.tiles.isSolid(newTilePosition)
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded > maxRange)))
             {
@@ -274,9 +274,9 @@ std::vector<Vector2I> PathfinderSystem::findPath(
     //* - Not accessible
     //* - Equal to start
     if (
-        !map.tiles.visibilityIDs_.contains(target)
+        !map.tiles.visibilityIDs.contains(target)
         || (skipInvisibleTiles
-            && (map.tiles.visibilityIDs_.at(target) == VisibilityID::invisible))
+            && (map.tiles.visibilityIDs.at(target) == VisibilityID::invisible))
         || map.tiles.isSolid(target)
         || (start == target))
     {

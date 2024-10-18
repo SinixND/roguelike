@@ -3,7 +3,6 @@
 //* #define DEBUG_FOG
 
 #include "DenseMap.h"
-#include "Tiles.h"
 #include "UnitConversion.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
@@ -418,11 +417,16 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
 
                 for (Shadow const& shadow : shadowline)
                 {
+                    //* Check if visible:
                     //* If top-left tile corner is left (<) from slopeLeft (at same height = tileTop)
                     //* OR
                     //* If slopeRight is left (<) from bottom-right tile corner (at same height = tileBottom)
-                    if ((octX - 0.5f) < (shadow.getLeftAtTop(octantPosition))
-                        || (shadow.getRightAtBottom(octantPosition)) < (octX + 0.5f))
+                    //* AND
+                    //* Is in viewport
+                    if (
+                        ((octX - 0.5f) < (shadow.getLeftAtTop(octantPosition))
+                         || (shadow.getRightAtBottom(octantPosition)) < (octX + 0.5f))
+                        && (octY < (range - 1)))
                     {
                         //* top-left/bottom-right corner not in shadow -> visible (variable unchanged)
 
@@ -494,8 +498,8 @@ void VisibilitySystem::update(
     Vector2I const& heroPosition)
 {
     //* Input
-    int octantWidth{2 + (viewportInTiles.width() / 2)};
-    int octantHeight{2 + (viewportInTiles.height() / 2)};
+    int quarterWidth{1 + (viewportInTiles.width() / 2)};
+    int quarterHeight{1 + (viewportInTiles.height() / 2)};
 
     //* Init
     fogs_.clear();
@@ -511,12 +515,12 @@ void VisibilitySystem::update(
         //* Set range for octant
         if (((octant + 1) / 2) % 2) //* := f tt ff tt f
         {
-            range = octantWidth;
+            range = quarterWidth;
         }
 
         else
         {
-            range = octantHeight;
+            range = quarterHeight;
         }
 
 #if defined(DEBUG) && defined(DEBUG_SHADOW)

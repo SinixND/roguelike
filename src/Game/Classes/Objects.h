@@ -13,10 +13,10 @@
 class Objects
 {
 public:
-    snx::DenseMap<Vector2I, PositionComponent> positions_{};
-    snx::DenseMap<Vector2I, RenderID> renderIDs_{};
-    snx::DenseMap<Vector2I, std::string> tags_{};
-    snx::DenseMap<Vector2I, Event> events_{};
+    snx::DenseMap<Vector2I, PositionComponent> positions{};
+    snx::DenseMap<Vector2I, RenderID> renderIDs{};
+    snx::DenseMap<Vector2I, std::string> tags{};
+    snx::DenseMap<Vector2I, Event> events{};
 
 public:
     //* Access or create

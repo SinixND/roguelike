@@ -76,7 +76,6 @@ bool UserInputSystem::takeInputMouse(bool isCursorActive)
     }
 
     //* Check if input is invalid (need exception for mouse toggle action)
-    //* Check if input is invalid (need exception for mouse toggle action)
     if (inputAction_ == InputActionID::none
         || (!(inputAction_ == InputActionID::toggleCursor)
             && !isCursorActive))
@@ -184,7 +183,9 @@ bool UserInputSystem::takeInputGesture()
 
             case GESTURE_TAP:
             {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
                 snx::Logger::log("Triggered GESTURE_TAP\n");
+#endif
                 // touchDownTime_ = GetTime();
 
                 break;
@@ -192,7 +193,9 @@ bool UserInputSystem::takeInputGesture()
 
             case GESTURE_DOUBLETAP:
             {
+#if defined(DEBUG) && defined(DEBUG_GESTURES)
                 snx::Logger::log("Triggered GESTURE_DOUBLETAP\n");
+#endif
                 // inputAction_ = InputActionID::actInPlace;
 
                 break;
@@ -423,10 +426,10 @@ void UserInputSystem::triggerAction(
     {
         case InputActionID::actUp:
         {
-            if (map.enemies.ids_.contains(
-                Vector2Add(
-                    hero.position.tilePosition(),
-                    Directions::V_UP)))
+            if (map.enemies.ids.contains(
+                    Vector2Add(
+                        hero.position.tilePosition(),
+                        Directions::V_UP)))
             {
                 snx::debug::cliLog("Hero would attack\n");
                 hero.energy.consume();
@@ -441,10 +444,10 @@ void UserInputSystem::triggerAction(
 
         case InputActionID::actLeft:
         {
-            if (map.enemies.ids_.contains(
-                Vector2Add(
-                    hero.position.tilePosition(),
-                    Directions::V_LEFT)))
+            if (map.enemies.ids.contains(
+                    Vector2Add(
+                        hero.position.tilePosition(),
+                        Directions::V_LEFT)))
             {
                 snx::debug::cliLog("Hero would attack\n");
                 hero.energy.consume();
@@ -459,10 +462,10 @@ void UserInputSystem::triggerAction(
 
         case InputActionID::actDown:
         {
-            if (map.enemies.ids_.contains(
-                Vector2Add(
-                    hero.position.tilePosition(),
-                    Directions::V_DOWN)))
+            if (map.enemies.ids.contains(
+                    Vector2Add(
+                        hero.position.tilePosition(),
+                        Directions::V_DOWN)))
             {
                 snx::debug::cliLog("Hero would attack\n");
                 hero.energy.consume();
@@ -477,10 +480,10 @@ void UserInputSystem::triggerAction(
 
         case InputActionID::actRight:
         {
-            if (map.enemies.ids_.contains(
-                        Vector2Add(
-                            hero.position.tilePosition(),
-                            Directions::V_RIGHT)))
+            if (map.enemies.ids.contains(
+                    Vector2Add(
+                        hero.position.tilePosition(),
+                        Directions::V_RIGHT)))
             {
                 snx::debug::cliLog("Hero would attack\n");
                 hero.energy.consume();
@@ -509,14 +512,14 @@ void UserInputSystem::triggerAction(
             Vector2I heroTilePosition{hero.position.tilePosition()};
 
             //* Wait if nothing to interact
-            if (!map.objects.events_.contains(heroTilePosition))
+            if (!map.objects.events.contains(heroTilePosition))
             {
                 snx::Logger::log("Wait...");
                 hero.energy.consume();
                 break;
             }
 
-            snx::PublisherStatic::publish(map.objects.events_.at(heroTilePosition));
+            snx::PublisherStatic::publish(map.objects.events.at(heroTilePosition));
 
             break;
         }

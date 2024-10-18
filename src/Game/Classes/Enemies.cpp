@@ -40,10 +40,10 @@ Vector2I Enemies::getRandomPosition(Tiles const& tiles)
         //* - not solid
         //* - not occupied by other enemy
         if (
-            tiles.positions_.contains(randomPosition)
-            && !(tiles.visibilityIDs_.at(randomPosition) == VisibilityID::visible)
+            tiles.positions.contains(randomPosition)
+            && !(tiles.visibilityIDs.at(randomPosition) == VisibilityID::visible)
             && !tiles.isSolid(randomPosition)
-            && !this->ids_.contains(randomPosition))
+            && !this->ids.contains(randomPosition))
         {
             return randomPosition;
         }
@@ -58,12 +58,12 @@ void Enemies::insert(
     int scanRange,
     Vector2I const& tilePosition)
 {
-    ids_.insert(tilePosition, id);
-    positions_.insert(id, PositionComponent{tilePosition});
-    renderIDs_.insert(id, renderID);
-    movements_.insert(id, movement);
-    energies_.insert(id, energy);
-    ais_.insert(id, AIComponent{scanRange});
+    ids.insert(tilePosition, id);
+    positions.insert(id, PositionComponent{tilePosition});
+    renderIDs.insert(id, renderID);
+    movements.insert(id, movement);
+    energies.insert(id, energy);
+    ais.insert(id, AIComponent{scanRange});
 }
 
 void Enemies::create(
@@ -101,7 +101,7 @@ void Enemies::init(
     int mapLevel,
     Map const& map)
 {
-    while (static_cast<int>(renderIDs_.size()) < ((mapLevel + 1) * 5))
+    while (static_cast<int>(renderIDs.size()) < ((mapLevel + 1) * 5))
     {
         create(
             map,
@@ -113,9 +113,9 @@ bool Enemies::regenerate()
 {
     bool isEnemyReady{false};
 
-    for (size_t const& enemyId : ids_.values())
+    for (size_t const& enemyId : ids.values())
     {
-        if (energies_.at(enemyId).regenerate())
+        if (energies.at(enemyId).regenerate())
         {
             isEnemyReady = true;
         }
@@ -129,24 +129,24 @@ bool Enemies::checkForAction(
     Vector2I const& heroPosition,
     GameCamera const& gameCamera)
 {
-    size_t idSize{ids_.size()};
+    size_t idSize{ids.size()};
 
     static size_t enemiesChecked{0};
 
     while (enemiesChecked < idSize)
     {
-        size_t enemyId{ids_.values()[enemiesChecked]};
+        size_t enemyId{ids.values()[enemiesChecked]};
 
-        if (!energies_.at(enemyId).isReady())
+        if (!energies.at(enemyId).isReady())
         {
             //* Cant perform action
             ++enemiesChecked;
             continue;
         }
 
-        Vector2I enemyPosition{positions_.at(enemyId).tilePosition()};
+        Vector2I enemyPosition{positions.at(enemyId).tilePosition()};
 
-        switch (renderIDs_.at(enemyId))
+        switch (renderIDs.at(enemyId))
         {
             case RenderID::goblin:
             {
@@ -156,14 +156,14 @@ bool Enemies::checkForAction(
                     heroPosition,
                     gameCamera,
                     false,
-                    ais_.at(enemyId).scanRange())};
+                    ais.at(enemyId).scanRange())};
 
                 size_t pathSize{path.size()};
 
                 if (pathSize == 0)
                 {
                     //* Wait
-                    energies_.at(enemyId).consume();
+                    energies.at(enemyId).consume();
                 }
 
                 //* Path is either empty or has at least 2 entries (start and target)
@@ -171,12 +171,12 @@ bool Enemies::checkForAction(
                 {
                     //* Attack
                     //* Perform waiting action until attack is implemented
-                    energies_.at(enemyId).consume();
+                    energies.at(enemyId).consume();
                 }
 
                 else if (pathSize > 2)
                 {
-                    movements_.at(enemyId).trigger(
+                    movements.at(enemyId).trigger(
                         Vector2Subtract(
                             path.rbegin()[1],
                             enemyPosition));
@@ -186,7 +186,7 @@ bool Enemies::checkForAction(
                 else
                 {
                     //* Wait
-                    energies_.at(enemyId).consume();
+                    energies.at(enemyId).consume();
                 }
 
                 break;
@@ -210,22 +210,23 @@ void Enemies::update(
     PositionComponent const& heroPosition)
 {
     //* TODO: consider "day" of last update in loop to handle dying enemies!
-    for (size_t const& enemyId : ids_.values())
+    for (size_t const& enemyId : ids.values())
     {
-        auto position{positions_.at(enemyId)};
+        PositionComponent& position{positions.at(enemyId)};
 
         Vector2I oldPosition{position.tilePosition()};
 
         //* Update ids_ key if tilePosition changes
-        if(movements_.at(enemyId).update(
-            position,
-            energies_.at(enemyId),
-            map,
-            heroPosition))
-            {
-                ids_.changeKey(
-                    oldPosition, 
-                    position.tilePosition());
-            }
+        if (
+            movements.at(enemyId).update(
+                position,
+                energies.at(enemyId),
+                map,
+                heroPosition))
+        {
+            ids.changeKey(
+                oldPosition,
+                position.tilePosition());
+        }
     }
 }

@@ -16,30 +16,30 @@ void Tiles::set(
     bool isOpaque,
     VisibilityID visibilityID)
 {
-    positions_[tilePosition].changeTo(tilePosition);
+    positions[tilePosition].changeTo(tilePosition);
 
-    renderIDs_[tilePosition] = renderID;
+    renderIDs[tilePosition] = renderID;
 
-    visibilityIDs_[tilePosition] = visibilityID;
+    visibilityIDs[tilePosition] = visibilityID;
 
     if (isSolid)
     {
-        isSolids_.insert(tilePosition);
+        isSolids.insert(tilePosition);
     }
 
     else
     {
-        isSolids_.erase(tilePosition);
+        isSolids.erase(tilePosition);
     }
 
     if (isOpaque)
     {
-        isOpaques_.insert(tilePosition);
+        isOpaques.insert(tilePosition);
     }
 
     else
     {
-        isOpaques_.erase(tilePosition);
+        isOpaques.erase(tilePosition);
     }
 
     updateMapSize(tilePosition);
@@ -58,14 +58,14 @@ void Tiles::updateMapSize(Vector2I const& tilePosition)
 
 bool Tiles::isSolid(Vector2I const& tilePosition) const
 {
-    return isSolids_.contains(tilePosition);
+    return isSolids.contains(tilePosition);
 }
 
 bool Tiles::isOpaque(Vector2I const& tilePosition) const
 {
-    return isOpaques_.contains(tilePosition);
+    return isOpaques.contains(tilePosition);
 }
-    
+
 RectangleExI Tiles::mapSize() const
 {
     return mapSize_;

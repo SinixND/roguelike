@@ -12,7 +12,6 @@
 #include "Tiles.h"
 #include "raylibEx.h"
 #include <cstddef>
-#include <vector>
 
 //* SoA class
 //* Its the clients responsibility to avoid desync caused by individual size modifications of DenseMaps (eg. insert, erase)
@@ -21,12 +20,12 @@ class Enemies
     snx::IdManager idManager_{};
 
 public:
-    snx::DenseMap<Vector2I, size_t> ids_{};
-    snx::DenseMap<size_t, PositionComponent> positions_{};
-    snx::DenseMap<size_t, RenderID> renderIDs_{};
-    snx::DenseMap<size_t, MovementComponent> movements_{};
-    snx::DenseMap<size_t, EnergyComponent> energies_{};
-    snx::DenseMap<size_t, AIComponent> ais_{};
+    snx::DenseMap<Vector2I, size_t> ids{};
+    snx::DenseMap<size_t, PositionComponent> positions{};
+    snx::DenseMap<size_t, RenderID> renderIDs{};
+    snx::DenseMap<size_t, MovementComponent> movements{};
+    snx::DenseMap<size_t, EnergyComponent> energies{};
+    snx::DenseMap<size_t, AIComponent> ais{};
 
 public:
     //* Pass heroPosition twice to get random position
@@ -50,7 +49,6 @@ public:
     void update(
         Map const& map,
         PositionComponent const& heroPosition);
-
 
 private:
     Vector2I getRandomPosition(Tiles const& tiles);

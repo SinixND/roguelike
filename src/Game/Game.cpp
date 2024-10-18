@@ -79,9 +79,9 @@ void Game::setupGameEvents()
 
             world.decreaseMapLevel();
 
-            for (PositionComponent const& position : world.currentMap->objects.positions_.values())
+            for (PositionComponent const& position : world.currentMap->objects.positions.values())
             {
-                if (!(world.currentMap->objects.renderIDs_.at(position.tilePosition()) == RenderID::descend))
+                if (!(world.currentMap->objects.renderIDs.at(position.tilePosition()) == RenderID::descend))
                 {
                     continue;
                 }

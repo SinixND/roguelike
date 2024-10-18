@@ -14,11 +14,11 @@ void Objects::set(
     std::string const& tag,
     Event event)
 {
-    positions_[tilePosition].changeTo(tilePosition);
+    positions[tilePosition].changeTo(tilePosition);
 
-    renderIDs_[tilePosition] = renderID;
+    renderIDs[tilePosition] = renderID;
 
-    tags_[tilePosition] = tag;
+    tags[tilePosition] = tag;
 
-    events_[tilePosition] = event;
+    events[tilePosition] = event;
 }

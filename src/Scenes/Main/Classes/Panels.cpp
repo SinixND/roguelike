@@ -82,13 +82,13 @@ void Panels::drawLogPanelContent() const
 
 void Panels::drawTileInfoPanelContent(Objects const& objects, Vector2I const& cursorPosition) const
 {
-    if (!objects.tags_.contains(cursorPosition))
+    if (!objects.tags.contains(cursorPosition))
     {
         return;
     }
 
     //* Draw tag from tile under cursor
-    char const* tag{TextFormat("[%s]", objects.tags_.at(cursorPosition).c_str())};
+    char const* tag{TextFormat("[%s]", objects.tags.at(cursorPosition).c_str())};
 
     int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
 
