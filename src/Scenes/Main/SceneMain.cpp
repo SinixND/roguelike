@@ -44,7 +44,10 @@ void SceneMain::init()
 
     renderer_.init();
 
-    tileChunks_.init(game_.world.currentMap->tiles, renderer_);
+    tileChunks_.init(
+            game_.world.currentMap->tiles.positions_, 
+            game_.world.currentMap->tiles.renderIDs_, 
+            renderer_);
 
     //* Setup events
     setupSceneEvents();
@@ -67,8 +70,8 @@ void SceneMain::setupSceneEvents()
             gameCamera_.init(panels_.map, game_.hero.position.worldPixel());
             visibility_.update(
                 // game_.world.currentMap->tiles,
-                game_.world.currentMap->tiles.getVisibilityIDs(),
-                game_.world.currentMap->tiles.getIsOpaques(),
+                game_.world.currentMap->tiles.visibilityIDs_,
+                game_.world.currentMap->tiles.isOpaques_,
                 gameCamera_.viewportInTiles(),
                 game_.hero.position.tilePosition());
         });
@@ -87,8 +90,8 @@ void SceneMain::setupSceneEvents()
             //* VisibilitySystem
             visibility_.update(
                 // game_.world.currentMap->tiles,
-                game_.world.currentMap->tiles.getVisibilityIDs(),
-                game_.world.currentMap->tiles.getIsOpaques(),
+                game_.world.currentMap->tiles.visibilityIDs_,
+                game_.world.currentMap->tiles.isOpaques_,
                 gameCamera_.viewportInTiles(),
                 game_.hero.position.tilePosition());
         },
@@ -98,7 +101,10 @@ void SceneMain::setupSceneEvents()
         Event::mapChange,
         [&]()
         {
-            tileChunks_.init(game_.world.currentMap->tiles, renderer_);
+            tileChunks_.init(
+                    game_.world.currentMap->tiles.positions_, 
+                    game_.world.currentMap->tiles.renderIDs_, 
+                    renderer_);
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -242,21 +248,21 @@ void SceneMain::renderOutput()
     //* Draw objects
     Objects const& objects{game_.world.currentMap->objects};
 
-    for (PositionComponent const& position : objects.getPositions().values())
+    for (PositionComponent const& position : objects.positions_.values())
     {
         renderer_.render(
-            objects.getRenderIDs().at(position.tilePosition()),
+            objects.renderIDs_.at(position.tilePosition()),
             position.worldPixel());
     }
 
     //* Draw enemies
     Enemies const& enemies{game_.world.currentMap->enemies};
 
-    for (size_t id : enemies.getIds())
+    for (size_t id : enemies.ids_)
     {
         renderer_.render(
-            enemies.getRenderIDs().at(id),
-            enemies.getPositions().at(id).worldPixel());
+            enemies.renderIDs_.at(id),
+            enemies.positions_.at(id).worldPixel());
     }
 
     //* VisibilitySystem

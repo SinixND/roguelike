@@ -7,7 +7,6 @@
 #include "PublisherStatic.h"
 #include "TileData.h"
 #include "raylibEx.h"
-#include <cmath>
 #include <raylib.h>
 #include <raymath.h>
 #include <vector>
@@ -131,6 +130,7 @@ bool MovementComponent::update(
     //* Check if movement exceeds tile length this frame
     if (cumulativeDistanceMoved_ < TileData::TILE_SIZE)
     {
+        //* Move full distance this frame
         didTilePositionChange = position.move(distance);
     }
     else
@@ -171,4 +171,8 @@ bool MovementComponent::update(
     return didTilePositionChange;
 }
 
-void MovementComponent::setSpeed(int speed) { speed_ = speed; }
+void MovementComponent::setSpeed(int speed) 
+{ 
+    speed_ = speed; 
+}
+

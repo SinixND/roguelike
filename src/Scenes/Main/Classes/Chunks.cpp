@@ -6,7 +6,6 @@
 #include "DenseMap.h"
 #include "PositionComponent.h"
 #include "RenderSystem.h"
-#include ".h"
 #include "UnitConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>

@@ -3,7 +3,6 @@
 
 #include "GameCamera.h"
 #include "Map.h"
-#include "PositionComponent.h"
 #include "RNG.h"
 #include "Tiles.h"
 #include "UnitConversion.h"
@@ -162,7 +161,7 @@ bool checkRatingList(
             //* - Enemy is present
             int penalty{0};
 
-            if (map.enemies.getPositions().contains(PositionComponent{newTilePosition}))
+            if (map.enemies.ids_.contains(newTilePosition))
             {
                 penalty += 4;
             }
@@ -193,9 +192,9 @@ bool checkRatingList(
             //* - Not accessible
             //* - Steps needed exceed maxRange
             if (
-                !map.tiles.getVisibilityIDs().contains(newTilePosition)
-                || (map.tiles.getVisibilityIDs().at(newTilePosition) == VisibilityID::invisible)
-                || map.tiles.getIsSolids().contains(newTilePosition)
+                !map.tiles.visibilityIDs_.contains(newTilePosition)
+                || (map.tiles.visibilityIDs_.at(newTilePosition) == VisibilityID::invisible)
+                || map.tiles.isSolid(newTilePosition)
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded > maxRange)))
             {
                 //* Invalid! Add to ignore set so it doesn't get checked again
@@ -275,10 +274,10 @@ std::vector<Vector2I> PathfinderSystem::findPath(
     //* - Not accessible
     //* - Equal to start
     if (
-        !map.tiles.getVisibilityIDs().contains(target)
+        !map.tiles.visibilityIDs_.contains(target)
         || (skipInvisibleTiles
-            && (map.tiles.getVisibilityIDs().at(target) == VisibilityID::invisible))
-        || map.tiles.getIsSolids().contains(target)
+            && (map.tiles.visibilityIDs_.at(target) == VisibilityID::invisible))
+        || map.tiles.isSolid(target)
         || (start == target))
     {
         return path;

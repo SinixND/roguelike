@@ -16,7 +16,6 @@
 #include "VisibilityID.h"
 #include "raylibEx.h"
 #include <cstddef>
-#include <utility>
 #include <vector>
 
 Vector2I Enemies::getRandomPosition(Tiles const& tiles)
@@ -41,10 +40,10 @@ Vector2I Enemies::getRandomPosition(Tiles const& tiles)
         //* - not solid
         //* - not occupied by other enemy
         if (
-            tiles.getPositions().contains(randomPosition)
-            && !(tiles.getVisibilityIDs().at(randomPosition) == VisibilityID::visible)
-            && !tiles.getIsSolids().contains(randomPosition)
-            && !positions_.contains(PositionComponent{randomPosition}))
+            tiles.positions_.contains(randomPosition)
+            && !(tiles.visibilityIDs_.at(randomPosition) == VisibilityID::visible)
+            && !tiles.isSolid(randomPosition)
+            && !this->ids_.contains(randomPosition))
         {
             return randomPosition;
         }
@@ -59,11 +58,11 @@ void Enemies::insert(
     int scanRange,
     Vector2I const& tilePosition)
 {
-    ids_.push_back(id);
+    ids_.insert(tilePosition, id);
+    positions_.insert(id, PositionComponent{tilePosition});
     renderIDs_.insert(id, renderID);
     movements_.insert(id, movement);
     energies_.insert(id, energy);
-    positions_.insert(id, PositionComponent{tilePosition});
     ais_.insert(id, AIComponent{scanRange});
 }
 
@@ -114,7 +113,7 @@ bool Enemies::regenerate()
 {
     bool isEnemyReady{false};
 
-    for (size_t const& enemyId : ids_)
+    for (size_t const& enemyId : ids_.values())
     {
         if (energies_.at(enemyId).regenerate())
         {
@@ -136,7 +135,7 @@ bool Enemies::checkForAction(
 
     while (enemiesChecked < idSize)
     {
-        size_t enemyId{ids_[enemiesChecked]};
+        size_t enemyId{ids_.values()[enemiesChecked]};
 
         if (!energies_.at(enemyId).isReady())
         {
@@ -211,67 +210,22 @@ void Enemies::update(
     PositionComponent const& heroPosition)
 {
     //* TODO: consider "day" of last update in loop to handle dying enemies!
-    for (size_t const& enemyId : ids_)
+    for (size_t const& enemyId : ids_.values())
     {
-        movements_.at(enemyId).update(
-            positions_.at(enemyId),
+        auto position{positions_.at(enemyId)};
+
+        Vector2I oldPosition{position.tilePosition()};
+
+        //* Update ids_ key if tilePosition changes
+        if(movements_.at(enemyId).update(
+            position,
             energies_.at(enemyId),
             map,
-            heroPosition);
+            heroPosition))
+            {
+                ids_.changeKey(
+                    oldPosition, 
+                    position.tilePosition());
+            }
     }
-}
-
-std::vector<size_t> const& Enemies::getIds() const
-{
-    return ids_;
-}
-
-snx::DenseMap<size_t, AIComponent> const& Enemies::getAIs() const
-{
-    return ais_;
-}
-
-snx::DenseMap<size_t, AIComponent>& Enemies::getAIs()
-{
-    return const_cast<snx::DenseMap<size_t, AIComponent>&>(std::as_const(*this).getAIs());
-}
-
-snx::DenseMap<size_t, PositionComponent> const& Enemies::getPositions() const
-{
-    return positions_;
-}
-
-snx::DenseMap<size_t, PositionComponent>& Enemies::getPositions()
-{
-    return const_cast<snx::DenseMap<size_t, PositionComponent>&>(std::as_const(*this).getPositions());
-}
-
-snx::DenseMap<size_t, RenderID> const& Enemies::getRenderIDs() const
-{
-    return renderIDs_;
-}
-
-snx::DenseMap<size_t, RenderID>& Enemies::getRenderIDs()
-{
-    return const_cast<snx::DenseMap<size_t, RenderID>&>(std::as_const(*this).getRenderIDs());
-}
-
-snx::DenseMap<size_t, MovementComponent> const& Enemies::getMovements() const
-{
-    return movements_;
-}
-
-snx::DenseMap<size_t, MovementComponent>& Enemies::getMovements()
-{
-    return const_cast<snx::DenseMap<size_t, MovementComponent>&>(std::as_const(*this).getMovements());
-}
-
-snx::DenseMap<size_t, EnergyComponent> const& Enemies::gitEnergies() const
-{
-    return energies_;
-}
-
-snx::DenseMap<size_t, EnergyComponent>& Enemies::getEnergies()
-{
-    return const_cast<snx::DenseMap<size_t, EnergyComponent>&>(std::as_const(*this).gitEnergies());
 }

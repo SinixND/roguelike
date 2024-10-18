@@ -6,7 +6,7 @@
 # TODOs
 ## Active (Rework features that existed before Restructuring)
 check:
-- [ ] Replace Tiles/Objects/Enemies parameters if not most/all fields are used
+- [ ] Rename old private members
 - [ ] Rework MovementComponent... should be system, split component data and system logic? Should not consume energy, but report if successful
 - [ ] Rework Visiblity... should not hold Fog, split into component data (fog) and system?
 

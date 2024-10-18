@@ -423,11 +423,10 @@ void UserInputSystem::triggerAction(
     {
         case InputActionID::actUp:
         {
-            if (map.enemies.getPositions().contains(
-                    PositionComponent{
-                        Vector2Add(
-                            hero.position.tilePosition(),
-                            Directions::V_UP)}))
+            if (map.enemies.ids_.contains(
+                Vector2Add(
+                    hero.position.tilePosition(),
+                    Directions::V_UP)))
             {
                 snx::debug::cliLog("Hero would attack\n");
                 hero.energy.consume();
@@ -442,11 +441,10 @@ void UserInputSystem::triggerAction(
 
         case InputActionID::actLeft:
         {
-            if (map.enemies.getPositions().contains(
-                    PositionComponent{
-                        Vector2Add(
-                            hero.position.tilePosition(),
-                            Directions::V_LEFT)}))
+            if (map.enemies.ids_.contains(
+                Vector2Add(
+                    hero.position.tilePosition(),
+                    Directions::V_LEFT)))
             {
                 snx::debug::cliLog("Hero would attack\n");
                 hero.energy.consume();
@@ -461,11 +459,10 @@ void UserInputSystem::triggerAction(
 
         case InputActionID::actDown:
         {
-            if (map.enemies.getPositions().contains(
-                    PositionComponent{
-                        Vector2Add(
-                            hero.position.tilePosition(),
-                            Directions::V_DOWN)}))
+            if (map.enemies.ids_.contains(
+                Vector2Add(
+                    hero.position.tilePosition(),
+                    Directions::V_DOWN)))
             {
                 snx::debug::cliLog("Hero would attack\n");
                 hero.energy.consume();
@@ -480,11 +477,10 @@ void UserInputSystem::triggerAction(
 
         case InputActionID::actRight:
         {
-            if (map.enemies.getPositions().contains(
-                    PositionComponent{
+            if (map.enemies.ids_.contains(
                         Vector2Add(
                             hero.position.tilePosition(),
-                            Directions::V_RIGHT)}))
+                            Directions::V_RIGHT)))
             {
                 snx::debug::cliLog("Hero would attack\n");
                 hero.energy.consume();
@@ -513,14 +509,14 @@ void UserInputSystem::triggerAction(
             Vector2I heroTilePosition{hero.position.tilePosition()};
 
             //* Wait if nothing to interact
-            if (!map.objects.getEvents().contains(heroTilePosition))
+            if (!map.objects.events_.contains(heroTilePosition))
             {
                 snx::Logger::log("Wait...");
                 hero.energy.consume();
                 break;
             }
 
-            snx::PublisherStatic::publish(map.objects.getEvents().at(heroTilePosition));
+            snx::PublisherStatic::publish(map.objects.events_.at(heroTilePosition));
 
             break;
         }

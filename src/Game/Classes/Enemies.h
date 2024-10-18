@@ -18,10 +18,10 @@
 //* Its the clients responsibility to avoid desync caused by individual size modifications of DenseMaps (eg. insert, erase)
 class Enemies
 {
-public:
     snx::IdManager idManager_{};
 
-    std::vector<size_t> ids_{};
+public:
+    snx::DenseMap<Vector2I, size_t> ids_{};
     snx::DenseMap<size_t, PositionComponent> positions_{};
     snx::DenseMap<size_t, RenderID> renderIDs_{};
     snx::DenseMap<size_t, MovementComponent> movements_{};
