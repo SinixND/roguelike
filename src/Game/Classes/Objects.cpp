@@ -6,19 +6,21 @@
 #include "RenderID.h"
 #include "raylibEx.h"
 #include <string>
-#include <utility>
 
 void Objects::set(
     Vector2I const& tilePosition,
     RenderID renderID,
-    std::string const& tag,
+    std::string const& name,
+    std::string const& action,
     Event event)
 {
     positions[tilePosition].changeTo(tilePosition);
 
     renderIDs[tilePosition] = renderID;
 
-    tags[tilePosition] = tag;
+    names[tilePosition] = name;
+
+    actions[tilePosition] = action;
 
     events[tilePosition] = event;
 }

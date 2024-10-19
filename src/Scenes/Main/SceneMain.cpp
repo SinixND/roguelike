@@ -178,8 +178,13 @@ void SceneMain::setupSceneEvents()
                 snx::debug::cliLog("OBJECT\n");
 
                 snx::debug::cliLog(
-                    "\nTag: "
-                    + game_.world.currentMap->objects.tags_.at(cursorPos)
+                    "\nName: "
+                    + game_.world.currentMap->objects.names.at(cursorPos)
+                    + "\n");
+
+                snx::debug::cliLog(
+                    "\nActions: "
+                    + game_.world.currentMap->objects.actions.at(cursorPos)
                     + "\n");
 
                 snx::debug::cliLog(
@@ -290,8 +295,14 @@ void SceneMain::renderOutput()
     EndMode2D();
 
     panels_.drawLogPanelContent();
-    panels_.drawTileInfoPanelContent(game_.world.currentMap->objects, cursor_.position.tilePosition());
-    panels_.drawStatusPanelContent(game_.world.currentMapLevel);
+
+    panels_.drawHeroInfoPanelContent(game_.hero);
+
+    panels_.drawTileInfoPanelContent(
+        game_.world.currentMap->objects,
+        cursor_.position.tilePosition());
+
+    panels_.drawGameInfoPanelContent(game_.world.currentMapLevel);
 
     panels_.drawPanelBorders();
 }

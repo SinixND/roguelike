@@ -48,10 +48,10 @@ public:
     }
 
     RectangleEx(Vector2 const& center, float width, float height)
-        : left_(center.x - (width / 2))
-        , top_(center.y - (height / 2))
-        , right_(center.x + (width / 2))
-        , bottom_(center.y + (height / 2))
+        : left_(center.x - (0.5f * width))
+        , top_(center.y - (0.5f * height))
+        , right_(center.x + (0.5f * width))
+        , bottom_(center.y + (0.5f * height))
         , width_(width)
         , height_(height)
     {
@@ -200,8 +200,8 @@ public:
     Vector2 center() const
     {
         return Vector2{
-            (left_ + (width_ / 2)),
-            (top_ + (height_ / 2))};
+            (left_ + (0.5f * width_)),
+            (top_ + (0.5f * height_))};
     }
 
     Rectangle rectangle() const
