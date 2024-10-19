@@ -5,15 +5,14 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Hold to inspect (activate and set cursor position while held -> persistant, should reset itself)
+- [ ] Separate data and logic
 
 
 ## Shortterm
-- [ ] Merge tile info panel with info panel and make sections for Hero -> Enemy (pop-up?) -> Object -> Tile
-- [ ] Setup docker
 - [ ] Add/Move/Refactor AI component/behaviour (defensive, offensive, smart, active, passive, 
 detection range)
 - [ ] Health, Attack
+- [ ] Add overlay boxes for enemy/object information
 
 
 ## Longterm
@@ -21,8 +20,8 @@ detection range)
 - [ ] Save/Load for Account > Character > CurrentRun
 - [ ] Account settings via lua
 - [ ] Implement zoom?
-- [ ] Change world position from center to (usual) top-left?
 - [ ] (needed?!) Deactivate cursor trigger game action outside map panel 
+- [ ] Setup docker (non-trvial for GUI apps)
 
 
 ## Continuous

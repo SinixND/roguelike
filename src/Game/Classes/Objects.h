@@ -15,7 +15,8 @@ class Objects
 public:
     snx::DenseMap<Vector2I, PositionComponent> positions{};
     snx::DenseMap<Vector2I, RenderID> renderIDs{};
-    snx::DenseMap<Vector2I, std::string> tags{};
+    snx::DenseMap<Vector2I, std::string> names{};
+    snx::DenseMap<Vector2I, std::string> actions{};
     snx::DenseMap<Vector2I, Event> events{};
 
 public:
@@ -23,7 +24,8 @@ public:
     void set(
         Vector2I const& tilePosition,
         RenderID renderID,
-        std::string const& tag,
+        std::string const& name,
+        std::string const& action,
         Event event);
 };
 

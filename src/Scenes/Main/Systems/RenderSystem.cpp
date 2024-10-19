@@ -54,7 +54,9 @@ void RenderSystem::render(
             TileData::TILE_SIZE,
             TileData::TILE_SIZE},
         //* TileData::TILE_CENTER,
-        Vector2{0, 0},
+        Vector2{
+            0,
+            0},
         0,
         tint);
 }

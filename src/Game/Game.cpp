@@ -58,7 +58,7 @@ void Game::setupGameEvents()
         Event::nextLevel,
         [&]()
         {
-            snx::Logger::log("Enter next Level...");
+            snx::Logger::log("Entered next level");
 
             world.increaseMapLevel();
 
@@ -75,7 +75,7 @@ void Game::setupGameEvents()
         Event::previousLevel,
         [&]()
         {
-            snx::Logger::log("Enter previous Level...");
+            snx::Logger::log("Entered previous level");
 
             world.decreaseMapLevel();
 

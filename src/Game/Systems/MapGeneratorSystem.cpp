@@ -28,12 +28,13 @@ namespace MapGeneratorSystem
 
     void addObject(
         Objects& objects,
-        std::string tag,
+        std::string name,
+        std::string action,
         Vector2I const& tilePosition,
         RenderID renderID,
         Event event = Event::null)
     {
-        objects.set(tilePosition, renderID, tag, event);
+        objects.set(tilePosition, renderID, name, action, event);
     }
 
     void addTiles(
@@ -184,6 +185,7 @@ namespace MapGeneratorSystem
         //* Add previous level trigger
         addObject(
             map.objects,
+            "Stairs",
             "Ascend",
             Vector2I{
                 0,
@@ -332,6 +334,7 @@ namespace MapGeneratorSystem
         //* Next level trigger
         addObject(
             testRoom.objects,
+            "Stairs",
             "Descend",
             Vector2I{
                 0,
@@ -363,6 +366,7 @@ namespace MapGeneratorSystem
         //* Add next level trigger
         addObject(
             startRoom.objects,
+            "Stairs",
             "Descend",
             Vector2I{
                 0,

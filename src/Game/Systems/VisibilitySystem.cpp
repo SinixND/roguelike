@@ -498,8 +498,8 @@ void VisibilitySystem::update(
     Vector2I const& heroPosition)
 {
     //* Input
-    int quarterWidth{1 + (viewportInTiles.width() / 2)};
-    int quarterHeight{1 + (viewportInTiles.height() / 2)};
+    int quarterWidth{2 + (viewportInTiles.width() / 2)};
+    int quarterHeight{2 + (viewportInTiles.height() / 2)};
 
     //* Init
     fogs_.clear();
@@ -510,7 +510,7 @@ void VisibilitySystem::update(
     //* Orientation dependent range (horizontal, vertical)
     int range{};
 
-    for (int octant{0}; octant <= 7; ++octant)
+    for (int octant{0}; octant < 8; ++octant)
     {
         //* Set range for octant
         if (((octant + 1) / 2) % 2) //* := f tt ff tt f

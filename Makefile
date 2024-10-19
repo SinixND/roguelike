@@ -51,7 +51,7 @@
 # LBL_Makeflags
 #######################################
 
-VERSION					?= $(shell date --iso=seconds)
+# VERSION					?= $(shell date --iso=seconds)
 
 ### Automatically added flags to make command
 MAKEFLAGS 				:= --no-print-directory #-j
@@ -83,10 +83,10 @@ BIN_DIR_ROOT 			:= ./bin
 ### Here go all source files (with the $(SRC_EXT) extension) and project specific header files
 SRC_DIR 				:= ./src
 
-### Here go all (project-)independet header files
+### Here go all (project-)independent header files
 INC_DIR 				:= ./include
 
-### Here go all (project-)independet header files
+### Here go all external files
 LIB_DIR 				:= ./lib
 
 ### Here the object files will be outputted
@@ -230,15 +230,15 @@ ifeq ($(PLATFORM),windows)
 else
     ifeq ($(BUILD),debug)
         ifeq ($(PLATFORM),web)
-            LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/debug/web
+            LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/lib/web/debug
         else
-            LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/debug
+            LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/lib/desktop/debug
         endif
     else
         ifeq ($(PLATFORM),web)
-            LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/release/web
+            LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/lib/web/release
         else
-            LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/release
+            LIB_DIRS 	+= $(RAYLIB_SRC_DIR)/lib/desktop/release
         endif
     endif
 endif
@@ -274,6 +274,7 @@ endif
 
 
 # LBL_IncludeDirectories_ProjectSpecific
+SYS_INC_DIRS 			+= $(LIB_DIR)
 SYS_INC_DIRS 			+= $(RAYLIB_SRC_DIR)
 
 
@@ -308,7 +309,8 @@ endif
 # -Wfatal-errors 	Stop at first error
 
 ### Default flags
-CXX_FLAGS 				:= -std=c++20 -MMD -MP -DVERSION=$(VERSION)
+#-DVERSION=$(VERSION)
+CXX_FLAGS 				:= -std=c++20 -MMD -MP 
 FATAL					:= no
 
 ### Build specific flags 
