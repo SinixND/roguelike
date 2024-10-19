@@ -6,9 +6,21 @@
 
 class Panels
 {
+    //* Panels (sorted by descending priority)
+    float panelBorderWeight{};
+
+    //* Info (right), Number: chars per line
+    float infoPanelWidth{};
+
+    //* Status (top), Number: lines to print
+    float statusPanelHeight{};
+
+    //* Log (bottom)
+    float logPanelHeight{};
+
 public:
     RectangleEx tileInfo{};
-    RectangleEx info_{};
+    RectangleEx info{};
     RectangleEx status{};
     RectangleEx log{};
     RectangleEx map{};

@@ -4,34 +4,57 @@
 #include "GameFont.h"
 #include "Logger.h"
 #include "Objects.h"
-#include "PanelData.h"
 #include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raylib.h>
+#include <raygui.h>
 #include <raymath.h>
 #include <string>
 
 void Panels::init()
 {
+    panelBorderWeight = 1;
+
+    infoPanelWidth =
+        // static_cast<float>(
+        //     (/*Number of chars per line*/ 15 * GameFont::fontWidth)
+        //     + 2 * GameFont::fontWidth)
+        MeasureTextEx(
+            GameFont::font(),
+            "123456789012345", 
+            GameFont::fontHeight,
+            GameFont::fontWidth).x ;
+
+    statusPanelHeight =
+        static_cast<float>(
+            (/*Number of lines to print*/ 1 * (1.5f * GameFont::fontHeight))
+            + (0.5f * GameFont::fontHeight)) ;
+
+    logPanelHeight =
+        static_cast<float>(
+            (/*Number of lines to print*/ 4 * (1.5f * GameFont::fontHeight))
+            + (0.5f * GameFont::fontHeight)) ;
+
+
     tileInfo
         .setRight(static_cast<int>(GetRenderWidth()))
         .setBottom(static_cast<int>(GetRenderHeight()))
-        .resizeWidthLeft(PanelData::INFO_PANEL_WIDTH)
-        .resizeHeightTop(PanelData::LOG_PANEL_HEIGHT);
+        .resizeWidthLeft(infoPanelWidth)
+        .resizeHeightTop(logPanelHeight);
 
-    info_
+    info
         .setRight(static_cast<int>(GetRenderWidth()))
         .setBottom(tileInfo.top())
-        .resizeWidthLeft(PanelData::INFO_PANEL_WIDTH);
+        .resizeWidthLeft(infoPanelWidth);
 
     status
         .setRight(tileInfo.left())
-        .setBottom(PanelData::STATUS_PANEL_HEIGHT);
+        .setBottom(statusPanelHeight);
 
     log
         .setRight(tileInfo.left())
         .setBottom(static_cast<int>(GetRenderHeight()))
-        .resizeHeightTop(PanelData::LOG_PANEL_HEIGHT);
+        .resizeHeightTop(logPanelHeight);
 
     map
         .setRight(tileInfo.left())
@@ -46,9 +69,9 @@ void Panels::drawStatusPanelContent(int level) const
     //* Draw text for current level
     char const* currentLevel{TextFormat("Level %i", level)};
 
-    Font const& font{GuiGetFont()};
+    Font const& font{GameFont::font()};
 
-    int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
+    int fontSize{static_cast<int>(GameFont::fontHeight)};
     int fontSpacing{GuiGetStyle(DEFAULT, TEXT_SPACING)};
 
     Vector2 textDimensions{MeasureTextEx(font, currentLevel, fontSize, fontSpacing)};
@@ -107,26 +130,26 @@ void Panels::drawPanelBorders() const
 {
     DrawRectangleLinesEx(
         tileInfo.rectangle(),
-        PanelData::PANEL_BORDER_WEIGHT,
+        panelBorderWeight,
         DARKGRAY);
 
     DrawRectangleLinesEx(
-        info_.rectangle(),
-        PanelData::PANEL_BORDER_WEIGHT,
+        info.rectangle(),
+        panelBorderWeight,
         DARKGRAY);
 
     DrawRectangleLinesEx(
         status.rectangle(),
-        PanelData::PANEL_BORDER_WEIGHT,
+        panelBorderWeight,
         DARKGRAY);
 
     DrawRectangleLinesEx(
         log.rectangle(),
-        PanelData::PANEL_BORDER_WEIGHT,
+        panelBorderWeight,
         DARKGRAY);
 
     DrawRectangleLinesEx(
         map.rectangle(),
-        PanelData::PANEL_BORDER_WEIGHT,
+        panelBorderWeight,
         DARKGRAY);
 }

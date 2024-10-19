@@ -8,9 +8,11 @@ class GameFont
     static inline Font font_{};
 
 public:
-    static inline float const fontHeight{16};
+    static inline float const fontHeight{24};
     //* raygui font padding is 4
-    static inline float const fontWidth{fontHeight - 8};
+    static inline float const fontWidth{
+        static_cast<float>(MeasureText("1", GameFont::fontHeight))
+    };
 
 public:
     static void load()

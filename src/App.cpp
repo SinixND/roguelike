@@ -8,7 +8,10 @@
 #include <raylib.h>
 
 #if defined(EMSCRIPTEN)
+#include "Logger.h"
 #include <emscripten/emscripten.h>
+#include <emscripten/html5.h>
+#include <string>
 #endif
 
 #if defined(EMSCRIPTEN)
@@ -36,7 +39,10 @@ void App::init()
 
     //* Raylib Settings
     SetWindowIcon(favicon_);
-    SetWindowMinSize(config.windowWidth(), config.windowHeight());
+    SetWindowMinSize(640, 480);
+#if defined(EMSCRIPTEN)
+    MaximizeWindow();
+#endif
     SetExitKey(KEY_F4);
     SetTargetFPS(fpsTarget_);
 
