@@ -10,9 +10,8 @@
 
 //* SoA class
 //* Its the clients responsibility to avoid desync caused by individual size modifications of DenseMaps (eg. insert, erase)
-class Objects
+struct Objects
 {
-public:
     snx::DenseMap<Vector2I, PositionComponent> positions{};
     snx::DenseMap<Vector2I, RenderID> renderIDs{};
     snx::DenseMap<Vector2I, std::string> names{};

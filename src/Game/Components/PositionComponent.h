@@ -30,10 +30,6 @@ public:
 
     //* Returns if tilePosition changed
     bool move(Vector2 const& offset);
-
-    // bool operator==(PositionComponent const& rhs) const;
-    // bool operator==(Vector2 const& rhs) const;
-    // bool operator==(Vector2I const& rhs) const;
 };
 
 #endif

@@ -1,4 +1,4 @@
-#include "Chunks.h"
+#include "ChunkSystem.h"
 
 #include "Chunk.h"
 #include "ChunkData.h"
@@ -10,7 +10,26 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-void Chunks::init(
+void verifyRequiredChunk(
+    snx::DenseMap<Vector2I, Chunk>& chunks,
+    Vector2I const& tilePosition)
+{
+    Vector2I chunkPosition{UnitConversion::tileToChunk(tilePosition)};
+
+    //* If clause is needed due to exclude unnecessary LoadRenderTexture() calls
+    if (!chunks.contains(chunkPosition))
+    {
+        chunks.emplace(
+            chunkPosition,
+            LoadRenderTexture(
+                ChunkData::CHUNK_SIZE_F,
+                ChunkData::CHUNK_SIZE_F),
+            PositionComponent{chunkPosition});
+    }
+}
+
+void ChunkSystem::init(
+    snx::DenseMap<Vector2I, Chunk>& chunks,
     snx::DenseMap<Vector2I, PositionComponent> const tilesPositions,
     snx::DenseMap<Vector2I, RenderID> const& tilesRenderIDs,
     RenderSystem& renderer)
@@ -26,7 +45,9 @@ void Chunks::init(
     //* Create necessary chunks
     for (PositionComponent const& position : tilesPositions.values())
     {
-        verifyRequiredChunk(position.tilePosition());
+        verifyRequiredChunk(
+                chunks,
+                position.tilePosition());
     }
 
     //* Render  to chunk
@@ -60,18 +81,3 @@ void Chunks::init(
     }
 }
 
-void Chunks::verifyRequiredChunk(Vector2I const& tilePosition)
-{
-    Vector2I chunkPosition{UnitConversion::tileToChunk(tilePosition)};
-
-    //* If clause is needed due to exclude unnecessary LoadRenderTexture() calls
-    if (!chunks.contains(chunkPosition))
-    {
-        chunks.emplace(
-            chunkPosition,
-            LoadRenderTexture(
-                ChunkData::CHUNK_SIZE_F,
-                ChunkData::CHUNK_SIZE_F),
-            PositionComponent{chunkPosition});
-    }
-}

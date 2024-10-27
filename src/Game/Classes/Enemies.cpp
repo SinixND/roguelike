@@ -8,6 +8,7 @@
 #include "IdManager.h"
 #include "Map.h"
 #include "MovementComponent.h"
+#include "MovementSystem.h"
 #include "PathfinderSystem.h"
 #include "PositionComponent.h"
 #include "RNG.h"
@@ -41,7 +42,7 @@ Vector2I Enemies::getRandomPosition(Tiles const& tiles)
         //* - not occupied by other enemy
         if (
             tiles.positions.contains(randomPosition)
-            && !(tiles.visibilityIDs.at(randomPosition) == VisibilityID::visible)
+            && !(tiles.visibilityIDs.at(randomPosition) == VisibilityID::VISIBILE)
             && !tiles.isSolid(randomPosition)
             && !this->ids.contains(randomPosition))
         {
@@ -69,10 +70,11 @@ void Enemies::insert(
 void Enemies::create(
     Map const& map,
     RenderID enemyID,
+    bool randomPosition,
     Vector2I tilePosition)
 {
-    //* Allow creating enemy at specified position except heroPosition
-    if (tilePosition == Vector2I{0, 0})
+    //* Allow creating enemy at specified position
+    if (randomPosition)
     {
         tilePosition = getRandomPosition(map.tiles);
     }
@@ -82,11 +84,11 @@ void Enemies::create(
     switch (enemyID)
     {
         default:
-        case RenderID::goblin:
+        case RenderID::GOBLIN:
         {
             insert(
                 newID,
-                RenderID::goblin,
+                RenderID::GOBLIN,
                 MovementComponent{20 * EnemyData::GOBLIN_BASE_AGILITY},
                 EnergyComponent{EnemyData::GOBLIN_BASE_AGILITY},
                 EnemyData::GOBLIN_SCAN_RANGE,
@@ -105,7 +107,7 @@ void Enemies::init(
     {
         create(
             map,
-            RenderID::goblin);
+            RenderID::GOBLIN);
     }
 }
 
@@ -148,7 +150,7 @@ bool Enemies::checkForAction(
 
         switch (renderIDs.at(enemyId))
         {
-            case RenderID::goblin:
+            case RenderID::GOBLIN:
             {
                 std::vector<Vector2I> path{PathfinderSystem::findPath(
                     map,
@@ -218,7 +220,8 @@ void Enemies::update(
 
         //* Update ids_ key if tilePosition changes
         if (
-            movements.at(enemyId).update(
+            MovementSystem::update(
+                movements.at(enemyId),
                 position,
                 energies.at(enemyId),
                 map,

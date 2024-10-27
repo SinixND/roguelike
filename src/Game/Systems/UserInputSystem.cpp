@@ -1,5 +1,4 @@
 #include "UserInputSystem.h"
-#include <string>
 //* #define DEBUG_GESTURES
 //* #define DEBUG_GESTURE_EVENTS
 
@@ -15,395 +14,62 @@
 #include "PathfinderSystem.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
+#include "UserInputComponent.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
-#include <utility>
 
-void UserInputSystem::bindKey(int key, InputActionID action)
+void UserInputSystem::setDefaultInputMappings(
+    UserInputComponent& userInputComponent)
 {
-    keyToInputActionID_.insert(std::make_pair(key, action));
+    userInputComponent.bindKey(KEY_NULL, InputActionID::NONE);
+
+    userInputComponent.bindKey(KEY_W, InputActionID::ACT_UP);
+    userInputComponent.bindKey(KEY_K, InputActionID::ACT_UP);
+    userInputComponent.bindKey(KEY_UP, InputActionID::ACT_UP);
+
+    userInputComponent.bindKey(KEY_A, InputActionID::ACT_LEFT);
+    userInputComponent.bindKey(KEY_K, InputActionID::ACT_LEFT);
+    userInputComponent.bindKey(KEY_LEFT, InputActionID::ACT_LEFT);
+
+    userInputComponent.bindKey(KEY_S, InputActionID::ACT_DOWN);
+    userInputComponent.bindKey(KEY_J, InputActionID::ACT_DOWN);
+    userInputComponent.bindKey(KEY_DOWN, InputActionID::ACT_DOWN);
+
+    userInputComponent.bindKey(KEY_D, InputActionID::ACT_RIGHT);
+    userInputComponent.bindKey(KEY_L, InputActionID::ACT_RIGHT);
+    userInputComponent.bindKey(KEY_RIGHT, InputActionID::ACT_RIGHT);
+
+    userInputComponent.bindKey(KEY_SPACE, InputActionID::ACT_IN_PLACE);
+
+    userInputComponent.bindModifierKey(KEY_LEFT_SHIFT, InputActionID::MOD);
+
+    userInputComponent.bindMouseButton(MOUSE_BUTTON_RIGHT, InputActionID::TOGGLE_CURSOR);
+    userInputComponent.bindMouseButton(MOUSE_BUTTON_LEFT, InputActionID::MOVE_TO_TARGET);
 }
 
-void UserInputSystem::bindMouseButton(int key, InputActionID action)
+void UserInputSystem::takeInput(
+    UserInputComponent& userInputComponent,
+    bool isCursorActive)
 {
-    mouseButtonToInputActionID_.insert(std::make_pair(key, action));
-}
-
-void UserInputSystem::bindModifierKey(int key, InputActionID action)
-{
-    inputActionIDToModifierKey_.insert(std::make_pair(action, key));
-}
-
-void UserInputSystem::setDefaultInputMappings()
-{
-    bindKey(KEY_NULL, InputActionID::none);
-
-    bindKey(KEY_W, InputActionID::actUp);
-    bindKey(KEY_K, InputActionID::actUp);
-    bindKey(KEY_UP, InputActionID::actUp);
-
-    bindKey(KEY_A, InputActionID::actLeft);
-    bindKey(KEY_K, InputActionID::actLeft);
-    bindKey(KEY_LEFT, InputActionID::actLeft);
-
-    bindKey(KEY_S, InputActionID::actDown);
-    bindKey(KEY_J, InputActionID::actDown);
-    bindKey(KEY_DOWN, InputActionID::actDown);
-
-    bindKey(KEY_D, InputActionID::actRight);
-    bindKey(KEY_L, InputActionID::actRight);
-    bindKey(KEY_RIGHT, InputActionID::actRight);
-
-    bindKey(KEY_SPACE, InputActionID::actInPlace);
-
-    bindModifierKey(KEY_LEFT_SHIFT, InputActionID::mod);
-
-    bindMouseButton(MOUSE_BUTTON_RIGHT, InputActionID::toggleCursor);
-    bindMouseButton(MOUSE_BUTTON_LEFT, InputActionID::moveToTarget);
-}
-
-bool UserInputSystem::takeInputMouse(bool isCursorActive)
-{
-    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
-    {
-        inputAction_ = mouseButtonToInputActionID_[MOUSE_BUTTON_RIGHT];
-    }
-
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-    {
-        inputAction_ = mouseButtonToInputActionID_[MOUSE_BUTTON_LEFT];
-    }
-
-    //* Check if input is invalid (need exception for mouse toggle action)
-    if (inputAction_ == InputActionID::none
-        || (!(inputAction_ == InputActionID::toggleCursor)
-            && !isCursorActive))
-    {
-
-        return false;
-    }
-
-    return true;
-}
-
-bool UserInputSystem::takeInputKey()
-{
-    //* Update key pressed
-    //* Set lastKey only to valid inputs (associated with actions)
-    lastKey_ = (currentKey_) ? currentKey_ : lastKey_;
-    currentKey_ = GetKeyPressed();
-
-    //* Check modifiers
-    modifier_ = IsKeyDown(inputActionIDToModifierKey_[InputActionID::mod]);
-
-    //* Repeat last key if no input but modifier down
-#if defined(TERMUX)
-    if ((modifier_ && !currentKey_))
-#else
-    if ((modifier_ && !currentKey_) || IsKeyPressedRepeat(lastKey_))
-#endif
-    {
-        currentKey_ = lastKey_;
-    }
-
-    inputAction_ = keyToInputActionID_[currentKey_];
-
-    if (inputAction_ == InputActionID::none)
-    {
-        return false;
-    }
-
-    return true;
-}
-
-bool UserInputSystem::takeInputGesture()
-{
-    //* IMPORTANT NOTE:
-    //* Implemented events TAP, DOUBLETAP and HOLD as raylib gesture registration was unreliable
-    //* Therefore disabled any functionality of GESTURE_TAP and GESTURE_DOUBLE_TAP
-    //* but left in game logging so it gets noticed when it was fixed
-
-    //* Update gestures
-    lastGesture_ = currentGesture_;
-    currentGesture_ = GetGestureDetected();
-
-    //* Detect gesture change
-    if (currentGesture_ != lastGesture_)
-    {
-        switch (currentGesture_)
-        {
-            default:
-            case GESTURE_NONE:
-            {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered GESTURE_NONE\n");
-                snx::debug::cliLog("Triggered GESTURE_NONE\n");
-#endif
-#if defined(DEBUG) && defined(DEBUG_GESTURE_EVENTS)
-                snx::Logger::log("Triggered TOUCH UP EVENT\n");
-                snx::debug::cliLog("Triggered TOUCH UP EVENT\n");
-#endif
-                touchUpTime_ = GetTime();
-
-                //* Reset hold duration
-                touchHoldDuration_ = 0;
-
-                //* Check for Tap events
-                if (lastGesture_ == GESTURE_HOLD
-                    && (touchUpTime_ - touchDownTime_) < maxTapTime)
-                {
-                    //* Check for double tap
-                    if ((touchUpTime_ - lastTap_) < maxDoubleTapTime)
-                    {
-#if defined(DEBUG) && defined(DEBUG_GESTURE_EVENTS)
-                        snx::Logger::log("Triggered DOUBLE TAP EVENT\n");
-                        snx::debug::cliLog("Triggered DOUBLE TAP EVENT\n");
-#endif
-                        inputAction_ = InputActionID::actInPlace;
-                    }
-                    else
-                    {
-#if defined(DEBUG) && defined(DEBUG_GESTURE_EVENTS)
-                        snx::Logger::log("Triggered TAP EVENT\n");
-                        snx::debug::cliLog("Triggered TAP EVENT\n");
-#endif
-                        // inputAction_ = InputActionID::actInPlace;
-                    }
-
-                    lastTap_ = touchUpTime_;
-
-                    break;
-                }
-
-                inputAction_ = InputActionID::none;
-
-                break;
-            }
-
-            case GESTURE_TAP:
-            {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered GESTURE_TAP\n");
-#endif
-                // touchDownTime_ = GetTime();
-
-                break;
-            }
-
-            case GESTURE_DOUBLETAP:
-            {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered GESTURE_DOUBLETAP\n");
-#endif
-                // inputAction_ = InputActionID::actInPlace;
-
-                break;
-            }
-
-            case GESTURE_HOLD:
-            {
-#if defined(DEBUG) && (defined(DEBUG_GESTURES) || defined(DEBUG_GESTURE_EVENTS))
-                snx::Logger::log("Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n");
-                snx::debug::cliLog("Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n");
-#endif
-                touchDownTime_ = GetTime();
-
-                break;
-            }
-
-            case GESTURE_DRAG:
-            {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered first GESTURE_DRAG\n");
-                snx::debug::cliLog("Triggered first GESTURE_DRAG\n");
-#endif
-                //* Set modifier
-                modifier_ = true;
-
-                Vector2 direction = Vector2MainDirection(GetGestureDragVector());
-                if (direction == Vector2{0, -1})
-                {
-                    inputAction_ = InputActionID::actUp;
-                }
-
-                else if (direction == Vector2{-1, 0})
-                {
-                    inputAction_ = InputActionID::actLeft;
-                }
-
-                else if (direction == Vector2{0, 1})
-                {
-                    inputAction_ = InputActionID::actDown;
-                }
-
-                else if (direction == Vector2{1, 0})
-                {
-                    inputAction_ = InputActionID::actRight;
-                }
-
-                break;
-            }
-
-            case GESTURE_SWIPE_UP:
-            {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered GESTURE_SWIPE_UP\n");
-                snx::debug::cliLog("Triggered GESTURE_SWIPE_UP\n");
-#endif
-                inputAction_ = InputActionID::actUp;
-
-                break;
-            }
-
-            case GESTURE_SWIPE_LEFT:
-            {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered GESTURE_SWIPE_LEFT\n");
-                snx::debug::cliLog("Triggered GESTURE_SWIPE_LEFT\n");
-#endif
-                inputAction_ = InputActionID::actLeft;
-
-                break;
-            }
-
-            case GESTURE_SWIPE_DOWN:
-            {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered GESTURE_SWIPE_DOWN\n");
-                snx::debug::cliLog("Triggered GESTURE_SWIPE_DOWN\n");
-#endif
-                inputAction_ = InputActionID::actDown;
-
-                break;
-            }
-
-            case GESTURE_SWIPE_RIGHT:
-            {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered GESTURE_SWIPE_RIGHT\n");
-                snx::debug::cliLog("Triggered GESTURE_SWIPE_RIGHT\n");
-#endif
-                inputAction_ = InputActionID::actRight;
-
-                break;
-            }
-
-            case GESTURE_PINCH_IN:
-            {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered GESTURE_PINCH_IN\n");
-                snx::debug::cliLog("Triggered GESTURE_PINCH_IN\n");
-#endif
-
-                break;
-            }
-
-            case GESTURE_PINCH_OUT:
-            {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered GESTURE_PINCH_OUT\n");
-                snx::debug::cliLog("Triggered GESTURE_PINCH_OUT\n");
-#endif
-
-                break;
-            }
-        }
-    }
-
-    //* Detect continuous gestures
-    //* if (currentGesture_ == lastGesture_)
-    else
-    {
-        switch (currentGesture_)
-        {
-            default:
-            case GESTURE_NONE:
-            {
-                inputAction_ = InputActionID::none;
-
-                break;
-            }
-
-            case GESTURE_HOLD:
-            {
-                touchHoldDuration_ = GetTime() - touchDownTime_;
-
-                if ((touchHoldDuration_) > minHoldTime)
-                {
-#if defined(DEBUG) && defined(DEBUG_GESTURE_EVENTS)
-                    snx::Logger::log("Triggered HOLD EVENT\n");
-                    snx::debug::cliLog("Triggered HOLD EVENT\n");
-#endif
-                    //* Get/Set info panel reference to tile/object/enemy at current position
-                    snx::PublisherStatic::publish(Event::cursorPositionChanged);
-                }
-
-                break;
-            }
-
-            case GESTURE_DRAG:
-            {
-#if defined(DEBUG) && defined(DEBUG_GESTURES)
-                snx::Logger::log("Triggered GESTURE_DRAG\n");
-                snx::debug::cliLog("Triggered GESTURE_DRAG\n");
-#endif
-                //* Set modifier
-                modifier_ = true;
-
-                Vector2 direction = Vector2MainDirection(GetGestureDragVector());
-                if (direction == Vector2{0, -1})
-                {
-                    inputAction_ = InputActionID::actUp;
-                }
-
-                else if (direction == Vector2{-1, 0})
-                {
-                    inputAction_ = InputActionID::actLeft;
-                }
-
-                else if (direction == Vector2{0, 1})
-                {
-                    inputAction_ = InputActionID::actDown;
-                }
-
-                else if (direction == Vector2{1, 0})
-                {
-                    inputAction_ = InputActionID::actRight;
-                }
-
-                break;
-            }
-        }
-    }
-
-    if (inputAction_ == InputActionID::none)
-    {
-        return false;
-    }
-
-    return true;
-}
-
-void UserInputSystem::takeInput(bool isCursorActive)
-{
-    if (takeInputKey())
+    if (userInputComponent.takeInputKey())
     {
         return;
     }
 
-    if (takeInputMouse(isCursorActive))
+    if (userInputComponent.takeInputMouse(isCursorActive))
     {
         return;
     }
 
     else if (!isCursorActive)
     {
-        takeInputGesture();
+        userInputComponent.takeInputGesture();
     }
 }
 
 void UserInputSystem::triggerAction(
+    UserInputComponent& userInputComponent,
     Hero& hero,
     Cursor const& cursor,
     Map const& map,
@@ -414,7 +80,7 @@ void UserInputSystem::triggerAction(
         return;
     }
 
-    if (inputAction_ == InputActionID::none)
+    if (userInputComponent.inputAction() == InputActionID::NONE)
     {
         //* Trigger input agnostic actions, eg. non-empty path
         hero.movement.trigger();
@@ -422,9 +88,9 @@ void UserInputSystem::triggerAction(
         return;
     }
 
-    switch (inputAction_)
+    switch (userInputComponent.inputAction())
     {
-        case InputActionID::actUp:
+        case InputActionID::ACT_UP:
         {
             if (map.enemies.ids.contains(
                     Vector2Add(
@@ -442,7 +108,7 @@ void UserInputSystem::triggerAction(
             break;
         }
 
-        case InputActionID::actLeft:
+        case InputActionID::ACT_LEFT:
         {
             if (map.enemies.ids.contains(
                     Vector2Add(
@@ -460,7 +126,7 @@ void UserInputSystem::triggerAction(
             break;
         }
 
-        case InputActionID::actDown:
+        case InputActionID::ACT_DOWN:
         {
             if (map.enemies.ids.contains(
                     Vector2Add(
@@ -478,7 +144,7 @@ void UserInputSystem::triggerAction(
             break;
         }
 
-        case InputActionID::actRight:
+        case InputActionID::ACT_RIGHT:
         {
             if (map.enemies.ids.contains(
                     Vector2Add(
@@ -496,7 +162,7 @@ void UserInputSystem::triggerAction(
             break;
         }
 
-        case InputActionID::moveToTarget:
+        case InputActionID::MOVE_TO_TARGET:
         {
             hero.movement.trigger(PathfinderSystem::findPath(
                 map,
@@ -507,7 +173,7 @@ void UserInputSystem::triggerAction(
             break;
         }
 
-        case InputActionID::actInPlace:
+        case InputActionID::ACT_IN_PLACE:
         {
             Vector2I heroTilePosition{hero.position.tilePosition()};
 
@@ -524,9 +190,9 @@ void UserInputSystem::triggerAction(
             break;
         }
 
-        case InputActionID::toggleCursor:
+        case InputActionID::TOGGLE_CURSOR:
         {
-            snx::PublisherStatic::publish(Event::cursorToggle);
+            snx::PublisherStatic::publish(Event::CURSOR_TOGGLE);
 
             break;
         }
@@ -536,5 +202,5 @@ void UserInputSystem::triggerAction(
     }
 
     //* Reset
-    inputAction_ = InputActionID::none;
+    userInputComponent.resetInputAction();
 }

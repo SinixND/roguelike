@@ -17,10 +17,10 @@ class App
 {
     static inline AppConfig config{};
 
-    int const fpsTarget_{300};
+    int const FPS_TARGET_{300};
 
     //* Raylib settings
-    Image const favicon_{LoadImage("resources/favicon/favicon.png")};
+    Image const FAVICON_{LoadImage("resources/favicon/favicon.png")};
 
     //* Scenes
     SceneMain SceneMain_{};

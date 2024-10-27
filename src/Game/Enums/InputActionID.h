@@ -3,18 +3,18 @@
 
 enum class InputActionID
 {
-    none = 0,
+    NONE = 0,
     //* Actions
-    actUp,
-    actLeft,
-    actDown,
-    actRight,
-    moveToTarget,
-    actInPlace,
+    ACT_UP,
+    ACT_LEFT,
+    ACT_DOWN,
+    ACT_RIGHT,
+    MOVE_TO_TARGET,
+    ACT_IN_PLACE,
     //* Utility
-    toggleCursor,
+    TOGGLE_CURSOR,
     //* Modifiers
-    mod,
+    MOD,
 };
 
 #endif

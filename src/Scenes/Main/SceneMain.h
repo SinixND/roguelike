@@ -1,14 +1,16 @@
 #ifndef IG20231203204746
 #define IG20231203204746
 
-#include "Chunks.h"
+#include "Chunk.h"
 #include "Cursor.h"
+#include "DenseMap.h"
 #include "Game.h"
 #include "GameCamera.h"
 #include "IScene.h"
 #include "Panels.h"
 #include "RenderSystem.h"
 #include "VisibilitySystem.h"
+#include "raylibEx.h"
 #include <raylib.h>
 
 class SceneMain : public snx::IScene
@@ -21,8 +23,8 @@ class SceneMain : public snx::IScene
 
     Cursor cursor_{};
 
-    Chunks tileChunks_{};
-    VisibilitySystem visibility_{};
+    snx::DenseMap<Vector2I, Chunk> chunks_{};
+    snx::DenseMap<Vector2I, Fog> fogs_{};
 
 public:
     void init();

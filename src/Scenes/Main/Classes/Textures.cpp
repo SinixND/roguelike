@@ -10,7 +10,7 @@ enum class RenderID;
 void Textures::loadAtlas(std::string const& filename)
 {
     unloadAtlas();
-    textureAtlas_ = LoadTexture((texturePath + filename).c_str());
+    textureAtlas_ = LoadTexture((TEXTURE_PATH + filename).c_str());
 }
 
 Texture2D const& Textures::getTextureAtlas() const

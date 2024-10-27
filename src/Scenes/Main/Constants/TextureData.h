@@ -8,7 +8,7 @@
 namespace TextureData
 {
     //* Themes
-    std::vector<std::string> const themes{
+    std::vector<std::string> const THEMES{
         "Default",
         "Ascii",
         "AsciiBW"};

@@ -9,7 +9,7 @@
 class Hero
 {
 public:
-    RenderID renderID{RenderID::hero};
+    RenderID renderID{RenderID::HERO};
     MovementComponent movement{};
     EnergyComponent energy{};
     PositionComponent position{};

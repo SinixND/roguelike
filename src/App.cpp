@@ -38,17 +38,17 @@ void App::init()
     InitWindow(config.windowWidth(), config.windowHeight(), "Roguelike");
 
     //* Raylib Settings
-    SetWindowIcon(favicon_);
+    SetWindowIcon(FAVICON_);
     SetWindowMinSize(640, 480);
 #if defined(EMSCRIPTEN)
     MaximizeWindow();
 #endif
     SetExitKey(KEY_F4);
-    SetTargetFPS(fpsTarget_);
+    SetTargetFPS(FPS_TARGET_);
 
     //* Fonts
     GameFont::load();
-    GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::fontHeight);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::FONT_HEIGHT);
 
     //* Scene
     SceneMain_.init();
@@ -71,7 +71,7 @@ void updateWindow()
 
     if (IsWindowResized())
     {
-        snx::PublisherStatic::publish(Event::windowResized);
+        snx::PublisherStatic::publish(Event::WINDOW_RESIZED);
     }
 }
 

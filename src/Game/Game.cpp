@@ -6,10 +6,12 @@
 #include "GameCamera.h"
 #include "Hero.h"
 #include "Logger.h"
+#include "MovementSystem.h"
 #include "Objects.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "RenderID.h"
+#include "UserInputSystem.h"
 #include "World.h"
 #include "raylibEx.h"
 #include <raygui.h>
@@ -28,34 +30,34 @@ void Game::init()
 
     hero.init();
 
-    inputHandler_.setDefaultInputMappings();
+    UserInputSystem::setDefaultInputMappings(userInput_);
 
     //* Setup events
     setupGameEvents();
 
 #if defined(DEBUG)
-    snx::PublisherStatic::publish(Event::nextLevel);
+    snx::PublisherStatic::publish(Event::NEXT_LEVEL);
 #endif
 }
 
 void Game::setupGameEvents()
 {
     snx::PublisherStatic::addSubscriber(
-        Event::actionInProgress,
+        Event::ACTION_IN_PROGRESS,
         [&]()
         {
             actionsInProgress_ = true;
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::actionFinished,
+        Event::ACTION_FINISHED,
         [&]()
         {
             actionsInProgress_ = false;
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::nextLevel,
+        Event::NEXT_LEVEL,
         [&]()
         {
             snx::Logger::log("Entered next level");
@@ -66,13 +68,13 @@ void Game::setupGameEvents()
 
             ++turn_;
 
-            snx::PublisherStatic::publish(Event::heroMoved);
-            snx::PublisherStatic::publish(Event::heroPositionChanged);
-            snx::PublisherStatic::publish(Event::mapChange);
+            snx::PublisherStatic::publish(Event::HERO_MOVED);
+            snx::PublisherStatic::publish(Event::HERO_POSITION_CHANGED);
+            snx::PublisherStatic::publish(Event::MAP_CHANGE);
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::previousLevel,
+        Event::PREVIOUS_LEVEL,
         [&]()
         {
             snx::Logger::log("Entered previous level");
@@ -81,7 +83,7 @@ void Game::setupGameEvents()
 
             for (PositionComponent const& position : world.currentMap->objects.positions.values())
             {
-                if (!(world.currentMap->objects.renderIDs.at(position.tilePosition()) == RenderID::descend))
+                if (!(world.currentMap->objects.renderIDs.at(position.tilePosition()) == RenderID::DESCEND))
                 {
                     continue;
                 }
@@ -91,9 +93,9 @@ void Game::setupGameEvents()
 
             --turn_;
 
-            snx::PublisherStatic::publish(Event::heroMoved);
-            snx::PublisherStatic::publish(Event::heroPositionChanged);
-            snx::PublisherStatic::publish(Event::mapChange);
+            snx::PublisherStatic::publish(Event::HERO_MOVED);
+            snx::PublisherStatic::publish(Event::HERO_POSITION_CHANGED);
+            snx::PublisherStatic::publish(Event::MAP_CHANGE);
         });
 }
 
@@ -104,7 +106,9 @@ void Game::processInput(Cursor& cursor)
     {
         //* Take input from mouse, keys or gestures
         //* Continuous movement done by repeating previous input if modifier is active
-        inputHandler_.takeInput(cursor.isActive);
+        UserInputSystem::takeInput(
+            userInput_,
+            cursor.isActive);
     }
 }
 
@@ -142,14 +146,16 @@ void Game::updateState(
     }
 
     //* Trigger potential hero action
-    inputHandler_.triggerAction(
+    UserInputSystem::triggerAction(
+        userInput_,
         hero,
         cursor,
         *world.currentMap,
         gameCamera);
 
-    //* Update hero movment
-    hero.movement.update(
+    //* Update hero movement
+    MovementSystem::update(
+        hero.movement,
         hero.position,
         hero.energy,
         *world.currentMap,

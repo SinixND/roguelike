@@ -8,7 +8,7 @@
 
 class Textures
 {
-    std::string const texturePath{"resources/textures/"};
+    std::string const TEXTURE_PATH{"resources/textures/"};
 
     //* Texture atlas
     Texture2D textureAtlas_{};

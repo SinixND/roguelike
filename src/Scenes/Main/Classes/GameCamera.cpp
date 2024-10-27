@@ -15,27 +15,27 @@ void GameCamera::init(RectangleEx const& viewport, Vector2 const& heroPosition)
         viewport.center(),
         heroPosition,
         0,
-        0.5};
+        0.75};
 
-    snx::PublisherStatic::publish(Event::cameraChanged);
+    snx::PublisherStatic::publish(Event::CAMERA_CHANGED);
 }
 
 void GameCamera::setOffset(Vector2 const& offset)
 {
     camera_.offset = offset;
-    snx::PublisherStatic::publish(Event::cameraChanged);
+    snx::PublisherStatic::publish(Event::CAMERA_CHANGED);
 }
 
 void GameCamera::setTarget(Vector2 const& target)
 {
     camera_.target = target;
-    snx::PublisherStatic::publish(Event::cameraChanged);
+    snx::PublisherStatic::publish(Event::CAMERA_CHANGED);
 }
 
 void GameCamera::setZoom(float zoom)
 {
     camera_.zoom = zoom;
-    snx::PublisherStatic::publish(Event::cameraChanged);
+    snx::PublisherStatic::publish(Event::CAMERA_CHANGED);
 }
 
 void GameCamera::updateViewport(RectangleEx const& viewport)

@@ -31,7 +31,7 @@ void Cursor::update(Camera2D const& camera, Vector2I const& heroPosition)
         {
             position.changeTo(mouseTile);
 
-            snx::PublisherStatic::publish(Event::cursorPositionChanged);
+            snx::PublisherStatic::publish(Event::CURSOR_POSITION_CHANGED);
         }
 
         return;

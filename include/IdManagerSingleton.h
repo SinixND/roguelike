@@ -12,7 +12,7 @@ namespace snx
 {
     class IdManager : public snx::Singleton<IdManager>
     {
-        static inline size_t const maxId_{std::numeric_limits<Id>::max()};
+        static inline size_t const MAX_ID{std::numeric_limits<Id>::max()};
         static inline size_t lastId_{0};
         static inline std::unordered_set<Id> activeIds_;
         static inline std::unordered_set<Id> freeIds_;
@@ -20,7 +20,7 @@ namespace snx
     public:
         static Id requestId()
         {
-            assert(lastId_ < maxId_ && "ID OVERFLOWING!");
+            assert(lastId_ < MAX_ID && "ID OVERFLOWING!");
 
             if (!freeIds_.empty())
             {

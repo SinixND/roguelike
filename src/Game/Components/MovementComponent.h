@@ -5,10 +5,6 @@
 #include <raylib.h>
 #include <vector>
 
-class Map;
-class PositionComponent;
-class EnergyComponent;
-
 class MovementComponent
 {
     std::vector<Vector2I> path_{};
@@ -19,8 +15,9 @@ class MovementComponent
     int speed_{};
     float cumulativeDistanceMoved_{};
 
-    bool isTriggered_{false};
-    bool isInProgress_{false};
+public:
+    bool isTriggered{false};
+    bool isInProgress{false};
 
 public:
     MovementComponent() = default;
@@ -31,37 +28,31 @@ public:
     }
 
     //* Unsets isTriggered_ and clears path_
-    void clearMovment();
+    void clearPath();
 
     //* Sets direction, currentVelocity and isTriggered_
     void trigger(Vector2I const& direction);
     void trigger(std::vector<Vector2I> const& path);
     void trigger();
 
-    //* Moves hero with following steps
-    //* - Check for collision
-    //* - Starts movment if trigger set OR trigger not set but path available
-    //* - Consumes energy,
-    //* - Sets inProgress state,
-    //* - Skips if action is in progress,
-    //* - Moves for one tile max
-    //* - Resets inProgress state if moved for one tile
-    //* - Resets currentVelocity
-    //* Returns if tilePosition changed
-    bool update(
-        PositionComponent& position,
-        EnergyComponent& energy,
-        Map const& map,
-        PositionComponent const& heroPosition);
+    //* Resets trigger, consumes energy and sets InProgress
+    void activateTrigger();
 
+    void stopMovement();
+
+    //* Calculate distance for this frame
+    Vector2 distance() const;
+    float length() const;
+
+    Vector2I const& direction() const;
     void setSpeed(int speed);
+
+    float cumulativeDistanceMoved() const;
+    void updateCumulativeDistanceMoved();
+    void resetCumulativeDistanceMoved();
 
 private:
     void setInProgress();
-    void stopMovement();
-
-    //* Resets trigger, consumes energy and sets InProgress
-    void activateTrigger(EnergyComponent& energy);
 
     //* Triggers from and adjusts path
     void triggerPath();

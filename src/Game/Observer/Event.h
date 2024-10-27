@@ -3,22 +3,22 @@
 
 enum class Event
 {
-    null = 0,
+    NONE = 0,
     //* Application interaction
-    windowResized,
-    panelsResized,
-    cameraChanged,
-    cursorToggle,
-    cursorPositionChanged,
-    mapChange,
-    colorThemeChange,
+    WINDOW_RESIZED,
+    PANELS_RESIZED,
+    CAMERA_CHANGED,
+    CURSOR_TOGGLE,
+    CURSOR_POSITION_CHANGED,
+    MAP_CHANGE,
+    COLOR_THEME_CHANGE,
     //* Game events
-    actionFinished,
-    actionInProgress,
-    heroMoved,
-    heroPositionChanged,
-    nextLevel,
-    previousLevel,
+    ACTION_FINISHED,
+    ACTION_IN_PROGRESS,
+    HERO_MOVED,
+    HERO_POSITION_CHANGED,
+    NEXT_LEVEL,
+    PREVIOUS_LEVEL,
 };
 
 #endif

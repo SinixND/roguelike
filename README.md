@@ -5,7 +5,8 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Separate data and logic
+- [ ] Separate data and logic (panels)
+- [ ] Modify visiblity -> independent of viewport
 
 
 ## Shortterm

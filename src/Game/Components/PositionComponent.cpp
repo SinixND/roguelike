@@ -38,17 +38,3 @@ bool PositionComponent::move(Vector2 const& offset)
     return false;
 }
 
-// bool PositionComponent::operator==(PositionComponent const& rhs) const
-// {
-//     return this->position_ == rhs.position_;
-// }
-//
-// bool PositionComponent::operator==(Vector2 const& rhs) const
-// {
-//     return this->position_ == rhs;
-// }
-//
-// bool PositionComponent::operator==(Vector2I const& rhs) const
-// {
-//     return this->tilePosition() == rhs;
-// }

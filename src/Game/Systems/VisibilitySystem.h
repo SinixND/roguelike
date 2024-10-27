@@ -10,7 +10,7 @@
 #include <unordered_set>
 #include <vector>
 
-class Tiles;
+struct Tiles;
 
 class Shadow
 {
@@ -59,22 +59,18 @@ public:
     }
 };
 
-class VisibilitySystem
+namespace VisibilitySystem
 {
-    snx::DenseMap<Vector2I, Fog> fogs_{};
-
-public:
     void update(
+        snx::DenseMap<Vector2I, Fog>& fogs_,
         snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
         std::unordered_set<Vector2I> const& isOpaques,
         RectangleExI const& viewport,
         Vector2I const& heroPosition);
 
-    snx::DenseMap<Vector2I, Fog> const& fogs() const;
-
-private:
     //* If any part of tile is visible -> whole tile is visible (so that "tunnel walls" stay visible)
     void calculateVisibilitiesInOctant(
+        snx::DenseMap<Vector2I, Fog>& fogs_,
         int octant,
         snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
         std::unordered_set<Vector2I> const& isOpaques,

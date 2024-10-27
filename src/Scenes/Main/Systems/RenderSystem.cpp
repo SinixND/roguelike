@@ -16,7 +16,7 @@
 
 std::string RenderSystem::textureAtlasFileName() const
 {
-    return TextureData::themes[theme_] + ".png";
+    return TextureData::THEMES[theme_] + ".png";
 }
 
 void RenderSystem::init()
@@ -25,14 +25,14 @@ void RenderSystem::init()
     textures_.loadAtlas(textureAtlasFileName());
 
     //* Register textures
-    textures_.registerTexture(RenderID::none, {0, 0});
-    textures_.registerTexture(RenderID::cursor, {35, 0});
-    textures_.registerTexture(RenderID::hero, {70, 0});
-    textures_.registerTexture(RenderID::wall, {105, 0});
-    textures_.registerTexture(RenderID::floor, {0, 35});
-    textures_.registerTexture(RenderID::descend, {35, 35});
-    textures_.registerTexture(RenderID::ascend, {70, 35});
-    textures_.registerTexture(RenderID::goblin, {105, 35});
+    textures_.registerTexture(RenderID::NONE, {0, 0});
+    textures_.registerTexture(RenderID::CURSOR, {35, 0});
+    textures_.registerTexture(RenderID::HERO, {70, 0});
+    textures_.registerTexture(RenderID::WALL, {105, 0});
+    textures_.registerTexture(RenderID::FLOOR, {0, 35});
+    textures_.registerTexture(RenderID::DESCEND, {35, 35});
+    textures_.registerTexture(RenderID::ASCEND, {70, 35});
+    textures_.registerTexture(RenderID::GOBLIN, {105, 35});
 }
 
 void RenderSystem::render(
@@ -152,7 +152,7 @@ void RenderSystem::renderFog(Fog const& fog) const
 
 void RenderSystem::cycleThemes()
 {
-    theme_ = (theme_ < TextureData::themes.size() - 1) ? ++theme_ : 0;
+    theme_ = (theme_ < TextureData::THEMES.size() - 1) ? ++theme_ : 0;
 }
 
 void RenderSystem::deinit()

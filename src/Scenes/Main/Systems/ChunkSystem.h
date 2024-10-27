@@ -4,24 +4,16 @@
 #include "Chunk.h"
 #include "DenseMap.h"
 #include "RenderSystem.h"
-#include "Tiles.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
-class Chunks
+namespace ChunkSystem
 {
-public:
-    snx::DenseMap<Vector2I, Chunk> chunks{};
-
-public:
     void init(
+        snx::DenseMap<Vector2I, Chunk>& chunks,
         snx::DenseMap<Vector2I, PositionComponent> const tilesPositions,
         snx::DenseMap<Vector2I, RenderID> const& tilesRenderIDs,
         RenderSystem& renderer);
-
-private:
-    //* Verify chunk exists for tilePosition
-    void verifyRequiredChunk(Vector2I const& tilePosition);
 };
 
 #endif

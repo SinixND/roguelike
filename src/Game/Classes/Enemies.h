@@ -13,13 +13,12 @@
 #include "raylibEx.h"
 #include <cstddef>
 
-//* SoA class
-//* Its the clients responsibility to avoid desync caused by individual size modifications of DenseMaps (eg. insert, erase)
-class Enemies
-{
-    snx::IdManager idManager_{};
+struct Map;
 
-public:
+//* SoA
+//* Its the clients responsibility to avoid desync caused by individual size modifications of DenseMaps (eg. insert, erase). Use member functions instead
+struct Enemies
+{
     snx::DenseMap<Vector2I, size_t> ids{};
     snx::DenseMap<size_t, PositionComponent> positions{};
     snx::DenseMap<size_t, RenderID> renderIDs{};
@@ -27,11 +26,14 @@ public:
     snx::DenseMap<size_t, EnergyComponent> energies{};
     snx::DenseMap<size_t, AIComponent> ais{};
 
+private:
+    snx::IdManager idManager_{};
+
 public:
-    //* Pass heroPosition twice to get random position
     void create(
         Map const& map,
         RenderID enemyID,
+        bool randomPosition = true,
         Vector2I tilePosition = Vector2I{0, 0});
 
     void init(

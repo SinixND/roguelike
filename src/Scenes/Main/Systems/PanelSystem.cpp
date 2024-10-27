@@ -1,10 +1,11 @@
-#include "Panels.h"
+#include "PanelSystem.h"
 
 #include "Event.h"
 #include "GameFont.h"
 #include "Hero.h"
 #include "Logger.h"
 #include "Objects.h"
+#include "Panels.h"
 #include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raygui.h>
@@ -12,67 +13,67 @@
 #include <raymath.h>
 #include <string>
 
-void Panels::init()
+void PanelSystem::init(Panels& panels)
 {
-    panelBorderWeight = 1;
-
-    heroInfoPanelWidth =
+    float heroInfoPanelWidth =
         // static_cast<float>(
         //     (/*Number of chars per line*/ 15 * GameFont::fontWidth)
         //     + 2 * GameFont::fontWidth)
         MeasureTextEx(
             GameFont::font(),
             "1234567890123456",
-            GameFont::fontHeight,
+            GameFont::FONT_HEIGHT,
             0)
             .x;
 
-    gameInfoPanelHeight =
+    float gameInfoPanelHeight =
         static_cast<float>(
-            (/*Number of lines to print*/ 1 * GameFont::fontHeight)
-            + GameFont::fontHeight);
+            (/*Number of lines to print*/ 1 * GameFont::FONT_HEIGHT)
+            + GameFont::FONT_HEIGHT);
 
-    logPanelHeight =
+    float logPanelHeight =
         static_cast<float>(
-            (/*Number of lines to print*/ 4 * GameFont::fontHeight)
-            + GameFont::fontHeight);
+            (/*Number of lines to print*/ 4 * GameFont::FONT_HEIGHT)
+            + GameFont::FONT_HEIGHT);
 
-    tileInfo
+    panels.tileInfo
         .setRight(static_cast<int>(GetRenderWidth()))
         .setBottom(static_cast<int>(GetRenderHeight()))
         .resizeWidthLeft(heroInfoPanelWidth)
         .resizeHeightTop(logPanelHeight);
 
-    heroInfo
+    panels.heroInfo
         .setRight(static_cast<int>(GetRenderWidth()))
-        .setBottom(tileInfo.top())
+        .setBottom(panels.tileInfo.top())
         .resizeWidthLeft(heroInfoPanelWidth);
 
-    status
-        .setRight(tileInfo.left())
+    panels.status
+        .setRight(panels.tileInfo.left())
         .setBottom(gameInfoPanelHeight);
 
-    log
-        .setRight(tileInfo.left())
+    panels.log
+        .setRight(panels.tileInfo.left())
         .setBottom(static_cast<int>(GetRenderHeight()))
         .resizeHeightTop(logPanelHeight);
 
-    map
-        .setRight(tileInfo.left())
-        .setBottom(log.top())
-        .setTop(status.bottom());
+    panels.map
+        .setRight(panels.tileInfo.left())
+        .setBottom(panels.log.top())
+        .setTop(panels.status.bottom());
 
-    snx::PublisherStatic::publish(Event::panelsResized);
+    snx::PublisherStatic::publish(Event::PANELS_RESIZED);
 }
 
-void Panels::drawGameInfoPanelContent(int level) const
+void PanelSystem::drawGameInfoPanelContent(
+    Panels const& panels,
+    int level)
 {
     //* Draw text for current level
     char const* currentLevel{TextFormat("Level %i", level)};
 
     Font const& font{GameFont::font()};
 
-    float fontSize{GameFont::fontHeight};
+    float fontSize{GameFont::FONT_HEIGHT};
 
     Vector2 textDimensions{
         MeasureTextEx(
@@ -85,14 +86,16 @@ void Panels::drawGameInfoPanelContent(int level) const
         font,
         currentLevel,
         Vector2{
-            ((0.5f * map.width()) - (0.5f * textDimensions.x)),
+            ((0.5f * panels.map.width()) - (0.5f * textDimensions.x)),
             (0.5f * fontSize)},
         fontSize,
         GuiGetStyle(DEFAULT, TEXT_SPACING),
         RAYWHITE);
 }
 
-void Panels::drawHeroInfoPanelContent([[maybe_unused]] Hero const& hero) const
+void PanelSystem::drawHeroInfoPanelContent(
+    Panels const& panels,
+    [[maybe_unused]] Hero const& hero)
 {
     int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
     /*
@@ -110,16 +113,17 @@ void Panels::drawHeroInfoPanelContent([[maybe_unused]] Hero const& hero) const
         "|             |\n"
         "|_____________|",
         Vector2{
-            heroInfo.left() + (0.5f * GameFont::fontWidth),
-            heroInfo.top() + (0.5f * GameFont::fontHeight)},
+            panels.heroInfo.left() + (0.5f * GameFont::fontWidth),
+            panels.heroInfo.top() + (0.5f * GameFont::FONT_HEIGHT)},
         fontSize,
         0,
         LIGHTGRAY);
 }
 
-void Panels::drawTileInfoPanelContent(
+void PanelSystem::drawTileInfoPanelContent(
+    Panels const& panels,
     Objects const& objects,
-    Vector2I const& cursorPosition) const
+    Vector2I const& cursorPosition)
 {
     if (!objects.names.contains(cursorPosition))
     {
@@ -131,57 +135,61 @@ void Panels::drawTileInfoPanelContent(
     //* Draw tag and action from tile under cursor
     DrawTextEx(
         GameFont::font(),
-        TextFormat("Name: %s\nAction: %s", objects.names.at(cursorPosition).c_str(), objects.actions.at(cursorPosition).c_str()),
+        TextFormat("Object: %s\nAction: %s", objects.names.at(cursorPosition).c_str(), objects.actions.at(cursorPosition).c_str()),
         Vector2{
-            tileInfo.left() + (0.5f * GameFont::fontWidth),
-            tileInfo.top() + (0.5f * fontSize)},
+            panels.tileInfo.left() + (0.5f * GameFont::fontWidth),
+            panels.tileInfo.top() + (0.5f * fontSize)},
         fontSize,
         0,
         LIGHTGRAY);
 }
 
-void Panels::drawLogPanelContent() const
+void PanelSystem::drawLogPanelContent(
+    Panels const& panels)
 {
     int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
-    double lines{(log.height() / (1.5 * fontSize)) - 1};
+    double lines{(panels.log.height() / (1.5 * fontSize)) - 1};
     for (int i{0}; i < lines; ++i)
     {
         DrawTextEx(
             GameFont::font(),
             snx::Logger::getMessage(i).c_str(),
             Vector2{
-                log.left() + (0.5f * fontSize),
-                log.bottom() - (fontSize * 1.5f) - (i * 1.5f * fontSize)},
+                panels.log.left() + (0.5f * fontSize),
+                panels.log.bottom() - (fontSize * 1.5f) - (i * 1.5f * fontSize)},
             fontSize,
             0,
             LIGHTGRAY);
     }
 }
 
-void Panels::drawPanelBorders() const
+void PanelSystem::drawPanelBorders(
+    Panels const& panels)
 {
+    float panelBorderWeight = 1;
+
     DrawRectangleLinesEx(
-        tileInfo.rectangle(),
+        panels.tileInfo.rectangle(),
         panelBorderWeight,
         Color{25, 25, 25, 255});
 
     DrawRectangleLinesEx(
-        heroInfo.rectangle(),
+        panels.heroInfo.rectangle(),
         panelBorderWeight,
         Color{25, 25, 25, 255});
 
     DrawRectangleLinesEx(
-        status.rectangle(),
+        panels.status.rectangle(),
         panelBorderWeight,
         Color{25, 25, 25, 255});
 
     DrawRectangleLinesEx(
-        log.rectangle(),
+        panels.log.rectangle(),
         panelBorderWeight,
         Color{25, 25, 25, 255});
 
     DrawRectangleLinesEx(
-        map.rectangle(),
+        panels.map.rectangle(),
         panelBorderWeight,
         Color{25, 25, 25, 255});
 }

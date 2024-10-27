@@ -27,14 +27,14 @@
 //* Heuristic used to rate tiles
 //* bias > 1: prioritize short path
 //* bias < 1: prioritize closer to target
-float constexpr bias{2};
+float constexpr BIAS{2};
 
 float RatedTile::rating() const
 {
     return
         //* Distance to target
         Vector2Length(distanceToTarget)
-        + bias * stepsNeeded;
+        + BIAS * stepsNeeded;
 }
 
 void RatedTile::reconstructPath(std::vector<Vector2I>& path)
@@ -193,7 +193,7 @@ bool checkRatingList(
             //* - Steps needed exceed maxRange
             if (
                 !map.tiles.visibilityIDs.contains(newTilePosition)
-                || (map.tiles.visibilityIDs.at(newTilePosition) == VisibilityID::invisible)
+                || (map.tiles.visibilityIDs.at(newTilePosition) == VisibilityID::INVISIBLE)
                 || map.tiles.isSolid(newTilePosition)
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded > maxRange)))
             {
@@ -276,7 +276,7 @@ std::vector<Vector2I> PathfinderSystem::findPath(
     if (
         !map.tiles.visibilityIDs.contains(target)
         || (skipInvisibleTiles
-            && (map.tiles.visibilityIDs.at(target) == VisibilityID::invisible))
+            && (map.tiles.visibilityIDs.at(target) == VisibilityID::INVISIBLE))
         || map.tiles.isSolid(target)
         || (start == target))
     {

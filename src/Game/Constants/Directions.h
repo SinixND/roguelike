@@ -15,7 +15,7 @@ namespace Directions
     Vector2I constexpr V_LEFT{-1, 0};
     Vector2I constexpr V_UP{0, -1};
 
-    std::array<Vector2I, 4> const directions{
+    std::array<Vector2I, 4> const DIRECTIONS{
         Directions::V_LEFT,
         Directions::V_RIGHT,
         Directions::V_UP,

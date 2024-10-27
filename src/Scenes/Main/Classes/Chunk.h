@@ -22,11 +22,12 @@ public:
     Chunk() = default;
 
     Chunk(RenderTexture const& renderTexture, PositionComponent const& position)
-        : corners(RectangleExI{
-              position.tilePosition().x,
-              position.tilePosition().y,
-              ChunkData::CHUNK_SIZE_I,
-              ChunkData::CHUNK_SIZE_I})
+        : corners(
+            RectangleExI{
+                position.tilePosition().x,
+                position.tilePosition().y,
+                ChunkData::CHUNK_SIZE_I,
+                ChunkData::CHUNK_SIZE_I})
         , position(position)
         , renderTexture(renderTexture)
     {

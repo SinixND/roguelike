@@ -3,6 +3,7 @@
 //* #define DEBUG_FOG
 
 #include "Chunk.h"
+#include "ChunkSystem.h"
 #include "Colors.h"
 #include "Cursor.h"
 #include "Debugger.h"
@@ -12,6 +13,7 @@
 #include "Game.h"
 #include "GameCamera.h"
 #include "Objects.h"
+#include "PanelSystem.h"
 #include "Panels.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
@@ -32,7 +34,7 @@ void SceneMain::init()
 {
     game_.init();
 
-    panels_.init();
+    PanelSystem::init(panels_);
 
     gameCamera_.init(
         panels_.map,
@@ -44,7 +46,8 @@ void SceneMain::init()
 
     renderer_.init();
 
-    tileChunks_.init(
+    ChunkSystem::init(
+        chunks_,
         game_.world.currentMap->tiles.positions,
         game_.world.currentMap->tiles.renderIDs,
         renderer_);
@@ -56,19 +59,20 @@ void SceneMain::init()
 void SceneMain::setupSceneEvents()
 {
     snx::PublisherStatic::addSubscriber(
-        Event::windowResized,
+        Event::WINDOW_RESIZED,
         [&]()
         {
-            panels_.init();
+            PanelSystem::init(panels_);
         },
         true);
 
     snx::PublisherStatic::addSubscriber(
-        Event::panelsResized,
+        Event::PANELS_RESIZED,
         [&]()
         {
             gameCamera_.init(panels_.map, game_.hero.position.worldPixel());
-            visibility_.update(
+            VisibilitySystem::update(
+                fogs_,
                 // game_.world.currentMap->tiles,
                 game_.world.currentMap->tiles.visibilityIDs,
                 game_.world.currentMap->tiles.isOpaques,
@@ -77,18 +81,19 @@ void SceneMain::setupSceneEvents()
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::heroMoved,
+        Event::HERO_MOVED,
         [&]()
         {
             gameCamera_.setTarget(game_.hero.position.worldPixel());
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::heroPositionChanged,
+        Event::HERO_POSITION_CHANGED,
         [&]()
         {
             //* VisibilitySystem
-            visibility_.update(
+            VisibilitySystem::update(
+                fogs_,
                 // game_.world.currentMap->tiles,
                 game_.world.currentMap->tiles.visibilityIDs,
                 game_.world.currentMap->tiles.isOpaques,
@@ -98,27 +103,28 @@ void SceneMain::setupSceneEvents()
         true);
 
     snx::PublisherStatic::addSubscriber(
-        Event::mapChange,
+        Event::MAP_CHANGE,
         [&]()
         {
-            tileChunks_.init(
+            ChunkSystem::init(
+                chunks_,
                 game_.world.currentMap->tiles.positions,
                 game_.world.currentMap->tiles.renderIDs,
                 renderer_);
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::colorThemeChange,
+        Event::COLOR_THEME_CHANGE,
         [&]()
         {
             renderer_.cycleThemes();
             renderer_.init();
 
-            snx::PublisherStatic::publish(Event::mapChange);
+            snx::PublisherStatic::publish(Event::MAP_CHANGE);
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::cursorToggle,
+        Event::CURSOR_TOGGLE,
         [&]()
         {
             cursor_.toggle();
@@ -211,7 +217,7 @@ void SceneMain::processInput()
     //* Color theme
     if (IsKeyPressed(KEY_F2))
     {
-        snx::PublisherStatic::publish(Event::colorThemeChange);
+        snx::PublisherStatic::publish(Event::COLOR_THEME_CHANGE);
     }
 
     game_.processInput(cursor_);
@@ -245,7 +251,7 @@ void SceneMain::renderOutput()
     //* World
     //* Draw map
     //* Draw tiles
-    for (Chunk const& chunk : tileChunks_.chunks.values())
+    for (Chunk const& chunk : chunks_.values())
     {
         renderer_.renderChunk(chunk);
     }
@@ -271,7 +277,7 @@ void SceneMain::renderOutput()
     }
 
     //* VisibilitySystem
-    for (Fog const& fog : visibility_.fogs())
+    for (Fog const& fog : fogs_)
     {
         renderer_.renderFog(fog);
     }
@@ -294,17 +300,22 @@ void SceneMain::renderOutput()
     EndScissorMode();
     EndMode2D();
 
-    panels_.drawLogPanelContent();
+    PanelSystem::drawLogPanelContent(panels_);
 
-    panels_.drawHeroInfoPanelContent(game_.hero);
+    PanelSystem::drawHeroInfoPanelContent(
+        panels_,
+        game_.hero);
 
-    panels_.drawTileInfoPanelContent(
+    PanelSystem::drawTileInfoPanelContent(
+        panels_,
         game_.world.currentMap->objects,
         cursor_.position.tilePosition());
 
-    panels_.drawGameInfoPanelContent(game_.world.currentMapLevel);
+    PanelSystem::drawGameInfoPanelContent(
+        panels_,
+        game_.world.currentMapLevel);
 
-    panels_.drawPanelBorders();
+    PanelSystem::drawPanelBorders(panels_);
 }
 
 void SceneMain::update()

@@ -10,7 +10,7 @@ class Cursor
 {
 public:
     PositionComponent position{};
-    RenderID renderID{RenderID::cursor};
+    RenderID renderID{RenderID::CURSOR};
     bool isActive{false};
 
 public:

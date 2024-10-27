@@ -7,6 +7,7 @@
 #include "VisibilityID.h"
 #include "raylibEx.h"
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <cstdlib>
 #include <raylib.h>
@@ -92,11 +93,6 @@ float Shadow::getRight(int octantPositionHeight) const
 }
 
 //* VisibilitySystem
-snx::DenseMap<Vector2I, Fog> const& VisibilitySystem::fogs() const
-{
-    return fogs_;
-}
-
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
 void drawShadow(
     Shadow const& shadowNew,
@@ -326,16 +322,16 @@ void updateVisibilities(
     snx::DenseMap<Vector2I, Fog>& fogs,
     Vector2I const& tilePosition)
 {
-    if (tileVisibilityOld == VisibilityID::visible)
+    if (tileVisibilityOld == VisibilityID::VISIBILE)
     {
         //* Tile WAS visible
-        visibilityIDs.at(tilePosition) = VisibilityID::seen;
+        visibilityIDs.at(tilePosition) = VisibilityID::SEEN;
 
         //* Add non opaque fog
         fogs[tilePosition] = Fog{tilePosition, false};
     }
 
-    else if (tileVisibilityOld == VisibilityID::seen)
+    else if (tileVisibilityOld == VisibilityID::SEEN)
     {
         //* Add non opaque fog
         fogs[tilePosition] = Fog{tilePosition, false};
@@ -349,6 +345,7 @@ void updateVisibilities(
 }
 
 void VisibilitySystem::calculateVisibilitiesInOctant(
+    snx::DenseMap<Vector2I, Fog>& fogs_,
     int octant,
     snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
     std::unordered_set<Vector2I> const& isOpaques,
@@ -423,12 +420,15 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                     //* If slopeRight is left (<) from bottom-right tile corner (at same height = tileBottom)
                     //* AND
                     //* Is in viewport
+                    //* AND
+                    //* Is in view range
                     if (
                         ((octX - 0.5f) < (shadow.getLeftAtTop(octantPosition))
                          || (shadow.getRightAtBottom(octantPosition)) < (octX + 0.5f))
-                        && (octY < (range - 1)))
+                        // && (octY < (range - 1))
+                        && sqrt(pow(octX, 2) + pow(octY, 2)) < range)
                     {
-                        //* top-left/bottom-right corner not in shadow -> visible (variable unchanged)
+                        //* -> visible (variable unchanged): top-left/bottom-right corner not in shadow
 
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
                         snx::debug::cliLog(
@@ -454,7 +454,7 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                 if (isVisible)
                 {
                     //* Tile IS visible
-                    visibilityIDs.at(tilePosition) = VisibilityID::visible;
+                    visibilityIDs.at(tilePosition) = VisibilityID::VISIBILE;
                 }
 
                 else
@@ -492,6 +492,7 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
 }
 
 void VisibilitySystem::update(
+    snx::DenseMap<Vector2I, Fog>& fogs_,
     snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
     std::unordered_set<Vector2I> const& isOpaques,
     RectangleExI const& viewportInTiles,
@@ -504,7 +505,7 @@ void VisibilitySystem::update(
     //* Init
     fogs_.clear();
 
-    visibilityIDs.at(heroPosition) = VisibilityID::visible;
+    visibilityIDs.at(heroPosition) = VisibilityID::VISIBILE;
 
     //* Iterate octants
     //* Orientation dependent range (horizontal, vertical)
@@ -531,6 +532,7 @@ void VisibilitySystem::update(
 #endif
 
         calculateVisibilitiesInOctant(
+            fogs_,
             octant,
             visibilityIDs,
             isOpaques,

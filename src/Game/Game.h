@@ -2,7 +2,7 @@
 #define IG20241011025951
 
 #include "Hero.h"
-#include "UserInputSystem.h"
+#include "UserInputComponent.h"
 #include "World.h"
 
 class Cursor;
@@ -10,7 +10,7 @@ class GameCamera;
 
 class Game
 {
-    UserInputSystem inputHandler_{};
+    UserInputComponent userInput_{};
 
     bool actionsInProgress_{false};
 
