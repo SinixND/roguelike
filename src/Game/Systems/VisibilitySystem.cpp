@@ -350,6 +350,7 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
     snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
     std::unordered_set<Vector2I> const& isOpaques,
     Vector2I const& heroPosition,
+    int visionRange,
     int range)
 {
     //* !!! Coordinates are usual cartesian !!!
@@ -388,7 +389,7 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
 
             VisibilityID tileVisibilityOld{visibilityIDs.at(tilePosition)};
 
-            //* < : Update only octant tiles including diagonal tiles (spare last row tile needed for correct diagonal visibility)
+            //* < : Update only octant tiles including diagonal tiles (spare last row tile, needed for correct diagonal visibility)
             if (octX <= octY)
             {
                 //* Skip test (-> set invis) if shadowline already covers whole octant
@@ -412,43 +413,49 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                 //* Check visibility by intersection with shadow line elements
                 bool isVisible{true};
 
-                for (Shadow const& shadow : shadowline)
+                //* Check if tile is out of range (viewport and visionRange)
+                if (!(
+                        (octY < (range - 1))
+                        && sqrt(pow(octX, 2) + pow(octY, 2)) < visionRange))
                 {
-                    //* Check if visible:
-                    //* If top-left tile corner is left (<) from slopeLeft (at same height = tileTop)
-                    //* OR
-                    //* If slopeRight is left (<) from bottom-right tile corner (at same height = tileBottom)
-                    //* AND
-                    //* Is in viewport
-                    //* AND
-                    //* Is in view range
-                    if (
-                        ((octX - 0.5f) < (shadow.getLeftAtTop(octantPosition))
-                         || (shadow.getRightAtBottom(octantPosition)) < (octX + 0.5f))
-                        // && (octY < (range - 1))
-                        && sqrt(pow(octX, 2) + pow(octY, 2)) < range)
+                    isVisible = false;
+                }
+                else
+                {
+
+                    for (Shadow const& shadow : shadowline)
                     {
-                        //* -> visible (variable unchanged): top-left/bottom-right corner not in shadow
+                        //* Check if visible:
+                        //* If top-left tile corner is left (<) from slopeLeft (at same height = tileTop)
+                        //* OR
+                        //* If slopeRight is left (<) from bottom-right tile corner (at same height = tileBottom)
+                        [[maybe_unused]] auto test{sqrt(pow(octX, 2) + pow(octY, 2))};
+                        if (
+                            ((octX - 0.5f) < (shadow.getLeftAtTop(octantPosition))
+                             || (shadow.getRightAtBottom(octantPosition)) < (octX + 0.5f)))
+                        {
+                            //* -> visible (variable unchanged): top-left/bottom-right corner not in shadow
+
+#if defined(DEBUG) && defined(DEBUG_SHADOW)
+                            snx::debug::cliLog(
+                                "Tile is (partly) visible",
+                                "\n");
+#endif
+
+                            continue;
+                        }
+
+                        isVisible = false;
 
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
                         snx::debug::cliLog(
-                            "Tile is (partly) visible",
+                            "Tile is invisible",
                             "\n");
 #endif
 
-                        continue;
-                    }
-
-                    isVisible = false;
-
-#if defined(DEBUG) && defined(DEBUG_SHADOW)
-                    snx::debug::cliLog(
-                        "Tile is invisible",
-                        "\n");
-#endif
-
-                    break;
-                } //* Shadowline
+                        break;
+                    } //* Shadowline
+                }
 
                 //* Update visibility
                 if (isVisible)
@@ -496,6 +503,7 @@ void VisibilitySystem::update(
     snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
     std::unordered_set<Vector2I> const& isOpaques,
     RectangleExI const& viewportInTiles,
+    int visionRange,
     Vector2I const& heroPosition)
 {
     //* Input
@@ -514,11 +522,11 @@ void VisibilitySystem::update(
     for (int octant{0}; octant < 8; ++octant)
     {
         //* Set range for octant
+        //* viewport dependent:
         if (((octant + 1) / 2) % 2) //* := f tt ff tt f
         {
             range = quarterWidth;
         }
-
         else
         {
             range = quarterHeight;
@@ -537,6 +545,7 @@ void VisibilitySystem::update(
             visibilityIDs,
             isOpaques,
             heroPosition,
+            visionRange,
             range);
     }
 

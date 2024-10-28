@@ -9,6 +9,7 @@ public:
     AIComponent(int scanRange)
         : scanRange_(scanRange){};
 
+public:
     int scanRange() const;
 };
 

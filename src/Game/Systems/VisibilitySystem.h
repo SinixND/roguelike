@@ -66,6 +66,7 @@ namespace VisibilitySystem
         snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
         std::unordered_set<Vector2I> const& isOpaques,
         RectangleExI const& viewport,
+        int visionRange,
         Vector2I const& heroPosition);
 
     //* If any part of tile is visible -> whole tile is visible (so that "tunnel walls" stay visible)
@@ -75,6 +76,7 @@ namespace VisibilitySystem
         snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
         std::unordered_set<Vector2I> const& isOpaques,
         Vector2I const& heroPosition,
+        int visionRange,
         int range);
 
     void updateShadowline(

@@ -40,6 +40,7 @@ public:
     //* Returns true if input received
     bool takeInputGesture();
 
+public:
     InputActionID inputAction() const;
     void resetInputAction();
 };

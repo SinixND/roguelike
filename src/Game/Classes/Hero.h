@@ -14,6 +14,8 @@ public:
     EnergyComponent energy{};
     PositionComponent position{};
 
+    int visionRange{};
+
 public:
     void init();
 };

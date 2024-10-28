@@ -19,7 +19,7 @@ bool MovementSystem::update(
     PositionComponent const& heroPosition)
 {
     //* Avoid check if no movement in progress
-    if (movement.isTriggered)
+    if (movement.isTriggered())
     {
         //* Check collision before starting movement
         if (CollisionSystem::checkCollision(
@@ -37,14 +37,14 @@ bool MovementSystem::update(
     }
 
     //* Start movement on trigger
-    if (movement.isTriggered)
+    if (movement.isTriggered())
     {
         movement.activateTrigger();
         energy.consume();
     }
 
     //* Check if action is in progress
-    if (!movement.isInProgress)
+    if (!movement.isInProgress())
     {
         return false;
     }

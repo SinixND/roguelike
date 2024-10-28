@@ -42,7 +42,7 @@ void RenderSystem::render(
 {
     //* Use 0.5f pixel offset to avoid texture bleeding
     DrawTexturePro(
-        textures_.getTextureAtlas(),
+        textures_.textureAtlas(),
         Rectangle{
             textures_.getTexturePosition(renderID).x + 0.5f,
             textures_.getTexturePosition(renderID).y + 0.5f,
@@ -69,7 +69,7 @@ void RenderSystem::renderToChunk(
 {
     //* Use 0.5f pixel offset to avoid texture bleeding
     DrawTexturePro(
-        textures_.getTextureAtlas(),
+        textures_.textureAtlas(),
         Rectangle{
             textures_.getTexturePosition(renderID).x + 0.5f,
             textures_.getTexturePosition(renderID).y + 0.5f,

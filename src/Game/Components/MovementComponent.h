@@ -15,9 +15,8 @@ class MovementComponent
     int speed_{};
     float cumulativeDistanceMoved_{};
 
-public:
-    bool isTriggered{false};
-    bool isInProgress{false};
+    bool isTriggered_{false};
+    bool isInProgress_{false};
 
 public:
     MovementComponent() = default;
@@ -44,12 +43,17 @@ public:
     Vector2 distance() const;
     float length() const;
 
+public:
     Vector2I const& direction() const;
+
     void setSpeed(int speed);
 
     float cumulativeDistanceMoved() const;
     void updateCumulativeDistanceMoved();
     void resetCumulativeDistanceMoved();
+
+    bool isTriggered() const;
+    bool isInProgress() const;
 
 private:
     void setInProgress();

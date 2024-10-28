@@ -77,6 +77,7 @@ void SceneMain::setupSceneEvents()
                 game_.world.currentMap->tiles.visibilityIDs,
                 game_.world.currentMap->tiles.isOpaques,
                 gameCamera_.viewportInTiles(),
+                game_.hero.visionRange,
                 game_.hero.position.tilePosition());
         });
 
@@ -98,6 +99,7 @@ void SceneMain::setupSceneEvents()
                 game_.world.currentMap->tiles.visibilityIDs,
                 game_.world.currentMap->tiles.isOpaques,
                 gameCamera_.viewportInTiles(),
+                game_.hero.visionRange,
                 game_.hero.position.tilePosition());
         },
         true);

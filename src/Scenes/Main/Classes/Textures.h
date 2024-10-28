@@ -18,13 +18,14 @@ public:
     //* Texture atlas
     void loadAtlas(std::string const& filename);
 
-    Texture2D const& getTextureAtlas() const;
-
     void registerTexture(RenderID textureID, Vector2 position);
 
     Vector2 const& getTexturePosition(RenderID renderID) const;
 
     void unloadAtlas();
+
+public:
+    Texture2D const& textureAtlas() const;
 };
 
 #endif

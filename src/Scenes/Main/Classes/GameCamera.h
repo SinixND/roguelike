@@ -15,6 +15,7 @@ public:
         RectangleEx const& viewport,
         Vector2 const& heroPosition);
 
+public:
     Camera2D const& camera() const;
     RectangleEx const& viewportOnScreen() const;
     RectangleExI viewportInTiles() const;

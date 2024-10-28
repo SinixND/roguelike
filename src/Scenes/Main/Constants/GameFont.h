@@ -32,6 +32,7 @@ public:
 
     static void unload() { UnloadFont(font_); }
 
+public:
     static Font const& font()
     {
         return font_;

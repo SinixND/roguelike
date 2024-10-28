@@ -13,7 +13,7 @@ void Textures::loadAtlas(std::string const& filename)
     textureAtlas_ = LoadTexture((TEXTURE_PATH + filename).c_str());
 }
 
-Texture2D const& Textures::getTextureAtlas() const
+Texture2D const& Textures::textureAtlas() const
 {
     return textureAtlas_;
 }

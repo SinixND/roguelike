@@ -5,13 +5,10 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Separate data and logic (panels)
-- [ ] Modify visiblity -> independent of viewport
+- [ ] Add/Move/Refactor AI component/behaviour (defensive, offensive, smart, active, passive, 
 
 
 ## Shortterm
-- [ ] Add/Move/Refactor AI component/behaviour (defensive, offensive, smart, active, passive, 
-detection range)
 - [ ] Health, Attack
 - [ ] Add overlay boxes for enemy/object information
 

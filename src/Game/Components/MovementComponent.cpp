@@ -10,7 +10,7 @@
 
 void MovementComponent::trigger()
 {
-    if (!isTriggered && !isInProgress && !path_.empty())
+    if (!isTriggered_ && !isInProgress_ && !path_.empty())
     {
         triggerPath();
     }
@@ -22,7 +22,7 @@ void MovementComponent::trigger(Vector2I const& direction)
 
     currentVelocity_ = Vector2Scale(direction, (speed_ * TileData::TILE_SIZE));
 
-    isTriggered = true;
+    isTriggered_ = true;
 }
 
 void MovementComponent::trigger(std::vector<Vector2I> const& path)
@@ -58,27 +58,27 @@ void MovementComponent::triggerPath()
 
 void MovementComponent::activateTrigger()
 {
-    isTriggered = false;
+    isTriggered_ = false;
     setInProgress();
 }
 
 void MovementComponent::setInProgress()
 {
     //* Retrigger movement
-    isInProgress = true;
+    isInProgress_ = true;
 
     snx::PublisherStatic::publish(Event::ACTION_IN_PROGRESS);
 }
 
 void MovementComponent::stopMovement()
 {
-    isInProgress = false;
+    isInProgress_ = false;
     currentVelocity_ = Vector2{0, 0};
 }
 
 void MovementComponent::clearPath()
 {
-    isTriggered = false;
+    isTriggered_ = false;
     path_.clear();
 }
 
@@ -117,4 +117,14 @@ void MovementComponent::updateCumulativeDistanceMoved()
 void MovementComponent::resetCumulativeDistanceMoved()
 {
     cumulativeDistanceMoved_ = 0;
+}
+
+bool MovementComponent::isTriggered() const
+{
+    return isTriggered_;
+}
+
+bool MovementComponent::isInProgress() const
+{
+    return isInProgress_;
 }

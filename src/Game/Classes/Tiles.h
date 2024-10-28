@@ -34,6 +34,7 @@ public:
     bool isSolid(Vector2I const& tilePosition) const;
     bool isOpaque(Vector2I const& tilePosition) const;
 
+public:
     RectangleExI mapSize() const;
 
 private:
