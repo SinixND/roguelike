@@ -30,6 +30,7 @@ public:
     void clearPath();
 
     //* Sets direction, currentVelocity and isTriggered_
+    void trigger(Vector2I const& from, Vector2I const& to);
     void trigger(Vector2I const& direction);
     void trigger(std::vector<Vector2I> const& path);
     void trigger();

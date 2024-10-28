@@ -1,6 +1,13 @@
 #ifndef IG20240909151555
 #define IG20240909151555
 
+class PositionComponent;
+class MovementComponent;
+class EnergyComponent;
+struct Map;
+struct Vector2I;
+class GameCamera;
+
 class AIComponent
 {
     int scanRange_{};

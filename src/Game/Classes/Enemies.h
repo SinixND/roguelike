@@ -42,12 +42,6 @@ public:
 
     bool regenerate();
 
-    //* Checks consecutively, persistant across game loop iterations
-    bool checkForAction(
-        Map const& map,
-        Vector2I const& heroPosition,
-        GameCamera const& gameCamera);
-
     void update(
         Map const& map,
         PositionComponent const& heroPosition);

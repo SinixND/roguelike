@@ -5,12 +5,13 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Add/Move/Refactor AI component/behaviour (defensive, offensive, smart, active, passive, 
+- [ ] Remove all includes and check for possible forward declar
+- [ ] Health, Attack
 
 
 ## Shortterm
-- [ ] Health, Attack
 - [ ] Add overlay boxes for enemy/object information
+- [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
 
 
 ## Longterm

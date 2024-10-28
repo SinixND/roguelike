@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include "AISystem.h"
 #include "Cursor.h"
 #include "Enemies.h"
 #include "Event.h"
@@ -123,8 +124,11 @@ void Game::updateState(
         !actionsInProgress_
         && !hero.energy.isReady())
     {
-        allEnemiesChecked = world.currentMap->enemies.checkForAction(
-            *world.currentMap,
+        Map& map{*world.currentMap};
+
+        allEnemiesChecked = AISystem::checkForAction(
+            map.enemies,
+            map,
             hero.position.tilePosition(),
             gameCamera);
     }

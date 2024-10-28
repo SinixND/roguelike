@@ -16,6 +16,14 @@ void MovementComponent::trigger()
     }
 }
 
+void MovementComponent::trigger(Vector2I const& from, Vector2I const& to)
+{
+    trigger(
+        Vector2Subtract(
+            to, 
+            from));
+}
+
 void MovementComponent::trigger(Vector2I const& direction)
 {
     direction_ = direction;
