@@ -1,14 +1,19 @@
 #include "AISystem.h"
 
+#include "DamageComponent.h"
+#include "DamageSystem.h"
 #include "Enemies.h"
+#include "HealthComponent.h"
 #include "PathfinderSystem.h"
 
 #include <cstddef>
+#include <vector>
 
 bool AISystem::checkForAction(
     Enemies& enemies,
     Map const& map,
     Vector2I const& heroPosition,
+    HealthComponent& heroHealth,
     GameCamera const& gameCamera)
 {
     size_t idSize{enemies.ids.size()};
@@ -17,9 +22,9 @@ bool AISystem::checkForAction(
 
     while (enemiesChecked < idSize)
     {
-        size_t enemyId{enemies.ids.values()[enemiesChecked]};
+        size_t enemyID{enemies.ids.values()[enemiesChecked]};
 
-        if (!enemies.energies.at(enemyId).isReady())
+        if (!enemies.energies.at(enemyID).isReady())
         {
             //* Cant perform action
             ++enemiesChecked;
@@ -27,13 +32,15 @@ bool AISystem::checkForAction(
         }
 
         AISystem::chooseAction(
-                enemies.ais.at(enemyId),
-                enemies.positions.at(enemyId),
-                enemies.movements.at(enemyId),
-                enemies.energies.at(enemyId),
-                map, 
-                heroPosition, 
-                gameCamera);
+            enemies.ais.at(enemyID),
+            enemies.positions.at(enemyID),
+            enemies.movements.at(enemyID),
+            enemies.energies.at(enemyID),
+            enemies.damages.at(enemyID),
+            map,
+            heroPosition,
+            heroHealth,
+            gameCamera);
 
         return false;
     }
@@ -48,8 +55,10 @@ void AISystem::chooseAction(
     PositionComponent& position,
     MovementComponent& movement,
     EnergyComponent& energy,
+    DamageComponent& damage,
     Map const& map,
     Vector2I const& heroPosition,
+    HealthComponent& heroHealth,
     GameCamera const& gameCamera)
 {
     std::vector<Vector2I> path{PathfinderSystem::findPath(
@@ -73,6 +82,9 @@ void AISystem::chooseAction(
     {
         //* Attack
         //* Perform waiting action until attack is implemented
+        DamageSystem::attack(
+            damage,
+            heroHealth);
         energy.consume();
     }
 
@@ -90,4 +102,3 @@ void AISystem::chooseAction(
         energy.consume();
     }
 }
-

@@ -3,10 +3,11 @@
 //* #define DEBUG_GESTURE_EVENTS
 
 #include "Cursor.h"
-#include "Debugger.h"
+#include "DamageSystem.h"
 #include "Directions.h"
 #include "Event.h"
 #include "GameCamera.h"
+#include "HealthComponent.h"
 #include "Hero.h"
 #include "InputActionID.h"
 #include "Logger.h"
@@ -72,7 +73,7 @@ void UserInputSystem::triggerAction(
     UserInputComponent& userInputComponent,
     Hero& hero,
     Cursor const& cursor,
-    Map const& map,
+    Map& map,
     GameCamera const& gameCamera)
 {
     if (!hero.energy.isReady())
@@ -92,13 +93,18 @@ void UserInputSystem::triggerAction(
     {
         case InputActionID::ACT_UP:
         {
-            if (map.enemies.ids.contains(
-                    Vector2Add(
-                        hero.position.tilePosition(),
-                        Directions::V_UP)))
+            Vector2I target{
+                Vector2Add(
+                    hero.position.tilePosition(),
+                    Directions::V_UP)};
+
+            if (map.enemies.ids.contains(target))
             {
-                snx::debug::cliLog("Hero would attack\n");
-                hero.energy.consume();
+                DamageSystem::attack(
+                    hero.damage,
+                    map.enemies.healths.at(
+                        map.enemies.ids.at(
+                            target)));
                 break;
             }
 
@@ -110,13 +116,18 @@ void UserInputSystem::triggerAction(
 
         case InputActionID::ACT_LEFT:
         {
-            if (map.enemies.ids.contains(
-                    Vector2Add(
-                        hero.position.tilePosition(),
-                        Directions::V_LEFT)))
+            Vector2I target{
+                Vector2Add(
+                    hero.position.tilePosition(),
+                    Directions::V_LEFT)};
+
+            if (map.enemies.ids.contains(target))
             {
-                snx::debug::cliLog("Hero would attack\n");
-                hero.energy.consume();
+                DamageSystem::attack(
+                    hero.damage,
+                    map.enemies.healths.at(
+                        map.enemies.ids.at(
+                            target)));
                 break;
             }
 
@@ -128,13 +139,18 @@ void UserInputSystem::triggerAction(
 
         case InputActionID::ACT_DOWN:
         {
-            if (map.enemies.ids.contains(
-                    Vector2Add(
-                        hero.position.tilePosition(),
-                        Directions::V_DOWN)))
+            Vector2I target{
+                Vector2Add(
+                    hero.position.tilePosition(),
+                    Directions::V_DOWN)};
+
+            if (map.enemies.ids.contains(target))
             {
-                snx::debug::cliLog("Hero would attack\n");
-                hero.energy.consume();
+                DamageSystem::attack(
+                    hero.damage,
+                    map.enemies.healths.at(
+                        map.enemies.ids.at(
+                            target)));
                 break;
             }
 
@@ -146,13 +162,18 @@ void UserInputSystem::triggerAction(
 
         case InputActionID::ACT_RIGHT:
         {
-            if (map.enemies.ids.contains(
-                    Vector2Add(
-                        hero.position.tilePosition(),
-                        Directions::V_RIGHT)))
+            Vector2I target{
+                Vector2Add(
+                    hero.position.tilePosition(),
+                    Directions::V_RIGHT)};
+
+            if (map.enemies.ids.contains(target))
             {
-                snx::debug::cliLog("Hero would attack\n");
-                hero.energy.consume();
+                DamageSystem::attack(
+                    hero.damage,
+                    map.enemies.healths.at(
+                        map.enemies.ids.at(
+                            target)));
                 break;
             }
 
@@ -182,6 +203,7 @@ void UserInputSystem::triggerAction(
             {
                 snx::Logger::log("Wait...");
                 hero.energy.consume();
+                hero.health.regenerate();
                 break;
             }
 

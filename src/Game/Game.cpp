@@ -130,6 +130,7 @@ void Game::updateState(
             map.enemies,
             map,
             hero.position.tilePosition(),
+            hero.health,
             gameCamera);
     }
 

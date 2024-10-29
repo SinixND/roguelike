@@ -1,10 +1,12 @@
 #include "Enemies.h"
 
 #include "AIComponent.h"
+#include "DamageComponent.h"
 #include "DenseMap.h"
 #include "EnemyData.h"
 #include "EnergyComponent.h"
 #include "GameCamera.h"
+#include "HealthComponent.h"
 #include "IdManager.h"
 #include "Map.h"
 #include "MovementComponent.h"
@@ -56,6 +58,8 @@ void Enemies::insert(
     RenderID renderID,
     MovementComponent const& movement,
     EnergyComponent const& energy,
+    HealthComponent const& health,
+    DamageComponent const& damage,
     int scanRange,
     Vector2I const& tilePosition)
 {
@@ -64,6 +68,8 @@ void Enemies::insert(
     renderIDs.insert(id, renderID);
     movements.insert(id, movement);
     energies.insert(id, energy);
+    healths.insert(id, health);
+    damages.insert(id, damage);
     ais.insert(id, AIComponent{scanRange});
 }
 
@@ -91,6 +97,8 @@ void Enemies::create(
                 RenderID::GOBLIN,
                 MovementComponent{20 * EnemyData::GOBLIN_BASE_AGILITY},
                 EnergyComponent{EnemyData::GOBLIN_BASE_AGILITY},
+                HealthComponent{10},
+                DamageComponent{1},
                 EnemyData::GOBLIN_SCAN_RANGE,
                 tilePosition);
 

@@ -20,7 +20,7 @@ void MovementComponent::trigger(Vector2I const& from, Vector2I const& to)
 {
     trigger(
         Vector2Subtract(
-            to, 
+            to,
             from));
 }
 
@@ -105,11 +105,6 @@ float MovementComponent::length() const
 Vector2I const& MovementComponent::direction() const
 {
     return direction_;
-}
-
-void MovementComponent::setSpeed(int speed)
-{
-    speed_ = speed;
 }
 
 float MovementComponent::cumulativeDistanceMoved() const

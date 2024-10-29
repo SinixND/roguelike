@@ -1,0 +1,15 @@
+#ifndef IG20241029004032
+#define IG20241029004032
+
+class DamageComponent;
+class HealthComponent;
+
+namespace DamageSystem
+{
+    // Returns true if defender health became 0
+    bool attack(
+        DamageComponent const& attackerDamage,
+        HealthComponent& defenderHealth);
+}
+
+#endif

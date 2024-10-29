@@ -47,8 +47,6 @@ public:
 public:
     Vector2I const& direction() const;
 
-    void setSpeed(int speed);
-
     float cumulativeDistanceMoved() const;
     void updateCumulativeDistanceMoved();
     void resetCumulativeDistanceMoved();

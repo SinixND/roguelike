@@ -2,9 +2,10 @@
 #define IG20240909134010
 
 #include "AIComponent.h"
+#include "DamageComponent.h"
 #include "DenseMap.h"
 #include "EnergyComponent.h"
-#include "GameCamera.h"
+#include "HealthComponent.h"
 #include "IdManager.h"
 #include "MovementComponent.h"
 #include "PositionComponent.h"
@@ -20,11 +21,13 @@ struct Map;
 struct Enemies
 {
     snx::DenseMap<Vector2I, size_t> ids{};
+    snx::DenseMap<size_t, AIComponent> ais{};
     snx::DenseMap<size_t, PositionComponent> positions{};
     snx::DenseMap<size_t, RenderID> renderIDs{};
     snx::DenseMap<size_t, MovementComponent> movements{};
     snx::DenseMap<size_t, EnergyComponent> energies{};
-    snx::DenseMap<size_t, AIComponent> ais{};
+    snx::DenseMap<size_t, HealthComponent> healths{};
+    snx::DenseMap<size_t, DamageComponent> damages{};
 
 private:
     snx::IdManager idManager_{};
@@ -54,6 +57,8 @@ private:
         RenderID renderID,
         MovementComponent const& movement,
         EnergyComponent const& energy,
+        HealthComponent const& health,
+        DamageComponent const& damage,
         int scanRange,
         Vector2I const& enemyPosition);
 };

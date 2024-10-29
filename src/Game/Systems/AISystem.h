@@ -9,6 +9,8 @@ class GameCamera;
 class PositionComponent;
 class MovementComponent;
 class EnergyComponent;
+class DamageComponent;
+class HealthComponent;
 
 namespace AISystem
 {
@@ -17,6 +19,7 @@ namespace AISystem
         Enemies& enemies,
         Map const& map,
         Vector2I const& heroPosition,
+        HealthComponent& heroHealth,
         GameCamera const& gameCamera);
 
     void chooseAction(
@@ -24,8 +27,10 @@ namespace AISystem
         PositionComponent& position,
         MovementComponent& movement,
         EnergyComponent& energy,
+        DamageComponent& damage,
         Map const& map,
         Vector2I const& heroPosition,
+        HealthComponent& heroHealth,
         GameCamera const& gameCamera);
 }
 

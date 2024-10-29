@@ -20,7 +20,7 @@ namespace UserInputSystem
         UserInputComponent& userInputComponent,
         Hero& hero,
         Cursor const& cursor,
-        Map const& map,
+        Map& map,
         GameCamera const& gameCamera);
 };
 

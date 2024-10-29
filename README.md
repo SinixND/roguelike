@@ -5,13 +5,13 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Remove all includes and check for possible forward declar
-- [ ] Health, Attack
+- [ ] Remove all includes and check for possible forward declarations
+- [ ] Implement killing and spawning
 
 
 ## Shortterm
 - [ ] Add overlay boxes for enemy/object information
-- [ ] Add AI behaviour (defensive, offensive, smart, active, passive, 
+- [ ] Add AI behaviour (defensive, offensive, smart, active, passive) 
 
 
 ## Longterm
@@ -114,3 +114,4 @@
 - [x] Add enemy movement
 - [x] Split GameScene into Scene/Main and Game
 - [x] Implement custom gesture registration (raylib has/had issues)
+- [x] Add health and damage
