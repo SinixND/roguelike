@@ -149,9 +149,14 @@ namespace snx
         {
             assert(!contains(to) && "Key already exists, possible loss of data!");
 
-            insert(to, at(from));
+            //* Add new key with old index
+            keyToIndex_[to] = keyToIndex_.at(from);
 
-            erase(from);
+            //* Remove old key
+            keyToIndex_.erase(from);
+
+            //* Remap index to new key
+            indexToKey_[keyToIndex_.at(to)] = to;
         }
 
         //* Empty all containers
