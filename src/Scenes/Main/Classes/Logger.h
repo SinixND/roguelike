@@ -10,12 +10,14 @@ namespace snx
 {
     class Logger
     {
+        static inline std::string stamp_{};
+
         static inline std::deque<std::string> history_{100, ""};
 
     public:
         static void log(std::string const& message)
         {
-            history_.push_front(message);
+            history_.push_front("[" + stamp_ + "] " + message);
 
             if (history_.size() > MAX_HISTORY_SIZE)
             {
@@ -23,9 +25,19 @@ namespace snx
             }
         }
 
+        static void logAppend(std::string const& message)
+        {
+            history_.front() += message;
+        }
+
         static std::string const& getMessage(int number)
         {
             return history_.at(number);
+        }
+
+        static void setStamp(std::string const& stamp)
+        {
+            stamp_ = stamp;
         }
     };
 }

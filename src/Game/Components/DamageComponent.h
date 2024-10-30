@@ -9,7 +9,7 @@ int const BASE_CRITICAL_HIT_DAMAGE{50};
 
 class DamageComponent
 {
-    int damage_{};
+    int baseDamage_{};
 
     // Unit: percent
     int criticalHitChance_{BASE_CRITICAL_HIT_CHANCE};
@@ -24,11 +24,13 @@ public:
         int damage,
         int criticalHitChance = BASE_CRITICAL_HIT_CHANCE,
         int criticalHitDamage = BASE_CRITICAL_HIT_DAMAGE)
-        : damage_(damage)
+        : baseDamage_(damage)
         , criticalHitChance_(criticalHitChance)
         , criticalHitDamage_(criticalHitDamage)
     {
     }
+
+    int baseDamage() const;
 
     int damage() const;
     float damageAverage() const;

@@ -18,6 +18,7 @@
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
+#include <string>
 
 #if defined(DEBUG)
 #include "RNG.h"
@@ -67,8 +68,6 @@ void Game::setupGameEvents()
 
             hero.position.changeTo(Vector2I{0, 0});
 
-            ++turn_;
-
             snx::PublisherStatic::publish(Event::HERO_MOVED);
             snx::PublisherStatic::publish(Event::HERO_POSITION_CHANGED);
             snx::PublisherStatic::publish(Event::MAP_CHANGE);
@@ -91,8 +90,6 @@ void Game::setupGameEvents()
 
                 hero.position.changeTo(position.tilePosition());
             }
-
-            --turn_;
 
             snx::PublisherStatic::publish(Event::HERO_MOVED);
             snx::PublisherStatic::publish(Event::HERO_POSITION_CHANGED);
@@ -148,6 +145,9 @@ void Game::updateState(
             isUnitReady = hero.energy.regenerate();
             isUnitReady = world.currentMap->enemies.regenerate() || isUnitReady;
         }
+
+        ++turn_;
+        snx::Logger::setStamp(std::to_string(turn_));
     }
 
     //* Trigger potential hero action
@@ -168,4 +168,9 @@ void Game::updateState(
 
     //* Update enemies
     world.currentMap->enemies.update(*world.currentMap, hero.position);
+}
+
+int Game::turn() const
+{
+    return turn_;
 }

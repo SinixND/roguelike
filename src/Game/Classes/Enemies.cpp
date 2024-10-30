@@ -5,13 +5,11 @@
 #include "DenseMap.h"
 #include "EnemyData.h"
 #include "EnergyComponent.h"
-#include "GameCamera.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
 #include "Map.h"
 #include "MovementComponent.h"
 #include "MovementSystem.h"
-#include "PathfinderSystem.h"
 #include "PositionComponent.h"
 #include "RNG.h"
 #include "RenderID.h"
@@ -73,9 +71,21 @@ void Enemies::insert(
     ais.insert(id, AIComponent{scanRange});
 }
 
+void Enemies::remove(size_t id)
+{
+    ids.erase(positions.at(id).tilePosition());
+    positions.erase(id);
+    renderIDs.erase(id);
+    movements.erase(id);
+    energies.erase(id);
+    healths.erase(id);
+    damages.erase(id);
+    ais.erase(id);
+}
+
 void Enemies::create(
     Map const& map,
-    RenderID enemyID,
+    RenderID enemyId,
     bool randomPosition,
     Vector2I tilePosition)
 {
@@ -87,7 +97,7 @@ void Enemies::create(
 
     size_t newID{idManager_.requestId()};
 
-    switch (enemyID)
+    switch (enemyId)
     {
         default:
         case RenderID::GOBLIN:
@@ -97,8 +107,8 @@ void Enemies::create(
                 RenderID::GOBLIN,
                 MovementComponent{20 * EnemyData::GOBLIN_BASE_AGILITY},
                 EnergyComponent{EnemyData::GOBLIN_BASE_AGILITY},
-                HealthComponent{10},
-                DamageComponent{1},
+                HealthComponent{EnemyData::GOBLIN_BASE_HEALTH},
+                DamageComponent{EnemyData::GOBLIN_BASE_DAMAGE},
                 EnemyData::GOBLIN_SCAN_RANGE,
                 tilePosition);
 
@@ -138,19 +148,31 @@ void Enemies::update(
     Map const& map,
     PositionComponent const& heroPosition)
 {
-    //* TODO: consider "day" of last update in loop to handle dying enemies!
-    for (size_t const& enemyId : ids.values())
+    size_t i{0};
+
+    while (i < ids.values().size())
     {
-        PositionComponent& position{positions.at(enemyId)};
+        //* Kill enemy at 0 health
+        if (healths.values().at(i).currentHealth() <= 0)
+        {
+            remove(ids.values().at(i));
+
+            //* Spawn new enemy
+            create(map, RenderID::GOBLIN);
+
+            continue;
+        }
+
+        PositionComponent& position{positions.values().at(i)};
 
         Vector2I oldPosition{position.tilePosition()};
 
         //* Update ids_ key if tilePosition changes
         if (
             MovementSystem::update(
-                movements.at(enemyId),
+                movements.values().at(i),
                 position,
-                energies.at(enemyId),
+                energies.values().at(i),
                 map,
                 heroPosition))
         {
@@ -158,5 +180,7 @@ void Enemies::update(
                 oldPosition,
                 position.tilePosition());
         }
+
+        ++i;
     }
 }

@@ -35,7 +35,7 @@ private:
 public:
     void create(
         Map const& map,
-        RenderID enemyID,
+        RenderID enemyId,
         bool randomPosition = true,
         Vector2I tilePosition = Vector2I{0, 0});
 
@@ -61,6 +61,8 @@ private:
         DamageComponent const& damage,
         int scanRange,
         Vector2I const& enemyPosition);
+
+    void remove(size_t id);
 };
 
 #endif

@@ -6,15 +6,15 @@
 # TODOs
 ## Active (Rework features that existed before Restructuring)
 - [ ] Remove all includes and check for possible forward declarations
-- [ ] Implement killing and spawning
+- [ ] Make hero stat display independent from char count
 
 
 ## Shortterm
-- [ ] Add overlay boxes for enemy/object information
 - [ ] Add AI behaviour (defensive, offensive, smart, active, passive) 
 
 
 ## Longterm
+- [ ] Add overlay boxes for enemy/object information (wanted?)
 - [ ] Changeable key bindings
 - [ ] Save/Load for Account > Character > CurrentRun
 - [ ] Account settings via lua
@@ -115,3 +115,4 @@
 - [x] Split GameScene into Scene/Main and Game
 - [x] Implement custom gesture registration (raylib has/had issues)
 - [x] Add health and damage
+- [x] Implement killing and spawning

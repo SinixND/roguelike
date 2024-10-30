@@ -30,6 +30,8 @@ public:
         Cursor const& cursor);
 
     void setupGameEvents();
+
+    int turn() const;
 };
 
 #endif

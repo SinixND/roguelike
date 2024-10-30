@@ -7,7 +7,7 @@ class HealthComponent;
 namespace DamageSystem
 {
     // Returns true if defender health became 0
-    bool attack(
+    void attack(
         DamageComponent const& attackerDamage,
         HealthComponent& defenderHealth);
 }

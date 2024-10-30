@@ -1,5 +1,5 @@
 #include "SceneMain.h"
-// #define DEBUG_TILEINFO
+#define DEBUG_TILEINFO
 //* #define DEBUG_FOG
 
 #include "Chunk.h"
@@ -134,12 +134,12 @@ void SceneMain::setupSceneEvents()
 
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
     snx::PublisherStatic::addSubscriber(
-        Event::cursorPositionChanged,
+        Event::CURSOR_POSITION_CHANGED,
         [&]()
         {
             Vector2I cursorPos{cursor_.position.tilePosition()};
 
-            if (!game_.world.currentMap->tiles.positions_.contains(cursorPos))
+            if (!game_.world.currentMap->tiles.positions.contains(cursorPos))
             {
                 return;
             }
@@ -156,19 +156,19 @@ void SceneMain::setupSceneEvents()
 
             snx::debug::cliLog(
                 "WorldPixel: "
-                + std::to_string(game_.world.currentMap->tiles.positions_.at(cursorPos).worldPixel().x)
+                + std::to_string(game_.world.currentMap->tiles.positions.at(cursorPos).worldPixel().x)
                 + ", "
-                + std::to_string(game_.world.currentMap->tiles.positions_.at(cursorPos).worldPixel().y)
+                + std::to_string(game_.world.currentMap->tiles.positions.at(cursorPos).worldPixel().y)
                 + "\n");
 
             snx::debug::cliLog(
                 "RenderID: "
-                + std::to_string(static_cast<int>(game_.world.currentMap->tiles.renderIDs_.at(cursorPos)))
+                + std::to_string(static_cast<int>(game_.world.currentMap->tiles.renderIDs.at(cursorPos)))
                 + "\n");
 
             snx::debug::cliLog(
                 "VisibilityID: "
-                + std::to_string(static_cast<int>(game_.world.currentMap->tiles.visibilityIDs_.at(cursorPos)))
+                + std::to_string(static_cast<int>(game_.world.currentMap->tiles.visibilityIDs.at(cursorPos)))
                 + "\n");
 
             snx::debug::cliLog(
@@ -181,7 +181,7 @@ void SceneMain::setupSceneEvents()
                 + std::to_string(game_.world.currentMap->tiles.isOpaque(cursorPos))
                 + "\n");
 
-            if (game_.world.currentMap->objects.positions_.contains(cursorPos))
+            if (game_.world.currentMap->objects.positions.contains(cursorPos))
             {
                 snx::debug::cliLog("OBJECT\n");
 
@@ -197,18 +197,23 @@ void SceneMain::setupSceneEvents()
 
                 snx::debug::cliLog(
                     "RenderID: "
-                    + std::to_string(static_cast<int>(game_.world.currentMap->objects.renderIDs_.at(cursorPos)))
+                    + std::to_string(static_cast<int>(game_.world.currentMap->objects.renderIDs.at(cursorPos)))
                     + "\n");
 
                 snx::debug::cliLog(
                     "Event: "
-                    + std::to_string(static_cast<int>(game_.world.currentMap->objects.events_.at(cursorPos)))
+                    + std::to_string(static_cast<int>(game_.world.currentMap->objects.events.at(cursorPos)))
                     + "\n");
             }
 
-            if (game_.world.currentMap->enemies.ids_.contains(cursorPos))
+            if (game_.world.currentMap->enemies.ids.contains(cursorPos))
             {
-                snx::debug::cliLog("OBJECT\n");
+                snx::debug::cliLog("ENEMY\n");
+
+                snx::debug::cliLog(
+                    "Id: "
+                    + std::to_string(game_.world.currentMap->enemies.ids.at(cursorPos))
+                    + "\n");
             }
         });
 #endif

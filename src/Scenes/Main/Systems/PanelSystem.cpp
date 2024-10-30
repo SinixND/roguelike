@@ -109,9 +109,14 @@ void PanelSystem::drawHeroInfoPanelContent(
     */
     DrawTextEx(
         GameFont::font(),
-        "|= HERO ======|\n"
-        "|             |\n"
-        "|_____________|",
+        TextFormat(
+            "|= HERO ======|\n"
+            "|HP : %i/%i |\n"
+            "|ATK : %i      |\n"
+            "|_____________|",
+            hero.health.currentHealth(),
+            hero.health.maxHealth(),
+            hero.damage.baseDamage()),
         Vector2{
             panels.heroInfo.left() + (0.5f * GameFont::fontWidth),
             panels.heroInfo.top() + (0.5f * GameFont::FONT_HEIGHT)},
@@ -144,11 +149,12 @@ void PanelSystem::drawTileInfoPanelContent(
         LIGHTGRAY);
 }
 
-void PanelSystem::drawLogPanelContent(
-    Panels const& panels)
+void PanelSystem::drawLogPanelContent(Panels const& panels)
 {
     int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
+
     double lines{(panels.log.height() / (1.5 * fontSize)) - 1};
+
     for (int i{0}; i < lines; ++i)
     {
         DrawTextEx(

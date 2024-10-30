@@ -69,6 +69,22 @@ void UserInputSystem::takeInput(
     }
 }
 
+void performAttack(
+    Hero& hero,
+    Map& map,
+    Vector2I const& target)
+{
+    snx::Logger::log("Hero deals ");
+
+    DamageSystem::attack(
+        hero.damage,
+        map.enemies.healths.at(
+            map.enemies.ids.at(
+                target)));
+
+    hero.energy.consume();
+}
+
 void UserInputSystem::triggerAction(
     UserInputComponent& userInputComponent,
     Hero& hero,
@@ -100,11 +116,8 @@ void UserInputSystem::triggerAction(
 
             if (map.enemies.ids.contains(target))
             {
-                DamageSystem::attack(
-                    hero.damage,
-                    map.enemies.healths.at(
-                        map.enemies.ids.at(
-                            target)));
+                performAttack(hero, map, target);
+
                 break;
             }
 
@@ -123,11 +136,8 @@ void UserInputSystem::triggerAction(
 
             if (map.enemies.ids.contains(target))
             {
-                DamageSystem::attack(
-                    hero.damage,
-                    map.enemies.healths.at(
-                        map.enemies.ids.at(
-                            target)));
+                performAttack(hero, map, target);
+
                 break;
             }
 
@@ -146,11 +156,8 @@ void UserInputSystem::triggerAction(
 
             if (map.enemies.ids.contains(target))
             {
-                DamageSystem::attack(
-                    hero.damage,
-                    map.enemies.healths.at(
-                        map.enemies.ids.at(
-                            target)));
+                performAttack(hero, map, target);
+
                 break;
             }
 
@@ -169,11 +176,8 @@ void UserInputSystem::triggerAction(
 
             if (map.enemies.ids.contains(target))
             {
-                DamageSystem::attack(
-                    hero.damage,
-                    map.enemies.healths.at(
-                        map.enemies.ids.at(
-                            target)));
+                performAttack(hero, map, target);
+
                 break;
             }
 
@@ -201,9 +205,12 @@ void UserInputSystem::triggerAction(
             //* Wait if nothing to interact
             if (!map.objects.events.contains(heroTilePosition))
             {
-                snx::Logger::log("Wait...");
+                snx::Logger::log("Hero waits...");
+
                 hero.energy.consume();
+
                 hero.health.regenerate();
+
                 break;
             }
 
