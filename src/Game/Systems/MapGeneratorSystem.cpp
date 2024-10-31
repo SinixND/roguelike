@@ -1,12 +1,11 @@
 #include "MapGeneratorSystem.h"
-
 #include "Directions.h"
 #include "Event.h"
 #include "Map.h"
-#include "Objects.h"
+#include "ObjectSoA.h"
 #include "RNG.h"
 #include "RenderID.h"
-#include "Tiles.h"
+#include "TileSoA.h"
 #include "raylibEx.h"
 #include <array>
 #include <raylib.h>
@@ -17,7 +16,7 @@ namespace MapGeneratorSystem
 {
     //* Access or insert
     void addTile(
-        Tiles& tiles,
+        TileSoA& tiles,
         Vector2I const& tilePosition,
         RenderID renderID,
         bool isSolid = false,
@@ -27,7 +26,7 @@ namespace MapGeneratorSystem
     }
 
     void addObject(
-        Objects& objects,
+        ObjectSoA& objects,
         std::string name,
         std::string action,
         Vector2I const& tilePosition,
@@ -38,7 +37,7 @@ namespace MapGeneratorSystem
     }
 
     void addTiles(
-        Tiles& tiles,
+        TileSoA& tiles,
         RectangleExI const& rectangle,
         RenderID renderID,
         bool isSolid = false,
@@ -61,7 +60,7 @@ namespace MapGeneratorSystem
     }
 
     //* Add room (floor with surrounding walls)
-    void addRoom(Tiles& tiles, RectangleExI const& room)
+    void addRoom(TileSoA& tiles, RectangleExI const& room)
     {
         if (room.width() < 2 || room.height() < 2)
         {
@@ -287,7 +286,7 @@ namespace MapGeneratorSystem
                 1},
             RenderID::FLOOR);
 
-        //* Tiles
+        //* TileSoA
         addTile(
             testRoom.tiles,
             Vector2I{

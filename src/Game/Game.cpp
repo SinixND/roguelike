@@ -2,19 +2,20 @@
 
 #include "AISystem.h"
 #include "Cursor.h"
-#include "Enemies.h"
+#include "EnemySoA.h"
 #include "Event.h"
 #include "GameCamera.h"
 #include "Hero.h"
 #include "Logger.h"
 #include "MovementSystem.h"
-#include "Objects.h"
+#include "ObjectSoA.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "RenderID.h"
 #include "UserInputSystem.h"
 #include "World.h"
 #include "raylibEx.h"
+#include <cstddef>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -29,8 +30,6 @@ void Game::init()
 #if defined(DEBUG)
     snx::RNG::seed(1);
 #endif
-
-    hero.init();
 
     UserInputSystem::setDefaultInputMappings(userInput_);
 
@@ -66,6 +65,7 @@ void Game::setupGameEvents()
 
             world.increaseMapLevel();
 
+            //* Place Hero on the map entry position
             hero.position.changeTo(Vector2I{0, 0});
 
             snx::PublisherStatic::publish(Event::HERO_MOVED);
@@ -81,14 +81,18 @@ void Game::setupGameEvents()
 
             world.decreaseMapLevel();
 
-            for (PositionComponent const& position : world.currentMap->objects.positions.values())
-            {
-                if (!(world.currentMap->objects.renderIDs.at(position.tilePosition()) == RenderID::DESCEND))
-                {
-                    continue;
-                }
+            //* Place Hero on the map exit
+            auto const& objects{world.currentMap->objects};
+            auto const& renderIDs{objects.renderIDs.values()};
+            auto const& positions{objects.positions.values()};
 
-                hero.position.changeTo(position.tilePosition());
+            for (size_t i{0}; i < renderIDs.size(); ++i)
+            {
+                if (renderIDs.at(i) == RenderID::DESCEND)
+                {
+                    hero.position.changeTo(
+                        positions.at(i).tilePosition());
+                }
             }
 
             snx::PublisherStatic::publish(Event::HERO_MOVED);
@@ -99,15 +103,11 @@ void Game::setupGameEvents()
 
 void Game::processInput(Cursor& cursor)
 {
-    //* Allow input if hero is ready (= full energy)
-    if (hero.energy.isReady())
-    {
-        //* Take input from mouse, keys or gestures
-        //* Continuous movement done by repeating previous input if modifier is active
-        UserInputSystem::takeInput(
-            userInput_,
-            cursor.isActive);
-    }
+    //* Take input from mouse, keys or gestures
+    //* Continuous movement done by repeating previous input if modifier is active
+    UserInputSystem::takeInput(
+        userInput_,
+        cursor.isActive);
 }
 
 void Game::updateState(

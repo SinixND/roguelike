@@ -1,5 +1,4 @@
 #include "World.h"
-
 #include "MapGeneratorSystem.h"
 
 void World::increaseMapLevel()

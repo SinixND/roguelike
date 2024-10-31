@@ -3,8 +3,10 @@
 
 #include "PositionComponent.h"
 #include "RenderID.h"
-#include "raylibEx.h"
-#include <raylib.h>
+
+struct Camera2D;
+typedef struct Camera2D Camera2D;
+struct Vector2I;
 
 class Cursor
 {
@@ -16,7 +18,9 @@ public:
 public:
     void toggle();
 
-    void update(Camera2D const& camera, Vector2I const& heroPosition);
+    void update(
+        Camera2D const& camera,
+        Vector2I const& heroPosition);
 };
 
 #endif

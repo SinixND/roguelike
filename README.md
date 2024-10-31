@@ -6,6 +6,7 @@
 # TODOs
 ## Active (Rework features that existed before Restructuring)
 - [ ] Remove all includes and check for possible forward declarations
+- [ ] Refactor to prefer const functions with return values
 - [ ] Make hero stat display independent from char count
 
 

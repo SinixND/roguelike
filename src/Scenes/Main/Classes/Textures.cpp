@@ -1,6 +1,5 @@
 #include "Textures.h"
 #include "RenderID.h"
-
 #include <raylib.h>
 #include <string>
 #include <utility>

@@ -1,10 +1,10 @@
 #ifndef IG20241028002927
 #define IG20241028002927
 
-#include "Hero.h"
-#include "Objects.h"
-#include "Panels.h"
-#include "raylibEx.h"
+struct Panels;
+struct Hero;
+struct ObjectSoA;
+struct Vector2I;
 
 namespace PanelSystem
 {
@@ -20,7 +20,7 @@ namespace PanelSystem
 
     void drawTileInfoPanelContent(
         Panels const& panels,
-        Objects const& objects,
+        ObjectSoA const& objects,
         Vector2I const& cursorPosition);
 
     void drawLogPanelContent(Panels const& panels);

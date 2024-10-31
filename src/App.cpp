@@ -1,5 +1,4 @@
 #include "App.h"
-
 #include "DeveloperMode.h"
 #include "Event.h"
 #include "GameFont.h"

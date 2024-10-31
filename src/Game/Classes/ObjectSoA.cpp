@@ -1,13 +1,12 @@
-#include "Objects.h"
-
 #include "DenseMap.h"
 #include "Event.h"
+#include "ObjectSoA.h"
 #include "PositionComponent.h"
 #include "RenderID.h"
 #include "raylibEx.h"
 #include <string>
 
-void Objects::set(
+void ObjectSoA::set(
     Vector2I const& tilePosition,
     RenderID renderID,
     std::string const& name,

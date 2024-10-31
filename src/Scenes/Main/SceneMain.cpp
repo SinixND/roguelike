@@ -1,20 +1,19 @@
 #include "SceneMain.h"
+
 #define DEBUG_TILEINFO
 //* #define DEBUG_FOG
 
-#include "Chunk.h"
 #include "ChunkSystem.h"
 #include "Colors.h"
 #include "Cursor.h"
 #include "Debugger.h"
 #include "DeveloperMode.h"
-#include "Enemies.h"
+#include "EnemySoA.h"
 #include "Event.h"
 #include "Game.h"
 #include "GameCamera.h"
-#include "Objects.h"
+#include "ObjectSoA.h"
 #include "PanelSystem.h"
-#include "Panels.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "RenderSystem.h"
@@ -26,7 +25,7 @@
 #include <raymath.h>
 
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
-#include "Objects.h"
+#include "ObjectSoA.h"
 #include <string>
 #endif
 
@@ -46,7 +45,7 @@ void SceneMain::init()
 
     renderer_.init();
 
-    ChunkSystem::init(
+    ChunkSystem::initializeChunks(
         chunks_,
         game_.world.currentMap->tiles.positions,
         game_.world.currentMap->tiles.renderIDs,
@@ -108,7 +107,7 @@ void SceneMain::setupSceneEvents()
         Event::MAP_CHANGE,
         [&]()
         {
-            ChunkSystem::init(
+            ChunkSystem::initializeChunks(
                 chunks_,
                 game_.world.currentMap->tiles.positions,
                 game_.world.currentMap->tiles.renderIDs,
@@ -227,7 +226,11 @@ void SceneMain::processInput()
         snx::PublisherStatic::publish(Event::COLOR_THEME_CHANGE);
     }
 
-    game_.processInput(cursor_);
+    //* Allow input if hero is ready (= full energy)
+    if (game_.hero.energy.isReady())
+    {
+        game_.processInput(cursor_);
+    }
 }
 
 void SceneMain::updateState()
@@ -258,29 +261,33 @@ void SceneMain::renderOutput()
     //* World
     //* Draw map
     //* Draw tiles
-    for (Chunk const& chunk : chunks_.values())
+    for (Chunk const& chunk : chunks_)
     {
         renderer_.renderChunk(chunk);
     }
 
     //* Draw objects
-    Objects const& objects{game_.world.currentMap->objects};
+    auto const& objects{game_.world.currentMap->objects};
+    auto const& objectRenderIDs{objects.renderIDs.values()};
+    auto const& objectPositions{objects.positions.values()};
 
-    for (PositionComponent const& position : objects.positions.values())
+    for (size_t i{0}; i < objectRenderIDs.size(); ++i)
     {
         renderer_.render(
-            objects.renderIDs.at(position.tilePosition()),
-            position.worldPixel());
+            objectRenderIDs.at(i),
+            objectPositions.at(i).worldPixel());
     }
 
     //* Draw enemies
-    Enemies const& enemies{game_.world.currentMap->enemies};
+    auto const& enemies{game_.world.currentMap->enemies};
+    auto const& enemyRenderIDs{enemies.renderIDs.values()};
+    auto const& enemyPositions{enemies.positions.values()};
 
-    for (size_t id : enemies.ids)
+    for (size_t i{0}; i < enemyRenderIDs.size(); ++i)
     {
         renderer_.render(
-            enemies.renderIDs.at(id),
-            enemies.positions.at(id).worldPixel());
+            enemyRenderIDs.at(i),
+            enemyPositions.at(i).worldPixel());
     }
 
     //* VisibilitySystem

@@ -66,7 +66,7 @@ inline ThreadPool::ThreadPool()
 inline void ThreadPool::start()
 {
     //* Max # of threads the system supports
-    const uint32_t num_threads = std::thread::hardware_concurrency(); 
+    const uint32_t num_threads = std::thread::hardware_concurrency();
 
     threads.reserve(num_threads);
 

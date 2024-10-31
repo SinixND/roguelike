@@ -1,8 +1,11 @@
 #ifndef IG20241027130300
 #define IG20241027130300
 
-#include "Map.h"
-#include "MovementComponent.h"
+class MovementComponent;
+class PositionComponent;
+class EnergyComponent;
+struct Map;
+class PositionComponent;
 
 namespace MovementSystem
 {

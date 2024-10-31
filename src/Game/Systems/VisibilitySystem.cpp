@@ -1,6 +1,6 @@
 #include "VisibilitySystem.h"
-//* #define DEBUG_SHADOW
-//* #define DEBUG_FOG
+
+// #define DEBUG_SHADOW
 
 #include "DenseMap.h"
 #include "UnitConversion.h"
@@ -17,10 +17,6 @@
 
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
 #include "TileData.h"
-#endif
-
-#if defined(DEBUG) && defined(DEBUG_FOG)
-#include "Debugger.h"
 #endif
 
 //* Shadow
@@ -548,16 +544,4 @@ void VisibilitySystem::update(
             visionRange,
             range);
     }
-
-#if defined(DEBUG) && defined(DEBUG_FOG)
-    for (Fog const& fog : fogsToRender_.values())
-    {
-        snx::debug::cliLog(
-            "Fog",
-            fog.tilePosition(),
-            ": ",
-            (fog.isFogOpaque()) ? "invis" : "seen",
-            "\n");
-    }
-#endif
 }

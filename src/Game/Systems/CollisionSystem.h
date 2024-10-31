@@ -1,8 +1,8 @@
 #ifndef IG20240914212555
 #define IG20240914212555
 
-#include "Map.h"
-#include "raylibEx.h"
+struct Map;
+struct Vector2I;
 
 namespace CollisionSystem
 {

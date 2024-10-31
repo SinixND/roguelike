@@ -1,10 +1,9 @@
 #include "PanelSystem.h"
-
 #include "Event.h"
 #include "GameFont.h"
 #include "Hero.h"
 #include "Logger.h"
-#include "Objects.h"
+#include "ObjectSoA.h"
 #include "Panels.h"
 #include "PublisherStatic.h"
 #include "raylibEx.h"
@@ -127,7 +126,7 @@ void PanelSystem::drawHeroInfoPanelContent(
 
 void PanelSystem::drawTileInfoPanelContent(
     Panels const& panels,
-    Objects const& objects,
+    ObjectSoA const& objects,
     Vector2I const& cursorPosition)
 {
     if (!objects.names.contains(cursorPosition))

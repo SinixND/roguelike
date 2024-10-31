@@ -2,16 +2,15 @@
 
 #include "DamageComponent.h"
 #include "DamageSystem.h"
-#include "Enemies.h"
+#include "EnemySoA.h"
 #include "HealthComponent.h"
 #include "Logger.h"
 #include "PathfinderSystem.h"
-
 #include <cstddef>
 #include <vector>
 
 bool AISystem::checkForAction(
-    Enemies& enemies,
+    EnemySoA& enemies,
     Map const& map,
     Vector2I const& heroPosition,
     HealthComponent& heroHealth,

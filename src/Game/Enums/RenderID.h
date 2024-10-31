@@ -6,15 +6,15 @@ enum class RenderID
     NONE,
     //* UI
     CURSOR,
-    //* Tiles
+    //* TileSoA
     WALL,
     FLOOR,
-    //* Objects
+    //* ObjectSoA
     DESCEND,
     ASCEND,
     //* Units
     HERO,
-    //* Enemies
+    //* EnemySoA
     GOBLIN,
     //* Misc
 };

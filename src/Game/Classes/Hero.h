@@ -4,24 +4,23 @@
 #include "DamageComponent.h"
 #include "EnergyComponent.h"
 #include "HealthComponent.h"
+#include "HeroData.h"
 #include "MovementComponent.h"
 #include "PositionComponent.h"
 #include "RenderID.h"
 
-class Hero
+struct Hero
 {
-public:
     RenderID renderID{RenderID::HERO};
-    MovementComponent movement{};
-    EnergyComponent energy{};
+    MovementComponent movement{20 * HeroData::BASE_AGILITY};
+    EnergyComponent energy{HeroData::BASE_AGILITY};
     PositionComponent position{};
-    HealthComponent health{};
-    DamageComponent damage{};
+    HealthComponent health{
+        HeroData::BASE_HEALTH,
+        HeroData::BASE_HEALTH_REGENERATION};
+    DamageComponent damage{HeroData::BASE_DAMAGE};
 
-    int visionRange{};
-
-public:
-    void init();
+    int visionRange{HeroData::VISION_RANGE};
 };
 
 #endif

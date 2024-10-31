@@ -6,12 +6,9 @@
 #include "RenderID.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
-#include <raylib.h>
 #include <unordered_set>
 
-//* SoA class
-//* Its the clients responsibility to avoid desync caused by individual size modifications of DenseMaps (eg. insert, erase)
-struct Tiles
+struct TileSoA
 {
     snx::DenseMap<Vector2I, PositionComponent> positions{};
     snx::DenseMap<Vector2I, RenderID> renderIDs{};

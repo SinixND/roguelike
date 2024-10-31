@@ -1,5 +1,4 @@
 #include "MovementSystem.h"
-
 #include "CollisionSystem.h"
 #include "EnergyComponent.h"
 #include "Event.h"

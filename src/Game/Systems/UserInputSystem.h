@@ -1,12 +1,11 @@
 #ifndef IG20240531194629
 #define IG20240531194629
 
-#include "Cursor.h"
-#include "GameCamera.h"
-#include "Hero.h"
-#include "Map.h"
-#include "UserInputComponent.h"
-#include <raylib.h>
+class UserInputComponent;
+struct Hero;
+class Cursor;
+struct Map;
+class GameCamera;
 
 namespace UserInputSystem
 {

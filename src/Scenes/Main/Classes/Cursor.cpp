@@ -1,9 +1,7 @@
 #include "Cursor.h"
-
 #include "Event.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
-#include "RenderID.h"
 #include "UnitConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
@@ -23,6 +21,7 @@ void Cursor::toggle()
 
 void Cursor::update(Camera2D const& camera, Vector2I const& heroPosition)
 {
+    //* Update cursor position if active
     if (isActive)
     {
         Vector2I mouseTile{UnitConversion::screenToTile(GetMousePosition(), camera)};
@@ -37,5 +36,6 @@ void Cursor::update(Camera2D const& camera, Vector2I const& heroPosition)
         return;
     }
 
+    //* Keep cursor on hero if inactive
     position.changeTo(heroPosition);
 }

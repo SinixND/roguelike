@@ -3,9 +3,9 @@
 
 #include "ChunkData.h"
 #include "TileData.h"
-#include "raylib.h"
 #include "raylibEx.h"
 #include <cmath>
+#include <raylib.h>
 #include <raymath.h>
 
 //* This file contains functions to convert between
@@ -14,7 +14,6 @@
 //* - chunk (int/position, game coordinates)
 //* Camera transforms between game and screen coordinates
 //* - screen (float/pixel, screen coordinates)
-
 namespace UnitConversion
 {
     //* World pixel to tile position

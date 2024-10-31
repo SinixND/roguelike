@@ -1,5 +1,4 @@
 #include "UserInputComponent.h"
-
 #include "Event.h"
 #include "InputActionID.h"
 #include "PublisherStatic.h"

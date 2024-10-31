@@ -10,15 +10,13 @@
 #include "MovementComponent.h"
 #include "PositionComponent.h"
 #include "RenderID.h"
-#include "Tiles.h"
-#include "raylibEx.h"
 #include <cstddef>
 
+struct Vector2I;
 struct Map;
+struct TileSoA;
 
-//* SoA
-//* Its the clients responsibility to avoid desync caused by individual size modifications of DenseMaps (eg. insert, erase). Use member functions instead
-struct Enemies
+struct EnemySoA
 {
     snx::DenseMap<Vector2I, size_t> ids{};
     snx::DenseMap<size_t, AIComponent> ais{};
@@ -50,7 +48,7 @@ public:
         PositionComponent const& heroPosition);
 
 private:
-    Vector2I getRandomPosition(Tiles const& tiles);
+    Vector2I getRandomPosition(TileSoA const& tiles);
 
     void insert(
         size_t id,

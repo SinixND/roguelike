@@ -1,11 +1,11 @@
 #ifndef IG20240901143710
 #define IG20240901143710
 
-#include "GameCamera.h"
-#include "Map.h"
 #include "raylibEx.h"
-#include <raylib.h>
 #include <vector>
+
+struct Map;
+class GameCamera;
 
 class RatedTile
 {
@@ -33,7 +33,6 @@ public:
 
     void reconstructPath(std::vector<Vector2I>& path);
 };
-
 namespace PathfinderSystem
 {
     //* Returns path from target (front()) to start (included, back())

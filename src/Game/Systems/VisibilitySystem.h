@@ -4,13 +4,9 @@
 //* https://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/
 
 #include "DenseMap.h"
-#include "VisibilityID.h"
 #include "raylibEx.h"
-#include <raylib.h>
 #include <unordered_set>
 #include <vector>
-
-struct Tiles;
 
 class Shadow
 {
@@ -43,21 +39,13 @@ public:
     float getRight(int octantPositionHeight) const;
 };
 
-class Fog
+struct Fog
 {
-public:
     Vector2I tilePosition{};
     bool isFogOpaque{};
-
-public:
-    Fog() = default;
-
-    Fog(Vector2I const& tilePosition, bool isFogOpaque)
-        : tilePosition(tilePosition)
-        , isFogOpaque(isFogOpaque)
-    {
-    }
 };
+
+enum class VisibilityID;
 
 namespace VisibilitySystem
 {

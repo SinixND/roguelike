@@ -4,7 +4,6 @@
 #include "PublisherStatic.h"
 #include "UnitConversion.h"
 #include "raylibEx.h"
-
 #include <raylib.h>
 
 void GameCamera::init(RectangleEx const& viewport, Vector2 const& heroPosition)

@@ -1,5 +1,4 @@
-#include "Enemies.h"
-
+#include "EnemySoA.h"
 #include "AIComponent.h"
 #include "DamageComponent.h"
 #include "DenseMap.h"
@@ -13,13 +12,13 @@
 #include "PositionComponent.h"
 #include "RNG.h"
 #include "RenderID.h"
-#include "Tiles.h"
+#include "TileSoA.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
 #include <cstddef>
 #include <vector>
 
-Vector2I Enemies::getRandomPosition(Tiles const& tiles)
+Vector2I EnemySoA::getRandomPosition(TileSoA const& tiles)
 {
     RectangleExI const& mapSize{tiles.mapSize()};
 
@@ -51,7 +50,7 @@ Vector2I Enemies::getRandomPosition(Tiles const& tiles)
     }
 }
 
-void Enemies::insert(
+void EnemySoA::insert(
     size_t id,
     RenderID renderID,
     MovementComponent const& movement,
@@ -71,7 +70,7 @@ void Enemies::insert(
     ais.insert(id, AIComponent{scanRange});
 }
 
-void Enemies::remove(size_t id)
+void EnemySoA::remove(size_t id)
 {
     ids.erase(positions.at(id).tilePosition());
     positions.erase(id);
@@ -83,7 +82,7 @@ void Enemies::remove(size_t id)
     ais.erase(id);
 }
 
-void Enemies::create(
+void EnemySoA::create(
     Map const& map,
     RenderID enemyId,
     bool randomPosition,
@@ -117,7 +116,7 @@ void Enemies::create(
     }
 }
 
-void Enemies::init(
+void EnemySoA::init(
     int mapLevel,
     Map const& map)
 {
@@ -129,13 +128,13 @@ void Enemies::init(
     }
 }
 
-bool Enemies::regenerate()
+bool EnemySoA::regenerate()
 {
     bool isEnemyReady{false};
 
-    for (size_t const& enemyId : ids.values())
+    for (EnergyComponent& energy : energies)
     {
-        if (energies.at(enemyId).regenerate())
+        if (energy.regenerate())
         {
             isEnemyReady = true;
         }
@@ -144,7 +143,7 @@ bool Enemies::regenerate()
     return isEnemyReady;
 }
 
-void Enemies::update(
+void EnemySoA::update(
     Map const& map,
     PositionComponent const& heroPosition)
 {

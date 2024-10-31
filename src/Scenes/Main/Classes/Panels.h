@@ -1,7 +1,6 @@
 #ifndef IG20240531174000
 #define IG20240531174000
 
-#include "raylibEx.h"
 
 struct Panels
 {

@@ -8,9 +8,7 @@
 #include "raylibEx.h"
 #include <string>
 
-//* SoA class
-//* Its the clients responsibility to avoid desync caused by individual size modifications of DenseMaps (eg. insert, erase)
-struct Objects
+struct ObjectSoA
 {
     snx::DenseMap<Vector2I, PositionComponent> positions{};
     snx::DenseMap<Vector2I, RenderID> renderIDs{};

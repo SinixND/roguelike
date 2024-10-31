@@ -1,7 +1,6 @@
 #ifndef IG20240128195657
 #define IG20240128195657
 
-#include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <unordered_map>
@@ -10,21 +9,21 @@
 
 namespace snx
 {
-    template <typename Key>
-    struct IDenseMap
-    {
-        virtual bool contains(Key const& key) const = 0;
-        virtual void clear() = 0;
-        virtual void erase(Key const& key) = 0;
-        virtual void changeKey(Key const& from, Key const& to) = 0;
-        virtual size_t size() const = 0;
+    // template <typename Key>
+    // struct IDenseMap
+    // {
+    //     virtual bool contains(Key const& key) const = 0;
+    //     virtual void clear() = 0;
+    //     virtual void erase(Key const& key) = 0;
+    //     virtual void changeKey(Key const& from, Key const& to) = 0;
+    //     virtual size_t size() const = 0;
 
-        virtual ~IDenseMap() = default;
-    };
+    //     virtual ~IDenseMap() = default;
+    // };
 
     template <typename Key, typename Type>
     class DenseMap
-        : public IDenseMap<Key>
+    // : public IDenseMap<Key>
     {
     public:
         //* ITERATORS
@@ -50,7 +49,7 @@ namespace snx
 
         //* CAPACITY
         //* Return size of DenseMap
-        size_t size() const override
+        size_t size() const // override
         {
             return values_.size();
         }
@@ -102,7 +101,7 @@ namespace snx
         }
 
         //* Moves last value to gap
-        void erase(Key const& key) override
+        void erase(Key const& key) // override
         {
             // if (!contains(key))
             // {
@@ -145,7 +144,7 @@ namespace snx
             indexToKey_.pop_back();
         }
 
-        void changeKey(Key const& from, Key const& to) override
+        void changeKey(Key const& from, Key const& to) // override
         {
             assert(!contains(to) && "Key already exists, possible loss of data!");
 
@@ -160,7 +159,7 @@ namespace snx
         }
 
         //* Empty all containers
-        void clear() override
+        void clear() // override
         {
             values_.clear();
             keyToIndex_.clear();
@@ -191,7 +190,7 @@ namespace snx
             return at(key);
         }
 
-        bool contains(Key const& key) const override
+        bool contains(Key const& key) const // override
         {
             return keyToIndex_.contains(key);
         }

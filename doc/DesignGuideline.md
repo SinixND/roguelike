@@ -16,9 +16,9 @@
 - If non-const access or trivial write access needed: `public`
 
 #### **NOTE**: 
-At first it might seem that `public` access ties clients to implementation/concrete type, while non-const reference getters (NCRG) do not -> leads to more flexible/maintainable and increased encapsulation. 
+Although trivial getters + setter provide more flexibility for later change, as they do not tie to a specific implementation. they hide the (pontentially high) cost of calling the function. 
 
-*But if conversion is added to NCRG, it can't return a reference anymore!!! Additionally, `public` provides implicit const-correctness, which NCRG does not.*
+*Better refactor `public` to getter/setter later if actually needed.*
 
 
 # Concepts

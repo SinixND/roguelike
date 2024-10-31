@@ -1,7 +1,6 @@
 #ifndef IG20240414161243
 #define IG20240414161243
 
-#include "raylibEx.h"
 
 namespace RotationMatrices
 {

@@ -1,10 +1,11 @@
 #include "PathfinderSystem.h"
+
 //* #define DEBUG_PATHFINDER
 
 #include "GameCamera.h"
 #include "Map.h"
 #include "RNG.h"
-#include "Tiles.h"
+#include "TileSoA.h"
 #include "UnitConversion.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"

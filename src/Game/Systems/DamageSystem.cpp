@@ -1,5 +1,4 @@
 #include "DamageSystem.h"
-
 #include "DamageComponent.h"
 #include "HealthComponent.h"
 

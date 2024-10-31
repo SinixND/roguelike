@@ -1,13 +1,14 @@
 #ifndef IG20240531150939
 #define IG20240531150939
 
-#include "Chunk.h"
-#include "RenderID.h"
 #include "Textures.h"
-#include "VisibilitySystem.h"
 #include <cstddef>
 #include <raylib.h>
 #include <string>
+
+enum class RenderID;
+class Chunk;
+struct Fog;
 
 class RenderSystem
 {

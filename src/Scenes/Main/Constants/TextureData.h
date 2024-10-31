@@ -1,9 +1,6 @@
 #ifndef IG20240414161450
 #define IG20240414161450
 
-#include <raylib.h>
-#include <string>
-#include <vector>
 
 namespace TextureData
 {

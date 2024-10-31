@@ -1,4 +1,5 @@
 #include "DamageComponent.h"
+
 // #define DEBUG_DAMAGE
 
 #include "Logger.h"

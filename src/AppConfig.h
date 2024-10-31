@@ -1,7 +1,6 @@
 #ifndef IG20240529010632
 #define IG20240529010632
 
-#include <raylib.h>
 
 //* Configs imported from user file
 

@@ -2,7 +2,7 @@
 #define IG20241028165100
 
 class AIComponent;
-struct Enemies;
+struct EnemySoA;
 struct Map;
 struct Vector2I;
 class GameCamera;
@@ -16,7 +16,7 @@ namespace AISystem
 {
     //* Return if all enemies checked
     bool checkForAction(
-        Enemies& enemies,
+        EnemySoA& enemies,
         Map const& map,
         Vector2I const& heroPosition,
         HealthComponent& heroHealth,

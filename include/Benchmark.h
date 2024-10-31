@@ -51,7 +51,7 @@ namespace snx
             }
         }
 
-        static void report(std::string bmName)
+        static void report(std::string bmName = "")
         {
             auto average = (durations_.at(bmName) / measurementCounts_.at(bmName));
             std::cout

@@ -1,5 +1,4 @@
 #include "ChunkSystem.h"
-
 #include "Chunk.h"
 #include "ChunkData.h"
 #include "Colors.h"
@@ -10,9 +9,9 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-void verifyRequiredChunk(
-    snx::DenseMap<Vector2I, Chunk>& chunks,
-    Vector2I const& tilePosition)
+void verifyRequiredChunkExists(
+    Vector2I const& tilePosition,
+    snx::DenseMap<Vector2I, Chunk>& chunks)
 {
     Vector2I chunkPosition{UnitConversion::tileToChunk(tilePosition)};
 
@@ -28,14 +27,14 @@ void verifyRequiredChunk(
     }
 }
 
-void ChunkSystem::init(
+void ChunkSystem::initializeChunks(
     snx::DenseMap<Vector2I, Chunk>& chunks,
     snx::DenseMap<Vector2I, PositionComponent> const tilesPositions,
     snx::DenseMap<Vector2I, RenderID> const& tilesRenderIDs,
     RenderSystem& renderer)
 {
     //* Reset
-    for (Chunk const& chunk : chunks.values())
+    for (Chunk const& chunk : chunks)
     {
         UnloadRenderTexture(chunk.renderTexture);
     }
@@ -43,15 +42,15 @@ void ChunkSystem::init(
     chunks.clear();
 
     //* Create necessary chunks
-    for (PositionComponent const& position : tilesPositions.values())
+    for (PositionComponent const& position : tilesPositions)
     {
-        verifyRequiredChunk(
-                chunks,
-                position.tilePosition());
+        verifyRequiredChunkExists(
+            position.tilePosition(),
+            chunks);
     }
 
-    //* Render  to chunk
-    for (Chunk& chunk : chunks.values())
+    //* Render to chunk
+    for (Chunk& chunk : chunks)
     {
         RectangleExI const& chunkSize{chunk.corners};
 
@@ -80,4 +79,3 @@ void ChunkSystem::init(
         EndTextureMode();
     }
 }
-

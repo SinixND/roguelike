@@ -1,5 +1,4 @@
 #include "PositionComponent.h"
-
 #include "UnitConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
@@ -37,4 +36,3 @@ bool PositionComponent::move(Vector2 const& offset)
 
     return false;
 }
-
