@@ -12,15 +12,24 @@
 #include <raymath.h>
 #include <string>
 
+constexpr int INFO_PANEL_WIDTH{16};
+
 void PanelSystem::init(Panels& panels)
 {
+    std::string widthString{};
+
+    for (int i{0}; i < INFO_PANEL_WIDTH; ++i)
+    {
+        widthString.append("I");
+    }
+
     float heroInfoPanelWidth =
         // static_cast<float>(
         //     (/*Number of chars per line*/ 15 * GameFont::fontWidth)
         //     + 2 * GameFont::fontWidth)
         MeasureTextEx(
             GameFont::font(),
-            "1234567890123456",
+            widthString.c_str(),
             GameFont::FONT_HEIGHT,
             0)
             .x;
@@ -92,6 +101,22 @@ void PanelSystem::drawGameInfoPanelContent(
         RAYWHITE);
 }
 
+std::string printInfo(std::string const& text)
+{
+    std::string info{"|"};
+
+    info.append(text);
+
+    while (info.length() < (INFO_PANEL_WIDTH - 2))
+    {
+        info.append(" ");
+    }
+
+    info.append("|\n");
+
+    return info;
+}
+
 void PanelSystem::drawHeroInfoPanelContent(
     Panels const& panels,
     [[maybe_unused]] Hero const& hero)
@@ -106,16 +131,27 @@ void PanelSystem::drawHeroInfoPanelContent(
     |HEA: RUSTY   |
     |_____________|
     */
+    std::string info{};
+
+    info.append("|= HERO ======|\n");
+
+    info.append(
+        printInfo(
+            "HP : "
+            + std::to_string(hero.health.currentHealth())
+            + "/"
+            + std::to_string(hero.health.maxHealth()).c_str()));
+
+    info.append(printInfo(
+        "ATK : "
+        + std::to_string(hero.damage.baseDamage())));
+
+    info.append("|_____________|");
+
     DrawTextEx(
         GameFont::font(),
         TextFormat(
-            "|= HERO ======|\n"
-            "|HP : %i/%i |\n"
-            "|ATK : %i      |\n"
-            "|_____________|",
-            hero.health.currentHealth(),
-            hero.health.maxHealth(),
-            hero.damage.baseDamage()),
+            info.c_str()),
         Vector2{
             panels.heroInfo.left() + (0.5f * GameFont::fontWidth),
             panels.heroInfo.top() + (0.5f * GameFont::FONT_HEIGHT)},

@@ -1,4 +1,5 @@
 #include "SceneMain.h"
+#include "VisibilityID.h"
 
 #define DEBUG_TILEINFO
 //* #define DEBUG_FOG
@@ -285,6 +286,11 @@ void SceneMain::renderOutput()
 
     for (size_t i{0}; i < enemyRenderIDs.size(); ++i)
     {
+        if (game_.world.currentMap->tiles.visibilityIDs.at(enemyPositions.at(i).tilePosition()) != VisibilityID::VISIBILE)
+        {
+            continue;
+        }
+
         renderer_.render(
             enemyRenderIDs.at(i),
             enemyPositions.at(i).worldPixel());

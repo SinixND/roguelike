@@ -5,13 +5,20 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Remove all includes and check for possible forward declarations
-- [ ] Refactor to prefer const functions with return values
-- [ ] Make hero stat display independent from char count
+- [ ] End/Restart game on death
+- [ ] Add AI behaviour with new enemy types
+
+| Default state before attacked                          | Name       |
+| ------------------------------------------------------ | ---------- |
+| stationary, defensive                                  | [M]imic    |
+| moving, defensive                                      | [G]olem    |
+| moving, aggressive                                     | [R]at      |
+| moving, aggressive, invisible till (near or first hit) | [P]redator |
+| Passes solids                                          | [S]hade    |
+|                                                        | [D]jin     |
 
 
 ## Shortterm
-- [ ] Add AI behaviour (defensive, offensive, smart, active, passive) 
 
 
 ## Longterm
@@ -117,3 +124,4 @@
 - [x] Implement custom gesture registration (raylib has/had issues)
 - [x] Add health and damage
 - [x] Implement killing and spawning
+- [x] Remove all includes and check for possible forward declarations
