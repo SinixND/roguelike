@@ -21,17 +21,17 @@ void verifyRequiredChunkExists(
         chunks.emplace(
             chunkPosition,
             LoadRenderTexture(
-                ChunkData::CHUNK_SIZE_F,
-                ChunkData::CHUNK_SIZE_F),
+                ChunkData::chunkSize_f,
+                ChunkData::chunkSize_f),
             PositionComponent{chunkPosition});
     }
 }
 
 void ChunkSystem::initializeChunks(
+    Textures const& textures,
     snx::DenseMap<Vector2I, Chunk>& chunks,
     snx::DenseMap<Vector2I, PositionComponent> const tilesPositions,
-    snx::DenseMap<Vector2I, RenderID> const& tilesRenderIDs,
-    RenderSystem& renderer)
+    snx::DenseMap<Vector2I, RenderID> const& tilesRenderIDs)
 {
     //* Reset
     for (Chunk const& chunk : chunks)
@@ -56,7 +56,7 @@ void ChunkSystem::initializeChunks(
 
         BeginTextureMode(chunk.renderTexture);
 
-        ClearBackground(BG_COLOR);
+        ClearBackground(bgColor);
 
         for (int x{chunkSize.left() - 1}; x < (chunkSize.right() + 2); ++x)
         {
@@ -69,7 +69,8 @@ void ChunkSystem::initializeChunks(
                     continue;
                 }
 
-                renderer.renderToChunk(
+                RenderSystem::renderToChunk(
+                    textures,
                     tilesRenderIDs.at(tilePosition),
                     tilesPositions.at(tilePosition).worldPixel(),
                     chunk);

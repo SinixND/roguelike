@@ -1,9 +1,9 @@
 #include "PanelSystem.h"
-#include "Event.h"
+#include "EventID.h"
 #include "GameFont.h"
 #include "Hero.h"
 #include "Logger.h"
-#include "ObjectSoA.h"
+#include "Objects.h"
 #include "Panels.h"
 #include "PublisherStatic.h"
 #include "raylibEx.h"
@@ -12,13 +12,13 @@
 #include <raymath.h>
 #include <string>
 
-constexpr int INFO_PANEL_WIDTH{16};
+int constexpr infoPanelWidth{16};
 
 void PanelSystem::init(Panels& panels)
 {
     std::string widthString{};
 
-    for (int i{0}; i < INFO_PANEL_WIDTH; ++i)
+    for (int i{0}; i < infoPanelWidth; ++i)
     {
         widthString.append("I");
     }
@@ -30,19 +30,19 @@ void PanelSystem::init(Panels& panels)
         MeasureTextEx(
             GameFont::font(),
             widthString.c_str(),
-            GameFont::FONT_HEIGHT,
+            GameFont::fontHeight,
             0)
             .x;
 
     float gameInfoPanelHeight =
         static_cast<float>(
-            (/*Number of lines to print*/ 1 * GameFont::FONT_HEIGHT)
-            + GameFont::FONT_HEIGHT);
+            (/*Number of lines to print*/ 1 * GameFont::fontHeight)
+            + GameFont::fontHeight);
 
     float logPanelHeight =
         static_cast<float>(
-            (/*Number of lines to print*/ 4 * GameFont::FONT_HEIGHT)
-            + GameFont::FONT_HEIGHT);
+            (/*Number of lines to print*/ 4 * GameFont::fontHeight)
+            + GameFont::fontHeight);
 
     panels.tileInfo
         .setRight(static_cast<int>(GetRenderWidth()))
@@ -69,7 +69,7 @@ void PanelSystem::init(Panels& panels)
         .setBottom(panels.log.top())
         .setTop(panels.status.bottom());
 
-    snx::PublisherStatic::publish(Event::PANELS_RESIZED);
+    snx::PublisherStatic::publish(EventID::PANELS_RESIZED);
 }
 
 void PanelSystem::drawGameInfoPanelContent(
@@ -81,7 +81,7 @@ void PanelSystem::drawGameInfoPanelContent(
 
     Font const& font{GameFont::font()};
 
-    float fontSize{GameFont::FONT_HEIGHT};
+    float fontSize{GameFont::fontHeight};
 
     Vector2 textDimensions{
         MeasureTextEx(
@@ -107,7 +107,7 @@ std::string printInfo(std::string const& text)
 
     info.append(text);
 
-    while (info.length() < (INFO_PANEL_WIDTH - 2))
+    while (info.length() < (infoPanelWidth - 2))
     {
         info.append(" ");
     }
@@ -154,7 +154,7 @@ void PanelSystem::drawHeroInfoPanelContent(
             info.c_str()),
         Vector2{
             panels.heroInfo.left() + (0.5f * GameFont::fontWidth),
-            panels.heroInfo.top() + (0.5f * GameFont::FONT_HEIGHT)},
+            panels.heroInfo.top() + (0.5f * GameFont::fontHeight)},
         fontSize,
         0,
         LIGHTGRAY);
@@ -162,7 +162,7 @@ void PanelSystem::drawHeroInfoPanelContent(
 
 void PanelSystem::drawTileInfoPanelContent(
     Panels const& panels,
-    ObjectSoA const& objects,
+    Objects const& objects,
     Vector2I const& cursorPosition)
 {
     if (!objects.names.contains(cursorPosition))

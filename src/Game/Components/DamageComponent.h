@@ -2,28 +2,28 @@
 #define IG20241029001208
 
 // Unit: percent
-int const BASE_CRITICAL_HIT_CHANCE{0};
+int const baseCriticalHitChance{0};
 
 // Unit: percent
-int const BASE_CRITICAL_HIT_DAMAGE{50};
+int const baseCriticalHitDamage{50};
 
 class DamageComponent
 {
     int baseDamage_{};
 
     // Unit: percent
-    int criticalHitChance_{BASE_CRITICAL_HIT_CHANCE};
+    int criticalHitChance_{baseCriticalHitChance};
 
     // Unit: percent
-    int criticalHitDamage_{BASE_CRITICAL_HIT_DAMAGE};
+    int criticalHitDamage_{baseCriticalHitDamage};
 
 public:
     DamageComponent() = default;
 
     DamageComponent(
         int damage,
-        int criticalHitChance = BASE_CRITICAL_HIT_CHANCE,
-        int criticalHitDamage = BASE_CRITICAL_HIT_DAMAGE)
+        int criticalHitChance = baseCriticalHitChance,
+        int criticalHitDamage = baseCriticalHitDamage)
         : baseDamage_(damage)
         , criticalHitChance_(criticalHitChance)
         , criticalHitDamage_(criticalHitDamage)

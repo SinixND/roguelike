@@ -4,7 +4,7 @@
 class MovementComponent;
 class PositionComponent;
 class EnergyComponent;
-struct Map;
+class Map;
 class PositionComponent;
 
 namespace MovementSystem

@@ -1,7 +1,6 @@
 #ifndef IG20240227231122
 #define IG20240227231122
 
-//* Holds a world / render position and provides convenience functions to work with tile positions as well
 #include "UnitConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
@@ -11,7 +10,9 @@ class PositionComponent
     Vector2 position_{};
 
 public:
-    explicit PositionComponent(Vector2 const& position = {0, 0})
+    PositionComponent() = default;
+
+    explicit PositionComponent(Vector2 const& position)
         : position_(position)
     {
     }

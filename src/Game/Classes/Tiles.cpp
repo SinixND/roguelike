@@ -1,14 +1,14 @@
 #include "DenseMap.h"
 #include "PositionComponent.h"
 #include "RenderID.h"
-#include "TileSoA.h"
+#include "Tiles.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
 #include <algorithm>
 #include <unordered_set>
 #include <utility>
 
-void TileSoA::set(
+void Tiles::set(
     Vector2I const& tilePosition,
     RenderID renderID,
     bool isSolid,
@@ -44,7 +44,7 @@ void TileSoA::set(
     updateMapSize(tilePosition);
 }
 
-void TileSoA::updateMapSize(Vector2I const& tilePosition)
+void Tiles::updateMapSize(Vector2I const& tilePosition)
 {
     mapSize_ = RectangleExI{
         Vector2I{
@@ -55,17 +55,17 @@ void TileSoA::updateMapSize(Vector2I const& tilePosition)
             std::max(tilePosition.y, mapSize_.bottom())}};
 }
 
-bool TileSoA::isSolid(Vector2I const& tilePosition) const
+bool Tiles::isSolid(Vector2I const& tilePosition) const
 {
     return isSolids.contains(tilePosition);
 }
 
-bool TileSoA::isOpaque(Vector2I const& tilePosition) const
+bool Tiles::isOpaque(Vector2I const& tilePosition) const
 {
     return isOpaques.contains(tilePosition);
 }
 
-RectangleExI TileSoA::mapSize() const
+RectangleExI Tiles::mapSize() const
 {
     return mapSize_;
 }

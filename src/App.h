@@ -15,12 +15,12 @@ struct emscriptenArgs
 
 class App
 {
-    static inline AppConfig config{};
+    AppConfig config_{};
 
-    int const FPS_TARGET_{300};
+    int const fpsTarget_{300};
 
     //* Raylib settings
-    Image const FAVICON_{LoadImage("resources/favicon/favicon.png")};
+    Image const favicon_{LoadImage("resources/favicon/favicon.png")};
 
     //* Scenes
     SceneMain SceneMain_{};

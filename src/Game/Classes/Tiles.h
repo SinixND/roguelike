@@ -8,16 +8,16 @@
 #include "raylibEx.h"
 #include <unordered_set>
 
-struct TileSoA
+class Tiles
 {
+    RectangleExI mapSize_{};
+
+public:
     snx::DenseMap<Vector2I, PositionComponent> positions{};
     snx::DenseMap<Vector2I, RenderID> renderIDs{};
     snx::DenseMap<Vector2I, VisibilityID> visibilityIDs{};
     std::unordered_set<Vector2I> isSolids{};
     std::unordered_set<Vector2I> isOpaques{};
-
-private:
-    RectangleExI mapSize_{};
 
 public:
     //* Access or create

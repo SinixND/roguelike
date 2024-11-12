@@ -4,7 +4,7 @@
 #include <deque>
 #include <string>
 
-int constexpr MAX_HISTORY_SIZE{100};
+int constexpr historySizeMax{100};
 
 namespace snx
 {
@@ -19,7 +19,7 @@ namespace snx
         {
             history_.push_front("[" + stamp_ + "] " + message);
 
-            if (history_.size() > MAX_HISTORY_SIZE)
+            if (history_.size() > historySizeMax)
             {
                 history_.pop_back();
             }

@@ -1,7 +1,7 @@
 #ifndef IG20240315181752
 #define IG20240315181752
 
-enum class Event
+enum class EventID
 {
     NONE = 0,
     //* Application interaction

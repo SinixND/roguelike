@@ -1,24 +1,24 @@
-#include "EnemySoA.h"
+#include "Enemies.h"
 #include "AIComponent.h"
 #include "DamageComponent.h"
 #include "DenseMap.h"
 #include "EnemyData.h"
 #include "EnergyComponent.h"
 #include "HealthComponent.h"
-#include "IdManager.h"
+#include "IDManager.h"
 #include "Map.h"
 #include "MovementComponent.h"
 #include "MovementSystem.h"
 #include "PositionComponent.h"
 #include "RNG.h"
 #include "RenderID.h"
-#include "TileSoA.h"
+#include "Tiles.h"
 #include "VisibilityID.h"
 #include "raylibEx.h"
 #include <cstddef>
 #include <vector>
 
-Vector2I EnemySoA::getRandomPosition(TileSoA const& tiles)
+Vector2I Enemies::getRandomPosition(Tiles const& tiles)
 {
     RectangleExI const& mapSize{tiles.mapSize()};
 
@@ -50,7 +50,7 @@ Vector2I EnemySoA::getRandomPosition(TileSoA const& tiles)
     }
 }
 
-void EnemySoA::insert(
+void Enemies::insert(
     size_t id,
     RenderID renderID,
     MovementComponent const& movement,
@@ -70,7 +70,7 @@ void EnemySoA::insert(
     ais.insert(id, AIComponent{scanRange});
 }
 
-void EnemySoA::remove(size_t id)
+void Enemies::remove(size_t id)
 {
     ids.erase(positions.at(id).tilePosition());
     positions.erase(id);
@@ -82,9 +82,9 @@ void EnemySoA::remove(size_t id)
     ais.erase(id);
 }
 
-void EnemySoA::create(
+void Enemies::create(
     Map const& map,
-    RenderID enemyId,
+    RenderID enemyID,
     bool randomPosition,
     Vector2I tilePosition)
 {
@@ -94,9 +94,9 @@ void EnemySoA::create(
         tilePosition = getRandomPosition(map.tiles);
     }
 
-    size_t newID{idManager_.requestId()};
+    size_t newID{idManager_.requestID()};
 
-    switch (enemyId)
+    switch (enemyID)
     {
         default:
         case RenderID::GOBLIN:
@@ -104,11 +104,11 @@ void EnemySoA::create(
             insert(
                 newID,
                 RenderID::GOBLIN,
-                MovementComponent{20 * EnemyData::GOBLIN_BASE_AGILITY},
-                EnergyComponent{EnemyData::GOBLIN_BASE_AGILITY},
-                HealthComponent{EnemyData::GOBLIN_BASE_HEALTH},
-                DamageComponent{EnemyData::GOBLIN_BASE_DAMAGE},
-                EnemyData::GOBLIN_SCAN_RANGE,
+                MovementComponent{20 * EnemyData::goblinAgilityBase},
+                EnergyComponent{EnemyData::goblinAgilityBase},
+                HealthComponent{EnemyData::goblinHealthBase},
+                DamageComponent{EnemyData::goblinDamageBase},
+                EnemyData::goblinScanRange,
                 tilePosition);
 
             break;
@@ -116,7 +116,7 @@ void EnemySoA::create(
     }
 }
 
-void EnemySoA::init(
+void Enemies::init(
     int mapLevel,
     Map const& map)
 {
@@ -128,7 +128,7 @@ void EnemySoA::init(
     }
 }
 
-bool EnemySoA::regenerate()
+bool Enemies::regenerate()
 {
     bool isEnemyReady{false};
 
@@ -143,7 +143,7 @@ bool EnemySoA::regenerate()
     return isEnemyReady;
 }
 
-void EnemySoA::update(
+void Enemies::update(
     Map const& map,
     PositionComponent const& heroPosition)
 {

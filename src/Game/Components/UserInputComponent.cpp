@@ -1,5 +1,5 @@
 #include "UserInputComponent.h"
-#include "Event.h"
+#include "EventID.h"
 #include "InputActionID.h"
 #include "PublisherStatic.h"
 #include "raylibEx.h"
@@ -7,11 +7,11 @@
 #include <utility>
 
 //* Maximum hold time for tap event to trigger
-double constexpr MAX_TAP_TIME{0.3f};
+double constexpr maxTapTime{0.3f};
 //* Minimum hold time for hold event to trigger
-double constexpr MIN_HOLD_TIME{0.3f};
+double constexpr minHoldTime{0.3f};
 //* Maximum time between taps for double tap event to trigger
-double constexpr MAX_DOUBLE_TAP_TIME{0.3f};
+double constexpr maxDoubleTapTime{0.3f};
 
 void UserInputComponent::bindKey(int key, InputActionID action)
 {
@@ -116,10 +116,10 @@ bool UserInputComponent::takeInputGesture()
 
                 //* Check for Tap events
                 if (lastGesture_ == GESTURE_HOLD
-                    && (touchUpTime_ - touchDownTime_) < MAX_TAP_TIME)
+                    && (touchUpTime_ - touchDownTime_) < maxTapTime)
                 {
                     //* Check for double tap
-                    if ((touchUpTime_ - lastTap_) < MAX_DOUBLE_TAP_TIME)
+                    if ((touchUpTime_ - lastTap_) < maxDoubleTapTime)
                     {
 #if defined(DEBUG) && defined(DEBUG_GESTURE_EVENTS)
                         snx::Logger::log("Triggered DOUBLE TAP EVENT\n");
@@ -294,14 +294,14 @@ bool UserInputComponent::takeInputGesture()
             {
                 touchHoldDuration_ = GetTime() - touchDownTime_;
 
-                if ((touchHoldDuration_) > MIN_HOLD_TIME)
+                if ((touchHoldDuration_) > minHoldTime)
                 {
 #if defined(DEBUG) && defined(DEBUG_GESTURE_EVENTS)
                     snx::Logger::log("Triggered HOLD EVENT\n");
                     snx::debug::cliLog("Triggered HOLD EVENT\n");
 #endif
                     //* Get/Set info panel reference to tile/object/enemy at current position
-                    snx::PublisherStatic::publish(Event::CURSOR_POSITION_CHANGED);
+                    snx::PublisherStatic::publish(EventID::CURSOR_POSITION_CHANGED);
                 }
 
                 break;

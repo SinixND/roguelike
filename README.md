@@ -5,6 +5,13 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
+- [ ] Refactor SoA: size_t as key; hashmap for position lookup
+- [ ] Refactor: prefer public unless private control needed
+- [ ] Refactor: prefer pure function; pass by val/constRef OR rawPtr (i# modified)!!
+- [ ] Give Hero optional TransformComponent (unique_ptr)?
+
+
+## Shortterm
 - [ ] End/Restart game on death
 - [ ] Add AI behaviour with new enemy types
 
@@ -16,9 +23,6 @@
 | moving, aggressive, invisible till (near or first hit) | [P]redator |
 | Passes solids                                          | [S]hade    |
 |                                                        | [D]jin     |
-
-
-## Shortterm
 
 
 ## Longterm

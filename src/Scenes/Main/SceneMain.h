@@ -3,6 +3,7 @@
 
 #include "Chunk.h"
 #include "Cursor.h"
+#include "Data/RenderData.h"
 #include "DenseMap.h"
 #include "Game.h"
 #include "GameCamera.h"
@@ -19,7 +20,7 @@ class SceneMain : public snx::IScene
 
     Panels panels_{};
     GameCamera gameCamera_{};
-    RenderSystem renderer_{};
+    RenderData renderData_{};
 
     Cursor cursor_{};
 

@@ -4,7 +4,7 @@
 class PositionComponent;
 class MovementComponent;
 class EnergyComponent;
-struct Map;
+class Map;
 struct Vector2I;
 class GameCamera;
 

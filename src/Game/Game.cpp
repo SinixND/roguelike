@@ -2,13 +2,13 @@
 
 #include "AISystem.h"
 #include "Cursor.h"
-#include "EnemySoA.h"
-#include "Event.h"
+#include "Enemies.h"
+#include "EventID.h"
 #include "GameCamera.h"
 #include "Hero.h"
 #include "Logger.h"
 #include "MovementSystem.h"
-#include "ObjectSoA.h"
+#include "Objects.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "RenderID.h"
@@ -37,28 +37,28 @@ void Game::init()
     setupGameEvents();
 
 #if defined(DEBUG)
-    snx::PublisherStatic::publish(Event::NEXT_LEVEL);
+    snx::PublisherStatic::publish(EventID::NEXT_LEVEL);
 #endif
 }
 
 void Game::setupGameEvents()
 {
     snx::PublisherStatic::addSubscriber(
-        Event::ACTION_IN_PROGRESS,
+        EventID::ACTION_IN_PROGRESS,
         [&]()
         {
             actionsInProgress_ = true;
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::ACTION_FINISHED,
+        EventID::ACTION_FINISHED,
         [&]()
         {
             actionsInProgress_ = false;
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::NEXT_LEVEL,
+        EventID::NEXT_LEVEL,
         [&]()
         {
             snx::Logger::log("Entered next level");
@@ -68,13 +68,13 @@ void Game::setupGameEvents()
             //* Place Hero on the map entry position
             hero.position.changeTo(Vector2I{0, 0});
 
-            snx::PublisherStatic::publish(Event::HERO_MOVED);
-            snx::PublisherStatic::publish(Event::HERO_POSITION_CHANGED);
-            snx::PublisherStatic::publish(Event::MAP_CHANGE);
+            snx::PublisherStatic::publish(EventID::HERO_MOVED);
+            snx::PublisherStatic::publish(EventID::HERO_POSITION_CHANGED);
+            snx::PublisherStatic::publish(EventID::MAP_CHANGE);
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::PREVIOUS_LEVEL,
+        EventID::PREVIOUS_LEVEL,
         [&]()
         {
             snx::Logger::log("Entered previous level");
@@ -95,9 +95,9 @@ void Game::setupGameEvents()
                 }
             }
 
-            snx::PublisherStatic::publish(Event::HERO_MOVED);
-            snx::PublisherStatic::publish(Event::HERO_POSITION_CHANGED);
-            snx::PublisherStatic::publish(Event::MAP_CHANGE);
+            snx::PublisherStatic::publish(EventID::HERO_MOVED);
+            snx::PublisherStatic::publish(EventID::HERO_POSITION_CHANGED);
+            snx::PublisherStatic::publish(EventID::MAP_CHANGE);
         });
 }
 

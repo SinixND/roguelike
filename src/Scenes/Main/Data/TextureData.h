@@ -1,16 +1,18 @@
 #ifndef IG20240414161450
 #define IG20240414161450
 
+#include <string>
+#include <vector>
 
 namespace TextureData
 {
     //* Themes
-    std::vector<std::string> const THEMES{
+    std::vector<std::string> const themes{
         "Default",
         "Ascii",
         "AsciiBW"};
 
-    float constexpr TEXTURE_SIZE{32};
+    float const textureSize{32};
 }
 
 #endif

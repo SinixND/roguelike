@@ -6,18 +6,19 @@
 #include "DenseMap.h"
 #include "EnergyComponent.h"
 #include "HealthComponent.h"
-#include "IdManager.h"
+#include "IDManager.h"
 #include "MovementComponent.h"
 #include "PositionComponent.h"
 #include "RenderID.h"
 #include <cstddef>
 
 struct Vector2I;
-struct Map;
-struct TileSoA;
+class Map;
+class Tiles;
 
-struct EnemySoA
+class Enemies
 {
+public:
     snx::DenseMap<Vector2I, size_t> ids{};
     snx::DenseMap<size_t, AIComponent> ais{};
     snx::DenseMap<size_t, PositionComponent> positions{};
@@ -28,12 +29,12 @@ struct EnemySoA
     snx::DenseMap<size_t, DamageComponent> damages{};
 
 private:
-    snx::IdManager idManager_{};
+    snx::IDManager idManager_{};
 
 public:
     void create(
         Map const& map,
-        RenderID enemyId,
+        RenderID enemyID,
         bool randomPosition = true,
         Vector2I tilePosition = Vector2I{0, 0});
 
@@ -48,7 +49,7 @@ public:
         PositionComponent const& heroPosition);
 
 private:
-    Vector2I getRandomPosition(TileSoA const& tiles);
+    Vector2I getRandomPosition(Tiles const& tiles);
 
     void insert(
         size_t id,

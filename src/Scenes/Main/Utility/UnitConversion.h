@@ -21,16 +21,16 @@ namespace UnitConversion
     {
         //* World pixel is center of tile
         return Vector2I{
-            static_cast<int>(std::floor((pixel.x + (TileData::TILE_SIZE_HALF)) / TileData::TILE_SIZE)),
-            static_cast<int>(std::floor((pixel.y + (TileData::TILE_SIZE_HALF)) / TileData::TILE_SIZE))};
+            static_cast<int>(std::floor((pixel.x + (TileData::tileSizeHalf)) / TileData::tileSize)),
+            static_cast<int>(std::floor((pixel.y + (TileData::tileSizeHalf)) / TileData::tileSize))};
     }
 
     //* Tile position to world pixel
     inline Vector2 tileToWorld(Vector2I const& tilePosition)
     {
         return Vector2{
-            (tilePosition.x * TileData::TILE_SIZE),
-            (tilePosition.y * TileData::TILE_SIZE)};
+            (tilePosition.x * TileData::tileSize),
+            (tilePosition.y * TileData::tileSize)};
     }
 
     //* Screen pixel to world pixel to tile position
@@ -58,8 +58,8 @@ namespace UnitConversion
     inline Vector2I tileToChunk(Vector2I const& tilePosition)
     {
         return Vector2I{
-            static_cast<int>(std::floor(tilePosition.x / static_cast<float>(ChunkData::CHUNK_SIZE_I))) * ChunkData::CHUNK_SIZE_I,
-            static_cast<int>(std::floor(tilePosition.y / static_cast<float>(ChunkData::CHUNK_SIZE_I))) * ChunkData::CHUNK_SIZE_I};
+            static_cast<int>(std::floor(tilePosition.x / static_cast<float>(ChunkData::chunkSize))) * ChunkData::chunkSize,
+            static_cast<int>(std::floor(tilePosition.y / static_cast<float>(ChunkData::chunkSize))) * ChunkData::chunkSize};
     }
 
     //* Octant position to tile position
@@ -73,28 +73,28 @@ namespace UnitConversion
         {
             default:
             case 0:
-                return Type(octantPosition.x, -octantPosition.y);
+                return Type({octantPosition.x, -octantPosition.y});
 
             case 1:
-                return Type(octantPosition.y, -octantPosition.x);
+                return Type({octantPosition.y, -octantPosition.x});
 
             case 2:
-                return Type(octantPosition.y, octantPosition.x);
+                return Type({octantPosition.y, octantPosition.x});
 
             case 3:
-                return Type(octantPosition.x, octantPosition.y);
+                return Type({octantPosition.x, octantPosition.y});
 
             case 4:
-                return Type(-octantPosition.x, octantPosition.y);
+                return Type({-octantPosition.x, octantPosition.y});
 
             case 5:
-                return Type(-octantPosition.y, octantPosition.x);
+                return Type({-octantPosition.y, octantPosition.x});
 
             case 6:
-                return Type(-octantPosition.y, -octantPosition.x);
+                return Type({-octantPosition.y, -octantPosition.x});
 
             case 7:
-                return Type(-octantPosition.x, -octantPosition.y);
+                return Type({-octantPosition.x, -octantPosition.y});
         }
     }
 

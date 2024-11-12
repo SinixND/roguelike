@@ -25,8 +25,8 @@ public:
               RectangleExI{
                   position.tilePosition().x,
                   position.tilePosition().y,
-                  ChunkData::CHUNK_SIZE_I,
-                  ChunkData::CHUNK_SIZE_I})
+                  ChunkData::chunkSize,
+                  ChunkData::chunkSize})
         , position(position)
         , renderTexture(renderTexture)
     {

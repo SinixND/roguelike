@@ -9,11 +9,11 @@
 #include "Cursor.h"
 #include "Debugger.h"
 #include "DeveloperMode.h"
-#include "EnemySoA.h"
-#include "Event.h"
+#include "Enemies.h"
+#include "EventID.h"
 #include "Game.h"
 #include "GameCamera.h"
-#include "ObjectSoA.h"
+#include "Objects.h"
 #include "PanelSystem.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
@@ -26,7 +26,7 @@
 #include <raymath.h>
 
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
-#include "ObjectSoA.h"
+#include "Objects.h"
 #include <string>
 #endif
 
@@ -44,13 +44,13 @@ void SceneMain::init()
     snx::debug::gcam() = gameCamera_;
 #endif
 
-    renderer_.init();
+    RenderSystem::loadRenderData(renderData_);
 
     ChunkSystem::initializeChunks(
+        renderData_.textures,
         chunks_,
         game_.world.currentMap->tiles.positions,
-        game_.world.currentMap->tiles.renderIDs,
-        renderer_);
+        game_.world.currentMap->tiles.renderIDs);
 
     //* Setup events
     setupSceneEvents();
@@ -59,7 +59,7 @@ void SceneMain::init()
 void SceneMain::setupSceneEvents()
 {
     snx::PublisherStatic::addSubscriber(
-        Event::WINDOW_RESIZED,
+        EventID::WINDOW_RESIZED,
         [&]()
         {
             PanelSystem::init(panels_);
@@ -67,7 +67,7 @@ void SceneMain::setupSceneEvents()
         true);
 
     snx::PublisherStatic::addSubscriber(
-        Event::PANELS_RESIZED,
+        EventID::PANELS_RESIZED,
         [&]()
         {
             gameCamera_.init(panels_.map, game_.hero.position.worldPixel());
@@ -82,14 +82,14 @@ void SceneMain::setupSceneEvents()
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::HERO_MOVED,
+        EventID::HERO_MOVED,
         [&]()
         {
             gameCamera_.setTarget(game_.hero.position.worldPixel());
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::HERO_POSITION_CHANGED,
+        EventID::HERO_POSITION_CHANGED,
         [&]()
         {
             //* VisibilitySystem
@@ -105,28 +105,28 @@ void SceneMain::setupSceneEvents()
         true);
 
     snx::PublisherStatic::addSubscriber(
-        Event::MAP_CHANGE,
+        EventID::MAP_CHANGE,
         [&]()
         {
             ChunkSystem::initializeChunks(
+                renderData_.textures,
                 chunks_,
                 game_.world.currentMap->tiles.positions,
-                game_.world.currentMap->tiles.renderIDs,
-                renderer_);
+                game_.world.currentMap->tiles.renderIDs);
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::COLOR_THEME_CHANGE,
+        EventID::COLOR_THEME_CHANGE,
         [&]()
         {
-            renderer_.cycleThemes();
-            renderer_.init();
+            RenderSystem::cycleThemes(renderData_.theme);
+            RenderSystem::loadRenderData(renderData_);
 
-            snx::PublisherStatic::publish(Event::MAP_CHANGE);
+            snx::PublisherStatic::publish(EventID::MAP_CHANGE);
         });
 
     snx::PublisherStatic::addSubscriber(
-        Event::CURSOR_TOGGLE,
+        EventID::CURSOR_TOGGLE,
         [&]()
         {
             cursor_.toggle();
@@ -134,7 +134,7 @@ void SceneMain::setupSceneEvents()
 
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
     snx::PublisherStatic::addSubscriber(
-        Event::CURSOR_POSITION_CHANGED,
+        EventID::CURSOR_POSITION_CHANGED,
         [&]()
         {
             Vector2I cursorPos{cursor_.position.tilePosition()};
@@ -211,7 +211,7 @@ void SceneMain::setupSceneEvents()
                 snx::debug::cliLog("ENEMY\n");
 
                 snx::debug::cliLog(
-                    "Id: "
+                    "ID: "
                     + std::to_string(game_.world.currentMap->enemies.ids.at(cursorPos))
                     + "\n");
             }
@@ -224,7 +224,7 @@ void SceneMain::processInput()
     //* Color theme
     if (IsKeyPressed(KEY_F2))
     {
-        snx::PublisherStatic::publish(Event::COLOR_THEME_CHANGE);
+        snx::PublisherStatic::publish(EventID::COLOR_THEME_CHANGE);
     }
 
     //* Allow input if hero is ready (= full energy)
@@ -264,7 +264,7 @@ void SceneMain::renderOutput()
     //* Draw tiles
     for (Chunk const& chunk : chunks_)
     {
-        renderer_.renderChunk(chunk);
+        RenderSystem::renderChunk(chunk);
     }
 
     //* Draw objects
@@ -274,7 +274,8 @@ void SceneMain::renderOutput()
 
     for (size_t i{0}; i < objectRenderIDs.size(); ++i)
     {
-        renderer_.render(
+        RenderSystem::render(
+            renderData_.textures,
             objectRenderIDs.at(i),
             objectPositions.at(i).worldPixel());
     }
@@ -291,7 +292,8 @@ void SceneMain::renderOutput()
             continue;
         }
 
-        renderer_.render(
+        RenderSystem::render(
+            renderData_.textures,
             enemyRenderIDs.at(i),
             enemyPositions.at(i).worldPixel());
     }
@@ -299,12 +301,13 @@ void SceneMain::renderOutput()
     //* VisibilitySystem
     for (Fog const& fog : fogs_)
     {
-        renderer_.renderFog(fog);
+        RenderSystem::renderFog(fog);
     }
 
     //* Units
     //* Draw hero
-    renderer_.render(
+    RenderSystem::render(
+        renderData_.textures,
         game_.hero.renderID,
         game_.hero.position.worldPixel());
 
@@ -312,7 +315,8 @@ void SceneMain::renderOutput()
     //* Draw cursor
     if (cursor_.isActive)
     {
-        renderer_.render(
+        RenderSystem::render(
+            renderData_.textures,
             cursor_.renderID,
             cursor_.position.worldPixel());
     }
@@ -345,7 +349,7 @@ void SceneMain::update()
 
     BeginDrawing();
 
-    ClearBackground(BG_COLOR);
+    ClearBackground(bgColor);
 
     renderOutput();
 
@@ -362,5 +366,5 @@ void SceneMain::update()
 
 void SceneMain::deinitialize()
 {
-    renderer_.deinit();
+    RenderSystem::deinit(renderData_.textures);
 }

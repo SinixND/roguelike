@@ -8,7 +8,7 @@ class GameFont
     static inline Font font_{};
 
 public:
-    static inline float const FONT_HEIGHT{24};
+    static inline float const fontHeight{24};
     //* raygui font padding is 4
     static inline float fontWidth{};
 
@@ -17,7 +17,7 @@ public:
     {
         font_ = LoadFontEx(
             "resources/fonts/LiberationMono-Regular.ttf",
-            GameFont::FONT_HEIGHT,
+            GameFont::fontHeight,
             nullptr,
             0);
 
@@ -25,7 +25,7 @@ public:
             MeasureTextEx(
                 font_,
                 "1",
-                FONT_HEIGHT,
+                fontHeight,
                 0)
                 .x);
     }

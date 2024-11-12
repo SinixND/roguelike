@@ -10,11 +10,11 @@
 
 int main(/* int argc, char** argv */)
 {
-    App application{};
+    App app{};
 
-    application.init();
-    application.run();
-    application.deinit();
+    app.init();
+    app.run();
+    app.deinit();
 
     return 0;
 }

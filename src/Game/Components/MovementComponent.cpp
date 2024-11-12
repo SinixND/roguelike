@@ -1,5 +1,5 @@
 #include "MovementComponent.h"
-#include "Event.h"
+#include "EventID.h"
 #include "PublisherStatic.h"
 #include "TileData.h"
 #include "raylibEx.h"
@@ -27,7 +27,7 @@ void MovementComponent::trigger(Vector2I const& direction)
 {
     direction_ = direction;
 
-    currentVelocity_ = Vector2Scale(direction, (speed_ * TileData::TILE_SIZE));
+    currentVelocity_ = Vector2Scale(direction, (speed_ * TileData::tileSize));
 
     isTriggered_ = true;
 }
@@ -74,7 +74,7 @@ void MovementComponent::setInProgress()
     //* Retrigger movement
     isInProgress_ = true;
 
-    snx::PublisherStatic::publish(Event::ACTION_IN_PROGRESS);
+    snx::PublisherStatic::publish(EventID::ACTION_IN_PROGRESS);
 }
 
 void MovementComponent::stopMovement()

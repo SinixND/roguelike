@@ -5,7 +5,7 @@
 #include <functional>
 #include <unordered_map>
 
-class Event;
+enum class EventID;
 
 namespace snx {
 //* List of subscribers (lambdas)
@@ -16,13 +16,13 @@ template <typename TFunctor> using SubscriberList = std::forward_list<TFunctor>;
 
 //* Publisher
 template <typename TFunctor> class Publisher {
-  std::unordered_map<Event, SubscriberList<TFunctor>> eventToSubscriberLists_{
+  std::unordered_map<EventID, SubscriberList<TFunctor>> eventToSubscriberLists_{
       {}};
 
 public:
   //* Event is the 'key' that we want to handle.
   //* 'subscriber' is the action triggered by the event
-  void addSubscriber(Event event, std::function<void()> subscriber,
+  void addSubscriber(EventID event, std::function<void()> subscriber,
                      bool fireOnCreation = false) {
     ensureList(event);
 
@@ -34,7 +34,7 @@ public:
   }
 
   //* Execute all subscribers for given event
-  void publish(Event event) {
+  void publish(EventID event) {
     for (TFunctor &subscriber : eventToSubscriberLists_[event]) {
       subscriber();
     }
@@ -51,7 +51,7 @@ public:
 
 private:
   //* Ensure subscriber list exists for given event
-  void ensureList(Event event) {
+  void ensureList(EventID event) {
     if (eventToSubscriberLists_.find(event) == eventToSubscriberLists_.end()) {
       eventToSubscriberLists_[event] = SubscriberList<TFunctor>();
     }

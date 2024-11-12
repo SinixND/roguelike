@@ -1,17 +1,17 @@
+#include "Objects.h"
 #include "DenseMap.h"
-#include "Event.h"
-#include "ObjectSoA.h"
+#include "EventID.h"
 #include "PositionComponent.h"
 #include "RenderID.h"
 #include "raylibEx.h"
 #include <string>
 
-void ObjectSoA::set(
+void Objects::set(
     Vector2I const& tilePosition,
     RenderID renderID,
     std::string const& name,
     std::string const& action,
-    Event event)
+    EventID event)
 {
     positions[tilePosition].changeTo(tilePosition);
 

@@ -1,5 +1,5 @@
 #include "Cursor.h"
-#include "Event.h"
+#include "EventID.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "UnitConversion.h"
@@ -30,7 +30,7 @@ void Cursor::update(Camera2D const& camera, Vector2I const& heroPosition)
         {
             position.changeTo(mouseTile);
 
-            snx::PublisherStatic::publish(Event::CURSOR_POSITION_CHANGED);
+            snx::PublisherStatic::publish(EventID::CURSOR_POSITION_CHANGED);
         }
 
         return;

@@ -1,7 +1,7 @@
 #include "MovementSystem.h"
 #include "CollisionSystem.h"
 #include "EnergyComponent.h"
-#include "Event.h"
+#include "EventID.h"
 #include "Map.h"
 #include "MovementComponent.h"
 #include "PositionComponent.h"
@@ -53,7 +53,7 @@ bool MovementSystem::update(
     movement.updateCumulativeDistanceMoved();
 
     //* Check if movement exceeds tile length this frame
-    if (movement.cumulativeDistanceMoved() < TileData::TILE_SIZE)
+    if (movement.cumulativeDistanceMoved() < TileData::tileSize)
     {
         //* Move full distance this frame
         didTilePositionChange = position.move(movement.distance());
@@ -65,7 +65,7 @@ bool MovementSystem::update(
             Vector2ClampValue(
                 movement.distance(),
                 0,
-                TileData::TILE_SIZE - (movement.cumulativeDistanceMoved() - movement.length())));
+                TileData::tileSize - (movement.cumulativeDistanceMoved() - movement.length())));
 
         //* === Moved one tile ===
         //* Clean precision errors
@@ -74,7 +74,7 @@ bool MovementSystem::update(
         //* Reset cumulativeDistanceMoved
         movement.resetCumulativeDistanceMoved();
 
-        snx::PublisherStatic::publish(Event::ACTION_FINISHED);
+        snx::PublisherStatic::publish(EventID::ACTION_FINISHED);
 
         movement.stopMovement();
     }
@@ -86,11 +86,11 @@ bool MovementSystem::update(
     }
 
     //* Handle special case for hero
-    snx::PublisherStatic::publish(Event::HERO_MOVED);
+    snx::PublisherStatic::publish(EventID::HERO_MOVED);
 
     if (didTilePositionChange)
     {
-        snx::PublisherStatic::publish(Event::HERO_POSITION_CHANGED);
+        snx::PublisherStatic::publish(EventID::HERO_POSITION_CHANGED);
     }
 
     return didTilePositionChange;

@@ -17,8 +17,8 @@ class World
     int maxMapLevel_{};
 
 public:
-    Map* currentMap{&maps_.back()};
     int currentMapLevel{};
+    Map* currentMap{&maps_.back()};
 
 public:
     void increaseMapLevel();

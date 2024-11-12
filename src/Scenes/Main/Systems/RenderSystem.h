@@ -1,46 +1,39 @@
 #ifndef IG20240531150939
 #define IG20240531150939
 
-#include "Textures.h"
 #include <cstddef>
 #include <raylib.h>
-#include <string>
 
 enum class RenderID;
 class Chunk;
 struct Fog;
+struct RenderData;
+class Textures;
 
-class RenderSystem
+namespace RenderSystem
 {
-    Textures textures_{};
-
-    //* Themes: TextureData::themes
-    size_t theme_{1};
-
-public:
-    void init();
+    void loadRenderData(RenderData& renderData);
 
     void render(
+        Textures const& textures,
         RenderID renderID,
         Vector2 const& worldPixel,
-        Color const& tint = WHITE) const;
+        Color const& tint = WHITE);
 
     void renderToChunk(
+        Textures const& textures,
         RenderID renderID,
         Vector2 const& worldPixel,
         Chunk& chunk,
-        Color const& tint = WHITE) const;
+        Color const& tint = WHITE);
 
-    void renderChunk(Chunk const& chunk) const;
+    void renderChunk(Chunk const& chunk);
 
-    void renderFog(Fog const& fog) const;
+    void renderFog(Fog const& fog);
 
-    void cycleThemes();
+    void cycleThemes(size_t& theme);
 
-    void deinit();
-
-private:
-    std::string textureAtlasFileName() const;
-};
+    void deinit(Textures& textures);
+}
 
 #endif

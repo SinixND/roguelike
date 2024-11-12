@@ -8,11 +8,11 @@
 
 class Textures
 {
-    std::string const TEXTURE_PATH{"resources/textures/"};
+    std::string const texturePath{"resources/textures/"};
 
     //* Texture atlas
     Texture2D textureAtlas_{};
-    std::unordered_map<RenderID, Vector2> textureIdToAtlasPosition_{};
+    std::unordered_map<RenderID, Vector2> textureIDToAtlasPosition_{};
 
 public:
     //* Texture atlas

@@ -1,6 +1,6 @@
 #include "App.h"
 #include "DeveloperMode.h"
-#include "Event.h"
+#include "EventID.h"
 #include "GameFont.h"
 #include "PublisherStatic.h"
 #include <raygui.h>
@@ -28,26 +28,26 @@ void App::init()
 
     //* Raylib flags
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    if (config.vSync())
+    if (config_.vSync())
     {
         SetConfigFlags(FLAG_VSYNC_HINT);
     }
 
     //* Initialize window
-    InitWindow(config.windowWidth(), config.windowHeight(), "Roguelike");
+    InitWindow(config_.windowWidth(), config_.windowHeight(), "Roguelike");
 
     //* Raylib Settings
-    SetWindowIcon(FAVICON_);
+    SetWindowIcon(favicon_);
     SetWindowMinSize(640, 480);
 #if defined(EMSCRIPTEN)
     MaximizeWindow();
 #endif
     SetExitKey(KEY_F4);
-    SetTargetFPS(FPS_TARGET_);
+    SetTargetFPS(fpsTarget_);
 
     //* Fonts
     GameFont::load();
-    GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::FONT_HEIGHT);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::fontHeight);
 
     //* Scene
     SceneMain_.init();
@@ -70,7 +70,7 @@ void updateWindow()
 
     if (IsWindowResized())
     {
-        snx::PublisherStatic::publish(Event::WINDOW_RESIZED);
+        snx::PublisherStatic::publish(EventID::WINDOW_RESIZED);
     }
 }
 

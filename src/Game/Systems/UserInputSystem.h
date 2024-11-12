@@ -4,7 +4,7 @@
 class UserInputComponent;
 struct Hero;
 class Cursor;
-struct Map;
+class Map;
 class GameCamera;
 
 namespace UserInputSystem

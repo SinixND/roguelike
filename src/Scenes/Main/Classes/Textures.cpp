@@ -9,7 +9,7 @@ enum class RenderID;
 void Textures::loadAtlas(std::string const& filename)
 {
     unloadAtlas();
-    textureAtlas_ = LoadTexture((TEXTURE_PATH + filename).c_str());
+    textureAtlas_ = LoadTexture((texturePath + filename).c_str());
 }
 
 Texture2D const& Textures::textureAtlas() const
@@ -19,12 +19,12 @@ Texture2D const& Textures::textureAtlas() const
 
 void Textures::registerTexture(RenderID textureID, Vector2 position)
 {
-    textureIdToAtlasPosition_.insert(std::make_pair(textureID, position));
+    textureIDToAtlasPosition_.insert(std::make_pair(textureID, position));
 }
 
 Vector2 const& Textures::getTexturePosition(RenderID renderID) const
 {
-    return textureIdToAtlasPosition_.at(renderID);
+    return textureIDToAtlasPosition_.at(renderID);
 }
 
 void Textures::unloadAtlas()

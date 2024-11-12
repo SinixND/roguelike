@@ -12,15 +12,15 @@
 struct Hero
 {
     RenderID renderID{RenderID::HERO};
-    MovementComponent movement{20 * HeroData::BASE_AGILITY};
-    EnergyComponent energy{HeroData::BASE_AGILITY};
+    MovementComponent movement{20 * HeroData::agilityBase};
+    EnergyComponent energy{HeroData::agilityBase};
     PositionComponent position{};
     HealthComponent health{
-        HeroData::BASE_HEALTH,
-        HeroData::BASE_HEALTH_REGENERATION};
-    DamageComponent damage{HeroData::BASE_DAMAGE};
+        HeroData::healthBase,
+        HeroData::healthRegenerationBase};
+    DamageComponent damage{HeroData::damageBase};
 
-    int visionRange{HeroData::VISION_RANGE};
+    int visionRange{HeroData::visionRange};
 };
 
 #endif

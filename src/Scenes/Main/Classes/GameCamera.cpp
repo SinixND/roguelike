@@ -1,6 +1,6 @@
 #include "GameCamera.h"
 
-#include "Event.h"
+#include "EventID.h"
 #include "PublisherStatic.h"
 #include "UnitConversion.h"
 #include "raylibEx.h"
@@ -16,25 +16,25 @@ void GameCamera::init(RectangleEx const& viewport, Vector2 const& heroPosition)
         0,
         0.75};
 
-    snx::PublisherStatic::publish(Event::CAMERA_CHANGED);
+    snx::PublisherStatic::publish(EventID::CAMERA_CHANGED);
 }
 
 void GameCamera::setOffset(Vector2 const& offset)
 {
     camera_.offset = offset;
-    snx::PublisherStatic::publish(Event::CAMERA_CHANGED);
+    snx::PublisherStatic::publish(EventID::CAMERA_CHANGED);
 }
 
 void GameCamera::setTarget(Vector2 const& target)
 {
     camera_.target = target;
-    snx::PublisherStatic::publish(Event::CAMERA_CHANGED);
+    snx::PublisherStatic::publish(EventID::CAMERA_CHANGED);
 }
 
 void GameCamera::setZoom(float zoom)
 {
     camera_.zoom = zoom;
-    snx::PublisherStatic::publish(Event::CAMERA_CHANGED);
+    snx::PublisherStatic::publish(EventID::CAMERA_CHANGED);
 }
 
 void GameCamera::updateViewport(RectangleEx const& viewport)

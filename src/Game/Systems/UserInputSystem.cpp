@@ -6,7 +6,7 @@
 #include "Cursor.h"
 #include "DamageSystem.h"
 #include "Directions.h"
-#include "Event.h"
+#include "EventID.h"
 #include "GameCamera.h"
 #include "HealthComponent.h"
 #include "Hero.h"
@@ -113,7 +113,7 @@ void UserInputSystem::triggerAction(
             Vector2I target{
                 Vector2Add(
                     hero.position.tilePosition(),
-                    Directions::V_UP)};
+                    Directions::up)};
 
             if (map.enemies.ids.contains(target))
             {
@@ -123,7 +123,7 @@ void UserInputSystem::triggerAction(
             }
 
             hero.movement.trigger(
-                Directions::V_UP);
+                Directions::up);
 
             break;
         }
@@ -133,7 +133,7 @@ void UserInputSystem::triggerAction(
             Vector2I target{
                 Vector2Add(
                     hero.position.tilePosition(),
-                    Directions::V_LEFT)};
+                    Directions::left)};
 
             if (map.enemies.ids.contains(target))
             {
@@ -143,7 +143,7 @@ void UserInputSystem::triggerAction(
             }
 
             hero.movement.trigger(
-                Directions::V_LEFT);
+                Directions::left);
 
             break;
         }
@@ -153,7 +153,7 @@ void UserInputSystem::triggerAction(
             Vector2I target{
                 Vector2Add(
                     hero.position.tilePosition(),
-                    Directions::V_DOWN)};
+                    Directions::down)};
 
             if (map.enemies.ids.contains(target))
             {
@@ -163,7 +163,7 @@ void UserInputSystem::triggerAction(
             }
 
             hero.movement.trigger(
-                Directions::V_DOWN);
+                Directions::down);
 
             break;
         }
@@ -173,7 +173,7 @@ void UserInputSystem::triggerAction(
             Vector2I target{
                 Vector2Add(
                     hero.position.tilePosition(),
-                    Directions::V_RIGHT)};
+                    Directions::right)};
 
             if (map.enemies.ids.contains(target))
             {
@@ -183,7 +183,7 @@ void UserInputSystem::triggerAction(
             }
 
             hero.movement.trigger(
-                Directions::V_RIGHT);
+                Directions::right);
 
             break;
         }
@@ -222,7 +222,7 @@ void UserInputSystem::triggerAction(
 
         case InputActionID::TOGGLE_CURSOR:
         {
-            snx::PublisherStatic::publish(Event::CURSOR_TOGGLE);
+            snx::PublisherStatic::publish(EventID::CURSOR_TOGGLE);
 
             break;
         }

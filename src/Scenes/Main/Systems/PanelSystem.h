@@ -3,7 +3,7 @@
 
 struct Panels;
 struct Hero;
-struct ObjectSoA;
+class Objects;
 struct Vector2I;
 
 namespace PanelSystem
@@ -20,7 +20,7 @@ namespace PanelSystem
 
     void drawTileInfoPanelContent(
         Panels const& panels,
-        ObjectSoA const& objects,
+        Objects const& objects,
         Vector2I const& cursorPosition);
 
     void drawLogPanelContent(Panels const& panels);

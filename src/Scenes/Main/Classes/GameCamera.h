@@ -8,6 +8,8 @@
 class GameCamera
 {
     Camera2D camera_{};
+
+    // Viewport equals to respective panel
     RectangleEx const* viewport_{};
 
 public:

@@ -1,15 +1,16 @@
 #ifndef IG20240907173344
 #define IG20240907173344
 
-#include "EnemySoA.h"
-#include "ObjectSoA.h"
-#include "TileSoA.h"
+#include "Enemies.h"
+#include "Objects.h"
+#include "Tiles.h"
 
-struct Map
+class Map
 {
-    TileSoA tiles{};
-    ObjectSoA objects{};
-    EnemySoA enemies{};
+public:
+    Tiles tiles{};
+    Objects objects{};
+    Enemies enemies{};
 };
 
 #endif
