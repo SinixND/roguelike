@@ -14,7 +14,7 @@
 //* - chunk (int/position, game coordinates)
 //* Camera transforms between game and screen coordinates
 //* - screen (float/pixel, screen coordinates)
-namespace UnitConversion
+namespace Convert
 {
     //* World pixel to tile position
     inline Vector2I worldToTile(Vector2 const& pixel)
@@ -34,7 +34,9 @@ namespace UnitConversion
     }
 
     //* Screen pixel to world pixel to tile position
-    inline Vector2I screenToTile(Vector2 const& pixel, Camera2D const& camera)
+    inline Vector2I screenToTile(
+        Vector2 const& pixel,
+        Camera2D const& camera)
     {
         Vector2 worldPixel{GetScreenToWorld2D(pixel, camera)};
 
@@ -42,7 +44,9 @@ namespace UnitConversion
     }
 
     //* Tile position to world pixel to screen pixel
-    inline Vector2 tileToScreen(Vector2I const& tilePosition, Camera2D const& camera)
+    inline Vector2 tileToScreen(
+        Vector2I const& tilePosition,
+        Camera2D const& camera)
     {
         Vector2 worldPixel{tileToWorld(tilePosition)};
 
@@ -51,7 +55,9 @@ namespace UnitConversion
 
     inline Vector2I getMouseTile(Camera2D const& camera)
     {
-        return screenToTile(GetMousePosition(), camera);
+        return screenToTile(
+            GetMousePosition(),
+            camera);
     }
 
     //* Tile position to chunk position
@@ -67,7 +73,9 @@ namespace UnitConversion
     //* Coordinates within octanct are usual cartesian
     //* Octant[0] is from 0,1 (top) to 1,1 (top-right), going CW
     template <typename Type>
-    inline Type transformFromOctant(Type const& octantPosition, int octant)
+    inline Type transformFromOctant(
+        Type const& octantPosition,
+        int octant)
     {
         switch (octant)
         {
@@ -98,17 +106,27 @@ namespace UnitConversion
         }
     }
 
-    inline Vector2I octantToTile(Vector2I const& octantPosition, int octant, Vector2I const& origin)
+    inline Vector2I octantToTile(
+        Vector2I const& octantPosition,
+        int octant,
+        Vector2I const& origin)
     {
         return Vector2Add(origin, transformFromOctant<Vector2I>(octantPosition, octant));
     }
 
-    inline Vector2 octantToWorld(Vector2 const& octantPosition, int octant, Vector2I const& origin)
+    inline Vector2 octantToWorld(
+        Vector2 const& octantPosition,
+        int octant,
+        Vector2I const& origin)
     {
         return Vector2Add(tileToWorld(origin), transformFromOctant<Vector2>(octantPosition, octant));
     }
 
-    inline Vector2 octantToScreen(Vector2 const& octantPosition, int octant, Vector2I const& origin, Camera2D const& camera)
+    inline Vector2 octantToScreen(
+        Vector2 const& octantPosition,
+        int octant,
+        Vector2I const& origin,
+        Camera2D const& camera)
     {
         return GetWorldToScreen2D(octantToWorld(octantPosition, octant, origin), camera);
     }

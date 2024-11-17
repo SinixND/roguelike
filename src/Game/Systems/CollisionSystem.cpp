@@ -9,8 +9,8 @@ bool CollisionSystem::checkCollision(
 {
     return (
         //* Next tilePosition unit moves to
-        map.tiles.isSolid(tilePositionToCheck)
-        // || map.objects_.getIsSolids().contains(tilePositionToCheck)
+        map.tiles.solids.contains(tilePositionToCheck)
+        // || map.objects_.solids.contains(tilePositionToCheck)
         || map.enemies.ids.contains(tilePositionToCheck)
         || Vector2Equals(tilePositionToCheck, heroPosition));
 }

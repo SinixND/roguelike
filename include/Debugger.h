@@ -28,7 +28,9 @@ namespace snx
         }
 
         template <typename Arg, typename... Args>
-        static void cliPrint(Arg message, Args... args)
+        static void cliPrint(
+            Arg message,
+            Args... args)
         {
             cliPrint(message);
             cliPrint(args...);
@@ -44,7 +46,9 @@ namespace snx
         }
 
         template <typename Arg, typename... Args>
-        static void cliLog(Arg message, Args... args)
+        static void cliLog(
+            Arg message,
+            Args... args)
         {
             cliLog(message);
             cliPrint(args...);

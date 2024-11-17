@@ -5,7 +5,7 @@
 
 namespace snx
 {
-    using ID = std::size_t;
+    using Id = std::size_t;
 }
 
 #endif

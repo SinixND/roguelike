@@ -49,13 +49,15 @@ namespace snx
 
         //* CAPACITY
         //* Return size of DenseMap
-        size_t size() const // override
+        size_t size() const
         {
             return values_.size();
         }
 
         //* MODIFIERS
-        Type const& insert(Key const& key, Type const& value = Type{})
+        Type const& insert(
+            Key const& key,
+            Type const& value = Type{})
         {
             // if (contains(key))
             // {
@@ -78,7 +80,9 @@ namespace snx
         }
 
         template <typename... Args>
-        Type const& emplace(Key const& key, Args&&... args)
+        Type const& emplace(
+            Key const& key,
+            Args&&... args)
         {
             // if (contains(key))
             // {
@@ -101,7 +105,7 @@ namespace snx
         }
 
         //* Moves last value to gap
-        void erase(Key const& key) // override
+        void erase(Key const& key)
         {
             // if (!contains(key))
             // {
@@ -144,7 +148,9 @@ namespace snx
             indexToKey_.pop_back();
         }
 
-        void changeKey(Key const& from, Key const& to) // override
+        void changeKey(
+            Key const& from,
+            Key const& to)
         {
             assert(!contains(to) && "Key already exists, possible loss of data!");
 
@@ -159,7 +165,7 @@ namespace snx
         }
 
         //* Empty all containers
-        void clear() // override
+        void clear()
         {
             values_.clear();
             keyToIndex_.clear();
@@ -190,7 +196,7 @@ namespace snx
             return at(key);
         }
 
-        bool contains(Key const& key) const // override
+        bool contains(Key const& key) const
         {
             return keyToIndex_.contains(key);
         }

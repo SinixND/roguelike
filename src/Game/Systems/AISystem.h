@@ -1,16 +1,16 @@
 #ifndef IG20241028165100
 #define IG20241028165100
 
-class AIComponent;
-class Enemies;
-class Map;
+struct AIComponent;
+struct Enemies;
+struct Map;
 struct Vector2I;
 class GameCamera;
-class PositionComponent;
-class MovementComponent;
-class EnergyComponent;
-class DamageComponent;
-class HealthComponent;
+struct Vector2;
+struct TransformComponent;
+struct EnergyComponent;
+struct DamageComponent;
+struct HealthComponent;
 
 namespace AISystem
 {
@@ -24,8 +24,8 @@ namespace AISystem
 
     void chooseAction(
         AIComponent const& ai,
-        PositionComponent& position,
-        MovementComponent& movement,
+        Vector2& position,
+        TransformComponent& movement,
         EnergyComponent& energy,
         DamageComponent& damage,
         Map const& map,

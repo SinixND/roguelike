@@ -18,7 +18,7 @@ namespace snx
             DrawRectangleLinesEx(
                 GetWindowRec(),
                 borderWidth,
-                borderColor);
+                Colors::border);
         }
 
         virtual ~IScene() = default;

@@ -1,4 +1,5 @@
 #include "DamageSystem.h"
+
 #include "DamageComponent.h"
 #include "HealthComponent.h"
 
@@ -6,5 +7,7 @@ void DamageSystem::attack(
     DamageComponent const& attackerDamage,
     HealthComponent& defenderHealth)
 {
-    defenderHealth.damage(attackerDamage.damage());
+    damage(
+        &defenderHealth,
+        calculateDamage(attackerDamage));
 }

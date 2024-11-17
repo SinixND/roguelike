@@ -4,8 +4,8 @@
 #include <cstddef>
 #include <raylib.h>
 
-enum class RenderID;
-class Chunk;
+enum class RenderId;
+struct Chunk;
 struct Fog;
 struct RenderData;
 class Textures;
@@ -16,13 +16,13 @@ namespace RenderSystem
 
     void render(
         Textures const& textures,
-        RenderID renderID,
+        RenderId renderId,
         Vector2 const& worldPixel,
         Color const& tint = WHITE);
 
     void renderToChunk(
         Textures const& textures,
-        RenderID renderID,
+        RenderId renderId,
         Vector2 const& worldPixel,
         Chunk& chunk,
         Color const& tint = WHITE);

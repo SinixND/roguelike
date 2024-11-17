@@ -1,7 +1,7 @@
 #ifndef IG20240315181752
 #define IG20240315181752
 
-enum class EventID
+enum class EventId
 {
     NONE = 0,
     //* Application interaction
@@ -9,14 +9,14 @@ enum class EventID
     PANELS_RESIZED,
     CAMERA_CHANGED,
     CURSOR_TOGGLE,
-    CURSOR_POSITION_CHANGED,
+    CURSOR_POSITION__CHANGED,
     MAP_CHANGE,
     COLOR_THEME_CHANGE,
     //* Game events
     ACTION_FINISHED,
     ACTION_IN_PROGRESS,
     HERO_MOVED,
-    HERO_POSITION_CHANGED,
+    HERO_POSITION__CHANGED,
     NEXT_LEVEL,
     PREVIOUS_LEVEL,
 };

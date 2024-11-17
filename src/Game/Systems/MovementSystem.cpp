@@ -1,96 +1,133 @@
 #include "MovementSystem.h"
+
 #include "CollisionSystem.h"
+#include "Convert.h"
 #include "EnergyComponent.h"
-#include "EventID.h"
+#include "EventId.h"
 #include "Map.h"
-#include "MovementComponent.h"
-#include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "TileData.h"
+#include "TransformComponent.h"
 #include "raylibEx.h"
 #include <raymath.h>
 
+//* Returns true if tilePosition changed
+bool move(
+    Vector2* position,
+    Vector2 const& offset)
+{
+    Vector2I oldPosition{Convert::worldToTile(*position)};
+
+    *position += offset;
+
+    if (!Vector2Equals(
+            oldPosition,
+            Convert::worldToTile(*position)))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 bool MovementSystem::update(
-    MovementComponent& movement,
-    PositionComponent& position,
+    TransformComponent& movement,
+    Vector2& position,
     EnergyComponent& energy,
     Map const& map,
-    PositionComponent const& heroPosition)
+    Vector2 const& heroPosition)
 {
     //* Avoid check if no movement in progress
-    if (movement.isTriggered())
+    if (movement.isTriggered_)
     {
         //* Check collision before starting movement
         if (CollisionSystem::checkCollision(
                 map,
                 Vector2Add(
-                    position.tilePosition(),
-                    movement.direction()),
-                heroPosition.tilePosition()))
+                    Convert::worldToTile(position),
+                    movement.direction_),
+                Convert::worldToTile(heroPosition)))
         {
-            movement.clearPath();
+            clearPath(
+                &movement.isTriggered_,
+                &movement.path_);
 
             //* Wait instead
-            energy.consume();
+            consume(&energy);
         }
     }
 
     //* Start movement on trigger
-    if (movement.isTriggered())
+    if (movement.isTriggered_)
     {
-        movement.activateTrigger();
-        energy.consume();
+        activateTrigger(
+            &movement.isTriggered_,
+            &movement.isInProgress_);
+
+        consume(&energy);
     }
 
     //* Check if action is in progress
-    if (!movement.isInProgress())
+    if (!movement.isInProgress_)
     {
         return false;
     }
 
     bool didTilePositionChange{false};
 
-    movement.updateCumulativeDistanceMoved();
+    updateCumulativeDistanceMoved(
+        &movement.cumulativeDistanceMoved_,
+        &movement.velocity_);
 
     //* Check if movement exceeds tile length this frame
-    if (movement.cumulativeDistanceMoved() < TileData::tileSize)
+    if (movement.cumulativeDistanceMoved_ < TileData::tileSize)
     {
         //* Move full distance this frame
-        didTilePositionChange = position.move(movement.distance());
+        didTilePositionChange = move(
+            &position,
+            Vector2Scale(
+                movement.velocity_,
+                GetFrameTime()));
     }
     else
     {
         //* Move by remaining distance until TILE_SIZE
-        didTilePositionChange = position.move(
+        didTilePositionChange = move(
+            &position,
             Vector2ClampValue(
-                movement.distance(),
+                Vector2Scale(
+                    movement.velocity_,
+                    GetFrameTime()),
                 0,
-                TileData::tileSize - (movement.cumulativeDistanceMoved() - movement.length())));
+                TileData::tileSize
+                    - (movement.cumulativeDistanceMoved_ - Vector2Length(Vector2Scale(movement.velocity_, GetFrameTime())))));
 
         //* === Moved one tile ===
         //* Clean precision errors
-        position.changeTo(Vector2Round(position.worldPixel()));
+        position = Vector2Round(position);
 
         //* Reset cumulativeDistanceMoved
-        movement.resetCumulativeDistanceMoved();
+        movement.cumulativeDistanceMoved_ = 0;
 
-        snx::PublisherStatic::publish(EventID::ACTION_FINISHED);
+        snx::PublisherStatic::publish(EventId::ACTION_FINISHED);
 
-        movement.stopMovement();
+        stopMovement(
+            &movement.velocity_,
+            &movement.isInProgress_);
     }
 
     //* Check if unit moving is the hero
-    if (position.worldPixel() != heroPosition.worldPixel())
+    if (position != heroPosition)
     {
         return didTilePositionChange;
     }
 
     //* Handle special case for hero
-    snx::PublisherStatic::publish(EventID::HERO_MOVED);
+    snx::PublisherStatic::publish(EventId::HERO_MOVED);
 
     if (didTilePositionChange)
     {
-        snx::PublisherStatic::publish(EventID::HERO_POSITION_CHANGED);
+        snx::PublisherStatic::publish(EventId::HERO_POSITION__CHANGED);
     }
 
     return didTilePositionChange;

@@ -3,70 +3,133 @@
 //* #define DEBUG_GESTURES
 //* #define DEBUG_GESTURE_EVENTS
 
+#include "Convert.h"
 #include "Cursor.h"
 #include "DamageSystem.h"
 #include "Directions.h"
-#include "EventID.h"
+#include "EnergyComponent.h"
+#include "EventId.h"
 #include "GameCamera.h"
 #include "HealthComponent.h"
 #include "Hero.h"
-#include "InputActionID.h"
+#include "InputActionId.h"
 #include "Logger.h"
 #include "Map.h"
 #include "PathfinderSystem.h"
-#include "PositionComponent.h"
 #include "PublisherStatic.h"
-#include "UserInputComponent.h"
+#include "UserInput.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
 
 void UserInputSystem::setDefaultInputMappings(
-    UserInputComponent& userInputComponent)
+    UserInput& userInput)
 {
-    userInputComponent.bindKey(KEY_NULL, InputActionID::NONE);
+    bindKey(
+        &userInput,
+        KEY_NULL,
+        InputActionId::NONE);
 
-    userInputComponent.bindKey(KEY_W, InputActionID::ACT_UP);
-    userInputComponent.bindKey(KEY_K, InputActionID::ACT_UP);
-    userInputComponent.bindKey(KEY_UP, InputActionID::ACT_UP);
+    bindKey(
+        &userInput,
+        KEY_W,
+        InputActionId::ACT_UP);
 
-    userInputComponent.bindKey(KEY_A, InputActionID::ACT_LEFT);
-    userInputComponent.bindKey(KEY_K, InputActionID::ACT_LEFT);
-    userInputComponent.bindKey(KEY_LEFT, InputActionID::ACT_LEFT);
+    bindKey(
+        &userInput,
+        KEY_K,
+        InputActionId::ACT_UP);
 
-    userInputComponent.bindKey(KEY_S, InputActionID::ACT_DOWN);
-    userInputComponent.bindKey(KEY_J, InputActionID::ACT_DOWN);
-    userInputComponent.bindKey(KEY_DOWN, InputActionID::ACT_DOWN);
+    bindKey(
+        &userInput,
+        KEY_UP,
+        InputActionId::ACT_UP);
 
-    userInputComponent.bindKey(KEY_D, InputActionID::ACT_RIGHT);
-    userInputComponent.bindKey(KEY_L, InputActionID::ACT_RIGHT);
-    userInputComponent.bindKey(KEY_RIGHT, InputActionID::ACT_RIGHT);
+    bindKey(
+        &userInput,
+        KEY_A,
+        InputActionId::ACT_LEFT);
 
-    userInputComponent.bindKey(KEY_SPACE, InputActionID::ACT_IN_PLACE);
+    bindKey(
+        &userInput,
+        KEY_K,
+        InputActionId::ACT_LEFT);
 
-    userInputComponent.bindModifierKey(KEY_LEFT_SHIFT, InputActionID::MOD);
+    bindKey(
+        &userInput,
+        KEY_LEFT,
+        InputActionId::ACT_LEFT);
 
-    userInputComponent.bindMouseButton(MOUSE_BUTTON_RIGHT, InputActionID::TOGGLE_CURSOR);
-    userInputComponent.bindMouseButton(MOUSE_BUTTON_LEFT, InputActionID::MOVE_TO_TARGET);
+    bindKey(
+        &userInput,
+        KEY_S,
+        InputActionId::ACT_DOWN);
+
+    bindKey(
+        &userInput,
+        KEY_J,
+        InputActionId::ACT_DOWN);
+
+    bindKey(
+        &userInput,
+        KEY_DOWN,
+        InputActionId::ACT_DOWN);
+
+    bindKey(
+        &userInput,
+        KEY_D,
+        InputActionId::ACT_RIGHT);
+
+    bindKey(
+        &userInput,
+        KEY_L,
+        InputActionId::ACT_RIGHT);
+
+    bindKey(
+        &userInput,
+        KEY_RIGHT,
+        InputActionId::ACT_RIGHT);
+
+    bindKey(
+        &userInput,
+        KEY_SPACE,
+        InputActionId::ACT_IN_PLACE);
+
+    bindModifierKey(
+        &userInput,
+        KEY_LEFT_SHIFT,
+        InputActionId::MOD);
+
+    bindMouseButton(
+        &userInput,
+        MOUSE_BUTTON_RIGHT,
+        InputActionId::TOGGLE_CURSOR);
+
+    bindMouseButton(
+        &userInput,
+        MOUSE_BUTTON_LEFT,
+        InputActionId::MOVE_TO_TARGET);
 }
 
 void UserInputSystem::takeInput(
-    UserInputComponent& userInputComponent,
+    UserInput& userInput,
     bool isCursorActive)
 {
-    if (userInputComponent.takeInputKey())
+    if (takeInputKey(&userInput))
     {
         return;
     }
 
-    if (userInputComponent.takeInputMouse(isCursorActive))
+    if (takeInputMouse(
+            &userInput,
+            isCursorActive))
     {
         return;
     }
 
     else if (!isCursorActive)
     {
-        userInputComponent.takeInputGesture();
+        takeInputGesture(&userInput);
     }
 }
 
@@ -83,134 +146,175 @@ void performAttack(
             map.enemies.ids.at(
                 target)));
 
-    hero.energy.consume();
+    consume(&hero.energy);
 }
 
 void UserInputSystem::triggerAction(
-    UserInputComponent& userInputComponent,
+    UserInput& userInput,
     Hero& hero,
     Cursor const& cursor,
     Map& map,
     GameCamera const& gameCamera)
 {
-    if (!hero.energy.isReady())
+    if (!hero.energy.isReady)
     {
         return;
     }
 
-    if (userInputComponent.inputAction() == InputActionID::NONE)
+    if (userInput.inputAction_ == InputActionId::NONE)
     {
         //* Trigger input agnostic actions, eg. non-empty path
-        hero.movement.trigger();
+        triggerAuto(
+            &hero.movement.direction_,
+            &hero.movement.velocity_,
+            &hero.movement.isTriggered_,
+            hero.movement.speed_,
+            &hero.movement.path_,
+            hero.movement.isInProgress_);
 
         return;
     }
 
-    switch (userInputComponent.inputAction())
+    switch (userInput.inputAction_)
     {
-        case InputActionID::ACT_UP:
+        case InputActionId::ACT_UP:
         {
             Vector2I target{
                 Vector2Add(
-                    hero.position.tilePosition(),
+                    Convert::worldToTile(hero.position),
                     Directions::up)};
 
             if (map.enemies.ids.contains(target))
             {
-                performAttack(hero, map, target);
+                performAttack(
+                    hero,
+                    map,
+                    target);
 
                 break;
             }
 
-            hero.movement.trigger(
+            triggerByDirection(
+                &hero.movement.direction_,
+                &hero.movement.velocity_,
+                &hero.movement.isTriggered_,
+                hero.movement.speed_,
                 Directions::up);
 
             break;
         }
 
-        case InputActionID::ACT_LEFT:
+        case InputActionId::ACT_LEFT:
         {
             Vector2I target{
                 Vector2Add(
-                    hero.position.tilePosition(),
+                    Convert::worldToTile(hero.position),
                     Directions::left)};
 
             if (map.enemies.ids.contains(target))
             {
-                performAttack(hero, map, target);
+                performAttack(
+                    hero,
+                    map,
+                    target);
 
                 break;
             }
 
-            hero.movement.trigger(
+            triggerByDirection(
+                &hero.movement.direction_,
+                &hero.movement.velocity_,
+                &hero.movement.isTriggered_,
+                hero.movement.speed_,
                 Directions::left);
 
             break;
         }
 
-        case InputActionID::ACT_DOWN:
+        case InputActionId::ACT_DOWN:
         {
             Vector2I target{
                 Vector2Add(
-                    hero.position.tilePosition(),
+                    Convert::worldToTile(hero.position),
                     Directions::down)};
 
             if (map.enemies.ids.contains(target))
             {
-                performAttack(hero, map, target);
+                performAttack(
+                    hero,
+                    map,
+                    target);
 
                 break;
             }
 
-            hero.movement.trigger(
+            triggerByDirection(
+                &hero.movement.direction_,
+                &hero.movement.velocity_,
+                &hero.movement.isTriggered_,
+                hero.movement.speed_,
                 Directions::down);
 
             break;
         }
 
-        case InputActionID::ACT_RIGHT:
+        case InputActionId::ACT_RIGHT:
         {
             Vector2I target{
                 Vector2Add(
-                    hero.position.tilePosition(),
+                    Convert::worldToTile(hero.position),
                     Directions::right)};
 
             if (map.enemies.ids.contains(target))
             {
-                performAttack(hero, map, target);
+                performAttack(
+                    hero,
+                    map,
+                    target);
 
                 break;
             }
 
-            hero.movement.trigger(
+            triggerByDirection(
+                &hero.movement.direction_,
+                &hero.movement.velocity_,
+                &hero.movement.isTriggered_,
+                hero.movement.speed_,
                 Directions::right);
 
             break;
         }
 
-        case InputActionID::MOVE_TO_TARGET:
+        case InputActionId::MOVE_TO_TARGET:
         {
-            hero.movement.trigger(PathfinderSystem::findPath(
-                map,
-                hero.position.tilePosition(),
-                cursor.position.tilePosition(),
-                gameCamera));
+            triggerByPath(
+                &hero.movement.direction_,
+                &hero.movement.velocity_,
+                &hero.movement.isTriggered_,
+                hero.movement.speed_,
+                &hero.movement.path_,
+                PathfinderSystem::findPath(
+                    map,
+                    Convert::worldToTile(hero.position),
+                    Convert::worldToTile(cursor.position),
+                    gameCamera));
 
             break;
         }
 
-        case InputActionID::ACT_IN_PLACE:
+        case InputActionId::ACT_IN_PLACE:
         {
-            Vector2I heroTilePosition{hero.position.tilePosition()};
+            Vector2I heroTilePosition{Convert::worldToTile(hero.position)};
 
             //* Wait if nothing to interact
             if (!map.objects.events.contains(heroTilePosition))
             {
                 snx::Logger::log("Hero waits...");
 
-                hero.energy.consume();
+                consume(&hero.energy);
 
-                hero.health.regenerate();
+                regenerate(&hero.health);
+                // hero.health.regenerate();
 
                 break;
             }
@@ -220,9 +324,9 @@ void UserInputSystem::triggerAction(
             break;
         }
 
-        case InputActionID::TOGGLE_CURSOR:
+        case InputActionId::TOGGLE_CURSOR:
         {
-            snx::PublisherStatic::publish(EventID::CURSOR_TOGGLE);
+            snx::PublisherStatic::publish(EventId::CURSOR_TOGGLE);
 
             break;
         }
@@ -232,5 +336,5 @@ void UserInputSystem::triggerAction(
     }
 
     //* Reset
-    userInputComponent.resetInputAction();
+    userInput.inputAction_ = InputActionId::NONE;
 }

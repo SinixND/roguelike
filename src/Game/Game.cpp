@@ -1,17 +1,18 @@
 #include "Game.h"
 
 #include "AISystem.h"
+#include "Convert.h"
 #include "Cursor.h"
 #include "Enemies.h"
-#include "EventID.h"
+#include "EnergyComponent.h"
+#include "EventId.h"
 #include "GameCamera.h"
 #include "Hero.h"
 #include "Logger.h"
 #include "MovementSystem.h"
 #include "Objects.h"
-#include "PositionComponent.h"
 #include "PublisherStatic.h"
-#include "RenderID.h"
+#include "RenderId.h"
 #include "UserInputSystem.h"
 #include "World.h"
 #include "raylibEx.h"
@@ -25,116 +26,120 @@
 #include "RNG.h"
 #endif
 
-void Game::init()
+void initGame(Game* game)
 {
 #if defined(DEBUG)
     snx::RNG::seed(1);
 #endif
 
-    UserInputSystem::setDefaultInputMappings(userInput_);
+    UserInputSystem::setDefaultInputMappings(game->userInput_);
 
     //* Setup events
-    setupGameEvents();
+    setupGameEvents(game);
 
 #if defined(DEBUG)
-    snx::PublisherStatic::publish(EventID::NEXT_LEVEL);
+    snx::PublisherStatic::publish(EventId::NEXT_LEVEL);
 #endif
 }
 
-void Game::setupGameEvents()
+void setupGameEvents(Game* game)
 {
     snx::PublisherStatic::addSubscriber(
-        EventID::ACTION_IN_PROGRESS,
-        [&]()
+        EventId::ACTION_IN_PROGRESS,
+        [=]()
         {
-            actionsInProgress_ = true;
+            game->actionsInProgress_ = true;
         });
 
     snx::PublisherStatic::addSubscriber(
-        EventID::ACTION_FINISHED,
-        [&]()
+        EventId::ACTION_FINISHED,
+        [=]()
         {
-            actionsInProgress_ = false;
+            game->actionsInProgress_ = false;
         });
 
     snx::PublisherStatic::addSubscriber(
-        EventID::NEXT_LEVEL,
-        [&]()
+        EventId::NEXT_LEVEL,
+        [=]()
         {
             snx::Logger::log("Entered next level");
 
-            world.increaseMapLevel();
+            increaseMapLevel(&game->world);
 
             //* Place Hero on the map entry position
-            hero.position.changeTo(Vector2I{0, 0});
+            game->hero.position = Convert::tileToWorld(Vector2I{0, 0});
 
-            snx::PublisherStatic::publish(EventID::HERO_MOVED);
-            snx::PublisherStatic::publish(EventID::HERO_POSITION_CHANGED);
-            snx::PublisherStatic::publish(EventID::MAP_CHANGE);
+            snx::PublisherStatic::publish(EventId::HERO_MOVED);
+            snx::PublisherStatic::publish(EventId::HERO_POSITION__CHANGED);
+            snx::PublisherStatic::publish(EventId::MAP_CHANGE);
         });
 
     snx::PublisherStatic::addSubscriber(
-        EventID::PREVIOUS_LEVEL,
-        [&]()
+        EventId::PREVIOUS_LEVEL,
+        [=]()
         {
             snx::Logger::log("Entered previous level");
 
-            world.decreaseMapLevel();
+            decreaseMapLevel(&game->world);
 
             //* Place Hero on the map exit
-            auto const& objects{world.currentMap->objects};
-            auto const& renderIDs{objects.renderIDs.values()};
+            auto const& objects{game->world.currentMap->objects};
+            auto const& renderIds{objects.renderIds.values()};
             auto const& positions{objects.positions.values()};
 
-            for (size_t i{0}; i < renderIDs.size(); ++i)
+            for (size_t i{0}; i < renderIds.size(); ++i)
             {
-                if (renderIDs.at(i) == RenderID::DESCEND)
+                if (renderIds.at(i) == RenderId::DESCEND)
                 {
-                    hero.position.changeTo(
-                        positions.at(i).tilePosition());
+                    game->hero.position = positions.at(i);
                 }
             }
 
-            snx::PublisherStatic::publish(EventID::HERO_MOVED);
-            snx::PublisherStatic::publish(EventID::HERO_POSITION_CHANGED);
-            snx::PublisherStatic::publish(EventID::MAP_CHANGE);
+            snx::PublisherStatic::publish(EventId::HERO_MOVED);
+            snx::PublisherStatic::publish(EventId::HERO_POSITION__CHANGED);
+            snx::PublisherStatic::publish(EventId::MAP_CHANGE);
         });
 }
 
-void Game::processInput(Cursor& cursor)
+void processUserInput(
+    Game* game,
+    Cursor& cursor)
 {
     //* Take input from mouse, keys or gestures
     //* Continuous movement done by repeating previous input if modifier is active
     UserInputSystem::takeInput(
-        userInput_,
+        game->userInput_,
         cursor.isActive);
 }
 
-void Game::updateState(
+void updateGameState(
+    Game* game,
     GameCamera const& gameCamera,
     Cursor const& cursor)
+
 {
+
     //* Cycle enemies once to check for action
     bool allEnemiesChecked{false};
 
     if (
-        !actionsInProgress_
-        && !hero.energy.isReady())
+        !game->actionsInProgress_
+        && !game->hero.energy.isReady)
     {
-        Map& map{*world.currentMap};
+        Map& map{*game->world.currentMap};
 
         allEnemiesChecked = AISystem::checkForAction(
             map.enemies,
             map,
-            hero.position.tilePosition(),
-            hero.health,
+            Convert::worldToTile(game->hero.position),
+            game->hero.health,
             gameCamera);
     }
 
     //* Regenerate energy if no action in progress
     if (
-        !actionsInProgress_
-        && !hero.energy.isReady()
+        !game->actionsInProgress_
+        && !game->hero.energy.isReady
         && allEnemiesChecked)
     {
         //* Regenerate until one unit becomes ready
@@ -142,35 +147,33 @@ void Game::updateState(
 
         while (!isUnitReady)
         {
-            isUnitReady = hero.energy.regenerate();
-            isUnitReady = world.currentMap->enemies.regenerate() || isUnitReady;
+            isUnitReady = regenerate(&game->hero.energy);
+            isUnitReady = regenerateAll(&game->world.currentMap->enemies.energies.values()) || isUnitReady;
         }
 
-        ++turn_;
-        snx::Logger::setStamp(std::to_string(turn_));
+        ++game->turn_;
+        snx::Logger::setStamp(std::to_string(game->turn_));
     }
 
     //* Trigger potential hero action
     UserInputSystem::triggerAction(
-        userInput_,
-        hero,
+        game->userInput_,
+        game->hero,
         cursor,
-        *world.currentMap,
+        *game->world.currentMap,
         gameCamera);
 
     //* Update hero movement
     MovementSystem::update(
-        hero.movement,
-        hero.position,
-        hero.energy,
-        *world.currentMap,
-        hero.position);
+        game->hero.movement,
+        game->hero.position,
+        game->hero.energy,
+        *game->world.currentMap,
+        game->hero.position);
 
     //* Update enemies
-    world.currentMap->enemies.update(*world.currentMap, hero.position);
-}
-
-int Game::turn() const
-{
-    return turn_;
+    ModuleEnemies::updateEnemies(
+        &game->world.currentMap->enemies,
+        *game->world.currentMap,
+        game->hero.position);
 }

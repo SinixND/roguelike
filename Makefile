@@ -413,7 +413,7 @@ init:
 	@mkdir -p $(WEB_DIR)
 
 ### Rule for complete compilation, ready to publish
-publish: clean
+publish:
 	$(info )
 	$(info === Publish ===)
 	@$(MAKE) debug release web windows -j

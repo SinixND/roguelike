@@ -5,9 +5,12 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
+- [ ] Rename Component->Data?
+- [ ] Separate System (not related to class) and Module (former member functions) via namespace
+- [ ] Refactor: prefer public/struct unless private control needed
 - [ ] Refactor SoA: size_t as key; hashmap for position lookup
-- [ ] Refactor: prefer public unless private control needed
-- [ ] Refactor: prefer pure function; pass by val/constRef OR rawPtr (i# modified)!!
+- [ ] Pass by rawPtr (if modified)
+- [ ] Refactor: _prefer(!)_ pure functions: in, out, io
 - [ ] Give Hero optional TransformComponent (unique_ptr)?
 
 

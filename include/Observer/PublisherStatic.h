@@ -1,7 +1,7 @@
 #ifndef IG20240527235606
 #define IG20240527235606
 
-#include "EventID.h"
+#include "EventId.h"
 #include <forward_list>
 #include <functional>
 #include <unordered_map>
@@ -17,12 +17,15 @@ namespace snx
     //* Publisher
     class PublisherStatic
     {
-        static inline std::unordered_map<EventID, SubscriberList> eventToSubscriberLists_{{}};
+        static inline std::unordered_map<EventId, SubscriberList> eventToSubscriberLists_{{}};
 
     public:
         //* Event is the 'key' that we want to handle.
         //* 'subscriber' is the action triggered by the event
-        static void addSubscriber(EventID event, LambdaVoid subscriber, bool fireOnCreation = false)
+        static void addSubscriber(
+            EventId event,
+            LambdaVoid subscriber,
+            bool fireOnCreation = false)
         {
             ensureList(event);
 
@@ -35,7 +38,7 @@ namespace snx
         }
 
         //* Execute all subscribers for given event
-        static void publish(EventID event)
+        static void publish(EventId event)
         {
             for (LambdaVoid& subscriber : eventToSubscriberLists_[event])
             {
@@ -55,7 +58,7 @@ namespace snx
 
     private:
         //* Ensure subscriber list exists for given event
-        static void ensureList(EventID event)
+        static void ensureList(EventId event)
         {
             if (eventToSubscriberLists_.find(event) == eventToSubscriberLists_.end())
             {

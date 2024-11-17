@@ -6,8 +6,8 @@
 #include "Map.h"
 #include "RNG.h"
 #include "Tiles.h"
-#include "UnitConversion.h"
-#include "VisibilityID.h"
+#include "Convert.h"
+#include "VisibilityId.h"
 #include "raylibEx.h"
 #include <cstdlib>
 #include <forward_list>
@@ -142,7 +142,7 @@ bool checkRatingList(
             //* Needs to be in map panel
             if (
                 !CheckCollisionPointRec(
-                    UnitConversion::tileToScreen(
+                    Convert::tileToScreen(
                         newTilePosition,
                         gameCamera.camera()),
                     gameCamera.viewportOnScreen()))
@@ -193,9 +193,9 @@ bool checkRatingList(
             //* - Not accessible
             //* - Steps needed exceed maxRange
             if (
-                !map.tiles.visibilityIDs.contains(newTilePosition)
-                || (map.tiles.visibilityIDs.at(newTilePosition) == VisibilityID::INVISIBLE)
-                || map.tiles.isSolid(newTilePosition)
+                !map.tiles.visibilityIds.contains(newTilePosition)
+                || (map.tiles.visibilityIds.at(newTilePosition) == VisibilityId::INVISIBLE)
+                || map.tiles.solids.contains(newTilePosition)
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded > maxRange)))
             {
                 //* Invalid! Add to ignore set so it doesn't get checked again
@@ -219,12 +219,12 @@ bool checkRatingList(
                     "{:.0f}",
                     newRatedTile.rating())
                     .c_str(),
-                UnitConversion::tileToScreen(
+                Convert::tileToScreen(
                     newTilePosition,
                     snx::debug::gcam().camera())
                         .x
                     + 10,
-                UnitConversion::tileToScreen(
+                Convert::tileToScreen(
                     newTilePosition,
                     snx::debug::gcam().camera())
                         .y
@@ -275,10 +275,10 @@ std::vector<Vector2I> PathfinderSystem::findPath(
     //* - Not accessible
     //* - Equal to start
     if (
-        !map.tiles.visibilityIDs.contains(target)
+        !map.tiles.visibilityIds.contains(target)
         || (skipInvisibleTiles
-            && (map.tiles.visibilityIDs.at(target) == VisibilityID::INVISIBLE))
-        || map.tiles.isSolid(target)
+            && (map.tiles.visibilityIds.at(target) == VisibilityId::INVISIBLE))
+        || map.tiles.solids.contains(target)
         || (start == target))
     {
         return path;
@@ -319,7 +319,7 @@ std::vector<Vector2I> PathfinderSystem::findPath(
     {
         DrawCircleV(
             Vector2Add(
-                UnitConversion::tileToScreen(
+                Convert::tileToScreen(
                     position,
                     snx::debug::gcam().camera()),
                 Vector2{TileData::TILE_SIZE_HALF, TileData::TILE_SIZE_HALF}),

@@ -1,8 +1,7 @@
 #include "Cursor.h"
-#include "EventID.h"
-#include "PositionComponent.h"
+#include "Convert.h"
+#include "EventId.h"
 #include "PublisherStatic.h"
-#include "UnitConversion.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -24,18 +23,18 @@ void Cursor::update(Camera2D const& camera, Vector2I const& heroPosition)
     //* Update cursor position if active
     if (isActive)
     {
-        Vector2I mouseTile{UnitConversion::screenToTile(GetMousePosition(), camera)};
+        Vector2I mouseTile{Convert::screenToTile(GetMousePosition(), camera)};
 
-        if (!(position.tilePosition() == mouseTile))
+        if (!(Convert::worldToTile(position) == mouseTile))
         {
-            position.changeTo(mouseTile);
+            position = Convert::tileToWorld(mouseTile);
 
-            snx::PublisherStatic::publish(EventID::CURSOR_POSITION_CHANGED);
+            snx::PublisherStatic::publish(EventId::CURSOR_POSITION__CHANGED);
         }
 
         return;
     }
 
     //* Keep cursor on hero if inactive
-    position.changeTo(heroPosition);
+    position = Convert::tileToWorld(heroPosition);
 }

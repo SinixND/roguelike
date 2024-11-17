@@ -1,71 +1,54 @@
-#include "DenseMap.h"
-#include "PositionComponent.h"
-#include "RenderID.h"
 #include "Tiles.h"
-#include "VisibilityID.h"
+#include "Convert.h"
+#include "DenseMap.h"
+#include "RenderId.h"
+#include "VisibilityId.h"
 #include "raylibEx.h"
 #include <algorithm>
 #include <unordered_set>
-#include <utility>
 
-void Tiles::set(
+void updateMapSize(RectangleExI* mapSize, Vector2I const& tilePosition)
+{
+    *mapSize = RectangleExI{
+        Vector2I{
+            std::min(tilePosition.x, mapSize->left()),
+            std::min(tilePosition.y, mapSize->top())},
+        Vector2I{
+            std::max(tilePosition.x, mapSize->right()),
+            std::max(tilePosition.y, mapSize->bottom())}};
+}
+
+void createTile(
+    Tiles* tiles,
     Vector2I const& tilePosition,
-    RenderID renderID,
+    RenderId renderId,
     bool isSolid,
     bool isOpaque,
-    VisibilityID visibilityID)
+    VisibilityId visibilityId)
 {
-    positions[tilePosition].changeTo(tilePosition);
+    tiles->positions[tilePosition] = Convert::tileToWorld(tilePosition);
 
-    renderIDs[tilePosition] = renderID;
+    tiles->renderIds[tilePosition] = renderId;
 
-    visibilityIDs[tilePosition] = visibilityID;
+    tiles->visibilityIds[tilePosition] = visibilityId;
 
     if (isSolid)
     {
-        isSolids.insert(tilePosition);
+        tiles->solids.insert(tilePosition);
     }
-
     else
     {
-        isSolids.erase(tilePosition);
+        tiles->solids.erase(tilePosition);
     }
 
     if (isOpaque)
     {
-        isOpaques.insert(tilePosition);
+        tiles->opaques.insert(tilePosition);
     }
-
     else
     {
-        isOpaques.erase(tilePosition);
+        tiles->opaques.erase(tilePosition);
     }
 
-    updateMapSize(tilePosition);
-}
-
-void Tiles::updateMapSize(Vector2I const& tilePosition)
-{
-    mapSize_ = RectangleExI{
-        Vector2I{
-            std::min(tilePosition.x, mapSize_.left()),
-            std::min(tilePosition.y, mapSize_.top())},
-        Vector2I{
-            std::max(tilePosition.x, mapSize_.right()),
-            std::max(tilePosition.y, mapSize_.bottom())}};
-}
-
-bool Tiles::isSolid(Vector2I const& tilePosition) const
-{
-    return isSolids.contains(tilePosition);
-}
-
-bool Tiles::isOpaque(Vector2I const& tilePosition) const
-{
-    return isOpaques.contains(tilePosition);
-}
-
-RectangleExI Tiles::mapSize() const
-{
-    return mapSize_;
+    updateMapSize(&(tiles->mapSize), tilePosition);
 }

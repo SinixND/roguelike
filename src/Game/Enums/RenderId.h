@@ -1,7 +1,7 @@
 #ifndef IG20240209175845
 #define IG20240209175845
 
-enum class RenderID
+enum class RenderId
 {
     NONE,
     //* UI

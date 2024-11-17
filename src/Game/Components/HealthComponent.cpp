@@ -6,46 +6,23 @@
 #include <string>
 #endif
 
-int HealthComponent::maxHealth() const
-{
-    return maxHealth_;
-}
-
-void HealthComponent::increaseMaxHealth(int health)
-{
-    maxHealth_ += health;
-}
-
-void HealthComponent::reduceMaxHealth(int health)
-{
-    maxHealth_ -= health;
-
-    if (maxHealth_ < 1)
-    {
-        maxHealth_ = 1;
-    }
-}
-
-int HealthComponent::currentHealth() const
-{
-    return currentHealth_;
-}
-
-bool HealthComponent::damage(int health)
+bool damage(
+    HealthComponent* healthComponent,
+    int health)
 {
 #if defined(DEBUG) && defined(DEBUG_HEALTH)
-    snx::debug::cliLog("Remove " + std::to_string(health) + " from " + std::to_string(currentHealth_) + " health\n");
+    snx::debug::cliLog("Remove " + std::to_string(health) + " from " + std::to_string(healthComponent->currentHealth) + " health\n");
 #endif
     if (health)
     {
-        currentHealth_ -= health;
+        healthComponent->currentHealth -= health;
     }
     else
     {
-        currentHealth_ = 0;
+        healthComponent->currentHealth = 0;
     }
 
-    if (currentHealth_ <= 0)
+    if (healthComponent->currentHealth <= 0)
     {
         return true;
     }
@@ -53,27 +30,31 @@ bool HealthComponent::damage(int health)
     return false;
 }
 
-void HealthComponent::heal(int health)
+void heal(
+    HealthComponent* healthComponent,
+    int health)
 {
     if (health)
     {
-        currentHealth_ += health;
+        healthComponent->currentHealth += health;
     }
     else
     {
-        currentHealth_ = maxHealth_;
+        healthComponent->currentHealth = healthComponent->maxHealth;
     }
 
-    if (currentHealth_ > maxHealth_)
+    if (healthComponent->currentHealth > healthComponent->maxHealth)
     {
-        currentHealth_ = maxHealth_;
+        healthComponent->currentHealth = healthComponent->maxHealth;
     }
 }
 
-void HealthComponent::regenerate()
+void regenerate(HealthComponent* healthComponent)
 {
 #if defined(DEBUG) && defined(DEBUG_HEALTH)
-    snx::debug::cliLog("Gain " + std::to_string(regenRate_) + " to " + std::to_string(currentHealth_) + " health\n");
+    snx::debug::cliLog("Gain " + std::to_string(healthComponent->regenRate) + " to " + std::to_string(healthComponent->currentHealth) + " health\n");
 #endif
-    heal(regenRate_);
+    heal(
+        healthComponent,
+        healthComponent->regenRate);
 }

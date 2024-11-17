@@ -11,60 +11,23 @@
 #include <string>
 #endif
 
-int DamageComponent::baseDamage() const
+int calculateDamage(DamageComponent const& damageComponent)
 {
-    return baseDamage_;
-}
-
-int DamageComponent::damage() const
-{
-    int damage{baseDamage_};
+    int damage{damageComponent.baseDamage};
 
     // Handle critical hit
-    bool isCrit_ = snx::RNG::random(0, 100) < criticalHitChance_;
-
-    if (isCrit_)
-    {
-#if defined(DEBUG) && defined(DEBUG_DAMAGE)
-        snx::debug::cliLog("Critical hit!\n");
-#endif
-        damage += damage * criticalHitDamageFactor();
-    }
+    damage += damage * (damageComponent.criticalHitDamage * 100.0f) * static_cast<int>(snx::RNG::random(0, 100) < damageComponent.criticalHitChance);
 
 #if defined(DEBUG) && defined(DEBUG_DAMAGE)
     snx::debug::cliLog(std::to_string(damage) + " damage\n");
 #endif
     snx::Logger::logAppend(TextFormat("%i damage", damage));
 
-    if (isCrit_)
-    {
-        snx::Logger::logAppend(" (Crit!)");
-    }
-
     return damage;
 }
 
-float DamageComponent::damageAverage() const
+float damageAverage(DamageComponent const& damageComponent)
 {
-    return baseDamage_ + (baseDamage_ * criticalHitChanceFactor() * criticalHitDamageFactor());
+    return damageComponent.baseDamage + (damageComponent.baseDamage * (damageComponent.criticalHitChance / 100.0f) * (damageComponent.criticalHitDamage / 100.0f));
 }
 
-int DamageComponent::criticalHitChancePercent() const
-{
-    return criticalHitChance_;
-}
-
-float DamageComponent::criticalHitChanceFactor() const
-{
-    return criticalHitChance_ / 100.0f;
-}
-
-int DamageComponent::criticalHitDamagePercent() const
-{
-    return criticalHitDamage_;
-}
-
-float DamageComponent::criticalHitDamageFactor() const
-{
-    return criticalHitDamage_ / 100.0f;
-}

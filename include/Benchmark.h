@@ -17,37 +17,37 @@ namespace snx
         static inline std::unordered_map<std::string, size_t> measurementCounts_;
 
     public:
-        static void start(std::string bmNameToStart = "")
+        static void start(std::string bmName = "")
         {
-            if (!starts_.contains(bmNameToStart))
+            if (!starts_.contains(bmName))
             {
-                starts_.insert(std::make_pair(bmNameToStart, std::chrono::high_resolution_clock::now()));
+                starts_.insert(std::make_pair(bmName, std::chrono::high_resolution_clock::now()));
                 return;
             }
 
-            starts_.at(bmNameToStart) = std::chrono::high_resolution_clock::now();
+            starts_.at(bmName) = std::chrono::high_resolution_clock::now();
         }
 
-        static void stop(std::string bmNameToEnd = "")
+        static void stop(std::string bmName = "")
         {
             auto end = std::chrono::high_resolution_clock::now();
 
-            if (!durations_.contains(bmNameToEnd))
+            if (!durations_.contains(bmName))
             {
                 durations_.insert(
                     std::make_pair(
-                        bmNameToEnd,
-                        (end - starts_[bmNameToEnd]).count()));
+                        bmName,
+                        (end - starts_[bmName]).count()));
 
                 measurementCounts_.insert(std::make_pair(
-                    bmNameToEnd,
+                    bmName,
                     1));
             }
 
             else
             {
-                durations_.at(bmNameToEnd) += (end - starts_[bmNameToEnd]).count();
-                ++measurementCounts_.at(bmNameToEnd);
+                durations_.at(bmName) += (end - starts_[bmName]).count();
+                ++measurementCounts_.at(bmName);
             }
         }
 
@@ -65,6 +65,12 @@ namespace snx
                 << " 1/s over "
                 << measurementCounts_.at(bmName)
                 << " iterations\n";
+        }
+
+        static void stopAndReport(std::string bmName = "")
+        {
+            stop(bmName);
+            report(bmName);
         }
     };
 };

@@ -1,8 +1,8 @@
 #include "GameCamera.h"
 
-#include "EventID.h"
+#include "EventId.h"
 #include "PublisherStatic.h"
-#include "UnitConversion.h"
+#include "Convert.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -16,25 +16,25 @@ void GameCamera::init(RectangleEx const& viewport, Vector2 const& heroPosition)
         0,
         0.75};
 
-    snx::PublisherStatic::publish(EventID::CAMERA_CHANGED);
+    snx::PublisherStatic::publish(EventId::CAMERA_CHANGED);
 }
 
 void GameCamera::setOffset(Vector2 const& offset)
 {
     camera_.offset = offset;
-    snx::PublisherStatic::publish(EventID::CAMERA_CHANGED);
+    snx::PublisherStatic::publish(EventId::CAMERA_CHANGED);
 }
 
 void GameCamera::setTarget(Vector2 const& target)
 {
     camera_.target = target;
-    snx::PublisherStatic::publish(EventID::CAMERA_CHANGED);
+    snx::PublisherStatic::publish(EventId::CAMERA_CHANGED);
 }
 
 void GameCamera::setZoom(float zoom)
 {
     camera_.zoom = zoom;
-    snx::PublisherStatic::publish(EventID::CAMERA_CHANGED);
+    snx::PublisherStatic::publish(EventId::CAMERA_CHANGED);
 }
 
 void GameCamera::updateViewport(RectangleEx const& viewport)
@@ -55,10 +55,10 @@ RectangleEx const& GameCamera::viewportOnScreen() const
 RectangleExI GameCamera::viewportInTiles() const
 {
     return RectangleExI{
-        UnitConversion::screenToTile(
+        Convert::screenToTile(
             viewport_->topLeft(),
             camera_),
-        UnitConversion::screenToTile(
+        Convert::screenToTile(
             viewport_->bottomRight(),
             camera_)};
 }

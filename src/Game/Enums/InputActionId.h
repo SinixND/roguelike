@@ -1,7 +1,7 @@
 #ifndef IG20240719133200
 #define IG20240719133200
 
-enum class InputActionID
+enum class InputActionId
 {
     NONE = 0,
     //* Actions

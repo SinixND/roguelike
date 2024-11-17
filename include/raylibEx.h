@@ -25,7 +25,11 @@ class RectangleEx
 public:
     RectangleEx() = default;
 
-    RectangleEx(float left, float top, float width = 0, float height = 0)
+    RectangleEx(
+        float left,
+        float top,
+        float width = 0,
+        float height = 0)
         : left_(left)
         , top_(top)
         , right_(left + width)
@@ -36,7 +40,9 @@ public:
         validate();
     }
 
-    RectangleEx(Vector2 const& topLeft, Vector2 const& bottomRight = {0, 0})
+    RectangleEx(
+        Vector2 const& topLeft,
+        Vector2 const& bottomRight = {0, 0})
         : left_(topLeft.x)
         , top_(topLeft.y)
         , right_(bottomRight.x)
@@ -47,7 +53,10 @@ public:
         validate();
     }
 
-    RectangleEx(Vector2 const& center, float width, float height)
+    RectangleEx(
+        Vector2 const& center,
+        float width,
+        float height)
         : left_(center.x - (0.5f * width))
         , top_(center.y - (0.5f * height))
         , right_(center.x + (0.5f * width))
@@ -280,7 +289,11 @@ class RectangleExI
 public:
     RectangleExI() = default;
 
-    RectangleExI(int left, int top, int width = 1, int height = 1)
+    RectangleExI(
+        int left,
+        int top,
+        int width = 1,
+        int height = 1)
         : left_(left)
         , top_(top)
         , right_(left + width - 1)
@@ -291,7 +304,9 @@ public:
         validate();
     }
 
-    RectangleExI(Vector2I const& topLeft, Vector2I const& bottomRight = {0, 0})
+    RectangleExI(
+        Vector2I const& topLeft,
+        Vector2I const& bottomRight = {0, 0})
         : left_(topLeft.x)
         , top_(topLeft.y)
         , right_(bottomRight.x)
@@ -303,7 +318,10 @@ public:
     }
 
     //* Only odd values for width/height
-    RectangleExI(Vector2I const& center, int width, int height)
+    RectangleExI(
+        Vector2I const& center,
+        int width,
+        int height)
         : left_(center.x - (width / 2))
         , top_(center.y - (height / 2))
         , right_(center.x + (width / 2))
@@ -622,7 +640,9 @@ RMAPI int Vector2Length(Vector2I const& v)
     return (abs(v.x) + abs(v.y));
 }
 
-inline bool CheckCollisionPointRec(Vector2I const& point, RectangleExI const& rec)
+inline bool CheckCollisionPointRec(
+    Vector2I const& point,
+    RectangleExI const& rec)
 {
     return (
         (point.x >= rec.left())
@@ -631,20 +651,31 @@ inline bool CheckCollisionPointRec(Vector2I const& point, RectangleExI const& re
         && (point.y <= rec.bottom()));
 }
 
-inline bool CheckCollisionPointRec(Vector2 const& point, RectangleEx const& rec)
+inline bool CheckCollisionPointRec(
+    Vector2 const& point,
+    RectangleEx const& rec)
 {
-    return CheckCollisionPointRec(point, rec.rectangle());
+    return CheckCollisionPointRec(
+        point,
+        rec.rectangle());
 }
 
 //* 0 = colinear, >0 (positive) = CW, <0 (negative) = CCW
-inline int GetOrientation(Vector2 const& p1, Vector2 const& p2, Vector2 const& p3)
+inline int GetOrientation(
+    Vector2 const& p1,
+    Vector2 const& p2,
+    Vector2 const& p3)
 {
     //* https://www.geeksforgeeks.org/orientation-3-ordered-points/
     float n{(p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y)};
     return n / abs(n);
 }
 
-inline bool CheckCollisionLines(Vector2 const& a1, Vector2 const& b1, Vector2 const& c2, Vector2 const& d2)
+inline bool CheckCollisionLines(
+    Vector2 const& a1,
+    Vector2 const& b1,
+    Vector2 const& c2,
+    Vector2 const& d2)
 {
     //* https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
     //* REQUIREMENT:
@@ -675,7 +706,10 @@ inline bool CheckCollisionLines(Vector2 const& a1, Vector2 const& b1, Vector2 co
     return true;
 }
 
-inline bool CheckCollisionLineRec(Vector2 const& a1, Vector2 const& b1, RectangleEx const& rectangle)
+inline bool CheckCollisionLineRec(
+    Vector2 const& a1,
+    Vector2 const& b1,
+    RectangleEx const& rectangle)
 {
     //* Check collsion of line with Rectangle diagonals
     if (CheckCollisionLines(
@@ -820,14 +854,18 @@ inline Vector2I ConvertToVector2I(Vector2 const& v)
         static_cast<int>(v.y)};
 }
 
-inline Vector2I GetMin(Vector2I const& v1, Vector2I const& v2)
+inline Vector2I GetMin(
+    Vector2I const& v1,
+    Vector2I const& v2)
 {
     return Vector2I{
         (v1.x < v2.x ? v1.x : v2.x),
         (v1.y < v2.y ? v1.y : v2.y)};
 }
 
-inline Vector2I GetMax(Vector2I const& v1, Vector2I const& v2)
+inline Vector2I GetMax(
+    Vector2I const& v1,
+    Vector2I const& v2)
 {
     return Vector2I{
         (v1.x > v2.x ? v1.x : v2.x),

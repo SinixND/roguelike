@@ -39,16 +39,16 @@ class SceneMain {
 SceneMain *-- Game
 
 class Game {
-    - UserInputComponent userInput_
+    - UserInput userInput_
     - bool actionsInProgress_
     - int turn_
     + World world
     + Hero hero
 }
 
-Game *-- UserInputComponent
+Game *-- UserInput
 
-class UserInputComponent {
+struct UserInput {
     - InputActionID inputAction_
     - bool modifier_
     - std::unordered_map<int, InputActionID> keyToInputActionID_
@@ -94,7 +94,7 @@ class Tiles {
 
 Tiles *-- PositionComponent
 
-class PositionComponent {
+struct PositionComponent {
     - Vector2 position_
 }
 
@@ -146,7 +146,7 @@ class MovementComponent {
 
 Enemies *-- EnergyComponent
 
-class EnergyComponent {
+struct EnergyComponent {
     - int maxEnergy_
     - int currentEnergy_
     - bool isReady_
@@ -156,14 +156,14 @@ class EnergyComponent {
 Enemies *-- HealthComponent
 
 class HealthComponent {
-    - int maxHealth_
-    - int currentHealth_
-    - int regenRate_
+    - int maxHealth
+    - int currentHealth
+    - int regenRate
 }
 
 Enemies *-- DamageComponent
 
-class DamageComponent {
+struct DamageComponent {
     - int baseDamage_
     - int criticalHitChance_
     - int criticalHitDamage_

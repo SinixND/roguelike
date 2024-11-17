@@ -3,7 +3,10 @@
 
 #include <raylib.h>
 
-Color constexpr borderColor{GRAY};
-Color constexpr bgColor{BLACK};
+namespace Colors
+{
+    Color constexpr border{GRAY};
+    Color constexpr bg{BLACK};
+}
 
 #endif

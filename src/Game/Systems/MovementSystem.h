@@ -1,11 +1,11 @@
 #ifndef IG20241027130300
 #define IG20241027130300
 
-class MovementComponent;
-class PositionComponent;
-class EnergyComponent;
-class Map;
-class PositionComponent;
+struct TransformComponent;
+struct Vector2;
+struct EnergyComponent;
+struct Map;
+struct Vector2;
 
 namespace MovementSystem
 {
@@ -17,14 +17,14 @@ namespace MovementSystem
     //* - Skips if action is in progress,
     //* - Moves for one tile max
     //* - Resets inProgress state if moved for one tile
-    //* - Resets currentVelocity
+    //* - Resets velocity
     //* Returns if tilePosition changed
     bool update(
-        MovementComponent& movement,
-        PositionComponent& position,
+        TransformComponent& movement,
+        Vector2& position,
         EnergyComponent& energy,
         Map const& map,
-        PositionComponent const& heroPosition);
+        Vector2 const& heroPosition);
 };
 
 #endif

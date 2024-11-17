@@ -29,7 +29,9 @@ namespace snx
         }
 
         //* Returns 0 or 1 with no arguments provided
-        static inline int random(int min = 0, int max = 1)
+        static inline int random(
+            int min = 0,
+            int max = 1)
         {
             std::uniform_int_distribution<int> distribution{min, max};
 

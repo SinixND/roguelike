@@ -3,8 +3,8 @@
 // #define DEBUG_SHADOW
 
 #include "DenseMap.h"
-#include "UnitConversion.h"
-#include "VisibilityID.h"
+#include "Convert.h"
+#include "VisibilityId.h"
 #include "raylibEx.h"
 #include <algorithm>
 #include <cmath>
@@ -101,14 +101,14 @@ void drawShadow(
 
     //* Draw left shadow projection
     DrawLineEx(
-        UnitConversion::octantToScreen(
+        Convert::octantToScreen(
             Vector2{
                 shadowNew.getLeftAtTop(octantPosition) * TileData::TILE_SIZE,
                 (octantPosition.y * TileData::TILE_SIZE) + TileData::TILE_SIZE_HALF},
             octant,
             origin,
             snx::debug::gcam().camera()),
-        UnitConversion::octantToScreen(
+        Convert::octantToScreen(
             Vector2{
                 shadowNew.getLeft(maxHeight * TileData::TILE_SIZE),
                 maxHeight * TileData::TILE_SIZE},
@@ -120,14 +120,14 @@ void drawShadow(
 
     //* Draw right shadow projection
     DrawLineEx(
-        UnitConversion::octantToScreen(
+        Convert::octantToScreen(
             Vector2{
                 shadowNew.getRightAtBottom(octantPosition) * TileData::TILE_SIZE,
                 (octantPosition.y * TileData::TILE_SIZE) - TileData::TILE_SIZE_HALF},
             octant,
             origin,
             snx::debug::gcam().camera()),
-        UnitConversion::octantToScreen(
+        Convert::octantToScreen(
             Vector2{
                 shadowNew.getRight(maxHeight * TileData::TILE_SIZE),
                 maxHeight * TileData::TILE_SIZE},
@@ -313,21 +313,21 @@ void VisibilitySystem::updateShadowline(
 }
 
 void updateVisibilities(
-    VisibilityID tileVisibilityOld,
-    snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
+    VisibilityId tileVisibilityOld,
+    snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
     snx::DenseMap<Vector2I, Fog>& fogs,
     Vector2I const& tilePosition)
 {
-    if (tileVisibilityOld == VisibilityID::VISIBILE)
+    if (tileVisibilityOld == VisibilityId::VISIBILE)
     {
         //* Tile WAS visible
-        visibilityIDs.at(tilePosition) = VisibilityID::SEEN;
+        visibilityIds.at(tilePosition) = VisibilityId::SEEN;
 
         //* Add non opaque fog
         fogs[tilePosition] = Fog{tilePosition, false};
     }
 
-    else if (tileVisibilityOld == VisibilityID::SEEN)
+    else if (tileVisibilityOld == VisibilityId::SEEN)
     {
         //* Add non opaque fog
         fogs[tilePosition] = Fog{tilePosition, false};
@@ -343,7 +343,7 @@ void updateVisibilities(
 void VisibilitySystem::calculateVisibilitiesInOctant(
     snx::DenseMap<Vector2I, Fog>& fogs_,
     int octant,
-    snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
+    snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
     std::unordered_set<Vector2I> const& isOpaques,
     Vector2I const& heroPosition,
     int visionRange,
@@ -364,7 +364,7 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
             Vector2I octantPosition{octX, octY};
 
             Vector2I tilePosition{
-                UnitConversion::octantToTile(
+                Convert::octantToTile(
                     octantPosition,
                     octant,
                     heroPosition)};
@@ -378,12 +378,12 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                 "\n");
 #endif
 
-            if (!visibilityIDs.contains(tilePosition))
+            if (!visibilityIds.contains(tilePosition))
             {
                 continue;
             }
 
-            VisibilityID tileVisibilityOld{visibilityIDs.at(tilePosition)};
+            VisibilityId tileVisibilityOld{visibilityIds.at(tilePosition)};
 
             //* < : Update only octant tiles including diagonal tiles (spare last row tile, needed for correct diagonal visibility)
             if (octX <= octY)
@@ -401,7 +401,11 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                         "\n");
 #endif
 
-                    updateVisibilities(tileVisibilityOld, visibilityIDs, fogs_, tilePosition);
+                    updateVisibilities(
+                        tileVisibilityOld,
+                        visibilityIds,
+                        fogs_,
+                        tilePosition);
 
                     continue;
                 } //* Max shadow
@@ -425,7 +429,7 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                         //* If top-left tile corner is left (<) from slopeLeft (at same height = tileTop)
                         //* OR
                         //* If slopeRight is left (<) from bottom-right tile corner (at same height = tileBottom)
-                        [[maybe_unused]] auto test{sqrt(pow(octX, 2) + pow(octY, 2))};
+                        // [[maybe_unused]] auto test{sqrt(pow(octX, 2) + pow(octY, 2))};
                         if (
                             ((octX - 0.5f) < (shadow.getLeftAtTop(octantPosition))
                              || (shadow.getRightAtBottom(octantPosition)) < (octX + 0.5f)))
@@ -457,12 +461,16 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                 if (isVisible)
                 {
                     //* Tile IS visible
-                    visibilityIDs.at(tilePosition) = VisibilityID::VISIBILE;
+                    visibilityIds.at(tilePosition) = VisibilityId::VISIBILE;
                 }
 
                 else
                 {
-                    updateVisibilities(tileVisibilityOld, visibilityIDs, fogs_, tilePosition);
+                    updateVisibilities(
+                        tileVisibilityOld,
+                        visibilityIds,
+                        fogs_,
+                        tilePosition);
                 }
             } //* Octant tiles only
 
@@ -485,7 +493,9 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                 range);
 #endif
 
-            updateShadowline(shadowline, octantPosition);
+            updateShadowline(
+                shadowline,
+                octantPosition);
         } //* Octant column
     } //* Octant row
 
@@ -496,7 +506,7 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
 
 void VisibilitySystem::update(
     snx::DenseMap<Vector2I, Fog>& fogs_,
-    snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
+    snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
     std::unordered_set<Vector2I> const& isOpaques,
     RectangleExI const& viewportInTiles,
     int visionRange,
@@ -509,7 +519,7 @@ void VisibilitySystem::update(
     //* Init
     fogs_.clear();
 
-    visibilityIDs.at(heroPosition) = VisibilityID::VISIBILE;
+    visibilityIds.at(heroPosition) = VisibilityId::VISIBILE;
 
     //* Iterate octants
     //* Orientation dependent range (horizontal, vertical)
@@ -538,7 +548,7 @@ void VisibilitySystem::update(
         calculateVisibilitiesInOctant(
             fogs_,
             octant,
-            visibilityIDs,
+            visibilityIds,
             isOpaques,
             heroPosition,
             visionRange,

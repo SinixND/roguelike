@@ -1,5 +1,5 @@
 #include "PanelSystem.h"
-#include "EventID.h"
+#include "EventId.h"
 #include "GameFont.h"
 #include "Hero.h"
 #include "Logger.h"
@@ -69,7 +69,7 @@ void PanelSystem::init(Panels& panels)
         .setBottom(panels.log.top())
         .setTop(panels.status.bottom());
 
-    snx::PublisherStatic::publish(EventID::PANELS_RESIZED);
+    snx::PublisherStatic::publish(EventId::PANELS_RESIZED);
 }
 
 void PanelSystem::drawGameInfoPanelContent(
@@ -97,7 +97,9 @@ void PanelSystem::drawGameInfoPanelContent(
             ((0.5f * panels.map.width()) - (0.5f * textDimensions.x)),
             (0.5f * fontSize)},
         fontSize,
-        GuiGetStyle(DEFAULT, TEXT_SPACING),
+        GuiGetStyle(
+            DEFAULT,
+            TEXT_SPACING),
         RAYWHITE);
 }
 
@@ -138,13 +140,13 @@ void PanelSystem::drawHeroInfoPanelContent(
     info.append(
         printInfo(
             "HP : "
-            + std::to_string(hero.health.currentHealth())
+            + std::to_string(hero.health.currentHealth)
             + "/"
-            + std::to_string(hero.health.maxHealth()).c_str()));
+            + std::to_string(hero.health.maxHealth).c_str()));
 
     info.append(printInfo(
         "ATK : "
-        + std::to_string(hero.damage.baseDamage())));
+        + std::to_string(hero.damage.baseDamage)));
 
     info.append("|_____________|");
 
@@ -175,7 +177,10 @@ void PanelSystem::drawTileInfoPanelContent(
     //* Draw tag and action from tile under cursor
     DrawTextEx(
         GameFont::font(),
-        TextFormat("Object: %s\nAction: %s", objects.names.at(cursorPosition).c_str(), objects.actions.at(cursorPosition).c_str()),
+        TextFormat(
+            "Object: %s\nAction: %s",
+            objects.names.at(cursorPosition).c_str(),
+            objects.actions.at(cursorPosition).c_str()),
         Vector2{
             panels.tileInfo.left() + (0.5f * GameFont::fontWidth),
             panels.tileInfo.top() + (0.5f * fontSize)},

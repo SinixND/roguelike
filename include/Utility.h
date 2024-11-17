@@ -6,7 +6,9 @@
 namespace snx
 {
     template <typename Type>
-    inline void appendVector(std::vector<Type>& targetVector, std::vector<Type> const& vector)
+    inline void appendVector(
+        std::vector<Type>& targetVector,
+        std::vector<Type> const& vector)
     {
         targetVector.insert(targetVector.end(), vector.begin(), vector.end());
     }

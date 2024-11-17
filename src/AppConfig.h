@@ -1,7 +1,6 @@
 #ifndef IG20240529010632
 #define IG20240529010632
 
-
 //* Configs imported from user file
 
 class AppConfig
