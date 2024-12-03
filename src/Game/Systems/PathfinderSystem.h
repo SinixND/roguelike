@@ -4,7 +4,7 @@
 #include "raylibEx.h"
 #include <vector>
 
-struct Map;
+class Map;
 class GameCamera;
 
 class RatedTile
@@ -22,9 +22,7 @@ public:
         int stepsNeeded,
         RatedTile* ancestor)
         : tilePosition(tilePosition)
-        , distanceToTarget(Vector2Subtract(
-              target,
-              tilePosition))
+        , distanceToTarget(Vector2Subtract(target, tilePosition))
         , stepsNeeded(stepsNeeded)
         , ancestor(ancestor)
     {

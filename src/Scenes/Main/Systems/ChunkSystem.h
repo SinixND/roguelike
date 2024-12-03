@@ -8,9 +8,9 @@ namespace snx
 }
 
 struct Vector2I;
-struct Chunk;
-struct Vector2;
-enum class RenderId;
+class Chunk;
+class PositionComponent;
+enum class RenderID;
 class Textures;
 
 namespace ChunkSystem
@@ -18,8 +18,8 @@ namespace ChunkSystem
     void initializeChunks(
         Textures const& textures,
         snx::DenseMap<Vector2I, Chunk>& chunks,
-        snx::DenseMap<Vector2I, Vector2> const tilesPositions,
-        snx::DenseMap<Vector2I, RenderId> const& tilesRenderIds);
+        snx::DenseMap<Vector2I, PositionComponent> const tilesPositions,
+        snx::DenseMap<Vector2I, RenderID> const& tilesRenderIDs);
 };
 
 #endif

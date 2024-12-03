@@ -1,6 +1,5 @@
 #include "AISystem.h"
 
-#include "Convert.h"
 #include "DamageComponent.h"
 #include "DamageSystem.h"
 #include "Enemies.h"
@@ -23,9 +22,9 @@ bool AISystem::checkForAction(
 
     while (enemiesChecked < idSize)
     {
-        size_t enemyId{enemies.ids.values()[enemiesChecked]};
+        size_t enemyID{enemies.ids.values()[enemiesChecked]};
 
-        if (!enemies.energies.at(enemyId).isReady)
+        if (!enemies.energies.at(enemyID).isReady())
         {
             //* Cant perform action
             ++enemiesChecked;
@@ -33,11 +32,11 @@ bool AISystem::checkForAction(
         }
 
         AISystem::chooseAction(
-            enemies.ais.at(enemyId),
-            enemies.positions.at(enemyId),
-            enemies.movements.at(enemyId),
-            enemies.energies.at(enemyId),
-            enemies.damages.at(enemyId),
+            enemies.ais.at(enemyID),
+            enemies.positions.at(enemyID),
+            enemies.movements.at(enemyID),
+            enemies.energies.at(enemyID),
+            enemies.damages.at(enemyID),
             map,
             heroPosition,
             heroHealth,
@@ -53,8 +52,8 @@ bool AISystem::checkForAction(
 
 void AISystem::chooseAction(
     AIComponent const& ai,
-    Vector2& position,
-    TransformComponent& movement,
+    PositionComponent& position,
+    MovementComponent& movement,
     EnergyComponent& energy,
     DamageComponent& damage,
     Map const& map,
@@ -64,18 +63,18 @@ void AISystem::chooseAction(
 {
     std::vector<Vector2I> path{PathfinderSystem::findPath(
         map,
-        Convert::worldToTile(position),
+        position.tilePosition(),
         heroPosition,
         gameCamera,
         false,
-        ai.scanRange)};
+        ai.scanRange())};
 
     size_t pathSize{path.size()};
 
     if (pathSize == 0)
     {
         //* Wait
-        consume(&energy);
+        energy.consume();
     }
 
     //* Path is either empty or has at least 2 entries (start and target)
@@ -88,24 +87,20 @@ void AISystem::chooseAction(
             damage,
             heroHealth);
 
-        consume(&energy);
+        energy.consume();
     }
 
     else if (pathSize > 2)
     {
-        triggerFromTo(
-            &movement.direction_,
-            &movement.velocity_,
-            &movement.isTriggered_,
-            movement.speed_,
-            Convert::worldToTile(position),
+        movement.trigger(
+            position.tilePosition(),
             path.rbegin()[1]);
     }
 
-    //* TransformComponent is not viable
+    //* MovementComponent is not viable
     else
     {
         //* Wait
-        consume(&energy);
+        energy.consume();
     }
 }

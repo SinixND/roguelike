@@ -1,7 +1,7 @@
 #ifndef IG20240914212555
 #define IG20240914212555
 
-struct Map;
+class Map;
 struct Vector2I;
 
 namespace CollisionSystem

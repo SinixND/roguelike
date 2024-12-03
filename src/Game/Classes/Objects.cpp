@@ -1,27 +1,25 @@
 #include "Objects.h"
-
-#include "Convert.h"
 #include "DenseMap.h"
 #include "EventId.h"
-#include "RenderId.h"
+#include "PositionComponent.h"
+#include "RenderID.h"
 #include "raylibEx.h"
 #include <string>
 
-void ModuleObjects::create(
-    Objects* objects,
+void Objects::set(
     Vector2I const& tilePosition,
-    RenderId renderId,
+    RenderID renderID,
     std::string const& name,
     std::string const& action,
     EventId event)
 {
-    objects->positions[tilePosition] = Convert::tileToWorld(tilePosition);
+    positions[tilePosition].changeTo(tilePosition);
 
-    objects->renderIds[tilePosition] = renderId;
+    renderIDs[tilePosition] = renderID;
 
-    objects->names[tilePosition] = name;
+    names[tilePosition] = name;
 
-    objects->actions[tilePosition] = action;
+    actions[tilePosition] = action;
 
-    objects->events[tilePosition] = event;
+    events[tilePosition] = event;
 }

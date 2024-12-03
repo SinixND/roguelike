@@ -1,6 +1,8 @@
 #ifndef IG20240815194414
 #define IG20240815194414
 
+#include "ChunkData.h"
+#include "PositionComponent.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -8,15 +10,29 @@
 //* - one renderTexture
 //* - its corners as a RectangleExI (tile coordinates)
 //* - center position
-struct Chunk
+class Chunk
 {
+public:
     RectangleExI corners{};
-    Vector2 position{};
+    PositionComponent position{};
     RenderTexture renderTexture{};
-};
 
-Chunk createChunk(
-    Vector2 const& position,
-    RenderTexture const& renderTexture);
+public:
+    Chunk() = default;
+
+    Chunk(
+        PositionComponent const& position,
+        RenderTexture const& renderTexture)
+        : corners(
+              RectangleExI{
+                  position.tilePosition().x,
+                  position.tilePosition().y,
+                  ChunkData::chunkSize,
+                  ChunkData::chunkSize})
+        , position(position)
+        , renderTexture(renderTexture)
+    {
+    }
+};
 
 #endif

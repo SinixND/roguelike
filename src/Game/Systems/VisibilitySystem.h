@@ -45,13 +45,13 @@ struct Fog
     bool isFogOpaque{};
 };
 
-enum class VisibilityId;
+enum class VisibilityID;
 
 namespace VisibilitySystem
 {
     void update(
         snx::DenseMap<Vector2I, Fog>& fogs_,
-        snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
+        snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
         std::unordered_set<Vector2I> const& isOpaques,
         RectangleExI const& viewport,
         int visionRange,
@@ -61,7 +61,7 @@ namespace VisibilitySystem
     void calculateVisibilitiesInOctant(
         snx::DenseMap<Vector2I, Fog>& fogs_,
         int octant,
-        snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
+        snx::DenseMap<Vector2I, VisibilityID>& visibilityIDs,
         std::unordered_set<Vector2I> const& isOpaques,
         Vector2I const& heroPosition,
         int visionRange,

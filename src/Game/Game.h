@@ -2,36 +2,36 @@
 #define IG20241011025951
 
 #include "Hero.h"
-#include "UserInput.h"
+#include "UserInputComponent.h"
 #include "World.h"
 
 class Cursor;
 class GameCamera;
 
-struct Game
+class Game
 {
-    UserInput userInput_{};
+    UserInputComponent userInput_{};
 
     bool actionsInProgress_{false};
 
     //* Track game turns
     int turn_{0};
 
+public:
     World world{};
     Hero hero{};
+
+public:
+    void init();
+
+    void processInput(Cursor& cursor);
+    void updateState(
+        GameCamera const& gameCamera,
+        Cursor const& cursor);
+
+    void setupGameEvents();
+
+    int turn() const;
 };
-
-void initGame(Game* game);
-
-void processUserInput(
-    Game* game,
-    Cursor& cursor);
-
-void updateGameState(
-    Game* game,
-    GameCamera const& gameCamera,
-    Cursor const& cursor);
-
-void setupGameEvents(Game* game);
 
 #endif

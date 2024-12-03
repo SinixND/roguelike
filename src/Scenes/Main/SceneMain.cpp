@@ -1,6 +1,5 @@
 #include "SceneMain.h"
-#include "Convert.h"
-#include "VisibilityId.h"
+#include "VisibilityID.h"
 
 #define DEBUG_TILEINFO
 //* #define DEBUG_FOG
@@ -16,6 +15,7 @@
 #include "GameCamera.h"
 #include "Objects.h"
 #include "PanelSystem.h"
+#include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "RenderSystem.h"
 #include "VisibilitySystem.h"
@@ -32,13 +32,13 @@
 
 void SceneMain::init()
 {
-    initGame(&game_);
+    game_.init();
 
     PanelSystem::init(panels_);
 
     gameCamera_.init(
         panels_.map,
-        game_.hero.position);
+        game_.hero.position.worldPixel());
 
 #if defined(DEBUG)
     snx::debug::gcam() = gameCamera_;
@@ -50,7 +50,7 @@ void SceneMain::init()
         renderData_.textures,
         chunks_,
         game_.world.currentMap->tiles.positions,
-        game_.world.currentMap->tiles.renderIds);
+        game_.world.currentMap->tiles.renderIDs);
 
     //* Setup events
     setupSceneEvents();
@@ -70,37 +70,37 @@ void SceneMain::setupSceneEvents()
         EventId::PANELS_RESIZED,
         [&]()
         {
-            gameCamera_.init(panels_.map, game_.hero.position);
+            gameCamera_.init(panels_.map, game_.hero.position.worldPixel());
             VisibilitySystem::update(
                 fogs_,
                 // game_.world.currentMap->tiles,
-                game_.world.currentMap->tiles.visibilityIds,
-                game_.world.currentMap->tiles.opaques,
+                game_.world.currentMap->tiles.visibilityIDs,
+                game_.world.currentMap->tiles.isOpaques,
                 gameCamera_.viewportInTiles(),
                 game_.hero.visionRange,
-                Convert::worldToTile(game_.hero.position));
+                game_.hero.position.tilePosition());
         });
 
     snx::PublisherStatic::addSubscriber(
         EventId::HERO_MOVED,
         [&]()
         {
-            gameCamera_.setTarget(game_.hero.position);
+            gameCamera_.setTarget(game_.hero.position.worldPixel());
         });
 
     snx::PublisherStatic::addSubscriber(
-        EventId::HERO_POSITION__CHANGED,
+        EventId::HERO_POSITION_CHANGED,
         [&]()
         {
             //* VisibilitySystem
             VisibilitySystem::update(
                 fogs_,
                 // game_.world.currentMap->tiles,
-                game_.world.currentMap->tiles.visibilityIds,
-                game_.world.currentMap->tiles.opaques,
+                game_.world.currentMap->tiles.visibilityIDs,
+                game_.world.currentMap->tiles.isOpaques,
                 gameCamera_.viewportInTiles(),
                 game_.hero.visionRange,
-                Convert::worldToTile(game_.hero.position));
+                game_.hero.position.tilePosition());
         },
         true);
 
@@ -112,7 +112,7 @@ void SceneMain::setupSceneEvents()
                 renderData_.textures,
                 chunks_,
                 game_.world.currentMap->tiles.positions,
-                game_.world.currentMap->tiles.renderIds);
+                game_.world.currentMap->tiles.renderIDs);
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -134,10 +134,10 @@ void SceneMain::setupSceneEvents()
 
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
     snx::PublisherStatic::addSubscriber(
-        EventId::CURSOR_POSITION__CHANGED,
+        EventId::CURSOR_POSITION_CHANGED,
         [&]()
         {
-            Vector2I cursorPos{Convert::worldToTile(cursor_.position)};
+            Vector2I cursorPos{cursor_.position.tilePosition()};
 
             if (!game_.world.currentMap->tiles.positions.contains(cursorPos))
             {
@@ -156,29 +156,29 @@ void SceneMain::setupSceneEvents()
 
             snx::debug::cliLog(
                 "WorldPixel: "
-                + std::to_string(game_.world.currentMap->tiles.positions.at(cursorPos).x)
+                + std::to_string(game_.world.currentMap->tiles.positions.at(cursorPos).worldPixel().x)
                 + ", "
-                + std::to_string(game_.world.currentMap->tiles.positions.at(cursorPos).y)
+                + std::to_string(game_.world.currentMap->tiles.positions.at(cursorPos).worldPixel().y)
                 + "\n");
 
             snx::debug::cliLog(
-                "RenderId: "
-                + std::to_string(static_cast<int>(game_.world.currentMap->tiles.renderIds.at(cursorPos)))
+                "RenderID: "
+                + std::to_string(static_cast<int>(game_.world.currentMap->tiles.renderIDs.at(cursorPos)))
                 + "\n");
 
             snx::debug::cliLog(
-                "VisibilityId: "
-                + std::to_string(static_cast<int>(game_.world.currentMap->tiles.visibilityIds.at(cursorPos)))
+                "VisibilityID: "
+                + std::to_string(static_cast<int>(game_.world.currentMap->tiles.visibilityIDs.at(cursorPos)))
                 + "\n");
 
             snx::debug::cliLog(
                 "IsSolid: "
-                + std::to_string(game_.world.currentMap->tiles.solids.contains(cursorPos))
+                + std::to_string(game_.world.currentMap->tiles.isSolid(cursorPos))
                 + "\n");
 
             snx::debug::cliLog(
                 "IsOpaque: "
-                + std::to_string(game_.world.currentMap->tiles.opaques.contains(cursorPos))
+                + std::to_string(game_.world.currentMap->tiles.isOpaque(cursorPos))
                 + "\n");
 
             if (game_.world.currentMap->objects.positions.contains(cursorPos))
@@ -196,8 +196,8 @@ void SceneMain::setupSceneEvents()
                     + "\n");
 
                 snx::debug::cliLog(
-                    "RenderId: "
-                    + std::to_string(static_cast<int>(game_.world.currentMap->objects.renderIds.at(cursorPos)))
+                    "RenderID: "
+                    + std::to_string(static_cast<int>(game_.world.currentMap->objects.renderIDs.at(cursorPos)))
                     + "\n");
 
                 snx::debug::cliLog(
@@ -211,7 +211,7 @@ void SceneMain::setupSceneEvents()
                 snx::debug::cliLog("ENEMY\n");
 
                 snx::debug::cliLog(
-                    "Id: "
+                    "ID: "
                     + std::to_string(game_.world.currentMap->enemies.ids.at(cursorPos))
                     + "\n");
             }
@@ -228,11 +228,9 @@ void SceneMain::processInput()
     }
 
     //* Allow input if hero is ready (= full energy)
-    if (game_.hero.energy.isReady)
+    if (game_.hero.energy.isReady())
     {
-        processUserInput(
-            &game_,
-            cursor_);
+        game_.processInput(cursor_);
     }
 }
 
@@ -240,10 +238,9 @@ void SceneMain::updateState()
 {
     cursor_.update(
         gameCamera_.camera(),
-        Convert::worldToTile(game_.hero.position));
+        game_.hero.position.tilePosition());
 
-    updateGameState(
-        &game_,
+    game_.updateState(
         gameCamera_,
         cursor_);
 
@@ -272,33 +269,33 @@ void SceneMain::renderOutput()
 
     //* Draw objects
     auto const& objects{game_.world.currentMap->objects};
-    auto const& objectRenderIds{objects.renderIds.values()};
+    auto const& objectRenderIDs{objects.renderIDs.values()};
     auto const& objectPositions{objects.positions.values()};
 
-    for (size_t i{0}; i < objectRenderIds.size(); ++i)
+    for (size_t i{0}; i < objectRenderIDs.size(); ++i)
     {
         RenderSystem::render(
             renderData_.textures,
-            objectRenderIds.at(i),
-            objectPositions.at(i));
+            objectRenderIDs.at(i),
+            objectPositions.at(i).worldPixel());
     }
 
     //* Draw enemies
     auto const& enemies{game_.world.currentMap->enemies};
-    auto const& enemyRenderIds{enemies.renderIds.values()};
+    auto const& enemyRenderIDs{enemies.renderIDs.values()};
     auto const& enemyPositions{enemies.positions.values()};
 
-    for (size_t i{0}; i < enemyRenderIds.size(); ++i)
+    for (size_t i{0}; i < enemyRenderIDs.size(); ++i)
     {
-        if (game_.world.currentMap->tiles.visibilityIds.at(Convert::worldToTile(enemyPositions.at(i))) != VisibilityId::VISIBILE)
+        if (game_.world.currentMap->tiles.visibilityIDs.at(enemyPositions.at(i).tilePosition()) != VisibilityID::VISIBILE)
         {
             continue;
         }
 
         RenderSystem::render(
             renderData_.textures,
-            enemyRenderIds.at(i),
-            enemyPositions.at(i));
+            enemyRenderIDs.at(i),
+            enemyPositions.at(i).worldPixel());
     }
 
     //* VisibilitySystem
@@ -311,8 +308,8 @@ void SceneMain::renderOutput()
     //* Draw hero
     RenderSystem::render(
         renderData_.textures,
-        game_.hero.renderId,
-        game_.hero.position);
+        game_.hero.renderID,
+        game_.hero.position.worldPixel());
 
     //* UI
     //* Draw cursor
@@ -320,8 +317,8 @@ void SceneMain::renderOutput()
     {
         RenderSystem::render(
             renderData_.textures,
-            cursor_.renderId,
-            cursor_.position);
+            cursor_.renderID,
+            cursor_.position.worldPixel());
     }
 
     EndScissorMode();
@@ -336,7 +333,7 @@ void SceneMain::renderOutput()
     PanelSystem::drawTileInfoPanelContent(
         panels_,
         game_.world.currentMap->objects,
-        Convert::worldToTile(cursor_.position));
+        cursor_.position.tilePosition());
 
     PanelSystem::drawGameInfoPanelContent(
         panels_,

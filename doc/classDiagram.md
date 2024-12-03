@@ -105,7 +105,7 @@ class Objects {
     + snx::DenseMap<Vector2I, RenderID> renderIDs
     + snx::DenseMap<Vector2I, std::string> names
     + snx::DenseMap<Vector2I, std::string> actions
-    + snx::DenseMap<Vector2I, EventID> events
+    + snx::DenseMap<Vector2I, EventId> events
 }
 
 Objects *-- PositionComponent
@@ -121,7 +121,7 @@ class Enemies {
     + snx::DenseMap<size_t, EnergyComponent> energies
     + snx::DenseMap<size_t, HealthComponent> healths
     + snx::DenseMap<size_t, DamageComponent> damages
-    - snx::IDManager idManager_
+    - snx::IdManager idManager_
 }
 
 Enemies *-- AIComponent

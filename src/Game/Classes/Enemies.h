@@ -7,46 +7,61 @@
 #include "EnergyComponent.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
-#include "RenderId.h"
-#include "TransformComponent.h"
+#include "MovementComponent.h"
+#include "PositionComponent.h"
+#include "RenderID.h"
 #include <cstddef>
 
 struct Vector2I;
-struct Map;
-struct Tiles;
+class Map;
+class Tiles;
 
-struct Enemies
+class Enemies
 {
-    static inline snx::IdManager idManager{};
-
+public:
     snx::DenseMap<Vector2I, size_t> ids{};
     snx::DenseMap<size_t, AIComponent> ais{};
-    snx::DenseMap<size_t, Vector2> positions{};
-    snx::DenseMap<size_t, RenderId> renderIds{};
-    snx::DenseMap<size_t, TransformComponent> movements{};
+    snx::DenseMap<size_t, PositionComponent> positions{};
+    snx::DenseMap<size_t, RenderID> renderIDs{};
+    snx::DenseMap<size_t, MovementComponent> movements{};
     snx::DenseMap<size_t, EnergyComponent> energies{};
     snx::DenseMap<size_t, HealthComponent> healths{};
     snx::DenseMap<size_t, DamageComponent> damages{};
-};
 
-namespace ModuleEnemies
-{
+private:
+    snx::IdManager idManager_{};
+
+public:
     void create(
-        Enemies* enemies,
-        Tiles const& tiles,
-        RenderId enemyId,
+        Map const& map,
+        RenderID enemyID,
         bool randomPosition = true,
         Vector2I tilePosition = Vector2I{0, 0});
 
-    void createEnemies(
-        Enemies* enemies,
+    void init(
         int mapLevel,
-        Tiles const& tiles);
+        Map const& map);
 
-    void updateEnemies(
-        Enemies* enemies,
+    bool regenerate();
+
+    void update(
         Map const& map,
-        Vector2 const& heroPosition);
-}
+        PositionComponent const& heroPosition);
+
+private:
+    Vector2I getRandomPosition(Tiles const& tiles);
+
+    void insert(
+        size_t id,
+        RenderID renderID,
+        MovementComponent const& movement,
+        EnergyComponent const& energy,
+        HealthComponent const& health,
+        DamageComponent const& damage,
+        int scanRange,
+        Vector2I const& enemyPosition);
+
+    void remove(size_t id);
+};
 
 #endif

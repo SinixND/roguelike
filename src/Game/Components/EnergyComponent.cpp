@@ -1,63 +1,49 @@
 #include "EnergyComponent.h"
-#include <vector>
 
-bool consume(EnergyComponent* energyComponent, int energy)
+bool EnergyComponent::consume(int energy)
 {
     if (energy < 0)
     {
         //* Consume all available energy
-        energyComponent->currentEnergy = 0;
+        currentEnergy_ = 0;
     }
     else
     {
         //* Consume energy
-        energyComponent->currentEnergy -= energy;
+        currentEnergy_ -= energy;
     }
 
-    if (energyComponent->currentEnergy <= 0)
+    if (currentEnergy_ <= 0)
     {
-        energyComponent->isReady = false;
-
+        isReady_ = false;
         return false;
     }
 
     return true;
 }
 
-bool regenerate(EnergyComponent* energyComponent)
+bool EnergyComponent::regenerate()
 {
-    if (energyComponent->currentEnergy >= energyComponent->maxEnergy)
+    if (currentEnergy_ >= maxEnergy_)
     {
-        energyComponent->isReady = true;
-
+        isReady_ = true;
         return true;
     }
 
     //* Regen energy until full
-    energyComponent->currentEnergy += energyComponent->regenRate;
+    currentEnergy_ += regenRate;
 
-    if (energyComponent->currentEnergy > energyComponent->maxEnergy)
+    if (currentEnergy_ > maxEnergy_)
     {
         //* Ensure energy does not exceed maxEnergy
-        energyComponent->currentEnergy = energyComponent->maxEnergy;
-
+        currentEnergy_ = maxEnergy_;
         return true;
     }
 
     return false;
 }
 
-bool regenerateAll(std::vector<EnergyComponent>* energies)
+int EnergyComponent::isReady() const
 {
-    bool isReady{false};
-
-    for (EnergyComponent& energy : *energies)
-    {
-        if (regenerate(&energy))
-        {
-            isReady = true;
-        }
-    }
-
-    return isReady;
+    return isReady_;
 }

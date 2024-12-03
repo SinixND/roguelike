@@ -7,19 +7,39 @@ int const baseCriticalHitChance{0};
 // Unit: percent
 int const baseCriticalHitDamage{50};
 
-struct DamageComponent
+class DamageComponent
 {
-    int baseDamage{0};
+    int baseDamage_{};
 
     // Unit: percent
-    int criticalHitChance{baseCriticalHitChance};
+    int criticalHitChance_{baseCriticalHitChance};
 
     // Unit: percent
-    int criticalHitDamage{baseCriticalHitDamage};
+    int criticalHitDamage_{baseCriticalHitDamage};
+
+public:
+    DamageComponent() = default;
+
+    DamageComponent(
+        int damage,
+        int criticalHitChance = baseCriticalHitChance,
+        int criticalHitDamage = baseCriticalHitDamage)
+        : baseDamage_(damage)
+        , criticalHitChance_(criticalHitChance)
+        , criticalHitDamage_(criticalHitDamage)
+    {
+    }
+
+    int baseDamage() const;
+
+    int damage() const;
+    float damageAverage() const;
+
+    int criticalHitChancePercent() const;
+    float criticalHitChanceFactor() const;
+
+    int criticalHitDamagePercent() const;
+    float criticalHitDamageFactor() const;
 };
-
-int calculateDamage(DamageComponent const& damageComponent);
-
-float damageAverage(DamageComponent const& damageComponent);
 
 #endif

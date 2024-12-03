@@ -1,7 +1,7 @@
 #ifndef IG20240426003633
 #define IG20240426003633
 
-#include "RenderId.h"
+#include "RenderID.h"
 #include <raylib.h>
 #include <string>
 #include <unordered_map>
@@ -12,17 +12,15 @@ class Textures
 
     //* Texture atlas
     Texture2D textureAtlas_{};
-    std::unordered_map<RenderId, Vector2> textureIdToAtlasPosition_{};
+    std::unordered_map<RenderID, Vector2> textureIDToAtlasPosition_{};
 
 public:
     //* Texture atlas
     void loadAtlas(std::string const& filename);
 
-    void registerTexture(
-        RenderId textureId,
-        Vector2 position);
+    void registerTexture(RenderID textureID, Vector2 position);
 
-    Vector2 const& getTexturePosition(RenderId renderId) const;
+    Vector2 const& getTexturePosition(RenderID renderID) const;
 
     void unloadAtlas();
 

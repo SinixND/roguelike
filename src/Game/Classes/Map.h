@@ -5,8 +5,9 @@
 #include "Objects.h"
 #include "Tiles.h"
 
-struct Map
+class Map
 {
+public:
     Tiles tiles{};
     Objects objects{};
     Enemies enemies{};

@@ -1,8 +1,8 @@
 #ifndef IG20240531185351
 #define IG20240531185351
 
-#include "RenderId.h"
-#include <raylib.h>
+#include "PositionComponent.h"
+#include "RenderID.h"
 
 struct Camera2D;
 typedef struct Camera2D Camera2D;
@@ -11,8 +11,8 @@ struct Vector2I;
 class Cursor
 {
 public:
-    Vector2 position{};
-    RenderId renderId{RenderId::CURSOR};
+    PositionComponent position{};
+    RenderID renderID{RenderID::CURSOR};
     bool isActive{false};
 
 public:

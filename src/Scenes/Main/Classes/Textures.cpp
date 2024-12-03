@@ -1,10 +1,10 @@
 #include "Textures.h"
-#include "RenderId.h"
+#include "RenderID.h"
 #include <raylib.h>
 #include <string>
 #include <utility>
 
-enum class RenderId;
+enum class RenderID;
 
 void Textures::loadAtlas(std::string const& filename)
 {
@@ -17,14 +17,14 @@ Texture2D const& Textures::textureAtlas() const
     return textureAtlas_;
 }
 
-void Textures::registerTexture(RenderId textureId, Vector2 position)
+void Textures::registerTexture(RenderID textureID, Vector2 position)
 {
-    textureIdToAtlasPosition_.insert(std::make_pair(textureId, position));
+    textureIDToAtlasPosition_.insert(std::make_pair(textureID, position));
 }
 
-Vector2 const& Textures::getTexturePosition(RenderId renderId) const
+Vector2 const& Textures::getTexturePosition(RenderID renderID) const
 {
-    return textureIdToAtlasPosition_.at(renderId);
+    return textureIDToAtlasPosition_.at(renderID);
 }
 
 void Textures::unloadAtlas()

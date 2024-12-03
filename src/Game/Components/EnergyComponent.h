@@ -1,24 +1,31 @@
 #ifndef IG20240601002118
 #define IG20240601002118
 
-#include <vector>
-
-struct EnergyComponent
+class EnergyComponent
 {
-    int currentEnergy{10};
-    int maxEnergy{currentEnergy};
+    int maxEnergy_{10};
+    int currentEnergy_{maxEnergy_};
+    bool isReady_{true};
+
+public:
     int regenRate{1};
-    bool isReady{true};
+
+public:
+    EnergyComponent() = default;
+
+    explicit EnergyComponent(int regenRate)
+        : regenRate(regenRate)
+    {
+    }
+
+    //* Consumes all energy if no parameter provided and returns if there is energy left
+    bool consume(int energy = -1);
+
+    //* Returns true if energy full
+    bool regenerate();
+
+public:
+    int isReady() const;
 };
-
-bool regenerateAll(std::vector<EnergyComponent>* energies);
-
-//* Consumes all energy if no parameter provided and returns if there is energy left
-bool consume(
-    EnergyComponent* energyComponent,
-    int energy = -1);
-
-//* Returns true if energy full
-bool regenerate(EnergyComponent* energyComponent);
 
 #endif

@@ -34,10 +34,7 @@ void App::init()
     }
 
     //* Initialize window
-    InitWindow(
-        config_.windowWidth(),
-        config_.windowHeight(),
-        "Roguelike");
+    InitWindow(config_.windowWidth(), config_.windowHeight(), "Roguelike");
 
     //* Raylib Settings
     SetWindowIcon(favicon_);
@@ -50,10 +47,7 @@ void App::init()
 
     //* Fonts
     GameFont::load();
-    GuiSetStyle(
-        DEFAULT,
-        TEXT_SIZE,
-        GameFont::fontHeight);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::fontHeight);
 
     //* Scene
     SceneMain_.init();
@@ -92,11 +86,7 @@ void App::run()
 {
 #if defined(EMSCRIPTEN)
     emscriptenArgs arg{activeScene_};
-    emscripten_set_main_loop_arg(
-        applicationLoop,
-        &arg,
-        60 /*FPS*/,
-        1 /*Simulate infinite loop*/);
+    emscripten_set_main_loop_arg(applicationLoop, &arg, 60 /*FPS*/, 1 /*Simulate infinite loop*/);
 #else
     while (!(WindowShouldClose()))
     {
