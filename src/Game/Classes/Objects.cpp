@@ -2,24 +2,25 @@
 #include "DenseMap.h"
 #include "EventId.h"
 #include "PositionComponent.h"
-#include "RenderID.h"
+#include "RenderId.h"
 #include "raylibEx.h"
 #include <string>
 
-void Objects::set(
+void createObject(
+    Objects* objects,
     Vector2I const& tilePosition,
-    RenderID renderID,
+    RenderId renderId,
     std::string const& name,
     std::string const& action,
     EventId event)
 {
-    positions[tilePosition].changeTo(tilePosition);
+    objects->positions[tilePosition].changeTo(tilePosition);
 
-    renderIDs[tilePosition] = renderID;
+    objects->renderIds[tilePosition] = renderId;
 
-    names[tilePosition] = name;
+    objects->names[tilePosition] = name;
 
-    actions[tilePosition] = action;
+    objects->actions[tilePosition] = action;
 
-    events[tilePosition] = event;
+    objects->events[tilePosition] = event;
 }

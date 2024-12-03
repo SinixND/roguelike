@@ -1,5 +1,5 @@
 #include "TransformComponent.h"
-#include "Debugger.h"
+
 #include "EventId.h"
 #include "PublisherStatic.h"
 #include "TileData.h"
@@ -8,94 +8,35 @@
 #include <raymath.h>
 #include <vector>
 
-void triggerByDirection(
-    Vector2I* direction_,
-    Vector2* velocity_,
-    bool* isTriggered_,
-    float const& speed_,
-    Vector2I const& direction)
+void TransformComponent::trigger()
 {
-    *direction_ = direction;
-
-    *velocity_ = Vector2Scale(direction, (speed_ * TileData::tileSize));
-
-    *isTriggered_ = true;
-}
-
-//* Triggers from path and adjusts it
-void triggerPath(
-    Vector2I* direction_,
-    Vector2* velocity_,
-    bool* isTriggered_,
-    float const& speed_,
-    std::vector<Vector2I>* path_)
-{
-    Vector2I movementDirection{
-        Vector2Subtract(
-            path_->rbegin()[1],
-            path_->rbegin()[0])};
-
-    triggerByDirection(
-        direction_,
-        velocity_,
-        isTriggered_,
-        speed_,
-        movementDirection);
-
-    //* Remove tilePosition moved from
-    path_->pop_back();
-
-    //* Clear path guided movement after last trigger if target reched (path_.size() == 1 (target))
-    if (path_->size() <= 1)
+    if (!isTriggered_ && !isInProgress_ && !path_.empty())
     {
-        path_->clear();
+        triggerFromPath();
     }
 }
 
-void triggerAuto(
-    Vector2I* direction_,
-    Vector2* velocity_,
-    bool* isTriggered_,
-    float const& speed_,
-    std::vector<Vector2I>* path_,
-    bool isInProgress_)
+void TransformComponent::trigger(Vector2I const& from, Vector2I const& to)
 {
-    if (!*isTriggered_ && !isInProgress_ && !path_->empty())
-    {
-        triggerPath(
-            direction_,
-            velocity_,
-            isTriggered_,
-            speed_,
-            path_);
-    }
-}
-
-//* Sets direction, velocity and isTriggered
-void triggerFromTo(
-    Vector2I* direction_,
-    Vector2* velocity_,
-    bool* isTriggered_,
-    float const& speed_,
-    Vector2I const& from,
-    Vector2I const& to)
-{
-    triggerByDirection(
-        direction_,
-        velocity_,
-        isTriggered_,
-        speed_,
+    trigger(
         Vector2Subtract(
             to,
             from));
 }
 
-void triggerByPath(
-    Vector2I* direction_,
-    Vector2* velocity_,
-    bool* isTriggered_,
-    float const& speed_,
-    std::vector<Vector2I>* path_,
+void TransformComponent::trigger(Vector2I const& direction)
+{
+    direction_ = direction;
+
+    velocity_ = Vector2Scale(
+        direction,
+        (speed_ * TileData::tileSize));
+
+    isTriggered_ = true;
+}
+
+void trigger(
+    TransformComponent* transformComponent,
     std::vector<Vector2I> const& path)
 {
     if (path.empty())
@@ -103,55 +44,91 @@ void triggerByPath(
         return;
     }
 
-    *path_ = path;
+    transformComponent->path_ = path;
 
-    triggerPath(
-        direction_,
-        velocity_,
-        isTriggered_,
-        speed_,
-        path_);
+    transformComponent->triggerFromPath();
 }
 
-void setInProgress(bool* isInProgress_)
+void TransformComponent::triggerFromPath()
+{
+    trigger(Vector2Subtract(
+        path_.rbegin()[1],
+        path_.rbegin()[0]));
+
+    //* Remove tilePosition moved from
+    path_.pop_back();
+
+    //* Clear path guided movement after last trigger if target reched (path_.size() == 1 (target))
+    if (path_.size() <= 1)
+    {
+        path_.clear();
+    }
+}
+
+void TransformComponent::activateTrigger()
+{
+    isTriggered_ = false;
+    setInProgress();
+}
+
+void TransformComponent::setInProgress()
 {
     //* Retrigger movement
-    *isInProgress_ = true;
+    isInProgress_ = true;
 
     snx::PublisherStatic::publish(EventId::ACTION_IN_PROGRESS);
 }
 
-//* Resets trigger, consumes energy and sets InProgress
-void activateTrigger(
-    bool* isTriggered_,
-    bool* isInProgress_)
+void TransformComponent::stopMovement()
 {
-    *isTriggered_ = false;
-    setInProgress(isInProgress_);
+    isInProgress_ = false;
+    velocity_ = Vector2{0, 0};
 }
 
-void stopMovement(
-    Vector2* velocity_,
-    bool* isInProgress_)
+void TransformComponent::clearPath()
 {
-    *isInProgress_ = false;
-    *velocity_ = Vector2{0, 0};
+    isTriggered_ = false;
+    path_.clear();
 }
 
-//* Unsets isTriggered_ and clears path_
-void clearPath(
-    bool* isTriggered_,
-    std::vector<Vector2I>* path_)
+Vector2 TransformComponent::distance() const
 {
-    *isTriggered_ = false;
-    path_->clear();
+    return Vector2Scale(
+        velocity_,
+        GetFrameTime());
 }
 
-void updateCumulativeDistanceMoved(
-    float* cumulativeDistanceMoved_,
-    Vector2* velocity_)
+float TransformComponent::length() const
 {
-    *cumulativeDistanceMoved_ += Vector2Length(Vector2Scale(
-        *velocity_,
-        GetFrameTime()));
+    return Vector2Length(distance());
+}
+
+Vector2I const& TransformComponent::direction() const
+{
+    return direction_;
+}
+
+float TransformComponent::cumulativeDistanceMoved() const
+{
+    return cumulativeDistanceMoved_;
+}
+
+void TransformComponent::updateCumulativeDistanceMoved()
+{
+    cumulativeDistanceMoved_ += Vector2Length(distance());
+}
+
+void TransformComponent::resetCumulativeDistanceMoved()
+{
+    cumulativeDistanceMoved_ = 0;
+}
+
+bool TransformComponent::isTriggered() const
+{
+    return isTriggered_;
+}
+
+bool TransformComponent::isInProgress() const
+{
+    return isInProgress_;
 }

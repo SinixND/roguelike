@@ -3,8 +3,8 @@
 
 #include "DenseMap.h"
 #include "PositionComponent.h"
-#include "RenderID.h"
-#include "VisibilityID.h"
+#include "RenderId.h"
+#include "VisibilityId.h"
 #include "raylibEx.h"
 #include <unordered_set>
 
@@ -14,24 +14,20 @@ class Tiles
 
 public:
     snx::DenseMap<Vector2I, PositionComponent> positions{};
-    snx::DenseMap<Vector2I, RenderID> renderIDs{};
-    snx::DenseMap<Vector2I, VisibilityID> visibilityIDs{};
+    snx::DenseMap<Vector2I, RenderId> renderIds{};
+    snx::DenseMap<Vector2I, VisibilityId> visibilityIds{};
     std::unordered_set<Vector2I> isSolids{};
     std::unordered_set<Vector2I> isOpaques{};
 
 public:
     //* Access or create
-    void set(
+    void create(
         Vector2I const& tilePosition,
-        RenderID renderID,
+        RenderId renderId,
         bool isSolid = false,
         bool isOpaque = false,
-        VisibilityID visibilityID = VisibilityID::INVISIBLE);
+        VisibilityId visibilityId = VisibilityId::INVISIBLE);
 
-    bool isSolid(Vector2I const& tilePosition) const;
-    bool isOpaque(Vector2I const& tilePosition) const;
-
-public:
     RectangleExI mapSize() const;
 
 private:

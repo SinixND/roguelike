@@ -1,8 +1,8 @@
 #include "ChunkSystem.h"
+
 #include "Chunk.h"
 #include "ChunkData.h"
 #include "Colors.h"
-#include "Convert.h"
 #include "DenseMap.h"
 #include "PositionComponent.h"
 #include "RenderSystem.h"
@@ -13,14 +13,14 @@ void verifyRequiredChunkExists(
     Vector2I const& tilePosition,
     snx::DenseMap<Vector2I, Chunk>& chunks)
 {
-    PositionComponent chunkPosition{tilePosition};
+    Vector2I chunkPosition{Convert::tileToChunk(tilePosition)};
 
     //* If clause is needed due to exclude unnecessary LoadRenderTexture() calls
-    if (!chunks.contains(chunkPosition.tilePosition()))
+    if (!chunks.contains(chunkPosition))
     {
         chunks.emplace(
-            chunkPosition.tilePosition(),
             chunkPosition,
+            PositionComponent{chunkPosition},
             LoadRenderTexture(
                 ChunkData::chunkSize_f,
                 ChunkData::chunkSize_f));
@@ -30,8 +30,8 @@ void verifyRequiredChunkExists(
 void ChunkSystem::initializeChunks(
     Textures const& textures,
     snx::DenseMap<Vector2I, Chunk>& chunks,
-    snx::DenseMap<Vector2I, PositionComponent> const tilesPositions,
-    snx::DenseMap<Vector2I, RenderID> const& tilesRenderIDs)
+    snx::DenseMap<Vector2I, PositionComponent> const& tilesPositions,
+    snx::DenseMap<Vector2I, RenderId> const& tilesRenderIds)
 {
     //* Reset
     for (Chunk const& chunk : chunks)
@@ -64,15 +64,15 @@ void ChunkSystem::initializeChunks(
             {
                 Vector2I tilePosition{x, y};
 
-                if (!tilesRenderIDs.contains(tilePosition))
+                if (!tilesRenderIds.contains(tilePosition))
                 {
                     continue;
                 }
 
                 RenderSystem::renderToChunk(
                     textures,
-                    tilesRenderIDs.at(tilePosition),
-                    tilesPositions.at(tilePosition).worldPixel(),
+                    tilesRenderIds.at(tilePosition),
+                    tilesPositions.at(tilePosition).worldPixel,
                     chunk);
             }
         }

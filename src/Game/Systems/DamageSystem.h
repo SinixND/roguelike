@@ -1,7 +1,7 @@
 #ifndef IG20241029004032
 #define IG20241029004032
 
-class DamageComponent;
+struct DamageComponent;
 class HealthComponent;
 
 namespace DamageSystem

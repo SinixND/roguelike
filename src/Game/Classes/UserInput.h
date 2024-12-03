@@ -5,7 +5,7 @@
 #include <raylib.h>
 #include <unordered_map>
 
-struct UserInput
+class UserInput
 {
     InputActionId inputAction_{InputActionId::NONE};
 
@@ -25,32 +25,23 @@ struct UserInput
     double touchUpTime_{0.01};
     double touchHoldDuration_{};
     double lastTap_{};
+
+public:
+    void bindKey(int key, InputActionId action);
+    void bindMouseButton(int key, InputActionId action);
+    void bindModifierKey(int key, InputActionId action);
+
+    //* Returns true if input received
+    bool takeInputMouse(bool isCursorActive);
+
+    //* Returns true if input received
+    bool takeInputKey();
+
+    //* Returns true if input received
+    bool takeInputGesture();
+
+    InputActionId inputAction() const;
+    void resetInputAction();
 };
-
-void bindKey(
-    UserInput* inputData,
-    int key,
-    InputActionId action);
-
-void bindMouseButton(
-    UserInput* inputData,
-    int key,
-    InputActionId action);
-
-void bindModifierKey(
-    UserInput* inputData,
-    int key,
-    InputActionId action);
-
-//* Returns true if input received
-bool takeInputMouse(
-    UserInput* inputData,
-    bool isCursorActive);
-
-//* Returns true if input received
-bool takeInputKey(UserInput* inputData);
-
-//* Returns true if input received
-bool takeInputGesture(UserInput* inputData);
 
 #endif

@@ -5,13 +5,17 @@
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Rename Component->Data?
-- [ ] Separate System (not related to class) and Module (former member functions) via namespace
-- [ ] Refactor: prefer public/struct unless private control needed
-- [ ] Refactor SoA: size_t as key; hashmap for position lookup
-- [ ] Pass by rawPtr (if modified)
-- [ ] Refactor: _prefer(!)_ pure functions: in, out, io
-- [ ] Give Hero optional TransformComponent (unique_ptr)?
+- [ ] Refactor pathfind to skip original position
+- [ ] Refactor public/private (see Notes)
+- [ ] DenseMap for persistent components; SparseSet for optional components (see `DesignGuideline.md`)
+- [ ] Refactor: Extract possible NMNF functions
+    - [ ] Pass by rawPtr (if modified)
+- [ ] Split Tranform (per frame) and Movement (persistent) data
+
+- [ ] Refactor SoA: size_t as key; hashmap/2D-array for position lookup
+- [ ] Split Component(temp) and Data(persistent)?
+- [ ] Separate System (not related to class) and Module (former member functions) via namespace?
+- [ ] eg. Give Hero optional TransformComponent (unique_ptr)?
 
 
 ## Shortterm

@@ -10,48 +10,48 @@
 #include "GameCamera.h"
 #include "HealthComponent.h"
 #include "Hero.h"
-#include "InputActionID.h"
+#include "InputActionId.h"
 #include "Logger.h"
 #include "Map.h"
 #include "PathfinderSystem.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
-#include "UserInputComponent.h"
+#include "UserInput.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
 
 void UserInputSystem::setDefaultInputMappings(
-    UserInputComponent& userInputComponent)
+    UserInput& userInputComponent)
 {
-    userInputComponent.bindKey(KEY_NULL, InputActionID::NONE);
+    userInputComponent.bindKey(KEY_NULL, InputActionId::NONE);
 
-    userInputComponent.bindKey(KEY_W, InputActionID::ACT_UP);
-    userInputComponent.bindKey(KEY_K, InputActionID::ACT_UP);
-    userInputComponent.bindKey(KEY_UP, InputActionID::ACT_UP);
+    userInputComponent.bindKey(KEY_W, InputActionId::ACT_UP);
+    userInputComponent.bindKey(KEY_K, InputActionId::ACT_UP);
+    userInputComponent.bindKey(KEY_UP, InputActionId::ACT_UP);
 
-    userInputComponent.bindKey(KEY_A, InputActionID::ACT_LEFT);
-    userInputComponent.bindKey(KEY_K, InputActionID::ACT_LEFT);
-    userInputComponent.bindKey(KEY_LEFT, InputActionID::ACT_LEFT);
+    userInputComponent.bindKey(KEY_A, InputActionId::ACT_LEFT);
+    userInputComponent.bindKey(KEY_K, InputActionId::ACT_LEFT);
+    userInputComponent.bindKey(KEY_LEFT, InputActionId::ACT_LEFT);
 
-    userInputComponent.bindKey(KEY_S, InputActionID::ACT_DOWN);
-    userInputComponent.bindKey(KEY_J, InputActionID::ACT_DOWN);
-    userInputComponent.bindKey(KEY_DOWN, InputActionID::ACT_DOWN);
+    userInputComponent.bindKey(KEY_S, InputActionId::ACT_DOWN);
+    userInputComponent.bindKey(KEY_J, InputActionId::ACT_DOWN);
+    userInputComponent.bindKey(KEY_DOWN, InputActionId::ACT_DOWN);
 
-    userInputComponent.bindKey(KEY_D, InputActionID::ACT_RIGHT);
-    userInputComponent.bindKey(KEY_L, InputActionID::ACT_RIGHT);
-    userInputComponent.bindKey(KEY_RIGHT, InputActionID::ACT_RIGHT);
+    userInputComponent.bindKey(KEY_D, InputActionId::ACT_RIGHT);
+    userInputComponent.bindKey(KEY_L, InputActionId::ACT_RIGHT);
+    userInputComponent.bindKey(KEY_RIGHT, InputActionId::ACT_RIGHT);
 
-    userInputComponent.bindKey(KEY_SPACE, InputActionID::ACT_IN_PLACE);
+    userInputComponent.bindKey(KEY_SPACE, InputActionId::ACT_IN_PLACE);
 
-    userInputComponent.bindModifierKey(KEY_LEFT_SHIFT, InputActionID::MOD);
+    userInputComponent.bindModifierKey(KEY_LEFT_SHIFT, InputActionId::MOD);
 
-    userInputComponent.bindMouseButton(MOUSE_BUTTON_RIGHT, InputActionID::TOGGLE_CURSOR);
-    userInputComponent.bindMouseButton(MOUSE_BUTTON_LEFT, InputActionID::MOVE_TO_TARGET);
+    userInputComponent.bindMouseButton(MOUSE_BUTTON_RIGHT, InputActionId::TOGGLE_CURSOR);
+    userInputComponent.bindMouseButton(MOUSE_BUTTON_LEFT, InputActionId::MOVE_TO_TARGET);
 }
 
 void UserInputSystem::takeInput(
-    UserInputComponent& userInputComponent,
+    UserInput& userInputComponent,
     bool isCursorActive)
 {
     if (userInputComponent.takeInputKey())
@@ -87,7 +87,7 @@ void performAttack(
 }
 
 void UserInputSystem::triggerAction(
-    UserInputComponent& userInputComponent,
+    UserInput& userInputComponent,
     Hero& hero,
     Cursor const& cursor,
     Map& map,
@@ -98,17 +98,17 @@ void UserInputSystem::triggerAction(
         return;
     }
 
-    if (userInputComponent.inputAction() == InputActionID::NONE)
+    if (userInputComponent.inputAction() == InputActionId::NONE)
     {
         //* Trigger input agnostic actions, eg. non-empty path
-        hero.movement.trigger();
+        hero.transform.trigger();
 
         return;
     }
 
     switch (userInputComponent.inputAction())
     {
-        case InputActionID::ACT_UP:
+        case InputActionId::ACT_UP:
         {
             Vector2I target{
                 Vector2Add(
@@ -122,13 +122,13 @@ void UserInputSystem::triggerAction(
                 break;
             }
 
-            hero.movement.trigger(
+            hero.transform.trigger(
                 Directions::up);
 
             break;
         }
 
-        case InputActionID::ACT_LEFT:
+        case InputActionId::ACT_LEFT:
         {
             Vector2I target{
                 Vector2Add(
@@ -142,13 +142,13 @@ void UserInputSystem::triggerAction(
                 break;
             }
 
-            hero.movement.trigger(
+            hero.transform.trigger(
                 Directions::left);
 
             break;
         }
 
-        case InputActionID::ACT_DOWN:
+        case InputActionId::ACT_DOWN:
         {
             Vector2I target{
                 Vector2Add(
@@ -162,13 +162,13 @@ void UserInputSystem::triggerAction(
                 break;
             }
 
-            hero.movement.trigger(
+            hero.transform.trigger(
                 Directions::down);
 
             break;
         }
 
-        case InputActionID::ACT_RIGHT:
+        case InputActionId::ACT_RIGHT:
         {
             Vector2I target{
                 Vector2Add(
@@ -182,24 +182,26 @@ void UserInputSystem::triggerAction(
                 break;
             }
 
-            hero.movement.trigger(
+            hero.transform.trigger(
                 Directions::right);
 
             break;
         }
 
-        case InputActionID::MOVE_TO_TARGET:
+        case InputActionId::MOVE_TO_TARGET:
         {
-            hero.movement.trigger(PathfinderSystem::findPath(
-                map,
-                hero.position.tilePosition(),
-                cursor.position.tilePosition(),
-                gameCamera));
+            trigger(
+                &hero.transform,
+                PathfinderSystem::findPath(
+                    map,
+                    hero.position.tilePosition(),
+                    cursor.position.tilePosition(),
+                    gameCamera));
 
             break;
         }
 
-        case InputActionID::ACT_IN_PLACE:
+        case InputActionId::ACT_IN_PLACE:
         {
             Vector2I heroTilePosition{hero.position.tilePosition()};
 
@@ -210,7 +212,7 @@ void UserInputSystem::triggerAction(
 
                 hero.energy.consume();
 
-                hero.health.regenerate();
+                regenerate(&hero.health);
 
                 break;
             }
@@ -220,7 +222,7 @@ void UserInputSystem::triggerAction(
             break;
         }
 
-        case InputActionID::TOGGLE_CURSOR:
+        case InputActionId::TOGGLE_CURSOR:
         {
             snx::PublisherStatic::publish(EventId::CURSOR_TOGGLE);
 

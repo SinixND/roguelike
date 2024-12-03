@@ -6,26 +6,6 @@
 #include <string>
 #endif
 
-int HealthComponent::maxHealth() const
-{
-    return maxHealth_;
-}
-
-void HealthComponent::increaseMaxHealth(int health)
-{
-    maxHealth_ += health;
-}
-
-void HealthComponent::reduceMaxHealth(int health)
-{
-    maxHealth_ -= health;
-
-    if (maxHealth_ < 1)
-    {
-        maxHealth_ = 1;
-    }
-}
-
 int HealthComponent::currentHealth() const
 {
     return currentHealth_;
@@ -61,19 +41,20 @@ void HealthComponent::heal(int health)
     }
     else
     {
-        currentHealth_ = maxHealth_;
+        currentHealth_ = maxHealth;
     }
 
-    if (currentHealth_ > maxHealth_)
+    if (currentHealth_ > maxHealth)
     {
-        currentHealth_ = maxHealth_;
+        currentHealth_ = maxHealth;
     }
 }
 
-void HealthComponent::regenerate()
+void regenerate(HealthComponent* healthComponent)
 {
 #if defined(DEBUG) && defined(DEBUG_HEALTH)
-    snx::debug::cliLog("Gain " + std::to_string(regenRate_) + " to " + std::to_string(currentHealth_) + " health\n");
+    snx::debug::cliLog("Gain " + std::to_string(healthComponent->regenRate) + " to " + std::to_string(healthComponent->currentHealth()) + " health\n");
 #endif
-    heal(regenRate_);
+
+    healthComponent->heal(healthComponent->regenRate);
 }

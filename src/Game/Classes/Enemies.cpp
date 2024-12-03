@@ -1,4 +1,5 @@
 #include "Enemies.h"
+
 #include "AIComponent.h"
 #include "DamageComponent.h"
 #include "DenseMap.h"
@@ -7,18 +8,20 @@
 #include "HealthComponent.h"
 #include "IdManager.h"
 #include "Map.h"
-#include "MovementComponent.h"
 #include "MovementSystem.h"
 #include "PositionComponent.h"
 #include "RNG.h"
-#include "RenderID.h"
+#include "RenderId.h"
 #include "Tiles.h"
-#include "VisibilityID.h"
+#include "TransformComponent.h"
+#include "VisibilityId.h"
 #include "raylibEx.h"
 #include <cstddef>
 #include <vector>
 
-Vector2I Enemies::getRandomPosition(Tiles const& tiles)
+Vector2I getRandomPosition(
+    Enemies const& enemies,
+    Tiles const& tiles)
 {
     RectangleExI const& mapSize{tiles.mapSize()};
 
@@ -41,71 +44,80 @@ Vector2I Enemies::getRandomPosition(Tiles const& tiles)
         //* - not occupied by other enemy
         if (
             tiles.positions.contains(randomPosition)
-            && !(tiles.visibilityIDs.at(randomPosition) == VisibilityID::VISIBILE)
-            && !tiles.isSolid(randomPosition)
-            && !this->ids.contains(randomPosition))
+            && !(tiles.visibilityIds.at(randomPosition) == VisibilityId::VISIBILE)
+            && !tiles.isSolids.contains(randomPosition)
+            && !enemies.ids.contains(randomPosition))
         {
             return randomPosition;
         }
     }
 }
 
-void Enemies::insert(
+void insertEnemy(
+    Enemies* enemies,
     size_t id,
-    RenderID renderID,
-    MovementComponent const& movement,
+    RenderId renderId,
+    TransformComponent const& movement,
     EnergyComponent const& energy,
     HealthComponent const& health,
     DamageComponent const& damage,
     int scanRange,
     Vector2I const& tilePosition)
 {
-    ids.insert(tilePosition, id);
-    positions.insert(id, PositionComponent{tilePosition});
-    renderIDs.insert(id, renderID);
-    movements.insert(id, movement);
-    energies.insert(id, energy);
-    healths.insert(id, health);
-    damages.insert(id, damage);
-    ais.insert(id, AIComponent{scanRange});
+    enemies->ids.insert(tilePosition, id);
+    enemies->positions.insert(id, PositionComponent{tilePosition});
+    enemies->renderIds.insert(id, renderId);
+    enemies->transforms.insert(id, movement);
+    enemies->energies.insert(id, energy);
+    enemies->healths.insert(id, health);
+    enemies->damages.insert(id, damage);
+    enemies->ais.insert(id, AIComponent{scanRange});
 }
 
-void Enemies::remove(size_t id)
+void removeEnemy(
+    Enemies* enemies,
+    size_t id)
 {
-    ids.erase(positions.at(id).tilePosition());
-    positions.erase(id);
-    renderIDs.erase(id);
-    movements.erase(id);
-    energies.erase(id);
-    healths.erase(id);
-    damages.erase(id);
-    ais.erase(id);
+    enemies->ids.erase(enemies->positions.at(id).tilePosition());
+    enemies->positions.erase(id);
+    enemies->renderIds.erase(id);
+    enemies->transforms.erase(id);
+    enemies->energies.erase(id);
+    enemies->healths.erase(id);
+    enemies->damages.erase(id);
+    enemies->ais.erase(id);
 }
 
-void Enemies::create(
+void createEnemy(
+    Enemies* enemies,
     Map const& map,
-    RenderID enemyID,
+    RenderId enemyId,
     bool randomPosition,
     Vector2I tilePosition)
 {
     //* Allow creating enemy at specified position
     if (randomPosition)
     {
-        tilePosition = getRandomPosition(map.tiles);
+        tilePosition = getRandomPosition(
+            *enemies,
+            map.tiles);
     }
 
-    size_t newID{idManager_.requestId()};
+    size_t newId{Enemies::idManager_.requestId()};
 
-    switch (enemyID)
+    switch (enemyId)
     {
         default:
-        case RenderID::GOBLIN:
+        case RenderId::GOBLIN:
         {
-            insert(
-                newID,
-                RenderID::GOBLIN,
-                MovementComponent{20 * EnemyData::goblinAgilityBase},
-                EnergyComponent{EnemyData::goblinAgilityBase},
+            insertEnemy(
+                enemies,
+                newId,
+                RenderId::GOBLIN,
+                TransformComponent{},
+                EnergyComponent{
+                    EnemyData::goblinEnergyMax,
+                    EnemyData::goblinEnergyRegenBase},
                 HealthComponent{EnemyData::goblinHealthBase},
                 DamageComponent{EnemyData::goblinDamageBase},
                 EnemyData::goblinScanRange,
@@ -116,25 +128,27 @@ void Enemies::create(
     }
 }
 
-void Enemies::init(
+void initEnemies(
+    Enemies* enemies,
     int mapLevel,
     Map const& map)
 {
-    while (static_cast<int>(renderIDs.size()) < ((mapLevel + 1) * 5))
+    while (static_cast<int>(enemies->renderIds.size()) < ((mapLevel + 1) * 5))
     {
-        create(
+        createEnemy(
+            enemies,
             map,
-            RenderID::GOBLIN);
+            RenderId::GOBLIN);
     }
 }
 
-bool Enemies::regenerate()
+bool regenerateAll(Enemies* enemies)
 {
     bool isEnemyReady{false};
 
-    for (EnergyComponent& energy : energies)
+    for (EnergyComponent& energy : enemies->energies)
     {
-        if (energy.regenerate())
+        if (!energy.regenerate())
         {
             isEnemyReady = true;
         }
@@ -143,39 +157,41 @@ bool Enemies::regenerate()
     return isEnemyReady;
 }
 
-void Enemies::update(
+void updateEnemies(
+    Enemies* enemies,
     Map const& map,
     PositionComponent const& heroPosition)
 {
     size_t i{0};
 
-    while (i < ids.values().size())
+    while (i < enemies->ids.values().size())
     {
         //* Kill enemy at 0 health
-        if (healths.values().at(i).currentHealth() <= 0)
+        if (enemies->healths.values().at(i).currentHealth() <= 0)
         {
-            remove(ids.values().at(i));
+            removeEnemy(enemies, enemies->ids.values().at(i));
 
             //* Spawn new enemy
-            create(map, RenderID::GOBLIN);
+            createEnemy(enemies, map, RenderId::GOBLIN);
 
             continue;
         }
 
-        PositionComponent& position{positions.values().at(i)};
+        PositionComponent& position{enemies->positions.values().at(i)};
 
         Vector2I oldPosition{position.tilePosition()};
 
+        //* Update movement
         //* Update ids_ key if tilePosition changes
         if (
             MovementSystem::update(
-                movements.values().at(i),
+                enemies->transforms.values().at(i),
                 position,
-                energies.values().at(i),
+                enemies->energies.values().at(i),
                 map,
                 heroPosition))
         {
-            ids.changeKey(
+            enemies->ids.changeKey(
                 oldPosition,
                 position.tilePosition());
         }

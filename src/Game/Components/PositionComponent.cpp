@@ -3,31 +3,21 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-Vector2 const& PositionComponent::worldPixel() const
-{
-    return position_;
-}
-
 Vector2I PositionComponent::tilePosition() const
 {
-    return Convert::worldToTile(position_);
-}
-
-void PositionComponent::changeTo(Vector2 const& worldPixel)
-{
-    position_ = worldPixel;
+    return Convert::worldToTile(worldPixel);
 }
 
 void PositionComponent::changeTo(Vector2I const& tilePosition)
 {
-    position_ = Convert::tileToWorld(tilePosition);
+    worldPixel = Convert::tileToWorld(tilePosition);
 }
 
 bool PositionComponent::move(Vector2 const& offset)
 {
     Vector2I oldPosition{tilePosition()};
 
-    position_ += offset;
+    worldPixel += offset;
 
     if (!Vector2Equals(oldPosition, tilePosition()))
     {

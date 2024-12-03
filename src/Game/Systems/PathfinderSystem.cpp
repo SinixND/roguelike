@@ -2,12 +2,12 @@
 
 //* #define DEBUG_PATHFINDER
 
+#include "Convert.h"
 #include "GameCamera.h"
 #include "Map.h"
 #include "RNG.h"
 #include "Tiles.h"
-#include "Convert.h"
-#include "VisibilityID.h"
+#include "VisibilityId.h"
 #include "raylibEx.h"
 #include <cstdlib>
 #include <forward_list>
@@ -193,9 +193,9 @@ bool checkRatingList(
             //* - Not accessible
             //* - Steps needed exceed maxRange
             if (
-                !map.tiles.visibilityIDs.contains(newTilePosition)
-                || (map.tiles.visibilityIDs.at(newTilePosition) == VisibilityID::INVISIBLE)
-                || map.tiles.isSolid(newTilePosition)
+                !map.tiles.visibilityIds.contains(newTilePosition)
+                || (map.tiles.visibilityIds.at(newTilePosition) == VisibilityId::INVISIBLE)
+                || map.tiles.isSolids.contains(newTilePosition)
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded > maxRange)))
             {
                 //* Invalid! Add to ignore set so it doesn't get checked again
@@ -275,10 +275,10 @@ std::vector<Vector2I> PathfinderSystem::findPath(
     //* - Not accessible
     //* - Equal to start
     if (
-        !map.tiles.visibilityIDs.contains(target)
+        !map.tiles.visibilityIds.contains(target)
         || (skipInvisibleTiles
-            && (map.tiles.visibilityIDs.at(target) == VisibilityID::INVISIBLE))
-        || map.tiles.isSolid(target)
+            && (map.tiles.visibilityIds.at(target) == VisibilityId::INVISIBLE))
+        || map.tiles.isSolids.contains(target)
         || (start == target))
     {
         return path;

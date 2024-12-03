@@ -3,14 +3,13 @@
 
 #include <cassert>
 #include <cstddef>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 
 namespace snx
 {
-    template <typename Key, typename Type>
-    class DenseMap
+    template <typename Type>
+    class SparseSet
     {
     public:
         //* ITERATORS
@@ -35,7 +34,7 @@ namespace snx
         }
 
         //* CAPACITY
-        //* Return size of DenseMap
+        //* Return size of SparseSet
         size_t size() const
         {
             return values_.size();
@@ -43,52 +42,56 @@ namespace snx
 
         //* MODIFIERS
         Type const& insert(
-            Key const& key,
+            size_t key,
             Type const& value = Type{})
         {
             //* Get new list index for value before modifying values_
-            size_t valueIndex = size();
+            size_t valueIndex = values_.size();
 
             //* Add new value to list
             values_.push_back(value);
 
+            //* Check size
+            fitSize(key);
+
             //* Add key to valueIndex mapping
-            keyToIndex_.insert(std::make_pair(key, valueIndex));
+            keyToIndex_[key] = valueIndex;
 
             //* Add valueIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.push_back(key);
-
-            assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
 
             return at(key);
         }
 
         template <typename... Args>
         Type const& emplace(
-            Key const& key,
+            size_t key,
             Args&&... args)
         {
             //* Get new list index for value before modifying values_
-            size_t valueIndex = size();
+            size_t valueIndex = values_.size();
 
             //* Create and Add new value to list
             values_.push_back(Type{std::forward<Args>(args)...});
 
+            //* Check size
+            fitSize(key);
+
             //* Add key to valueIndex mapping
-            keyToIndex_.insert(std::make_pair(key, valueIndex));
+            keyToIndex_[key] = valueIndex;
 
             //* Add valueIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.push_back(key);
-
-            assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
 
             return at(key);
         }
 
         //* Moves last value to gap
-        void erase(Key const& key)
+        void erase(size_t key)
         {
-            if (!keyToIndex_.contains(key))
+            if (
+                key > (keyToIndex_.capacity() - 1)
+                && !contains(key))
             {
                 return;
             }
@@ -105,7 +108,7 @@ namespace snx
                 keptValueIndex = size - 1;
 
                 //* Get key of replacing/kept value
-                Key keptkey = indexToKey_[keptValueIndex];
+                size_t keptkey = indexToKey_[keptValueIndex];
 
                 //* Replace (removed) value with kept value (by index) so last entry (duplicate) can be popped (becomes new removed)
                 values_[removedValueIndex] = values_[keptValueIndex];
@@ -121,29 +124,13 @@ namespace snx
             }
 
             //* Remove removed key from mapping
-            keyToIndex_.erase(key);
+            keyToIndex_[key] = 0;
 
             //* Remove (duplicate) last value
             values_.pop_back();
 
             //* Remove removed value from mapping
             indexToKey_.pop_back();
-        }
-
-        void changeKey(
-            Key const& from,
-            Key const& to)
-        {
-            assert(!contains(to) && "Key already exists, possible loss of data!");
-
-            //* Add new key with old index
-            keyToIndex_[to] = keyToIndex_.at(from);
-
-            //* Remove old key
-            keyToIndex_.erase(from);
-
-            //* Remap index to new key
-            indexToKey_[keyToIndex_.at(to)] = to;
         }
 
         //* Empty all containers
@@ -156,19 +143,19 @@ namespace snx
 
         //* LOOKUP
         //* Access
-        Type const& at(Key const& key) const
+        Type const& at(size_t key) const
         {
             return values_.at(keyToIndex_.at(key));
         }
 
         //* Allow non-const call
-        Type& at(Key const& key)
+        Type& at(size_t key)
         {
             return const_cast<Type&>(std::as_const(*this).at(key));
         }
 
         //* Access or insert
-        Type& operator[](Key const& key)
+        Type& operator[](size_t key)
         {
             if (!contains(key))
             {
@@ -178,13 +165,13 @@ namespace snx
             return at(key);
         }
 
-        bool contains(Key const& key) const
+        bool contains(size_t key) const
         {
-            return keyToIndex_.contains(key);
+            return keyToIndex_[key];
         }
 
         //* Get key for value index
-        Key const& key(size_t index) const
+        size_t key(size_t index) const
         {
             return indexToKey_.at(index);
         }
@@ -203,13 +190,24 @@ namespace snx
 
     private:
         //* Vector index is used as value key
-        std::vector<Type> values_{};
+        std::vector<Type> values_{Type{}};
 
         //* Key is used to identify value
-        std::unordered_map<Key, size_t> keyToIndex_{};
+        std::vector<size_t> keyToIndex_{};
 
         //* Store a index (value) to key mapping (internal use for erease() only)
-        std::vector<Key> indexToKey_{};
+        std::vector<size_t> indexToKey_{0};
+
+    private:
+        void fitSize(size_t key)
+        {
+            if (key < keyToIndex_.capacity())
+            {
+                return;
+            }
+
+            keyToIndex_.resize(key + 1);
+        }
     };
 }
 

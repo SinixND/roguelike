@@ -4,7 +4,7 @@
 #include "raylibEx.h"
 #include <vector>
 
-class Map;
+struct Map;
 class GameCamera;
 
 class RatedTile

@@ -7,11 +7,11 @@
 
 #include "Chunk.h"
 #include "ChunkData.h"
-#include "RenderID.h"
+#include "Convert.h"
+#include "RenderId.h"
 #include "TextureData.h"
 #include "Textures.h"
 #include "TileData.h"
-#include "Convert.h"
 #include "VisibilitySystem.h"
 #include <cstddef>
 #include <raylib.h>
@@ -31,19 +31,19 @@ void RenderSystem::loadRenderData(RenderData& renderData)
             renderData.theme));
 
     //* Register textures
-    renderData.textures.registerTexture(RenderID::NONE, {0, 0});
-    renderData.textures.registerTexture(RenderID::CURSOR, {35, 0});
-    renderData.textures.registerTexture(RenderID::HERO, {70, 0});
-    renderData.textures.registerTexture(RenderID::WALL, {105, 0});
-    renderData.textures.registerTexture(RenderID::FLOOR, {0, 35});
-    renderData.textures.registerTexture(RenderID::DESCEND, {35, 35});
-    renderData.textures.registerTexture(RenderID::ASCEND, {70, 35});
-    renderData.textures.registerTexture(RenderID::GOBLIN, {105, 35});
+    renderData.textures.registerTexture(RenderId::NONE, {0, 0});
+    renderData.textures.registerTexture(RenderId::CURSOR, {35, 0});
+    renderData.textures.registerTexture(RenderId::HERO, {70, 0});
+    renderData.textures.registerTexture(RenderId::WALL, {105, 0});
+    renderData.textures.registerTexture(RenderId::FLOOR, {0, 35});
+    renderData.textures.registerTexture(RenderId::DESCEND, {35, 35});
+    renderData.textures.registerTexture(RenderId::ASCEND, {70, 35});
+    renderData.textures.registerTexture(RenderId::GOBLIN, {105, 35});
 }
 
 void RenderSystem::render(
     Textures const& textures,
-    RenderID renderID,
+    RenderId renderId,
     Vector2 const& worldPixel,
     Color const& tint)
 {
@@ -51,8 +51,8 @@ void RenderSystem::render(
     DrawTexturePro(
         textures.textureAtlas(),
         Rectangle{
-            textures.getTexturePosition(renderID).x + 0.5f,
-            textures.getTexturePosition(renderID).y + 0.5f,
+            textures.getTexturePosition(renderId).x + 0.5f,
+            textures.getTexturePosition(renderId).y + 0.5f,
             TextureData::textureSize - (2 * 0.5f),
             TextureData::textureSize - (2 * 0.5f)},
         Rectangle{
@@ -70,7 +70,7 @@ void RenderSystem::render(
 
 void RenderSystem::renderToChunk(
     Textures const& textures,
-    RenderID renderID,
+    RenderId renderId,
     Vector2 const& worldPixel,
     Chunk& chunk,
     Color const& tint)
@@ -79,13 +79,13 @@ void RenderSystem::renderToChunk(
     DrawTexturePro(
         textures.textureAtlas(),
         Rectangle{
-            textures.getTexturePosition(renderID).x + 0.5f,
-            textures.getTexturePosition(renderID).y + 0.5f,
+            textures.getTexturePosition(renderId).x + 0.5f,
+            textures.getTexturePosition(renderId).y + 0.5f,
             TextureData::textureSize - (2 * 0.5f),
             TextureData::textureSize - (2 * 0.5f)},
         Rectangle{
-            worldPixel.x - chunk.position.worldPixel().x,
-            worldPixel.y - chunk.position.worldPixel().y,
+            worldPixel.x - chunk.position.worldPixel.x,
+            worldPixel.y - chunk.position.worldPixel.y,
             TileData::tileSize,
             TileData::tileSize},
         //* TileData::TILE_CENTER,
@@ -104,8 +104,8 @@ void RenderSystem::renderChunk(Chunk const& chunk)
             static_cast<float>(chunk.renderTexture.texture.width),
             static_cast<float>(-chunk.renderTexture.texture.height)},
         Rectangle{
-            chunk.position.worldPixel().x,
-            chunk.position.worldPixel().y,
+            chunk.position.worldPixel.x,
+            chunk.position.worldPixel.y,
             ChunkData::chunkSize_f,
             ChunkData::chunkSize_f},
         Vector2{0, 0},
@@ -115,8 +115,8 @@ void RenderSystem::renderChunk(Chunk const& chunk)
 #if defined(DEBUG) && defined(DEBUG_CHUNKS)
     DrawRectangleLinesEx(
         Rectangle{
-            chunk.position.worldPixel().x,
-            chunk.position.worldPixel().y,
+            chunk.position.worldPixel.x,
+            chunk.position.worldPixel.y,
             ChunkData::CHUNK_SIZE_F,
             ChunkData::CHUNK_SIZE_F},
         3.0f,

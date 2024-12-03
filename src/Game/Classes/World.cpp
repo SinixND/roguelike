@@ -3,25 +3,30 @@
 
 void World::increaseMapLevel()
 {
-    if (currentMapLevel == maxMapLevel_)
+    if (currentMapLevel_ == maxMapLevel_)
     {
         ++maxMapLevel_;
         addNewMap();
     }
 
-    ++currentMapLevel;
-    setCurrentMap(currentMapLevel);
+    ++currentMapLevel_;
+    setCurrentMap(currentMapLevel_);
 }
 
 void World::decreaseMapLevel()
 {
-    if (currentMapLevel == 0)
+    if (currentMapLevel_ == 0)
     {
         return;
     }
 
-    --currentMapLevel;
-    setCurrentMap(currentMapLevel);
+    --currentMapLevel_;
+    setCurrentMap(currentMapLevel_);
+}
+
+int World::currentMapLevel() const
+{
+    return currentMapLevel_;
 }
 
 void World::addNewMap()
