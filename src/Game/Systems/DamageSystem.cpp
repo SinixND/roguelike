@@ -6,5 +6,5 @@ void DamageSystem::attack(
     DamageComponent const& attackerDamage,
     HealthComponent& defenderHealth)
 {
-    defenderHealth.damage(attackerDamage.damage());
+    defenderHealth.damage(damageRNG(attackerDamage));
 }

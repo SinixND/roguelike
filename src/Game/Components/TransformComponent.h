@@ -5,76 +5,60 @@
 #include <raylib.h>
 #include <vector>
 
-struct TransformComponent
+//* Movementspeed in tiles per second
+constexpr int MOVEMENT_SPEED{20};
+
+class TransformComponent
 {
-    std::vector<Vector2I> path_{};
     Vector2I direction_{};
     Vector2 velocity_{};
 
-    //* Speed unit is tiles per second
-    float speed_{};
+    int speed_{MOVEMENT_SPEED};
     float cumulativeDistanceMoved_{};
 
     bool isTriggered_{false};
     bool isInProgress_{false};
 
 public:
-    TransformComponent() = default;
+    std::vector<Vector2I> path_{};
 
-    explicit TransformComponent(float speed)
-        : speed_(speed)
-    {
-    }
+public:
+    //* Unsets isTriggered_ and clears path_
+    void clearPath();
+
+    //* Sets direction, currentVelocity and isTriggered_
+    void trigger(Vector2I const& from, Vector2I const& to);
+    void trigger(Vector2I const& direction);
+    void trigger();
+
+    //* Resets trigger, consumes energy and sets InProgress
+    void activateTrigger();
+
+    void stopMovement();
+
+    //* Calculate distance for this frame
+    Vector2 distance() const;
+    float length() const;
+
+public:
+    Vector2I const& direction() const;
+
+    float cumulativeDistanceMoved() const;
+    void updateCumulativeDistanceMoved();
+    void resetCumulativeDistanceMoved();
+
+    bool isTriggered() const;
+    bool isInProgress() const;
+
+    //* Triggers from and adjusts path
+    void triggerFromPath();
+
+private:
+    void setInProgress();
 };
 
-void triggerByDirection(
-    Vector2I* direction_,
-    Vector2* velocity_,
-    bool* isTriggered_,
-    float const& speed_,
-    Vector2I const& direction);
-
-void triggerAuto(
-    Vector2I* direction_,
-    Vector2* velocity_,
-    bool* isTriggered_,
-    float const& speed_,
-    std::vector<Vector2I>* path_,
-    bool isInProgress_);
-
-//* Sets direction, velocity and isTriggered
-void triggerFromTo(
-    Vector2I* direction_,
-    Vector2* velocity_,
-    bool* isTriggered_,
-    float const& speed_,
-    Vector2I const& from,
-    Vector2I const& to);
-
-void triggerByPath(
-    Vector2I* direction_,
-    Vector2* velocity_,
-    bool* isTriggered_,
-    float const& speed_,
-    std::vector<Vector2I>* path_,
+void trigger(
+    TransformComponent* transformComponent,
     std::vector<Vector2I> const& path);
-
-//* Resets trigger, consumes energy and sets InProgress
-void activateTrigger(
-    bool* isTriggered_,
-    bool* isInProgress_);
-
-void stopMovement(
-    Vector2* velocity_,
-    bool* isInProgress_);
-
-//* Unsets isTriggered_ and clears path_
-void clearPath(
-    bool* isTriggered_,
-    std::vector<Vector2I>* path_);
-
-void updateCumulativeDistanceMoved(
-    float* cumulativeDistanceMoved_,
-    Vector2* velocity_);
 
 #endif

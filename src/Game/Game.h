@@ -2,7 +2,7 @@
 #define IG20241011025951
 
 #include "Hero.h"
-#include "UserInputComponent.h"
+#include "UserInput.h"
 #include "World.h"
 
 class Cursor;
@@ -10,21 +10,23 @@ class GameCamera;
 
 class Game
 {
-    UserInputComponent userInput_{};
+public:
+    World world{};
 
-    bool actionsInProgress_{false};
+    Hero hero{};
+
+    UserInput userInput_{};
+
+    bool actionInProgress_{false};
 
     //* Track game turns
     int turn_{0};
 
 public:
-    World world{};
-    Hero hero{};
-
-public:
     void init();
 
     void processInput(Cursor& cursor);
+
     void updateState(
         GameCamera const& gameCamera,
         Cursor const& cursor);

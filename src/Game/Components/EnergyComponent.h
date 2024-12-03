@@ -3,29 +3,33 @@
 
 class EnergyComponent
 {
-    int maxEnergy_{10};
-    int currentEnergy_{maxEnergy_};
+    int currentEnergy_{};
     bool isReady_{true};
 
 public:
+    int maxEnergy_{10};
     int regenRate{1};
 
 public:
     EnergyComponent() = default;
 
-    explicit EnergyComponent(int regenRate)
-        : regenRate(regenRate)
+    explicit EnergyComponent(
+        int maxEnergy,
+        int regenRate)
+        : currentEnergy_(maxEnergy)
+        , maxEnergy_(maxEnergy)
+        , regenRate(regenRate)
     {
     }
 
-    //* Consumes all energy if no parameter provided and returns if there is energy left
-    bool consume(int energy = -1);
+    //* Consumes all energy remaining if no parameter provided; returns if consumption was successful
+    bool consume();
+    bool consume(int energy);
 
-    //* Returns true if energy full
+    //* Returns true if regeneration was successful
     bool regenerate();
 
-public:
-    int isReady() const;
+    bool isReady() const;
 };
 
 #endif

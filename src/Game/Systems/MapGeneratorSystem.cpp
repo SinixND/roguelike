@@ -4,7 +4,7 @@
 #include "Map.h"
 #include "Objects.h"
 #include "RNG.h"
-#include "RenderID.h"
+#include "RenderId.h"
 #include "Tiles.h"
 #include "raylibEx.h"
 #include <array>
@@ -14,32 +14,10 @@
 
 namespace MapGeneratorSystem
 {
-    //* Access or insert
-    void addTile(
-        Tiles& tiles,
-        Vector2I const& tilePosition,
-        RenderID renderID,
-        bool isSolid = false,
-        bool isOpaque = false)
-    {
-        tiles.set(tilePosition, renderID, isSolid, isOpaque);
-    }
-
-    void addObject(
-        Objects& objects,
-        std::string name,
-        std::string action,
-        Vector2I const& tilePosition,
-        RenderID renderID,
-        EventId event = EventId::NONE)
-    {
-        objects.set(tilePosition, renderID, name, action, event);
-    }
-
     void addTiles(
         Tiles& tiles,
         RectangleExI const& rectangle,
-        RenderID renderID,
+        RenderId renderId,
         bool isSolid = false,
         bool isOpaque = false)
     {
@@ -47,12 +25,11 @@ namespace MapGeneratorSystem
         {
             for (int y{0}; y < rectangle.height(); ++y)
             {
-                addTile(
-                    tiles,
+                tiles.create(
                     Vector2I{
                         rectangle.left() + x,
                         rectangle.top() + y},
-                    renderID,
+                    renderId,
                     isSolid,
                     isOpaque);
             }
@@ -75,7 +52,7 @@ namespace MapGeneratorSystem
                 room.top(),
                 room.width() - 1,
                 1},
-            RenderID::WALL,
+            RenderId::WALL,
             true,
             true);
 
@@ -87,7 +64,7 @@ namespace MapGeneratorSystem
                 room.top(),
                 1,
                 room.height() - 1},
-            RenderID::WALL,
+            RenderId::WALL,
             true,
             true);
 
@@ -99,7 +76,7 @@ namespace MapGeneratorSystem
                 room.bottom(),
                 room.width() - 1,
                 1},
-            RenderID::WALL,
+            RenderId::WALL,
             true,
             true);
 
@@ -111,7 +88,7 @@ namespace MapGeneratorSystem
                 room.top() + 1,
                 1,
                 room.height() - 1},
-            RenderID::WALL,
+            RenderId::WALL,
             true,
             true);
 
@@ -123,7 +100,7 @@ namespace MapGeneratorSystem
                 room.top() + 1,
                 room.width() - 2,
                 room.height() - 2},
-            RenderID::FLOOR,
+            RenderId::FLOOR,
             false,
             false);
     }
@@ -178,32 +155,35 @@ namespace MapGeneratorSystem
                 RectangleExI{
                     oldRoomPosition,
                     roomPosition},
-                RenderID::FLOOR);
+                RenderId::FLOOR);
         }
 
         //* Add previous level trigger
-        addObject(
-            map.objects,
-            "Stairs",
-            "Ascend",
+        createObject(
+            &map.objects,
             Vector2I{
                 0,
                 0},
-            RenderID::ASCEND,
+            RenderId::ASCEND,
+            "Stairs",
+            "Ascend",
             EventId::PREVIOUS_LEVEL);
 
         // Add next level trigger
-        // addObject(
+        // setObject(
         //     map.objects_,
         //     "Descend",
         //     Vector2I{
         //         0,
         //         -5},
-        //     RenderID::descend,
+        //     RenderId::descend,
         //     EventId::nextLevel);
 
         //* Add enemies
-        map.enemies.init(level, map);
+        initEnemies(
+            &map.enemies,
+            level,
+            map);
 
         return map;
     }
@@ -255,7 +235,7 @@ namespace MapGeneratorSystem
                 0,
                 1,
                 8},
-            RenderID::WALL,
+            RenderId::WALL,
             true,
             true);
 
@@ -266,7 +246,7 @@ namespace MapGeneratorSystem
                 -5,
                 1,
                 5},
-            RenderID::FLOOR);
+            RenderId::FLOOR);
 
         addTiles(
             testRoom.tiles,
@@ -275,7 +255,7 @@ namespace MapGeneratorSystem
                 -4,
                 3,
                 1},
-            RenderID::FLOOR);
+            RenderId::FLOOR);
 
         addTiles(
             testRoom.tiles,
@@ -284,66 +264,62 @@ namespace MapGeneratorSystem
                 -2,
                 3,
                 1},
-            RenderID::FLOOR);
+            RenderId::FLOOR);
 
         //* Tiles
-        addTile(
-            testRoom.tiles,
+        testRoom.tiles.create(
             Vector2I{
                 0,
                 -1},
-            RenderID::WALL,
+            RenderId::WALL,
             true,
             true);
 
-        addTile(
-            testRoom.tiles,
+        testRoom.tiles.create(
             Vector2I{
                 5,
                 6},
-            RenderID::WALL,
+            RenderId::WALL,
             true,
             true);
 
-        addTile(
-            testRoom.tiles,
+        testRoom.tiles.create(
             Vector2I{
                 6,
                 5},
-            RenderID::WALL,
+            RenderId::WALL,
             true,
             true);
 
-        addTile(
-            testRoom.tiles,
+        testRoom.tiles.create(
             Vector2I{
                 5,
                 5},
-            RenderID::WALL,
+            RenderId::WALL,
             true,
             true);
 
-        addTile(
-            testRoom.tiles,
+        testRoom.tiles.create(
             Vector2I{
                 -6,
                 5},
-            RenderID::FLOOR);
+            RenderId::FLOOR);
 
         //* Next level trigger
-        addObject(
-            testRoom.objects,
-            "Stairs",
-            "Descend",
+        createObject(
+            &testRoom.objects,
             Vector2I{
                 0,
                 -5},
-            RenderID::DESCEND,
+            RenderId::DESCEND,
+            "Stairs",
+            "Descend",
             EventId::NEXT_LEVEL);
 
-        testRoom.enemies.create(
+        createEnemy(
+            &testRoom.enemies,
             testRoom,
-            RenderID::GOBLIN,
+            RenderId::GOBLIN,
             false,
             Vector2I{3, 0});
 
@@ -364,14 +340,14 @@ namespace MapGeneratorSystem
                 15});
 
         //* Add next level trigger
-        addObject(
-            startRoom.objects,
-            "Stairs",
-            "Descend",
+        createObject(
+            &startRoom.objects,
             Vector2I{
                 0,
                 -5},
-            RenderID::DESCEND,
+            RenderId::DESCEND,
+            "Stairs",
+            "Descend",
             EventId::NEXT_LEVEL);
 
         return startRoom;

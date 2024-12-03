@@ -11,7 +11,7 @@
 #include "Objects.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
-#include "RenderID.h"
+#include "RenderId.h"
 #include "UserInputSystem.h"
 #include "World.h"
 #include "raylibEx.h"
@@ -47,14 +47,14 @@ void Game::setupGameEvents()
         EventId::ACTION_IN_PROGRESS,
         [&]()
         {
-            actionsInProgress_ = true;
+            actionInProgress_ = true;
         });
 
     snx::PublisherStatic::addSubscriber(
         EventId::ACTION_FINISHED,
         [&]()
         {
-            actionsInProgress_ = false;
+            actionInProgress_ = false;
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -83,12 +83,12 @@ void Game::setupGameEvents()
 
             //* Place Hero on the map exit
             auto const& objects{world.currentMap->objects};
-            auto const& renderIDs{objects.renderIDs.values()};
+            auto const& renderIds{objects.renderIds.values()};
             auto const& positions{objects.positions.values()};
 
-            for (size_t i{0}; i < renderIDs.size(); ++i)
+            for (size_t i{0}; i < renderIds.size(); ++i)
             {
-                if (renderIDs.at(i) == RenderID::DESCEND)
+                if (renderIds.at(i) == RenderId::DESCEND)
                 {
                     hero.position.changeTo(
                         positions.at(i).tilePosition());
@@ -117,8 +117,9 @@ void Game::updateState(
     //* Cycle enemies once to check for action
     bool allEnemiesChecked{false};
 
+    //* Trigger AI action
     if (
-        !actionsInProgress_
+        !actionInProgress_
         && !hero.energy.isReady())
     {
         Map& map{*world.currentMap};
@@ -133,7 +134,7 @@ void Game::updateState(
 
     //* Regenerate energy if no action in progress
     if (
-        !actionsInProgress_
+        !actionInProgress_
         && !hero.energy.isReady()
         && allEnemiesChecked)
     {
@@ -143,7 +144,7 @@ void Game::updateState(
         while (!isUnitReady)
         {
             isUnitReady = hero.energy.regenerate();
-            isUnitReady = world.currentMap->enemies.regenerate() || isUnitReady;
+            isUnitReady = regenerateAll(&world.currentMap->enemies) || isUnitReady;
         }
 
         ++turn_;
@@ -160,14 +161,17 @@ void Game::updateState(
 
     //* Update hero movement
     MovementSystem::update(
-        hero.movement,
+        hero.transform,
         hero.position,
         hero.energy,
         *world.currentMap,
         hero.position);
 
     //* Update enemies
-    world.currentMap->enemies.update(*world.currentMap, hero.position);
+    updateEnemies(
+        &world.currentMap->enemies,
+        *world.currentMap,
+        hero.position);
 }
 
 int Game::turn() const

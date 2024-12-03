@@ -15,14 +15,15 @@ class World
 #endif
 
     int maxMapLevel_{};
+    int currentMapLevel_{};
 
 public:
-    int currentMapLevel{};
     Map* currentMap{&maps_.back()};
 
 public:
     void increaseMapLevel();
     void decreaseMapLevel();
+    int currentMapLevel() const;
 
 private:
     void addNewMap();

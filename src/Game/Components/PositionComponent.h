@@ -7,25 +7,24 @@
 
 class PositionComponent
 {
-    Vector2 position_{};
+public:
+    Vector2 worldPixel{};
 
 public:
     PositionComponent() = default;
 
-    explicit PositionComponent(Vector2 const& position)
-        : position_(position)
+    explicit PositionComponent(Vector2 const& pixel)
+        : worldPixel(pixel)
     {
     }
 
     explicit PositionComponent(Vector2I const& tilePosition)
-        : position_(Convert::tileToWorld(tilePosition))
+        : worldPixel(Convert::tileToWorld(tilePosition))
     {
     }
 
-    Vector2 const& worldPixel() const;
     Vector2I tilePosition() const;
 
-    void changeTo(Vector2 const& worldPixel);
     void changeTo(Vector2I const& tilePosition);
 
     //* Returns if tilePosition changed

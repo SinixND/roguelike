@@ -22,9 +22,9 @@ bool AISystem::checkForAction(
 
     while (enemiesChecked < idSize)
     {
-        size_t enemyID{enemies.ids.values()[enemiesChecked]};
+        size_t enemyId{enemies.ids.values()[enemiesChecked]};
 
-        if (!enemies.energies.at(enemyID).isReady())
+        if (!enemies.energies.at(enemyId).isReady())
         {
             //* Cant perform action
             ++enemiesChecked;
@@ -32,11 +32,11 @@ bool AISystem::checkForAction(
         }
 
         AISystem::chooseAction(
-            enemies.ais.at(enemyID),
-            enemies.positions.at(enemyID),
-            enemies.movements.at(enemyID),
-            enemies.energies.at(enemyID),
-            enemies.damages.at(enemyID),
+            enemies.ais.at(enemyId),
+            enemies.positions.at(enemyId),
+            enemies.transforms.at(enemyId),
+            enemies.energies.at(enemyId),
+            enemies.damages.at(enemyId),
             map,
             heroPosition,
             heroHealth,
@@ -53,7 +53,7 @@ bool AISystem::checkForAction(
 void AISystem::chooseAction(
     AIComponent const& ai,
     PositionComponent& position,
-    MovementComponent& movement,
+    TransformComponent& transform,
     EnergyComponent& energy,
     DamageComponent& damage,
     Map const& map,
@@ -67,7 +67,7 @@ void AISystem::chooseAction(
         heroPosition,
         gameCamera,
         false,
-        ai.scanRange())};
+        ai.scanRange)};
 
     size_t pathSize{path.size()};
 
@@ -92,12 +92,12 @@ void AISystem::chooseAction(
 
     else if (pathSize > 2)
     {
-        movement.trigger(
+        transform.trigger(
             position.tilePosition(),
             path.rbegin()[1]);
     }
 
-    //* MovementComponent is not viable
+    //* TransformComponent is not viable
     else
     {
         //* Wait

@@ -3,27 +3,21 @@
 
 class HealthComponent
 {
-    int maxHealth_{};
     int currentHealth_{};
-    int regenRate_{};
+
+public:
+    int maxHealth{};
+    int regenRate{};
 
 public:
     HealthComponent() = default;
 
     explicit HealthComponent(int maxHealth, int regenRate = 0)
-        : maxHealth_(maxHealth)
-        , currentHealth_(maxHealth)
-        , regenRate_(regenRate)
+        : currentHealth_(maxHealth)
+        , maxHealth(maxHealth)
+        , regenRate(regenRate)
     {
     }
-
-    int maxHealth() const;
-
-    void increaseMaxHealth(int health);
-
-    void reduceMaxHealth(int health);
-
-    int currentHealth() const;
 
     // Returns true if health is <= 0
     // Reduces health to 0 with no argument
@@ -32,7 +26,9 @@ public:
     // Fully heals with no argument
     void heal(int health = 0);
 
-    void regenerate();
+    int currentHealth() const;
 };
+
+void regenerate(HealthComponent* healthComponent);
 
 #endif

@@ -2,7 +2,7 @@
 #define IG20240531185351
 
 #include "PositionComponent.h"
-#include "RenderID.h"
+#include "RenderId.h"
 
 struct Camera2D;
 typedef struct Camera2D Camera2D;
@@ -12,7 +12,7 @@ class Cursor
 {
 public:
     PositionComponent position{};
-    RenderID renderID{RenderID::CURSOR};
+    RenderId renderId{RenderId::CURSOR};
     bool isActive{false};
 
 public:

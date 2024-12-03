@@ -94,7 +94,7 @@ class Tiles {
 
 Tiles *-- PositionComponent
 
-struct PositionComponent {
+class PositionComponent {
     - Vector2 position_
 }
 
@@ -126,7 +126,7 @@ class Enemies {
 
 Enemies *-- AIComponent
 
-class AIComponent {
+struct AIComponent {
     - int scanRange_
 }
 

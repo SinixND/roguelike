@@ -1,22 +1,22 @@
 #ifndef IG20240531194629
 #define IG20240531194629
 
-class UserInputComponent;
+class UserInput;
 struct Hero;
 class Cursor;
-class Map;
+struct Map;
 class GameCamera;
 
 namespace UserInputSystem
 {
-    void setDefaultInputMappings(UserInputComponent& userInputComponent);
+    void setDefaultInputMappings(UserInput& userInputComponent);
 
     void takeInput(
-        UserInputComponent& userInputComponent,
+        UserInput& userInputComponent,
         bool isCursorActive);
 
     void triggerAction(
-        UserInputComponent& userInputComponent,
+        UserInput& userInputComponent,
         Hero& hero,
         Cursor const& cursor,
         Map& map,

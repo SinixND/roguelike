@@ -140,11 +140,11 @@ void PanelSystem::drawHeroInfoPanelContent(
             "HP : "
             + std::to_string(hero.health.currentHealth())
             + "/"
-            + std::to_string(hero.health.maxHealth()).c_str()));
+            + std::to_string(hero.health.maxHealth).c_str()));
 
     info.append(printInfo(
         "ATK : "
-        + std::to_string(hero.damage.baseDamage())));
+        + std::to_string(hero.damage.baseDamage)));
 
     info.append("|_____________|");
 

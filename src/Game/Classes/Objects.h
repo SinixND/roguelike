@@ -4,27 +4,26 @@
 #include "DenseMap.h"
 #include "EventId.h"
 #include "PositionComponent.h"
-#include "RenderID.h"
+#include "RenderId.h"
 #include "raylibEx.h"
 #include <string>
 
-class Objects
+struct Objects
 {
-public:
     snx::DenseMap<Vector2I, PositionComponent> positions{};
-    snx::DenseMap<Vector2I, RenderID> renderIDs{};
+    snx::DenseMap<Vector2I, RenderId> renderIds{};
     snx::DenseMap<Vector2I, std::string> names{};
     snx::DenseMap<Vector2I, std::string> actions{};
     snx::DenseMap<Vector2I, EventId> events{};
-
-public:
-    //* Access or create
-    void set(
-        Vector2I const& tilePosition,
-        RenderID renderID,
-        std::string const& name,
-        std::string const& action,
-        EventId event);
 };
+
+//* Access or create
+void createObject(
+    Objects* objects,
+    Vector2I const& tilePosition,
+    RenderId renderId,
+    std::string const& name,
+    std::string const& action,
+    EventId event);
 
 #endif

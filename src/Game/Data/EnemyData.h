@@ -5,6 +5,7 @@ namespace EnemyData
 {
     //* Goblin
     int constexpr goblinEnergyMax{10};
+    int constexpr goblinEnergyRegenBase{1};
     int constexpr goblinAgilityBase{1};
     int constexpr goblinScanRange{10};
     int constexpr goblinHealthBase{5};

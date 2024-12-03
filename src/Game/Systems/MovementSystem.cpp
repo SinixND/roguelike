@@ -3,32 +3,32 @@
 #include "EnergyComponent.h"
 #include "EventId.h"
 #include "Map.h"
-#include "MovementComponent.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "TileData.h"
+#include "TransformComponent.h"
 #include "raylibEx.h"
 #include <raymath.h>
 
 bool MovementSystem::update(
-    MovementComponent& movement,
+    TransformComponent& transform,
     PositionComponent& position,
     EnergyComponent& energy,
     Map const& map,
     PositionComponent const& heroPosition)
 {
     //* Avoid check if no movement in progress
-    if (movement.isTriggered())
+    if (transform.isTriggered())
     {
         //* Check collision before starting movement
         if (CollisionSystem::checkCollision(
                 map,
                 Vector2Add(
                     position.tilePosition(),
-                    movement.direction()),
+                    transform.direction()),
                 heroPosition.tilePosition()))
         {
-            movement.clearPath();
+            transform.clearPath();
 
             //* Wait instead
             energy.consume();
@@ -36,51 +36,51 @@ bool MovementSystem::update(
     }
 
     //* Start movement on trigger
-    if (movement.isTriggered())
+    if (transform.isTriggered())
     {
-        movement.activateTrigger();
+        transform.activateTrigger();
         energy.consume();
     }
 
     //* Check if action is in progress
-    if (!movement.isInProgress())
+    if (!transform.isInProgress())
     {
         return false;
     }
 
     bool didTilePositionChange{false};
 
-    movement.updateCumulativeDistanceMoved();
+    transform.updateCumulativeDistanceMoved();
 
     //* Check if movement exceeds tile length this frame
-    if (movement.cumulativeDistanceMoved() < TileData::tileSize)
+    if (transform.cumulativeDistanceMoved() < TileData::tileSize)
     {
         //* Move full distance this frame
-        didTilePositionChange = position.move(movement.distance());
+        didTilePositionChange = position.move(transform.distance());
     }
     else
     {
         //* Move by remaining distance until TILE_SIZE
         didTilePositionChange = position.move(
             Vector2ClampValue(
-                movement.distance(),
+                transform.distance(),
                 0,
-                TileData::tileSize - (movement.cumulativeDistanceMoved() - movement.length())));
+                TileData::tileSize - (transform.cumulativeDistanceMoved() - transform.length())));
 
         //* === Moved one tile ===
         //* Clean precision errors
-        position.changeTo(Vector2Round(position.worldPixel()));
+        position.worldPixel = Vector2Round(position.worldPixel);
 
         //* Reset cumulativeDistanceMoved
-        movement.resetCumulativeDistanceMoved();
+        transform.resetCumulativeDistanceMoved();
 
         snx::PublisherStatic::publish(EventId::ACTION_FINISHED);
 
-        movement.stopMovement();
+        transform.stopMovement();
     }
 
     //* Check if unit moving is the hero
-    if (position.worldPixel() != heroPosition.worldPixel())
+    if (position.worldPixel != heroPosition.worldPixel)
     {
         return didTilePositionChange;
     }
