@@ -52,7 +52,7 @@ namespace snx
             values_.push_back(value);
 
             //* Check size
-            fitSize(key);
+            keyToIndex_.resize(key + 1, 0);
 
             //* Add key to valueIndex mapping
             keyToIndex_[key] = valueIndex;
@@ -75,7 +75,7 @@ namespace snx
             values_.push_back(Type{std::forward<Args>(args)...});
 
             //* Check size
-            fitSize(key);
+            keyToIndex_.resize(key + 1, 0);
 
             //* Add key to valueIndex mapping
             keyToIndex_[key] = valueIndex;
@@ -87,44 +87,42 @@ namespace snx
         }
 
         //* Moves last value to gap
-        void erase(size_t key)
+        void erase(size_t keyToRemove)
         {
             if (
-                key > (keyToIndex_.capacity() - 1)
-                && !contains(key))
+                keyToRemove > (keyToIndex_.size() - 1)
+                // && !contains(key)
+            )
             {
                 return;
             }
 
-            //* Get list index of removed value
-            size_t removedValueIndex{keyToIndex_[key]};
-            size_t keptValueIndex{};
             size_t size{this->size()};
 
-            //* Replace removed value with last value before popping (if more than one value exists) to keep values contiguous
+            //* Replace removed value with last value before popping (if more than one value exists) to keep values contiguous without rearranging the whole vector
             if (size > 1)
             {
+                //* Get list index of removed value
+                size_t replacedIndex{keyToIndex_[keyToRemove]};
+
                 //* Get index of (kept) last value that replaces removed value
-                keptValueIndex = size - 1;
+                size_t keptIndex{size - 1};
 
                 //* Get key of replacing/kept value
-                size_t keptkey = indexToKey_[keptValueIndex];
+                size_t keptkey = indexToKey_[keptIndex];
 
-                //* Replace (removed) value with kept value (by index) so last entry (duplicate) can be popped (becomes new removed)
-                values_[removedValueIndex] = values_[keptValueIndex];
-
-                //* Update value index after replacement
-                keptValueIndex = removedValueIndex;
+                //* Replace (removed) value with kept value (by index) so last entry (duplicate) can be popped
+                values_[replacedIndex] = values_[keptIndex];
 
                 //* Update key to valueIndex mapping for kept key
-                keyToIndex_[keptkey] = keptValueIndex;
+                keyToIndex_[keptkey] = replacedIndex;
 
                 //* Update index to key mapping for kept key
-                indexToKey_[keptValueIndex] = keptkey;
+                indexToKey_[replacedIndex] = keptkey;
             }
 
-            //* Remove removed key from mapping
-            keyToIndex_[key] = 0;
+            //* Reset removed key in mapping
+            keyToIndex_[keyToRemove] = 0;
 
             //* Remove (duplicate) last value
             values_.pop_back();
@@ -197,17 +195,6 @@ namespace snx
 
         //* Store a index (value) to key mapping (internal use for erease() only)
         std::vector<size_t> indexToKey_{0};
-
-    private:
-        void fitSize(size_t key)
-        {
-            if (key < keyToIndex_.capacity())
-            {
-                return;
-            }
-
-            keyToIndex_.resize(key + 1);
-        }
     };
 }
 
