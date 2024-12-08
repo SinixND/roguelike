@@ -13,7 +13,6 @@
 #include "RNG.h"
 #include "RenderId.h"
 #include "Tiles.h"
-#include "TransformComponent.h"
 #include "VisibilityId.h"
 #include "raylibEx.h"
 #include <cstddef>
@@ -57,7 +56,8 @@ void insertEnemy(
     Enemies* enemies,
     size_t id,
     RenderId renderId,
-    TransformComponent const& movement,
+    // TransformComponent const& transform,
+    // MovementComponent const& movement,
     EnergyComponent const& energy,
     HealthComponent const& health,
     DamageComponent const& damage,
@@ -67,7 +67,8 @@ void insertEnemy(
     enemies->ids.insert(tilePosition, id);
     enemies->positions.insert(id, PositionComponent{tilePosition});
     enemies->renderIds.insert(id, renderId);
-    enemies->transforms.insert(id, movement);
+    // enemies->transforms.insert(id, transform);
+    // enemies->movements.insert(id, movement);
     enemies->energies.insert(id, energy);
     enemies->healths.insert(id, health);
     enemies->damages.insert(id, damage);
@@ -114,7 +115,8 @@ void createEnemy(
                 enemies,
                 newId,
                 RenderId::GOBLIN,
-                TransformComponent{},
+                // TransformComponent{},
+                // MovementComponent{},
                 EnergyComponent{
                     EnemyData::goblinEnergyMax,
                     EnemyData::goblinEnergyRegenBase},
@@ -185,7 +187,8 @@ void updateEnemies(
         //* Update ids_ key if tilePosition changes
         if (
             MovementSystem::update(
-                enemies->transforms.values().at(i),
+                enemies->transforms.at(i),
+                enemies->movements.at(i),
                 position,
                 enemies->energies.values().at(i),
                 map,

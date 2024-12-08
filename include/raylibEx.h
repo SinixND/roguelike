@@ -29,26 +29,38 @@ public:
         float left,
         float top,
         float width = 0,
-        float height = 0)
-        : left_(left)
-        , top_(top)
-        , right_(left + width)
-        , bottom_(top + height)
-        , width_(width)
-        , height_(height)
+        float height = 0) :
+        left_(
+            left),
+        top_(
+            top),
+        right_(
+            left + width),
+        bottom_(
+            top + height),
+        width_(
+            width),
+        height_(
+            height)
     {
         validate();
     }
 
     RectangleEx(
         Vector2 const& topLeft,
-        Vector2 const& bottomRight = {0, 0})
-        : left_(topLeft.x)
-        , top_(topLeft.y)
-        , right_(bottomRight.x)
-        , bottom_(bottomRight.y)
-        , width_(bottomRight.x - topLeft.x)
-        , height_(bottomRight.y - topLeft.y)
+        Vector2 const& bottomRight = {0, 0}) :
+        left_(
+            topLeft.x),
+        top_(
+            topLeft.y),
+        right_(
+            bottomRight.x),
+        bottom_(
+            bottomRight.y),
+        width_(
+            bottomRight.x - topLeft.x),
+        height_(
+            bottomRight.y - topLeft.y)
     {
         validate();
     }
@@ -56,24 +68,24 @@ public:
     RectangleEx(
         Vector2 const& center,
         float width,
-        float height)
-        : left_(center.x - (0.5f * width))
-        , top_(center.y - (0.5f * height))
-        , right_(center.x + (0.5f * width))
-        , bottom_(center.y + (0.5f * height))
-        , width_(width)
-        , height_(height)
+        float height) :
+        left_(center.x - (0.5f * width)),
+        top_(center.y - (0.5f * height)),
+        right_(center.x + (0.5f * width)),
+        bottom_(center.y + (0.5f * height)),
+        width_(width),
+        height_(height)
     {
         validate();
     }
 
-    explicit RectangleEx(Rectangle const& rectangle)
-        : left_(rectangle.x)
-        , top_(rectangle.y)
-        , right_(rectangle.x + rectangle.width)
-        , bottom_(rectangle.y + rectangle.height)
-        , width_(rectangle.width)
-        , height_(rectangle.height)
+    explicit RectangleEx(Rectangle const& rectangle) :
+        left_(rectangle.x),
+        top_(rectangle.y),
+        right_(rectangle.x + rectangle.width),
+        bottom_(rectangle.y + rectangle.height),
+        width_(rectangle.width),
+        height_(rectangle.height)
     {
         validate();
     }
@@ -293,26 +305,26 @@ public:
         int left,
         int top,
         int width = 1,
-        int height = 1)
-        : left_(left)
-        , top_(top)
-        , right_(left + width - 1)
-        , bottom_(top + height - 1)
-        , width_(width)
-        , height_(height)
+        int height = 1) :
+        left_(left),
+        top_(top),
+        right_(left + width - 1),
+        bottom_(top + height - 1),
+        width_(width),
+        height_(height)
     {
         validate();
     }
 
     RectangleExI(
         Vector2I const& topLeft,
-        Vector2I const& bottomRight = {0, 0})
-        : left_(topLeft.x)
-        , top_(topLeft.y)
-        , right_(bottomRight.x)
-        , bottom_(bottomRight.y)
-        , width_(bottomRight.x - topLeft.x + 1)
-        , height_(bottomRight.y - topLeft.y + 1)
+        Vector2I const& bottomRight = {0, 0}) :
+        left_(topLeft.x),
+        top_(topLeft.y),
+        right_(bottomRight.x),
+        bottom_(bottomRight.y),
+        width_(bottomRight.x - topLeft.x + 1),
+        height_(bottomRight.y - topLeft.y + 1)
     {
         validate();
     }
@@ -321,13 +333,13 @@ public:
     RectangleExI(
         Vector2I const& center,
         int width,
-        int height)
-        : left_(center.x - (width / 2))
-        , top_(center.y - (height / 2))
-        , right_(center.x + (width / 2))
-        , bottom_(center.y + (height / 2))
-        , width_(width)
-        , height_(height)
+        int height) :
+        left_(center.x - (width / 2)),
+        top_(center.y - (height / 2)),
+        right_(center.x + (width / 2)),
+        bottom_(center.y + (height / 2)),
+        width_(width),
+        height_(height)
     {
         validate();
 #if defined(DEBUG)
@@ -840,14 +852,16 @@ inline Rectangle GetWindowRec()
         static_cast<float>(GetRenderHeight())};
 }
 
-inline Vector2 ConvertToVector2(Vector2I const& v)
+inline Vector2 ConvertToVector2(
+    Vector2I const& v)
 {
     return Vector2{
         static_cast<float>(v.x),
         static_cast<float>(v.y)};
 }
 
-inline Vector2I ConvertToVector2I(Vector2 const& v)
+inline Vector2I ConvertToVector2I(
+    Vector2 const& v)
 {
     return Vector2I{
         static_cast<int>(v.x),

@@ -162,6 +162,7 @@ void Game::updateState(
     //* Update hero movement
     MovementSystem::update(
         hero.transform,
+        hero.movement,
         hero.position,
         hero.energy,
         *world.currentMap,

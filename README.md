@@ -1,18 +1,21 @@
 # ROGUELIKE
-    A roguelike made with raylib.
-    Platforms: Linux, Windows, Browser
+A roguelike made with raylib to practise programming (concepts).
+Platforms: Linux, Windows, Browser
 
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Refactor pathfind to skip original position
+- [ ] Split Transform (single turn) and Movement (multi-turn) data
 - [ ] Refactor public/private (see Notes)
-- [ ] DenseMap for persistent components; SparseSet for optional components (see `DesignGuideline.md`)
+- [ ] Refactor SoA: size_t as key; hashmap/2D-array for position lookup
+- [ ] Change DenseMap/SparseSet:
+  - Synced (private?) for persistent components/iteration
+  - Unsynced/public for optional components/lookup/existential
+  - (see `DesignGuideline.md`)
 - [ ] Refactor: Extract possible NMNF functions
     - [ ] Pass by rawPtr (if modified)
-- [ ] Split Tranform (per frame) and Movement (persistent) data
 
-- [ ] Refactor SoA: size_t as key; hashmap/2D-array for position lookup
+- [ ] Add in/out/io information to function parameters
 - [ ] Split Component(temp) and Data(persistent)?
 - [ ] Separate System (not related to class) and Module (former member functions) via namespace?
 - [ ] eg. Give Hero optional TransformComponent (unique_ptr)?
@@ -93,6 +96,28 @@
 
 ## Docker:
 [Install docker](https://itsfoss.com/install-docker-arch-linux/)
+
+
+# Concepts used in project
+- Generic Makefile (no cmake)
+- Support for linux / web (library: emscripten) / windows
+- Support for keyboard / mouse / touch
+- Texture/Sprite rendering (library: raylib)
+- Making of a simple ECS
+    - Research on SparseSet and Archetype
+- OOP/DOD
+    Lots of thoughts went into OOP vs DOD/POD design.
+    The basic takeaway was: 
+    - loose coupling/dependencies via getters/setters/interfaces; more code, possible cost in performance and complexity;
+    - PODs for coupled design, but clear program
+    - default to: public and non-member/non-friend until specific action needed
+- AoS classes (for single objects) vs SoA (for multiple)
+- Made DenseMap(arbitrary id)/SparseSet(`size_t` id) for contiguous container with persistant id on erase
+- Static publisher-subscriber system to communicate between different program areas (only enums, no variables)
+- Shadowcast a FogOfWar layer over Tiles
+- Time-dependent / smooth movement 
+- A* pathfinding
+- Procedural map generation
 
 
 # Implemented

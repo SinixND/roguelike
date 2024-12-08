@@ -1,24 +1,26 @@
 #include "MovementSystem.h"
+
 #include "CollisionSystem.h"
 #include "EnergyComponent.h"
 #include "EventId.h"
 #include "Map.h"
+#include "MovementComponent.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "TileData.h"
-#include "TransformComponent.h"
 #include "raylibEx.h"
 #include <raymath.h>
 
 bool MovementSystem::update(
-    TransformComponent& transform,
+    TransformComponent* transform,
+    MovementComponent* movement,
     PositionComponent& position,
     EnergyComponent& energy,
     Map const& map,
     PositionComponent const& heroPosition)
 {
     //* Avoid check if no movement in progress
-    if (transform.isTriggered())
+    if (movement)
     {
         //* Check collision before starting movement
         if (CollisionSystem::checkCollision(

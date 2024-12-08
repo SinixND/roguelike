@@ -5,7 +5,9 @@
 #include "Enemies.h"
 #include "HealthComponent.h"
 #include "Logger.h"
+#include "MovementComponent.h"
 #include "PathfinderSystem.h"
+#include "TransformComponent.h"
 #include <cstddef>
 #include <vector>
 
@@ -34,7 +36,7 @@ bool AISystem::checkForAction(
         AISystem::chooseAction(
             enemies.ais.at(enemyId),
             enemies.positions.at(enemyId),
-            enemies.transforms.at(enemyId),
+            enemies.movements.at(enemyId),
             enemies.energies.at(enemyId),
             enemies.damages.at(enemyId),
             map,
@@ -53,7 +55,7 @@ bool AISystem::checkForAction(
 void AISystem::chooseAction(
     AIComponent const& ai,
     PositionComponent& position,
-    TransformComponent& transform,
+    MovementComponent& movement,
     EnergyComponent& energy,
     DamageComponent& damage,
     Map const& map,
@@ -92,9 +94,13 @@ void AISystem::chooseAction(
 
     else if (pathSize > 2)
     {
-        transform.trigger(
-            position.tilePosition(),
-            path.rbegin()[1]);
+        // transform.trigger(
+        //     position.tilePosition(),
+        //     path.rbegin()[1]);
+        movement.path_.insert(
+            movement.path_.end(),
+            {position.tilePosition(),
+             path.rbegin()[1]});
     }
 
     //* TransformComponent is not viable

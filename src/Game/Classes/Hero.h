@@ -5,6 +5,7 @@
 #include "EnergyComponent.h"
 #include "HealthComponent.h"
 #include "HeroData.h"
+#include "MovementComponent.h"
 #include "PositionComponent.h"
 #include "RenderId.h"
 #include "TransformComponent.h"
@@ -13,6 +14,7 @@ struct Hero
 {
     RenderId renderId{RenderId::HERO};
     TransformComponent transform{};
+    MovementComponent movement{};
     EnergyComponent energy{
         HeroData::energyMax,
         HeroData::energyRegenBase};

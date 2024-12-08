@@ -7,10 +7,12 @@
 #include "EnergyComponent.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
+#include "MovementComponent.h"
 #include "PositionComponent.h"
 #include "RenderId.h"
 #include "TransformComponent.h"
 #include <cstddef>
+#include <unordered_map>
 
 struct Vector2I;
 struct Map;
@@ -25,6 +27,7 @@ struct Enemies
     snx::DenseMap<size_t, PositionComponent> positions{};
     snx::DenseMap<size_t, RenderId> renderIds{};
     snx::DenseMap<size_t, TransformComponent> transforms{};
+    snx::DenseMap<size_t, MovementComponent> movements{};
     snx::DenseMap<size_t, EnergyComponent> energies{};
     snx::DenseMap<size_t, HealthComponent> healths{};
     snx::DenseMap<size_t, DamageComponent> damages{};
