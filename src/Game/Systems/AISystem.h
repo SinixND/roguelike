@@ -7,7 +7,7 @@ struct Map;
 struct Vector2I;
 class GameCamera;
 class PositionComponent;
-class TransformComponent;
+class TransMoveComponent;
 class EnergyComponent;
 struct DamageComponent;
 class HealthComponent;
@@ -25,7 +25,7 @@ namespace AISystem
     void chooseAction(
         AIComponent const& ai,
         PositionComponent& position,
-        TransformComponent& transform,
+        TransMoveComponent& transform,
         EnergyComponent& energy,
         DamageComponent& damage,
         Map const& map,

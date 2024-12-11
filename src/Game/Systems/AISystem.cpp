@@ -53,7 +53,7 @@ bool AISystem::checkForAction(
 void AISystem::chooseAction(
     AIComponent const& ai,
     PositionComponent& position,
-    TransformComponent& transform,
+    TransMoveComponent& transform,
     EnergyComponent& energy,
     DamageComponent& damage,
     Map const& map,
@@ -97,7 +97,7 @@ void AISystem::chooseAction(
             path.rbegin()[1]);
     }
 
-    //* TransformComponent is not viable
+    //* TransMoveComponent is not viable
     else
     {
         //* Wait

@@ -7,12 +7,12 @@
 #include "HeroData.h"
 #include "PositionComponent.h"
 #include "RenderId.h"
-#include "TransformComponent.h"
+#include "TransMoveComponent.h"
 
 struct Hero
 {
     RenderId renderId{RenderId::HERO};
-    TransformComponent transform{};
+    TransMoveComponent transform{};
     EnergyComponent energy{
         HeroData::energyMax,
         HeroData::energyRegenBase};

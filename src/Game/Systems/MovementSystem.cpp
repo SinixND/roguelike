@@ -1,4 +1,5 @@
 #include "MovementSystem.h"
+
 #include "CollisionSystem.h"
 #include "EnergyComponent.h"
 #include "EventId.h"
@@ -6,12 +7,13 @@
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "TileData.h"
-#include "TransformComponent.h"
+#include "TransMoveComponent.h"
 #include "raylibEx.h"
+#include <raylib.h>
 #include <raymath.h>
 
 bool MovementSystem::update(
-    TransformComponent& transform,
+    TransMoveComponent& transform,
     PositionComponent& position,
     EnergyComponent& energy,
     Map const& map,
@@ -52,20 +54,22 @@ bool MovementSystem::update(
 
     transform.updateCumulativeDistanceMoved();
 
+    Vector2 offset{Vector2Scale(transform.direction(), transform.frameDistance())};
+
     //* Check if movement exceeds tile length this frame
     if (transform.cumulativeDistanceMoved() < TileData::tileSize)
     {
         //* Move full distance this frame
-        didTilePositionChange = position.move(transform.distance());
+        didTilePositionChange = position.move(offset);
     }
     else
     {
         //* Move by remaining distance until TILE_SIZE
         didTilePositionChange = position.move(
             Vector2ClampValue(
-                transform.distance(),
+                offset,
                 0,
-                TileData::tileSize - (transform.cumulativeDistanceMoved() - transform.length())));
+                TileData::tileSize - (transform.cumulativeDistanceMoved() - transform.frameDistance())));
 
         //* === Moved one tile ===
         //* Clean precision errors

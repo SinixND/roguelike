@@ -13,7 +13,7 @@
 #include "RNG.h"
 #include "RenderId.h"
 #include "Tiles.h"
-#include "TransformComponent.h"
+#include "TransMoveComponent.h"
 #include "VisibilityId.h"
 #include "raylibEx.h"
 #include <cstddef>
@@ -57,7 +57,7 @@ void insertEnemy(
     Enemies* enemies,
     size_t id,
     RenderId renderId,
-    TransformComponent const& movement,
+    TransMoveComponent const& movement,
     EnergyComponent const& energy,
     HealthComponent const& health,
     DamageComponent const& damage,
@@ -114,7 +114,7 @@ void createEnemy(
                 enemies,
                 newId,
                 RenderId::GOBLIN,
-                TransformComponent{},
+                TransMoveComponent{},
                 EnergyComponent{
                     EnemyData::goblinEnergyMax,
                     EnemyData::goblinEnergyRegenBase},

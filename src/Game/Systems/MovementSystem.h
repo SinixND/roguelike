@@ -1,7 +1,7 @@
 #ifndef IG20241027130300
 #define IG20241027130300
 
-class TransformComponent;
+class TransMoveComponent;
 class PositionComponent;
 class EnergyComponent;
 struct Map;
@@ -20,7 +20,7 @@ namespace MovementSystem
     //* - Resets currentVelocity
     //* Returns if tilePosition changed
     bool update(
-        TransformComponent& transform,
+        TransMoveComponent& transform,
         PositionComponent& position,
         EnergyComponent& energy,
         Map const& map,

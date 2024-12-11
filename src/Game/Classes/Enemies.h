@@ -9,7 +9,7 @@
 #include "IdManager.h"
 #include "PositionComponent.h"
 #include "RenderId.h"
-#include "TransformComponent.h"
+#include "TransMoveComponent.h"
 #include <cstddef>
 
 struct Vector2I;
@@ -24,7 +24,7 @@ struct Enemies
     snx::DenseMap<size_t, AIComponent> ais{};
     snx::DenseMap<size_t, PositionComponent> positions{};
     snx::DenseMap<size_t, RenderId> renderIds{};
-    snx::DenseMap<size_t, TransformComponent> transforms{};
+    snx::DenseMap<size_t, TransMoveComponent> transforms{};
     snx::DenseMap<size_t, EnergyComponent> energies{};
     snx::DenseMap<size_t, HealthComponent> healths{};
     snx::DenseMap<size_t, DamageComponent> damages{};

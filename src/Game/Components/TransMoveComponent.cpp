@@ -1,4 +1,4 @@
-#include "TransformComponent.h"
+#include "TransMoveComponent.h"
 
 #include "EventId.h"
 #include "PublisherStatic.h"
@@ -8,7 +8,7 @@
 #include <raymath.h>
 #include <vector>
 
-void TransformComponent::trigger()
+void TransMoveComponent::trigger()
 {
     if (!isTriggered_ && !isInProgress_ && !path_.empty())
     {
@@ -16,7 +16,7 @@ void TransformComponent::trigger()
     }
 }
 
-void TransformComponent::trigger(Vector2I const& from, Vector2I const& to)
+void TransMoveComponent::trigger(Vector2I const& from, Vector2I const& to)
 {
     trigger(
         Vector2Subtract(
@@ -24,19 +24,17 @@ void TransformComponent::trigger(Vector2I const& from, Vector2I const& to)
             from));
 }
 
-void TransformComponent::trigger(Vector2I const& direction)
+void TransMoveComponent::trigger(Vector2I const& direction)
 {
     direction_ = direction;
 
-    velocity_ = Vector2Scale(
-        direction,
-        (speed_ * TileData::tileSize));
+    currentSpeed_ = speed_ * TileData::tileSize;
 
     isTriggered_ = true;
 }
 
 void trigger(
-    TransformComponent* transformComponent,
+    TransMoveComponent* TransMoveComponent,
     std::vector<Vector2I> const& path)
 {
     if (path.empty())
@@ -44,12 +42,12 @@ void trigger(
         return;
     }
 
-    transformComponent->path_ = path;
+    TransMoveComponent->path_ = path;
 
-    transformComponent->triggerFromPath();
+    TransMoveComponent->triggerFromPath();
 }
 
-void TransformComponent::triggerFromPath()
+void TransMoveComponent::triggerFromPath()
 {
     trigger(Vector2Subtract(
         path_.rbegin()[1],
@@ -65,13 +63,13 @@ void TransformComponent::triggerFromPath()
     }
 }
 
-void TransformComponent::activateTrigger()
+void TransMoveComponent::activateTrigger()
 {
     isTriggered_ = false;
     setInProgress();
 }
 
-void TransformComponent::setInProgress()
+void TransMoveComponent::setInProgress()
 {
     //* Retrigger movement
     isInProgress_ = true;
@@ -79,56 +77,49 @@ void TransformComponent::setInProgress()
     snx::PublisherStatic::publish(EventId::ACTION_IN_PROGRESS);
 }
 
-void TransformComponent::stopMovement()
+void TransMoveComponent::stopMovement()
 {
     isInProgress_ = false;
-    velocity_ = Vector2{0, 0};
+    currentSpeed_ = .0f;
 }
 
-void TransformComponent::clearPath()
+void TransMoveComponent::clearPath()
 {
     isTriggered_ = false;
     path_.clear();
 }
 
-Vector2 TransformComponent::distance() const
+float TransMoveComponent::frameDistance() const
 {
-    return Vector2Scale(
-        velocity_,
-        GetFrameTime());
+    return currentSpeed_ * GetFrameTime();
 }
 
-float TransformComponent::length() const
-{
-    return Vector2Length(distance());
-}
-
-Vector2I const& TransformComponent::direction() const
+Vector2I const& TransMoveComponent::direction() const
 {
     return direction_;
 }
 
-float TransformComponent::cumulativeDistanceMoved() const
+float TransMoveComponent::cumulativeDistanceMoved() const
 {
     return cumulativeDistanceMoved_;
 }
 
-void TransformComponent::updateCumulativeDistanceMoved()
+void TransMoveComponent::updateCumulativeDistanceMoved()
 {
-    cumulativeDistanceMoved_ += Vector2Length(distance());
+    cumulativeDistanceMoved_ += frameDistance();
 }
 
-void TransformComponent::resetCumulativeDistanceMoved()
+void TransMoveComponent::resetCumulativeDistanceMoved()
 {
     cumulativeDistanceMoved_ = 0;
 }
 
-bool TransformComponent::isTriggered() const
+bool TransMoveComponent::isTriggered() const
 {
     return isTriggered_;
 }
 
-bool TransformComponent::isInProgress() const
+bool TransMoveComponent::isInProgress() const
 {
     return isInProgress_;
 }
