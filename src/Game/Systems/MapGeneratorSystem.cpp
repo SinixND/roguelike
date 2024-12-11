@@ -160,7 +160,7 @@ namespace MapGeneratorSystem
 
         //* Add previous level trigger
         createObject(
-            &map.objects,
+            map.objects,
             Vector2I{
                 0,
                 0},
@@ -181,7 +181,7 @@ namespace MapGeneratorSystem
 
         //* Add enemies
         initEnemies(
-            &map.enemies,
+            map.enemies,
             level,
             map);
 
@@ -307,7 +307,7 @@ namespace MapGeneratorSystem
 
         //* Next level trigger
         createObject(
-            &testRoom.objects,
+            testRoom.objects,
             Vector2I{
                 0,
                 -5},
@@ -317,7 +317,7 @@ namespace MapGeneratorSystem
             EventId::NEXT_LEVEL);
 
         createEnemy(
-            &testRoom.enemies,
+            testRoom.enemies,
             testRoom,
             RenderId::GOBLIN,
             false,
@@ -341,7 +341,7 @@ namespace MapGeneratorSystem
 
         //* Add next level trigger
         createObject(
-            &startRoom.objects,
+            startRoom.objects,
             Vector2I{
                 0,
                 -5},

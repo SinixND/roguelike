@@ -43,7 +43,7 @@ void RatedTile::reconstructPath(std::vector<Vector2I>& path)
     //* Add this to path
     path.push_back(tilePosition);
 
-    //* Abort at root/start
+    //* Abort (includes root/start)
     if (!ancestor)
     {
         return;
@@ -72,7 +72,7 @@ bool checkRatingList(
     //* Buffer rated tiles to allow neighbours with same rating
     std::vector<RatedTile*> tileList{ratingList[rating]};
 
-    //* All tiles with same rating will be checked -> remove key
+    //* All tiles with same rating will be checked . remove key
     ratingList.erase(rating);
 
     //* Check all tiles in vector for current best rating before choosing new best rating
@@ -83,7 +83,7 @@ bool checkRatingList(
         Vector2I offDirection{Vector2OffDirection(distanceToTarget)};
 
         //* Handle exceptions
-        //* Exception: |x| == |y| -> main is RNG, off is dependent
+        //* Exception: |x| == |y| . main is RNG, off is dependent
         if (abs(distanceToTarget.x) == abs(distanceToTarget.y))
         {
             if (snx::RNG::random())

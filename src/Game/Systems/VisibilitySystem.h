@@ -57,7 +57,7 @@ namespace VisibilitySystem
         int visionRange,
         Vector2I const& heroPosition);
 
-    //* If any part of tile is visible -> whole tile is visible (so that "tunnel walls" stay visible)
+    //* If any part of tile is visible . whole tile is visible (so that "tunnel walls" stay visible)
     void calculateVisibilitiesInOctant(
         snx::DenseMap<Vector2I, Fog>& fogs_,
         int octant,

@@ -28,21 +28,21 @@ void UserInput::bindModifierKey(int key, InputActionId action)
     inputActionIdToModifierKey_.insert(std::make_pair(action, key));
 }
 
-bool UserInput::takeInputMouse(bool isCursorActive)
+bool UserInput::registerMouse(bool isCursorActive)
 {
     if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
     {
-        inputAction_ = mouseButtonToInputActionId_[MOUSE_BUTTON_RIGHT];
+        inputAction = mouseButtonToInputActionId_[MOUSE_BUTTON_RIGHT];
     }
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
-        inputAction_ = mouseButtonToInputActionId_[MOUSE_BUTTON_LEFT];
+        inputAction = mouseButtonToInputActionId_[MOUSE_BUTTON_LEFT];
     }
 
     //* Check if input is invalid (need exception for mouse toggle action)
-    if (inputAction_ == InputActionId::NONE
-        || (!(inputAction_ == InputActionId::TOGGLE_CURSOR)
+    if (inputAction == InputActionId::NONE
+        || (!(inputAction == InputActionId::TOGGLE_CURSOR)
             && !isCursorActive))
     {
 
@@ -52,7 +52,7 @@ bool UserInput::takeInputMouse(bool isCursorActive)
     return true;
 }
 
-bool UserInput::takeInputKey()
+bool UserInput::registerKeyboard()
 {
     //* Update key pressed
     //* Set lastKey only to valid inputs (associated with actions)
@@ -72,9 +72,9 @@ bool UserInput::takeInputKey()
         currentKey_ = lastKey_;
     }
 
-    inputAction_ = keyToInputActionId_[currentKey_];
+    inputAction = keyToInputActionId_[currentKey_];
 
-    if (inputAction_ == InputActionId::NONE)
+    if (inputAction == InputActionId::NONE)
     {
         return false;
     }
@@ -82,7 +82,7 @@ bool UserInput::takeInputKey()
     return true;
 }
 
-bool UserInput::takeInputGesture()
+bool UserInput::registerGesture()
 {
     //* IMPORTANT NOTE:
     //* Implemented events TAP, DOUBLETAP and HOLD as raylib gesture registration was unreliable
@@ -125,7 +125,7 @@ bool UserInput::takeInputGesture()
                         snx::Logger::log("Triggered DOUBLE TAP EVENT\n");
                         snx::debug::cliLog("Triggered DOUBLE TAP EVENT\n");
 #endif
-                        inputAction_ = InputActionId::ACT_IN_PLACE;
+                        inputAction = InputActionId::ACT_IN_PLACE;
                     }
                     else
                     {
@@ -133,7 +133,6 @@ bool UserInput::takeInputGesture()
                         snx::Logger::log("Triggered TAP EVENT\n");
                         snx::debug::cliLog("Triggered TAP EVENT\n");
 #endif
-                        // inputAction_ = InputActionId::actInPlace;
                     }
 
                     lastTap_ = touchUpTime_;
@@ -141,7 +140,7 @@ bool UserInput::takeInputGesture()
                     break;
                 }
 
-                inputAction_ = InputActionId::NONE;
+                inputAction = InputActionId::NONE;
 
                 break;
             }
@@ -189,22 +188,22 @@ bool UserInput::takeInputGesture()
                 Vector2 direction = Vector2MainDirection(GetGestureDragVector());
                 if (direction == Vector2{0, -1})
                 {
-                    inputAction_ = InputActionId::ACT_UP;
+                    inputAction = InputActionId::ACT_UP;
                 }
 
                 else if (direction == Vector2{-1, 0})
                 {
-                    inputAction_ = InputActionId::ACT_LEFT;
+                    inputAction = InputActionId::ACT_LEFT;
                 }
 
                 else if (direction == Vector2{0, 1})
                 {
-                    inputAction_ = InputActionId::ACT_DOWN;
+                    inputAction = InputActionId::ACT_DOWN;
                 }
 
                 else if (direction == Vector2{1, 0})
                 {
-                    inputAction_ = InputActionId::ACT_RIGHT;
+                    inputAction = InputActionId::ACT_RIGHT;
                 }
 
                 break;
@@ -216,7 +215,7 @@ bool UserInput::takeInputGesture()
                 snx::Logger::log("Triggered GESTURE_SWIPE_UP\n");
                 snx::debug::cliLog("Triggered GESTURE_SWIPE_UP\n");
 #endif
-                inputAction_ = InputActionId::ACT_UP;
+                inputAction = InputActionId::ACT_UP;
 
                 break;
             }
@@ -227,7 +226,7 @@ bool UserInput::takeInputGesture()
                 snx::Logger::log("Triggered GESTURE_SWIPE_LEFT\n");
                 snx::debug::cliLog("Triggered GESTURE_SWIPE_LEFT\n");
 #endif
-                inputAction_ = InputActionId::ACT_LEFT;
+                inputAction = InputActionId::ACT_LEFT;
 
                 break;
             }
@@ -238,7 +237,7 @@ bool UserInput::takeInputGesture()
                 snx::Logger::log("Triggered GESTURE_SWIPE_DOWN\n");
                 snx::debug::cliLog("Triggered GESTURE_SWIPE_DOWN\n");
 #endif
-                inputAction_ = InputActionId::ACT_DOWN;
+                inputAction = InputActionId::ACT_DOWN;
 
                 break;
             }
@@ -249,7 +248,7 @@ bool UserInput::takeInputGesture()
                 snx::Logger::log("Triggered GESTURE_SWIPE_RIGHT\n");
                 snx::debug::cliLog("Triggered GESTURE_SWIPE_RIGHT\n");
 #endif
-                inputAction_ = InputActionId::ACT_RIGHT;
+                inputAction = InputActionId::ACT_RIGHT;
 
                 break;
             }
@@ -285,7 +284,7 @@ bool UserInput::takeInputGesture()
             default:
             case GESTURE_NONE:
             {
-                inputAction_ = InputActionId::NONE;
+                inputAction = InputActionId::NONE;
 
                 break;
             }
@@ -319,22 +318,22 @@ bool UserInput::takeInputGesture()
                 Vector2 direction = Vector2MainDirection(GetGestureDragVector());
                 if (direction == Vector2{0, -1})
                 {
-                    inputAction_ = InputActionId::ACT_UP;
+                    inputAction = InputActionId::ACT_UP;
                 }
 
                 else if (direction == Vector2{-1, 0})
                 {
-                    inputAction_ = InputActionId::ACT_LEFT;
+                    inputAction = InputActionId::ACT_LEFT;
                 }
 
                 else if (direction == Vector2{0, 1})
                 {
-                    inputAction_ = InputActionId::ACT_DOWN;
+                    inputAction = InputActionId::ACT_DOWN;
                 }
 
                 else if (direction == Vector2{1, 0})
                 {
-                    inputAction_ = InputActionId::ACT_RIGHT;
+                    inputAction = InputActionId::ACT_RIGHT;
                 }
 
                 break;
@@ -342,7 +341,7 @@ bool UserInput::takeInputGesture()
         }
     }
 
-    if (inputAction_ == InputActionId::NONE)
+    if (inputAction == InputActionId::NONE)
     {
         return false;
     }
@@ -350,12 +349,7 @@ bool UserInput::takeInputGesture()
     return true;
 }
 
-InputActionId UserInput::inputAction() const
-{
-    return inputAction_;
-}
-
 void UserInput::resetInputAction()
 {
-    inputAction_ = InputActionId::NONE;
+    inputAction = InputActionId::NONE;
 }

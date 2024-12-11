@@ -13,6 +13,7 @@
 #include "InputActionId.h"
 #include "Logger.h"
 #include "Map.h"
+#include "MovementSystem.h"
 #include "PathfinderSystem.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
@@ -50,23 +51,23 @@ void UserInputSystem::setDefaultInputMappings(
     userInputComponent.bindMouseButton(MOUSE_BUTTON_LEFT, InputActionId::MOVE_TO_TARGET);
 }
 
-void UserInputSystem::takeInput(
+void UserInputSystem::registerInput(
     UserInput& userInputComponent,
     bool isCursorActive)
 {
-    if (userInputComponent.takeInputKey())
+    if (userInputComponent.registerKeyboard())
     {
         return;
     }
 
-    if (userInputComponent.takeInputMouse(isCursorActive))
+    if (userInputComponent.registerMouse(isCursorActive))
     {
         return;
     }
 
     else if (!isCursorActive)
     {
-        userInputComponent.takeInputGesture();
+        userInputComponent.registerGesture();
     }
 }
 
@@ -98,15 +99,18 @@ void UserInputSystem::triggerAction(
         return;
     }
 
-    if (userInputComponent.inputAction() == InputActionId::NONE)
+    if (userInputComponent.inputAction == InputActionId::NONE)
     {
         //* Trigger input agnostic actions, eg. non-empty path
-        hero.transform.trigger();
+        MovementSystem::prepareInputAgnostic(
+            hero.movement,
+            hero.transform,
+            hero.position);
 
         return;
     }
 
-    switch (userInputComponent.inputAction())
+    switch (userInputComponent.inputAction)
     {
         case InputActionId::ACT_UP:
         {
@@ -122,7 +126,9 @@ void UserInputSystem::triggerAction(
                 break;
             }
 
-            hero.transform.trigger(
+            MovementSystem::prepareByDirection(
+                hero.movement,
+                hero.position,
                 Directions::up);
 
             break;
@@ -142,7 +148,9 @@ void UserInputSystem::triggerAction(
                 break;
             }
 
-            hero.transform.trigger(
+            MovementSystem::prepareByDirection(
+                hero.movement,
+                hero.position,
                 Directions::left);
 
             break;
@@ -162,7 +170,9 @@ void UserInputSystem::triggerAction(
                 break;
             }
 
-            hero.transform.trigger(
+            MovementSystem::prepareByDirection(
+                hero.movement,
+                hero.position,
                 Directions::down);
 
             break;
@@ -182,7 +192,9 @@ void UserInputSystem::triggerAction(
                 break;
             }
 
-            hero.transform.trigger(
+            MovementSystem::prepareByDirection(
+                hero.movement,
+                hero.position,
                 Directions::right);
 
             break;
@@ -190,8 +202,9 @@ void UserInputSystem::triggerAction(
 
         case InputActionId::MOVE_TO_TARGET:
         {
-            trigger(
-                &hero.transform,
+            MovementSystem::prepareByNewPath(
+                hero.movement,
+                hero.position,
                 PathfinderSystem::findPath(
                     map,
                     hero.position.tilePosition(),
@@ -212,7 +225,7 @@ void UserInputSystem::triggerAction(
 
                 hero.energy.consume();
 
-                regenerate(&hero.health);
+                regenerate(hero.health);
 
                 break;
             }

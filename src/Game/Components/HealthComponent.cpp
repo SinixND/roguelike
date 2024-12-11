@@ -50,11 +50,11 @@ void HealthComponent::heal(int health)
     }
 }
 
-void regenerate(HealthComponent* healthComponent)
+void regenerate(HealthComponent& healthComponent)
 {
 #if defined(DEBUG) && defined(DEBUG_HEALTH)
-    snx::debug::cliLog("Gain " + std::to_string(healthComponent->regenRate) + " to " + std::to_string(healthComponent->currentHealth()) + " health\n");
+    snx::debug::cliLog("Gain " + std::to_string(healthComponent.regenRate) + " to " + std::to_string(healthComponent.currentHealth()) + " health\n");
 #endif
 
-    healthComponent->heal(healthComponent->regenRate);
+    healthComponent.heal(healthComponent.regenRate);
 }

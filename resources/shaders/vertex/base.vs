@@ -1,7 +1,7 @@
 // https://raw.githubusercontent.com/raysan5/raylib/master/examples/shaders/resources/shaders/glsl330/base.vs
 
 // VERTEX SHADER
-// Transforms verticies ("edges of triangles")
+// TransMoves verticies ("edges of triangles")
 
 // VAO (vertex array object)
 // Stores where to find the data for each input (vertex) attribute

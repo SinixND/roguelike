@@ -5,20 +5,18 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active (Rework features that existed before Restructuring)
-- [ ] Split Transform (single turn) and Movement (multi-turn) data
-- [ ] Refactor public/private (see Notes)
+- [ ] Refactor public/private (see Notes) ~~namespace Class/Module/System~~
 - [ ] Refactor SoA: size_t as key; hashmap/2D-array for position lookup
 - [ ] Change DenseMap/SparseSet:
   - Synced (private?) for persistent components/iteration
   - Unsynced/public for optional components/lookup/existential
   - (see `DesignGuideline.md`)
 - [ ] Refactor: Extract possible NMNF functions
-    - [ ] Pass by rawPtr (if modified)
+    - [ ] ~~Pass by rawPtr (if modified)~~ Add in/out/io information to function parameters
 
-- [ ] Add in/out/io information to function parameters
 - [ ] Split Component(temp) and Data(persistent)?
 - [ ] Separate System (not related to class) and Module (former member functions) via namespace?
-- [ ] eg. Give Hero optional TransformComponent (unique_ptr)?
+- [ ] eg. Give Hero optional TransMoveComponent (unique_ptr)?
 
 
 ## Shortterm
@@ -41,7 +39,7 @@ Platforms: Linux, Windows, Browser
 - [ ] Save/Load for Account > Character > CurrentRun
 - [ ] Account settings via lua
 - [ ] Implement zoom?
-- [ ] (needed?!) Deactivate cursor trigger game action outside map panel 
+- [ ] Deactivate cursor trigger game action outside map panel (needed?!)
 - [ ] Setup docker (non-trvial for GUI apps)
 
 
@@ -161,3 +159,5 @@ Platforms: Linux, Windows, Browser
 - [x] Add health and damage
 - [x] Implement killing and spawning
 - [x] Remove all includes and check for possible forward declarations
+
+- [x] Split Transform (single turn) and Movement (multi-turn) data

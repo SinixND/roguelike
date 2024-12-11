@@ -604,14 +604,14 @@ RMAPI Vector2 Vector2Round(Vector2 v)
     return v;
 }
 
-RMAPI Vector2I Vector2Transform(Matrix2x2I const& M, Vector2I const& v)
+RMAPI Vector2I Vector2TransMove(Matrix2x2I const& M, Vector2I const& v)
 {
     return Vector2I{
         ((M.m11 * v.x) + (M.m12 * v.y)),
         ((M.m21 * v.x) + (M.m22 * v.y))};
 }
 
-RMAPI Vector2 Vector2Transform(Matrix2x2 const& M, Vector2 const& v)
+RMAPI Vector2 Vector2TransMove(Matrix2x2 const& M, Vector2 const& v)
 {
     return Vector2{
         ((M.m11 * v.x) + (M.m12 * v.y)),

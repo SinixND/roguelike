@@ -5,11 +5,12 @@
 #include "Enemies.h"
 #include "HealthComponent.h"
 #include "Logger.h"
+#include "MovementSystem.h"
 #include "PathfinderSystem.h"
 #include <cstddef>
 #include <vector>
 
-bool AISystem::checkForAction(
+bool AISystem::checkReadiness(
     Enemies& enemies,
     Map const& map,
     Vector2I const& heroPosition,
@@ -34,7 +35,7 @@ bool AISystem::checkForAction(
         AISystem::chooseAction(
             enemies.ais.at(enemyId),
             enemies.positions.at(enemyId),
-            enemies.transforms.at(enemyId),
+            enemies.movements.at(enemyId),
             enemies.energies.at(enemyId),
             enemies.damages.at(enemyId),
             map,
@@ -53,7 +54,7 @@ bool AISystem::checkForAction(
 void AISystem::chooseAction(
     AIComponent const& ai,
     PositionComponent& position,
-    TransformComponent& transform,
+    MovementComponent& movement,
     EnergyComponent& energy,
     DamageComponent& damage,
     Map const& map,
@@ -92,7 +93,9 @@ void AISystem::chooseAction(
 
     else if (pathSize > 2)
     {
-        transform.trigger(
+        MovementSystem::prepareByFromTo(
+            movement,
+            position,
             position.tilePosition(),
             path.rbegin()[1]);
     }

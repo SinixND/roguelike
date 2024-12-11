@@ -1,10 +1,17 @@
 # Design guideline
+## Prefer struct over class (**not used in favor of fail save invariant handling of classes**)
+Noel's blog: https://gamesfromwithin.com/category/c
+- Handle invariants via Module functions (replace member functions)
+- Structur (example): 
+    - namespace Class::Hero (struct/class)
+    - namespace Component::Health (struct/class)
+    - namespace Module::certHealth(health) -> health (eg. handle invariants)
+    - namespace System::regen(health) -> health (eg. use certHealth())
+
 ## Struct/Class general
 - Struct: POD (Plain Old Data) -> no functions
 - Name private member variables: name_
-- OOP if there is 1; DOD if there are more
-- For DOD (Data oriented design): Class/Object owns component-container (SparseSet/DenseMap for individual access)
-- For OOP: Object owns (an individual) component
+- OOP/AoS if there is 1; DOD/SoA if there are more
 - Prefer NMNF function [Nmsp::f(C& o)] over member functions [o.f()], if no need for private access / public API (interface) is sufficient
 
 ## Class members (variables) and methods (member functions)
@@ -26,7 +33,7 @@ Although trivial getters + setter provide more flexibility for later change, as 
 <!-- - If access other than by index needed: Add an additional mapping-member Id(entifier)->Index 
  - Decide if duplication for mapping, or support O(n) lookup of values -->
 - Add utility methods to modify containers. Also eg. for accessing individual members and/or returning a single entity struct
-- Transient (= Intermediate/Temporary/Transformation) data `struct`:
+- Transient (= Intermediate/Temporary/TransMoveation) data `struct`:
     - Forward declared `unique_ptr` member in `SoA.h`
     - Define it (and its member structs) in `SoA.cpp`
 - Unsorted/unsynced (public): Querying/prefetching/culling/preparation before (parallel) processing needed due to holes?

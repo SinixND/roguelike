@@ -14,11 +14,11 @@
 #endif
 
 #if defined(EMSCRIPTEN)
-void applicationLoop(void* arg_)
+void applicationLoop(void& arg_)
 {
-    emscriptenArgs* arg = (emscriptenArgs*)arg_;
+    emscriptenArgs& arg = (emscriptenArgs*)arg_;
 
-    arg->activeScene->update();
+    arg.activeScene->update();
 }
 #endif
 

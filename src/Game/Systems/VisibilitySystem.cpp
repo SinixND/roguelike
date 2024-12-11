@@ -388,7 +388,7 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
             //* < : Update only octant tiles including diagonal tiles (spare last row tile, needed for correct diagonal visibility)
             if (octX <= octY)
             {
-                //* Skip test (-> set invis) if shadowline already covers whole octant
+                //* Skip test (. set invis) if shadowline already covers whole octant
                 if (
                     shadowline.size()
                     && shadowline[0].slopeLeft() < 0
@@ -430,7 +430,7 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                             ((octX - 0.5f) < (shadow.getLeftAtTop(octantPosition))
                              || (shadow.getRightAtBottom(octantPosition)) < (octX + 0.5f)))
                         {
-                            //* -> visible (variable unchanged): top-left/bottom-right corner not in shadow
+                            //* . visible (variable unchanged): top-left/bottom-right corner not in shadow
 
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
                             snx::debug::cliLog(

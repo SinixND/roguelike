@@ -310,7 +310,7 @@ endif
 
 ### Default flags
 #-DVERSION=$(VERSION)
-CXX_FLAGS 				:= -std=c++20 -MMD -MP 
+CXX_FLAGS 				:= -std=c++20 -MMD -MP -g
 FATAL					:= no
 
 ### Build specific flags 

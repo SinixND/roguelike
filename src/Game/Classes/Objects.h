@@ -19,7 +19,7 @@ struct Objects
 
 //* Access or create
 void createObject(
-    Objects* objects,
+    Objects& objects,
     Vector2I const& tilePosition,
     RenderId renderId,
     std::string const& name,

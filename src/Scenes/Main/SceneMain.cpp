@@ -73,7 +73,6 @@ void SceneMain::setupSceneEvents()
             gameCamera_.init(panels_.map, game_.hero.position.worldPixel);
             VisibilitySystem::update(
                 fogs_,
-                // game_.world.currentMap->tiles,
                 game_.world.currentMap->tiles.visibilityIds,
                 game_.world.currentMap->tiles.isOpaques,
                 gameCamera_.viewportInTiles(),
@@ -95,7 +94,6 @@ void SceneMain::setupSceneEvents()
             //* VisibilitySystem
             VisibilitySystem::update(
                 fogs_,
-                // game_.world.currentMap->tiles,
                 game_.world.currentMap->tiles.visibilityIds,
                 game_.world.currentMap->tiles.isOpaques,
                 gameCamera_.viewportInTiles(),

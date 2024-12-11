@@ -33,6 +33,7 @@ public:
 
     void reconstructPath(std::vector<Vector2I>& path);
 };
+
 namespace PathfinderSystem
 {
     //* Returns path from target (front()) to start (included, back())

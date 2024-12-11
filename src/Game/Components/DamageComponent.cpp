@@ -18,7 +18,6 @@ int damageRNG(DamageComponent const& damageComponent)
     snx::Logger::logAppend(TextFormat("%i damage", damage));
 
     return damage;
-    // return damageComponent.baseDamage + (damageComponent.baseDamage * (snx::RNG::random(.0f, 100.0f) < damageComponent.critChanceFactor) * damageComponent.critDamageFactor);
 }
 
 int damageAverage(DamageComponent const& damageComponent)

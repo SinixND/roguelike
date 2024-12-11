@@ -7,7 +7,8 @@ struct Map;
 struct Vector2I;
 class GameCamera;
 class PositionComponent;
-class TransformComponent;
+struct TransformComponent;
+struct MovementComponent;
 class EnergyComponent;
 struct DamageComponent;
 class HealthComponent;
@@ -15,7 +16,7 @@ class HealthComponent;
 namespace AISystem
 {
     //* Return if all enemies checked
-    bool checkForAction(
+    bool checkReadiness(
         Enemies& enemies,
         Map const& map,
         Vector2I const& heroPosition,
@@ -25,7 +26,7 @@ namespace AISystem
     void chooseAction(
         AIComponent const& ai,
         PositionComponent& position,
-        TransformComponent& transform,
+        MovementComponent& movement,
         EnergyComponent& energy,
         DamageComponent& damage,
         Map const& map,

@@ -80,6 +80,6 @@ namespace snx
             }
         }
     };
-} // namespace snx
+}
 
 #endif

@@ -24,9 +24,6 @@ void PanelSystem::init(Panels& panels)
     }
 
     float heroInfoPanelWidth =
-        // static_cast<float>(
-        //     (/*Number of chars per line*/ 15 * GameFont::fontWidth)
-        //     + 2 * GameFont::fontWidth)
         MeasureTextEx(
             GameFont::font(),
             widthString.c_str(),

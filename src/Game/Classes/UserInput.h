@@ -7,8 +7,6 @@
 
 class UserInput
 {
-    InputActionId inputAction_{InputActionId::NONE};
-
     bool modifier_{};
 
     std::unordered_map<int, InputActionId> keyToInputActionId_{};
@@ -27,20 +25,22 @@ class UserInput
     double lastTap_{};
 
 public:
+    InputActionId inputAction{InputActionId::NONE};
+
+public:
     void bindKey(int key, InputActionId action);
     void bindMouseButton(int key, InputActionId action);
     void bindModifierKey(int key, InputActionId action);
 
     //* Returns true if input received
-    bool takeInputMouse(bool isCursorActive);
+    bool registerMouse(bool isCursorActive);
 
     //* Returns true if input received
-    bool takeInputKey();
+    bool registerKeyboard();
 
     //* Returns true if input received
-    bool takeInputGesture();
+    bool registerGesture();
 
-    InputActionId inputAction() const;
     void resetInputAction();
 };
 

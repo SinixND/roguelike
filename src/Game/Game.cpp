@@ -105,7 +105,7 @@ void Game::processInput(Cursor& cursor)
 {
     //* Take input from mouse, keys or gestures
     //* Continuous movement done by repeating previous input if modifier is active
-    UserInputSystem::takeInput(
+    UserInputSystem::registerInput(
         userInput_,
         cursor.isActive);
 }
@@ -124,7 +124,7 @@ void Game::updateState(
     {
         Map& map{*world.currentMap};
 
-        allEnemiesChecked = AISystem::checkForAction(
+        allEnemiesChecked = AISystem::checkReadiness(
             map.enemies,
             map,
             hero.position.tilePosition(),
@@ -144,7 +144,7 @@ void Game::updateState(
         while (!isUnitReady)
         {
             isUnitReady = hero.energy.regenerate();
-            isUnitReady = regenerateAll(&world.currentMap->enemies) || isUnitReady;
+            isUnitReady = regenerateAll(world.currentMap->enemies) || isUnitReady;
         }
 
         ++turn_;
@@ -162,6 +162,7 @@ void Game::updateState(
     //* Update hero movement
     MovementSystem::update(
         hero.transform,
+        hero.movement,
         hero.position,
         hero.energy,
         *world.currentMap,
@@ -169,7 +170,7 @@ void Game::updateState(
 
     //* Update enemies
     updateEnemies(
-        &world.currentMap->enemies,
+        world.currentMap->enemies,
         *world.currentMap,
         hero.position);
 }

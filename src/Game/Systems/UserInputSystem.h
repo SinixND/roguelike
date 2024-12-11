@@ -11,7 +11,7 @@ namespace UserInputSystem
 {
     void setDefaultInputMappings(UserInput& userInputComponent);
 
-    void takeInput(
+    void registerInput(
         UserInput& userInputComponent,
         bool isCursorActive);
 
