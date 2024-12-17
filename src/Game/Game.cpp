@@ -50,14 +50,14 @@ void Game::setupGameEvents()
         EventId::ACTION_IN_PROGRESS,
         [&]()
         {
-            actionInProgress_ = true;
+            actionInProgress = true;
         });
 
     snx::PublisherStatic::addSubscriber(
         EventId::ACTION_FINISHED,
         [&]()
         {
-            actionInProgress_ = false;
+            actionInProgress = false;
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -131,11 +131,25 @@ void Game::update(
     GameCamera const& gameCamera,
     Cursor const& cursor)
 {
-    //* Determine next actor (in input step!)
+    //* Determine next actor (in input step? use/update AI-current turn)
+
     //* Update next actor
     //* (Check hero?)
     //* Regen
 
+    auto const& enemies{world.currentMap->enemies};
+
+    size_t activeEnemyId = getActiveEnemy(
+        enemies.energies,
+        enemies.ais,
+        turn);
+
+    if (!actionInProgress)
+    {
+        //* takeEnemyTurn()
+        {
+        }
+    }
     //==================================
 
     //* Cycle enemies once to check for action
@@ -143,7 +157,7 @@ void Game::update(
 
     //* Trigger AI action
     if (
-        !actionInProgress_
+        !actionInProgress
         && !hero.energy.isReady())
     {
         Map& map{*world.currentMap};
@@ -158,7 +172,7 @@ void Game::update(
 
     //* Regenerate energy if no action in progress
     if (
-        !actionInProgress_
+        !actionInProgress
         && !hero.energy.isReady()
         && allEnemiesChecked)
     {
@@ -171,8 +185,8 @@ void Game::update(
             isUnitReady = regenerateAll(world.currentMap->enemies) || isUnitReady;
         }
 
-        ++turn_;
-        snx::Logger::setStamp(std::to_string(turn_));
+        ++turn;
+        snx::Logger::setStamp(std::to_string(turn));
     }
 
     //* Trigger potential hero action
@@ -355,7 +369,3 @@ void Game::update(
         hero.position);
 }
 
-int Game::turn() const
-{
-    return turn_;
-}

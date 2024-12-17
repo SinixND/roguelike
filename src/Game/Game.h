@@ -20,10 +20,10 @@ public:
     InputHandler inputHandler{};
     InputActionId inputAction{InputActionId::NONE};
 
-    bool actionInProgress_{false};
+    bool actionInProgress{false};
 
     //* Track game turns
-    int turn_{0};
+    int turn{0};
 
 public:
     void init();
@@ -35,8 +35,6 @@ public:
         Cursor const& cursor);
 
     void setupGameEvents();
-
-    int turn() const;
 };
 
 #endif
