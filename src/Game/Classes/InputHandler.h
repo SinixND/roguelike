@@ -22,7 +22,7 @@ struct InputHandler
 };
 
 InputActionId checkKeyboard(
-    InputHandler& handler,
+    InputHandler& input,
     InputMappings const& mappings);
 
 InputActionId checkMouse(

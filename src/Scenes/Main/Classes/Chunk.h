@@ -35,23 +35,4 @@ public:
     }
 };
 
-// Chunk newChunk(
-//     PositionComponent const& position,
-//     RenderTexture const& renderTexture)
-// {
-//     Chunk chunk{};
-//
-//     chunk.corners = RectangleExI{
-//         position.tilePosition().x,
-//         position.tilePosition().y,
-//         ChunkData::chunkSize,
-//         ChunkData::chunkSize};
-//
-//     chunk.position = position;
-//
-//     chunk.renderTexture = renderTexture;
-//
-//     return chunk;
-// }
-//
 #endif

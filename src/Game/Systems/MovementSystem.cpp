@@ -1,78 +1,67 @@
 #include "MovementSystem.h"
 #include "CollisionSystem.h"
+#include "Enemies.h"
 #include "EnergyComponent.h"
 #include "EventId.h"
-#include "Map.h"
+#include "MovementComponent.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "TileData.h"
+#include "Tiles.h"
 #include "TransformComponent.h"
 #include "raylibEx.h"
 #include <raymath.h>
 
-bool MovementSystem::update(
+void MovementSystem::update(
     TransformComponent& transform,
     MovementComponent& movement,
     PositionComponent& position,
     EnergyComponent& energy,
-    Map const& map,
     PositionComponent const& heroPosition)
 {
-    //* Avoid check if no movement in progress
-    //* Check collision before starting movement
-    if (
-        transform.speed
-        && CollisionSystem::checkCollision(
-            map,
-            Vector2Add(
-                position.tilePosition(),
-                transform.direction),
-            heroPosition.tilePosition()))
+    //* Start movement from path
+    if (!movement.path.empty()
+        && !transform.speed)
     {
-        movement.path.clear();
-
-        //* Wait instead
-        energy.consume();
-    }
-
-    //* Start movement on trigger
-    if (!movement.path.empty())
-    {
-        transform.direction = Vector2Subtract(
-            movement.path.rbegin()[1],
-            movement.path.rbegin()[0]);
-
-        transform.speed = movement.baseSpeed;
-
-        energy.consume();
-
-        snx::PublisherStatic::publish(EventId::ACTION_IN_PROGRESS);
+        prepareFromExistingPath(
+            movement,
+            transform);
     }
 
     //* Check if action is in progress
-    if (!transform.speed)
+    if (transform.speed)
     {
-        return false;
+        energy.consume();
+
+        snx::PublisherStatic::publish(EventId::MULTIFRAME_ACTION_ACTIVE);
+    }
+    else
+    {
+        return;
     }
 
-    bool didTilePositionChange{false};
+    Vector2 offset{frameOffset(transform)};
 
-    MovementSystem::updateCumulativeDistance(transform);
+    transform.cumulativeDistance += Vector2Length(offset);
+
+    Vector2I oldPosition{position.tilePosition()};
 
     //* Check if movement exceeds tile length this frame
     if (transform.cumulativeDistance < TileData::tileSize)
     {
         //* Move full distance this frame
-        didTilePositionChange = position.move(frameOffset(transform));
+        position.move(offset);
     }
     else
     {
         //* Move by remaining distance until TILE_SIZE
-        didTilePositionChange = position.move(
+        position.move(
             Vector2ClampValue(
-                frameOffset(transform),
+                offset,
                 0,
-                TileData::tileSize - (transform.cumulativeDistance - Vector2Length(frameOffset(transform)))));
+                TileData::tileSize
+                    - (transform.cumulativeDistance
+                       - Vector2Length(offset))));
 
         //* === Moved one tile ===
         //* Clean precision errors
@@ -81,39 +70,76 @@ bool MovementSystem::update(
         //* Reset cumulativeDistance
         resetCumulativeDistance(transform);
 
-        snx::PublisherStatic::publish(EventId::ACTION_FINISHED);
-
         resetTransform(transform);
-        movement.path.clear();
+
+        snx::PublisherStatic::publish(EventId::MULTIFRAME_ACTION_DONE);
     }
 
     //* Check if unit moving is the hero
     if (position.worldPixel != heroPosition.worldPixel)
     {
-        return didTilePositionChange;
+        return;
     }
 
     //* Handle special case for hero
     snx::PublisherStatic::publish(EventId::HERO_MOVED);
 
-    if (didTilePositionChange)
+    if (oldPosition != position.tilePosition())
     {
         snx::PublisherStatic::publish(EventId::HERO_POSITION_CHANGED);
     }
+}
 
-    return didTilePositionChange;
+void MovementSystem::updateEnemies(
+    Enemies& enemies,
+    PositionComponent const& heroPosition)
+{
+    PositionComponent* currentPosition{};
+    Vector2I oldPosition{};
+
+    for (size_t i{0}; i < enemies.transforms.size(); ++i)
+    {
+        currentPosition = &enemies.positions.values().at(i);
+
+        oldPosition = currentPosition->tilePosition();
+
+        //* Update movement
+        //* Update ids_ key if tilePosition changes
+        MovementSystem::update(
+            enemies.transforms.values().at(i),
+            enemies.movements.values().at(i),
+            *currentPosition,
+            enemies.energies.values().at(i),
+            heroPosition);
+
+        if (oldPosition != currentPosition->tilePosition())
+        {
+            enemies.ids.changeKey(
+                oldPosition,
+                currentPosition->tilePosition());
+        }
+    }
+}
+
+void MovementSystem::prepareByDirection(
+    MovementComponent const& movement,
+    Vector2I const& direction,
+    TransformComponent& transform)
+{
+    transform.direction = direction;
+    transform.speed = movement.baseSpeed;
 }
 
 void MovementSystem::prepareFromExistingPath(
     MovementComponent& movement,
-    PositionComponent const& position)
+    TransformComponent& transform)
 {
     prepareByDirection(
         movement,
-        position,
         Vector2Subtract(
             movement.path.rbegin()[1],
-            movement.path.rbegin()[0]));
+            movement.path.rbegin()[0]),
+        transform);
 
     //* Remove tilePosition moved from
     movement.path.pop_back();
@@ -125,24 +151,8 @@ void MovementSystem::prepareFromExistingPath(
     }
 }
 
-void MovementSystem::prepareInputAgnostic(
-    MovementComponent& movement,
-    TransformComponent const& transform,
-    PositionComponent const& position)
-{
-    if (
-        !transform.speed
-        && !movement.path.empty())
-    {
-        MovementSystem::prepareFromExistingPath(
-            movement,
-            position);
-    }
-}
-
 void MovementSystem::prepareByNewPath(
     MovementComponent& movement,
-    PositionComponent const& position,
     std::vector<Vector2I> const& path)
 {
     if (path.empty())
@@ -151,46 +161,20 @@ void MovementSystem::prepareByNewPath(
     }
 
     movement.path = path;
-
-    MovementSystem::prepareFromExistingPath(
-        movement,
-        position);
-}
-
-void MovementSystem::updateCumulativeDistance(TransformComponent& transform)
-{
-    transform.cumulativeDistance += Vector2Length(frameOffset(transform));
-}
-
-void MovementSystem::resetCumulativeDistance(TransformComponent& transform)
-{
-    transform.cumulativeDistance = 0;
-}
-
-void MovementSystem::prepareByDirection(
-    MovementComponent& movement,
-    PositionComponent const& position,
-    Vector2I const& direction)
-{
-    movement.path.push_back(Vector2Add(
-        position.tilePosition(),
-        direction));
-
-    movement.path.push_back(position.tilePosition());
 }
 
 void MovementSystem::prepareByFromTo(
     MovementComponent& movement,
-    PositionComponent const& position,
+    TransformComponent& transform,
     Vector2I const& from,
     Vector2I const& to)
 {
     prepareByDirection(
         movement,
-        position,
         Vector2Subtract(
             to,
-            from));
+            from),
+        transform);
 }
 
 void MovementSystem::resetTransform(TransformComponent& transform)
@@ -198,6 +182,11 @@ void MovementSystem::resetTransform(TransformComponent& transform)
     // transform.isInProgress_ = false;
     transform.direction = Vector2I{0, 0};
     transform.speed = .0f;
+}
+
+void MovementSystem::resetCumulativeDistance(TransformComponent& transform)
+{
+    transform.cumulativeDistance = 0;
 }
 
 Vector2 MovementSystem::frameOffset(TransformComponent const& transform)

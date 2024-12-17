@@ -11,7 +11,7 @@ namespace snx
     {
         float const borderWidth{1};
 
-        virtual void run() {}
+        virtual void update() {}
 
         void drawWindowBorder()
         {

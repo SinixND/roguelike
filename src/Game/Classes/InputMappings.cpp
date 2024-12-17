@@ -13,7 +13,7 @@ InputMappings defaultInputMappings()
     inputMappings.keyboardToAction.insert({KEY_UP, InputActionId::ACT_UP});
 
     inputMappings.keyboardToAction.insert({KEY_A, InputActionId::ACT_LEFT});
-    inputMappings.keyboardToAction.insert({KEY_K, InputActionId::ACT_LEFT});
+    inputMappings.keyboardToAction.insert({KEY_H, InputActionId::ACT_LEFT});
     inputMappings.keyboardToAction.insert({KEY_LEFT, InputActionId::ACT_LEFT});
 
     inputMappings.keyboardToAction.insert({KEY_S, InputActionId::ACT_DOWN});

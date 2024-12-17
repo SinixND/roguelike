@@ -217,7 +217,7 @@ void SceneMain::setupSceneEvents()
 #endif
 }
 
-void SceneMain::prepare()
+void SceneMain::processInput()
 {
     //* Color theme
     if (IsKeyPressed(KEY_F2))
@@ -228,17 +228,17 @@ void SceneMain::prepare()
     //* Allow input if hero is ready (= full energy)
     if (game_.hero.energy.isReady())
     {
-        game_.process(cursor_);
+        game_.processInput(cursor_);
     }
 }
 
-void SceneMain::update()
+void SceneMain::updateState()
 {
     cursor_.update(
         gameCamera_.camera(),
         game_.hero.position.tilePosition());
 
-    game_.update(
+    game_.updateState(
         gameCamera_,
         cursor_);
 
@@ -247,7 +247,7 @@ void SceneMain::update()
 #endif
 }
 
-void SceneMain::render()
+void SceneMain::renderOutput()
 {
     //* Draw map panel content
     BeginMode2D(gameCamera_.camera());
@@ -340,16 +340,16 @@ void SceneMain::render()
     PanelSystem::drawPanelBorders(panels_);
 }
 
-void SceneMain::run()
+void SceneMain::update()
 {
-    prepare();
-    update();
+    processInput();
+    updateState();
 
     BeginDrawing();
 
     ClearBackground(Colors::bg);
 
-    render();
+    renderOutput();
 
     //* Draw simple frame
     drawWindowBorder();

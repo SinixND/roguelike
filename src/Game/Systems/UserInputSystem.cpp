@@ -3,6 +3,7 @@
 //* #define DEBUG_GESTURES
 //* #define DEBUG_GESTURE_EVENTS
 
+#include "CollisionSystem.h"
 #include "Cursor.h"
 #include "DamageSystem.h"
 #include "Directions.h"
@@ -11,7 +12,6 @@
 #include "HealthComponent.h"
 #include "Hero.h"
 #include "InputActionId.h"
-#include "InputHandler.h"
 #include "Logger.h"
 #include "Map.h"
 #include "MovementSystem.h"
@@ -24,62 +24,91 @@
 
 void performAttack(
     Hero& hero,
-    Map& map,
+    Enemies& enemies,
     Vector2I const& target)
 {
     snx::Logger::log("Hero deals ");
 
     DamageSystem::attack(
         hero.damage,
-        map.enemies.healths.at(
-            map.enemies.ids.at(
+        enemies.healths.at(
+            enemies.ids.at(
                 target)));
-
-    hero.energy.consume();
 }
 
-void UserInputSystem::triggerAction(
-    InputHandler& userInputComponent,
+bool processDirectionalInput(
+    Hero& hero,
+    Map& map,
+    Vector2I direction)
+{
+    bool isActionMultiFrame = false;
+
+    Vector2I target{
+        Vector2Add(
+            hero.position.tilePosition(),
+            direction)};
+
+    if (map.enemies.ids.contains(target))
+    {
+        performAttack(
+            hero,
+            map.enemies,
+            target);
+
+        hero.energy.consume();
+    }
+    else if (!CollisionSystem::checkCollision(
+                 map.tiles,
+                 map.enemies,
+                 target,
+                 hero.position.tilePosition()))
+    {
+        MovementSystem::prepareByDirection(
+            hero.movement,
+            direction,
+            hero.transform);
+
+        hero.energy.consume();
+
+        isActionMultiFrame = true;
+    }
+
+    return isActionMultiFrame;
+}
+
+bool UserInputSystem::takeAction(
+    InputActionId inputAction,
     Hero& hero,
     Cursor const& cursor,
     Map& map,
     GameCamera const& gameCamera)
 {
-    if (!hero.energy.isReady())
-    {
-        return;
-    }
+    bool isActionMultiFrame{false};
 
-    if (userInputComponent.inputAction == InputActionId::NONE)
+    switch (inputAction)
     {
-        //* Trigger input agnostic actions, eg. non-empty path
-        MovementSystem::prepareInputAgnostic(
-            hero.movement,
-            hero.transform,
-            hero.position);
+        default:
+        case InputActionId::NONE:
+        {
+            // if (!hero.transform.speed
+            //     && !hero.movement.path.empty())
+            // {
+            //     MovementSystem::prepareFromExistingPath(
+            //         hero.movement,
+            //         // hero.position);
+            //         hero.transform);
+            //
+            //     isActionMultiFrame = true;
+            // }
 
-        return;
-    }
+            break;
+        }
 
-    switch (userInputComponent.inputAction)
-    {
         case InputActionId::ACT_UP:
         {
-            Vector2I target{
-                Vector2Add(
-                    hero.position.tilePosition(),
-                    Directions::up)};
-
-            if (map.enemies.ids.contains(target))
-            {
-                performAttack(hero, map, target);
-
-                break;
-            }
-
-            MovementSystem::prepareByDirection(
-                hero.movement,
-                hero.position,
+            isActionMultiFrame = processDirectionalInput(
+                hero,
+                map,
                 Directions::up);
 
             break;
@@ -87,21 +116,9 @@ void UserInputSystem::triggerAction(
 
         case InputActionId::ACT_LEFT:
         {
-            Vector2I target{
-                Vector2Add(
-                    hero.position.tilePosition(),
-                    Directions::left)};
-
-            if (map.enemies.ids.contains(target))
-            {
-                performAttack(hero, map, target);
-
-                break;
-            }
-
-            MovementSystem::prepareByDirection(
-                hero.movement,
-                hero.position,
+            isActionMultiFrame = processDirectionalInput(
+                hero,
+                map,
                 Directions::left);
 
             break;
@@ -109,21 +126,9 @@ void UserInputSystem::triggerAction(
 
         case InputActionId::ACT_DOWN:
         {
-            Vector2I target{
-                Vector2Add(
-                    hero.position.tilePosition(),
-                    Directions::down)};
-
-            if (map.enemies.ids.contains(target))
-            {
-                performAttack(hero, map, target);
-
-                break;
-            }
-
-            MovementSystem::prepareByDirection(
-                hero.movement,
-                hero.position,
+            isActionMultiFrame = processDirectionalInput(
+                hero,
+                map,
                 Directions::down);
 
             break;
@@ -131,21 +136,9 @@ void UserInputSystem::triggerAction(
 
         case InputActionId::ACT_RIGHT:
         {
-            Vector2I target{
-                Vector2Add(
-                    hero.position.tilePosition(),
-                    Directions::right)};
-
-            if (map.enemies.ids.contains(target))
-            {
-                performAttack(hero, map, target);
-
-                break;
-            }
-
-            MovementSystem::prepareByDirection(
-                hero.movement,
-                hero.position,
+            isActionMultiFrame = processDirectionalInput(
+                hero,
+                map,
                 Directions::right);
 
             break;
@@ -153,14 +146,20 @@ void UserInputSystem::triggerAction(
 
         case InputActionId::MOVE_TO_TARGET:
         {
-            MovementSystem::prepareByNewPath(
-                hero.movement,
-                hero.position,
-                PathfinderSystem::findPath(
-                    map,
-                    hero.position.tilePosition(),
-                    cursor.position.tilePosition(),
-                    gameCamera));
+            std::vector<Vector2I> path{PathfinderSystem::findPath(
+                map,
+                hero.position.tilePosition(),
+                cursor.position.tilePosition(),
+                gameCamera)};
+
+            if (!path.empty())
+            {
+                MovementSystem::prepareByNewPath(
+                    hero.movement,
+                    path);
+            }
+
+            isActionMultiFrame = !path.empty();
 
             break;
         }
@@ -192,11 +191,9 @@ void UserInputSystem::triggerAction(
 
             break;
         }
-
-        default:
-            break;
     }
 
-    //* Reset
-    userInputComponent.resetInputAction();
+    inputAction = InputActionId::NONE;
+
+    return isActionMultiFrame;
 }

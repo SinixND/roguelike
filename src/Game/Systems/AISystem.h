@@ -1,8 +1,11 @@
 #ifndef IG20241028165100
 #define IG20241028165100
 
+#include <cstddef>
+
 struct AIComponent;
-struct Enemies;
+class World;
+struct Hero;
 struct Map;
 struct Vector2I;
 class GameCamera;
@@ -15,18 +18,19 @@ class HealthComponent;
 
 namespace AISystem
 {
-    //* Return if all enemies checked
-    bool checkReadiness(
-        Enemies& enemies,
-        Map const& map,
-        Vector2I const& heroPosition,
-        HealthComponent& heroHealth,
-        GameCamera const& gameCamera);
+    bool takeActions(
+        World& world,
+        Hero& hero,
+        size_t& activeEnemyId,
+        GameCamera const& gameCamera,
+        int turn);
 
-    void chooseAction(
+    //* Return if multi-frame action taken
+    bool takeAction(
         AIComponent const& ai,
         PositionComponent& position,
         MovementComponent& movement,
+        TransformComponent& transform,
         EnergyComponent& energy,
         DamageComponent& damage,
         Map const& map,

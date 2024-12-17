@@ -44,11 +44,23 @@ void initEnemies(
     int mapLevel,
     Map const& map);
 
-bool regenerateAll(Enemies& enemies);
+bool regenerateEnergies(Enemies& enemies);
 
 void updateEnemies(
     Enemies& enemies,
-    Map const& map,
     PositionComponent const& heroPosition);
+
+size_t getActiveEnemy(
+    snx::DenseMap<size_t, EnergyComponent> const& energies,
+    snx::DenseMap<size_t, AIComponent> const& ais,
+    int const turn);
+
+void removeEnemy(
+    Enemies& enemies,
+    size_t id);
+
+void replaceDeadEnemies(
+    Enemies& enemies,
+    Map const& map);
 
 #endif

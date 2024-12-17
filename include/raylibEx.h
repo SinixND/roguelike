@@ -693,8 +693,7 @@ inline bool CheckCollisionLines(
     int cda{GetOrientation(c2, d2, a1)};
     int cdb{GetOrientation(c2, d2, b1)};
 
-    if (
-        //* Colinear orientations
+    if ( //* Colinear orientations
         !(abc * abd * cda * cdb)
         //* No intersection
         || (abc == abd)

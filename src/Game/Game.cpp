@@ -44,20 +44,116 @@ void Game::init()
 #endif
 }
 
+void Game::processInput(Cursor& cursor)
+{
+    //* Take input from mouse, keys or gestures
+    inputAction = checkKeyboard(
+        inputHandler,
+        inputMappings);
+
+    if (inputAction != InputActionId::NONE)
+    {
+        return;
+    }
+
+    inputAction = checkMouse(inputMappings, cursor.isActive);
+
+    if (inputAction != InputActionId::NONE)
+    {
+        return;
+    }
+
+    inputAction = checkGesture(inputHandler);
+}
+
+void Game::updateState(
+    GameCamera const& gameCamera,
+    Cursor const& cursor)
+{
+    //* AI
+    if (!isMultiFrameActionActive)
+    {
+        isMultiFrameActionActive = AISystem::takeActions(
+            world,
+            hero,
+            activeEnemyId,
+            gameCamera,
+            turn);
+    }
+
+    //* Hero
+    if (!isMultiFrameActionActive
+        && hero.energy.isReady())
+    {
+        isMultiFrameActionActive = UserInputSystem::takeAction(
+            inputAction,
+            hero,
+            cursor,
+            *world.currentMap,
+            gameCamera);
+    }
+
+    //* Update instant actions
+    if (!isMultiFrameActionActive)
+    {
+        replaceDeadEnemies(
+            world.currentMap->enemies,
+            *world.currentMap);
+    }
+    //* Update multi-frame actions
+    else
+    {
+        //* Update hero
+        MovementSystem::update(
+            hero.transform,
+            hero.movement,
+            hero.position,
+            hero.energy,
+            hero.position);
+
+        //* Update enemies
+        MovementSystem::updateEnemies(
+            world.currentMap->enemies,
+            hero.position);
+    }
+
+    //* Regenerate energy if no action in progress
+    if (!isMultiFrameActionActive
+        && !hero.energy.isReady()
+        && !activeEnemyId)
+    {
+        bool isUnitReady{false};
+
+        //* Regenerate until one unit becomes ready
+        while (!isUnitReady)
+        {
+            isUnitReady = hero.energy.regenerate();
+            isUnitReady |= regenerateEnergies(world.currentMap->enemies);
+        }
+
+        //* Progess turn when hero is ready
+        if (hero.energy.isReady())
+        {
+            ++turn;
+            snx::Logger::setStamp(std::to_string(turn));
+        }
+    }
+}
+
 void Game::setupGameEvents()
 {
     snx::PublisherStatic::addSubscriber(
-        EventId::ACTION_IN_PROGRESS,
+        EventId::MULTIFRAME_ACTION_ACTIVE,
         [&]()
         {
-            actionInProgress_ = true;
+            isMultiFrameActionActive = true;
         });
 
     snx::PublisherStatic::addSubscriber(
-        EventId::ACTION_FINISHED,
+        EventId::MULTIFRAME_ACTION_DONE,
         [&]()
         {
-            actionInProgress_ = false;
+            isMultiFrameActionActive = false;
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -102,260 +198,4 @@ void Game::setupGameEvents()
             snx::PublisherStatic::publish(EventId::HERO_POSITION_CHANGED);
             snx::PublisherStatic::publish(EventId::MAP_CHANGE);
         });
-}
-
-void Game::prepare(Cursor& cursor)
-{
-    //* Take input from mouse, keys or gestures
-    //* Continuous movement done by repeating previous input if modifier is active
-    inputAction = checkKeyboard(
-        inputHandler,
-        inputMappings);
-
-    if (inputAction != InputActionId::NONE)
-    {
-        return;
-    }
-
-    inputAction = checkMouse(inputMappings, cursor.isActive);
-
-    if (inputAction != InputActionId::NONE)
-    {
-        return;
-    }
-
-    inputAction = checkGesture(inputHandler);
-}
-
-void Game::update(
-    GameCamera const& gameCamera,
-    Cursor const& cursor)
-{
-    //* Determine next actor (in input step!)
-    //* Update next actor
-    //* (Check hero?)
-    //* Regen
-
-    //==================================
-
-    //* Cycle enemies once to check for action
-    bool allEnemiesChecked{false};
-
-    //* Trigger AI action
-    if (
-        !actionInProgress_
-        && !hero.energy.isReady())
-    {
-        Map& map{*world.currentMap};
-
-        allEnemiesChecked = AISystem::checkReadiness(
-            map.enemies,
-            map,
-            hero.position.tilePosition(),
-            hero.health,
-            gameCamera);
-    }
-
-    //* Regenerate energy if no action in progress
-    if (
-        !actionInProgress_
-        && !hero.energy.isReady()
-        && allEnemiesChecked)
-    {
-        //* Regenerate until one unit becomes ready
-        bool isUnitReady{false};
-
-        while (!isUnitReady)
-        {
-            isUnitReady = hero.energy.regenerate();
-            isUnitReady = regenerateAll(world.currentMap->enemies) || isUnitReady;
-        }
-
-        ++turn_;
-        snx::Logger::setStamp(std::to_string(turn_));
-    }
-
-    //* Trigger potential hero action
-    // UserInputSystem::triggerAction(
-    //     userInput_,
-    //     hero,
-    //     cursor,
-    //     *world.currentMap,
-    //     gameCamera);
-    {
-        if (!hero.energy.isReady())
-        {
-            return;
-        }
-
-        if (userInputComponent.inputAction == InputActionId::NONE)
-        {
-            //* Trigger input agnostic actions, eg. non-empty path
-            MovementSystem::prepareInputAgnostic(
-                hero.movement,
-                hero.transform,
-                hero.position);
-
-            return;
-        }
-
-        switch (userInputComponent.inputAction)
-        {
-            case InputActionId::ACT_UP:
-            {
-                Vector2I target{
-                    Vector2Add(
-                        hero.position.tilePosition(),
-                        Directions::up)};
-
-                if (map.enemies.ids.contains(target))
-                {
-                    performAttack(hero, map, target);
-
-                    break;
-                }
-
-                MovementSystem::prepareByDirection(
-                    hero.movement,
-                    hero.position,
-                    Directions::up);
-
-                break;
-            }
-
-            case InputActionId::ACT_LEFT:
-            {
-                Vector2I target{
-                    Vector2Add(
-                        hero.position.tilePosition(),
-                        Directions::left)};
-
-                if (map.enemies.ids.contains(target))
-                {
-                    performAttack(hero, map, target);
-
-                    break;
-                }
-
-                MovementSystem::prepareByDirection(
-                    hero.movement,
-                    hero.position,
-                    Directions::left);
-
-                break;
-            }
-
-            case InputActionId::ACT_DOWN:
-            {
-                Vector2I target{
-                    Vector2Add(
-                        hero.position.tilePosition(),
-                        Directions::down)};
-
-                if (map.enemies.ids.contains(target))
-                {
-                    performAttack(hero, map, target);
-
-                    break;
-                }
-
-                MovementSystem::prepareByDirection(
-                    hero.movement,
-                    hero.position,
-                    Directions::down);
-
-                break;
-            }
-
-            case InputActionId::ACT_RIGHT:
-            {
-                Vector2I target{
-                    Vector2Add(
-                        hero.position.tilePosition(),
-                        Directions::right)};
-
-                if (map.enemies.ids.contains(target))
-                {
-                    performAttack(hero, map, target);
-
-                    break;
-                }
-
-                MovementSystem::prepareByDirection(
-                    hero.movement,
-                    hero.position,
-                    Directions::right);
-
-                break;
-            }
-
-            case InputActionId::MOVE_TO_TARGET:
-            {
-                MovementSystem::prepareByNewPath(
-                    hero.movement,
-                    hero.position,
-                    PathfinderSystem::findPath(
-                        map,
-                        hero.position.tilePosition(),
-                        cursor.position.tilePosition(),
-                        gameCamera));
-
-                break;
-            }
-
-            case InputActionId::ACT_IN_PLACE:
-            {
-                Vector2I heroTilePosition{hero.position.tilePosition()};
-
-                //* Wait if nothing to interact
-                if (!map.objects.events.contains(heroTilePosition))
-                {
-                    snx::Logger::log("Hero waits...");
-
-                    hero.energy.consume();
-
-                    regenerate(hero.health);
-
-                    break;
-                }
-
-                snx::PublisherStatic::publish(map.objects.events.at(heroTilePosition));
-
-                break;
-            }
-
-            case InputActionId::TOGGLE_CURSOR:
-            {
-                snx::PublisherStatic::publish(EventId::CURSOR_TOGGLE);
-
-                break;
-            }
-
-            default:
-                break;
-        }
-
-        //* Reset
-        userInputComponent.resetInputAction();
-    }
-
-    //* Update hero movement
-    MovementSystem::update(
-        hero.transform,
-        hero.movement,
-        hero.position,
-        hero.energy,
-        *world.currentMap,
-        hero.position);
-
-    //* Update enemies
-    updateEnemies(
-        world.currentMap->enemies,
-        *world.currentMap,
-        hero.position);
-}
-
-int Game::turn() const
-{
-    return turn_;
 }

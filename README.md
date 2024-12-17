@@ -4,7 +4,8 @@ Platforms: Linux, Windows, Browser
 
 
 # TODOs
-## Active (Rework features that existed before Restructuring)
+## Active 
+- [ ] Fix pathfinding/continuous movement bug
 - [ ] Refactor public/private (see Notes) ~~namespace Class/Module/System~~
 - [ ] Refactor SoA: size_t as key; hashmap/2D-array for position lookup
 - [ ] Change DenseMap/SparseSet:
@@ -16,11 +17,9 @@ Platforms: Linux, Windows, Browser
 
 - [ ] Split Component(temp) and Data(persistent)?
 - [ ] Separate System (not related to class) and Module (former member functions) via namespace?
-- [ ] eg. Give Hero optional TransMoveComponent (unique_ptr)?
 
 
 ## Shortterm
-- [ ] Energy.isReady() -> regenRate != 0 (implement stats for maxhealth, regenRates etc.)
 - [ ] End/Restart game on death
 - [ ] Add AI behaviour with new enemy types
 

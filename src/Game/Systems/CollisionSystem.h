@@ -1,7 +1,9 @@
 #ifndef IG20240914212555
 #define IG20240914212555
 
-struct Map;
+class Tiles;
+struct Enemies;
+struct Objects;
 struct Vector2I;
 
 namespace CollisionSystem
@@ -11,7 +13,9 @@ namespace CollisionSystem
     //* - enemies
     //* Returns if collision occurs
     bool checkCollision(
-        Map const& map,
+        Tiles const& tiles,
+        Enemies const& enemies,
+        // Objects const& objects,
         Vector2I const& tilePositionToCheck,
         Vector2I const& heroPosition);
 }

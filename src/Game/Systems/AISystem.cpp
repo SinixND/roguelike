@@ -1,60 +1,64 @@
 #include "AISystem.h"
 
+#include "CollisionSystem.h"
 #include "DamageComponent.h"
 #include "DamageSystem.h"
 #include "Enemies.h"
 #include "HealthComponent.h"
+#include "Hero.h"
 #include "Logger.h"
+#include "Map.h"
 #include "MovementSystem.h"
 #include "PathfinderSystem.h"
+#include "TransformComponent.h"
+#include "World.h"
 #include <cstddef>
 #include <vector>
 
-bool AISystem::checkReadiness(
-    Enemies& enemies,
-    Map const& map,
-    Vector2I const& heroPosition,
-    HealthComponent& heroHealth,
-    GameCamera const& gameCamera)
+bool AISystem::takeActions(
+    World& world,
+    Hero& hero,
+    size_t& activeEnemyId,
+    GameCamera const& gameCamera,
+    int turn)
 {
-    size_t idSize{enemies.ids.size()};
+    bool multiFrameActionActive{false};
 
-    static size_t enemiesChecked{0};
+    Enemies& enemies{world.currentMap->enemies};
 
-    while (enemiesChecked < idSize)
+    do
     {
-        size_t enemyId{enemies.ids.values()[enemiesChecked]};
+        activeEnemyId = getActiveEnemy(
+            enemies.energies,
+            enemies.ais,
+            turn);
 
-        if (!enemies.energies.at(enemyId).isReady())
+        if (activeEnemyId)
         {
-            //* Cant perform action
-            ++enemiesChecked;
-            continue;
+            enemies.ais[activeEnemyId].turn = turn;
+
+            multiFrameActionActive |= AISystem::takeAction(
+                enemies.ais.at(activeEnemyId),
+                enemies.positions.at(activeEnemyId),
+                enemies.movements.at(activeEnemyId),
+                enemies.transforms.at(activeEnemyId),
+                enemies.energies.at(activeEnemyId),
+                enemies.damages.at(activeEnemyId),
+                *world.currentMap,
+                hero.position.tilePosition(),
+                hero.health,
+                gameCamera);
         }
+    } while (activeEnemyId);
 
-        AISystem::chooseAction(
-            enemies.ais.at(enemyId),
-            enemies.positions.at(enemyId),
-            enemies.movements.at(enemyId),
-            enemies.energies.at(enemyId),
-            enemies.damages.at(enemyId),
-            map,
-            heroPosition,
-            heroHealth,
-            gameCamera);
-
-        return false;
-    }
-
-    //* All enemies checked
-    enemiesChecked = 0;
-    return true;
+    return multiFrameActionActive;
 }
 
-void AISystem::chooseAction(
+bool AISystem::takeAction(
     AIComponent const& ai,
     PositionComponent& position,
     MovementComponent& movement,
+    TransformComponent& transform,
     EnergyComponent& energy,
     DamageComponent& damage,
     Map const& map,
@@ -62,24 +66,14 @@ void AISystem::chooseAction(
     HealthComponent& heroHealth,
     GameCamera const& gameCamera)
 {
-    std::vector<Vector2I> path{PathfinderSystem::findPath(
-        map,
-        position.tilePosition(),
-        heroPosition,
-        gameCamera,
-        false,
-        ai.scanRange)};
+    bool isActionMultiFrame{false};
 
-    size_t pathSize{path.size()};
-
-    if (pathSize == 0)
-    {
-        //* Wait
-        energy.consume();
-    }
-
-    //* Path is either empty or has at least 2 entries (start and target)
-    else if (pathSize == 2)
+    //* Instant action: attack
+    if (Vector2Length(
+            Vector2Subtract(
+                position.tilePosition(),
+                heroPosition))
+        == 1)
     {
         //* Attack
         snx::Logger::log("Hero takes ");
@@ -90,20 +84,45 @@ void AISystem::chooseAction(
 
         energy.consume();
     }
-
-    else if (pathSize > 2)
-    {
-        MovementSystem::prepareByFromTo(
-            movement,
-            position,
-            position.tilePosition(),
-            path.rbegin()[1]);
-    }
-
-    //* TransformComponent is not viable
+    //* Check path
     else
     {
-        //* Wait
-        energy.consume();
+        std::vector<Vector2I> path{PathfinderSystem::findPath(
+            map,
+            position.tilePosition(),
+            heroPosition,
+            gameCamera,
+            false,
+            ai.scanRange)};
+
+        size_t pathSize{path.size()};
+
+        //* Path is valid: has at least 2 entries (start and target) -> Multi-frame action: move
+        if (pathSize > 2
+            && !CollisionSystem::checkCollision(
+                map.tiles,
+                map.enemies,
+                path.rbegin()[1],
+                heroPosition))
+        {
+            //* Prepare multi-frame action
+            MovementSystem::prepareByFromTo(
+                movement,
+                transform,
+                position.tilePosition(),
+                path.rbegin()[1]);
+
+            energy.consume();
+
+            isActionMultiFrame = true;
+        }
+        //* Path is empty -> Instant action: wait
+        else
+        {
+            //* Wait
+            energy.consume();
+        }
     }
+    // return false;
+    return isActionMultiFrame;
 }

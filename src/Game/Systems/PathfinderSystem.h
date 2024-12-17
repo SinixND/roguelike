@@ -7,32 +7,20 @@
 struct Map;
 class GameCamera;
 
-class RatedTile
+struct RatedTile
 {
-public:
     Vector2I tilePosition{};
     Vector2I distanceToTarget{};
     int stepsNeeded{};
     RatedTile* ancestor{nullptr};
-
-public:
-    RatedTile(
-        Vector2I const& tilePosition,
-        Vector2I const& target,
-        int stepsNeeded,
-        RatedTile* ancestor)
-        : tilePosition(tilePosition)
-        , distanceToTarget(Vector2Subtract(target, tilePosition))
-        , stepsNeeded(stepsNeeded)
-        , ancestor(ancestor)
-    {
-    }
-
-    //* Heuristic used to rate tiles
-    float rating() const;
-
-    void reconstructPath(std::vector<Vector2I>& path);
 };
+
+//* Heuristic used to rate tiles
+int getRating(RatedTile const& ratedTile);
+
+void reconstructPath(
+    RatedTile const& ratedTile,
+    std::vector<Vector2I>& path);
 
 namespace PathfinderSystem
 {

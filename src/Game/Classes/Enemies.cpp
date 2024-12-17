@@ -42,8 +42,7 @@ Vector2I getRandomPosition(
         //* - not visible
         //* - not solid
         //* - not occupied by other enemy
-        if (
-            tiles.positions.contains(randomPosition)
+        if (tiles.positions.contains(randomPosition)
             && !(tiles.visibilityIds.at(randomPosition) == VisibilityId::VISIBILE)
             && !tiles.isSolids.contains(randomPosition)
             && !enemies.ids.contains(randomPosition))
@@ -146,7 +145,7 @@ void initEnemies(
     }
 }
 
-bool regenerateAll(Enemies& enemies)
+bool regenerateEnergies(Enemies& enemies)
 {
     bool isEnemyReady{false};
 
@@ -163,8 +162,59 @@ bool regenerateAll(Enemies& enemies)
 
 void updateEnemies(
     Enemies& enemies,
-    Map const& map,
     PositionComponent const& heroPosition)
+{
+    // size_t i{0};
+    PositionComponent* currentPosition{};
+    Vector2I oldPosition{};
+
+    for (size_t i{0}; i < enemies.transforms.size(); ++i)
+    {
+        currentPosition = &enemies.positions.values().at(i);
+
+        oldPosition = currentPosition->tilePosition();
+
+        //* Update movement
+        //* Update ids_ key if tilePosition changes
+        MovementSystem::update(
+            enemies.transforms.values().at(i),
+            enemies.movements.values().at(i),
+            *currentPosition,
+            enemies.energies.values().at(i),
+            heroPosition);
+
+        if (oldPosition != currentPosition->tilePosition())
+        {
+            enemies.ids.changeKey(
+                oldPosition,
+                currentPosition->tilePosition());
+        }
+    }
+}
+
+size_t getActiveEnemy(
+    snx::DenseMap<size_t, EnergyComponent> const& energies,
+    snx::DenseMap<size_t, AIComponent> const& ais,
+    int const turn)
+{
+    size_t activeEnemyId{0};
+
+    for (size_t idx{0}; idx < energies.size(); ++idx)
+    {
+        if (energies.values().at(idx).isReady()
+            && ais.values().at(idx).turn < turn)
+        {
+            activeEnemyId = energies.key(idx);
+            break;
+        }
+    }
+
+    return activeEnemyId;
+}
+
+void replaceDeadEnemies(
+    Enemies& enemies,
+    Map const& map)
 {
     size_t i{0};
 
@@ -173,32 +223,17 @@ void updateEnemies(
         //* Kill enemy at 0 health
         if (enemies.healths.values().at(i).currentHealth() <= 0)
         {
-            removeEnemy(enemies, enemies.ids.values().at(i));
+            removeEnemy(
+                enemies,
+                enemies.ids.values().at(i));
 
             //* Spawn new enemy
-            createEnemy(enemies, map, RenderId::GOBLIN);
+            createEnemy(
+                enemies,
+                map,
+                RenderId::GOBLIN);
 
             continue;
-        }
-
-        PositionComponent& position{enemies.positions.values().at(i)};
-
-        Vector2I oldPosition{position.tilePosition()};
-
-        //* Update movement
-        //* Update ids_ key if tilePosition changes
-        if (
-            MovementSystem::update(
-                enemies.transforms.values().at(i),
-                enemies.movements.values().at(i),
-                position,
-                enemies.energies.values().at(i),
-                map,
-                heroPosition))
-        {
-            enemies.ids.changeKey(
-                oldPosition,
-                position.tilePosition());
         }
 
         ++i;

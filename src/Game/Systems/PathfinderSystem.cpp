@@ -28,29 +28,34 @@
 //* Heuristic used to rate tiles
 //* bias > 1: prioritize short path
 //* bias < 1: prioritize closer to target
-float constexpr bias{2};
+int constexpr bias{2};
 
-float RatedTile::rating() const
+// float rating(RatedTile const& ratedTile)
+int getRating(RatedTile const& ratedTile)
 {
     return
         //* Distance to target
-        Vector2Length(distanceToTarget)
-        + bias * stepsNeeded;
+        Vector2Length(ratedTile.distanceToTarget)
+        + bias * ratedTile.stepsNeeded;
 }
 
-void RatedTile::reconstructPath(std::vector<Vector2I>& path)
+void reconstructPath(
+    RatedTile const& ratedTile,
+    std::vector<Vector2I>& path)
 {
     //* Add this to path
-    path.push_back(tilePosition);
+    path.push_back(ratedTile.tilePosition);
 
     //* Abort (includes root/start)
-    if (!ancestor)
+    if (!ratedTile.ancestor)
     {
         return;
     }
 
     //* Add ancestor to path
-    ancestor->reconstructPath(path);
+    reconstructPath(
+        *ratedTile.ancestor,
+        path);
 }
 
 //* PathfinderSystem
@@ -59,7 +64,7 @@ void RatedTile::reconstructPath(std::vector<Vector2I>& path)
 //* and restarting with new best rating,
 //* until target is found or no rating left to check
 bool checkRatingList(
-    int rating,
+    int currentRating,
     std::forward_list<RatedTile>& ratedTiles,
     std::map<int, std::vector<RatedTile*>>& ratingList,
     std::unordered_set<Vector2I>& tilesToIgnore,
@@ -70,10 +75,10 @@ bool checkRatingList(
     std::vector<Vector2I>& path)
 {
     //* Buffer rated tiles to allow neighbours with same rating
-    std::vector<RatedTile*> tileList{ratingList[rating]};
+    std::vector<RatedTile*> tileList{ratingList[currentRating]};
 
     //* All tiles with same rating will be checked . remove key
-    ratingList.erase(rating);
+    ratingList.erase(currentRating);
 
     //* Check all tiles in vector for current best rating before choosing new best rating
     for (RatedTile* currentTile : tileList)
@@ -140,8 +145,7 @@ bool checkRatingList(
                     currentTile->tilePosition)};
 
             //* Needs to be in map panel
-            if (
-                !CheckCollisionPointRec(
+            if (!CheckCollisionPointRec(
                     Convert::tileToScreen(
                         newTilePosition,
                         gameCamera.camera()),
@@ -151,8 +155,7 @@ bool checkRatingList(
             }
 
             //* Ignore ancestor
-            if (
-                currentTile->ancestor
+            if (currentTile->ancestor
                 && (newTilePosition == currentTile->ancestor->tilePosition))
             {
                 continue;
@@ -176,7 +179,9 @@ bool checkRatingList(
             //* If Target found
             if ((newTilePosition == target))
             {
-                newRatedTile.reconstructPath(path);
+                reconstructPath(
+                    newRatedTile,
+                    path);
 
                 return true;
             }
@@ -192,8 +197,7 @@ bool checkRatingList(
             //* - Is invisible
             //* - Not accessible
             //* - Steps needed exceed maxRange
-            if (
-                !map.tiles.visibilityIds.contains(newTilePosition)
+            if (!map.tiles.visibilityIds.contains(newTilePosition)
                 || (map.tiles.visibilityIds.at(newTilePosition) == VisibilityId::INVISIBLE)
                 || map.tiles.isSolids.contains(newTilePosition)
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded > maxRange)))
@@ -208,7 +212,7 @@ bool checkRatingList(
             ratedTiles.push_front(newRatedTile);
 
             //* Add newRatedTile
-            ratingList[newRatedTile.rating()].push_back(&ratedTiles.front());
+            ratingList[getRating(newRatedTile)].push_back(&ratedTiles.front());
 
             //* Valid! Add to ignore set so it doesn't get checked again
             tilesToIgnore.insert(newTilePosition);
@@ -236,8 +240,7 @@ bool checkRatingList(
     }
 
     //* Check new best rated tiles
-    if (
-        !ratingList.empty()
+    if (!ratingList.empty()
         && checkRatingList(
             ratingList.begin()->first,
             ratedTiles,
@@ -274,8 +277,7 @@ std::vector<Vector2I> PathfinderSystem::findPath(
     //* - Is invisible
     //* - Not accessible
     //* - Equal to start
-    if (
-        !map.tiles.visibilityIds.contains(target)
+    if (!map.tiles.visibilityIds.contains(target)
         || (skipInvisibleTiles
             && (map.tiles.visibilityIds.at(target) == VisibilityId::INVISIBLE))
         || map.tiles.isSolids.contains(target)
@@ -297,13 +299,13 @@ std::vector<Vector2I> PathfinderSystem::findPath(
     //* Map of tile pointers, sorted by rating (lowest first)
     std::map<int, std::vector<RatedTile*>> ratingList{};
 
-    ratingList[firstTile.rating()].push_back(&ratedTiles.front());
+    ratingList[getRating(firstTile)].push_back(&ratedTiles.front());
 
     //* List of ignored tiles to avoid double checks
     std::unordered_set<Vector2I> tilesToIgnore{start};
 
     checkRatingList(
-        firstTile.rating(),
+        getRating(firstTile),
         ratedTiles,
         ratingList,
         tilesToIgnore,
