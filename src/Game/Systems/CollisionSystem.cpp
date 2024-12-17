@@ -1,16 +1,20 @@
 #include "CollisionSystem.h"
-#include "Map.h"
+
+#include "Enemies.h"
+#include "Tiles.h"
 #include "raylibEx.h"
 
 bool CollisionSystem::checkCollision(
-    Map const& map,
+    Tiles const& tiles,
+    Enemies const& enemies,
+    // Objects const& objects,
     Vector2I const& tilePositionToCheck,
     Vector2I const& heroPosition)
 {
     return (
         //* Next tilePosition unit moves to
-        map.enemies.ids.contains(tilePositionToCheck)
+        enemies.ids.contains(tilePositionToCheck)
         // || map.objects_.getIsSolids().contains(tilePositionToCheck)
-        // || map.tiles.isSolids.contains(tilePositionToCheck)
+        || tiles.isSolids.contains(tilePositionToCheck)
         || Vector2Equals(tilePositionToCheck, heroPosition));
 }

@@ -16,14 +16,15 @@ class HealthComponent;
 namespace AISystem
 {
     //* Return if all enemies checked
-    bool checkReadiness(
-        Enemies& enemies,
-        Map const& map,
-        Vector2I const& heroPosition,
-        HealthComponent& heroHealth,
-        GameCamera const& gameCamera);
+    // bool checkReadiness(
+    //     Enemies& enemies,
+    //     Map const& map,
+    //     Vector2I const& heroPosition,
+    //     HealthComponent& heroHealth,
+    //     GameCamera const& gameCamera);
 
-    void chooseAction(
+    //* Return if multi-frame action taken
+    bool takeAction(
         AIComponent const& ai,
         PositionComponent& position,
         MovementComponent& movement,

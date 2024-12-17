@@ -51,4 +51,9 @@ void updateEnemies(
     Map const& map,
     PositionComponent const& heroPosition);
 
+size_t getActiveEnemy(
+    snx::DenseMap<size_t, EnergyComponent> const& energies,
+    snx::DenseMap<size_t, AIComponent> const& ais,
+    int const turn);
+
 #endif

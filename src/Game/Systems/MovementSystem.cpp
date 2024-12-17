@@ -2,7 +2,8 @@
 #include "CollisionSystem.h"
 #include "EnergyComponent.h"
 #include "EventId.h"
-#include "Map.h"
+// #include "Map.h"
+#include "MovementComponent.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "TileData.h"
@@ -15,25 +16,28 @@ bool MovementSystem::update(
     MovementComponent& movement,
     PositionComponent& position,
     EnergyComponent& energy,
-    Map const& map,
+    // Map const& map,
     PositionComponent const& heroPosition)
 {
     //* Avoid check if no movement in progress
     //* Check collision before starting movement
-    if (
-        transform.speed
-        && CollisionSystem::checkCollision(
-            map,
-            Vector2Add(
-                position.tilePosition(),
-                transform.direction),
-            heroPosition.tilePosition()))
-    {
-        movement.path.clear();
-
-        //* Wait instead
-        energy.consume();
-    }
+    // if (
+    //     transform.speed
+    //     && CollisionSystem::checkCollision(
+    //         map.tiles,
+    //         map.enemies,
+    //         // map.objects,
+    //         Vector2Add(
+    //             position.tilePosition(),
+    //             transform.direction),
+    //         heroPosition.tilePosition())
+    //     )
+    // {
+    //     movement.path.clear();
+    //
+    //     //* Wait instead
+    //     energy.consume();
+    // }
 
     //* Start movement on trigger
     if (!movement.path.empty())
@@ -122,21 +126,6 @@ void MovementSystem::prepareFromExistingPath(
     if (movement.path.size() <= 1)
     {
         movement.path.clear();
-    }
-}
-
-void MovementSystem::prepareInputAgnostic(
-    MovementComponent& movement,
-    TransformComponent const& transform,
-    PositionComponent const& position)
-{
-    if (
-        !transform.speed
-        && !movement.path.empty())
-    {
-        MovementSystem::prepareFromExistingPath(
-            movement,
-            position);
     }
 }
 

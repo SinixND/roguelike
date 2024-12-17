@@ -193,7 +193,7 @@ void updateEnemies(
                 enemies.movements.values().at(i),
                 position,
                 enemies.energies.values().at(i),
-                map,
+                // map,
                 heroPosition))
         {
             enemies.ids.changeKey(
@@ -203,4 +203,24 @@ void updateEnemies(
 
         ++i;
     }
+}
+
+size_t getActiveEnemy(
+    snx::DenseMap<size_t, EnergyComponent> const& energies,
+    snx::DenseMap<size_t, AIComponent> const& ais,
+    int const turn)
+{
+    size_t activeEnemyId{0};
+
+    for (size_t idx{0}; idx < energies.size(); ++idx)
+    {
+        if (energies.values().at(idx).isReady()
+            && ais.values().at(idx).turn < turn)
+        {
+            activeEnemyId = energies.key(idx);
+            break;
+        }
+    }
+
+    return activeEnemyId;
 }

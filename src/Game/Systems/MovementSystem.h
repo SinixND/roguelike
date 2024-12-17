@@ -19,13 +19,8 @@ namespace MovementSystem
         MovementComponent& movement,
         PositionComponent& position,
         EnergyComponent& energy,
-        Map const& map,
+        // Map const& map,
         PositionComponent const& heroPosition);
-
-    void prepareInputAgnostic(
-        MovementComponent& movement,
-        TransformComponent const& transform,
-        PositionComponent const& position);
 
     void prepareByNewPath(
         MovementComponent& movement,

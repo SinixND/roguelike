@@ -38,30 +38,27 @@ void performAttack(
     hero.energy.consume();
 }
 
-void UserInputSystem::triggerAction(
-    InputHandler& userInputComponent,
+bool UserInputSystem::takeAction(
+    InputActionId inputAction,
     Hero& hero,
     Cursor const& cursor,
     Map& map,
     GameCamera const& gameCamera)
 {
-    if (!hero.energy.isReady())
-    {
-        return;
-    }
+    bool isActionMultiFrame{false};
 
-    if (userInputComponent.inputAction == InputActionId::NONE)
+    if (inputAction == InputActionId::NONE
+        && !hero.transform.speed
+        && !hero.movement.path.empty())
     {
-        //* Trigger input agnostic actions, eg. non-empty path
-        MovementSystem::prepareInputAgnostic(
+        MovementSystem::prepareFromExistingPath(
             hero.movement,
-            hero.transform,
             hero.position);
 
-        return;
+        isActionMultiFrame = true;
     }
 
-    switch (userInputComponent.inputAction)
+    switch (inputAction)
     {
         case InputActionId::ACT_UP:
         {
@@ -82,6 +79,7 @@ void UserInputSystem::triggerAction(
                 hero.position,
                 Directions::up);
 
+            isActionMultiFrame = true;
             break;
         }
 
@@ -104,6 +102,7 @@ void UserInputSystem::triggerAction(
                 hero.position,
                 Directions::left);
 
+            isActionMultiFrame = true;
             break;
         }
 
@@ -126,6 +125,7 @@ void UserInputSystem::triggerAction(
                 hero.position,
                 Directions::down);
 
+            isActionMultiFrame = true;
             break;
         }
 
@@ -148,6 +148,7 @@ void UserInputSystem::triggerAction(
                 hero.position,
                 Directions::right);
 
+            isActionMultiFrame = true;
             break;
         }
 
@@ -162,6 +163,7 @@ void UserInputSystem::triggerAction(
                     cursor.position.tilePosition(),
                     gameCamera));
 
+            isActionMultiFrame = true;
             break;
         }
 
@@ -197,6 +199,7 @@ void UserInputSystem::triggerAction(
             break;
     }
 
-    //* Reset
-    userInputComponent.resetInputAction();
+    inputAction = InputActionId::NONE;
+
+    return isActionMultiFrame;
 }
