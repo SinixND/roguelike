@@ -54,7 +54,7 @@ namespace snx
             [[maybe_unused]] static size_t maxId = std::numeric_limits<size_t>::max();
             static size_t lastId{0};
 
-            //* Start with id = 1
+            //* START WITH ID = 1
             ++lastId;
 
             assert(lastId < maxId && "ID OVERFLOWING!");

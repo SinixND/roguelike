@@ -13,7 +13,7 @@ public:
 public:
     EnergyComponent() = default;
 
-    explicit EnergyComponent(
+    EnergyComponent(
         int maxEnergy,
         int regenRate)
         : currentEnergy_(maxEnergy)

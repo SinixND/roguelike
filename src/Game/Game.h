@@ -2,7 +2,8 @@
 #define IG20241011025951
 
 #include "Hero.h"
-#include "UserInput.h"
+#include "InputHandler.h"
+#include "InputMappings.h"
 #include "World.h"
 
 class Cursor;
@@ -15,7 +16,9 @@ public:
 
     Hero hero{};
 
-    UserInput userInput_{};
+    InputMappings inputMappings{};
+    InputHandler inputHandler{};
+    InputActionId inputAction{InputActionId::NONE};
 
     bool actionInProgress_{false};
 
@@ -25,9 +28,9 @@ public:
 public:
     void init();
 
-    void processInput(Cursor& cursor);
+    void prepare(Cursor& cursor);
 
-    void updateState(
+    void update(
         GameCamera const& gameCamera,
         Cursor const& cursor);
 

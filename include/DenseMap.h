@@ -53,7 +53,7 @@ namespace snx
             values_.push_back(value);
 
             //* Add key to valueIndex mapping
-            keyToIndex_.insert(std::make_pair(key, valueIndex));
+            keyToIndex_.insert({key, valueIndex});
 
             //* Add valueIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.push_back(key);
@@ -75,7 +75,7 @@ namespace snx
             values_.push_back(Type{std::forward<Args>(args)...});
 
             //* Add key to valueIndex mapping
-            keyToIndex_.insert(std::make_pair(key, valueIndex));
+            keyToIndex_.insert({key, valueIndex});
 
             //* Add valueIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.push_back(key);

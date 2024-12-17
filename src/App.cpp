@@ -93,7 +93,7 @@ void App::run()
         updateWindow();
         updateDeveloperMode();
 
-        activeScene_->update();
+        activeScene_->run();
     }
 #endif
 }

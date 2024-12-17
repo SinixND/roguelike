@@ -29,13 +29,13 @@ class SceneMain : public snx::IScene
 
 public:
     void init();
-    void update() override;
+    void run() override;
     void deinitialize();
 
 private:
-    void processInput();
-    void updateState();
-    void renderOutput();
+    void prepare();
+    void update();
+    void render();
 
     void setupSceneEvents();
 

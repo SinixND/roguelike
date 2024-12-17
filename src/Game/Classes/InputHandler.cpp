@@ -1,10 +1,10 @@
-#include "UserInput.h"
 #include "EventId.h"
+
 #include "InputActionId.h"
+#include "InputHandler.h"
 #include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raylib.h>
-#include <utility>
 
 //* Maximum hold time for tap event to trigger
 double constexpr maxTapTime{0.3f};
@@ -13,90 +13,68 @@ double constexpr minHoldTime{0.3f};
 //* Maximum time between taps for double tap event to trigger
 double constexpr maxDoubleTapTime{0.3f};
 
-void UserInput::bindKey(int key, InputActionId action)
-{
-    keyToInputActionId_.insert(std::make_pair(key, action));
-}
-
-void UserInput::bindMouseButton(int key, InputActionId action)
-{
-    mouseButtonToInputActionId_.insert(std::make_pair(key, action));
-}
-
-void UserInput::bindModifierKey(int key, InputActionId action)
-{
-    inputActionIdToModifierKey_.insert(std::make_pair(action, key));
-}
-
-bool UserInput::registerMouse(bool isCursorActive)
-{
-    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
-    {
-        inputAction = mouseButtonToInputActionId_[MOUSE_BUTTON_RIGHT];
-    }
-
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-    {
-        inputAction = mouseButtonToInputActionId_[MOUSE_BUTTON_LEFT];
-    }
-
-    //* Check if input is invalid (need exception for mouse toggle action)
-    if (inputAction == InputActionId::NONE
-        || (!(inputAction == InputActionId::TOGGLE_CURSOR)
-            && !isCursorActive))
-    {
-
-        return false;
-    }
-
-    return true;
-}
-
-bool UserInput::registerKeyboard()
+InputActionId checkKeyboard(
+    InputHandler& handler,
+    InputMappings const& mappings)
 {
     //* Update key pressed
     //* Set lastKey only to valid inputs (associated with actions)
-    lastKey_ = (currentKey_) ? currentKey_ : lastKey_;
-    currentKey_ = GetKeyPressed();
+    handler.lastKey = (handler.currentKey) ? handler.currentKey : handler.lastKey;
+    handler.currentKey = GetKeyPressed();
 
     //* Check modifiers
-    modifier_ = IsKeyDown(inputActionIdToModifierKey_[InputActionId::MOD]);
+    handler.modifier = IsKeyDown(mappings.modifierKey);
 
     //* Repeat last key if no input but modifier down
 #if defined(TERMUX)
-    if ((modifier_ && !currentKey_))
+    if ((handler.modifier && !handler.currentKey))
 #else
-    if ((modifier_ && !currentKey_) || IsKeyPressedRepeat(lastKey_))
+    if ((handler.modifier && !handler.currentKey) || IsKeyPressedRepeat(handler.lastKey))
 #endif
     {
-        currentKey_ = lastKey_;
+        handler.currentKey = handler.lastKey;
     }
 
-    inputAction = keyToInputActionId_[currentKey_];
-
-    if (inputAction == InputActionId::NONE)
-    {
-        return false;
-    }
-
-    return true;
+    return mappings.keyboardToAction.at(handler.currentKey);
 }
 
-bool UserInput::registerGesture()
+InputActionId checkMouse(
+    InputMappings const& mappings,
+    bool const isCursorActive)
 {
+    InputActionId inputAction{InputActionId::NONE};
+
+    for (int mouseButton : {MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT})
+    {
+        if (
+            (isCursorActive
+             || mappings.mouseToAction.at(mouseButton) == InputActionId::TOGGLE_CURSOR)
+            && IsMouseButtonPressed(mouseButton))
+        {
+            inputAction = mappings.mouseToAction.at(mouseButton);
+        }
+    }
+
+    return inputAction;
+}
+
+InputActionId checkGesture(InputHandler& handler)
+{
+    InputActionId inputAction{InputActionId::NONE};
+
     //* IMPORTANT NOTE:
     //* Implemented events TAP, DOUBLETAP and HOLD as raylib gesture registration was unreliable
     //* Therefore disabled any functionality of GESTURE_TAP and GESTURE_DOUBLE_TAP
     //* but left in game logging so it gets noticed when it was fixed
 
     //* Update gestures
-    lastGesture_ = currentGesture_;
-    currentGesture_ = GetGestureDetected();
+    handler.lastGesture = handler.currentGesture;
+    handler.currentGesture = GetGestureDetected();
 
     //* Detect gesture change
-    if (currentGesture_ != lastGesture_)
+    if (handler.currentGesture != handler.lastGesture)
     {
-        switch (currentGesture_)
+        switch (handler.currentGesture)
         {
             default:
             case GESTURE_NONE:
@@ -109,17 +87,17 @@ bool UserInput::registerGesture()
                 snx::Logger::log("Triggered TOUCH UP EVENT\n");
                 snx::debug::cliLog("Triggered TOUCH UP EVENT\n");
 #endif
-                touchUpTime_ = GetTime();
+                handler.touchUpTime = GetTime();
 
                 //* Reset hold duration
-                touchHoldDuration_ = 0;
+                handler.touchHoldDuration = 0;
 
                 //* Check for Tap events
-                if (lastGesture_ == GESTURE_HOLD
-                    && (touchUpTime_ - touchDownTime_) < maxTapTime)
+                if (handler.lastGesture == GESTURE_HOLD
+                    && (handler.touchUpTime - handler.touchDownTime) < maxTapTime)
                 {
                     //* Check for double tap
-                    if ((touchUpTime_ - lastTap_) < maxDoubleTapTime)
+                    if ((handler.touchUpTime - handler.lastTap) < maxDoubleTapTime)
                     {
 #if defined(DEBUG) && defined(DEBUG_GESTURE_EVENTS)
                         snx::Logger::log("Triggered DOUBLE TAP EVENT\n");
@@ -135,7 +113,7 @@ bool UserInput::registerGesture()
 #endif
                     }
 
-                    lastTap_ = touchUpTime_;
+                    handler.lastTap = handler.touchUpTime;
 
                     break;
                 }
@@ -150,7 +128,7 @@ bool UserInput::registerGesture()
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
                 snx::Logger::log("Triggered GESTURE_TAP\n");
 #endif
-                // touchDownTime_ = GetTime();
+                // touchDownTime = GetTime();
 
                 break;
             }
@@ -160,7 +138,7 @@ bool UserInput::registerGesture()
 #if defined(DEBUG) && defined(DEBUG_GESTURES)
                 snx::Logger::log("Triggered GESTURE_DOUBLETAP\n");
 #endif
-                // inputAction_ = InputActionId::actInPlace;
+                // inputAction = InputActionId::actInPlace;
 
                 break;
             }
@@ -171,7 +149,7 @@ bool UserInput::registerGesture()
                 snx::Logger::log("Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n");
                 snx::debug::cliLog("Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n");
 #endif
-                touchDownTime_ = GetTime();
+                handler.touchDownTime = GetTime();
 
                 break;
             }
@@ -183,7 +161,7 @@ bool UserInput::registerGesture()
                 snx::debug::cliLog("Triggered first GESTURE_DRAG\n");
 #endif
                 //* Set modifier
-                modifier_ = true;
+                handler.modifier = true;
 
                 Vector2 direction = Vector2MainDirection(GetGestureDragVector());
                 if (direction == Vector2{0, -1})
@@ -279,7 +257,7 @@ bool UserInput::registerGesture()
     //* if (currentGesture_ == lastGesture_)
     else
     {
-        switch (currentGesture_)
+        switch (handler.currentGesture)
         {
             default:
             case GESTURE_NONE:
@@ -291,9 +269,9 @@ bool UserInput::registerGesture()
 
             case GESTURE_HOLD:
             {
-                touchHoldDuration_ = GetTime() - touchDownTime_;
+                handler.touchHoldDuration = GetTime() - handler.touchDownTime;
 
-                if ((touchHoldDuration_) > minHoldTime)
+                if ((handler.touchHoldDuration) > minHoldTime)
                 {
 #if defined(DEBUG) && defined(DEBUG_GESTURE_EVENTS)
                     snx::Logger::log("Triggered HOLD EVENT\n");
@@ -313,7 +291,7 @@ bool UserInput::registerGesture()
                 snx::debug::cliLog("Triggered GESTURE_DRAG\n");
 #endif
                 //* Set modifier
-                modifier_ = true;
+                handler.modifier = true;
 
                 Vector2 direction = Vector2MainDirection(GetGestureDragVector());
                 if (direction == Vector2{0, -1})
@@ -341,15 +319,6 @@ bool UserInput::registerGesture()
         }
     }
 
-    if (inputAction == InputActionId::NONE)
-    {
-        return false;
-    }
-
-    return true;
+    return inputAction;
 }
 
-void UserInput::resetInputAction()
-{
-    inputAction = InputActionId::NONE;
-}

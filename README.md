@@ -20,6 +20,7 @@ Platforms: Linux, Windows, Browser
 
 
 ## Shortterm
+- [ ] Energy.isReady() -> regenRate != 0 (implement stats for maxhealth, regenRates etc.)
 - [ ] End/Restart game on death
 - [ ] Add AI behaviour with new enemy types
 

@@ -21,7 +21,7 @@ namespace snx
         {
             if (!starts_.contains(bmName))
             {
-                starts_.insert(std::make_pair(bmName, std::chrono::high_resolution_clock::now()));
+                starts_.insert({bmName, std::chrono::high_resolution_clock::now()});
                 return;
             }
 
@@ -34,14 +34,9 @@ namespace snx
 
             if (!durations_.contains(bmName))
             {
-                durations_.insert(
-                    std::make_pair(
-                        bmName,
-                        (end - starts_[bmName]).count()));
+                durations_.insert({bmName, (end - starts_[bmName]).count()});
 
-                measurementCounts_.insert(std::make_pair(
-                    bmName,
-                    1));
+                measurementCounts_.insert({bmName, 1});
             }
 
             else

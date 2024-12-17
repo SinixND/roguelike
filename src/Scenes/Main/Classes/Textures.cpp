@@ -19,7 +19,7 @@ Texture2D const& Textures::textureAtlas() const
 
 void Textures::registerTexture(RenderId textureId, Vector2 position)
 {
-    textureIdToAtlasPosition_.insert(std::make_pair(textureId, position));
+    textureIdToAtlasPosition_.insert({textureId, position});
 }
 
 Vector2 const& Textures::getTexturePosition(RenderId renderId) const
