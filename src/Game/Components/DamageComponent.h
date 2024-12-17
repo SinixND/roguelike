@@ -1,9 +1,9 @@
 #ifndef IG20241029001208
 #define IG20241029001208
 
-float const baseCritChance{.0f};
+float const baseCritChance{0.0f};
 
-float const baseCritDamage{.50f};
+float const baseCritDamage{0.50f};
 
 struct DamageComponent
 {

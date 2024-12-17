@@ -13,16 +13,7 @@ void PositionComponent::changeTo(Vector2I const& tilePosition)
     worldPixel = Convert::tileToWorld(tilePosition);
 }
 
-bool PositionComponent::move(Vector2 const& offset)
+void PositionComponent::move(Vector2 const& offset)
 {
-    Vector2I oldPosition{tilePosition()};
-
     worldPixel += offset;
-
-    if (!Vector2Equals(oldPosition, tilePosition()))
-    {
-        return true;
-    }
-
-    return false;
 }

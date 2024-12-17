@@ -188,8 +188,7 @@ void VisibilitySystem::updateShadowline(
 
         //* ||__old_   _old__||
         //*  |--new-   -new--|
-        if (
-            shadowline[i].getLeftAtTop(octantPosition) <= shadowNewLeftAtTop
+        if (shadowline[i].getLeftAtTop(octantPosition) <= shadowNewLeftAtTop
             && shadowNewRightAtBottom <= shadowline[i].getRightAtBottom(octantPosition))
         {
             //* Old contains new
@@ -200,8 +199,7 @@ void VisibilitySystem::updateShadowline(
 
         //*        ||__old_   _old__||
         //* |--new-   -new--|
-        if (
-            shadowNewLeftAtTop < shadowline[i].getLeftAtTop(octantPosition)
+        if (shadowNewLeftAtTop < shadowline[i].getLeftAtTop(octantPosition)
             && shadowline[i].getLeftAtBottom(octantPosition) <= shadowNewRightAtBottom
             && shadowNewRightAtBottom <= shadowline[i].getRightAtBottom(octantPosition))
         {
@@ -250,8 +248,7 @@ void VisibilitySystem::updateShadowline(
 
         //* ||__old_   _old__||
         //*          |--new-   -new--|
-        if (
-            shadowline[i].getLeftAtTop(octantPosition) <= shadowNewLeftAtTop
+        if (shadowline[i].getLeftAtTop(octantPosition) <= shadowNewLeftAtTop
             && shadowNewLeftAtTop <= shadowline[i].getRightAtTop(octantPosition)
             && shadowline[i].getRightAtBottom(octantPosition) < shadowNewRightAtBottom)
         {
@@ -389,8 +386,7 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
             if (octX <= octY)
             {
                 //* Skip test (. set invis) if shadowline already covers whole octant
-                if (
-                    shadowline.size()
+                if (shadowline.size()
                     && shadowline[0].slopeLeft() < 0
                     && shadowline[0].slopeRight() < 1)
                 {
@@ -426,8 +422,7 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                         //* OR
                         //* If slopeRight is left (<) from bottom-right tile corner (at same height = tileBottom)
                         [[maybe_unused]] auto test{sqrt(pow(octX, 2) + pow(octY, 2))};
-                        if (
-                            ((octX - 0.5f) < (shadow.getLeftAtTop(octantPosition))
+                        if (((octX - 0.5f) < (shadow.getLeftAtTop(octantPosition))
                              || (shadow.getRightAtBottom(octantPosition)) < (octX + 0.5f)))
                         {
                             //* . visible (variable unchanged): top-left/bottom-right corner not in shadow

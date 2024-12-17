@@ -28,7 +28,7 @@ public:
     void changeTo(Vector2I const& tilePosition);
 
     //* Returns if tilePosition changed
-    bool move(Vector2 const& offset);
+    void move(Vector2 const& offset);
 };
 
 #endif

@@ -228,7 +228,7 @@ void SceneMain::prepare()
     //* Allow input if hero is ready (= full energy)
     if (game_.hero.energy.isReady())
     {
-        game_.process(cursor_);
+        game_.processInput(cursor_);
     }
 }
 
@@ -238,7 +238,7 @@ void SceneMain::update()
         gameCamera_.camera(),
         game_.hero.position.tilePosition());
 
-    game_.update(
+    game_.updateState(
         gameCamera_,
         cursor_);
 

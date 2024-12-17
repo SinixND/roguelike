@@ -10,48 +10,47 @@ class PositionComponent;
 class EnergyComponent;
 struct Map;
 class PositionComponent;
+struct Enemies;
 
 namespace MovementSystem
 {
-    //* Returns if tilePosition changed
-    bool update(
+    void update(
         TransformComponent& transform,
         MovementComponent& movement,
         PositionComponent& position,
         EnergyComponent& energy,
-        Map const& map,
         PositionComponent const& heroPosition);
 
-    void prepareInputAgnostic(
-        MovementComponent& movement,
-        TransformComponent const& transform,
-        PositionComponent const& position);
+    void updateEnemies(
+        Enemies& enemies,
+        PositionComponent const& heroPosition);
 
     void prepareByNewPath(
         MovementComponent& movement,
-        PositionComponent const& position,
         std::vector<Vector2I> const& path);
 
     //* Triggers from and adjusts path
     void prepareFromExistingPath(
         MovementComponent& movement,
-        PositionComponent const& position);
+        // PositionComponent const& position);
+        TransformComponent& transform);
 
     void prepareByDirection(
         MovementComponent& movement,
-        PositionComponent const& position,
+        TransformComponent& transform,
         Vector2I const& direction);
 
     //* Sets direction, currentVelocity and isTriggered_
     void prepareByFromTo(
         MovementComponent& movement,
-        PositionComponent const& position,
+        TransformComponent& transform,
         Vector2I const& from,
         Vector2I const& to);
 
     void resetTransform(TransformComponent& transform);
 
     void updateCumulativeDistance(TransformComponent& transform);
+
     void resetCumulativeDistance(TransformComponent& transform);
 
     //* Calculate distance for this frame

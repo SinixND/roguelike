@@ -140,8 +140,7 @@ bool checkRatingList(
                     currentTile->tilePosition)};
 
             //* Needs to be in map panel
-            if (
-                !CheckCollisionPointRec(
+            if (!CheckCollisionPointRec(
                     Convert::tileToScreen(
                         newTilePosition,
                         gameCamera.camera()),
@@ -151,8 +150,7 @@ bool checkRatingList(
             }
 
             //* Ignore ancestor
-            if (
-                currentTile->ancestor
+            if (currentTile->ancestor
                 && (newTilePosition == currentTile->ancestor->tilePosition))
             {
                 continue;
@@ -192,8 +190,7 @@ bool checkRatingList(
             //* - Is invisible
             //* - Not accessible
             //* - Steps needed exceed maxRange
-            if (
-                !map.tiles.visibilityIds.contains(newTilePosition)
+            if (!map.tiles.visibilityIds.contains(newTilePosition)
                 || (map.tiles.visibilityIds.at(newTilePosition) == VisibilityId::INVISIBLE)
                 || map.tiles.isSolids.contains(newTilePosition)
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded > maxRange)))
@@ -236,8 +233,7 @@ bool checkRatingList(
     }
 
     //* Check new best rated tiles
-    if (
-        !ratingList.empty()
+    if (!ratingList.empty()
         && checkRatingList(
             ratingList.begin()->first,
             ratedTiles,
@@ -274,8 +270,7 @@ std::vector<Vector2I> PathfinderSystem::findPath(
     //* - Is invisible
     //* - Not accessible
     //* - Equal to start
-    if (
-        !map.tiles.visibilityIds.contains(target)
+    if (!map.tiles.visibilityIds.contains(target)
         || (skipInvisibleTiles
             && (map.tiles.visibilityIds.at(target) == VisibilityId::INVISIBLE))
         || map.tiles.isSolids.contains(target)

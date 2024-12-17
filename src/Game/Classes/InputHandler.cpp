@@ -14,28 +14,36 @@ double constexpr minHoldTime{0.3f};
 double constexpr maxDoubleTapTime{0.3f};
 
 InputActionId checkKeyboard(
-    InputHandler& handler,
+    InputHandler& input,
     InputMappings const& mappings)
 {
     //* Update key pressed
     //* Set lastKey only to valid inputs (associated with actions)
-    handler.lastKey = (handler.currentKey) ? handler.currentKey : handler.lastKey;
-    handler.currentKey = GetKeyPressed();
+    input.lastKey = (input.currentKey) ? input.currentKey : input.lastKey;
+    input.currentKey = GetKeyPressed();
 
     //* Check modifiers
-    handler.modifier = IsKeyDown(mappings.modifierKey);
+    input.modifier = IsKeyDown(mappings.modifierKey);
 
     //* Repeat last key if no input but modifier down
 #if defined(TERMUX)
-    if ((handler.modifier && !handler.currentKey))
+    if ((input.modifier
+         && !input.currentKey))
 #else
-    if ((handler.modifier && !handler.currentKey) || IsKeyPressedRepeat(handler.lastKey))
+    if ((input.modifier
+         && !input.currentKey)
+        || IsKeyPressedRepeat(input.lastKey))
 #endif
     {
-        handler.currentKey = handler.lastKey;
+        input.currentKey = input.lastKey;
     }
 
-    return mappings.keyboardToAction.at(handler.currentKey);
+    if (!mappings.keyboardToAction.contains(input.currentKey))
+    {
+        return InputActionId::NONE;
+    }
+
+    return mappings.keyboardToAction.at(input.currentKey);
 }
 
 InputActionId checkMouse(
@@ -46,8 +54,7 @@ InputActionId checkMouse(
 
     for (int mouseButton : {MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT})
     {
-        if (
-            (isCursorActive
+        if ((isCursorActive
              || mappings.mouseToAction.at(mouseButton) == InputActionId::TOGGLE_CURSOR)
             && IsMouseButtonPressed(mouseButton))
         {
@@ -321,4 +328,3 @@ InputActionId checkGesture(InputHandler& handler)
 
     return inputAction;
 }
-

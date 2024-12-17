@@ -89,8 +89,7 @@ namespace snx
         //* Moves last value to gap
         void erase(size_t keyToRemove)
         {
-            if (
-                keyToRemove > (keyToIndex_.size() - 1)
+            if (keyToRemove > (keyToIndex_.size() - 1)
                 // && !contains(key)
             )
             {
