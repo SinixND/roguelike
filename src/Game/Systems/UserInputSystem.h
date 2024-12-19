@@ -10,7 +10,8 @@ class GameCamera;
 
 namespace UserInputSystem
 {
-    void takeAction(
+    //* Return if multi-frame action taken
+    bool takeAction(
         InputActionId inputAction,
         Hero& hero,
         Cursor const& cursor,

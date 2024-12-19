@@ -2,7 +2,6 @@
 
 #include "AISystem.h"
 #include "Cursor.h"
-#include "DamageSystem.h"
 #include "Enemies.h"
 #include "EventId.h"
 #include "GameCamera.h"
@@ -105,7 +104,7 @@ void Game::setupGameEvents()
         });
 }
 
-void Game::prepare(Cursor& cursor)
+void Game::processInput(Cursor& cursor)
 {
     //* Take input from mouse, keys or gestures
     //* Continuous movement done by repeating previous input if modifier is active
@@ -128,7 +127,7 @@ void Game::prepare(Cursor& cursor)
     inputAction = checkGesture(inputHandler);
 }
 
-void Game::update(
+void Game::updateState(
     GameCamera const& gameCamera,
     Cursor const& cursor)
 {
@@ -138,12 +137,26 @@ void Game::update(
     //* (Check hero?)
     //* Regen
 
+    //* Hero
+    if (!actionInProgress)
+    {
+        if (hero.energy.isReady())
+        {
+            actionInProgress = UserInputSystem::takeAction(
+                inputAction,
+                hero,
+                cursor,
+                *world.currentMap,
+                gameCamera);
+        }
+    }
+
     //* AI
     if (!actionInProgress)
     {
         Enemies& enemies{world.currentMap->enemies};
 
-        size_t activeEnemyId = getActiveEnemy(
+        activeEnemyId = getActiveEnemy(
             enemies.energies,
             enemies.ais,
             turn);
@@ -166,32 +179,27 @@ void Game::update(
     //* Update multi-frame actions
     if (actionInProgress)
     {
-    }
-    //==================================
+        //* Update hero movement
+        MovementSystem::update(
+            hero.transform,
+            hero.movement,
+            hero.position,
+            hero.energy,
+            *world.currentMap,
+            hero.position);
 
-    //* Cycle enemies once to check for action
-    bool allEnemiesChecked{false};
-
-    //* Trigger AI action
-    if (
-        !actionInProgress
-        && !hero.energy.isReady())
-    {
-        Map& map{*world.currentMap};
-
-        allEnemiesChecked = AISystem::checkReadiness(
-            map.enemies,
-            map,
-            hero.position.tilePosition(),
-            hero.health,
-            gameCamera);
+        //* Update enemies
+        updateEnemies(
+            world.currentMap->enemies,
+            *world.currentMap,
+            hero.position);
     }
 
     //* Regenerate energy if no action in progress
     if (
         !actionInProgress
         && !hero.energy.isReady()
-        && allEnemiesChecked)
+        && !activeEnemyId)
     {
         //* Regenerate until one unit becomes ready
         bool isUnitReady{false};
@@ -199,36 +207,11 @@ void Game::update(
         while (!isUnitReady)
         {
             isUnitReady = hero.energy.regenerate();
-            isUnitReady = regenerateAll(world.currentMap->enemies) || isUnitReady;
+            isUnitReady |= regenerateAll(world.currentMap->enemies);
         }
 
         ++turn;
         snx::Logger::setStamp(std::to_string(turn));
     }
-
-    //* Trigger potential hero action
-    UserInputSystem::takeAction(
-        inputAction,
-        hero,
-        cursor,
-        *world.currentMap,
-        gameCamera);
-
-    inputAction = InputActionId::NONE;
-
-    //* Update hero movement
-    MovementSystem::update(
-        hero.transform,
-        hero.movement,
-        hero.position,
-        hero.energy,
-        *world.currentMap,
-        hero.position);
-
-    //* Update enemies
-    updateEnemies(
-        world.currentMap->enemies,
-        *world.currentMap,
-        hero.position);
 }
 

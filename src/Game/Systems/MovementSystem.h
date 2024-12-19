@@ -22,11 +22,6 @@ namespace MovementSystem
         Map const& map,
         PositionComponent const& heroPosition);
 
-    void prepareInputAgnostic(
-        MovementComponent& movement,
-        TransformComponent const& transform,
-        PositionComponent const& position);
-
     void prepareByNewPath(
         MovementComponent& movement,
         PositionComponent const& position,

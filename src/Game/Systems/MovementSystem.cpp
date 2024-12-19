@@ -125,21 +125,6 @@ void MovementSystem::prepareFromExistingPath(
     }
 }
 
-void MovementSystem::prepareInputAgnostic(
-    MovementComponent& movement,
-    TransformComponent const& transform,
-    PositionComponent const& position)
-{
-    if (
-        !transform.speed
-        && !movement.path.empty())
-    {
-        MovementSystem::prepareFromExistingPath(
-            movement,
-            position);
-    }
-}
-
 void MovementSystem::prepareByNewPath(
     MovementComponent& movement,
     PositionComponent const& position,

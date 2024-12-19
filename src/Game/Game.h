@@ -20,17 +20,18 @@ public:
     InputHandler inputHandler{};
     InputActionId inputAction{InputActionId::NONE};
 
-    bool actionInProgress{false};
-
     //* Track game turns
     int turn{0};
+
+    size_t activeEnemyId{0};
+    bool actionInProgress{false};
 
 public:
     void init();
 
-    void prepare(Cursor& cursor);
+    void processInput(Cursor& cursor);
 
-    void update(
+    void updateState(
         GameCamera const& gameCamera,
         Cursor const& cursor);
 

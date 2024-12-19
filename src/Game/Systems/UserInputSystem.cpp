@@ -38,27 +38,24 @@ void performAttack(
     hero.energy.consume();
 }
 
-void UserInputSystem::takeAction(
+bool UserInputSystem::takeAction(
     InputActionId inputAction,
     Hero& hero,
     Cursor const& cursor,
     Map& map,
     GameCamera const& gameCamera)
 {
-    if (!hero.energy.isReady())
-    {
-        return;
-    }
+    bool isActionMultiFrame{false};
 
-    if (inputAction == InputActionId::NONE)
+    if (inputAction == InputActionId::NONE
+        && !hero.transform.speed
+        && !hero.movement.path.empty())
     {
-        //* Trigger input agnostic actions, eg. non-empty path
-        MovementSystem::prepareInputAgnostic(
+        MovementSystem::prepareFromExistingPath(
             hero.movement,
-            hero.transform,
             hero.position);
 
-        return;
+        isActionMultiFrame = true;
     }
 
     switch (inputAction)
@@ -82,6 +79,7 @@ void UserInputSystem::takeAction(
                 hero.position,
                 Directions::up);
 
+            isActionMultiFrame = true;
             break;
         }
 
@@ -104,6 +102,7 @@ void UserInputSystem::takeAction(
                 hero.position,
                 Directions::left);
 
+            isActionMultiFrame = true;
             break;
         }
 
@@ -126,6 +125,7 @@ void UserInputSystem::takeAction(
                 hero.position,
                 Directions::down);
 
+            isActionMultiFrame = true;
             break;
         }
 
@@ -148,6 +148,7 @@ void UserInputSystem::takeAction(
                 hero.position,
                 Directions::right);
 
+            isActionMultiFrame = true;
             break;
         }
 
@@ -162,6 +163,7 @@ void UserInputSystem::takeAction(
                     cursor.position.tilePosition(),
                     gameCamera));
 
+            isActionMultiFrame = true;
             break;
         }
 
@@ -196,4 +198,8 @@ void UserInputSystem::takeAction(
         default:
             break;
     }
+
+    inputAction = InputActionId::NONE;
+
+    return isActionMultiFrame;
 }
