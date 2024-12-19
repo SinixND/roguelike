@@ -10,8 +10,8 @@ class GameCamera;
 
 namespace UserInputSystem
 {
-    void triggerAction(
-        InputHandler& userInputComponent,
+    void takeAction(
+        InputActionId inputAction,
         Hero& hero,
         Cursor const& cursor,
         Map& map,

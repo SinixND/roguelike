@@ -38,8 +38,8 @@ void performAttack(
     hero.energy.consume();
 }
 
-void UserInputSystem::triggerAction(
-    InputHandler& userInputComponent,
+void UserInputSystem::takeAction(
+    InputActionId inputAction,
     Hero& hero,
     Cursor const& cursor,
     Map& map,
@@ -50,7 +50,7 @@ void UserInputSystem::triggerAction(
         return;
     }
 
-    if (userInputComponent.inputAction == InputActionId::NONE)
+    if (inputAction == InputActionId::NONE)
     {
         //* Trigger input agnostic actions, eg. non-empty path
         MovementSystem::prepareInputAgnostic(
@@ -61,7 +61,7 @@ void UserInputSystem::triggerAction(
         return;
     }
 
-    switch (userInputComponent.inputAction)
+    switch (inputAction)
     {
         case InputActionId::ACT_UP:
         {
@@ -196,7 +196,4 @@ void UserInputSystem::triggerAction(
         default:
             break;
     }
-
-    //* Reset
-    userInputComponent.resetInputAction();
 }

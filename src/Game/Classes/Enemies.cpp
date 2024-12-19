@@ -214,8 +214,7 @@ size_t getActiveEnemy(
 
     for (size_t idx{0}; idx < energies.size(); ++idx)
     {
-        if (
-            energies.values().at(idx).isReady()
+        if (energies.values().at(idx).isReady()
             && ais.values().at(idx).turn < turn)
         {
             activeEnemyId = energies.key(idx);
