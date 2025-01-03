@@ -25,7 +25,8 @@ namespace MapGeneratorSystem
         {
             for (int y{0}; y < rectangle.height(); ++y)
             {
-                tiles.create(
+                createTile(
+                    tiles,
                     Vector2I{
                         rectangle.left() + x,
                         rectangle.top() + y},
@@ -180,8 +181,7 @@ namespace MapGeneratorSystem
         //     EventId::nextLevel);
 
         //* Add enemies
-        initEnemies(
-            map.enemies,
+        map.enemies = initEnemies(
             level,
             map);
 
@@ -267,7 +267,8 @@ namespace MapGeneratorSystem
             RenderId::FLOOR);
 
         //* Tiles
-        testRoom.tiles.create(
+        createTile(
+            testRoom.tiles,
             Vector2I{
                 0,
                 -1},
@@ -275,7 +276,8 @@ namespace MapGeneratorSystem
             true,
             true);
 
-        testRoom.tiles.create(
+        createTile(
+            testRoom.tiles,
             Vector2I{
                 5,
                 6},
@@ -283,7 +285,8 @@ namespace MapGeneratorSystem
             true,
             true);
 
-        testRoom.tiles.create(
+        createTile(
+            testRoom.tiles,
             Vector2I{
                 6,
                 5},
@@ -291,7 +294,8 @@ namespace MapGeneratorSystem
             true,
             true);
 
-        testRoom.tiles.create(
+        createTile(
+            testRoom.tiles,
             Vector2I{
                 5,
                 5},
@@ -299,7 +303,8 @@ namespace MapGeneratorSystem
             true,
             true);
 
-        testRoom.tiles.create(
+        createTile(
+            testRoom.tiles,
             Vector2I{
                 -6,
                 5},
@@ -318,7 +323,7 @@ namespace MapGeneratorSystem
 
         createEnemy(
             testRoom.enemies,
-            testRoom,
+            testRoom.tiles,
             RenderId::GOBLIN,
             false,
             Vector2I{3, 0});

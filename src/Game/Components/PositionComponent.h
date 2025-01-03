@@ -31,4 +31,8 @@ public:
     void move(Vector2 const& offset);
 };
 
+inline bool operator==(PositionComponent const& lhs, PositionComponent const& rhs)
+{
+    return ((lhs.worldPixel.x == rhs.worldPixel.x) && (lhs.worldPixel.y == rhs.worldPixel.y));
+}
 #endif

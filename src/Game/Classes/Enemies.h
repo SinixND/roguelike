@@ -3,46 +3,44 @@
 
 #include "AIComponent.h"
 #include "DamageComponent.h"
-#include "DenseMap.h"
 #include "EnergyComponent.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
 #include "MovementComponent.h"
 #include "PositionComponent.h"
 #include "RenderId.h"
+#include "SparseSet.h"
 #include "TransformComponent.h"
 #include <cstddef>
 
 struct Vector2I;
 struct Map;
-class Tiles;
+struct Tiles;
 
 struct Enemies
 {
-    static inline snx::IdManager idManager_{};
+    snx::SparseSet<AIComponent> ais{};
+    snx::SparseSet<PositionComponent> positions{};
+    snx::SparseSet<RenderId> renderIds{};
+    snx::SparseSet<TransformComponent> transforms{};
+    snx::SparseSet<MovementComponent> movements{};
+    snx::SparseSet<EnergyComponent> energies{};
+    snx::SparseSet<HealthComponent> healths{};
+    snx::SparseSet<DamageComponent> damages{};
 
-    snx::DenseMap<Vector2I, size_t> ids{};
-    snx::DenseMap<size_t, AIComponent> ais{};
-    snx::DenseMap<size_t, PositionComponent> positions{};
-    snx::DenseMap<size_t, RenderId> renderIds{};
-    snx::DenseMap<size_t, TransformComponent> transforms{};
-    snx::DenseMap<size_t, MovementComponent> movements{};
-    snx::DenseMap<size_t, EnergyComponent> energies{};
-    snx::DenseMap<size_t, HealthComponent> healths{};
-    snx::DenseMap<size_t, DamageComponent> damages{};
+    snx::IdManager idManager{};
 };
 
 void createEnemy(
     Enemies& enemies,
-    Map const& map,
-    RenderId enemyId,
+    Tiles const& tiles,
+    RenderId renderId,
     bool randomPosition = true,
     Vector2I tilePosition = Vector2I{0, 0});
 
-void initEnemies(
-    Enemies& enemies,
+Enemies initEnemies(
     int mapLevel,
-    Map const& map);
+    Map& map);
 
 bool regenerateEnergies(Enemies& enemies);
 
@@ -51,9 +49,9 @@ void updateEnemies(
     PositionComponent const& heroPosition);
 
 size_t getActiveEnemy(
-    snx::DenseMap<size_t, EnergyComponent> const& energies,
-    snx::DenseMap<size_t, AIComponent> const& ais,
-    int const turn);
+    snx::SparseSet<EnergyComponent> const& energies,
+    snx::SparseSet<AIComponent> const& ais,
+    int turn);
 
 void removeEnemy(
     Enemies& enemies,

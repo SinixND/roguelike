@@ -1,5 +1,5 @@
-#ifndef IG20240128195657
-#define IG20240128195657
+#ifndef IG20250103190631
+#define IG20250103190631
 
 #include <cassert>
 #include <cstddef>
@@ -89,9 +89,7 @@ namespace snx
         //* Moves last value to gap
         void erase(size_t keyToRemove)
         {
-            if (keyToRemove > (keyToIndex_.size() - 1)
-                // && !contains(key)
-            )
+            if (keyToRemove > (keyToIndex_.size() - 1))
             {
                 return;
             }
@@ -162,9 +160,27 @@ namespace snx
             return at(key);
         }
 
-        bool contains(size_t key) const
+        size_t contains(size_t key) const
         {
-            return keyToIndex_[key];
+            if (keyToIndex_.size() > key)
+            {
+                return keyToIndex_.at(key);
+            }
+
+            return 0;
+        }
+
+        size_t contains(Type const& value) const
+        {
+            for (size_t idx{0}; idx < values_.size(); ++idx)
+            {
+                if (values_.at(idx) == value)
+                {
+                    return key(idx);
+                }
+            }
+
+            return 0;
         }
 
         //* Get key for value index
@@ -189,7 +205,7 @@ namespace snx
         //* Vector index is used as value key
         std::vector<Type> values_{Type{}};
 
-        //* Key is used to identify value
+        //* Key aka. size_t is used to identify value
         std::vector<size_t> keyToIndex_{};
 
         //* Store a index (value) to key mapping (internal use for erease() only)

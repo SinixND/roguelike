@@ -22,20 +22,6 @@
 #include <raylib.h>
 #include <raymath.h>
 
-void performAttack(
-    Hero& hero,
-    Enemies& enemies,
-    Vector2I const& target)
-{
-    snx::Logger::log("Hero deals ");
-
-    DamageSystem::attack(
-        hero.damage,
-        enemies.healths.at(
-            enemies.ids.at(
-                target)));
-}
-
 bool processDirectionalInput(
     Hero& hero,
     Map& map,
@@ -48,12 +34,15 @@ bool processDirectionalInput(
             hero.position.tilePosition(),
             direction)};
 
-    if (map.enemies.ids.contains(target))
+    size_t id{map.enemies.positions.contains(PositionComponent{target})};
+
+    if (id)
     {
-        performAttack(
-            hero,
-            map.enemies,
-            target);
+        snx::Logger::log("Hero deals ");
+
+        DamageSystem::attack(
+            hero.damage,
+            map.enemies.healths.at(id));
 
         hero.energy.consume();
     }
@@ -169,9 +158,11 @@ bool UserInputSystem::takeAction(
             Vector2I heroTilePosition{hero.position.tilePosition()};
 
             //* Wait if nothing to interact
-            if (!map.objects.events.contains(heroTilePosition))
+            size_t id{map.objects.positions.contains(PositionComponent{heroTilePosition})};
+
+            if (!id)
             {
-                snx::Logger::log("Hero waits...");
+                snx::Logger::log("Hero regenerates health...");
 
                 hero.energy.consume();
 
@@ -180,7 +171,7 @@ bool UserInputSystem::takeAction(
                 break;
             }
 
-            snx::PublisherStatic::publish(map.objects.events.at(heroTilePosition));
+            snx::PublisherStatic::publish(map.objects.events.at(id));
 
             break;
         }

@@ -1,7 +1,7 @@
 #ifndef IG20240914212555
 #define IG20240914212555
 
-class Tiles;
+struct Tiles;
 struct Enemies;
 struct Objects;
 struct Vector2I;

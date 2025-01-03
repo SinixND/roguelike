@@ -1,61 +1,51 @@
 #include "Tiles.h"
 #include "DenseMap.h"
-#include "PositionComponent.h"
 #include "RenderId.h"
 #include "VisibilityId.h"
 #include "raylibEx.h"
 #include <algorithm>
-#include <unordered_set>
-#include <utility>
 
-void Tiles::updateMapSize(Vector2I const& tilePosition)
-{
-    mapSize_ = RectangleExI{
-        Vector2I{
-            std::min(tilePosition.x, mapSize_.left()),
-            std::min(tilePosition.y, mapSize_.top())},
-        Vector2I{
-            std::max(tilePosition.x, mapSize_.right()),
-            std::max(tilePosition.y, mapSize_.bottom())}};
-}
-
-void Tiles::create(
+void createTile(
+    Tiles& tiles,
     Vector2I const& tilePosition,
     RenderId renderId,
     bool isSolid,
     bool isOpaque,
     VisibilityId visibilityId)
 {
-    positions[tilePosition].changeTo(tilePosition);
+    size_t id{tiles.idManager.requestId()};
 
-    renderIds[tilePosition] = renderId;
+    tiles.positions.emplace(id, tilePosition);
 
-    visibilityIds[tilePosition] = visibilityId;
+    tiles.renderIds.insert(id, renderId);
+
+    tiles.visibilityIds.insert(id, visibilityId);
 
     if (isSolid)
     {
-        isSolids.insert(tilePosition);
+        tiles.isSolids.insert(id);
     }
 
     else
     {
-        isSolids.erase(tilePosition);
+        tiles.isSolids.erase(id);
     }
 
     if (isOpaque)
     {
-        isOpaques.insert(tilePosition);
+        tiles.isOpaques.insert(id);
     }
 
     else
     {
-        isOpaques.erase(tilePosition);
+        tiles.isOpaques.erase(id);
     }
 
-    updateMapSize(tilePosition);
-}
-
-RectangleExI Tiles::mapSize() const
-{
-    return mapSize_;
+    tiles.mapSize = RectangleExI{
+        Vector2I{
+            std::min(tilePosition.x, tiles.mapSize.left()),
+            std::min(tilePosition.y, tiles.mapSize.top())},
+        Vector2I{
+            std::max(tilePosition.x, tiles.mapSize.right()),
+            std::max(tilePosition.y, tiles.mapSize.bottom())}};
 }

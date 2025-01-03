@@ -10,6 +10,7 @@
 #include "IScene.h"
 #include "Panels.h"
 #include "RenderSystem.h"
+#include "SparseSet.h"
 #include "VisibilitySystem.h"
 #include "raylibEx.h"
 #include <raylib.h>
@@ -24,6 +25,7 @@ class SceneMain : public snx::IScene
 
     Cursor cursor_{};
 
+    snx::SparseSet<Vector2I> positions_{};
     snx::DenseMap<Vector2I, Chunk> chunks_{};
     snx::DenseMap<Vector2I, Fog> fogs_{};
 

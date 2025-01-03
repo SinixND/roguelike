@@ -1,7 +1,6 @@
 #include "Objects.h"
-#include "DenseMap.h"
+
 #include "EventId.h"
-#include "PositionComponent.h"
 #include "RenderId.h"
 #include "raylibEx.h"
 #include <string>
@@ -14,13 +13,11 @@ void createObject(
     std::string const& action,
     EventId event)
 {
-    objects.positions[tilePosition].changeTo(tilePosition);
+    size_t id{objects.idManager.requestId()};
 
-    objects.renderIds[tilePosition] = renderId;
-
-    objects.names[tilePosition] = name;
-
-    objects.actions[tilePosition] = action;
-
-    objects.events[tilePosition] = event;
+    objects.positions.emplace(id, tilePosition);
+    objects.renderIds.insert(id, renderId);
+    objects.names.insert(id, name);
+    objects.actions.insert(id, action);
+    objects.events.insert(id, event);
 }

@@ -1,20 +1,23 @@
 #ifndef IG20240908213935
 #define IG20240908213935
 
-#include "DenseMap.h"
 #include "EventId.h"
+#include "IdManager.h"
 #include "PositionComponent.h"
 #include "RenderId.h"
+#include "SparseSet.h"
 #include "raylibEx.h"
 #include <string>
 
 struct Objects
 {
-    snx::DenseMap<Vector2I, PositionComponent> positions{};
-    snx::DenseMap<Vector2I, RenderId> renderIds{};
-    snx::DenseMap<Vector2I, std::string> names{};
-    snx::DenseMap<Vector2I, std::string> actions{};
-    snx::DenseMap<Vector2I, EventId> events{};
+    snx::SparseSet<PositionComponent> positions{};
+    snx::SparseSet<RenderId> renderIds{};
+    snx::SparseSet<std::string> names{};
+    snx::SparseSet<std::string> actions{};
+    snx::SparseSet<EventId> events{};
+
+    snx::IdManager idManager{};
 };
 
 //* Access or create

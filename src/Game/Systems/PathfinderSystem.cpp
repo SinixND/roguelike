@@ -165,7 +165,7 @@ bool checkRatingList(
             //* - Enemy is present
             int penalty{0};
 
-            if (map.enemies.ids.contains(newTilePosition))
+            if (map.enemies.positions.contains(PositionComponent{newTilePosition}))
             {
                 penalty += 4;
             }
@@ -197,9 +197,12 @@ bool checkRatingList(
             //* - Is invisible
             //* - Not accessible
             //* - Steps needed exceed maxRange
-            if (!map.tiles.visibilityIds.contains(newTilePosition)
-                || (map.tiles.visibilityIds.at(newTilePosition) == VisibilityId::INVISIBLE)
-                || map.tiles.isSolids.contains(newTilePosition)
+            size_t id{map.tiles.positions.contains(PositionComponent{newTilePosition})};
+
+            if (!map.tiles.visibilityIds.contains(id)
+                // if (!map.tiles.visibilityIds.contains(newTilePosition)
+                || (map.tiles.visibilityIds.at(id) == VisibilityId::INVISIBLE)
+                || map.tiles.isSolids.contains(id)
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded > maxRange)))
             {
                 //* Invalid! Add to ignore set so it doesn't get checked again
@@ -277,10 +280,12 @@ std::vector<Vector2I> PathfinderSystem::findPath(
     //* - Is invisible
     //* - Not accessible
     //* - Equal to start
-    if (!map.tiles.visibilityIds.contains(target)
+    size_t id{map.tiles.positions.contains(PositionComponent{target})};
+
+    if (!map.tiles.visibilityIds.contains(id)
         || (skipInvisibleTiles
-            && (map.tiles.visibilityIds.at(target) == VisibilityId::INVISIBLE))
-        || map.tiles.isSolids.contains(target)
+            && (map.tiles.visibilityIds.at(id) == VisibilityId::INVISIBLE))
+        || map.tiles.isSolids.contains(id)
         || (start == target))
     {
         return path;

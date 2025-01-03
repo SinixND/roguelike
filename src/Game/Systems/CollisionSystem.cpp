@@ -1,6 +1,7 @@
 #include "CollisionSystem.h"
 
 #include "Enemies.h"
+#include "PositionComponent.h"
 #include "Tiles.h"
 #include "raylibEx.h"
 
@@ -11,10 +12,11 @@ bool CollisionSystem::checkCollision(
     Vector2I const& tilePositionToCheck,
     Vector2I const& heroPosition)
 {
+    size_t id{enemies.positions.contains(PositionComponent{tilePositionToCheck})};
+
     return (
-        //* Next tilePosition unit moves to
-        enemies.ids.contains(tilePositionToCheck)
+        id
         // || map.objects_.getIsSolids().contains(tilePositionToCheck)
-        || tiles.isSolids.contains(tilePositionToCheck)
+        || tiles.isSolids.at(id)
         || Vector2Equals(tilePositionToCheck, heroPosition));
 }

@@ -1,5 +1,4 @@
 #include "SceneMain.h"
-#include "VisibilityId.h"
 
 #define DEBUG_TILEINFO
 //* #define DEBUG_FOG
@@ -13,12 +12,10 @@
 #include "EventId.h"
 #include "Game.h"
 #include "GameCamera.h"
-#include "Objects.h"
 #include "PanelSystem.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "RenderSystem.h"
-#include "VisibilitySystem.h"
 #include "raylibEx.h"
 #include <cstddef>
 #include <raygui.h>
@@ -26,7 +23,6 @@
 #include <raymath.h>
 
 #if defined(DEBUG) && defined(DEBUG_TILEINFO)
-#include "Objects.h"
 #include <string>
 #endif
 

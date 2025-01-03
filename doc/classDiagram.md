@@ -83,7 +83,7 @@ class Map {
 
 Map *-- Tiles : SoA
 
-class Tiles {
+struct Tiles {
     - RectangleExI mapSize_
     + snx::DenseMap<Vector2I, PositionComponent> positions
     + snx::DenseMap<Vector2I, RenderID> renderIDs

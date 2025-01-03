@@ -7,7 +7,6 @@
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "TileData.h"
-#include "Tiles.h"
 #include "TransformComponent.h"
 #include "raylibEx.h"
 #include <raymath.h>
@@ -94,30 +93,18 @@ void MovementSystem::updateEnemies(
     Enemies& enemies,
     PositionComponent const& heroPosition)
 {
-    PositionComponent* currentPosition{};
-    Vector2I oldPosition{};
-
     for (size_t i{0}; i < enemies.transforms.size(); ++i)
     {
-        currentPosition = &enemies.positions.values().at(i);
-
-        oldPosition = currentPosition->tilePosition();
+        size_t id{enemies.transforms.key(i)};
 
         //* Update movement
         //* Update ids_ key if tilePosition changes
         MovementSystem::update(
-            enemies.transforms.values().at(i),
-            enemies.movements.values().at(i),
-            *currentPosition,
-            enemies.energies.values().at(i),
+            enemies.transforms.at(id),
+            enemies.movements.at(id),
+            enemies.positions.at(id),
+            enemies.energies.at(id),
             heroPosition);
-
-        if (oldPosition != currentPosition->tilePosition())
-        {
-            enemies.ids.changeKey(
-                oldPosition,
-                currentPosition->tilePosition());
-        }
     }
 }
 
