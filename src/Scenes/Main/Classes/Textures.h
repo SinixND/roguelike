@@ -6,26 +6,30 @@
 #include <string>
 #include <unordered_map>
 
-class Textures
+struct Textures
 {
-    std::string const texturePath{"resources/textures/"};
-
     //* Texture atlas
-    Texture2D textureAtlas_{};
-    std::unordered_map<RenderId, Vector2> textureIdToAtlasPosition_{};
-
-public:
-    //* Texture atlas
-    void loadAtlas(std::string const& filename);
-
-    void registerTexture(RenderId textureId, Vector2 position);
-
-    Vector2 const& getTexturePosition(RenderId renderId) const;
-
-    void unloadAtlas();
-
-public:
-    Texture2D const& textureAtlas() const;
+    Texture2D atlas{};
+    std::unordered_map<RenderId, Vector2> textureIdToAtlasPosition{};
 };
 
+namespace TexturesModule
+{
+    //* Texture atlas
+    void loadAtlas(
+        Textures& textures,
+        std::string const& filename);
+
+    void registerTexture(
+        Textures& textures,
+        RenderId textureId,
+        Vector2 position);
+
+    Vector2 const& getTexturePosition(
+        Textures const& textures,
+        RenderId renderId);
+
+    void unloadAtlas(
+        Textures& textures);
+}
 #endif

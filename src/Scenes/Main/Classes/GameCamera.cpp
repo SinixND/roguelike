@@ -6,11 +6,14 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-void GameCamera::init(RectangleEx const& viewport, Vector2 const& heroPosition)
+void GameCameraModule::init(
+    GameCamera& gameCamera,
+    RectangleEx const& viewport,
+    Vector2 const& heroPosition)
 {
-    updateViewport(viewport);
+    gameCamera.viewport = &viewport;
 
-    camera_ = Camera2D{
+    gameCamera.camera = Camera2D{
         viewport.center(),
         heroPosition,
         0,
@@ -19,46 +22,38 @@ void GameCamera::init(RectangleEx const& viewport, Vector2 const& heroPosition)
     snx::PublisherStatic::publish(EventId::CAMERA_CHANGED);
 }
 
-void GameCamera::setOffset(Vector2 const& offset)
+void GameCameraModule::setOffset(
+    GameCamera& gameCamera,
+    Vector2 const& offset)
 {
-    camera_.offset = offset;
+    gameCamera.camera.offset = offset;
     snx::PublisherStatic::publish(EventId::CAMERA_CHANGED);
 }
 
-void GameCamera::setTarget(Vector2 const& target)
+void GameCameraModule::setTarget(
+    GameCamera& gameCamera,
+    Vector2 const& target)
 {
-    camera_.target = target;
+    gameCamera.camera.target = target;
     snx::PublisherStatic::publish(EventId::CAMERA_CHANGED);
 }
 
-void GameCamera::setZoom(float zoom)
+void GameCameraModule::setZoom(
+    GameCamera& gameCamera,
+    float zoom)
 {
-    camera_.zoom = zoom;
+    gameCamera.camera.zoom = zoom;
     snx::PublisherStatic::publish(EventId::CAMERA_CHANGED);
 }
 
-void GameCamera::updateViewport(RectangleEx const& viewport)
-{
-    viewport_ = &viewport;
-}
-
-Camera2D const& GameCamera::camera() const
-{
-    return camera_;
-}
-
-RectangleEx const& GameCamera::viewportOnScreen() const
-{
-    return *viewport_;
-}
-
-RectangleExI GameCamera::viewportInTiles() const
+RectangleExI GameCameraModule::viewportInTiles(
+    GameCamera& gameCamera)
 {
     return RectangleExI{
         Convert::screenToTile(
-            viewport_->topLeft(),
-            camera_),
+            gameCamera.viewport->topLeft(),
+            gameCamera.camera),
         Convert::screenToTile(
-            viewport_->bottomRight(),
-            camera_)};
+            gameCamera.viewport->bottomRight(),
+            gameCamera.camera)};
 }

@@ -25,7 +25,8 @@ namespace MapGeneratorSystem
         {
             for (int y{0}; y < rectangle.height(); ++y)
             {
-                tiles.create(
+                TilesModule::createSingle(
+                    tiles,
                     Vector2I{
                         rectangle.left() + x,
                         rectangle.top() + y},
@@ -126,7 +127,6 @@ namespace MapGeneratorSystem
         //* Take random direction and add room
         while (Vector2Sum(roomPosition) < maxRoomOffset)
         {
-
             //* (Update) Old room position used for room connection
             Vector2I oldRoomPosition{roomPosition};
 
@@ -159,7 +159,7 @@ namespace MapGeneratorSystem
         }
 
         //* Add previous level trigger
-        createObject(
+        ObjectsModule::createSingle(
             map.objects,
             Vector2I{
                 0,
@@ -180,7 +180,7 @@ namespace MapGeneratorSystem
         //     EventId::nextLevel);
 
         //* Add enemies
-        initEnemies(
+        EnemiesModule::init(
             map.enemies,
             level,
             map);
@@ -267,7 +267,8 @@ namespace MapGeneratorSystem
             RenderId::FLOOR);
 
         //* Tiles
-        testRoom.tiles.create(
+        TilesModule::createSingle(
+            testRoom.tiles,
             Vector2I{
                 0,
                 -1},
@@ -275,7 +276,8 @@ namespace MapGeneratorSystem
             true,
             true);
 
-        testRoom.tiles.create(
+        TilesModule::createSingle(
+            testRoom.tiles,
             Vector2I{
                 5,
                 6},
@@ -283,7 +285,8 @@ namespace MapGeneratorSystem
             true,
             true);
 
-        testRoom.tiles.create(
+        TilesModule::createSingle(
+            testRoom.tiles,
             Vector2I{
                 6,
                 5},
@@ -291,7 +294,8 @@ namespace MapGeneratorSystem
             true,
             true);
 
-        testRoom.tiles.create(
+        TilesModule::createSingle(
+            testRoom.tiles,
             Vector2I{
                 5,
                 5},
@@ -299,14 +303,15 @@ namespace MapGeneratorSystem
             true,
             true);
 
-        testRoom.tiles.create(
+        TilesModule::createSingle(
+            testRoom.tiles,
             Vector2I{
                 -6,
                 5},
             RenderId::FLOOR);
 
         //* Next level trigger
-        createObject(
+        ObjectsModule::createSingle(
             testRoom.objects,
             Vector2I{
                 0,
@@ -316,7 +321,7 @@ namespace MapGeneratorSystem
             "Descend",
             EventId::NEXT_LEVEL);
 
-        createEnemy(
+        EnemiesModule::createSingle(
             testRoom.enemies,
             testRoom,
             RenderId::GOBLIN,
@@ -340,7 +345,7 @@ namespace MapGeneratorSystem
                 15});
 
         //* Add next level trigger
-        createObject(
+        ObjectsModule::createSingle(
             startRoom.objects,
             Vector2I{
                 0,

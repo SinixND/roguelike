@@ -5,8 +5,8 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Fix pathfinding/continuous movement bug
-- [ ] Refactor public/private (see Notes) ~~namespace Class/Module/System~~
+- [ ] Fix web bug -> cursor not moving when mouse active
+- [ ] Replace top level argument by members (eg. tiles instead of game(.tiles))
 - [ ] Refactor SoA: size_t as key; hashmap/2D-array for position lookup
 - [ ] Change DenseMap/SparseSet:
   - Synced (private?) for persistent components/iteration
@@ -16,7 +16,6 @@ Platforms: Linux, Windows, Browser
     - [ ] ~~Pass by rawPtr (if modified)~~ Add in/out/io information to function parameters
 
 - [ ] Split Component(temp) and Data(persistent)?
-- [ ] Separate System (not related to class) and Module (former member functions) via namespace?
 
 
 ## Shortterm
@@ -96,7 +95,7 @@ Platforms: Linux, Windows, Browser
 [Install docker](https://itsfoss.com/install-docker-arch-linux/)
 
 
-# Concepts used in project
+## Concepts used in project
 - Generic Makefile (no cmake)
 - Support for linux / web (library: emscripten) / windows
 - Support for keyboard / mouse / touch
@@ -118,7 +117,7 @@ Platforms: Linux, Windows, Browser
 - Procedural map generation
 
 
-# Implemented
+# Implemented ToDo's
 - [x] Compile for linux & windows
 - [x] Render sprites/textures
 - [ ] Make ECS (removed)
@@ -159,5 +158,6 @@ Platforms: Linux, Windows, Browser
 - [x] Add health and damage
 - [x] Implement killing and spawning
 - [x] Remove all includes and check for possible forward declarations
-
 - [x] Split Transform (single turn) and Movement (multi-turn) data
+- [x] Refactor public/private (see Notes) ~~namespace Class/Module/System~~
+- [x] Separate System (not related to class) and Module (former member functions) via namespace?

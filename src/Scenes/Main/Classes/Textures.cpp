@@ -1,33 +1,36 @@
 #include "Textures.h"
 #include "RenderId.h"
+#include "TextureData.h"
 #include <raylib.h>
 #include <string>
-#include <utility>
 
 enum class RenderId;
 
-void Textures::loadAtlas(std::string const& filename)
+void TexturesModule::loadAtlas(
+    Textures& textures,
+    std::string const& filename)
 {
-    unloadAtlas();
-    textureAtlas_ = LoadTexture((texturePath + filename).c_str());
+    TexturesModule::unloadAtlas(textures);
+    textures.atlas = LoadTexture((TextureData::texturePath + filename).c_str());
 }
 
-Texture2D const& Textures::textureAtlas() const
+void TexturesModule::registerTexture(
+    Textures& textures,
+    RenderId textureId,
+    Vector2 position)
 {
-    return textureAtlas_;
+    textures.textureIdToAtlasPosition.insert({textureId, position});
 }
 
-void Textures::registerTexture(RenderId textureId, Vector2 position)
+Vector2 const& TexturesModule::getTexturePosition(
+    Textures const& textures,
+    RenderId renderId)
 {
-    textureIdToAtlasPosition_.insert({textureId, position});
+    return textures.textureIdToAtlasPosition.at(renderId);
 }
 
-Vector2 const& Textures::getTexturePosition(RenderId renderId) const
+void TexturesModule::unloadAtlas(
+    Textures& textures)
 {
-    return textureIdToAtlasPosition_.at(renderId);
-}
-
-void Textures::unloadAtlas()
-{
-    UnloadTexture(textureAtlas_);
+    UnloadTexture(textures.atlas);
 }

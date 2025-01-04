@@ -6,21 +6,26 @@
 #include "raylibEx.h"
 #include <string>
 
-void createObject(
-    Objects& objects,
-    Vector2I const& tilePosition,
-    RenderId renderId,
-    std::string const& name,
-    std::string const& action,
-    EventId event)
+namespace ObjectsModule
 {
-    objects.positions[tilePosition].changeTo(tilePosition);
+    void createSingle(
+        Objects& objects,
+        Vector2I const& tilePosition,
+        RenderId renderId,
+        std::string const& name,
+        std::string const& action,
+        EventId event)
+    {
+        PositionModule::changeTo(
+            objects.positions[tilePosition],
+            tilePosition);
 
-    objects.renderIds[tilePosition] = renderId;
+        objects.renderIds[tilePosition] = renderId;
 
-    objects.names[tilePosition] = name;
+        objects.names[tilePosition] = name;
 
-    objects.actions[tilePosition] = action;
+        objects.actions[tilePosition] = action;
 
-    objects.events[tilePosition] = event;
+        objects.events[tilePosition] = event;
+    }
 }

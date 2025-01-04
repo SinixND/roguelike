@@ -26,19 +26,20 @@ std::string textureAtlasFileName(size_t theme)
 void RenderSystem::loadRenderData(RenderData& renderData)
 {
     //* Load texture atlas
-    renderData.textures.loadAtlas(
+    TexturesModule::loadAtlas(
+        renderData.textures,
         textureAtlasFileName(
             renderData.theme));
 
     //* Register textures
-    renderData.textures.registerTexture(RenderId::NONE, {0, 0});
-    renderData.textures.registerTexture(RenderId::CURSOR, {35, 0});
-    renderData.textures.registerTexture(RenderId::HERO, {70, 0});
-    renderData.textures.registerTexture(RenderId::WALL, {105, 0});
-    renderData.textures.registerTexture(RenderId::FLOOR, {0, 35});
-    renderData.textures.registerTexture(RenderId::DESCEND, {35, 35});
-    renderData.textures.registerTexture(RenderId::ASCEND, {70, 35});
-    renderData.textures.registerTexture(RenderId::GOBLIN, {105, 35});
+    TexturesModule::registerTexture(renderData.textures, RenderId::NONE, {0, 0});
+    TexturesModule::registerTexture(renderData.textures, RenderId::CURSOR, {35, 0});
+    TexturesModule::registerTexture(renderData.textures, RenderId::HERO, {70, 0});
+    TexturesModule::registerTexture(renderData.textures, RenderId::WALL, {105, 0});
+    TexturesModule::registerTexture(renderData.textures, RenderId::FLOOR, {0, 35});
+    TexturesModule::registerTexture(renderData.textures, RenderId::DESCEND, {35, 35});
+    TexturesModule::registerTexture(renderData.textures, RenderId::ASCEND, {70, 35});
+    TexturesModule::registerTexture(renderData.textures, RenderId::GOBLIN, {105, 35});
 }
 
 void RenderSystem::render(
@@ -49,10 +50,18 @@ void RenderSystem::render(
 {
     //* Use 0.5f pixel offset to avoid texture bleeding
     DrawTexturePro(
-        textures.textureAtlas(),
+        textures.atlas,
         Rectangle{
-            textures.getTexturePosition(renderId).x + 0.5f,
-            textures.getTexturePosition(renderId).y + 0.5f,
+            TexturesModule::getTexturePosition(
+                textures,
+                renderId)
+                    .x
+                + 0.5f,
+            TexturesModule::getTexturePosition(
+                textures,
+                renderId)
+                    .y
+                + 0.5f,
             TextureData::textureSize - (2 * 0.5f),
             TextureData::textureSize - (2 * 0.5f)},
         Rectangle{
@@ -77,10 +86,18 @@ void RenderSystem::renderToChunk(
 {
     //* Use 0.5f pixel offset to avoid texture bleeding
     DrawTexturePro(
-        textures.textureAtlas(),
+        textures.atlas,
         Rectangle{
-            textures.getTexturePosition(renderId).x + 0.5f,
-            textures.getTexturePosition(renderId).y + 0.5f,
+            TexturesModule::getTexturePosition(
+                textures,
+                renderId)
+                    .x
+                + 0.5f,
+            TexturesModule::getTexturePosition(
+                textures,
+                renderId)
+                    .y
+                + 0.5f,
             TextureData::textureSize - (2 * 0.5f),
             TextureData::textureSize - (2 * 0.5f)},
         Rectangle{
@@ -165,5 +182,5 @@ void RenderSystem::cycleThemes(size_t& theme)
 
 void RenderSystem::deinit(Textures& textures)
 {
-    textures.unloadAtlas();
+    TexturesModule::unloadAtlas(textures);
 }

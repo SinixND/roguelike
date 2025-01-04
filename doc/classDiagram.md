@@ -48,7 +48,7 @@ class Game {
 
 Game *-- UserInput
 
-struct UserInput {
+class UserInput {
     - InputActionID inputAction_
     - bool modifier_
     - std::unordered_map<int, InputActionID> keyToInputActionID_
@@ -126,7 +126,7 @@ class Enemies {
 
 Enemies *-- AIComponent
 
-struct AIComponent {
+class AIComponent {
     - int scanRange_
 }
 
@@ -146,7 +146,7 @@ class MovementComponent {
 
 Enemies *-- EnergyComponent
 
-struct EnergyComponent {
+class EnergyComponent {
     - int maxEnergy_
     - int currentEnergy_
     - bool isReady_
@@ -163,7 +163,7 @@ class HealthComponent {
 
 Enemies *-- DamageComponent
 
-struct DamageComponent {
+class DamageComponent {
     - int baseDamage_
     - int criticalHitChance_
     - int criticalHitDamage_

@@ -31,7 +31,7 @@
 int constexpr bias{2};
 
 // float rating(RatedTile const& ratedTile)
-int getRating(RatedTile const& ratedTile)
+int RatedTileModule::getRating(RatedTile const& ratedTile)
 {
     return
         //* Distance to target
@@ -39,7 +39,7 @@ int getRating(RatedTile const& ratedTile)
         + bias * ratedTile.stepsNeeded;
 }
 
-void reconstructPath(
+void RatedTileModule::reconstructPath(
     RatedTile const& ratedTile,
     std::vector<Vector2I>& path)
 {
@@ -120,7 +120,6 @@ bool checkRatingList(
         //* Exception: offDirection == {0 , 0}
         if (offDirection == Vector2I{0, 0})
         {
-
             if (snx::RNG::random())
             {
                 offDirection = Vector2Swap(mainDirection);
@@ -148,8 +147,8 @@ bool checkRatingList(
             if (!CheckCollisionPointRec(
                     Convert::tileToScreen(
                         newTilePosition,
-                        gameCamera.camera()),
-                    gameCamera.viewportOnScreen()))
+                        gameCamera.camera),
+                    *gameCamera.viewport))
             {
                 continue;
             }
@@ -179,7 +178,7 @@ bool checkRatingList(
             //* If Target found
             if ((newTilePosition == target))
             {
-                reconstructPath(
+                RatedTileModule::reconstructPath(
                     newRatedTile,
                     path);
 
@@ -212,7 +211,7 @@ bool checkRatingList(
             ratedTiles.push_front(newRatedTile);
 
             //* Add newRatedTile
-            ratingList[getRating(newRatedTile)].push_back(&ratedTiles.front());
+            ratingList[RatedTileModule::getRating(newRatedTile)].push_back(&ratedTiles.front());
 
             //* Valid! Add to ignore set so it doesn't get checked again
             tilesToIgnore.insert(newTilePosition);
@@ -299,13 +298,13 @@ std::vector<Vector2I> PathfinderSystem::findPath(
     //* Map of tile pointers, sorted by rating (lowest first)
     std::map<int, std::vector<RatedTile*>> ratingList{};
 
-    ratingList[getRating(firstTile)].push_back(&ratedTiles.front());
+    ratingList[RatedTileModule::getRating(firstTile)].push_back(&ratedTiles.front());
 
     //* List of ignored tiles to avoid double checks
     std::unordered_set<Vector2I> tilesToIgnore{start};
 
     checkRatingList(
-        getRating(firstTile),
+        RatedTileModule::getRating(firstTile),
         ratedTiles,
         ratingList,
         tilesToIgnore,

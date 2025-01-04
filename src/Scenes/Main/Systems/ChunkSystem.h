@@ -1,17 +1,13 @@
 #ifndef IG20240815193400
 #define IG20240815193400
 
-namespace snx
-{
-    template <typename Key, typename Type>
-    class DenseMap;
-}
+#include "DenseMap.h"
 
 struct Vector2I;
-class Chunk;
-class PositionComponent;
+struct Chunk;
+struct PositionComponent;
 enum class RenderId;
-class Textures;
+struct Textures;
 
 namespace ChunkSystem
 {

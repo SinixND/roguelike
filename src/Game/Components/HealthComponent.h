@@ -1,34 +1,27 @@
 #ifndef IG20241028234910
 #define IG20241028234910
 
-class HealthComponent
+struct HealthComponent
 {
-    int currentHealth_{};
-
-public:
-    int maxHealth{};
-    int regenRate{};
-
-public:
-    HealthComponent() = default;
-
-    explicit HealthComponent(int maxHealth, int regenRate = 0)
-        : currentHealth_(maxHealth)
-        , maxHealth(maxHealth)
-        , regenRate(regenRate)
-    {
-    }
-
-    //* Returns true if health is <= 0
-    //* Reduces health to 0 with no argument
-    bool damage(int health = 0);
-
-    //* Fully heals with no argument
-    void heal(int health = 0);
-
-    int currentHealth() const;
+    int maxHealth{1};
+    int regenRate{0};
+    int currentHealth{maxHealth};
 };
 
-void regenerate(HealthComponent& healthComponent);
+namespace HealthModule
+{
+    //* Returns true if health is <= 0
+    //* Reduces health to 0 with no argument
+    bool damage(
+        HealthComponent& health,
+        int value = 0);
+
+    //* Fully heals with no argument
+    void heal(
+        HealthComponent& health,
+        int value = 0);
+
+    void regenerate(HealthComponent& health);
+}
 
 #endif

@@ -12,7 +12,10 @@ struct DamageComponent
     float critDamageFactor{baseCritDamage};
 };
 
-int damageRNG(DamageComponent const& damageComponent);
-int damageAverage(DamageComponent const& damageComponent);
+namespace DamageModule
+{
+    int damageRNG(DamageComponent const& damageComponent);
+    int damageAverage(DamageComponent const& damageComponent);
+}
 
 #endif

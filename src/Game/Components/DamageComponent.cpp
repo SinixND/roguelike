@@ -11,7 +11,7 @@
 #include <string>
 #endif
 
-int damageRNG(DamageComponent const& damageComponent)
+int DamageModule::damageRNG(DamageComponent const& damageComponent)
 {
     int damage = damageComponent.baseDamage
                  + (damageComponent.baseDamage
@@ -24,7 +24,7 @@ int damageRNG(DamageComponent const& damageComponent)
     return damage;
 }
 
-int damageAverage(DamageComponent const& damageComponent)
+int DamageModule::damageAverage(DamageComponent const& damageComponent)
 {
     return damageComponent.baseDamage + (damageComponent.baseDamage * damageComponent.critChanceFactor * damageComponent.critDamageFactor);
 }

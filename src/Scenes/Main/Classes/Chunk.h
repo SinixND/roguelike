@@ -10,27 +10,25 @@
 //* - one renderTexture
 //* - its corners as a RectangleExI (tile coordinates)
 //* - center position
-class Chunk
+struct Chunk
 {
-public:
     RectangleExI corners{};
     PositionComponent position{};
     RenderTexture renderTexture{};
 
-public:
     Chunk() = default;
 
     Chunk(
         PositionComponent const& position,
-        RenderTexture const& renderTexture)
+        RenderTexture const& texture)
         : corners(
               RectangleExI{
-                  position.tilePosition().x,
-                  position.tilePosition().y,
+                  PositionModule::tilePosition(position).x,
+                  PositionModule::tilePosition(position).y,
                   ChunkData::chunkSize,
                   ChunkData::chunkSize})
         , position(position)
-        , renderTexture(renderTexture)
+        , renderTexture(texture)
     {
     }
 };

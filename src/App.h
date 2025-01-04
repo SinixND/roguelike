@@ -2,36 +2,33 @@
 #define IG20240519210141
 
 #include "AppConfig.h"
-#include "IScene.h"
 #include "SceneMain.h"
 #include <raylib.h>
 
 #if defined(EMSCRIPTEN)
-struct emscriptenArgs
+struct emscriptenApp
 {
-    snx::IScene* activeScene;
+    Scene* scene;
 };
 #endif
 
-class App
+struct App
 {
-    AppConfig config_{};
+    AppConfig config{};
 
-    int const fpsTarget_{300};
+    int const fpsTarget{300};
 
     //* Raylib settings
-    Image const favicon_{LoadImage("resources/favicon/favicon.png")};
+    Image const favicon{LoadImage("resources/favicon/favicon.png")};
 
     //* Scenes
-    SceneMain SceneMain_{};
-
-    //* Set default scene
-    snx::IScene* activeScene_{&SceneMain_};
-
-public:
-    void init();
-    void run();
-    void deinit();
+    Scene scene{};
 };
 
+namespace AppModule
+{
+    void init(App& app);
+    void run(App& app);
+    void deinit(App& app);
+}
 #endif

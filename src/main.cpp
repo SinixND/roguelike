@@ -12,9 +12,9 @@ int main(/* int argc, char** argv */)
 {
     App app{};
 
-    app.init();
-    app.run();
-    app.deinit();
+    AppModule::init(app);
+    AppModule::run(app);
+    AppModule::deinit(app);
 
     return 0;
 }

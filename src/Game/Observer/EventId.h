@@ -19,6 +19,7 @@ enum class EventId
     HERO_POSITION_CHANGED,
     NEXT_LEVEL,
     PREVIOUS_LEVEL,
+    INTERRUPT_MOVEMENT,
 };
 
 #endif

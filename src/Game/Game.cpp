@@ -3,13 +3,13 @@
 #include "AISystem.h"
 #include "Cursor.h"
 #include "Enemies.h"
+#include "EnergyComponent.h"
 #include "EventId.h"
 #include "GameCamera.h"
 #include "Hero.h"
+#include "Input.h"
 #include "InputActionId.h"
-#include "InputHandler.h"
 #include "InputMappings.h"
-#include "Logger.h"
 #include "MovementSystem.h"
 #include "Objects.h"
 #include "PositionComponent.h"
@@ -18,142 +18,145 @@
 #include "UserInputSystem.h"
 #include "World.h"
 #include "raylibEx.h"
+#include <Logger.h>
 #include <cstddef>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
-#include <string>
 
 #if defined(DEBUG)
 #include "RNG.h"
 #endif
 
-void Game::init()
+void GameModule::init(Game& game)
 {
 #if defined(DEBUG)
     snx::RNG::seed(1);
 #endif
 
-    inputMappings = defaultInputMappings();
+    game.inputMappings = InputMappingsModule::getDefault();
 
     //* Setup events
-    setupGameEvents();
+    GameModule::setupGameEvents(game);
 
 #if defined(DEBUG)
     snx::PublisherStatic::publish(EventId::NEXT_LEVEL);
 #endif
 }
 
-void Game::processInput(Cursor& cursor)
+void GameModule::processInput(
+    Game& game,
+    Cursor& cursor)
 {
     //* Take input from mouse, keys or gestures
-    inputAction = checkKeyboard(
-        inputHandler,
-        inputMappings);
+    game.inputAction = InputModule::checkKeyboard(
+        game.inputHandler,
+        game.inputMappings);
 
-    if (inputAction != InputActionId::NONE)
+    if (game.inputAction != InputActionId::NONE)
     {
         return;
     }
 
-    inputAction = checkMouse(inputMappings, cursor.isActive);
+    game.inputAction = InputModule::checkMouse(game.inputMappings, cursor.isActive);
 
-    if (inputAction != InputActionId::NONE)
+    if (game.inputAction != InputActionId::NONE)
     {
         return;
     }
 
-    inputAction = checkGesture(inputHandler);
+    game.inputAction = InputModule::checkGesture(game.inputHandler);
 }
 
-void Game::updateState(
+void GameModule::updateState(
+    Game& game,
     GameCamera const& gameCamera,
     Cursor const& cursor)
 {
     //* AI
-    if (!isMultiFrameActionActive)
+    if (!game.isMultiFrameActionActive)
     {
-        isMultiFrameActionActive = AISystem::takeActions(
-            world,
-            hero,
-            activeEnemyId,
+        game.isMultiFrameActionActive = AISystem::takeActions(
+            game.world,
+            game.hero,
+            game.activeEnemyId,
             gameCamera,
-            turn);
+            game.turn);
     }
 
     //* Hero
-    if (!isMultiFrameActionActive
-        && hero.energy.isReady())
+    if (!game.isMultiFrameActionActive
+        && game.hero.energy.state == EnergyState::READY)
     {
-        isMultiFrameActionActive = UserInputSystem::takeAction(
-            inputAction,
-            hero,
+        game.isMultiFrameActionActive = UserInputSystem::takeAction(
+            game.inputAction,
+            game.hero,
             cursor,
-            *world.currentMap,
+            *game.world.currentMap,
             gameCamera);
     }
 
     //* Update instant actions
-    if (!isMultiFrameActionActive)
+    if (!game.isMultiFrameActionActive)
     {
-        replaceDeadEnemies(
-            world.currentMap->enemies,
-            *world.currentMap);
+        EnemiesModule::replaceDead(
+            game.world.currentMap->enemies,
+            *game.world.currentMap);
     }
     //* Update multi-frame actions
     else
     {
         //* Update hero
-        MovementSystem::update(
-            hero.transform,
-            hero.movement,
-            hero.position,
-            hero.energy,
-            hero.position);
+        MovementSystem::updateHero(
+            game.hero.transform,
+            // game.hero.movement,
+            game.hero.position,
+            game.hero.energy,
+            game.hero.position);
 
         //* Update enemies
         MovementSystem::updateEnemies(
-            world.currentMap->enemies,
-            hero.position);
+            game.world.currentMap->enemies,
+            game.hero.position);
     }
 
     //* Regenerate energy if no action in progress
-    if (!isMultiFrameActionActive
-        && !hero.energy.isReady()
-        && !activeEnemyId)
+    if (!game.isMultiFrameActionActive
+        && game.hero.energy.state == EnergyState::NOT_READY
+        && !game.activeEnemyId)
     {
         bool isUnitReady{false};
 
         //* Regenerate until one unit becomes ready
         while (!isUnitReady)
         {
-            isUnitReady = hero.energy.regenerate();
-            isUnitReady |= regenerateEnergies(world.currentMap->enemies);
+            isUnitReady = EnergyModule::regenerate(game.hero.energy);
+            isUnitReady |= EnemiesModule::regenerate(game.world.currentMap->enemies);
         }
 
         //* Progess turn when hero is ready
-        if (hero.energy.isReady())
+        if (game.hero.energy.state == EnergyState::READY)
         {
-            ++turn;
-            snx::Logger::setStamp(std::to_string(turn));
+            ++game.turn;
+            snx::Logger::setStamp(std::to_string(game.turn));
         }
     }
 }
 
-void Game::setupGameEvents()
+void GameModule::setupGameEvents(Game& game)
 {
     snx::PublisherStatic::addSubscriber(
         EventId::MULTIFRAME_ACTION_ACTIVE,
         [&]()
         {
-            isMultiFrameActionActive = true;
+            game.isMultiFrameActionActive = true;
         });
 
     snx::PublisherStatic::addSubscriber(
         EventId::MULTIFRAME_ACTION_DONE,
         [&]()
         {
-            isMultiFrameActionActive = false;
+            game.isMultiFrameActionActive = false;
         });
 
     snx::PublisherStatic::addSubscriber(
@@ -162,10 +165,12 @@ void Game::setupGameEvents()
         {
             snx::Logger::log("Entered next level");
 
-            world.increaseMapLevel();
+            WorldModule::increaseMapLevel(game.world);
 
             //* Place Hero on the map entry position
-            hero.position.changeTo(Vector2I{0, 0});
+            PositionModule::changeTo(
+                game.hero.position,
+                Vector2I{0, 0});
 
             snx::PublisherStatic::publish(EventId::HERO_MOVED);
             snx::PublisherStatic::publish(EventId::HERO_POSITION_CHANGED);
@@ -178,10 +183,10 @@ void Game::setupGameEvents()
         {
             snx::Logger::log("Entered previous level");
 
-            world.decreaseMapLevel();
+            WorldModule::decreaseMapLevel(game.world);
 
             //* Place Hero on the map exit
-            auto const& objects{world.currentMap->objects};
+            auto const& objects{game.world.currentMap->objects};
             auto const& renderIds{objects.renderIds.values()};
             auto const& positions{objects.positions.values()};
 
@@ -189,13 +194,22 @@ void Game::setupGameEvents()
             {
                 if (renderIds.at(i) == RenderId::DESCEND)
                 {
-                    hero.position.changeTo(
-                        positions.at(i).tilePosition());
+                    PositionModule::changeTo(
+                        game.hero.position,
+                        PositionModule::tilePosition(positions.at(i)));
                 }
             }
 
             snx::PublisherStatic::publish(EventId::HERO_MOVED);
             snx::PublisherStatic::publish(EventId::HERO_POSITION_CHANGED);
             snx::PublisherStatic::publish(EventId::MAP_CHANGE);
+        });
+
+    snx::PublisherStatic::addSubscriber(
+        EventId::INTERRUPT_MOVEMENT,
+        [&]()
+        {
+            MovementSystem::resetTransform(game.hero.transform);
+            game.hero.movement.path.clear();
         });
 }

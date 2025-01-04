@@ -1,20 +1,20 @@
-#ifndef IG20241028165100
-#define IG20241028165100
+#ifndef IG_AISystem_20250104200416
+#define IG_AISystem_20250104200416
 
 #include <cstddef>
 
 struct AIComponent;
-class World;
+struct World;
 struct Hero;
 struct Map;
 struct Vector2I;
-class GameCamera;
-class PositionComponent;
+struct GameCamera;
+struct PositionComponent;
 struct TransformComponent;
 struct MovementComponent;
-class EnergyComponent;
+struct EnergyComponent;
 struct DamageComponent;
-class HealthComponent;
+struct HealthComponent;
 
 namespace AISystem
 {

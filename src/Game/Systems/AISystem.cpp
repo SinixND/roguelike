@@ -28,7 +28,7 @@ bool AISystem::takeActions(
 
     do
     {
-        activeEnemyId = getActiveEnemy(
+        activeEnemyId = EnemiesModule::getActive(
             enemies.energies,
             enemies.ais,
             turn);
@@ -45,7 +45,7 @@ bool AISystem::takeActions(
                 enemies.energies.at(activeEnemyId),
                 enemies.damages.at(activeEnemyId),
                 *world.currentMap,
-                hero.position.tilePosition(),
+                PositionModule::tilePosition(hero.position),
                 hero.health,
                 gameCamera);
         }
@@ -71,7 +71,7 @@ bool AISystem::takeAction(
     //* Instant action: attack
     if (Vector2Length(
             Vector2Subtract(
-                position.tilePosition(),
+                PositionModule::tilePosition(position),
                 heroPosition))
         == 1)
     {
@@ -82,14 +82,14 @@ bool AISystem::takeAction(
             damage,
             heroHealth);
 
-        energy.consume();
+        EnergyModule::consume(energy);
     }
     //* Check path
     else
     {
         std::vector<Vector2I> path{PathfinderSystem::findPath(
             map,
-            position.tilePosition(),
+            PositionModule::tilePosition(position),
             heroPosition,
             gameCamera,
             false,
@@ -98,6 +98,7 @@ bool AISystem::takeAction(
         size_t pathSize{path.size()};
 
         //* Path is valid: has at least 2 entries (start and target) -> Multi-frame action: move
+        //* TODO: Check all enemies->next position to avoid two enemies moving to the same spot
         if (pathSize > 2
             && !CollisionSystem::checkCollision(
                 map.tiles,
@@ -109,10 +110,10 @@ bool AISystem::takeAction(
             MovementSystem::prepareByFromTo(
                 movement,
                 transform,
-                position.tilePosition(),
+                PositionModule::tilePosition(position),
                 path.rbegin()[1]);
 
-            energy.consume();
+            EnergyModule::consume(energy);
 
             isActionMultiFrame = true;
         }
@@ -120,7 +121,7 @@ bool AISystem::takeAction(
         else
         {
             //* Wait
-            energy.consume();
+            EnergyModule::consume(energy);
         }
     }
     // return false;

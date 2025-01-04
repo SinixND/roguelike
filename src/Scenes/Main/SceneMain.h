@@ -7,42 +7,39 @@
 #include "DenseMap.h"
 #include "Game.h"
 #include "GameCamera.h"
-#include "IScene.h"
 #include "Panels.h"
 #include "RenderSystem.h"
 #include "VisibilitySystem.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
-class SceneMain : public snx::IScene
+struct Scene
 {
-    Game game_{};
+    Game game{};
 
-    Panels panels_{};
-    GameCamera gameCamera_{};
-    RenderData renderData_{};
+    Panels panels{};
+    GameCamera gameCamera{};
+    RenderData renderData{};
 
-    Cursor cursor_{};
+    Cursor cursor{};
 
-    snx::DenseMap<Vector2I, Chunk> chunks_{};
-    snx::DenseMap<Vector2I, Fog> fogs_{};
-
-public:
-    void init();
-    void update() override;
-    void deinitialize();
-
-private:
-    void processInput();
-    void updateState();
-    void renderOutput();
-
-    void setupSceneEvents();
+    snx::DenseMap<Vector2I, Chunk> chunks{};
+    snx::DenseMap<Vector2I, Fog> fogs{};
 
 #if defined(DEBUG)
-public:
     static inline Camera2D gcam{};
 #endif
 };
 
+namespace SceneModule
+{
+    void init(Scene& scene);
+    void update(Scene& scene);
+    void deinitialize(Scene& scene);
+    void processInput(Scene& scene);
+    void updateState(Scene& scene);
+    void renderOutput(Scene& scene);
+    void setupSceneEvents(Scene& scene);
+    void drawSceneBorder();
+}
 #endif

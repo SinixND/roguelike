@@ -1,4 +1,5 @@
 #include "HealthComponent.h"
+#include "PublisherStatic.h"
 #define DEBUG_HEALTH
 
 #if defined(DEBUG) && defined(DEBUG_HEALTH)
@@ -6,26 +7,25 @@
 #include <string>
 #endif
 
-int HealthComponent::currentHealth() const
-{
-    return currentHealth_;
-}
-
-bool HealthComponent::damage(int health)
+bool HealthModule::damage(
+    HealthComponent& health,
+    int value)
 {
 #if defined(DEBUG) && defined(DEBUG_HEALTH)
-    snx::debug::cliLog("Remove " + std::to_string(health) + " from " + std::to_string(currentHealth_) + " health\n");
+    snx::debug::cliLog("Remove " + std::to_string(value) + " from " + std::to_string(health.currentHealth) + " health\n");
 #endif
-    if (health)
+    if (value)
     {
-        currentHealth_ -= health;
+        health.currentHealth -= value;
     }
     else
     {
-        currentHealth_ = 0;
+        health.currentHealth = 0;
     }
 
-    if (currentHealth_ <= 0)
+    snx::PublisherStatic::publish(EventId::INTERRUPT_MOVEMENT);
+
+    if (health.currentHealth <= 0)
     {
         return true;
     }
@@ -33,28 +33,32 @@ bool HealthComponent::damage(int health)
     return false;
 }
 
-void HealthComponent::heal(int health)
+void HealthModule::heal(
+    HealthComponent& health,
+    int value)
 {
-    if (health)
+    if (value)
     {
-        currentHealth_ += health;
+        health.currentHealth += value;
     }
     else
     {
-        currentHealth_ = maxHealth;
+        health.currentHealth = health.maxHealth;
     }
 
-    if (currentHealth_ > maxHealth)
+    if (health.currentHealth > health.maxHealth)
     {
-        currentHealth_ = maxHealth;
+        health.currentHealth = health.maxHealth;
     }
 }
 
-void regenerate(HealthComponent& healthComponent)
+void HealthModule::regenerate(HealthComponent& health)
 {
 #if defined(DEBUG) && defined(DEBUG_HEALTH)
-    snx::debug::cliLog("Gain " + std::to_string(healthComponent.regenRate) + " to " + std::to_string(healthComponent.currentHealth()) + " health\n");
+    snx::debug::cliLog("Gain " + std::to_string(health.regenRate) + " to " + std::to_string(health.currentHealth) + " health\n");
 #endif
 
-    healthComponent.heal(healthComponent.regenRate);
+    HealthModule::heal(
+        health,
+        health.regenRate);
 }

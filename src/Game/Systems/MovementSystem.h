@@ -6,17 +6,16 @@
 
 struct TransformComponent;
 struct MovementComponent;
-class PositionComponent;
-class EnergyComponent;
+struct PositionComponent;
+struct EnergyComponent;
 struct Map;
-class PositionComponent;
 struct Enemies;
 
 namespace MovementSystem
 {
-    void update(
+    void updateHero(
         TransformComponent& transform,
-        MovementComponent& movement,
+        // MovementComponent& movement,
         PositionComponent& position,
         EnergyComponent& energy,
         PositionComponent const& heroPosition);

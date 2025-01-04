@@ -3,6 +3,7 @@
 #include "Chunk.h"
 #include "ChunkData.h"
 #include "Colors.h"
+#include "Convert.h"
 #include "DenseMap.h"
 #include "PositionComponent.h"
 #include "RenderSystem.h"
@@ -45,7 +46,7 @@ void ChunkSystem::initializeChunks(
     for (PositionComponent const& position : tilesPositions)
     {
         verifyRequiredChunkExists(
-            position.tilePosition(),
+            PositionModule::tilePosition(position),
             chunks);
     }
 

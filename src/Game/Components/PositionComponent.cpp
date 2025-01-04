@@ -1,19 +1,25 @@
 #include "PositionComponent.h"
+
 #include "Convert.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
-Vector2I PositionComponent::tilePosition() const
+Vector2I PositionModule::tilePosition(PositionComponent const& position)
 {
-    return Convert::worldToTile(worldPixel);
+    return Convert::worldToTile(position.worldPixel);
 }
 
-void PositionComponent::changeTo(Vector2I const& tilePosition)
+void PositionModule::changeTo(
+    PositionComponent& position,
+    Vector2I const& target)
 {
-    worldPixel = Convert::tileToWorld(tilePosition);
+    position.worldPixel = Convert::tileToWorld(target);
 }
 
-void PositionComponent::move(Vector2 const& offset)
+void PositionModule::move(
+    PositionComponent& position,
+    Vector2 const& offset)
 {
-    worldPixel += offset;
+    position.worldPixel += offset;
 }
+

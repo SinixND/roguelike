@@ -5,16 +5,14 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-class PositionComponent
+struct PositionComponent
 {
-public:
     Vector2 worldPixel{};
 
-public:
     PositionComponent() = default;
 
-    explicit PositionComponent(Vector2 const& pixel)
-        : worldPixel(pixel)
+    explicit PositionComponent(Vector2 const& position)
+        : worldPixel(position)
     {
     }
 
@@ -22,13 +20,20 @@ public:
         : worldPixel(Convert::tileToWorld(tilePosition))
     {
     }
+};
 
-    Vector2I tilePosition() const;
+namespace PositionModule
+{
+    Vector2I tilePosition(PositionComponent const& position);
 
-    void changeTo(Vector2I const& tilePosition);
+    void changeTo(
+        PositionComponent& position,
+        Vector2I const& target);
 
     //* Returns if tilePosition changed
-    void move(Vector2 const& offset);
-};
+    void move(
+        PositionComponent& position,
+        Vector2 const& offset);
+}
 
 #endif

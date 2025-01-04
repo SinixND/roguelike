@@ -17,13 +17,15 @@ struct Objects
     snx::DenseMap<Vector2I, EventId> events{};
 };
 
-//* Access or create
-void createObject(
-    Objects& objects,
-    Vector2I const& tilePosition,
-    RenderId renderId,
-    std::string const& name,
-    std::string const& action,
-    EventId event);
+namespace ObjectsModule
+{
+    void createSingle(
+        Objects& objects,
+        Vector2I const& tilePosition,
+        RenderId renderId,
+        std::string const& name,
+        std::string const& action,
+        EventId event);
+}
 
 #endif

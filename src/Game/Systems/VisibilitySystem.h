@@ -8,36 +8,66 @@
 #include <unordered_set>
 #include <vector>
 
-class Shadow
+struct Shadow
 {
-    float slopeLeft_{};
-    float slopeRight_{};
+    float slopeLeft{};
+    float slopeRight{};
 
-public:
     explicit Shadow(Vector2I const& octantPosition);
+};
 
-    float slopeLeft() const;
-    void setSlopeLeft(Vector2I const& octantPosition);
-    void setSlopeLeft(float slopeLeft);
+namespace ShadowModule
+{
+    float slopeLeft(Shadow const& shadow);
 
-    float slopeRight() const;
-    void setSlopeRight(Vector2I const& octantPosition);
-    void setSlopeRight(float slopeRight);
+    void setSlopeLeft(
+        Shadow& shadow,
+        Vector2I const& octantPosition);
+
+    void setSlopeLeft(
+        Shadow& shadow,
+        float slopeLeft);
+
+    float slopeRight(Shadow const& shadow);
+
+    void setSlopeRight(
+        Shadow& shadow,
+        Vector2I const& octantPosition);
+
+    void setSlopeRight(
+        Shadow& shadow,
+        float slopeRight);
 
     //* Get x at left slope for height of top-left octant tile corner
-    float getLeftAtTop(Vector2I const& octantPosition) const;
+    float getLeftAtTop(
+        Shadow const& shadow,
+        Vector2I const& octantPosition);
+
     //* Get x at left slope for height of bottom-right octant tile corner
-    float getLeftAtBottom(Vector2I const& octantPosition) const;
+    float getLeftAtBottom(
+        Shadow const& shadow,
+        Vector2I const& octantPosition);
+
     //* Get x at left slope for height of octant position
-    float getLeft(int octantPositionHeight) const;
+    float getLeft(
+        Shadow const& shadow,
+        int octantPositionHeight);
 
     //* Get x at right slope for height of top-left octant tile corner
-    float getRightAtTop(Vector2I const& octantPosition) const;
+    float getRightAtTop(
+        Shadow const& shadow,
+        Vector2I const& octantPosition);
+
     //* Get x at right slope for height of bottom-right octant tile corner
-    float getRightAtBottom(Vector2I const& octantPosition) const;
+    float getRightAtBottom(
+        Shadow const& shadow,
+        Vector2I const& octantPosition);
+
     //* Get x at right slope for height of octant position
-    float getRight(int octantPositionHeight) const;
-};
+    float getRight(
+        Shadow const& shadow,
+        int octantPositionHeight);
+}
 
 struct Fog
 {

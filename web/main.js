@@ -35,7 +35,7 @@ if (ENVIRONMENT_IS_NODE) {
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-// include: /data/data/com.termux/files/usr/tmp/tmpboffgjha.js
+// include: /tmp/tmpzyj5gjge.js
 
   Module['expectedDataFileDownloads'] ??= 0;
   Module['expectedDataFileDownloads']++;
@@ -223,7 +223,7 @@ Module['FS_createPath']("/resources", "textures", true, true);
 
   })();
 
-// end include: /data/data/com.termux/files/usr/tmp/tmpboffgjha.js
+// end include: /tmp/tmpzyj5gjge.js
 
 
 // Sometimes an existing Module object exists with properties
@@ -262,17 +262,22 @@ if (ENVIRONMENT_IS_NODE) {
 
 // include: node_shell_read.js
 readBinary = (filename) => {
-  // We need to re-wrap `file://` strings to URLs.
-  filename = isFileURI(filename) ? new URL(filename) : filename;
+  // We need to re-wrap `file://` strings to URLs. Normalizing isn't
+  // necessary in that case, the path should already be absolute.
+  filename = isFileURI(filename) ? new URL(filename) : nodePath.normalize(filename);
   var ret = fs.readFileSync(filename);
   return ret;
 };
 
-readAsync = async (filename, binary = true) => {
+readAsync = (filename, binary = true) => {
   // See the comment in the `readBinary` function.
-  filename = isFileURI(filename) ? new URL(filename) : filename;
-  var ret = fs.readFileSync(filename, binary ? undefined : 'utf8');
-  return ret;
+  filename = isFileURI(filename) ? new URL(filename) : nodePath.normalize(filename);
+  return new Promise((resolve, reject) => {
+    fs.readFile(filename, binary ? undefined : 'utf8', (err, data) => {
+      if (err) reject(err);
+      else resolve(binary ? data.buffer : data);
+    });
+  });
 };
 // end include: node_shell_read.js
   if (!Module['thisProgram'] && process.argv.length > 1) {
@@ -325,7 +330,7 @@ if (ENVIRONMENT_IS_WORKER) {
     };
   }
 
-  readAsync = async (url) => {
+  readAsync = (url) => {
     // Fetch has some additional restrictions over XHR, like it can't be used on a file:// url.
     // See https://github.com/github/fetch/pull/92#issuecomment-140665932
     // Cordova or Electron apps are typically loaded from a file:// url.
@@ -346,11 +351,13 @@ if (ENVIRONMENT_IS_WORKER) {
         xhr.send(null);
       });
     }
-    var response = await fetch(url, { credentials: 'same-origin' });
-    if (response.ok) {
-      return response.arrayBuffer();
-    }
-    throw new Error(response.status + ' : ' + response.url);
+    return fetch(url, { credentials: 'same-origin' })
+      .then((response) => {
+        if (response.ok) {
+          return response.arrayBuffer();
+        }
+        return Promise.reject(new Error(response.status + ' : ' + response.url));
+      })
   };
 // end include: web_or_worker_shell_read.js
   }
@@ -569,6 +576,7 @@ function addOnPostRun(cb) {
 // it happens right before run - run will be postponed until
 // the dependencies are met.
 var runDependencies = 0;
+var runDependencyWatcher = null;
 var dependenciesFulfilled = null; // overridden to take different actions when all run dependencies are fulfilled
 
 function getUniqueRunDependency(id) {
@@ -588,6 +596,10 @@ function removeRunDependency(id) {
   Module['monitorRunDependencies']?.(runDependencies);
 
   if (runDependencies == 0) {
+    if (runDependencyWatcher !== null) {
+      clearInterval(runDependencyWatcher);
+      runDependencyWatcher = null;
+    }
     if (dependenciesFulfilled) {
       var callback = dependenciesFulfilled;
       dependenciesFulfilled = null;
@@ -671,36 +683,33 @@ function getBinarySync(file) {
   throw 'both async and sync fetching of the wasm failed';
 }
 
-async function getWasmBinary(binaryFile) {
+function getBinaryPromise(binaryFile) {
   // If we don't have the binary yet, load it asynchronously using readAsync.
   if (!wasmBinary
       ) {
     // Fetch the binary using readAsync
-    try {
-      var response = await readAsync(binaryFile);
-      return new Uint8Array(response);
-    } catch {
-      // Fall back to getBinarySync below;
-    }
+    return readAsync(binaryFile).then(
+      (response) => new Uint8Array(/** @type{!ArrayBuffer} */(response)),
+      // Fall back to getBinarySync if readAsync fails
+      () => getBinarySync(binaryFile)
+    );
   }
 
   // Otherwise, getBinarySync should be able to get it synchronously
-  return getBinarySync(binaryFile);
+  return Promise.resolve().then(() => getBinarySync(binaryFile));
 }
 
-async function instantiateArrayBuffer(binaryFile, imports) {
-  try {
-    var binary = await getWasmBinary(binaryFile);
-    var instance = await WebAssembly.instantiate(binary, imports);
-    return instance;
-  } catch (reason) {
+function instantiateArrayBuffer(binaryFile, imports, receiver) {
+  return getBinaryPromise(binaryFile).then((binary) => {
+    return WebAssembly.instantiate(binary, imports);
+  }).then(receiver, (reason) => {
     err(`failed to asynchronously prepare wasm: ${reason}`);
 
     abort(reason);
-  }
+  });
 }
 
-async function instantiateAsync(binary, binaryFile, imports) {
+function instantiateAsync(binary, binaryFile, imports, callback) {
   if (!binary &&
       typeof WebAssembly.instantiateStreaming == 'function' &&
       !isDataURI(binaryFile) &&
@@ -714,19 +723,26 @@ async function instantiateAsync(binary, binaryFile, imports) {
       //   https://github.com/emscripten-core/emscripten/pull/16917
       !ENVIRONMENT_IS_NODE &&
       typeof fetch == 'function') {
-    try {
-      var response = fetch(binaryFile, { credentials: 'same-origin' });
-      var instantiationResult = await WebAssembly.instantiateStreaming(response, imports);
-      return instantiationResult;
-    } catch (reason) {
-      // We expect the most common failure cause to be a bad MIME type for the binary,
-      // in which case falling back to ArrayBuffer instantiation should work.
-      err(`wasm streaming compile failed: ${reason}`);
-      err('falling back to ArrayBuffer instantiation');
-      // fall back of instantiateArrayBuffer below
-    };
+    return fetch(binaryFile, { credentials: 'same-origin' }).then((response) => {
+      // Suppress closure warning here since the upstream definition for
+      // instantiateStreaming only allows Promise<Repsponse> rather than
+      // an actual Response.
+      // TODO(https://github.com/google/closure-compiler/pull/3913): Remove if/when upstream closure is fixed.
+      /** @suppress {checkTypes} */
+      var result = WebAssembly.instantiateStreaming(response, imports);
+
+      return result.then(
+        callback,
+        function(reason) {
+          // We expect the most common failure cause to be a bad MIME type for the binary,
+          // in which case falling back to ArrayBuffer instantiation should work.
+          err(`wasm streaming compile failed: ${reason}`);
+          err('falling back to ArrayBuffer instantiation');
+          return instantiateArrayBuffer(binaryFile, imports, callback);
+        });
+    });
   }
-  return instantiateArrayBuffer(binaryFile, imports);
+  return instantiateArrayBuffer(binaryFile, imports, callback);
 }
 
 function getWasmImports() {
@@ -739,7 +755,7 @@ function getWasmImports() {
 
 // Create the wasm instance.
 // Receives the wasm imports, returns the exports.
-async function createWasm() {
+function createWasm() {
   // Load the wasm module and create an instance of using native support in the JS engine.
   // handle a generated wasm instance, receiving its exports and
   // performing other necessary setup
@@ -792,9 +808,8 @@ async function createWasm() {
 
   wasmBinaryFile ??= findWasmBinary();
 
-    var result = await instantiateAsync(wasmBinary, wasmBinaryFile, info);
-    receiveInstantiationResult(result);
-    return result;
+  instantiateAsync(wasmBinary, wasmBinaryFile, info, receiveInstantiationResult);
+  return {}; // no exports yet; we'll fill them in later
 }
 
 // Globals used by JS i64 conversions (see makeSetValue)
@@ -806,43 +821,49 @@ var tempI64;
 // === Body ===
 
 var ASM_CONSTS = {
-  36352: () => { if (document.fullscreenElement) return 1; },  
- 36398: () => { return document.getElementById('canvas').width; },  
- 36450: () => { return parseInt(document.getElementById('canvas').style.width); },  
- 36518: () => { document.exitFullscreen(); },  
- 36545: () => { setTimeout(function() { Module.requestFullscreen(false, false); }, 100); },  
- 36618: () => { if (document.fullscreenElement) return 1; },  
- 36664: () => { return document.getElementById('canvas').width; },  
- 36716: () => { return screen.width; },  
- 36741: () => { document.exitFullscreen(); },  
- 36768: () => { setTimeout(function() { Module.requestFullscreen(false, true); setTimeout(function() { canvas.style.width="unset"; }, 100); }, 100); },  
- 36901: () => { if (document.fullscreenElement) return 1; },  
- 36947: () => { return document.getElementById('canvas').width; },  
- 36999: () => { return parseInt(document.getElementById('canvas').style.width); },  
- 37067: () => { if (document.fullscreenElement) return 1; },  
- 37113: () => { return document.getElementById('canvas').width; },  
- 37165: () => { return screen.width; },  
- 37190: () => { if (document.fullscreenElement) return 1; },  
- 37236: () => { return document.getElementById('canvas').width; },  
- 37288: () => { return screen.width; },  
- 37313: () => { document.exitFullscreen(); },  
- 37340: () => { if (document.fullscreenElement) return 1; },  
- 37386: () => { return document.getElementById('canvas').width; },  
- 37438: () => { return parseInt(document.getElementById('canvas').style.width); },  
- 37506: () => { document.exitFullscreen(); },  
- 37533: () => { return screen.width; },  
- 37558: () => { return screen.height; },  
- 37584: () => { return window.screenX; },  
- 37611: () => { return window.screenY; },  
- 37638: ($0) => { navigator.clipboard.writeText(UTF8ToString($0)); },  
- 37691: ($0) => { document.getElementById("canvas").style.cursor = UTF8ToString($0); },  
- 37762: () => { document.getElementById('canvas').style.cursor = 'none'; },  
- 37819: ($0) => { document.getElementById('canvas').style.cursor = UTF8ToString($0); },  
- 37890: () => { if (document.fullscreenElement) return 1; },  
- 37936: () => { if (document.pointerLockElement) return 1; }
+  36832: () => { if (document.fullscreenElement) return 1; },  
+ 36878: () => { return document.getElementById('canvas').width; },  
+ 36930: () => { return parseInt(document.getElementById('canvas').style.width); },  
+ 36998: () => { document.exitFullscreen(); },  
+ 37025: () => { setTimeout(function() { Module.requestFullscreen(false, false); }, 100); },  
+ 37098: () => { if (document.fullscreenElement) return 1; },  
+ 37144: () => { return document.getElementById('canvas').width; },  
+ 37196: () => { return screen.width; },  
+ 37221: () => { document.exitFullscreen(); },  
+ 37248: () => { setTimeout(function() { Module.requestFullscreen(false, true); setTimeout(function() { canvas.style.width="unset"; }, 100); }, 100); },  
+ 37381: () => { return window.innerWidth; },  
+ 37407: () => { return window.innerHeight; },  
+ 37434: () => { if (document.fullscreenElement) return 1; },  
+ 37480: () => { return document.getElementById('canvas').width; },  
+ 37532: () => { return parseInt(document.getElementById('canvas').style.width); },  
+ 37600: () => { if (document.fullscreenElement) return 1; },  
+ 37646: () => { return document.getElementById('canvas').width; },  
+ 37698: () => { return screen.width; },  
+ 37723: () => { return window.innerWidth; },  
+ 37749: () => { return window.innerHeight; },  
+ 37776: () => { if (document.fullscreenElement) return 1; },  
+ 37822: () => { return document.getElementById('canvas').width; },  
+ 37874: () => { return screen.width; },  
+ 37899: () => { document.exitFullscreen(); },  
+ 37926: () => { if (document.fullscreenElement) return 1; },  
+ 37972: () => { return document.getElementById('canvas').width; },  
+ 38024: () => { return parseInt(document.getElementById('canvas').style.width); },  
+ 38092: () => { document.exitFullscreen(); },  
+ 38119: ($0) => { document.getElementById('canvas').style.opacity = $0; },  
+ 38177: () => { return screen.width; },  
+ 38202: () => { return screen.height; },  
+ 38228: () => { return window.screenX; },  
+ 38255: () => { return window.screenY; },  
+ 38282: ($0) => { navigator.clipboard.writeText(UTF8ToString($0)); },  
+ 38335: ($0) => { document.getElementById("canvas").style.cursor = UTF8ToString($0); },  
+ 38406: () => { document.getElementById('canvas').style.cursor = 'none'; },  
+ 38463: ($0, $1, $2, $3) => { try { navigator.getGamepads()[$0].vibrationActuator.playEffect('dual-rumble', { startDelay: 0, duration: $3, weakMagnitude: $1, strongMagnitude: $2 }); } catch (e) { try { navigator.getGamepads()[$0].hapticActuators[0].pulse($2, $3); } catch (e) { } } },  
+ 38719: ($0) => { document.getElementById('canvas').style.cursor = UTF8ToString($0); },  
+ 38790: () => { if (document.fullscreenElement) return 1; },  
+ 38836: () => { return window.innerWidth; },  
+ 38862: () => { return window.innerHeight; },  
+ 38889: () => { if (document.pointerLockElement) return 1; }
 };
-function GetWindowInnerWidth() { return window.innerWidth; }
-function GetWindowInnerHeight() { return window.innerHeight; }
 
 // end include: preamble.js
 
@@ -980,8 +1001,9 @@ function GetWindowInnerHeight() { return window.innerHeight; }
   var UTF8ToString = (ptr, maxBytesToRead) => {
       return ptr ? UTF8ArrayToString(HEAPU8, ptr, maxBytesToRead) : '';
     };
-  var ___assert_fail = (condition, filename, line, func) =>
+  var ___assert_fail = (condition, filename, line, func) => {
       abort(`Assertion failed: ${UTF8ToString(condition)}, at: ` + [filename ? UTF8ToString(filename) : 'unknown filename', line, func ? UTF8ToString(func) : 'unknown function']);
+    };
 
   class ExceptionInfo {
       // excPtr - Thrown object pointer to wrap. Metadata pointer is calculated from it.
@@ -1399,7 +1421,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
             buffer[offset+i] = result;
           }
           if (bytesRead) {
-            stream.node.atime = Date.now();
+            stream.node.timestamp = Date.now();
           }
           return bytesRead;
         },
@@ -1415,7 +1437,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
             throw new FS.ErrnoError(29);
           }
           if (length) {
-            stream.node.mtime = stream.node.ctime = Date.now();
+            stream.node.timestamp = Date.now();
           }
           return i;
         },
@@ -1492,7 +1514,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
   var MEMFS = {
   ops_table:null,
   mount(mount) {
-        return MEMFS.createNode(null, '/', 16895, 0);
+        return MEMFS.createNode(null, '/', 16384 | 511 /* 0777 */, 0);
       },
   createNode(parent, name, mode, dev) {
         if (FS.isBlkdev(mode) || FS.isFIFO(mode)) {
@@ -1566,11 +1588,11 @@ function GetWindowInnerHeight() { return window.innerHeight; }
           node.node_ops = MEMFS.ops_table.chrdev.node;
           node.stream_ops = MEMFS.ops_table.chrdev.stream;
         }
-        node.atime = node.mtime = node.ctime = Date.now();
+        node.timestamp = Date.now();
         // add the new node to the parent
         if (parent) {
           parent.contents[name] = node;
-          parent.atime = parent.mtime = parent.ctime = node.atime;
+          parent.timestamp = node.timestamp;
         }
         return node;
       },
@@ -1626,9 +1648,9 @@ function GetWindowInnerHeight() { return window.innerHeight; }
           } else {
             attr.size = 0;
           }
-          attr.atime = new Date(node.atime);
-          attr.mtime = new Date(node.mtime);
-          attr.ctime = new Date(node.ctime);
+          attr.atime = new Date(node.timestamp);
+          attr.mtime = new Date(node.timestamp);
+          attr.ctime = new Date(node.timestamp);
           // NOTE: In our implementation, st_blocks = Math.ceil(st_size/st_blksize),
           //       but this is not required by the standard.
           attr.blksize = 4096;
@@ -1636,10 +1658,11 @@ function GetWindowInnerHeight() { return window.innerHeight; }
           return attr;
         },
   setattr(node, attr) {
-          for (const key of ["mode", "atime", "mtime", "ctime"]) {
-            if (attr[key]) {
-              node[key] = attr[key];
-            }
+          if (attr.mode !== undefined) {
+            node.mode = attr.mode;
+          }
+          if (attr.timestamp !== undefined) {
+            node.timestamp = attr.timestamp;
           }
           if (attr.size !== undefined) {
             MEMFS.resizeFileStorage(node, attr.size);
@@ -1652,28 +1675,29 @@ function GetWindowInnerHeight() { return window.innerHeight; }
           return MEMFS.createNode(parent, name, mode, dev);
         },
   rename(old_node, new_dir, new_name) {
-          var new_node;
-          try {
-            new_node = FS.lookupNode(new_dir, new_name);
-          } catch (e) {}
-          if (new_node) {
-            if (FS.isDir(old_node.mode)) {
-              // if we're overwriting a directory at new_name, make sure it's empty.
+          // if we're overwriting a directory at new_name, make sure it's empty.
+          if (FS.isDir(old_node.mode)) {
+            var new_node;
+            try {
+              new_node = FS.lookupNode(new_dir, new_name);
+            } catch (e) {
+            }
+            if (new_node) {
               for (var i in new_node.contents) {
                 throw new FS.ErrnoError(55);
               }
             }
-            FS.hashRemoveNode(new_node);
           }
           // do the internal rewiring
           delete old_node.parent.contents[old_node.name];
-          new_dir.contents[new_name] = old_node;
+          old_node.parent.timestamp = Date.now()
           old_node.name = new_name;
-          new_dir.ctime = new_dir.mtime = old_node.parent.ctime = old_node.parent.mtime = Date.now();
+          new_dir.contents[new_name] = old_node;
+          new_dir.timestamp = old_node.parent.timestamp;
         },
   unlink(parent, name) {
           delete parent.contents[name];
-          parent.ctime = parent.mtime = Date.now();
+          parent.timestamp = Date.now();
         },
   rmdir(parent, name) {
           var node = FS.lookupNode(parent, name);
@@ -1681,13 +1705,17 @@ function GetWindowInnerHeight() { return window.innerHeight; }
             throw new FS.ErrnoError(55);
           }
           delete parent.contents[name];
-          parent.ctime = parent.mtime = Date.now();
+          parent.timestamp = Date.now();
         },
   readdir(node) {
-          return ['.', '..', ...Object.keys(node.contents)];
+          var entries = ['.', '..'];
+          for (var key of Object.keys(node.contents)) {
+            entries.push(key);
+          }
+          return entries;
         },
   symlink(parent, newname, oldpath) {
-          var node = MEMFS.createNode(parent, newname, 0o777 | 40960, 0);
+          var node = MEMFS.createNode(parent, newname, 511 /* 0777 */ | 40960, 0);
           node.link = oldpath;
           return node;
         },
@@ -1714,7 +1742,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
   
           if (!length) return 0;
           var node = stream.node;
-          node.mtime = node.ctime = Date.now();
+          node.timestamp = Date.now();
   
           if (buffer.subarray && (!node.contents || node.contents.subarray)) { // This write is from a typed array to a typed array?
             if (canOwn) {
@@ -1803,9 +1831,23 @@ function GetWindowInnerHeight() { return window.innerHeight; }
   },
   };
   
-  var asyncLoad = async (url) => {
-      var arrayBuffer = await readAsync(url);
-      return new Uint8Array(arrayBuffer);
+  /** @param {boolean=} noRunDep */
+  var asyncLoad = (url, onload, onerror, noRunDep) => {
+      var dep = !noRunDep ? getUniqueRunDependency(`al ${url}`) : '';
+      readAsync(url).then(
+        (arrayBuffer) => {
+          onload(new Uint8Array(arrayBuffer));
+          if (dep) removeRunDependency(dep);
+        },
+        (err) => {
+          if (onerror) {
+            onerror();
+          } else {
+            throw `Loading data file "${url}" failed.`;
+          }
+        }
+      );
+      if (dep) addRunDependency(dep);
     };
   
   
@@ -1852,7 +1894,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
       }
       addRunDependency(dep);
       if (typeof url == 'string') {
-        asyncLoad(url).then(processData, onerror);
+        asyncLoad(url, processData, onerror);
       } else {
         processData(url);
       }
@@ -1956,7 +1998,6 @@ function GetWindowInnerHeight() { return window.innerHeight; }
           this.name = name;
           this.mode = mode;
           this.rdev = rdev;
-          this.atime = this.mtime = this.ctime = Date.now();
         }
         get read() {
           return (this.mode & this.readMode) === this.readMode;
@@ -1978,70 +2019,63 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         }
       },
   lookupPath(path, opts = {}) {
-        if (!path) return { path: '', node: null };
-        opts.follow_mount ??= true
+        path = PATH_FS.resolve(path);
   
-        if (!PATH.isAbs(path)) {
-          path = FS.cwd() + '/' + path;
+        if (!path) return { path: '', node: null };
+  
+        var defaults = {
+          follow_mount: true,
+          recurse_count: 0
+        };
+        opts = Object.assign(defaults, opts)
+  
+        if (opts.recurse_count > 8) {  // max recursive lookup of 8
+          throw new FS.ErrnoError(32);
         }
   
-        // limit max consecutive symlinks to 40 (SYMLOOP_MAX).
-        linkloop: for (var nlinks = 0; nlinks < 40; nlinks++) {
-          // split the absolute path
-          var parts = path.split('/').filter((p) => !!p && (p !== '.'));
+        // split the absolute path
+        var parts = path.split('/').filter((p) => !!p);
   
-          // start at the root
-          var current = FS.root;
-          var current_path = '/';
+        // start at the root
+        var current = FS.root;
+        var current_path = '/';
   
-          for (var i = 0; i < parts.length; i++) {
-            var islast = (i === parts.length-1);
-            if (islast && opts.parent) {
-              // stop resolving
-              break;
-            }
+        for (var i = 0; i < parts.length; i++) {
+          var islast = (i === parts.length-1);
+          if (islast && opts.parent) {
+            // stop resolving
+            break;
+          }
   
-            if (parts[i] === '..') {
-              current_path = PATH.dirname(current_path);
-              current = current.parent;
-              continue;
-            }
+          current = FS.lookupNode(current, parts[i]);
+          current_path = PATH.join2(current_path, parts[i]);
   
-            current_path = PATH.join2(current_path, parts[i]);
-            try {
-              current = FS.lookupNode(current, parts[i]);
-            } catch (e) {
-              // if noent_okay is true, suppress a ENOENT in the last component
-              // and return an object with an undefined node. This is needed for
-              // resolving symlinks in the path when creating a file.
-              if ((e?.errno === 44) && islast && opts.noent_okay) {
-                return { path: current_path };
-              }
-              throw e;
-            }
-  
-            // jump to the mount's root node if this is a mountpoint
-            if (FS.isMountpoint(current) && (!islast || opts.follow_mount)) {
+          // jump to the mount's root node if this is a mountpoint
+          if (FS.isMountpoint(current)) {
+            if (!islast || (islast && opts.follow_mount)) {
               current = current.mounted.root;
             }
+          }
   
-            // by default, lookupPath will not follow a symlink if it is the final path component.
-            // setting opts.follow = true will override this behavior.
-            if (FS.isLink(current.mode) && (!islast || opts.follow)) {
-              if (!current.node_ops.readlink) {
-                throw new FS.ErrnoError(52);
+          // by default, lookupPath will not follow a symlink if it is the final path component.
+          // setting opts.follow = true will override this behavior.
+          if (!islast || opts.follow) {
+            var count = 0;
+            while (FS.isLink(current.mode)) {
+              var link = FS.readlink(current_path);
+              current_path = PATH_FS.resolve(PATH.dirname(current_path), link);
+  
+              var lookup = FS.lookupPath(current_path, { recurse_count: opts.recurse_count + 1 });
+              current = lookup.node;
+  
+              if (count++ > 40) {  // limit max consecutive symlinks to 40 (SYMLOOP_MAX).
+                throw new FS.ErrnoError(32);
               }
-              var link = current.node_ops.readlink(current);
-              if (!PATH.isAbs(link)) {
-                link = PATH.dirname(current_path) + '/' + link;
-              }
-              path = link + '/' + parts.slice(i + 1).join('/');
-              continue linkloop;
             }
           }
-          return { path: current_path, node: current };
         }
-        throw new FS.ErrnoError(32);
+  
+        return { path: current_path, node: current };
       },
   getPath(node) {
         var path;
@@ -2164,9 +2198,6 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         return 0;
       },
   mayCreate(dir, name) {
-        if (!FS.isDir(dir.mode)) {
-          return 54;
-        }
         try {
           var node = FS.lookupNode(dir, name);
           return 20;
@@ -2423,35 +2454,14 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         }
         return parent.node_ops.mknod(parent, name, mode, dev);
       },
-  statfs(path) {
-  
-        // NOTE: None of the defaults here are true. We're just returning safe and
-        //       sane values.
-        var rtn = {
-          bsize: 4096,
-          frsize: 4096,
-          blocks: 1e6,
-          bfree: 5e5,
-          bavail: 5e5,
-          files: FS.nextInode,
-          ffree: FS.nextInode - 1,
-          fsid: 42,
-          flags: 2,
-          namelen: 255,
-        };
-  
-        var parent = FS.lookupPath(path, {follow: true}).node;
-        if (parent?.node_ops.statfs) {
-          Object.assign(rtn, parent.node_ops.statfs(parent.mount.opts.root));
-        }
-        return rtn;
-      },
-  create(path, mode = 0o666) {
+  create(path, mode) {
+        mode = mode !== undefined ? mode : 438 /* 0666 */;
         mode &= 4095;
         mode |= 32768;
         return FS.mknod(path, mode, 0);
       },
-  mkdir(path, mode = 0o777) {
+  mkdir(path, mode) {
+        mode = mode !== undefined ? mode : 511 /* 0777 */;
         mode &= 511 | 512;
         mode |= 16384;
         return FS.mknod(path, mode, 0);
@@ -2472,7 +2482,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
   mkdev(path, mode, dev) {
         if (typeof dev == 'undefined') {
           dev = mode;
-          mode = 0o666;
+          mode = 438 /* 0666 */;
         }
         mode |= 8192;
         return FS.mknod(path, mode, dev);
@@ -2570,7 +2580,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         // do the underlying fs rename
         try {
           old_dir.node_ops.rename(old_node, new_dir, new_name);
-          // update old node (we do this here to avoid each backend
+          // update old node (we do this here to avoid each backend 
           // needing to)
           old_node.parent = new_dir;
         } catch (e) {
@@ -2640,7 +2650,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         if (!link.node_ops.readlink) {
           throw new FS.ErrnoError(28);
         }
-        return link.node_ops.readlink(link);
+        return PATH_FS.resolve(FS.getPath(link.parent), link.node_ops.readlink(link));
       },
   stat(path, dontFollow) {
         var lookup = FS.lookupPath(path, { follow: !dontFollow });
@@ -2669,7 +2679,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         }
         node.node_ops.setattr(node, {
           mode: (mode & 4095) | (node.mode & ~4095),
-          ctime: Date.now()
+          timestamp: Date.now()
         });
       },
   lchmod(path, mode) {
@@ -2742,16 +2752,16 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         var lookup = FS.lookupPath(path, { follow: true });
         var node = lookup.node;
         node.node_ops.setattr(node, {
-          atime: atime,
-          mtime: mtime
+          timestamp: Math.max(atime, mtime)
         });
       },
-  open(path, flags, mode = 0o666) {
+  open(path, flags, mode) {
         if (path === "") {
           throw new FS.ErrnoError(44);
         }
         flags = typeof flags == 'string' ? FS_modeStringToFlags(flags) : flags;
         if ((flags & 64)) {
+          mode = typeof mode == 'undefined' ? 438 /* 0666 */ : mode;
           mode = (mode & 4095) | 32768;
         } else {
           mode = 0;
@@ -2760,15 +2770,15 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         if (typeof path == 'object') {
           node = path;
         } else {
-          // noent_okay makes it so that if the final component of the path
-          // doesn't exist, lookupPath returns `node: undefined`. `path` will be
-          // updated to point to the target of all symlinks.
-          var lookup = FS.lookupPath(path, {
-            follow: !(flags & 131072),
-            noent_okay: true
-          });
-          node = lookup.node;
-          path = lookup.path;
+          path = PATH.normalize(path);
+          try {
+            var lookup = FS.lookupPath(path, {
+              follow: !(flags & 131072)
+            });
+            node = lookup.node;
+          } catch (e) {
+            // ignore
+          }
         }
         // perhaps we need to create the node
         var created = false;
@@ -3071,10 +3081,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         FS.mkdir('/proc/self/fd');
         FS.mount({
           mount() {
-            var node = FS.createNode(proc_self, 'fd', 16895, 73);
-            node.stream_ops = {
-              llseek: MEMFS.stream_ops.llseek,
-            };
+            var node = FS.createNode(proc_self, 'fd', 16384 | 511 /* 0777 */, 73);
             node.node_ops = {
               lookup(parent, name) {
                 var fd = +name;
@@ -3083,15 +3090,9 @@ function GetWindowInnerHeight() { return window.innerHeight; }
                   parent: null,
                   mount: { mountpoint: 'fake' },
                   node_ops: { readlink: () => stream.path },
-                  id: fd + 1,
                 };
                 ret.parent = ret; // make it look like a simple root node
                 return ret;
-              },
-              readdir() {
-                return Array.from(FS.streams.entries())
-                  .filter(([k, v]) => v)
-                  .map(([k, v]) => k.toString());
               }
             };
             return node;
@@ -3275,7 +3276,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
               buffer[offset+i] = result;
             }
             if (bytesRead) {
-              stream.node.atime = Date.now();
+              stream.node.timestamp = Date.now();
             }
             return bytesRead;
           },
@@ -3288,7 +3289,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
               }
             }
             if (length) {
-              stream.node.mtime = stream.node.ctime = Date.now();
+              stream.node.timestamp = Date.now();
             }
             return i;
           }
@@ -3491,7 +3492,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
           }
           return dir;
         }
-        return dir + '/' + path;
+        return PATH.join2(dir, path);
       },
   doStat(func, path, buf) {
         var stat = func(path);
@@ -3751,44 +3752,14 @@ function GetWindowInnerHeight() { return window.innerHeight; }
   }
   }
 
-  var __abort_js = () =>
+  var __abort_js = () => {
       abort('');
+    };
+
+  var nowIsMonotonic = 1;
+  var __emscripten_get_now_is_monotonic = () => nowIsMonotonic;
 
   var __emscripten_memcpy_js = (dest, src, num) => HEAPU8.copyWithin(dest, src, src + num);
-
-  var _emscripten_get_now = () => performance.now();
-  
-  var _emscripten_date_now = () => Date.now();
-  
-  var nowIsMonotonic = 1;
-  
-  var checkWasiClock = (clock_id) => clock_id >= 0 && clock_id <= 3;
-  
-  var convertI32PairToI53Checked = (lo, hi) => {
-      return ((hi + 0x200000) >>> 0 < 0x400001 - !!lo) ? (lo >>> 0) + hi * 4294967296 : NaN;
-    };
-  function _clock_time_get(clk_id,ignored_precision_low, ignored_precision_high,ptime) {
-    var ignored_precision = convertI32PairToI53Checked(ignored_precision_low, ignored_precision_high);
-  
-    
-      if (!checkWasiClock(clk_id)) {
-        return 28;
-      }
-      var now;
-      // all wasi clocks but realtime are monotonic
-      if (clk_id === 0) {
-        now = _emscripten_date_now();
-      } else if (nowIsMonotonic) {
-        now = _emscripten_get_now();
-      } else {
-        return 52;
-      }
-      // "now" is in ms, and wasi times are in ns.
-      var nsec = Math.round(now * 1000 * 1000);
-      (tempI64 = [nsec>>>0,(tempDouble = nsec,(+(Math.abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? (+(Math.floor((tempDouble)/4294967296.0)))>>>0 : (~~((+(Math.ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)], HEAP32[((ptime)>>2)] = tempI64[0],HEAP32[(((ptime)+(4))>>2)] = tempI64[1]);
-      return 0;
-    ;
-  }
 
   var readEmAsmArgsArray = [];
   var readEmAsmArgs = (sigPtr, buf) => {
@@ -3821,6 +3792,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
       return runEmAsmFunction(code, sigPtr, argbuf);
     };
 
+  var _emscripten_date_now = () => Date.now();
 
   var JSEvents = {
   memcpy(target, src, size) {
@@ -3956,7 +3928,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
   var specialHTMLTargets = [0, typeof document != 'undefined' ? document : 0, typeof window != 'undefined' ? window : 0];
   var findEventTarget = (target) => {
       target = maybeCStringToJsString(target);
-      var domElement = specialHTMLTargets[target] || (typeof document != 'undefined' ? document.querySelector(target) : null);
+      var domElement = specialHTMLTargets[target] || (typeof document != 'undefined' ? document.querySelector(target) : undefined);
       return domElement;
     };
   
@@ -4015,6 +3987,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
       return 0;
     };
 
+  var _emscripten_get_now = () => performance.now();
 
   var _emscripten_get_num_gamepads = () => {
       // N.B. Do not call emscripten_get_num_gamepads() unless having first called emscripten_sample_gamepad_data(), and that has returned EMSCRIPTEN_RESULT_SUCCESS.
@@ -4059,18 +4032,22 @@ function GetWindowInnerHeight() { return window.innerHeight; }
       }
     };
   
-  var webgl_enable_EXT_polygon_offset_clamp = (ctx) =>
-      !!(ctx.extPolygonOffsetClamp = ctx.getExtension('EXT_polygon_offset_clamp'));
+  var webgl_enable_EXT_polygon_offset_clamp = (ctx) => {
+      return !!(ctx.extPolygonOffsetClamp = ctx.getExtension('EXT_polygon_offset_clamp'));
+    };
   
-  var webgl_enable_EXT_clip_control = (ctx) =>
-      !!(ctx.extClipControl = ctx.getExtension('EXT_clip_control'));
+  var webgl_enable_EXT_clip_control = (ctx) => {
+      return !!(ctx.extClipControl = ctx.getExtension('EXT_clip_control'));
+    };
   
-  var webgl_enable_WEBGL_polygon_mode = (ctx) =>
-      !!(ctx.webglPolygonMode = ctx.getExtension('WEBGL_polygon_mode'));
+  var webgl_enable_WEBGL_polygon_mode = (ctx) => {
+      return !!(ctx.webglPolygonMode = ctx.getExtension('WEBGL_polygon_mode'));
+    };
   
-  var webgl_enable_WEBGL_multi_draw = (ctx) =>
+  var webgl_enable_WEBGL_multi_draw = (ctx) => {
       // Closure is expected to be allowed to minify the '.multiDrawWebgl' property, so not accessing it quoted.
-      !!(ctx.multiDrawWebgl = ctx.getExtension('WEBGL_multi_draw'));
+      return !!(ctx.multiDrawWebgl = ctx.getExtension('WEBGL_multi_draw'));
+    };
   
   var getEmscriptenSupportedExtensions = (ctx) => {
       // Restrict the list of advertised extensions to those that we actually
@@ -4230,7 +4207,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         // Active Emscripten GL layer context object.
         GL.currentContext = GL.contexts[contextHandle];
         // Active WebGL context object.
-        Module['ctx'] = GLctx = GL.currentContext?.GLctx;
+        Module.ctx = GLctx = GL.currentContext?.GLctx;
         return !(contextHandle && !GLctx);
       },
   getContext:(contextHandle) => {
@@ -4787,14 +4764,16 @@ function GetWindowInnerHeight() { return window.innerHeight; }
     };
   
   /** @suppress {duplicate } */
-  var _glGetActiveAttrib = (program, index, bufSize, length, size, type, name) =>
+  var _glGetActiveAttrib = (program, index, bufSize, length, size, type, name) => {
       __glGetActiveAttribOrUniform('getActiveAttrib', program, index, bufSize, length, size, type, name);
+    };
   var _emscripten_glGetActiveAttrib = _glGetActiveAttrib;
 
   
   /** @suppress {duplicate } */
-  var _glGetActiveUniform = (program, index, bufSize, length, size, type, name) =>
+  var _glGetActiveUniform = (program, index, bufSize, length, size, type, name) => {
       __glGetActiveAttribOrUniform('getActiveUniform', program, index, bufSize, length, size, type, name);
+    };
   var _emscripten_glGetActiveUniform = _glGetActiveUniform;
 
   /** @suppress {duplicate } */
@@ -4814,8 +4793,9 @@ function GetWindowInnerHeight() { return window.innerHeight; }
 
   
   /** @suppress {duplicate } */
-  var _glGetAttribLocation = (program, name) =>
-      GLctx.getAttribLocation(GL.programs[program], UTF8ToString(name));
+  var _glGetAttribLocation = (program, name) => {
+      return GLctx.getAttribLocation(GL.programs[program], UTF8ToString(name));
+    };
   var _emscripten_glGetAttribLocation = _glGetAttribLocation;
 
   var writeI53ToI64 = (ptr, num) => {
@@ -5183,7 +5163,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
     };
   
   
-  var webglGetExtensions = () => {
+  var webglGetExtensions = function $webglGetExtensions() {
       var exts = getEmscriptenSupportedExtensions(GLctx);
       exts = exts.concat(exts.map((e) => "GL_" + e));
       return exts;
@@ -7024,7 +7004,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         }
       },
   createContext(/** @type {HTMLCanvasElement} */ canvas, useWebGL, setInModule, webGLContextAttributes) {
-        if (useWebGL && Module['ctx'] && canvas == Module['canvas']) return Module['ctx']; // no need to recreate GL context if it's already been created for this canvas.
+        if (useWebGL && Module.ctx && canvas == Module['canvas']) return Module.ctx; // no need to recreate GL context if it's already been created for this canvas.
   
         var ctx;
         var contextHandle;
@@ -7058,7 +7038,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         if (!ctx) return null;
   
         if (setInModule) {
-          Module['ctx'] = ctx;
+          Module.ctx = ctx;
           if (useWebGL) GL.makeContextCurrent(contextHandle);
           Browser.useWebGL = useWebGL;
           Browser.moduleContextCreatedCallbacks.forEach((callback) => callback());
@@ -7417,6 +7397,9 @@ function GetWindowInnerHeight() { return window.innerHeight; }
   }
 
   
+  var convertI32PairToI53Checked = (lo, hi) => {
+      return ((hi + 0x200000) >>> 0 < 0x400001 - !!lo) ? (lo >>> 0) + hi * 4294967296 : NaN;
+    };
   function _fd_seek(fd,offset_low, offset_high,whence,newOffset) {
     var offset = convertI32PairToI53Checked(offset_low, offset_high);
   
@@ -8413,7 +8396,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         }
   
         // If context creation failed, do not return a valid window
-        if (!Module['ctx'] && useWebGL) return 0;
+        if (!Module.ctx && useWebGL) return 0;
   
         // Initializes the framebuffer size from the canvas
         const canvas = Module['canvas'];
@@ -8446,7 +8429,7 @@ function GetWindowInnerHeight() { return window.innerHeight; }
         for (var i = 0; i < GLFW.windows.length; i++)
           if (GLFW.windows[i] !== null) return;
   
-        delete Module['ctx'];
+        delete Module.ctx;
       },
   swapBuffers:(winid) => {
       },
@@ -8662,6 +8645,12 @@ function GetWindowInnerHeight() { return window.innerHeight; }
       return 0;
     };
 
+  var _glfwGetWindowAttrib = (winid, attrib) => {
+      var win = GLFW.WindowFromId(winid);
+      if (!win) return 0;
+      return win.attributes[attrib];
+    };
+
   
   
   var _glfwInit = () => {
@@ -8773,6 +8762,8 @@ function GetWindowInnerHeight() { return window.innerHeight; }
       win.shouldClose = value;
     };
 
+  var _glfwSetWindowSize = (winid, width, height) => GLFW.setWindowSize(winid, width, height);
+
   var _glfwSetWindowSizeCallback = (winid, cbfun) => GLFW.setWindowSizeCallback(winid, cbfun);
 
   var _glfwSwapBuffers = (winid) => GLFW.swapBuffers(winid);
@@ -8876,10 +8867,6 @@ var miniTempWebGLIntBuffersStorage = new Int32Array(288);
     ;
 var wasmImports = {
   /** @export */
-  GetWindowInnerHeight,
-  /** @export */
-  GetWindowInnerWidth,
-  /** @export */
   __assert_fail: ___assert_fail,
   /** @export */
   __cxa_throw: ___cxa_throw,
@@ -8896,9 +8883,9 @@ var wasmImports = {
   /** @export */
   _abort_js: __abort_js,
   /** @export */
-  _emscripten_memcpy_js: __emscripten_memcpy_js,
+  _emscripten_get_now_is_monotonic: __emscripten_get_now_is_monotonic,
   /** @export */
-  clock_time_get: _clock_time_get,
+  _emscripten_memcpy_js: __emscripten_memcpy_js,
   /** @export */
   emscripten_asm_const_int: _emscripten_asm_const_int,
   /** @export */
@@ -9420,6 +9407,8 @@ var wasmImports = {
   /** @export */
   glfwGetVideoModes: _glfwGetVideoModes,
   /** @export */
+  glfwGetWindowAttrib: _glfwGetWindowAttrib,
+  /** @export */
   glfwInit: _glfwInit,
   /** @export */
   glfwMakeContextCurrent: _glfwMakeContextCurrent,
@@ -9448,6 +9437,8 @@ var wasmImports = {
   /** @export */
   glfwSetWindowShouldClose: _glfwSetWindowShouldClose,
   /** @export */
+  glfwSetWindowSize: _glfwSetWindowSize,
+  /** @export */
   glfwSetWindowSizeCallback: _glfwSetWindowSizeCallback,
   /** @export */
   glfwSwapBuffers: _glfwSwapBuffers,
@@ -9458,8 +9449,7 @@ var wasmImports = {
   /** @export */
   random_get: _random_get
 };
-var wasmExports;
-createWasm();
+var wasmExports = createWasm();
 var ___wasm_call_ctors = () => (___wasm_call_ctors = wasmExports['__wasm_call_ctors'])();
 var _free = (a0) => (_free = wasmExports['free'])(a0);
 var _malloc = (a0) => (_malloc = wasmExports['malloc'])(a0);

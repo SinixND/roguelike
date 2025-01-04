@@ -5,7 +5,7 @@
 #include <vector>
 
 struct Map;
-class GameCamera;
+struct GameCamera;
 
 struct RatedTile
 {
@@ -13,14 +13,29 @@ struct RatedTile
     Vector2I distanceToTarget{};
     int stepsNeeded{};
     RatedTile* ancestor{nullptr};
+
+    RatedTile(
+        Vector2I const& tilePosition,
+        Vector2I const& target,
+        int stepsNeeded,
+        RatedTile* ancestor = nullptr)
+        : tilePosition(tilePosition)
+        , distanceToTarget(Vector2Subtract(target, tilePosition))
+        , stepsNeeded(stepsNeeded)
+        , ancestor(ancestor)
+    {
+    }
 };
 
-//* Heuristic used to rate tiles
-int getRating(RatedTile const& ratedTile);
+namespace RatedTileModule
+{
+    //* Heuristic used to rate tiles
+    int getRating(RatedTile const& ratedTile);
 
-void reconstructPath(
-    RatedTile const& ratedTile,
-    std::vector<Vector2I>& path);
+    void reconstructPath(
+        RatedTile const& ratedTile,
+        std::vector<Vector2I>& path);
+}
 
 namespace PathfinderSystem
 {

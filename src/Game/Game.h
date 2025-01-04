@@ -2,22 +2,21 @@
 #define IG20241011025951
 
 #include "Hero.h"
-#include "InputHandler.h"
+#include "Input.h"
 #include "InputMappings.h"
 #include "World.h"
 
-class Cursor;
-class GameCamera;
+struct Cursor;
+struct GameCamera;
 
-class Game
+struct Game
 {
-public:
     World world{};
 
     Hero hero{};
 
     InputMappings inputMappings{};
-    InputHandler inputHandler{};
+    Input inputHandler{};
     InputActionId inputAction{InputActionId::NONE};
 
     //* Track game turns
@@ -25,17 +24,23 @@ public:
 
     size_t activeEnemyId{0};
     bool isMultiFrameActionActive{false};
+};
 
-public:
-    void init();
+namespace GameModule
+{
+    void init(Game& game);
 
-    void processInput(Cursor& cursor);
+    void processInput(
+        Game& game,
+        Cursor& cursor);
 
     void updateState(
+        Game& game,
         GameCamera const& gameCamera,
         Cursor const& cursor);
 
-    void setupGameEvents();
-};
+    void setupGameEvents(
+        Game& game);
+}
 
 #endif

@@ -22,70 +22,96 @@
 //* Shadow
 Shadow::Shadow(Vector2I const& octantPosition)
 {
-    setSlopeLeft(octantPosition);
-    setSlopeRight(octantPosition);
+    ShadowModule::setSlopeLeft(
+        *this,
+        octantPosition);
+    ShadowModule::setSlopeRight(
+        *this,
+        octantPosition);
 }
 
-float Shadow::slopeLeft() const
+float ShadowModule::slopeLeft(
+    Shadow const& shadow)
 {
-    return slopeLeft_;
+    return shadow.slopeLeft;
 }
 
-void Shadow::setSlopeLeft(Vector2I const& octantPosition)
+void ShadowModule::setSlopeLeft(
+    Shadow& shadow,
+    Vector2I const& octantPosition)
 {
-    slopeLeft_ = (octantPosition.y + 0.5f) / (octantPosition.x - 0.5f);
+    shadow.slopeLeft = (octantPosition.y + 0.5f) / (octantPosition.x - 0.5f);
 }
 
-void Shadow::setSlopeLeft(float slopeLeft)
+void ShadowModule::setSlopeLeft(
+    Shadow& shadow,
+    float slopeLeft)
 {
-    slopeLeft_ = slopeLeft;
+    shadow.slopeLeft = slopeLeft;
 }
 
-float Shadow::slopeRight() const
+float ShadowModule::slopeRight(
+    Shadow const& shadow)
 {
-    return slopeRight_;
+    return shadow.slopeRight;
 }
 
-void Shadow::setSlopeRight(Vector2I const& octantPosition)
+void ShadowModule::setSlopeRight(
+    Shadow& shadow,
+    Vector2I const& octantPosition)
 {
-    slopeRight_ = std::max(EPSILON, (octantPosition.y - 0.5f) / (octantPosition.x + 0.5f));
+    shadow.slopeRight = std::max(EPSILON, (octantPosition.y - 0.5f) / (octantPosition.x + 0.5f));
 }
 
-void Shadow::setSlopeRight(float slopeRight)
+void ShadowModule::setSlopeRight(
+    Shadow& shadow,
+    float slopeRight)
 {
-    slopeRight_ = slopeRight;
+    shadow.slopeRight = slopeRight;
 }
 
-float Shadow::getLeftAtTop(Vector2I const& octantPosition) const
+float ShadowModule::getLeftAtTop(
+    Shadow const& shadow,
+    Vector2I const& octantPosition)
 {
-    return (octantPosition.y + 0.5f) / slopeLeft_;
+    return (octantPosition.y + 0.5f) / shadow.slopeLeft;
 }
 
-float Shadow::getLeftAtBottom(Vector2I const& octantPosition) const
+float ShadowModule::getLeftAtBottom(
+    Shadow const& shadow,
+    Vector2I const& octantPosition)
 {
-    return (octantPosition.y - 0.5f) / slopeLeft_;
+    return (octantPosition.y - 0.5f) / shadow.slopeLeft;
 }
 
-float Shadow::getLeft(int octantPositionHeight) const
+float ShadowModule::getLeft(
+    Shadow const& shadow,
+    int octantPositionHeight)
 {
     //* NOTE: x = y / m
-    return (octantPositionHeight) / slopeLeft_;
+    return (octantPositionHeight) / shadow.slopeLeft;
 }
 
-float Shadow::getRightAtTop(Vector2I const& octantPosition) const
+float ShadowModule::getRightAtTop(
+    Shadow const& shadow,
+    Vector2I const& octantPosition)
 {
-    return (octantPosition.y + 0.5f) / slopeRight_;
+    return (octantPosition.y + 0.5f) / shadow.slopeRight;
 }
 
-float Shadow::getRightAtBottom(Vector2I const& octantPosition) const
+float ShadowModule::getRightAtBottom(
+    Shadow const& shadow,
+    Vector2I const& octantPosition)
 {
-    return (octantPosition.y - 0.5f) / slopeRight_;
+    return (octantPosition.y - 0.5f) / shadow.slopeRight;
 }
 
-float Shadow::getRight(int octantPositionHeight) const
+float ShadowModule::getRight(
+    Shadow const& shadow,
+    int octantPositionHeight)
 {
     //* NOTE: x = y / m
-    return (octantPositionHeight) / slopeRight_;
+    return (octantPositionHeight) / shadow.slopeRight;
 }
 
 //* VisibilitySystem
@@ -147,8 +173,12 @@ void VisibilitySystem::updateShadowline(
 {
     Shadow shadowNew{octantPosition};
 
-    float shadowNewLeftAtTop{shadowNew.getLeftAtTop(octantPosition)};
-    float shadowNewRightAtBottom{shadowNew.getRightAtBottom(octantPosition)};
+    float shadowNewLeftAtTop{ShadowModule::getLeftAtTop(
+        shadowNew,
+        octantPosition)};
+    float shadowNewRightAtBottom{ShadowModule::getRightAtBottom(
+        shadowNew,
+        octantPosition)};
 
     int shadowContainingLeftEnd{-1};
     int shadowContainingRightEnd{-1};
@@ -172,7 +202,7 @@ void VisibilitySystem::updateShadowline(
 
         //*           ||__old_
         //* -new--|
-        if (shadowNewRightAtBottom < shadowline[i].getLeftAtBottom(octantPosition))
+        if (shadowNewRightAtBottom < ShadowModule::getLeftAtBottom(shadowline[i], octantPosition))
         {
             //* New ends before current
             continue;
@@ -180,7 +210,7 @@ void VisibilitySystem::updateShadowline(
 
         //* _old__||
         //*            |--new-
-        if (shadowline[i].getRightAtTop(octantPosition) < shadowNewLeftAtTop)
+        if (ShadowModule::getRightAtTop(shadowline[i], octantPosition) < shadowNewLeftAtTop)
         {
             //* Current ends before new
             continue;
@@ -188,8 +218,8 @@ void VisibilitySystem::updateShadowline(
 
         //* ||__old_   _old__||
         //*  |--new-   -new--|
-        if (shadowline[i].getLeftAtTop(octantPosition) <= shadowNewLeftAtTop
-            && shadowNewRightAtBottom <= shadowline[i].getRightAtBottom(octantPosition))
+        if (ShadowModule::getLeftAtTop(shadowline[i], octantPosition) <= shadowNewLeftAtTop
+            && shadowNewRightAtBottom <= ShadowModule::getRightAtBottom(shadowline[i], octantPosition))
         {
             //* Old contains new
             shadowContainingLeftEnd = i;
@@ -199,9 +229,9 @@ void VisibilitySystem::updateShadowline(
 
         //*        ||__old_   _old__||
         //* |--new-   -new--|
-        if (shadowNewLeftAtTop < shadowline[i].getLeftAtTop(octantPosition)
-            && shadowline[i].getLeftAtBottom(octantPosition) <= shadowNewRightAtBottom
-            && shadowNewRightAtBottom <= shadowline[i].getRightAtBottom(octantPosition))
+        if (shadowNewLeftAtTop < ShadowModule::getLeftAtTop(shadowline[i], octantPosition)
+            && ShadowModule::getLeftAtBottom(shadowline[i], octantPosition) <= shadowNewRightAtBottom
+            && shadowNewRightAtBottom <= ShadowModule::getRightAtBottom(shadowline[i], octantPosition))
         {
             //* Merge shadows if another shadow contains left end already
             if (shadowContainingLeftEnd > -1)
@@ -211,7 +241,9 @@ void VisibilitySystem::updateShadowline(
 #endif
 
                 //* Adjust remaining
-                shadowline[shadowContainingLeftEnd].setSlopeRight(shadowline[i].slopeRight());
+                ShadowModule::setSlopeRight(
+                    shadowline[shadowContainingLeftEnd],
+                    ShadowModule::slopeRight(shadowline[i]));
 
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
                 snx::debug::cliLog(
@@ -232,7 +264,9 @@ void VisibilitySystem::updateShadowline(
             snx::debug::cliLog("Extend left\n");
 #endif
 
-            shadowline[i].setSlopeLeft(shadowNew.slopeLeft());
+            ShadowModule::setSlopeLeft(
+                shadowline[i],
+                ShadowModule::slopeLeft(shadowNew));
 
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
             snx::debug::cliLog(
@@ -248,9 +282,9 @@ void VisibilitySystem::updateShadowline(
 
         //* ||__old_   _old__||
         //*          |--new-   -new--|
-        if (shadowline[i].getLeftAtTop(octantPosition) <= shadowNewLeftAtTop
-            && shadowNewLeftAtTop <= shadowline[i].getRightAtTop(octantPosition)
-            && shadowline[i].getRightAtBottom(octantPosition) < shadowNewRightAtBottom)
+        if (ShadowModule::getLeftAtTop(shadowline[i], octantPosition) <= shadowNewLeftAtTop
+            && shadowNewLeftAtTop <= ShadowModule::getRightAtTop(shadowline[i], octantPosition)
+            && ShadowModule::getRightAtBottom(shadowline[i], octantPosition) < shadowNewRightAtBottom)
         {
             //* Merge shadows if another shadow contains right end already
             if (shadowContainingRightEnd > -1)
@@ -260,7 +294,7 @@ void VisibilitySystem::updateShadowline(
                 snx::debug::cliLog("Merge: Extend shadow[", i, "] to the left\n");
 #endif
 
-                shadowline[shadowContainingRightEnd].setSlopeLeft(shadowline[i].slopeLeft());
+                ShadowModule::setSlopeLeft(shadowline[shadowContainingRightEnd], ShadowModule::slopeLeft(shadowline[i]));
 
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
                 snx::debug::cliLog(
@@ -281,7 +315,9 @@ void VisibilitySystem::updateShadowline(
             snx::debug::cliLog("Extend right\n");
 #endif
 
-            shadowline[i].setSlopeRight(shadowNew.slopeRight());
+            ShadowModule::setSlopeRight(
+                shadowline[i],
+                ShadowModule::slopeRight(shadowNew));
 
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
             snx::debug::cliLog(
@@ -387,10 +423,9 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
             {
                 //* Skip test (. set invis) if shadowline already covers whole octant
                 if (shadowline.size()
-                    && shadowline[0].slopeLeft() < 0
-                    && shadowline[0].slopeRight() < 1)
+                    && ShadowModule::slopeLeft(shadowline[0]) < 0
+                    && ShadowModule::slopeRight(shadowline[0]) < 1)
                 {
-
 #if defined(DEBUG) && defined(DEBUG_SHADOW)
                     snx::debug::cliLog(
                         "Shadow is max.",
@@ -414,7 +449,6 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                 }
                 else
                 {
-
                     for (Shadow const& shadow : shadowline)
                     {
                         //* Check if visible:
@@ -422,8 +456,13 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                         //* OR
                         //* If slopeRight is left (<) from bottom-right tile corner (at same height = tileBottom)
                         [[maybe_unused]] auto test{sqrt(pow(octX, 2) + pow(octY, 2))};
-                        if (((octX - 0.5f) < (shadow.getLeftAtTop(octantPosition))
-                             || (shadow.getRightAtBottom(octantPosition)) < (octX + 0.5f)))
+                        if (((octX - 0.5f) < (ShadowModule::getLeftAtTop(
+                                 shadow,
+                                 octantPosition))
+                             || (ShadowModule::getRightAtBottom(
+                                    shadow,
+                                    octantPosition))
+                                    < (octX + 0.5f)))
                         {
                             //* . visible (variable unchanged): top-left/bottom-right corner not in shadow
 

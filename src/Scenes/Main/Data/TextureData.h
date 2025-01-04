@@ -6,6 +6,8 @@
 
 namespace TextureData
 {
+    std::string const texturePath{"resources/textures/"};
+
     //* Themes
     std::vector<std::string> const themes{
         "Default",

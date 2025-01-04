@@ -2,6 +2,7 @@
 #define IG20241217212706
 
 #include "InputActionId.h"
+#include <raylib.h>
 #include <unordered_map>
 
 struct InputMappings
@@ -11,6 +12,9 @@ struct InputMappings
     int modifierKey{};
 };
 
-InputMappings defaultInputMappings();
+namespace InputMappingsModule
+{
+    InputMappings getDefault();
+}
 
 #endif

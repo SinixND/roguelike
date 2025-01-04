@@ -87,6 +87,8 @@ BreakBeforeBraces: Allman
 BreakBeforeInlineASMColon: OnlyMultiline
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
+# clang 19
+# BreakFunctionDefinitionParameters: true
 BreakInheritanceList: BeforeComma
 BreakStringLiterals: true
 ColumnLimit:     0
@@ -99,7 +101,7 @@ DerivePointerAlignment: false
 DisableFormat:   false
 EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: LogicalBlock
-#ExperimentalAutoDetectBinPacking: false
+ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: false
 ForEachMacros:
   - foreach
@@ -144,8 +146,13 @@ IntegerLiteralSeparator:
   HexMinDigits:    0
 JavaScriptQuotes: Leave
 JavaScriptWrapImports: true
-KeepEmptyLinesAtTheStartOfBlocks: true
-KeepEmptyLinesAtEOF: false
+# clang-format 19
+# KeepEmptyLines:
+#   AtEndOfFile: true
+#   AtStartOfBlock: false
+#   AtStartOfFile: false
+KeepEmptyLinesAtTheStartOfBlocks: false
+KeepEmptyLinesAtEOF: true
 LambdaBodyIndentation: Signature
 LineEnding:      DeriveLF
 MacroBlockBegin: ''
@@ -159,15 +166,15 @@ ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: true
 PackConstructorInitializers: Never
 PenaltyBreakAssignment: 2
-PenaltyBreakBeforeFirstCallParameter: 19
+PenaltyBreakBeforeFirstCallParameter: 9999
 PenaltyBreakComment: 300
 PenaltyBreakFirstLessLess: 120
 PenaltyBreakOpenParenthesis: 0
-PenaltyBreakString: 1000
+PenaltyBreakString: 9999
 PenaltyBreakTemplateDeclaration: 10
-PenaltyExcessCharacter: 1000000
+PenaltyExcessCharacter: 9999
 PenaltyIndentedWhitespace: 0
-PenaltyReturnTypeOnItsOwnLine: 100000
+PenaltyReturnTypeOnItsOwnLine: 9999
 PointerAlignment: Left
 PPIndentWidth:   -1
 QualifierAlignment: Leave

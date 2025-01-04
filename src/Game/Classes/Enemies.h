@@ -15,12 +15,10 @@
 
 struct Vector2I;
 struct Map;
-class Tiles;
+struct Tiles;
 
 struct Enemies
 {
-    static inline snx::IdManager idManager_{};
-
     snx::DenseMap<Vector2I, size_t> ids{};
     snx::DenseMap<size_t, AIComponent> ais{};
     snx::DenseMap<size_t, PositionComponent> positions{};
@@ -30,37 +28,42 @@ struct Enemies
     snx::DenseMap<size_t, EnergyComponent> energies{};
     snx::DenseMap<size_t, HealthComponent> healths{};
     snx::DenseMap<size_t, DamageComponent> damages{};
+
+    snx::IdManager idManager{};
 };
 
-void createEnemy(
-    Enemies& enemies,
-    Map const& map,
-    RenderId enemyId,
-    bool randomPosition = true,
-    Vector2I tilePosition = Vector2I{0, 0});
+namespace EnemiesModule
+{
+    void createSingle(
+        Enemies& enemies,
+        Map const& map,
+        RenderId enemyId,
+        bool randomPosition = true,
+        Vector2I tilePosition = Vector2I{0, 0});
 
-void initEnemies(
-    Enemies& enemies,
-    int mapLevel,
-    Map const& map);
+    void init(
+        Enemies& enemies,
+        int mapLevel,
+        Map const& map);
 
-bool regenerateEnergies(Enemies& enemies);
+    void remove(
+        Enemies& enemies,
+        size_t id);
 
-void updateEnemies(
-    Enemies& enemies,
-    PositionComponent const& heroPosition);
+    bool regenerate(Enemies& enemies);
 
-size_t getActiveEnemy(
-    snx::DenseMap<size_t, EnergyComponent> const& energies,
-    snx::DenseMap<size_t, AIComponent> const& ais,
-    int const turn);
+    void update(
+        Enemies& enemies,
+        PositionComponent const& heroPosition);
 
-void removeEnemy(
-    Enemies& enemies,
-    size_t id);
+    size_t getActive(
+        snx::DenseMap<size_t, EnergyComponent> const& energies,
+        snx::DenseMap<size_t, AIComponent> const& ais,
+        int const turn);
 
-void replaceDeadEnemies(
-    Enemies& enemies,
-    Map const& map);
+    void replaceDead(
+        Enemies& enemies,
+        Map const& map);
+}
 
 #endif

@@ -2,11 +2,11 @@
 #define IG20240531194629
 
 #include "InputActionId.h"
-struct InputHandler;
+struct Input;
 struct Hero;
-class Cursor;
+struct Cursor;
 struct Map;
-class GameCamera;
+struct GameCamera;
 
 namespace UserInputSystem
 {

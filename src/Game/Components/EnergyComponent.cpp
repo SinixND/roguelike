@@ -1,61 +1,59 @@
 #include "EnergyComponent.h"
 
-bool EnergyComponent::consume()
+bool EnergyModule::consume(EnergyComponent& energy)
 {
-    if (currentEnergy_ <= 0)
+    if (energy.currentEnergy <= 0)
     {
         return false;
     }
 
     //* Consume all available energy
-    currentEnergy_ = 0;
+    energy.currentEnergy = 0;
 
-    isReady_ = false;
+    energy.state = EnergyState::NOT_READY;
 
     return true;
 }
 
-bool EnergyComponent::consume(int energy)
+bool EnergyModule::consume(
+    EnergyComponent& energy,
+    int value)
 {
-    if (currentEnergy_ <= 0)
+    if (energy.currentEnergy <= 0)
     {
         return false;
     }
 
     //* Consume energy
-    currentEnergy_ -= energy;
+    energy.currentEnergy -= value;
 
-    if (currentEnergy_ <= 0)
+    if (energy.currentEnergy <= 0)
     {
-        isReady_ = false;
+        energy.state = EnergyState::NOT_READY;
     }
 
     return true;
 }
 
-bool EnergyComponent::regenerate()
+bool EnergyModule::regenerate(EnergyComponent& energy)
 {
-    if (currentEnergy_ >= maxEnergy_)
+    if (energy.currentEnergy >= energy.maxEnergy)
     {
         return false;
     }
 
     //* Regen energy until full
-    currentEnergy_ += regenRate;
+    energy.currentEnergy += energy.regenRate;
 
-    if (currentEnergy_ < maxEnergy_)
+    if (energy.currentEnergy < energy.maxEnergy)
     {
         return true;
     }
 
     //* Ensure energy does not exceed maxEnergy
-    currentEnergy_ = maxEnergy_;
-    isReady_ = true;
+    energy.currentEnergy = energy.maxEnergy;
+    energy.state = EnergyState::READY;
 
     return true;
 }
 
-bool EnergyComponent::isReady() const
-{
-    return isReady_;
-}

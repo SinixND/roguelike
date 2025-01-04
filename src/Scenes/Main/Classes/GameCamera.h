@@ -5,31 +5,41 @@
 #include <raylib.h>
 
 //* Wrapper class for raylibs Camera2D
-class GameCamera
+struct GameCamera
 {
-    Camera2D camera_{};
+    Camera2D camera{};
 
     //* Viewport points/equals to respective panel
-    RectangleEx const* viewport_{};
+    RectangleEx const* viewport{};
+};
 
-public:
+namespace GameCameraModule
+{
     void init(
+        GameCamera& gameCamera,
         RectangleEx const& viewport,
         Vector2 const& heroPosition);
 
-public:
-    Camera2D const& camera() const;
-    RectangleEx const& viewportOnScreen() const;
-    RectangleExI viewportInTiles() const;
+    RectangleExI viewportInTiles(
+        GameCamera& gameCamera);
 
     //* Screen offset to draw target at
-    void setOffset(Vector2 const& offset);
+    void setOffset(
+        GameCamera& gameCamera,
+        Vector2 const& offset);
 
     //* World position to draw at offset
-    void setTarget(Vector2 const& target);
-    void setZoom(float zoom);
+    void setTarget(
+        GameCamera& gameCamera,
+        Vector2 const& target);
 
-    void updateViewport(RectangleEx const& viewport);
-};
+    void setZoom(
+        GameCamera& gameCamera,
+        float zoom);
+
+    void updateViewport(
+        GameCamera& gameCamera,
+        RectangleEx const& viewport);
+}
 
 #endif

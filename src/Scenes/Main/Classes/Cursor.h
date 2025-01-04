@@ -8,19 +8,20 @@ struct Camera2D;
 typedef struct Camera2D Camera2D;
 struct Vector2I;
 
-class Cursor
+struct Cursor
 {
-public:
     PositionComponent position{};
     RenderId renderId{RenderId::CURSOR};
     bool isActive{false};
-
-public:
-    void toggle();
-
-    void update(
-        Camera2D const& camera,
-        Vector2I const& heroPosition);
 };
 
+namespace CursorModule
+{
+    void toggle(Cursor& cursor);
+
+    void update(
+        Cursor& cursor,
+        Camera2D const& camera,
+        Vector2I const& heroPosition);
+}
 #endif

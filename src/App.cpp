@@ -7,50 +7,48 @@
 #include <raylib.h>
 
 #if defined(EMSCRIPTEN)
-#include "Logger.h"
 #include <emscripten/emscripten.h>
 #include <emscripten/html5.h>
-#include <string>
 #endif
 
 #if defined(EMSCRIPTEN)
-void applicationLoop(void* arg_)
+void applicationLoop(void* arg)
 {
-    emscriptenArgs* arg = (emscriptenArgs*)arg_;
+    emscriptenApp* emsApp = (emscriptenApp*)arg;
 
-    arg->activeScene->run();
+    SceneModule::update(*emsApp->scene);
 }
 #endif
 
-void App::init()
+void AppModule::init(App& app)
 {
     //* TODO: Import configs from user file
 
     //* Raylib flags
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    if (config_.vSync())
+    if (app.config.vSync)
     {
         SetConfigFlags(FLAG_VSYNC_HINT);
     }
 
     //* Initialize window
-    InitWindow(config_.windowWidth(), config_.windowHeight(), "Roguelike");
+    InitWindow(app.config.windowWidth, app.config.windowHeight, "Roguelike");
 
     //* Raylib Settings
-    SetWindowIcon(favicon_);
+    SetWindowIcon(app.favicon);
     SetWindowMinSize(640, 480);
 #if defined(EMSCRIPTEN)
     MaximizeWindow();
 #endif
     SetExitKey(KEY_F4);
-    SetTargetFPS(fpsTarget_);
+    SetTargetFPS(app.fpsTarget);
 
     //* Fonts
     GameFont::load();
     GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::fontHeight);
 
     //* Scene
-    SceneMain_.init();
+    SceneModule::init(app.scene);
 }
 
 void updateWindow()
@@ -82,26 +80,26 @@ void updateDeveloperMode()
     }
 }
 
-void App::run()
+void AppModule::run(App& app)
 {
 #if defined(EMSCRIPTEN)
-    emscriptenArgs arg{activeScene_};
-    emscripten_set_main_loop_arg(applicationLoop, &arg, 60 /*FPS*/, 1 /*Simulate infinite loop*/);
+    emscriptenApp emsApp{&app.scene};
+    emscripten_set_main_loop_arg(applicationLoop, &emsApp, 60 /*FPS*/, 1 /*Simulate infinite loop*/);
 #else
     while (!(WindowShouldClose()))
     {
         updateWindow();
         updateDeveloperMode();
 
-        activeScene_->update();
+        SceneModule::update(app.scene);
     }
 #endif
 }
 
-void App::deinit()
+void AppModule::deinit(App& app)
 {
     GameFont::unload();
-    SceneMain_.deinitialize();
+    SceneModule::deinitialize(app.scene);
 
     //* Close window and opengl context
     CloseWindow();

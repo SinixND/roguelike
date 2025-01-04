@@ -1,5 +1,4 @@
 #include "MovementSystem.h"
-#include "CollisionSystem.h"
 #include "Enemies.h"
 #include "EnergyComponent.h"
 #include "EventId.h"
@@ -7,31 +6,36 @@
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "TileData.h"
-#include "Tiles.h"
 #include "TransformComponent.h"
 #include "raylibEx.h"
 #include <raymath.h>
 
-void MovementSystem::update(
+void MovementSystem::updateHero(
     TransformComponent& transform,
-    MovementComponent& movement,
+    // MovementComponent& movement,
     PositionComponent& position,
     EnergyComponent& energy,
     PositionComponent const& heroPosition)
 {
     //* Start movement from path
-    if (!movement.path.empty()
-        && !transform.speed)
-    {
-        prepareFromExistingPath(
-            movement,
-            transform);
-    }
+    // if (!movement.path.empty()
+    //     && !transform.speed
+    //     // && !CollisionSystem::checkCollision(
+    //     //          map.tiles,
+    //     //          map.enemies,
+    //     //          target,
+    //     //          PositionModule::tilePosition(hero.position))
+    //     )
+    // {
+    //     prepareFromExistingPath(
+    //         movement,
+    //         transform);
+    // }
 
     //* Check if action is in progress
     if (transform.speed)
     {
-        energy.consume();
+        EnergyModule::consume(energy);
 
         snx::PublisherStatic::publish(EventId::MULTIFRAME_ACTION_ACTIVE);
     }
@@ -44,18 +48,21 @@ void MovementSystem::update(
 
     transform.cumulativeDistance += Vector2Length(offset);
 
-    Vector2I oldPosition{position.tilePosition()};
+    Vector2I oldPosition{PositionModule::tilePosition(position)};
 
     //* Check if movement exceeds tile length this frame
     if (transform.cumulativeDistance < TileData::tileSize)
     {
         //* Move full distance this frame
-        position.move(offset);
+        PositionModule::move(
+            position,
+            offset);
     }
     else
     {
         //* Move by remaining distance until TILE_SIZE
-        position.move(
+        PositionModule::move(
+            position,
             Vector2ClampValue(
                 offset,
                 0,
@@ -84,7 +91,7 @@ void MovementSystem::update(
     //* Handle special case for hero
     snx::PublisherStatic::publish(EventId::HERO_MOVED);
 
-    if (oldPosition != position.tilePosition())
+    if (oldPosition != PositionModule::tilePosition(position))
     {
         snx::PublisherStatic::publish(EventId::HERO_POSITION_CHANGED);
     }
@@ -97,26 +104,30 @@ void MovementSystem::updateEnemies(
     PositionComponent* currentPosition{};
     Vector2I oldPosition{};
 
+    //* get new positions
+
+    //* update all positions/movements/transforms
+
     for (size_t i{0}; i < enemies.transforms.size(); ++i)
     {
         currentPosition = &enemies.positions.values().at(i);
 
-        oldPosition = currentPosition->tilePosition();
+        oldPosition = PositionModule::tilePosition(*currentPosition);
 
         //* Update movement
         //* Update ids_ key if tilePosition changes
-        MovementSystem::update(
+        MovementSystem::updateHero(
             enemies.transforms.values().at(i),
-            enemies.movements.values().at(i),
+            // enemies.movements.values().at(i),
             *currentPosition,
             enemies.energies.values().at(i),
             heroPosition);
 
-        if (oldPosition != currentPosition->tilePosition())
+        if (oldPosition != PositionModule::tilePosition(*currentPosition))
         {
             enemies.ids.changeKey(
                 oldPosition,
-                currentPosition->tilePosition());
+                PositionModule::tilePosition(*currentPosition));
         }
     }
 }

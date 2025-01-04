@@ -6,56 +6,60 @@
 #include "raylibEx.h"
 #include <algorithm>
 #include <unordered_set>
-#include <utility>
 
-void Tiles::updateMapSize(Vector2I const& tilePosition)
+void updateMapSize(
+    Tiles& tiles,
+    Vector2I const& tilePosition)
 {
-    mapSize_ = RectangleExI{
+    tiles.mapSize = RectangleExI{
         Vector2I{
-            std::min(tilePosition.x, mapSize_.left()),
-            std::min(tilePosition.y, mapSize_.top())},
+            std::min(tilePosition.x, tiles.mapSize.left()),
+            std::min(tilePosition.y, tiles.mapSize.top())},
         Vector2I{
-            std::max(tilePosition.x, mapSize_.right()),
-            std::max(tilePosition.y, mapSize_.bottom())}};
+            std::max(tilePosition.x, tiles.mapSize.right()),
+            std::max(tilePosition.y, tiles.mapSize.bottom())}};
 }
 
-void Tiles::create(
-    Vector2I const& tilePosition,
-    RenderId renderId,
-    bool isSolid,
-    bool isOpaque,
-    VisibilityId visibilityId)
+namespace TilesModule
 {
-    positions[tilePosition].changeTo(tilePosition);
-
-    renderIds[tilePosition] = renderId;
-
-    visibilityIds[tilePosition] = visibilityId;
-
-    if (isSolid)
+    void createSingle(
+        Tiles& tiles,
+        Vector2I const& tilePosition,
+        RenderId renderId,
+        bool isSolid,
+        bool isOpaque,
+        VisibilityId visibilityId)
     {
-        isSolids.insert(tilePosition);
+        PositionModule::changeTo(
+            tiles.positions[tilePosition],
+            tilePosition);
+
+        tiles.renderIds[tilePosition] = renderId;
+
+        tiles.visibilityIds[tilePosition] = visibilityId;
+
+        if (isSolid)
+        {
+            tiles.isSolids.insert(tilePosition);
+        }
+
+        else
+        {
+            tiles.isSolids.erase(tilePosition);
+        }
+
+        if (isOpaque)
+        {
+            tiles.isOpaques.insert(tilePosition);
+        }
+
+        else
+        {
+            tiles.isOpaques.erase(tilePosition);
+        }
+
+        updateMapSize(
+            tiles,
+            tilePosition);
     }
-
-    else
-    {
-        isSolids.erase(tilePosition);
-    }
-
-    if (isOpaque)
-    {
-        isOpaques.insert(tilePosition);
-    }
-
-    else
-    {
-        isOpaques.erase(tilePosition);
-    }
-
-    updateMapSize(tilePosition);
-}
-
-RectangleExI Tiles::mapSize() const
-{
-    return mapSize_;
 }

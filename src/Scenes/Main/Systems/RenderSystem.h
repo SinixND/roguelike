@@ -5,10 +5,10 @@
 #include <raylib.h>
 
 enum class RenderId;
-class Chunk;
+struct Chunk;
 struct Fog;
 struct RenderData;
-class Textures;
+struct Textures;
 
 namespace RenderSystem
 {

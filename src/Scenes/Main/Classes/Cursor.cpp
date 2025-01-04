@@ -1,16 +1,17 @@
 #include "Cursor.h"
+
+#include "Convert.h"
 #include "EventId.h"
 #include "PositionComponent.h"
 #include "PublisherStatic.h"
-#include "Convert.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
-void Cursor::toggle()
+void CursorModule::toggle(Cursor& cursor)
 {
-    isActive = !isActive;
+    cursor.isActive = !cursor.isActive;
 
-    if (isActive)
+    if (cursor.isActive)
     {
         HideCursor();
         return;
@@ -19,16 +20,21 @@ void Cursor::toggle()
     ShowCursor();
 }
 
-void Cursor::update(Camera2D const& camera, Vector2I const& heroPosition)
+void CursorModule::update(
+    Cursor& cursor,
+    Camera2D const& camera,
+    Vector2I const& heroPosition)
 {
     //* Update cursor position if active
-    if (isActive)
+    if (cursor.isActive)
     {
         Vector2I mouseTile{Convert::screenToTile(GetMousePosition(), camera)};
 
-        if (!(position.tilePosition() == mouseTile))
+        if (!(PositionModule::tilePosition(cursor.position) == mouseTile))
         {
-            position.changeTo(mouseTile);
+            PositionModule::changeTo(
+                cursor.position,
+                mouseTile);
 
             snx::PublisherStatic::publish(EventId::CURSOR_POSITION_CHANGED);
         }
@@ -37,5 +43,7 @@ void Cursor::update(Camera2D const& camera, Vector2I const& heroPosition)
     }
 
     //* Keep cursor on hero if inactive
-    position.changeTo(heroPosition);
+    PositionModule::changeTo(
+        cursor.position,
+        heroPosition);
 }

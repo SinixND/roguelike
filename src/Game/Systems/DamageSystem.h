@@ -2,7 +2,7 @@
 #define IG20241029004032
 
 struct DamageComponent;
-class HealthComponent;
+struct HealthComponent;
 
 namespace DamageSystem
 {
