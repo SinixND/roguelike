@@ -10,10 +10,10 @@
 
 int main(/* int argc, char** argv */)
 {
-    App app{};
+    App app = AppModule::init();
 
-    AppModule::init(app);
-    AppModule::run(app);
+    AppModule::update(app);
+
     AppModule::deinit(app);
 
     return 0;

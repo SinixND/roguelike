@@ -1,7 +1,8 @@
 #include "Tiles.h"
-#include "DenseMap.h"
-#include "PositionComponent.h"
+
+#include "Convert.h"
 #include "RenderId.h"
+#include "SparseSet.h"
 #include "VisibilityId.h"
 #include "raylibEx.h"
 #include <algorithm>
@@ -30,32 +31,42 @@ namespace TilesModule
         bool isOpaque,
         VisibilityId visibilityId)
     {
-        PositionModule::changeTo(
-            tiles.positions[tilePosition],
-            tilePosition);
+        size_t tileId{0};
 
-        tiles.renderIds[tilePosition] = renderId;
+        if (!tiles.ids.contains(tilePosition))
+        {
+            tileId = tiles.idManager.requestId();
+            tiles.ids.insert(tilePosition, tileId);
+        }
+        else
+        {
+            tileId = tiles.ids.at(tilePosition);
+        }
 
-        tiles.visibilityIds[tilePosition] = visibilityId;
+        tiles.positions[tileId] = Convert::tileToWorld(tilePosition);
+
+        tiles.renderIds[tileId] = renderId;
+
+        tiles.visibilityIds[tileId] = visibilityId;
 
         if (isSolid)
         {
-            tiles.isSolids.insert(tilePosition);
+            tiles.isSolids.insert(tileId);
         }
 
         else
         {
-            tiles.isSolids.erase(tilePosition);
+            tiles.isSolids.erase(tileId);
         }
 
         if (isOpaque)
         {
-            tiles.isOpaques.insert(tilePosition);
+            tiles.isOpaques.insert(tileId);
         }
 
         else
         {
-            tiles.isOpaques.erase(tilePosition);
+            tiles.isOpaques.erase(tileId);
         }
 
         updateMapSize(

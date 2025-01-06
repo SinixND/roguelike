@@ -1,9 +1,9 @@
 #include "MovementSystem.h"
+#include "Convert.h"
 #include "Enemies.h"
 #include "EnergyComponent.h"
 #include "EventId.h"
 #include "MovementComponent.h"
-#include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "TileData.h"
 #include "TransformComponent.h"
@@ -13,9 +13,9 @@
 void MovementSystem::updateHero(
     TransformComponent& transform,
     // MovementComponent& movement,
-    PositionComponent& position,
+    Vector2& position,
     EnergyComponent& energy,
-    PositionComponent const& heroPosition)
+    Vector2 const& heroPosition)
 {
     //* Start movement from path
     // if (!movement.path.empty()
@@ -24,7 +24,7 @@ void MovementSystem::updateHero(
     //     //          map.tiles,
     //     //          map.enemies,
     //     //          target,
-    //     //          PositionModule::tilePosition(hero.position))
+    //     //          Convert::worldToTile(hero.position))
     //     )
     // {
     //     prepareFromExistingPath(
@@ -48,31 +48,27 @@ void MovementSystem::updateHero(
 
     transform.cumulativeDistance += Vector2Length(offset);
 
-    Vector2I oldPosition{PositionModule::tilePosition(position)};
+    Vector2I oldPosition{Convert::worldToTile(position)};
 
     //* Check if movement exceeds tile length this frame
     if (transform.cumulativeDistance < TileData::tileSize)
     {
         //* Move full distance this frame
-        PositionModule::move(
-            position,
-            offset);
+        position += offset;
     }
     else
     {
         //* Move by remaining distance until TILE_SIZE
-        PositionModule::move(
-            position,
-            Vector2ClampValue(
-                offset,
-                0,
-                TileData::tileSize
-                    - (transform.cumulativeDistance
-                       - Vector2Length(offset))));
+        position += Vector2ClampValue(
+            offset,
+            0,
+            TileData::tileSize
+                - (transform.cumulativeDistance
+                   - Vector2Length(offset)));
 
         //* === Moved one tile ===
         //* Clean precision errors
-        position.worldPixel = Vector2Round(position.worldPixel);
+        position = Vector2Round(position);
 
         //* Reset cumulativeDistance
         resetCumulativeDistance(transform);
@@ -83,7 +79,7 @@ void MovementSystem::updateHero(
     }
 
     //* Check if unit moving is the hero
-    if (position.worldPixel != heroPosition.worldPixel)
+    if (position != heroPosition)
     {
         return;
     }
@@ -91,7 +87,7 @@ void MovementSystem::updateHero(
     //* Handle special case for hero
     snx::PublisherStatic::publish(EventId::HERO_MOVED);
 
-    if (oldPosition != PositionModule::tilePosition(position))
+    if (oldPosition != Convert::worldToTile(position))
     {
         snx::PublisherStatic::publish(EventId::HERO_POSITION_CHANGED);
     }
@@ -99,35 +95,33 @@ void MovementSystem::updateHero(
 
 void MovementSystem::updateEnemies(
     Enemies& enemies,
-    PositionComponent const& heroPosition)
+    Vector2 const& heroPosition)
 {
-    PositionComponent* currentPosition{};
+    Vector2* currentPosition{};
     Vector2I oldPosition{};
 
     //* get new positions
-
     //* update all positions/movements/transforms
-
-    for (size_t i{0}; i < enemies.transforms.size(); ++i)
+    for (size_t idx{0}; idx < enemies.transforms.size(); ++idx)
     {
-        currentPosition = &enemies.positions.values().at(i);
+        currentPosition = &enemies.positions.values().at(idx);
 
-        oldPosition = PositionModule::tilePosition(*currentPosition);
+        oldPosition = Convert::worldToTile(*currentPosition);
 
         //* Update movement
         //* Update ids_ key if tilePosition changes
         MovementSystem::updateHero(
-            enemies.transforms.values().at(i),
+            enemies.transforms.values().at(idx),
             // enemies.movements.values().at(i),
             *currentPosition,
-            enemies.energies.values().at(i),
+            enemies.energies.values().at(idx),
             heroPosition);
 
-        if (oldPosition != PositionModule::tilePosition(*currentPosition))
+        if (oldPosition != Convert::worldToTile(*currentPosition))
         {
             enemies.ids.changeKey(
                 oldPosition,
-                PositionModule::tilePosition(*currentPosition));
+                Convert::worldToTile(*currentPosition));
         }
     }
 }

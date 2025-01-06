@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include "AISystem.h"
+#include "Convert.h"
 #include "Cursor.h"
 #include "Enemies.h"
 #include "EnergyComponent.h"
@@ -12,7 +13,6 @@
 #include "InputMappings.h"
 #include "MovementSystem.h"
 #include "Objects.h"
-#include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "RenderId.h"
 #include "UserInputSystem.h"
@@ -34,8 +34,6 @@ void GameModule::init(Game& game)
     snx::RNG::seed(1);
 #endif
 
-    game.inputMappings = InputMappingsModule::getDefault();
-
     //* Setup events
     GameModule::setupGameEvents(game);
 
@@ -45,27 +43,29 @@ void GameModule::init(Game& game)
 }
 
 void GameModule::processInput(
-    Game& game,
-    Cursor& cursor)
+    InputMappings const& inputMappings,
+    bool isCursorActive,
+    Input& inputHandler,
+    InputActionId& inputActionId)
 {
     //* Take input from mouse, keys or gestures
-    game.inputAction = InputModule::checkKeyboard(
-        game.inputHandler,
-        game.inputMappings);
+    inputActionId = InputModule::checkKeyboard(
+        inputHandler,
+        inputMappings);
 
-    if (game.inputAction != InputActionId::NONE)
+    if (inputActionId != InputActionId::NONE)
     {
         return;
     }
 
-    game.inputAction = InputModule::checkMouse(game.inputMappings, cursor.isActive);
+    inputActionId = InputModule::checkMouse(inputMappings, isCursorActive);
 
-    if (game.inputAction != InputActionId::NONE)
+    if (inputActionId != InputActionId::NONE)
     {
         return;
     }
 
-    game.inputAction = InputModule::checkGesture(game.inputHandler);
+    inputActionId = InputModule::checkGesture(inputHandler);
 }
 
 void GameModule::updateState(
@@ -168,9 +168,7 @@ void GameModule::setupGameEvents(Game& game)
             WorldModule::increaseMapLevel(game.world);
 
             //* Place Hero on the map entry position
-            PositionModule::changeTo(
-                game.hero.position,
-                Vector2I{0, 0});
+            game.hero.position = Convert::tileToWorld(Vector2I{0, 0});
 
             snx::PublisherStatic::publish(EventId::HERO_MOVED);
             snx::PublisherStatic::publish(EventId::HERO_POSITION_CHANGED);
@@ -190,13 +188,11 @@ void GameModule::setupGameEvents(Game& game)
             auto const& renderIds{objects.renderIds.values()};
             auto const& positions{objects.positions.values()};
 
-            for (size_t i{0}; i < renderIds.size(); ++i)
+            for (size_t idx{0}; idx < renderIds.size(); ++idx)
             {
-                if (renderIds.at(i) == RenderId::DESCEND)
+                if (renderIds.at(idx) == RenderId::DESCEND)
                 {
-                    PositionModule::changeTo(
-                        game.hero.position,
-                        PositionModule::tilePosition(positions.at(i)));
+                    game.hero.position = Convert::tileToWorld(Convert::worldToTile(positions.at(idx)));
                 }
             }
 

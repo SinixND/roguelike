@@ -3,6 +3,7 @@
 
 //* Configs imported from user file
 
+#include <raylib.h>
 struct AppConfig
 {
     //* Window dimensions
@@ -10,8 +11,12 @@ struct AppConfig
     int windowHeight{940};
 
     //* Fps
+    int const fpsTarget{300};
     bool showFPS{true};
     bool vSync{false};
+
+    //* Raylib settings
+    Image const favicon{LoadImage("resources/favicon/favicon.png")};
 };
 
 #endif

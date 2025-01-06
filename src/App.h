@@ -5,30 +5,18 @@
 #include "SceneMain.h"
 #include <raylib.h>
 
-#if defined(EMSCRIPTEN)
-struct emscriptenApp
-{
-    Scene* scene;
-};
-#endif
-
 struct App
 {
     AppConfig config{};
 
-    int const fpsTarget{300};
-
-    //* Raylib settings
-    Image const favicon{LoadImage("resources/favicon/favicon.png")};
-
     //* Scenes
-    Scene scene{};
+    SceneMain sceneMain{};
 };
 
 namespace AppModule
 {
-    void init(App& app);
-    void run(App& app);
+    App init();
+    void update(App& app);
     void deinit(App& app);
 }
 #endif

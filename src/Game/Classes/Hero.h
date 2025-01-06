@@ -6,7 +6,6 @@
 #include "HealthComponent.h"
 #include "HeroData.h"
 #include "MovementComponent.h"
-#include "PositionComponent.h"
 #include "RenderId.h"
 #include "TransformComponent.h"
 
@@ -18,7 +17,7 @@ struct Hero
     EnergyComponent energy{
         HeroData::energyMax,
         HeroData::energyRegenBase};
-    PositionComponent position{};
+    Vector2 position{};
     HealthComponent health{
         HeroData::healthBase,
         HeroData::healthRegenBase};

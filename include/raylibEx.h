@@ -895,14 +895,14 @@ inline bool operator==(Vector2I const& lhs, Vector2I const& rhs)
 
 //* hash
 //* https://en.wikipedia.org/wiki/List_of_prime_numbers
-int constexpr prime{2946901};
+int constexpr PRIME{2946901};
 
 template <>
 struct std::hash<Vector2>
 {
     size_t operator()(Vector2 const& v) const
     {
-        return (prime + std::hash<float>()(v.x)) * prime + std::hash<float>()(v.y);
+        return (PRIME + std::hash<float>()(v.x)) * PRIME + std::hash<float>()(v.y);
     }
 };
 
@@ -911,7 +911,8 @@ struct std::hash<Vector2I>
 {
     size_t operator()(Vector2I const& v) const
     {
-        return (prime + std::hash<int>()(v.x)) * prime + std::hash<int>()(v.y);
+        // return ( PRIME + std::hash<int>()( v.x ) ) * PRIME + std::hash<int>()( v.y );
+        return (std::hash<int>()(v.x)) ^ (std::hash<int>()(v.y) << 1);
     }
 };
 

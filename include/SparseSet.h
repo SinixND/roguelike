@@ -1,5 +1,5 @@
-#ifndef IG20240128195657
-#define IG20240128195657
+#ifndef IG20250109220707
+#define IG20250109220707
 
 #include <cassert>
 #include <cstddef>
@@ -41,15 +41,34 @@ namespace snx
         }
 
         //* MODIFIERS
+        Type* assign(
+            size_t key,
+            Type const& value = Type{})
+        {
+            if (keyToIndex_.size() <= key
+                || !keyToIndex_.at(key))
+            {
+                return nullptr;
+            }
+
+            at(key) = value;
+
+            return &at(key);
+        }
+
         Type const& insert(
             size_t key,
             Type const& value = Type{})
         {
+            // if ( keyToIndex_.size() > key
+            //      && keyToIndex_.at( key ) )
+            if (contains(key))
+            {
+                return at(key);
+            }
+
             //* Get new list index for value before modifying values_
             size_t valueIndex = values_.size();
-
-            //* Add new value to list
-            values_.push_back(value);
 
             //* Check size
             keyToIndex_.resize(key + 1, 0);
@@ -60,7 +79,32 @@ namespace snx
             //* Add valueIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.push_back(key);
 
+            //* Add new value to list
+            values_.push_back(value);
+
             return at(key);
+        }
+
+        Type const& insert(
+            Type const& value = Type{})
+        {
+            return insert(
+                indexToKey_,
+                value);
+        }
+
+        Type const& insert_or_assign(
+            size_t key,
+            Type const& value = Type{})
+        {
+            // if ( keyToIndex_.size() <= key
+            //      || !keyToIndex_.at( key ) )
+            if (!contains(key))
+            {
+                return insert(key, value);
+            }
+
+            return *assign(key, value);
         }
 
         template <typename... Args>
@@ -68,30 +112,33 @@ namespace snx
             size_t key,
             Args&&... args)
         {
-            //* Get new list index for value before modifying values_
-            size_t valueIndex = values_.size();
+            Type value{std::forward<Args>(args)...};
 
-            //* Create and Add new value to list
-            values_.push_back(Type{std::forward<Args>(args)...});
+            return insert(key, value);
+        }
 
-            //* Check size
-            keyToIndex_.resize(key + 1, 0);
+        template <typename... Args>
+        Type const& emplace_or_assign(
+            size_t key,
+            Args&&... args)
+        {
+            Type value{std::forward<Args>(args)...};
 
-            //* Add key to valueIndex mapping
-            keyToIndex_[key] = valueIndex;
+            // if ( keyToIndex_.size() <= key
+            //      || !keyToIndex_.at( key ) )
+            if (!contains(key))
+            {
+                return insert(key, value);
+            }
 
-            //* Add valueIndex to key mapping (internal use only to keep list contiguous)
-            indexToKey_.push_back(key);
-
-            return at(key);
+            return *assign(key, value);
         }
 
         //* Moves last value to gap
         void erase(size_t keyToRemove)
         {
-            if (keyToRemove > (keyToIndex_.size() - 1)
-                // && !contains(key)
-            )
+            // if ( keyToRemove > ( keyToIndex_.size() - 1 )
+            if (!contains(keyToRemove))
             {
                 return;
             }
@@ -164,7 +211,25 @@ namespace snx
 
         bool contains(size_t key) const
         {
+            if (keyToIndex_.size() <= key)
+            {
+                return false;
+            }
+
             return keyToIndex_[key];
+        }
+
+        size_t find(Type const& value) const
+        {
+            for (size_t idx{0}; idx < values_.size(); ++idx)
+            {
+                if (value == values_.at(idx))
+                {
+                    return indexToKey_[idx];
+                }
+            }
+
+            return 0;
         }
 
         //* Get key for value index
@@ -183,6 +248,11 @@ namespace snx
         std::vector<Type>& values()
         {
             return const_cast<std::vector<Type>&>(std::as_const(*this).values());
+        }
+
+        std::vector<size_t> const& keys() const
+        {
+            return indexToKey_;
         }
 
     private:

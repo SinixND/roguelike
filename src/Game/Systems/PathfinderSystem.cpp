@@ -192,13 +192,20 @@ bool checkRatingList(
             }
 
             //* Skip if tile is invalid:
-            //* - Not in map
-            //* - Is invisible
-            //* - Not accessible
-            //* - Steps needed exceed maxRange
-            if (!map.tiles.visibilityIds.contains(newTilePosition)
-                || (map.tiles.visibilityIds.at(newTilePosition) == VisibilityId::INVISIBLE)
-                || map.tiles.isSolids.contains(newTilePosition)
+            size_t tileId{0};
+
+            if (map.tiles.ids.contains(newTilePosition))
+            {
+                tileId = map.tiles.ids.at(newTilePosition);
+            }
+
+            //* - Not in map/existing
+            if (!tileId
+                //* - Is invisible
+                || (map.tiles.visibilityIds.at(tileId) == VisibilityId::INVISIBLE)
+                //* - Not accessible
+                || map.tiles.isSolids.contains(tileId)
+                //* - Steps needed exceed maxRange
                 || ((maxRange > 0) && (newRatedTile.stepsNeeded > maxRange)))
             {
                 //* Invalid! Add to ignore set so it doesn't get checked again
@@ -271,15 +278,18 @@ std::vector<Vector2I> PathfinderSystem::findPath(
 
     std::vector<Vector2I> path{};
 
-    //* Return empty path if target is
-    //* - Not in map
-    //* - Is invisible
-    //* - Not accessible
-    //* - Equal to start
-    if (!map.tiles.visibilityIds.contains(target)
+    //* Return empty path if target is invalid
+    size_t tileId{0};
+
+    if (map.tiles.ids.contains(target))
+    {
+        tileId = map.tiles.ids.at(target);
+    }
+
+    if (!tileId
         || (skipInvisibleTiles
-            && (map.tiles.visibilityIds.at(target) == VisibilityId::INVISIBLE))
-        || map.tiles.isSolids.contains(target)
+            && (map.tiles.visibilityIds.at(tileId) == VisibilityId::INVISIBLE))
+        || map.tiles.isSolids.contains(tileId)
         || (start == target))
     {
         return path;

@@ -42,15 +42,31 @@ namespace snx
         }
 
         //* MODIFIERS
+        Type* assign(
+            Key const& key,
+            Type const& value = Type{})
+        {
+            if (!keyToIndex_.contains(key))
+            {
+                return nullptr;
+            }
+
+            at(key) = value;
+
+            return &at(key);
+        }
+
         Type const& insert(
             Key const& key,
             Type const& value = Type{})
         {
+            if (keyToIndex_.contains(key))
+            {
+                return at(key);
+            }
+
             //* Get new list index for value before modifying values_
             size_t valueIndex = size();
-
-            //* Add new value to list
-            values_.push_back(value);
 
             //* Add key to valueIndex mapping
             keyToIndex_.insert({key, valueIndex});
@@ -58,9 +74,24 @@ namespace snx
             //* Add valueIndex to key mapping (internal use only to keep list contiguous)
             indexToKey_.push_back(key);
 
-            assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
+            //* Add new value to list
+            values_.push_back(value);
+
+            assert((keyToIndex_.size() == indexToKey_.size()) && "Internal mismatch!");
 
             return at(key);
+        }
+
+        Type const& insert_or_assign(
+            Key const& key,
+            Type const& value = Type{})
+        {
+            if (!keyToIndex_.contains(key))
+            {
+                return insert(key, value);
+            }
+
+            return *assign(key, value);
         }
 
         template <typename... Args>
@@ -68,21 +99,24 @@ namespace snx
             Key const& key,
             Args&&... args)
         {
-            //* Get new list index for value before modifying values_
-            size_t valueIndex = size();
+            Type value{std::forward<Args>(args)...};
 
-            //* Create and Add new value to list
-            values_.push_back(Type{std::forward<Args>(args)...});
+            return insert(key, value);
+        }
 
-            //* Add key to valueIndex mapping
-            keyToIndex_.insert({key, valueIndex});
+        template <typename... Args>
+        Type const& emplace_or_assign(
+            Key const& key,
+            Args&&... args)
+        {
+            Type value{std::forward<Args>(args)...};
 
-            //* Add valueIndex to key mapping (internal use only to keep list contiguous)
-            indexToKey_.push_back(key);
+            if (!keyToIndex_.contains(key))
+            {
+                return insert(key, value);
+            }
 
-            assert((keyToIndex_.size() == indexToKey_.size()) && "DenseMap mismatch!");
-
-            return at(key);
+            return *assign(key, value);
         }
 
         //* Moves last value to gap
@@ -201,6 +235,10 @@ namespace snx
             return const_cast<std::vector<Type>&>(std::as_const(*this).values());
         }
 
+        void validate()
+        {
+        }
+
     private:
         //* Vector index is used as value key
         std::vector<Type> values_{};
@@ -208,7 +246,7 @@ namespace snx
         //* Key is used to identify value
         std::unordered_map<Key, size_t> keyToIndex_{};
 
-        //* Store a index (value) to key mapping (internal use for erease() only)
+        //* Store a index (value) to key mapping
         std::vector<Key> indexToKey_{};
     };
 }

@@ -8,10 +8,9 @@
 #include "HealthComponent.h"
 #include "IdManager.h"
 #include "MovementComponent.h"
-#include "PositionComponent.h"
 #include "RenderId.h"
+#include "SparseSet.h"
 #include "TransformComponent.h"
-#include <cstddef>
 
 struct Vector2I;
 struct Map;
@@ -19,17 +18,17 @@ struct Tiles;
 
 struct Enemies
 {
-    snx::DenseMap<Vector2I, size_t> ids{};
-    snx::DenseMap<size_t, AIComponent> ais{};
-    snx::DenseMap<size_t, PositionComponent> positions{};
-    snx::DenseMap<size_t, RenderId> renderIds{};
-    snx::DenseMap<size_t, TransformComponent> transforms{};
-    snx::DenseMap<size_t, MovementComponent> movements{};
-    snx::DenseMap<size_t, EnergyComponent> energies{};
-    snx::DenseMap<size_t, HealthComponent> healths{};
-    snx::DenseMap<size_t, DamageComponent> damages{};
-
     snx::IdManager idManager{};
+    snx::DenseMap<Vector2I, size_t> ids{};
+
+    snx::SparseSet<AIComponent> ais{};
+    snx::SparseSet<Vector2> positions{};
+    snx::SparseSet<RenderId> renderIds{};
+    snx::SparseSet<TransformComponent> transforms{};
+    snx::SparseSet<MovementComponent> movements{};
+    snx::SparseSet<EnergyComponent> energies{};
+    snx::SparseSet<HealthComponent> healths{};
+    snx::SparseSet<DamageComponent> damages{};
 };
 
 namespace EnemiesModule
@@ -54,11 +53,11 @@ namespace EnemiesModule
 
     void update(
         Enemies& enemies,
-        PositionComponent const& heroPosition);
+        Vector2 const& heroPosition);
 
     size_t getActive(
-        snx::DenseMap<size_t, EnergyComponent> const& energies,
-        snx::DenseMap<size_t, AIComponent> const& ais,
+        snx::SparseSet<EnergyComponent> const& energies,
+        snx::SparseSet<AIComponent> const& ais,
         int const turn);
 
     void replaceDead(

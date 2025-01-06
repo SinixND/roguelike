@@ -6,7 +6,7 @@
 
 struct TransformComponent;
 struct MovementComponent;
-struct PositionComponent;
+struct Vector2;
 struct EnergyComponent;
 struct Map;
 struct Enemies;
@@ -16,13 +16,13 @@ namespace MovementSystem
     void updateHero(
         TransformComponent& transform,
         // MovementComponent& movement,
-        PositionComponent& position,
+        Vector2& position,
         EnergyComponent& energy,
-        PositionComponent const& heroPosition);
+        Vector2 const& heroPosition);
 
     void updateEnemies(
         Enemies& enemies,
-        PositionComponent const& heroPosition);
+        Vector2 const& heroPosition);
 
     void prepareByDirection(
         MovementComponent const& movement,
@@ -36,7 +36,7 @@ namespace MovementSystem
     //* Triggers from and adjusts path
     void prepareFromExistingPath(
         MovementComponent& movement,
-        // PositionComponent const& position);
+        // Vector2 const& position);
         TransformComponent& transform);
 
     //* Sets direction, currentVelocity and isTriggered_

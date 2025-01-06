@@ -1,5 +1,6 @@
 #include "CollisionSystem.h"
 
+#include "Convert.h"
 #include "Enemies.h"
 #include "Tiles.h"
 #include "raylibEx.h"
@@ -10,7 +11,11 @@ bool checkCollisionWithNextPosition(
 {
     for (size_t idx{0}; idx < enemies.transforms.size(); ++idx)
     {
-        if (Vector2Equals(tilePositionToCheck, Vector2Add(PositionModule::tilePosition(enemies.positions.values().at(idx)), enemies.transforms.values().at(idx).direction)))
+        if (Vector2Equals(
+                tilePositionToCheck,
+                Vector2Add(
+                    Convert::worldToTile(enemies.positions.values().at(idx)),
+                    enemies.transforms.values().at(idx).direction)))
         {
             return true;
         }
@@ -26,11 +31,14 @@ bool CollisionSystem::checkCollision(
     Vector2I const& tilePositionToCheck,
     Vector2I const& heroPosition)
 {
+    size_t enemyId{enemies.ids.contains(tilePositionToCheck)};
+    size_t tileId{tiles.ids.contains(tilePositionToCheck)};
+
     return (
         //* Next tilePosition unit moves to
-        enemies.ids.contains(tilePositionToCheck)
+        enemyId
         // || map.objects_.getIsSolids().contains(tilePositionToCheck)
-        || tiles.isSolids.contains(tilePositionToCheck)
+        || tiles.isSolids.contains(tileId)
         || Vector2Equals(tilePositionToCheck, heroPosition)
         || checkCollisionWithNextPosition(
             enemies,

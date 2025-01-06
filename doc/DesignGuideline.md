@@ -36,10 +36,6 @@ Although trivial getters + setter provide more flexibility for later change, as 
 - Transient (= Intermediate/Temporary/TransMoveation) data `struct`:
     - Forward declared `unique_ptr` member in `SoA.h`
     - Define it (and its member structs) in `SoA.cpp`
-- Unsorted/unsynced (public): Querying/prefetching/culling/preparation before (parallel) processing needed due to holes?
-    - Use for optional components
-- Sorted/Synced (private): Direct parallel processing possible
-    - Use if matching components always exist
 
 ## SparseSet
 - Maps _integer_ `id` to `idx` and `idx` to `data` (array to array)

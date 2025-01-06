@@ -311,7 +311,7 @@ endif
 ### Default flags
 #-DVERSION=$(VERSION)
 CXX_FLAGS 				:= -std=c++20 -MMD -MP -g
-FATAL					:= no
+FATAL					:= false
 
 ### Build specific flags 
 ifeq ($(OS),termux)
@@ -328,7 +328,7 @@ else
     ifeq ($(BUILD),debug)
         CXX_FLAGS 			+= -g -ggdb -O0 -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -DDEBUG 
 
-        ifeq ($(FATAL),yes)
+        ifeq ($(FATAL),true)
         	CXX_FLAGS				+= -Wfatal-errors
         endif
 

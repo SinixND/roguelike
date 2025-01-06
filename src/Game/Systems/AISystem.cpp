@@ -1,6 +1,7 @@
 #include "AISystem.h"
 
 #include "CollisionSystem.h"
+#include "Convert.h"
 #include "DamageComponent.h"
 #include "DamageSystem.h"
 #include "Enemies.h"
@@ -45,7 +46,7 @@ bool AISystem::takeActions(
                 enemies.energies.at(activeEnemyId),
                 enemies.damages.at(activeEnemyId),
                 *world.currentMap,
-                PositionModule::tilePosition(hero.position),
+                Convert::worldToTile(hero.position),
                 hero.health,
                 gameCamera);
         }
@@ -56,7 +57,7 @@ bool AISystem::takeActions(
 
 bool AISystem::takeAction(
     AIComponent const& ai,
-    PositionComponent& position,
+    Vector2& position,
     MovementComponent& movement,
     TransformComponent& transform,
     EnergyComponent& energy,
@@ -71,7 +72,7 @@ bool AISystem::takeAction(
     //* Instant action: attack
     if (Vector2Length(
             Vector2Subtract(
-                PositionModule::tilePosition(position),
+                Convert::worldToTile(position),
                 heroPosition))
         == 1)
     {
@@ -89,7 +90,7 @@ bool AISystem::takeAction(
     {
         std::vector<Vector2I> path{PathfinderSystem::findPath(
             map,
-            PositionModule::tilePosition(position),
+            Convert::worldToTile(position),
             heroPosition,
             gameCamera,
             false,
@@ -110,7 +111,7 @@ bool AISystem::takeAction(
             MovementSystem::prepareByFromTo(
                 movement,
                 transform,
-                PositionModule::tilePosition(position),
+                Convert::worldToTile(position),
                 path.rbegin()[1]);
 
             EnergyModule::consume(energy);

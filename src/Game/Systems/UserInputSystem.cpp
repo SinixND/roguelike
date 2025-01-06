@@ -4,6 +4,7 @@
 //* #define DEBUG_GESTURE_EVENTS
 
 #include "CollisionSystem.h"
+#include "Convert.h"
 #include "Cursor.h"
 #include "DamageSystem.h"
 #include "Directions.h"
@@ -16,7 +17,6 @@
 #include "Map.h"
 #include "MovementSystem.h"
 #include "PathfinderSystem.h"
-#include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raylib.h>
@@ -45,7 +45,7 @@ bool processDirectionalInput(
 
     Vector2I target{
         Vector2Add(
-            PositionModule::tilePosition(hero.position),
+            Convert::worldToTile(hero.position),
             direction)};
 
     if (map.enemies.ids.contains(target))
@@ -61,7 +61,7 @@ bool processDirectionalInput(
                  map.tiles,
                  map.enemies,
                  target,
-                 PositionModule::tilePosition(hero.position)))
+                 Convert::worldToTile(hero.position)))
     {
         MovementSystem::prepareByDirection(
             hero.movement,
@@ -108,7 +108,7 @@ bool UserInputSystem::takeAction(
                         map.tiles,
                         map.enemies,
                         hero.movement.path.rbegin()[1],
-                        PositionModule::tilePosition(hero.position)))
+                        Convert::worldToTile(hero.position)))
                 {
                     MovementSystem::prepareFromExistingPath(
                         hero.movement,
@@ -169,8 +169,8 @@ bool UserInputSystem::takeAction(
         {
             std::vector<Vector2I> path{PathfinderSystem::findPath(
                 map,
-                PositionModule::tilePosition(hero.position),
-                PositionModule::tilePosition(cursor.position),
+                Convert::worldToTile(hero.position),
+                Convert::worldToTile(cursor.position),
                 gameCamera)};
 
             if (!path.empty())
@@ -179,7 +179,7 @@ bool UserInputSystem::takeAction(
                         map.tiles,
                         map.enemies,
                         path.rbegin()[1],
-                        PositionModule::tilePosition(hero.position)))
+                        Convert::worldToTile(hero.position)))
                 {
                     MovementSystem::prepareByNewPath(
                         hero.movement,
@@ -202,10 +202,11 @@ bool UserInputSystem::takeAction(
 
         case InputActionId::ACT_IN_PLACE:
         {
-            Vector2I heroTilePosition{PositionModule::tilePosition(hero.position)};
+            Vector2I heroTilePosition{Convert::worldToTile(hero.position)};
 
-            //* Wait if nothing to interact
-            if (!map.objects.events.contains(heroTilePosition))
+            //* If nothing to interact: wait
+            if (!map.objects.ids.contains(heroTilePosition)
+                || !map.objects.events.contains(map.objects.ids.at(heroTilePosition)))
             {
                 snx::Logger::log("Hero waits...");
 
@@ -216,7 +217,7 @@ bool UserInputSystem::takeAction(
                 break;
             }
 
-            snx::PublisherStatic::publish(map.objects.events.at(heroTilePosition));
+            snx::PublisherStatic::publish(map.objects.events.at(map.objects.ids.at(heroTilePosition)));
 
             break;
         }

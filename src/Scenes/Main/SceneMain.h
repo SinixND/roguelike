@@ -4,16 +4,14 @@
 #include "Chunk.h"
 #include "Cursor.h"
 #include "Data/RenderData.h"
-#include "DenseMap.h"
 #include "Game.h"
 #include "GameCamera.h"
 #include "Panels.h"
 #include "RenderSystem.h"
 #include "VisibilitySystem.h"
-#include "raylibEx.h"
 #include <raylib.h>
 
-struct Scene
+struct SceneMain
 {
     Game game{};
 
@@ -33,13 +31,13 @@ struct Scene
 
 namespace SceneModule
 {
-    void init(Scene& scene);
-    void update(Scene& scene);
-    void deinitialize(Scene& scene);
-    void processInput(Scene& scene);
-    void updateState(Scene& scene);
-    void renderOutput(Scene& scene);
-    void setupSceneEvents(Scene& scene);
+    void init(SceneMain& scene);
+    void update(SceneMain& scene);
+    void deinitialize(SceneMain& scene);
+    void processInput(SceneMain& scene);
+    void updateState(SceneMain& scene);
+    void renderOutput(SceneMain& scene);
+    void setupSceneEvents(SceneMain& scene);
     void drawSceneBorder();
 }
 #endif

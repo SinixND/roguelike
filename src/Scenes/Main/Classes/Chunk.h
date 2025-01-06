@@ -2,7 +2,7 @@
 #define IG20240815194414
 
 #include "ChunkData.h"
-#include "PositionComponent.h"
+#include "Convert.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -13,18 +13,18 @@
 struct Chunk
 {
     RectangleExI corners{};
-    PositionComponent position{};
+    Vector2 position{};
     RenderTexture renderTexture{};
 
     Chunk() = default;
 
     Chunk(
-        PositionComponent const& position,
+        Vector2 const& position,
         RenderTexture const& texture)
         : corners(
               RectangleExI{
-                  PositionModule::tilePosition(position).x,
-                  PositionModule::tilePosition(position).y,
+                  Convert::worldToTile(position).x,
+                  Convert::worldToTile(position).y,
                   ChunkData::chunkSize,
                   ChunkData::chunkSize})
         , position(position)

@@ -11,17 +11,17 @@
 #include <emscripten/html5.h>
 #endif
 
-#if defined(EMSCRIPTEN)
-void applicationLoop(void* arg)
+void emscriptenLoop(void* arg)
 {
-    emscriptenApp* emsApp = (emscriptenApp*)arg;
+    App* app = (App*)arg;
 
-    SceneModule::update(*emsApp->scene);
+    SceneModule::update(app->sceneMain);
 }
-#endif
 
-void AppModule::init(App& app)
+App AppModule::init()
 {
+    App app{};
+
     //* TODO: Import configs from user file
 
     //* Raylib flags
@@ -35,20 +35,22 @@ void AppModule::init(App& app)
     InitWindow(app.config.windowWidth, app.config.windowHeight, "Roguelike");
 
     //* Raylib Settings
-    SetWindowIcon(app.favicon);
+    SetWindowIcon(app.config.favicon);
     SetWindowMinSize(640, 480);
 #if defined(EMSCRIPTEN)
     MaximizeWindow();
 #endif
     SetExitKey(KEY_F4);
-    SetTargetFPS(app.fpsTarget);
+    SetTargetFPS(app.config.fpsTarget);
 
     //* Fonts
     GameFont::load();
     GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::fontHeight);
 
     //* Scene
-    SceneModule::init(app.scene);
+    SceneModule::init(app.sceneMain);
+
+    return app;
 }
 
 void updateWindow()
@@ -80,18 +82,17 @@ void updateDeveloperMode()
     }
 }
 
-void AppModule::run(App& app)
+void AppModule::update(App& app)
 {
 #if defined(EMSCRIPTEN)
-    emscriptenApp emsApp{&app.scene};
-    emscripten_set_main_loop_arg(applicationLoop, &emsApp, 60 /*FPS*/, 1 /*Simulate infinite loop*/);
+    emscripten_set_main_loop_arg(emscriptenLoop, &app, 60 /*FPS*/, 1 /*Simulate infinite loop*/);
 #else
     while (!(WindowShouldClose()))
     {
         updateWindow();
         updateDeveloperMode();
 
-        SceneModule::update(app.scene);
+        SceneModule::update(app.sceneMain);
     }
 #endif
 }
@@ -99,7 +100,7 @@ void AppModule::run(App& app)
 void AppModule::deinit(App& app)
 {
     GameFont::unload();
-    SceneModule::deinitialize(app.scene);
+    SceneModule::deinitialize(app.sceneMain);
 
     //* Close window and opengl context
     CloseWindow();

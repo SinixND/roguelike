@@ -5,13 +5,8 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
+- [ ] Referenes before const refs before values
 - [ ] Fix web bug -> cursor not moving when mouse active
-- [ ] Replace top level argument by members (eg. tiles instead of game(.tiles))
-- [ ] Refactor SoA: size_t as key; hashmap/2D-array for position lookup
-- [ ] Change DenseMap/SparseSet:
-  - Synced (private?) for persistent components/iteration
-  - Unsynced/public for optional components/lookup/existential
-  - (see `DesignGuideline.md`)
 - [ ] Refactor: Extract possible NMNF functions
     - [ ] ~~Pass by rawPtr (if modified)~~ Add in/out/io information to function parameters
 
@@ -161,3 +156,4 @@ Platforms: Linux, Windows, Browser
 - [x] Split Transform (single turn) and Movement (multi-turn) data
 - [x] Refactor public/private (see Notes) ~~namespace Class/Module/System~~
 - [x] Separate System (not related to class) and Module (former member functions) via namespace?
+- [ ] Refactor SoA: size_t as key; hashmap/2D-array/vector for position lookup

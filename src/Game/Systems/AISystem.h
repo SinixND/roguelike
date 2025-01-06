@@ -9,7 +9,7 @@ struct Hero;
 struct Map;
 struct Vector2I;
 struct GameCamera;
-struct PositionComponent;
+struct Vector2;
 struct TransformComponent;
 struct MovementComponent;
 struct EnergyComponent;
@@ -28,7 +28,7 @@ namespace AISystem
     //* Return if multi-frame action taken
     bool takeAction(
         AIComponent const& ai,
-        PositionComponent& position,
+        Vector2& position,
         MovementComponent& movement,
         TransformComponent& transform,
         EnergyComponent& energy,

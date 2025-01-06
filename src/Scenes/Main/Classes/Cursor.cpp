@@ -2,7 +2,6 @@
 
 #include "Convert.h"
 #include "EventId.h"
-#include "PositionComponent.h"
 #include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raylib.h>
@@ -30,11 +29,9 @@ void CursorModule::update(
     {
         Vector2I mouseTile{Convert::screenToTile(GetMousePosition(), camera)};
 
-        if (!(PositionModule::tilePosition(cursor.position) == mouseTile))
+        if (!(Convert::worldToTile(cursor.position) == mouseTile))
         {
-            PositionModule::changeTo(
-                cursor.position,
-                mouseTile);
+            cursor.position = Convert::tileToWorld(mouseTile);
 
             snx::PublisherStatic::publish(EventId::CURSOR_POSITION_CHANGED);
         }
@@ -43,7 +40,5 @@ void CursorModule::update(
     }
 
     //* Keep cursor on hero if inactive
-    PositionModule::changeTo(
-        cursor.position,
-        heroPosition);
+    cursor.position = Convert::tileToWorld(heroPosition);
 }
