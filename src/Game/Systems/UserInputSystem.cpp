@@ -90,17 +90,6 @@ bool UserInputSystem::takeAction(
         default:
         case InputActionId::NONE:
         {
-            // if (!hero.transform.speed
-            //     && !hero.movement.path.empty())
-            // {
-            //     MovementSystem::prepareFromExistingPath(
-            //         hero.movement,
-            //         // hero.position);
-            //         hero.transform);
-            //
-            //     isActionMultiFrame = true;
-            // }
-
             if (!hero.movement.path.empty()
                 && !hero.transform.speed)
             {
@@ -175,11 +164,22 @@ bool UserInputSystem::takeAction(
 
             if (!path.empty())
             {
-                if (!CollisionSystem::checkCollision(
-                        map.tiles,
+                if (map.enemies.ids.contains(path.rbegin()[1]))
+                {
+                    performAttack(
+                        hero,
                         map.enemies,
-                        path.rbegin()[1],
-                        Convert::worldToTile(hero.position)))
+                        path.rbegin()[1]);
+
+                    EnergyModule::consume(hero.energy);
+
+                    path.clear();
+                }
+                else if (!CollisionSystem::checkCollision(
+                             map.tiles,
+                             map.enemies,
+                             path.rbegin()[1],
+                             Convert::worldToTile(hero.position)))
                 {
                     MovementSystem::prepareByNewPath(
                         hero.movement,

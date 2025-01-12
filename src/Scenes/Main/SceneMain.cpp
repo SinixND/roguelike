@@ -236,8 +236,10 @@ void SceneModule::processInput(SceneMain& scene)
     if (scene.game.hero.energy.state == EnergyState::READY)
     {
         GameModule::processInput(
-            scene.game,
-            scene.cursor);
+            scene.game.inputMappings,
+            scene.cursor.isActive,
+            scene.game.inputHandler,
+            scene.game.inputAction);
     }
 }
 

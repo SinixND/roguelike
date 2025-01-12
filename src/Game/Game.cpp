@@ -43,27 +43,29 @@ void GameModule::init(Game& game)
 }
 
 void GameModule::processInput(
-    Game& game,
-    Cursor& cursor)
+    InputMappings const& inputMappings,
+    bool isCursorActive,
+    Input& inputHandler,
+    InputActionId& inputActionId)
 {
     //* Take input from mouse, keys or gestures
-    game.inputAction = InputModule::checkKeyboard(
-        game.inputHandler,
-        game.inputMappings);
+    inputActionId = InputModule::checkKeyboard(
+        inputHandler,
+        inputMappings);
 
-    if (game.inputAction != InputActionId::NONE)
+    if (inputActionId != InputActionId::NONE)
     {
         return;
     }
 
-    game.inputAction = InputModule::checkMouse(game.inputMappings, cursor.isActive);
+    inputActionId = InputModule::checkMouse(inputMappings, isCursorActive);
 
-    if (game.inputAction != InputActionId::NONE)
+    if (inputActionId != InputActionId::NONE)
     {
         return;
     }
 
-    game.inputAction = InputModule::checkGesture(game.inputHandler);
+    inputActionId = InputModule::checkGesture(inputHandler);
 }
 
 void GameModule::updateState(

@@ -35,7 +35,7 @@ if (ENVIRONMENT_IS_NODE) {
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-// include: /tmp/tmps7snzk43.js
+// include: /tmp/tmpg1m6koeq.js
 
   Module['expectedDataFileDownloads'] ??= 0;
   Module['expectedDataFileDownloads']++;
@@ -223,7 +223,7 @@ Module['FS_createPath']("/resources", "textures", true, true);
 
   })();
 
-// end include: /tmp/tmps7snzk43.js
+// end include: /tmp/tmpg1m6koeq.js
 
 
 // Sometimes an existing Module object exists with properties

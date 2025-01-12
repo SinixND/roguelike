@@ -31,8 +31,10 @@ namespace GameModule
     void init(Game& game);
 
     void processInput(
-        Game& game,
-        Cursor& cursor);
+        InputMappings const& inInputMappings,
+        bool inIsCursorActive,
+        Input& outInputHandler,
+        InputActionId& outInputActionId);
 
     void updateState(
         Game& game,
