@@ -101,20 +101,22 @@ void MovementSystem::updateEnemies(
     Vector2I oldPosition{};
 
     //* get new positions
+
     //* update all positions/movements/transforms
-    for (size_t idx{0}; idx < enemies.transforms.size(); ++idx)
+
+    for (size_t i{0}; i < enemies.transforms.size(); ++i)
     {
-        currentPosition = &enemies.positions.values().at(idx);
+        currentPosition = &enemies.positions.values().at(i);
 
         oldPosition = Convert::worldToTile(*currentPosition);
 
         //* Update movement
         //* Update ids_ key if tilePosition changes
         MovementSystem::updateHero(
-            enemies.transforms.values().at(idx),
+            enemies.transforms.values().at(i),
             // enemies.movements.values().at(i),
             *currentPosition,
-            enemies.energies.values().at(idx),
+            enemies.energies.values().at(i),
             heroPosition);
 
         if (oldPosition != Convert::worldToTile(*currentPosition))

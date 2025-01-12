@@ -3,6 +3,7 @@
 #include "AIComponent.h"
 #include "Convert.h"
 #include "DamageComponent.h"
+#include "DenseMap.h"
 #include "EnemyData.h"
 #include "EnergyComponent.h"
 #include "HealthComponent.h"
@@ -11,7 +12,6 @@
 #include "MovementSystem.h"
 #include "RNG.h"
 #include "RenderId.h"
-#include "SparseSet.h"
 #include "Tiles.h"
 #include "TransformComponent.h"
 #include "VisibilityId.h"
@@ -42,11 +42,9 @@ Vector2I getRandomPosition(
         //* - not visible
         //* - not solid
         //* - not occupied by other enemy
-        size_t tileId{tiles.ids.contains(randomPosition)};
-
-        if (tileId
-            && !(tiles.visibilityIds.at(tileId) == VisibilityId::VISIBILE)
-            && !tiles.isSolids.contains(tileId)
+        if (tiles.positions.contains(randomPosition)
+            && !(tiles.visibilityIds.at(randomPosition) == VisibilityId::VISIBILE)
+            && !tiles.isSolids.contains(randomPosition)
             && !enemies.ids.contains(randomPosition))
         {
             return randomPosition;
@@ -92,16 +90,7 @@ void EnemiesModule::createSingle(
             map.tiles);
     }
 
-    size_t enemyId{0};
-
-    if (!enemies.ids.contains(tilePosition))
-    {
-        enemyId = enemies.idManager.requestId();
-    }
-    else
-    {
-        enemyId = enemies.ids.at(tilePosition);
-    }
+    size_t enemyId{enemies.idManager.requestId()};
 
     switch (renderId)
     {
@@ -175,22 +164,37 @@ void EnemiesModule::update(
     Enemies& enemies,
     Vector2 const& heroPosition)
 {
-    for (size_t idx{0}; idx < enemies.transforms.size(); ++idx)
+    // size_t i{0};
+    Vector2* currentPosition{};
+    Vector2I oldPosition{};
+
+    for (size_t i{0}; i < enemies.transforms.size(); ++i)
     {
+        currentPosition = &enemies.positions.values().at(i);
+
+        oldPosition = Convert::worldToTile(*currentPosition);
+
         //* Update movement
         //* Update ids_ key if tilePosition changes
         MovementSystem::updateHero(
-            enemies.transforms.values().at(idx),
+            enemies.transforms.values().at(i),
             // enemies.movements.values().at(i),
-            enemies.positions.values().at(idx),
-            enemies.energies.values().at(idx),
+            *currentPosition,
+            enemies.energies.values().at(i),
             heroPosition);
+
+        if (oldPosition != Convert::worldToTile(*currentPosition))
+        {
+            enemies.ids.changeKey(
+                oldPosition,
+                Convert::worldToTile(*currentPosition));
+        }
     }
 }
 
 size_t EnemiesModule::getActive(
-    snx::SparseSet<EnergyComponent> const& energies,
-    snx::SparseSet<AIComponent> const& ais,
+    snx::DenseMap<size_t, EnergyComponent> const& energies,
+    snx::DenseMap<size_t, AIComponent> const& ais,
     int const turn)
 {
     size_t activeEnemyId{0};
@@ -212,24 +216,26 @@ void EnemiesModule::replaceDead(
     Enemies& enemies,
     Map const& map)
 {
-    for (auto id : enemies.healths.keys())
+    size_t i{0};
+
+    while (i < enemies.ids.values().size())
     {
         //* Kill enemy at 0 health
-        if (enemies.healths.at(id).currentHealth <= 0)
+        if (enemies.healths.values().at(i).currentHealth <= 0)
         {
-            RenderId enemyType{enemies.renderIds.at(id)};
-
             EnemiesModule::remove(
                 enemies,
-                id);
+                enemies.ids.values().at(i));
 
             //* Spawn new enemy
             EnemiesModule::createSingle(
                 enemies,
                 map,
-                enemyType);
+                RenderId::GOBLIN);
 
             continue;
         }
+
+        ++i;
     }
 }

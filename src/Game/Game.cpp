@@ -43,29 +43,27 @@ void GameModule::init(Game& game)
 }
 
 void GameModule::processInput(
-    InputMappings const& inputMappings,
-    bool isCursorActive,
-    Input& inputHandler,
-    InputActionId& inputActionId)
+    Game& game,
+    Cursor& cursor)
 {
     //* Take input from mouse, keys or gestures
-    inputActionId = InputModule::checkKeyboard(
-        inputHandler,
-        inputMappings);
+    game.inputAction = InputModule::checkKeyboard(
+        game.inputHandler,
+        game.inputMappings);
 
-    if (inputActionId != InputActionId::NONE)
+    if (game.inputAction != InputActionId::NONE)
     {
         return;
     }
 
-    inputActionId = InputModule::checkMouse(inputMappings, isCursorActive);
+    game.inputAction = InputModule::checkMouse(game.inputMappings, cursor.isActive);
 
-    if (inputActionId != InputActionId::NONE)
+    if (game.inputAction != InputActionId::NONE)
     {
         return;
     }
 
-    inputActionId = InputModule::checkGesture(inputHandler);
+    game.inputAction = InputModule::checkGesture(game.inputHandler);
 }
 
 void GameModule::updateState(
@@ -188,11 +186,11 @@ void GameModule::setupGameEvents(Game& game)
             auto const& renderIds{objects.renderIds.values()};
             auto const& positions{objects.positions.values()};
 
-            for (size_t idx{0}; idx < renderIds.size(); ++idx)
+            for (size_t i{0}; i < renderIds.size(); ++i)
             {
-                if (renderIds.at(idx) == RenderId::DESCEND)
+                if (renderIds.at(i) == RenderId::DESCEND)
                 {
-                    game.hero.position = Convert::tileToWorld(Convert::worldToTile(positions.at(idx)));
+                    game.hero.position = positions.at(i);
                 }
             }
 

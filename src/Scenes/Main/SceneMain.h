@@ -4,11 +4,13 @@
 #include "Chunk.h"
 #include "Cursor.h"
 #include "Data/RenderData.h"
+#include "DenseMap.h"
 #include "Game.h"
 #include "GameCamera.h"
 #include "Panels.h"
 #include "RenderSystem.h"
 #include "VisibilitySystem.h"
+#include "raylibEx.h"
 #include <raylib.h>
 
 struct SceneMain

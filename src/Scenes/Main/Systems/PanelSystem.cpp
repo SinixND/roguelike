@@ -1,5 +1,4 @@
 #include "PanelSystem.h"
-#include "Convert.h"
 #include "EventId.h"
 #include "GameFont.h"
 #include "Hero.h"
@@ -163,9 +162,7 @@ void PanelSystem::drawTileInfoPanelContent(
     Objects const& objects,
     Vector2I const& cursorPosition)
 {
-    size_t id{objects.ids.contains(cursorPosition)};
-
-    if (!objects.names.contains(id))
+    if (!objects.names.contains(cursorPosition))
     {
         return;
     }
@@ -175,7 +172,7 @@ void PanelSystem::drawTileInfoPanelContent(
     //* Draw tag and action from tile under cursor
     DrawTextEx(
         GameFont::font(),
-        TextFormat("Object: %s\nAction: %s", objects.names.at(id).c_str(), objects.actions.at(id).c_str()),
+        TextFormat("Object: %s\nAction: %s", objects.names.at(cursorPosition).c_str(), objects.actions.at(cursorPosition).c_str()),
         Vector2{
             panels.tileInfo.left() + (0.5f * GameFont::fontWidth),
             panels.tileInfo.top() + (0.5f * fontSize)},

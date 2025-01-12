@@ -3,22 +3,17 @@
 
 #include "DenseMap.h"
 #include "EventId.h"
-#include "IdManager.h"
 #include "RenderId.h"
-#include "SparseSet.h"
 #include "raylibEx.h"
 #include <string>
 
 struct Objects
 {
-    snx::IdManager idManager{};
-    snx::DenseMap<Vector2I, size_t> ids{};
-
-    snx::SparseSet<Vector2> positions{};
-    snx::SparseSet<RenderId> renderIds{};
-    snx::SparseSet<std::string> names{};
-    snx::SparseSet<std::string> actions{};
-    snx::SparseSet<EventId> events{};
+    snx::DenseMap<Vector2I, Vector2> positions{};
+    snx::DenseMap<Vector2I, RenderId> renderIds{};
+    snx::DenseMap<Vector2I, std::string> names{};
+    snx::DenseMap<Vector2I, std::string> actions{};
+    snx::DenseMap<Vector2I, EventId> events{};
 };
 
 namespace ObjectsModule

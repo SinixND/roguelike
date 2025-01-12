@@ -2,24 +2,18 @@
 #define IG20240602211712
 
 #include "DenseMap.h"
-#include "IdManager.h"
 #include "RenderId.h"
-#include "SparseSet.h"
 #include "VisibilityId.h"
 #include "raylibEx.h"
 #include <unordered_set>
 
 struct Tiles
 {
-    snx::IdManager idManager{};
-    snx::DenseMap<Vector2I, size_t> ids{};
-
-    snx::SparseSet<Vector2> positions{};
-    snx::SparseSet<RenderId> renderIds{};
-    snx::SparseSet<VisibilityId> visibilityIds{};
-
-    std::unordered_set<size_t> isSolids{};
-    std::unordered_set<size_t> isOpaques{};
+    snx::DenseMap<Vector2I, Vector2> positions{};
+    snx::DenseMap<Vector2I, RenderId> renderIds{};
+    snx::DenseMap<Vector2I, VisibilityId> visibilityIds{};
+    std::unordered_set<Vector2I> isSolids{};
+    std::unordered_set<Vector2I> isOpaques{};
 
     RectangleExI mapSize{};
 };

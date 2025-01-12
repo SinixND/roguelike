@@ -4,7 +4,6 @@
 //* https://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/
 
 #include "DenseMap.h"
-#include "SparseSet.h"
 #include "raylibEx.h"
 #include <unordered_set>
 #include <vector>
@@ -70,10 +69,10 @@ namespace ShadowModule
         int octantPositionHeight);
 }
 
-enum class Fog
+struct Fog
 {
-    transparent,
-    opaque,
+    Vector2I tilePosition{};
+    bool isFogOpaque{};
 };
 
 enum class VisibilityId;
@@ -81,22 +80,20 @@ enum class VisibilityId;
 namespace VisibilitySystem
 {
     void update(
-        snx::DenseMap<Vector2I, Fog>& fogs,
-        snx::SparseSet<VisibilityId>& visibilityIds,
-        snx::DenseMap<Vector2I, size_t> const& ids,
-        std::unordered_set<size_t> const& isOpaques,
+        snx::DenseMap<Vector2I, Fog>& fogs_,
+        snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
+        std::unordered_set<Vector2I> const& isOpaques,
         RectangleExI const& viewport,
         int visionRange,
         Vector2I const& heroPosition);
 
     //* If any part of tile is visible . whole tile is visible (so that "tunnel walls" stay visible)
     void calculateVisibilitiesInOctant(
-        snx::DenseMap<Vector2I, Fog>& fogs,
-        snx::SparseSet<VisibilityId>& visibilityIds,
-        snx::DenseMap<Vector2I, size_t> const& ids,
-        std::unordered_set<size_t> const& isOpaques,
-        Vector2I const& heroPosition,
+        snx::DenseMap<Vector2I, Fog>& fogs_,
         int octant,
+        snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
+        std::unordered_set<Vector2I> const& isOpaques,
+        Vector2I const& heroPosition,
         int visionRange,
         int range);
 

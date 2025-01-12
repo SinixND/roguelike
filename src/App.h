@@ -5,6 +5,13 @@
 #include "SceneMain.h"
 #include <raylib.h>
 
+#if defined(EMSCRIPTEN)
+struct emscriptenApp
+{
+    Scene* scene;
+};
+#endif
+
 struct App
 {
     AppConfig config{};

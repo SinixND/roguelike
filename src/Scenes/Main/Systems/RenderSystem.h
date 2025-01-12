@@ -5,8 +5,8 @@
 #include <raylib.h>
 
 enum class RenderId;
-struct Chunks;
-enum class Fog;
+struct Chunk;
+struct Fog;
 struct RenderData;
 struct Textures;
 
@@ -14,7 +14,7 @@ namespace RenderSystem
 {
     void loadRenderData(RenderData& renderData);
 
-    void renderTile(
+    void render(
         Textures const& textures,
         RenderId renderId,
         Vector2 const& worldPixel,
@@ -24,16 +24,12 @@ namespace RenderSystem
         Textures const& textures,
         RenderId renderId,
         Vector2 const& worldPixel,
-        Vector2 const& chunkPixel,
+        Chunk& chunk,
         Color const& tint = WHITE);
 
-    void renderChunk(
-        Texture const& chunkTexture,
-        Vector2 const& worldPixel);
+    void renderChunk(Chunk const& chunk);
 
-    void renderFog(
-        Vector2 const& position,
-        Fog fog);
+    void renderFog(Fog const& fog);
 
     void cycleThemes(size_t& theme);
 

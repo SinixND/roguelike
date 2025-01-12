@@ -1,8 +1,8 @@
 #include "Objects.h"
 #include "Convert.h"
+#include "DenseMap.h"
 #include "EventId.h"
 #include "RenderId.h"
-#include "SparseSet.h"
 #include "raylibEx.h"
 #include <string>
 
@@ -16,28 +16,14 @@ namespace ObjectsModule
         std::string const& action,
         EventId event)
     {
-        size_t objectId{0};
+        objects.positions[tilePosition] = Convert::tileToWorld(tilePosition);
 
-        if (!objects.ids.contains(tilePosition))
-        {
-            objectId = objects.idManager.requestId();
-            objects.ids.insert(tilePosition, objectId);
-        }
-        else
-        {
-            objectId = objects.ids.at(tilePosition);
-        }
+        objects.renderIds[tilePosition] = renderId;
 
-        objects.ids.insert(tilePosition, objectId);
+        objects.names[tilePosition] = name;
 
-        objects.positions[objectId] = Convert::tileToWorld(tilePosition);
+        objects.actions[tilePosition] = action;
 
-        objects.renderIds[objectId] = renderId;
-
-        objects.names[objectId] = name;
-
-        objects.actions[objectId] = action;
-
-        objects.events[objectId] = event;
+        objects.events[tilePosition] = event;
     }
 }

@@ -204,9 +204,8 @@ bool UserInputSystem::takeAction(
         {
             Vector2I heroTilePosition{Convert::worldToTile(hero.position)};
 
-            //* If nothing to interact: wait
-            if (!map.objects.ids.contains(heroTilePosition)
-                || !map.objects.events.contains(map.objects.ids.at(heroTilePosition)))
+            //* Wait if nothing to interact
+            if (!map.objects.events.contains(heroTilePosition))
             {
                 snx::Logger::log("Hero waits...");
 
@@ -217,7 +216,7 @@ bool UserInputSystem::takeAction(
                 break;
             }
 
-            snx::PublisherStatic::publish(map.objects.events.at(map.objects.ids.at(heroTilePosition)));
+            snx::PublisherStatic::publish(map.objects.events.at(heroTilePosition));
 
             break;
         }
