@@ -27,7 +27,7 @@ void verifyRequiredChunkExists(
     }
 }
 
-void ChunkSystem::initializeChunks(
+void ChunkSystem::init(
     Textures const& textures,
     snx::DenseMap<Vector2I, Chunk>& chunks,
     snx::DenseMap<Vector2I, Vector2> const& tilesPositions,
@@ -58,6 +58,7 @@ void ChunkSystem::initializeChunks(
 
         ClearBackground(Colors::bg);
 
+        //* Iterate all tilePositions in chunk
         for (int x{chunkSize.left() - 1}; x < (chunkSize.right() + 2); ++x)
         {
             for (int y{chunkSize.top() - 1}; y < (chunkSize.bottom() + 2); ++y)

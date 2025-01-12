@@ -35,7 +35,7 @@ if (ENVIRONMENT_IS_NODE) {
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-// include: /tmp/tmpg1m6koeq.js
+// include: /tmp/tmp3m_5r4nm.js
 
   Module['expectedDataFileDownloads'] ??= 0;
   Module['expectedDataFileDownloads']++;
@@ -145,14 +145,14 @@ var REMOTE_PACKAGE_SIZE = metadata['remote_package_size'];
       function assert(check, msg) {
         if (!check) throw msg + new Error().stack;
       }
-Module['FS_createPath']("/", "resources", true, true);
-Module['FS_createPath']("/resources", "favicon", true, true);
-Module['FS_createPath']("/resources", "fonts", true, true);
-Module['FS_createPath']("/resources", "iconset", true, true);
-Module['FS_createPath']("/resources", "shaders", true, true);
-Module['FS_createPath']("/resources/shaders", "fragment", true, true);
-Module['FS_createPath']("/resources/shaders", "vertex", true, true);
-Module['FS_createPath']("/resources", "textures", true, true);
+Module['FS_createPath']("/", "assets", true, true);
+Module['FS_createPath']("/assets", "favicon", true, true);
+Module['FS_createPath']("/assets", "fonts", true, true);
+Module['FS_createPath']("/assets", "iconset", true, true);
+Module['FS_createPath']("/assets", "shaders", true, true);
+Module['FS_createPath']("/assets/shaders", "fragment", true, true);
+Module['FS_createPath']("/assets/shaders", "vertex", true, true);
+Module['FS_createPath']("/assets", "textures", true, true);
 
       /** @constructor */
       function DataRequest(start, end, audio) {
@@ -219,11 +219,11 @@ Module['FS_createPath']("/resources", "textures", true, true);
     }
 
     }
-    loadPackage({"files": [{"filename": "/resources/favicon/favicon.ico", "start": 0, "end": 318}, {"filename": "/resources/favicon/favicon.png", "start": 318, "end": 1885}, {"filename": "/resources/fonts/LiberationMono-Bold.ttf", "start": 1885, "end": 309881}, {"filename": "/resources/fonts/LiberationMono-Regular.ttf", "start": 309881, "end": 629389}, {"filename": "/resources/iconset/iconset.rgi", "start": 629389, "end": 645785}, {"filename": "/resources/iconset/iconset.rgi.h", "start": 645785, "end": 684639}, {"filename": "/resources/iconset/iconset.rgi.png", "start": 684639, "end": 694731}, {"filename": "/resources/shaders/fragment/base.fs", "start": 694731, "end": 695432}, {"filename": "/resources/shaders/vertex/base.vs", "start": 695432, "end": 696465}, {"filename": "/resources/textures/Ascii.png", "start": 696465, "end": 783498}, {"filename": "/resources/textures/Ascii.xcf", "start": 783498, "end": 812657}, {"filename": "/resources/textures/AsciiBW.png", "start": 812657, "end": 899935}, {"filename": "/resources/textures/AsciiBW.xcf", "start": 899935, "end": 929752}, {"filename": "/resources/textures/Default.png", "start": 929752, "end": 1016120}, {"filename": "/resources/textures/Default.xcf", "start": 1016120, "end": 1040600}], "remote_package_size": 1040600});
+    loadPackage({"files": [{"filename": "/assets/favicon/favicon.ico", "start": 0, "end": 318}, {"filename": "/resources/favicon/favicon.png", "start": 318, "end": 1885}, {"filename": "/resources/fonts/LiberationMono-Bold.ttf", "start": 1885, "end": 309881}, {"filename": "/resources/fonts/LiberationMono-Regular.ttf", "start": 309881, "end": 629389}, {"filename": "/resources/iconset/iconset.rgi", "start": 629389, "end": 645785}, {"filename": "/resources/iconset/iconset.rgi.h", "start": 645785, "end": 684639}, {"filename": "/resources/iconset/iconset.rgi.png", "start": 684639, "end": 694731}, {"filename": "/resources/shaders/fragment/base.fs", "start": 694731, "end": 695432}, {"filename": "/resources/shaders/vertex/base.vs", "start": 695432, "end": 696465}, {"filename": "/resources/textures/Ascii.png", "start": 696465, "end": 783498}, {"filename": "/resources/textures/Ascii.xcf", "start": 783498, "end": 812657}, {"filename": "/resources/textures/AsciiBW.png", "start": 812657, "end": 899935}, {"filename": "/resources/textures/AsciiBW.xcf", "start": 899935, "end": 929752}, {"filename": "/resources/textures/Default.png", "start": 929752, "end": 1016120}, {"filename": "/resources/textures/Default.xcf", "start": 1016120, "end": 1040600}], "remote_package_size": 1040600});
 
   })();
 
-// end include: /tmp/tmpg1m6koeq.js
+// end include: /tmp/tmp3m_5r4nm.js
 
 
 // Sometimes an existing Module object exists with properties

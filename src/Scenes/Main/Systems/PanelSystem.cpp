@@ -18,7 +18,7 @@ void PanelSystem::init(Panels& panels)
 {
     std::string widthString{};
 
-    for (int i{0}; i < infoPanelWidth; ++i)
+    for (int n{0}; n < infoPanelWidth; ++n)
     {
         widthString.append("I");
     }
@@ -187,14 +187,14 @@ void PanelSystem::drawLogPanelContent(Panels const& panels)
 
     double lines{(panels.log.height() / (1.5 * fontSize)) - 1};
 
-    for (int i{0}; i < lines; ++i)
+    for (int n{0}; n < lines; ++n)
     {
         DrawTextEx(
             GameFont::font(),
-            snx::Logger::getMessage(i).c_str(),
+            snx::Logger::getMessage(n).c_str(),
             Vector2{
                 panels.log.left() + (0.5f * fontSize),
-                panels.log.bottom() - (fontSize * 1.5f) - (i * 1.5f * fontSize)},
+                panels.log.bottom() - (fontSize * 1.5f) - (n * 1.5f * fontSize)},
             fontSize,
             0,
             LIGHTGRAY);

@@ -15,7 +15,7 @@ namespace RenderSystem
 {
     void loadRenderData(RenderData& renderData);
 
-    void render(
+    void renderTile(
         Textures const& textures,
         RenderId renderId,
         Vector2 const& worldPixel,

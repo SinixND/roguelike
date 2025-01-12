@@ -5,15 +5,17 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Referenes before const refs before values
+- [ ] Output > IO > Input; References > const refs > values
 - [ ] Fix web bug -> cursor not moving when mouse active
 - [ ] Refactor: Extract possible NMNF functions
     - [ ] ~~Pass by rawPtr (if modified)~~ Add in/out/io information to function parameters
 
-- [ ] Split Component(temp) and Data(persistent)?
+- [ ] Split Component(temp) and Data(persistent)? (existential)
 
 
 ## Shortterm
+- [ ] Implement ncurses
+- [ ] Restructure main = App { Scene, Game { World=>Levels, Fogs }}
 - [ ] End/Restart game on death
 - [ ] Add AI behaviour with new enemy types
 
@@ -156,4 +158,3 @@ Platforms: Linux, Windows, Browser
 - [x] Split Transform (single turn) and Movement (multi-turn) data
 - [x] Refactor public/private (see Notes) ~~namespace Class/Module/System~~
 - [x] Separate System (not related to class) and Module (former member functions) via namespace?
-- [ ] Refactor SoA: size_t as key; hashmap/2D-array/vector for position lookup

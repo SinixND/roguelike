@@ -215,16 +215,16 @@ void EnemiesModule::replaceDead(
     Enemies& enemies,
     Map const& map)
 {
-    size_t i{0};
+    size_t idx{0};
 
-    while (i < enemies.ids.values().size())
+    while (idx < enemies.ids.values().size())
     {
         //* Kill enemy at 0 health
-        if (enemies.healths.values().at(i).currentHealth <= 0)
+        if (enemies.healths.values().at(idx).currentHealth <= 0)
         {
             EnemiesModule::remove(
                 enemies,
-                enemies.ids.values().at(i));
+                enemies.ids.values().at(idx));
 
             //* Spawn new enemy
             EnemiesModule::createSingle(
@@ -235,6 +235,6 @@ void EnemiesModule::replaceDead(
             continue;
         }
 
-        ++i;
+        ++idx;
     }
 }

@@ -5,15 +5,15 @@
 //* Required for custom icons set
 #define RAYGUI_CUSTOM_ICONS
 
-#include "../resources/iconset/iconset.rgi.h"
+#include "../assets/iconset/iconset.rgi.h"
 #include <raygui.h>
 
-int main(/* int argc, char** argv */)
+int main( /* int argc, char** argv */ )
 {
-    App app{AppModule::init()};
+    App app{ AppModule::init() };
 
-    AppModule::update(app);
-    AppModule::deinit(app);
+    AppModule::update( app );
+    AppModule::deinit( app );
 
     return 0;
 }

@@ -43,7 +43,7 @@ void RenderSystem::loadRenderData(RenderData& renderData)
     TexturesModule::registerTexture(renderData.textures, RenderId::GOBLIN, {105, 35});
 }
 
-void RenderSystem::render(
+void RenderSystem::renderTile(
     Textures const& textures,
     RenderId renderId,
     Vector2 const& worldPixel,

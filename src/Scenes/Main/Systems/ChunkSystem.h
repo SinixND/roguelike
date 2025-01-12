@@ -11,7 +11,7 @@ struct Textures;
 
 namespace ChunkSystem
 {
-    void initializeChunks(
+    void init(
         Textures const& textures,
         snx::DenseMap<Vector2I, Chunk>& chunks,
         snx::DenseMap<Vector2I, Vector2> const& tilesPositions,

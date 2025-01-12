@@ -6,15 +6,16 @@
 
 namespace TextureData
 {
-    std::string const texturePath{"resources/textures/"};
+    std::string const texturePath{ "assets/textures/" };
 
     //* Themes
     std::vector<std::string> const themes{
         "Default",
         "Ascii",
-        "AsciiBW"};
+        "AsciiBW"
+    };
 
-    float const textureSize{32};
+    float const textureSize{ 32 };
 }
 
 #endif

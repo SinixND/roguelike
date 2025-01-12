@@ -96,7 +96,7 @@ BUILD_DIR_ROOT 			:= ./build
 WEB_DIR 				:= ./web
 
 ### Define folder for resource files
-RESOURCE_DIR 			:= ./resources
+ASSETS_DIR	 			:= ./assets
 
 
 # LBL_FileExtensions
@@ -346,7 +346,7 @@ endif
 LD_FLAGS 				:= -lpthread #-fsanitize=address
 
 ifeq ($(PLATFORM),web)
-    LD_FLAGS 			+= --preload-file resources/ -sUSE_GLFW=3
+    LD_FLAGS 			+= --preload-file $(ASSETS_DIR)/ -sUSE_GLFW=3
     ifeq ($(BUILD),debug)
         LD_FLAGS 			+= --shell-file $(RAYLIB_SRC_DIR)/shell.html
     else
@@ -376,7 +376,11 @@ vpath %$(SRC_EXT) $(SRC_DIRS)
 .PHONY: all build clean debug dtb init publish release run run_release web windows 
 
 ### Default rule by convention
+ifeq ($(OS),termux)
+all: debug
+else
 all: debug release
+endif
 
 ### Build binary with current config
 build: $(BIN_DIR)/$(BIN)$(BIN_EXT)
@@ -416,7 +420,11 @@ init:
 publish:
 	$(info )
 	$(info === Publish ===)
+ifeq ($(OS),termux)
+	@$(MAKE) debug release web -j
+else
 	@$(MAKE) debug release web windows -j
+endif
 
 ### Rule for release build process with binary as prerequisite
 release: 

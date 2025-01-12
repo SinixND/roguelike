@@ -2,8 +2,8 @@
 Language:        Cpp
 # BasedOnStyle:  LLVM
 AccessModifierOffset: -4
-AlignAfterOpenBracket: AlwaysBreak
-# AlignAfterOpenBracket: BlockIndent
+# AlignAfterOpenBracket: AlwaysBreak
+AlignAfterOpenBracket: BlockIndent
 AlignArrayOfStructures: None
 AlignConsecutiveAssignments:
   Enabled:         false
@@ -226,8 +226,8 @@ SpacesInParensOptions:
   InCStyleCasts:   false
   InConditionalStatements: false
   InEmptyParentheses: false
-  Other:           false
-  # Other:           true
+  # Other:           false
+  Other:           true
 SpacesInSquareBrackets: false
 Standard:        Latest
 StatementAttributeLikeMacros:

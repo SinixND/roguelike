@@ -47,7 +47,7 @@ void SceneModule::init(SceneMain& scene)
 
     RenderSystem::loadRenderData(scene.renderData);
 
-    ChunkSystem::initializeChunks(
+    ChunkSystem::init(
         scene.renderData.textures,
         scene.chunks,
         scene.game.world.currentMap->tiles.positions,
@@ -113,7 +113,7 @@ void SceneModule::setupSceneEvents(SceneMain& scene)
         EventId::MAP_CHANGE,
         [&]()
         {
-            ChunkSystem::initializeChunks(
+            ChunkSystem::init(
                 scene.renderData.textures,
                 scene.chunks,
                 scene.game.world.currentMap->tiles.positions,
@@ -283,12 +283,12 @@ void SceneModule::renderOutput(SceneMain& scene)
     auto const& objectRenderIds{objects.renderIds.values()};
     auto const& objectPositions{objects.positions.values()};
 
-    for (size_t i{0}; i < objectRenderIds.size(); ++i)
+    for (size_t idx{0}; idx < objectRenderIds.size(); ++idx)
     {
-        RenderSystem::render(
+        RenderSystem::renderTile(
             scene.renderData.textures,
-            objectRenderIds.at(i),
-            objectPositions.at(i));
+            objectRenderIds.at(idx),
+            objectPositions.at(idx));
     }
 
     //* Draw enemies
@@ -296,17 +296,17 @@ void SceneModule::renderOutput(SceneMain& scene)
     auto const& enemyRenderIds{enemies.renderIds.values()};
     auto const& enemyPositions{enemies.positions.values()};
 
-    for (size_t i{0}; i < enemyRenderIds.size(); ++i)
+    for (size_t idx{0}; idx < enemyRenderIds.size(); ++idx)
     {
-        if (scene.game.world.currentMap->tiles.visibilityIds.at(Convert::worldToTile(enemyPositions.at(i))) != VisibilityId::VISIBILE)
+        if (scene.game.world.currentMap->tiles.visibilityIds.at(Convert::worldToTile(enemyPositions.at(idx))) != VisibilityId::VISIBILE)
         {
             continue;
         }
 
-        RenderSystem::render(
+        RenderSystem::renderTile(
             scene.renderData.textures,
-            enemyRenderIds.at(i),
-            enemyPositions.at(i));
+            enemyRenderIds.at(idx),
+            enemyPositions.at(idx));
     }
 
     //* VisibilitySystem
@@ -319,7 +319,7 @@ void SceneModule::renderOutput(SceneMain& scene)
 
     //* Units
     //* Draw hero
-    RenderSystem::render(
+    RenderSystem::renderTile(
         scene.renderData.textures,
         scene.game.hero.renderId,
         scene.game.hero.position);
@@ -328,7 +328,7 @@ void SceneModule::renderOutput(SceneMain& scene)
     //* Draw cursor
     if (scene.cursor.isActive)
     {
-        RenderSystem::render(
+        RenderSystem::renderTile(
             scene.renderData.textures,
             scene.cursor.renderId,
             scene.cursor.position);

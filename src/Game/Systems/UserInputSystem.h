@@ -2,7 +2,7 @@
 #define IG20240531194629
 
 #include "InputActionId.h"
-struct Input;
+struct InputHandler;
 struct Hero;
 struct Cursor;
 struct Map;
@@ -16,7 +16,8 @@ namespace UserInputSystem
         Hero& hero,
         Cursor const& cursor,
         Map& map,
-        GameCamera const& gameCamera);
+        GameCamera const& gameCamera
+    );
 };
 
 #endif

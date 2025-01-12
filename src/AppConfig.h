@@ -7,16 +7,16 @@
 struct AppConfig
 {
     //* Window dimensions
-    int windowWidth{800};
-    int windowHeight{940};
+    int windowWidth{ 800 };
+    int windowHeight{ 940 };
 
     //* Fps
-    int const fpsTarget{300};
-    bool showFPS{true};
-    bool vSync{false};
+    int const fpsTarget{ 300 };
+    bool showFPS{ true };
+    bool vSync{ false };
 
     //* Raylib settings
-    Image const favicon{LoadImage("resources/favicon/favicon.png")};
+    Image const favicon{ LoadImage( "assets/favicon/favicon.png" ) };
 };
 
 #endif
