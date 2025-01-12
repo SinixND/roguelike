@@ -345,36 +345,39 @@ void VisibilitySystem::updateShadowline(
     }
 }
 
-void updateVisibilities(
-    VisibilityId tileVisibilityOld,
-    snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
-    snx::DenseMap<Vector2I, Fog>& fogs,
-    Vector2I const& tilePosition)
+VisibilityId updatedVisibility(VisibilityId tileVisibilityOld)
 {
+    VisibilityId visibilityId{tileVisibilityOld};
+
     if (tileVisibilityOld == VisibilityId::VISIBILE)
     {
         //* Tile WAS visible
-        visibilityIds.at(tilePosition) = VisibilityId::SEEN;
-
-        //* Add non opaque fog
-        fogs[tilePosition] = Fog::TRANSPARENT;
+        visibilityId = VisibilityId::SEEN;
     }
 
-    else if (tileVisibilityOld == VisibilityId::SEEN)
+    return visibilityId;
+}
+
+Fog updateFogOfWar(VisibilityId tileVisibilityOld)
+{
+    Fog fog{};
+
+    if (tileVisibilityOld == VisibilityId::VISIBILE
+        || tileVisibilityOld == VisibilityId::SEEN)
     {
-        //* Add non opaque fog
-        fogs[tilePosition] = Fog::TRANSPARENT;
+        fog = Fog::TRANSPARENT;
     }
 
     else
     {
-        //* Add opaque fog
-        fogs[tilePosition] = Fog::OPAQUE;
+        fog = Fog::OPAQUE;
     }
+
+    return fog;
 }
 
 void VisibilitySystem::calculateVisibilitiesInOctant(
-    snx::DenseMap<Vector2I, Fog>& fogs_,
+    snx::DenseMap<Vector2I, Fog>& fogs,
     int octant,
     snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
     std::unordered_set<Vector2I> const& isOpaques,
@@ -432,7 +435,8 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                         "\n");
 #endif
 
-                    updateVisibilities(tileVisibilityOld, visibilityIds, fogs_, tilePosition);
+                    visibilityIds.at(tilePosition) = updatedVisibility(tileVisibilityOld);
+                    fogs[tilePosition] = updateFogOfWar(tileVisibilityOld);
 
                     continue;
                 } //* Max shadow
@@ -496,7 +500,8 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
 
                 else
                 {
-                    updateVisibilities(tileVisibilityOld, visibilityIds, fogs_, tilePosition);
+                    visibilityIds.at(tilePosition) = updatedVisibility(tileVisibilityOld);
+                    fogs[tilePosition] = updateFogOfWar(tileVisibilityOld);
                 }
             } //* Octant tiles only
 
@@ -529,7 +534,7 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
 }
 
 void VisibilitySystem::update(
-    snx::DenseMap<Vector2I, Fog>& fogs_,
+    snx::DenseMap<Vector2I, Fog>& fogs,
     snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
     std::unordered_set<Vector2I> const& isOpaques,
     RectangleExI const& viewportInTiles,
@@ -541,7 +546,7 @@ void VisibilitySystem::update(
     int quarterHeight{2 + (viewportInTiles.height() / 2)};
 
     //* Init
-    fogs_.clear();
+    fogs.clear();
 
     visibilityIds.at(heroPosition) = VisibilityId::VISIBILE;
 
@@ -570,7 +575,7 @@ void VisibilitySystem::update(
 #endif
 
         calculateVisibilitiesInOctant(
-            fogs_,
+            fogs,
             octant,
             visibilityIds,
             isOpaques,
