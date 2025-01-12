@@ -69,10 +69,10 @@ namespace ShadowModule
         int octantPositionHeight);
 }
 
-struct Fog
+enum class Fog
 {
-    Vector2I tilePosition{};
-    bool isFogOpaque{};
+    TRANSPARENT,
+    OPAQUE,
 };
 
 enum class VisibilityId;
@@ -80,16 +80,16 @@ enum class VisibilityId;
 namespace VisibilitySystem
 {
     void update(
-        snx::DenseMap<Vector2I, Fog>& fogs_,
+        snx::DenseMap<Vector2I, Fog>& fogs,
         snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
         std::unordered_set<Vector2I> const& isOpaques,
-        RectangleExI const& viewport,
+        RectangleExI const& viewportInTiles,
         int visionRange,
         Vector2I const& heroPosition);
 
     //* If any part of tile is visible . whole tile is visible (so that "tunnel walls" stay visible)
     void calculateVisibilitiesInOctant(
-        snx::DenseMap<Vector2I, Fog>& fogs_,
+        snx::DenseMap<Vector2I, Fog>& fogs,
         int octant,
         snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
         std::unordered_set<Vector2I> const& isOpaques,

@@ -164,23 +164,22 @@ void EnemiesModule::update(
     Enemies& enemies,
     Vector2 const& heroPosition)
 {
-    // size_t i{0};
     Vector2* currentPosition{};
     Vector2I oldPosition{};
 
-    for (size_t i{0}; i < enemies.transforms.size(); ++i)
+    for (size_t idx{0}; idx < enemies.transforms.size(); ++idx)
     {
-        currentPosition = &enemies.positions.values().at(i);
+        currentPosition = &enemies.positions.values().at(idx);
 
         oldPosition = Convert::worldToTile(*currentPosition);
 
         //* Update movement
         //* Update ids_ key if tilePosition changes
         MovementSystem::updateHero(
-            enemies.transforms.values().at(i),
+            enemies.transforms.values().at(idx),
             // enemies.movements.values().at(i),
             *currentPosition,
-            enemies.energies.values().at(i),
+            enemies.energies.values().at(idx),
             heroPosition);
 
         if (oldPosition != Convert::worldToTile(*currentPosition))

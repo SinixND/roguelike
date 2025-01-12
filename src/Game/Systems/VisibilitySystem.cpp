@@ -357,19 +357,19 @@ void updateVisibilities(
         visibilityIds.at(tilePosition) = VisibilityId::SEEN;
 
         //* Add non opaque fog
-        fogs[tilePosition] = Fog{tilePosition, false};
+        fogs[tilePosition] = Fog::TRANSPARENT;
     }
 
     else if (tileVisibilityOld == VisibilityId::SEEN)
     {
         //* Add non opaque fog
-        fogs[tilePosition] = Fog{tilePosition, false};
+        fogs[tilePosition] = Fog::TRANSPARENT;
     }
 
     else
     {
         //* Add opaque fog
-        fogs[tilePosition] = Fog{tilePosition, true};
+        fogs[tilePosition] = Fog::OPAQUE;
     }
 }
 

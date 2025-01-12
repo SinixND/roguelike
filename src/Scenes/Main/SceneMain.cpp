@@ -308,9 +308,11 @@ void SceneModule::renderOutput(SceneMain& scene)
     }
 
     //* VisibilitySystem
-    for (Fog const& fog : scene.fogs)
+    for (size_t idx{0}; idx < scene.fogs.size(); ++idx)
     {
-        RenderSystem::renderFog(fog);
+        RenderSystem::renderFog(
+            Convert::tileToWorld(scene.fogs.key(idx)),
+            scene.fogs.values().at(idx));
     }
 
     //* Units

@@ -6,9 +6,10 @@
 
 enum class RenderId;
 struct Chunk;
-struct Fog;
+enum class Fog;
 struct RenderData;
 struct Textures;
+struct Vector2I;
 
 namespace RenderSystem
 {
@@ -29,7 +30,9 @@ namespace RenderSystem
 
     void renderChunk(Chunk const& chunk);
 
-    void renderFog(Fog const& fog);
+    void renderFog(
+        Vector2 const& fogPosition,
+        Fog fog);
 
     void cycleThemes(size_t& theme);
 

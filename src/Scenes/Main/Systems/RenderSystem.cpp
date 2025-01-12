@@ -1,6 +1,7 @@
 #include "RenderSystem.h"
 #include "Data/TextureData.h"
 #include "RenderData.h"
+#include "raylibEx.h"
 
 //* #define DEBUG_CHUNKS
 #define DEBUG_VISIBILITY
@@ -139,12 +140,14 @@ void RenderSystem::renderChunk(Chunk const& chunk)
 #endif
 }
 
-void RenderSystem::renderFog(Fog const& fog)
+void RenderSystem::renderFog(
+    Vector2 const& fogPosition,
+    Fog fog)
 {
     Color tint{};
 
 #if defined(DEBUG) && defined(DEBUG_VISIBILITY)
-    if (fog.isFogOpaque)
+    if (fog == Fog::OPAQUE)
     {
         tint = ColorAlpha(RED, 0.5f);
     }
@@ -154,7 +157,7 @@ void RenderSystem::renderFog(Fog const& fog)
         tint = ColorAlpha(BLUE, 0.5f);
     }
 #else
-    if (fog.isFogOpaque)
+    if (fog == Fog::OPAQUE)
     {
         tint = BLACK;
     }
@@ -166,9 +169,7 @@ void RenderSystem::renderFog(Fog const& fog)
 #endif
 
     DrawRectangleV(
-        //* Vector2SubtractValue(
-        Convert::tileToWorld(fog.tilePosition),
-        //* TileData::TILE_SIZE_HALF),
+        fogPosition,
         TileData::tileDimensions,
         tint);
 }
