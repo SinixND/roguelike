@@ -376,11 +376,7 @@ vpath %$(SRC_EXT) $(SRC_DIRS)
 .PHONY: all build clean debug dtb init publish release run run_release web windows 
 
 ### Default rule by convention
-ifeq ($(OS),termux)
-all: debug
-else
 all: debug release
-endif
 
 ### Build binary with current config
 build: $(BIN_DIR)/$(BIN)$(BIN_EXT)
@@ -420,11 +416,7 @@ init:
 publish:
 	$(info )
 	$(info === Publish ===)
-ifeq ($(OS),termux)
-	@$(MAKE) debug release web -j
-else
 	@$(MAKE) debug release web windows -j
-endif
 
 ### Rule for release build process with binary as prerequisite
 release: 

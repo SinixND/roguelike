@@ -3,8 +3,10 @@ A roguelike made with raylib to practise programming (concepts).
 Platforms: Linux, Windows, Browser
 
 
+
 # TODOs
 ## Active 
+- [ ] Update data structure
 - [ ] Output > IO > Input; References > const refs > values
 - [ ] Fix web bug -> cursor not moving when mouse active
 - [ ] Refactor: Extract possible NMNF functions

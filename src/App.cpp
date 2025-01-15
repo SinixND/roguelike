@@ -6,16 +6,16 @@
 #include <raygui.h>
 #include <raylib.h>
 
-#if defined(EMSCRIPTEN)
+#if defined( EMSCRIPTEN )
 #include <emscripten/emscripten.h>
 #include <emscripten/html5.h>
 #endif
 
-void emscriptenLoop(void* arg)
+void emscriptenLoop( void* arg )
 {
     App* app = (App*)arg;
 
-    SceneModule::update(app->sceneMain);
+    SceneModule::update( app->scene );
 }
 
 App AppModule::init()
@@ -25,39 +25,39 @@ App AppModule::init()
     //* TODO: Import configs from user file
 
     //* Raylib flags
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    if (app.config.vSync)
+    SetConfigFlags( FLAG_WINDOW_RESIZABLE );
+    if ( app.config.vSync )
     {
-        SetConfigFlags(FLAG_VSYNC_HINT);
+        SetConfigFlags( FLAG_VSYNC_HINT );
     }
 
     //* Initialize window
-    InitWindow(app.config.windowWidth, app.config.windowHeight, "Roguelike");
+    InitWindow( app.config.windowWidth, app.config.windowHeight, "Roguelike" );
 
     //* Raylib Settings
-    SetWindowIcon(app.config.favicon);
-    SetWindowMinSize(640, 480);
-#if defined(EMSCRIPTEN)
+    SetWindowIcon( app.config.favicon );
+    SetWindowMinSize( 640, 480 );
+#if defined( EMSCRIPTEN )
     MaximizeWindow();
 #endif
-    SetExitKey(KEY_F4);
-    SetTargetFPS(app.config.fpsTarget);
+    SetExitKey( KEY_F4 );
+    SetTargetFPS( app.config.fpsTarget );
 
     //* Fonts
     GameFont::load();
-    GuiSetStyle(DEFAULT, TEXT_SIZE, GameFont::fontHeight);
+    GuiSetStyle( DEFAULT, TEXT_SIZE, GameFont::fontHeight );
 
     //* Scene
-    SceneModule::init(app.sceneMain);
+    SceneModule::init( app.scene );
 
     return app;
 }
 
 void updateWindow()
 {
-    if (IsKeyPressed(KEY_F11))
+    if ( IsKeyPressed( KEY_F11 ) )
     {
-        if (IsWindowMaximized())
+        if ( IsWindowMaximized() )
         {
             RestoreWindow();
         }
@@ -68,39 +68,39 @@ void updateWindow()
         }
     }
 
-    if (IsWindowResized())
+    if ( IsWindowResized() )
     {
-        snx::PublisherStatic::publish(EventId::WINDOW_RESIZED);
+        snx::PublisherStatic::publish( EventId::WINDOW_RESIZED );
     }
 }
 
 void updateDeveloperMode()
 {
-    if (IsKeyPressed(KEY_F1))
+    if ( IsKeyPressed( KEY_F1 ) )
     {
         DeveloperMode::toggle();
     }
 }
 
-void AppModule::update(App& app)
+void AppModule::update( App& app )
 {
-#if defined(EMSCRIPTEN)
-    emscripten_set_main_loop_arg(emscriptenLoop, &app, 60 /*FPS*/, 1 /*Simulate infinite loop*/);
+#if defined( EMSCRIPTEN )
+    emscripten_set_main_loop_arg( emscriptenLoop, &app, 60 /*FPS*/, 1 /*Simulate infinite loop*/ );
 #else
-    while (!(WindowShouldClose()))
+    while ( !( WindowShouldClose() ) )
     {
         updateWindow();
         updateDeveloperMode();
 
-        SceneModule::update(app.sceneMain);
+        SceneModule::update( app.scene );
     }
 #endif
 }
 
-void AppModule::deinit(App& app)
+void AppModule::deinit( App& app )
 {
     GameFont::unload();
-    SceneModule::deinitialize(app.sceneMain);
+    SceneModule::deinitialize( app.scene );
 
     //* Close window and opengl context
     CloseWindow();
