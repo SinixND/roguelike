@@ -5,7 +5,6 @@
 #include "Scene.h"
 #include <raylib.h>
 
-//! Handles application environment
 struct App
 {
     AppConfig config{};
