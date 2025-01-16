@@ -4,9 +4,11 @@
 
 void DamageSystem::attack(
     DamageComponent const& attackerDamage,
-    HealthComponent& defenderHealth)
+    HealthComponent& defenderHealth
+)
 {
     HealthModule::damage(
         defenderHealth,
-        DamageModule::damageRNG(attackerDamage));
+        DamageModule::damageRNG( attackerDamage )
+    );
 }

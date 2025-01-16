@@ -17,7 +17,8 @@ namespace CollisionSystem
         Enemies const& enemies,
         // Objects const& objects,
         Vector2I const& tilePositionToCheck,
-        Vector2I const& heroPosition);
+        Vector2I const& heroPosition
+    );
 }
 
 #endif

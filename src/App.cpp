@@ -18,6 +18,35 @@ void emscriptenLoop( void* arg )
     SceneModule::update( app->scene );
 }
 
+void updateWindow()
+{
+    if ( IsKeyPressed( KEY_F11 ) )
+    {
+        if ( IsWindowMaximized() )
+        {
+            RestoreWindow();
+        }
+
+        else
+        {
+            MaximizeWindow();
+        }
+    }
+
+    if ( IsWindowResized() )
+    {
+        snx::PublisherStatic::publish( EventId::WINDOW_RESIZED );
+    }
+}
+
+void updateDeveloperMode()
+{
+    if ( IsKeyPressed( KEY_F1 ) )
+    {
+        DeveloperMode::toggle();
+    }
+}
+
 App AppModule::init()
 {
     App app{};
@@ -51,35 +80,6 @@ App AppModule::init()
     SceneModule::init( app.scene );
 
     return app;
-}
-
-void updateWindow()
-{
-    if ( IsKeyPressed( KEY_F11 ) )
-    {
-        if ( IsWindowMaximized() )
-        {
-            RestoreWindow();
-        }
-
-        else
-        {
-            MaximizeWindow();
-        }
-    }
-
-    if ( IsWindowResized() )
-    {
-        snx::PublisherStatic::publish( EventId::WINDOW_RESIZED );
-    }
-}
-
-void updateDeveloperMode()
-{
-    if ( IsKeyPressed( KEY_F1 ) )
-    {
-        DeveloperMode::toggle();
-    }
 }
 
 void AppModule::update( App& app )

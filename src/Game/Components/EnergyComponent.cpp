@@ -1,8 +1,8 @@
 #include "EnergyComponent.h"
 
-bool EnergyModule::consume(EnergyComponent& energy)
+bool EnergyModule::consume( EnergyComponent& energy )
 {
-    if (energy.currentEnergy <= 0)
+    if ( energy.currentEnergy <= 0 )
     {
         return false;
     }
@@ -17,9 +17,10 @@ bool EnergyModule::consume(EnergyComponent& energy)
 
 bool EnergyModule::consume(
     EnergyComponent& energy,
-    int value)
+    int value
+)
 {
-    if (energy.currentEnergy <= 0)
+    if ( energy.currentEnergy <= 0 )
     {
         return false;
     }
@@ -27,7 +28,7 @@ bool EnergyModule::consume(
     //* Consume energy
     energy.currentEnergy -= value;
 
-    if (energy.currentEnergy <= 0)
+    if ( energy.currentEnergy <= 0 )
     {
         energy.state = EnergyState::NOT_READY;
     }
@@ -35,9 +36,9 @@ bool EnergyModule::consume(
     return true;
 }
 
-bool EnergyModule::regenerate(EnergyComponent& energy)
+bool EnergyModule::regenerate( EnergyComponent& energy )
 {
-    if (energy.currentEnergy >= energy.maxEnergy)
+    if ( energy.currentEnergy >= energy.maxEnergy )
     {
         return false;
     }
@@ -45,7 +46,7 @@ bool EnergyModule::regenerate(EnergyComponent& energy)
     //* Regen energy until full
     energy.currentEnergy += energy.regenRate;
 
-    if (energy.currentEnergy < energy.maxEnergy)
+    if ( energy.currentEnergy < energy.maxEnergy )
     {
         return true;
     }

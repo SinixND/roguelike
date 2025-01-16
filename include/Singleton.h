@@ -2,9 +2,9 @@
 #define IG20240315204900
 
 //* Included as an example of a parameterized macro
-#define DISALLOW_COPY_AND_ASSIGN(T) \
-    T(T const&) = delete;           \
-    T& operator=(T const&) = delete;
+#define DISALLOW_COPY_AND_ASSIGN( T ) \
+    T( T const& ) = delete;           \
+    T& operator=( T const& ) = delete;
 
 namespace snx
 {
@@ -22,8 +22,8 @@ namespace snx
         Singleton() = default;
         virtual ~Singleton() = default;
 
-        Singleton(Singleton const&) = delete;
-        Singleton& operator=(Singleton const&) = delete;
+        Singleton( Singleton const& ) = delete;
+        Singleton& operator=( Singleton const& ) = delete;
     };
 }
 

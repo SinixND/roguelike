@@ -20,15 +20,18 @@ struct Chunk
 
     Chunk(
         Vector2 const& position,
-        RenderTexture const& texture)
+        RenderTexture const& texture
+    )
         : corners(
               RectangleExI{
-                  Convert::worldToTile(position).x,
-                  Convert::worldToTile(position).y,
+                  Convert::worldToTile( position ).x,
+                  Convert::worldToTile( position ).y,
                   ChunkData::chunkSize,
-                  ChunkData::chunkSize})
-        , position(position)
-        , renderTexture(texture)
+                  ChunkData::chunkSize
+              }
+          )
+        , position( position )
+        , renderTexture( texture )
     {
     }
 };

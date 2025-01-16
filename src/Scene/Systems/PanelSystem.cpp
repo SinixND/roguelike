@@ -12,15 +12,15 @@
 #include <raymath.h>
 #include <string>
 
-int constexpr infoPanelWidth{16};
+int constexpr infoPanelWidth{ 16 };
 
-void PanelSystem::init(Panels& panels)
+void PanelSystem::init( Panels& panels )
 {
     std::string widthString{};
 
-    for (int n{0}; n < infoPanelWidth; ++n)
+    for ( int n{ 0 }; n < infoPanelWidth; ++n )
     {
-        widthString.append("I");
+        widthString.append( "I" );
     }
 
     float heroInfoPanelWidth =
@@ -28,97 +28,106 @@ void PanelSystem::init(Panels& panels)
             GameFont::font(),
             widthString.c_str(),
             GameFont::fontHeight,
-            0)
+            0
+        )
             .x;
 
     float gameInfoPanelHeight =
         static_cast<float>(
-            (/*Number of lines to print*/ 1 * GameFont::fontHeight)
-            + GameFont::fontHeight);
+            ( /*Number of lines to print*/ 1 * GameFont::fontHeight )
+            + GameFont::fontHeight
+        );
 
     float logPanelHeight =
         static_cast<float>(
-            (/*Number of lines to print*/ 4 * GameFont::fontHeight)
-            + GameFont::fontHeight);
+            ( /*Number of lines to print*/ 4 * GameFont::fontHeight )
+            + GameFont::fontHeight
+        );
 
     panels.tileInfo
-        .setRight(static_cast<int>(GetRenderWidth()))
-        .setBottom(static_cast<int>(GetRenderHeight()))
-        .resizeWidthLeft(heroInfoPanelWidth)
-        .resizeHeightTop(logPanelHeight);
+        .setRight( static_cast<int>( GetRenderWidth() ) )
+        .setBottom( static_cast<int>( GetRenderHeight() ) )
+        .resizeWidthLeft( heroInfoPanelWidth )
+        .resizeHeightTop( logPanelHeight );
 
     panels.heroInfo
-        .setRight(static_cast<int>(GetRenderWidth()))
-        .setBottom(panels.tileInfo.top())
-        .resizeWidthLeft(heroInfoPanelWidth);
+        .setRight( static_cast<int>( GetRenderWidth() ) )
+        .setBottom( panels.tileInfo.top() )
+        .resizeWidthLeft( heroInfoPanelWidth );
 
     panels.status
-        .setRight(panels.tileInfo.left())
-        .setBottom(gameInfoPanelHeight);
+        .setRight( panels.tileInfo.left() )
+        .setBottom( gameInfoPanelHeight );
 
     panels.log
-        .setRight(panels.tileInfo.left())
-        .setBottom(static_cast<int>(GetRenderHeight()))
-        .resizeHeightTop(logPanelHeight);
+        .setRight( panels.tileInfo.left() )
+        .setBottom( static_cast<int>( GetRenderHeight() ) )
+        .resizeHeightTop( logPanelHeight );
 
     panels.map
-        .setRight(panels.tileInfo.left())
-        .setBottom(panels.log.top())
-        .setTop(panels.status.bottom());
+        .setRight( panels.tileInfo.left() )
+        .setBottom( panels.log.top() )
+        .setTop( panels.status.bottom() );
 
-    snx::PublisherStatic::publish(EventId::PANELS_RESIZED);
+    snx::PublisherStatic::publish( EventId::PANELS_RESIZED );
 }
 
 void PanelSystem::drawGameInfoPanelContent(
     Panels const& panels,
-    int level)
+    int level
+)
 {
     //* Draw text for current level
-    char const* currentLevel{TextFormat("Level %i", level)};
+    char const* currentLevel{ TextFormat( "Level %i", level ) };
 
-    Font const& font{GameFont::font()};
+    Font const& font{ GameFont::font() };
 
-    float fontSize{GameFont::fontHeight};
+    float fontSize{ GameFont::fontHeight };
 
     Vector2 textDimensions{
         MeasureTextEx(
             font,
             currentLevel,
             fontSize,
-            0)};
+            0
+        )
+    };
 
     DrawTextEx(
         font,
         currentLevel,
         Vector2{
-            ((0.5f * panels.map.width()) - (0.5f * textDimensions.x)),
-            (0.5f * fontSize)},
+            ( ( 0.5f * panels.map.width() ) - ( 0.5f * textDimensions.x ) ),
+            ( 0.5f * fontSize )
+        },
         fontSize,
-        GuiGetStyle(DEFAULT, TEXT_SPACING),
-        RAYWHITE);
+        GuiGetStyle( DEFAULT, TEXT_SPACING ),
+        RAYWHITE
+    );
 }
 
-std::string printInfo(std::string const& text)
+std::string printInfo( std::string const& text )
 {
-    std::string info{"|"};
+    std::string info{ "|" };
 
-    info.append(text);
+    info.append( text );
 
-    while (info.length() < (infoPanelWidth - 2))
+    while ( info.length() < ( infoPanelWidth - 2 ) )
     {
-        info.append(" ");
+        info.append( " " );
     }
 
-    info.append("|\n");
+    info.append( "|\n" );
 
     return info;
 }
 
 void PanelSystem::drawHeroInfoPanelContent(
     Panels const& panels,
-    [[maybe_unused]] Hero const& hero)
+    [[maybe_unused]] Hero const& hero
+)
 {
-    int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
+    int fontSize{ GuiGetStyle( DEFAULT, TEXT_SIZE ) };
     /*
     |= HERO ======|
     |HP : 100/100 |
@@ -130,104 +139,121 @@ void PanelSystem::drawHeroInfoPanelContent(
     */
     std::string info{};
 
-    info.append("|= HERO ======|\n");
+    info.append( "|= HERO ======|\n" );
 
     info.append(
         printInfo(
             "HP : "
-            + std::to_string(hero.health.currentHealth)
+            + std::to_string( hero.health.currentHealth )
             + "/"
-            + std::to_string(hero.health.maxHealth).c_str()));
+            + std::to_string( hero.health.maxHealth ).c_str()
+        )
+    );
 
-    info.append(printInfo(
+    info.append( printInfo(
         "ATK : "
-        + std::to_string(hero.damage.baseDamage)));
+        + std::to_string( hero.damage.baseDamage )
+    ) );
 
-    info.append("|_____________|");
+    info.append( "|_____________|" );
 
     DrawTextEx(
         GameFont::font(),
         TextFormat(
-            info.c_str()),
+            info.c_str()
+        ),
         Vector2{
-            panels.heroInfo.left() + (0.5f * GameFont::fontWidth),
-            panels.heroInfo.top() + (0.5f * GameFont::fontHeight)},
+            panels.heroInfo.left() + ( 0.5f * GameFont::fontWidth ),
+            panels.heroInfo.top() + ( 0.5f * GameFont::fontHeight )
+        },
         fontSize,
         0,
-        LIGHTGRAY);
+        LIGHTGRAY
+    );
 }
 
 void PanelSystem::drawTileInfoPanelContent(
     Panels const& panels,
     Objects const& objects,
-    Vector2I const& cursorPosition)
+    Vector2I const& cursorPosition
+)
 {
-    if (!objects.names.contains(cursorPosition))
+    if ( !objects.names.contains( cursorPosition ) )
     {
         return;
     }
 
-    int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
+    int fontSize{ GuiGetStyle( DEFAULT, TEXT_SIZE ) };
 
     //* Draw tag and action from tile under cursor
     DrawTextEx(
         GameFont::font(),
-        TextFormat("Object: %s\nAction: %s", objects.names.at(cursorPosition).c_str(), objects.actions.at(cursorPosition).c_str()),
+        TextFormat( "Object: %s\nAction: %s", objects.names.at( cursorPosition ).c_str(), objects.actions.at( cursorPosition ).c_str() ),
         Vector2{
-            panels.tileInfo.left() + (0.5f * GameFont::fontWidth),
-            panels.tileInfo.top() + (0.5f * fontSize)},
+            panels.tileInfo.left() + ( 0.5f * GameFont::fontWidth ),
+            panels.tileInfo.top() + ( 0.5f * fontSize )
+        },
         fontSize,
         0,
-        LIGHTGRAY);
+        LIGHTGRAY
+    );
 }
 
-void PanelSystem::drawLogPanelContent(Panels const& panels)
+void PanelSystem::drawLogPanelContent( Panels const& panels )
 {
-    int fontSize{GuiGetStyle(DEFAULT, TEXT_SIZE)};
+    int fontSize{ GuiGetStyle( DEFAULT, TEXT_SIZE ) };
 
-    double lines{(panels.log.height() / (1.5 * fontSize)) - 1};
+    double lines{ ( panels.log.height() / ( 1.5 * fontSize ) ) - 1 };
 
-    for (int n{0}; n < lines; ++n)
+    for ( int n{ 0 }; n < lines; ++n )
     {
         DrawTextEx(
             GameFont::font(),
-            snx::Logger::getMessage(n).c_str(),
+            snx::Logger::getMessage( n ).c_str(),
             Vector2{
-                panels.log.left() + (0.5f * fontSize),
-                panels.log.bottom() - (fontSize * 1.5f) - (n * 1.5f * fontSize)},
+                panels.log.left() + ( 0.5f * fontSize ),
+                panels.log.bottom() - ( fontSize * 1.5f ) - ( n * 1.5f * fontSize )
+            },
             fontSize,
             0,
-            LIGHTGRAY);
+            LIGHTGRAY
+        );
     }
 }
 
 void PanelSystem::drawPanelBorders(
-    Panels const& panels)
+    Panels const& panels
+)
 {
     float panelBorderWeight = 1;
 
     DrawRectangleLinesEx(
         panels.tileInfo.rectangle(),
         panelBorderWeight,
-        Color{25, 25, 25, 255});
+        Color{ 25, 25, 25, 255 }
+    );
 
     DrawRectangleLinesEx(
         panels.heroInfo.rectangle(),
         panelBorderWeight,
-        Color{25, 25, 25, 255});
+        Color{ 25, 25, 25, 255 }
+    );
 
     DrawRectangleLinesEx(
         panels.status.rectangle(),
         panelBorderWeight,
-        Color{25, 25, 25, 255});
+        Color{ 25, 25, 25, 255 }
+    );
 
     DrawRectangleLinesEx(
         panels.log.rectangle(),
         panelBorderWeight,
-        Color{25, 25, 25, 255});
+        Color{ 25, 25, 25, 255 }
+    );
 
     DrawRectangleLinesEx(
         panels.map.rectangle(),
         panelBorderWeight,
-        Color{25, 25, 25, 255});
+        Color{ 25, 25, 25, 255 }
+    );
 }

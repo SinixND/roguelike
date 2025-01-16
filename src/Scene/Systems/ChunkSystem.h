@@ -15,7 +15,8 @@ namespace ChunkSystem
         Textures const& textures,
         snx::DenseMap<Vector2I, Chunk>& chunks,
         snx::DenseMap<Vector2I, Vector2> const& tilesPositions,
-        snx::DenseMap<Vector2I, RenderId> const& tilesRenderIds);
+        snx::DenseMap<Vector2I, RenderId> const& tilesRenderIds
+    );
 };
 
 #endif

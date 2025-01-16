@@ -6,11 +6,11 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-void CursorModule::toggle(Cursor& cursor)
+void CursorModule::toggle( Cursor& cursor )
 {
     cursor.isActive = !cursor.isActive;
 
-    if (cursor.isActive)
+    if ( cursor.isActive )
     {
         HideCursor();
         return;
@@ -22,23 +22,24 @@ void CursorModule::toggle(Cursor& cursor)
 void CursorModule::update(
     Cursor& cursor,
     Camera2D const& camera,
-    Vector2I const& heroPosition)
+    Vector2I const& heroPosition
+)
 {
     //* Update cursor position if active
-    if (cursor.isActive)
+    if ( cursor.isActive )
     {
-        Vector2I mouseTile{Convert::screenToTile(GetMousePosition(), camera)};
+        Vector2I mouseTile{ Convert::screenToTile( GetMousePosition(), camera ) };
 
-        if (!(Convert::worldToTile(cursor.position) == mouseTile))
+        if ( !( Convert::worldToTile( cursor.position ) == mouseTile ) )
         {
-            cursor.position = Convert::tileToWorld(mouseTile);
+            cursor.position = Convert::tileToWorld( mouseTile );
 
-            snx::PublisherStatic::publish(EventId::CURSOR_POSITION_CHANGED);
+            snx::PublisherStatic::publish( EventId::CURSOR_POSITION_CHANGED );
         }
 
         return;
     }
 
     //* Keep cursor on hero if inactive
-    cursor.position = Convert::tileToWorld(heroPosition);
+    cursor.position = Convert::tileToWorld( heroPosition );
 }

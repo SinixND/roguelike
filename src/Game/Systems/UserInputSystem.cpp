@@ -25,50 +25,60 @@
 void performAttack(
     Hero& hero,
     Enemies& enemies,
-    Vector2I const& target)
+    Vector2I const& target
+)
 {
-    snx::Logger::log("Hero deals ");
+    snx::Logger::log( "Hero deals " );
 
     DamageSystem::attack(
         hero.damage,
         enemies.healths.at(
             enemies.ids.at(
-                target)));
+                target
+            )
+        )
+    );
 }
 
 bool processDirectionalInput(
     Hero& hero,
     Map& map,
-    Vector2I direction)
+    Vector2I direction
+)
 {
     bool isActionMultiFrame = false;
 
     Vector2I target{
         Vector2Add(
-            Convert::worldToTile(hero.position),
-            direction)};
+            Convert::worldToTile( hero.position ),
+            direction
+        )
+    };
 
-    if (map.enemies.ids.contains(target))
+    if ( map.enemies.ids.contains( target ) )
     {
         performAttack(
             hero,
             map.enemies,
-            target);
+            target
+        );
 
-        EnergyModule::consume(hero.energy);
+        EnergyModule::consume( hero.energy );
     }
-    else if (!CollisionSystem::checkCollision(
-                 map.tiles,
-                 map.enemies,
-                 target,
-                 Convert::worldToTile(hero.position)))
+    else if ( !CollisionSystem::checkCollision(
+                  map.tiles,
+                  map.enemies,
+                  target,
+                  Convert::worldToTile( hero.position )
+              ) )
     {
         MovementSystem::prepareByDirection(
             hero.movement,
             direction,
-            hero.transform);
+            hero.transform
+        );
 
-        EnergyModule::consume(hero.energy);
+        EnergyModule::consume( hero.energy );
 
         isActionMultiFrame = true;
     }
@@ -81,33 +91,36 @@ bool UserInputSystem::takeAction(
     Hero& hero,
     Cursor const& cursor,
     Map& map,
-    GameCamera const& gameCamera)
+    GameCamera const& gameCamera
+)
 {
-    bool isActionMultiFrame{false};
+    bool isActionMultiFrame{ false };
 
-    switch (inputAction)
+    switch ( inputAction )
     {
         default:
         case InputActionId::NONE:
         {
-            if (!hero.movement.path.empty()
-                && !hero.transform.speed)
+            if ( !hero.movement.path.empty()
+                 && !hero.transform.speed )
             {
-                if (!CollisionSystem::checkCollision(
-                        map.tiles,
-                        map.enemies,
-                        hero.movement.path.rbegin()[1],
-                        Convert::worldToTile(hero.position)))
+                if ( !CollisionSystem::checkCollision(
+                         map.tiles,
+                         map.enemies,
+                         hero.movement.path.rbegin()[1],
+                         Convert::worldToTile( hero.position )
+                     ) )
                 {
                     MovementSystem::prepareFromExistingPath(
                         hero.movement,
-                        hero.transform);
+                        hero.transform
+                    );
 
                     isActionMultiFrame = true;
                 }
                 else
                 {
-                    MovementSystem::resetTransform(hero.transform);
+                    MovementSystem::resetTransform( hero.transform );
                     hero.movement.path.clear();
                 }
             }
@@ -119,7 +132,8 @@ bool UserInputSystem::takeAction(
             isActionMultiFrame = processDirectionalInput(
                 hero,
                 map,
-                Directions::up);
+                Directions::up
+            );
 
             break;
         }
@@ -129,7 +143,8 @@ bool UserInputSystem::takeAction(
             isActionMultiFrame = processDirectionalInput(
                 hero,
                 map,
-                Directions::left);
+                Directions::left
+            );
 
             break;
         }
@@ -139,7 +154,8 @@ bool UserInputSystem::takeAction(
             isActionMultiFrame = processDirectionalInput(
                 hero,
                 map,
-                Directions::down);
+                Directions::down
+            );
 
             break;
         }
@@ -149,45 +165,51 @@ bool UserInputSystem::takeAction(
             isActionMultiFrame = processDirectionalInput(
                 hero,
                 map,
-                Directions::right);
+                Directions::right
+            );
 
             break;
         }
 
         case InputActionId::MOVE_TO_TARGET:
         {
-            std::vector<Vector2I> path{PathfinderSystem::findPath(
+            std::vector<Vector2I> path{ PathfinderSystem::findPath(
                 map,
-                Convert::worldToTile(hero.position),
-                Convert::worldToTile(cursor.position),
-                gameCamera)};
+                Convert::worldToTile( hero.position ),
+                Convert::worldToTile( cursor.position ),
+                gameCamera
+            ) };
 
-            if (!path.empty())
+            if ( !path.empty() )
             {
-                if (map.enemies.ids.contains(path.rbegin()[1]))
+                if ( map.enemies.ids.contains( path.rbegin()[1] ) )
                 {
                     performAttack(
                         hero,
                         map.enemies,
-                        path.rbegin()[1]);
+                        path.rbegin()[1]
+                    );
 
-                    EnergyModule::consume(hero.energy);
+                    EnergyModule::consume( hero.energy );
 
                     path.clear();
                 }
-                else if (!CollisionSystem::checkCollision(
-                             map.tiles,
-                             map.enemies,
-                             path.rbegin()[1],
-                             Convert::worldToTile(hero.position)))
+                else if ( !CollisionSystem::checkCollision(
+                              map.tiles,
+                              map.enemies,
+                              path.rbegin()[1],
+                              Convert::worldToTile( hero.position )
+                          ) )
                 {
                     MovementSystem::prepareByNewPath(
                         hero.movement,
-                        path);
+                        path
+                    );
 
                     MovementSystem::prepareFromExistingPath(
                         hero.movement,
-                        hero.transform);
+                        hero.transform
+                    );
                 }
                 else
                 {
@@ -202,28 +224,28 @@ bool UserInputSystem::takeAction(
 
         case InputActionId::ACT_IN_PLACE:
         {
-            Vector2I heroTilePosition{Convert::worldToTile(hero.position)};
+            Vector2I heroTilePosition{ Convert::worldToTile( hero.position ) };
 
             //* Wait if nothing to interact
-            if (!map.objects.events.contains(heroTilePosition))
+            if ( !map.objects.events.contains( heroTilePosition ) )
             {
-                snx::Logger::log("Hero waits...");
+                snx::Logger::log( "Hero waits..." );
 
-                EnergyModule::consume(hero.energy);
+                EnergyModule::consume( hero.energy );
 
-                HealthModule::regenerate(hero.health);
+                HealthModule::regenerate( hero.health );
 
                 break;
             }
 
-            snx::PublisherStatic::publish(map.objects.events.at(heroTilePosition));
+            snx::PublisherStatic::publish( map.objects.events.at( heroTilePosition ) );
 
             break;
         }
 
         case InputActionId::TOGGLE_CURSOR:
         {
-            snx::PublisherStatic::publish(EventId::CURSOR_TOGGLE);
+            snx::PublisherStatic::publish( EventId::CURSOR_TOGGLE );
 
             break;
         }

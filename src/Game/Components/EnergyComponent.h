@@ -9,23 +9,24 @@ enum class EnergyState
 
 struct EnergyComponent
 {
-    int regenRate{1};
-    int maxEnergy{10};
-    int currentEnergy{maxEnergy};
+    int regenRate{ 1 };
+    int maxEnergy{ 10 };
+    int currentEnergy{ maxEnergy };
 
-    EnergyState state{EnergyState::READY};
+    EnergyState state{ EnergyState::READY };
 };
 
 namespace EnergyModule
 {
     //* Consumes all energy remaining if no parameter provided; returns if consumption was successful
-    bool consume(EnergyComponent& energy);
+    bool consume( EnergyComponent& energy );
 
     bool consume(
         EnergyComponent& energy,
-        int value);
+        int value
+    );
 
     //* Returns true if regeneration was successful
-    bool regenerate(EnergyComponent& energy);
+    bool regenerate( EnergyComponent& energy );
 }
 #endif

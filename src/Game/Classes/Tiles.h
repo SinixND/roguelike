@@ -26,7 +26,8 @@ namespace TilesModule
         RenderId renderId,
         bool isSolid = false,
         bool isOpaque = false,
-        VisibilityId visibilityId = VisibilityId::INVISIBLE);
+        VisibilityId visibilityId = VisibilityId::INVISIBLE
+    );
 }
 
 #endif

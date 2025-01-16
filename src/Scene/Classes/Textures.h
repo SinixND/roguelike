@@ -18,18 +18,22 @@ namespace TexturesModule
     //* Texture atlas
     void loadAtlas(
         Textures& textures,
-        std::string const& filename);
+        std::string const& filename
+    );
 
     void registerTexture(
         Textures& textures,
         RenderId textureId,
-        Vector2 position);
+        Vector2 position
+    );
 
     Vector2 const& getTexturePosition(
         Textures const& textures,
-        RenderId renderId);
+        RenderId renderId
+    );
 
     void unloadAtlas(
-        Textures& textures);
+        Textures& textures
+    );
 }
 #endif

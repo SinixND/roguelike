@@ -17,7 +17,7 @@ namespace snx
     //* Publisher
     class PublisherStatic
     {
-        static inline std::unordered_map<EventId, SubscriberList> eventToSubscriberLists_{{}};
+        static inline std::unordered_map<EventId, SubscriberList> eventToSubscriberLists_{ {} };
 
     public:
         //* Event is the 'key' that we want to handle.
@@ -25,22 +25,23 @@ namespace snx
         static void addSubscriber(
             EventId event,
             LambdaVoid subscriber,
-            bool fireOnCreation = false)
+            bool fireOnCreation = false
+        )
         {
-            ensureList(event);
+            ensureList( event );
 
-            eventToSubscriberLists_[event].push_front(subscriber);
+            eventToSubscriberLists_[event].push_front( subscriber );
 
-            if (fireOnCreation)
+            if ( fireOnCreation )
             {
-                publish(event);
+                publish( event );
             }
         }
 
         //* Execute all subscribers for given event
-        static void publish(EventId event)
+        static void publish( EventId event )
         {
-            for (LambdaVoid& subscriber : eventToSubscriberLists_[event])
+            for ( LambdaVoid& subscriber : eventToSubscriberLists_[event] )
             {
                 subscriber();
             }
@@ -50,26 +51,26 @@ namespace snx
         static void publishAll()
         {
             //* Iterate all subscribers
-            for (auto& [event, list] : eventToSubscriberLists_)
+            for ( auto& [event, list] : eventToSubscriberLists_ )
             {
-                notifyAllSubscribers(list);
+                notifyAllSubscribers( list );
             }
         }
 
     private:
         //* Ensure subscriber list exists for given event
-        static void ensureList(EventId event)
+        static void ensureList( EventId event )
         {
-            if (eventToSubscriberLists_.find(event) == eventToSubscriberLists_.end())
+            if ( eventToSubscriberLists_.find( event ) == eventToSubscriberLists_.end() )
             {
                 eventToSubscriberLists_[event] = SubscriberList();
             }
         }
 
         //* Execute all subscribers in subscriber list
-        static void notifyAllSubscribers(std::forward_list<LambdaVoid>& subscriberList)
+        static void notifyAllSubscribers( std::forward_list<LambdaVoid>& subscriberList )
         {
-            for (LambdaVoid& subscriber : subscriberList)
+            for ( LambdaVoid& subscriber : subscriberList )
             {
                 subscriber();
             }

@@ -16,7 +16,7 @@ namespace snx
     public:
         size_t requestId()
         {
-            if (!freeIds_.empty())
+            if ( !freeIds_.empty() )
             {
                 return recycledId();
             }
@@ -24,27 +24,27 @@ namespace snx
             return incrementedId();
         }
 
-        void suspendId(size_t id)
+        void suspendId( size_t id )
         {
-            if (activeIds_.count(id) < 1)
+            if ( activeIds_.count( id ) < 1 )
             {
                 return;
             }
 
-            auto usedIdsIterator{activeIds_.find(id)};
-            freeIds_.insert(*usedIdsIterator);
-            activeIds_.erase(usedIdsIterator);
+            auto usedIdsIterator{ activeIds_.find( id ) };
+            freeIds_.insert( *usedIdsIterator );
+            activeIds_.erase( usedIdsIterator );
         }
 
     private:
         size_t recycledId()
         {
             size_t id{};
-            auto freeIdsIterator{freeIds_.begin()};
+            auto freeIdsIterator{ freeIds_.begin() };
             id = *freeIdsIterator;
 
-            activeIds_.insert(id);
-            freeIds_.erase(freeIdsIterator);
+            activeIds_.insert( id );
+            freeIds_.erase( freeIdsIterator );
 
             return id;
         }
@@ -52,14 +52,14 @@ namespace snx
         size_t incrementedId()
         {
             [[maybe_unused]] static size_t maxId = std::numeric_limits<size_t>::max();
-            static size_t lastId{0};
+            static size_t lastId{ 0 };
 
             //* START WITH ID = 1
             ++lastId;
 
-            assert(lastId < maxId && "ID OVERFLOWING!");
+            assert( lastId < maxId && "ID OVERFLOWING!" );
 
-            activeIds_.insert(lastId);
+            activeIds_.insert( lastId );
 
             return lastId;
         }

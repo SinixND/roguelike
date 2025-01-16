@@ -11,17 +11,18 @@ struct Vector2I;
 struct Cursor
 {
     Vector2 position{};
-    RenderId renderId{RenderId::CURSOR};
-    bool isActive{false};
+    RenderId renderId{ RenderId::CURSOR };
+    bool isActive{ false };
 };
 
 namespace CursorModule
 {
-    void toggle(Cursor& cursor);
+    void toggle( Cursor& cursor );
 
     void update(
         Cursor& cursor,
         Camera2D const& camera,
-        Vector2I const& heroPosition);
+        Vector2I const& heroPosition
+    );
 }
 #endif

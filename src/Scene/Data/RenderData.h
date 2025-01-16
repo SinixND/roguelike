@@ -9,7 +9,7 @@ struct RenderData
     Textures textures{};
 
     //* Themes: TextureData::themes
-    size_t theme{1};
+    size_t theme{ 1 };
 };
 
 #endif

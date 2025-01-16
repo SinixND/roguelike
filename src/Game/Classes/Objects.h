@@ -24,7 +24,8 @@ namespace ObjectsModule
         RenderId renderId,
         std::string const& name,
         std::string const& action,
-        EventId event);
+        EventId event
+    );
 }
 
 #endif

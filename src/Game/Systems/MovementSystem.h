@@ -18,40 +18,46 @@ namespace MovementSystem
         // MovementComponent& movement,
         Vector2& position,
         EnergyComponent& energy,
-        Vector2 const& heroPosition);
+        Vector2 const& heroPosition
+    );
 
     void updateEnemies(
         Enemies& enemies,
-        Vector2 const& heroPosition);
+        Vector2 const& heroPosition
+    );
 
     void prepareByDirection(
         MovementComponent const& movement,
         Vector2I const& direction,
-        TransformComponent& transform);
+        TransformComponent& transform
+    );
 
     void prepareByNewPath(
         MovementComponent& movement,
-        std::vector<Vector2I> const& path);
+        std::vector<Vector2I> const& path
+    );
 
     //* Triggers from and adjusts path
     void prepareFromExistingPath(
         MovementComponent& movement,
         // Vector2 const& position);
-        TransformComponent& transform);
+        TransformComponent& transform
+    );
 
     //* Sets direction, currentVelocity and isTriggered_
     void prepareByFromTo(
         MovementComponent& movement,
         TransformComponent& transform,
         Vector2I const& from,
-        Vector2I const& to);
+        Vector2I const& to
+    );
 
-    void resetTransform(TransformComponent& transform);
+    void resetTransform( TransformComponent& transform );
 
-    void resetCumulativeDistance(TransformComponent& transform);
+    void resetCumulativeDistance( TransformComponent& transform );
 
     //* Calculate distance for this frame
-    Vector2 frameOffset(TransformComponent const& transform);
+    Vector2 frameOffset( TransformComponent const& transform );
 };
 
 #endif

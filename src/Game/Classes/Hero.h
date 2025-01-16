@@ -11,19 +11,21 @@
 
 struct Hero
 {
-    RenderId renderId{RenderId::HERO};
+    RenderId renderId{ RenderId::HERO };
     TransformComponent transform{};
     MovementComponent movement{};
     EnergyComponent energy{
         HeroData::energyMax,
-        HeroData::energyRegenBase};
+        HeroData::energyRegenBase
+    };
     Vector2 position{};
     HealthComponent health{
         HeroData::healthBase,
-        HeroData::healthRegenBase};
-    DamageComponent damage{HeroData::damageBase};
+        HeroData::healthRegenBase
+    };
+    DamageComponent damage{ HeroData::damageBase };
 
-    int visionRange{HeroData::visionRange};
+    int visionRange{ HeroData::visionRange };
 };
 
 #endif

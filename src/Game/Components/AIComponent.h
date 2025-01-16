@@ -3,8 +3,8 @@
 
 struct AIComponent
 {
-    int scanRange{0};
-    int turn{0};
+    int scanRange{ 0 };
+    int turn{ 0 };
 };
 
 #endif

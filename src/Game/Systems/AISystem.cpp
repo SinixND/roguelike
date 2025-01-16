@@ -21,36 +21,39 @@ bool AISystem::takeActions(
     Hero& hero,
     size_t& activeEnemyId,
     GameCamera const& gameCamera,
-    int turn)
+    int turn
+)
 {
-    bool multiFrameActionActive{false};
+    bool multiFrameActionActive{ false };
 
-    Enemies& enemies{world.currentMap->enemies};
+    Enemies& enemies{ world.currentMap->enemies };
 
     do
     {
         activeEnemyId = EnemiesModule::getActive(
             enemies.energies,
             enemies.ais,
-            turn);
+            turn
+        );
 
-        if (activeEnemyId)
+        if ( activeEnemyId )
         {
             enemies.ais[activeEnemyId].turn = turn;
 
             multiFrameActionActive |= AISystem::takeAction(
-                enemies.ais.at(activeEnemyId),
-                enemies.positions.at(activeEnemyId),
-                enemies.movements.at(activeEnemyId),
-                enemies.transforms.at(activeEnemyId),
-                enemies.energies.at(activeEnemyId),
-                enemies.damages.at(activeEnemyId),
+                enemies.ais.at( activeEnemyId ),
+                enemies.positions.at( activeEnemyId ),
+                enemies.movements.at( activeEnemyId ),
+                enemies.transforms.at( activeEnemyId ),
+                enemies.energies.at( activeEnemyId ),
+                enemies.damages.at( activeEnemyId ),
                 *world.currentMap,
-                Convert::worldToTile(hero.position),
+                Convert::worldToTile( hero.position ),
                 hero.health,
-                gameCamera);
+                gameCamera
+            );
         }
-    } while (activeEnemyId);
+    } while ( activeEnemyId );
 
     return multiFrameActionActive;
 }
@@ -65,56 +68,63 @@ bool AISystem::takeAction(
     Map const& map,
     Vector2I const& heroPosition,
     HealthComponent& heroHealth,
-    GameCamera const& gameCamera)
+    GameCamera const& gameCamera
+)
 {
-    bool isActionMultiFrame{false};
+    bool isActionMultiFrame{ false };
 
     //* Instant action: attack
-    if (Vector2Length(
-            Vector2Subtract(
-                Convert::worldToTile(position),
-                heroPosition))
-        == 1)
+    if ( Vector2Length(
+             Vector2Subtract(
+                 Convert::worldToTile( position ),
+                 heroPosition
+             )
+         )
+         == 1 )
     {
         //* Attack
-        snx::Logger::log("Hero takes ");
+        snx::Logger::log( "Hero takes " );
 
         DamageSystem::attack(
             damage,
-            heroHealth);
+            heroHealth
+        );
 
-        EnergyModule::consume(energy);
+        EnergyModule::consume( energy );
     }
     //* Check path
     else
     {
-        std::vector<Vector2I> path{PathfinderSystem::findPath(
+        std::vector<Vector2I> path{ PathfinderSystem::findPath(
             map,
-            Convert::worldToTile(position),
+            Convert::worldToTile( position ),
             heroPosition,
             gameCamera,
             false,
-            ai.scanRange)};
+            ai.scanRange
+        ) };
 
-        size_t pathSize{path.size()};
+        size_t pathSize{ path.size() };
 
         //* Path is valid: has at least 2 entries (start and target) -> Multi-frame action: move
         //* TODO: Check all enemies->next position to avoid two enemies moving to the same spot
-        if (pathSize > 2
-            && !CollisionSystem::checkCollision(
-                map.tiles,
-                map.enemies,
-                path.rbegin()[1],
-                heroPosition))
+        if ( pathSize > 2
+             && !CollisionSystem::checkCollision(
+                 map.tiles,
+                 map.enemies,
+                 path.rbegin()[1],
+                 heroPosition
+             ) )
         {
             //* Prepare multi-frame action
             MovementSystem::prepareByFromTo(
                 movement,
                 transform,
-                Convert::worldToTile(position),
-                path.rbegin()[1]);
+                Convert::worldToTile( position ),
+                path.rbegin()[1]
+            );
 
-            EnergyModule::consume(energy);
+            EnergyModule::consume( energy );
 
             isActionMultiFrame = true;
         }
@@ -122,7 +132,7 @@ bool AISystem::takeAction(
         else
         {
             //* Wait
-            EnergyModule::consume(energy);
+            EnergyModule::consume( energy );
         }
     }
     // return false;

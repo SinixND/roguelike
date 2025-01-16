@@ -29,22 +29,23 @@ namespace snx
         void addSubscriber(
             EventId event,
             std::function<void()> subscriber,
-            bool fireOnCreation = false)
+            bool fireOnCreation = false
+        )
         {
-            ensureList(event);
+            ensureList( event );
 
-            eventToSubscriberLists_[event].push_front(subscriber);
+            eventToSubscriberLists_[event].push_front( subscriber );
 
-            if (fireOnCreation)
+            if ( fireOnCreation )
             {
-                publish(event);
+                publish( event );
             }
         }
 
         //* Execute all subscribers for given event
-        void publish(EventId event)
+        void publish( EventId event )
         {
-            for (TFunctor& subscriber : eventToSubscriberLists_[event])
+            for ( TFunctor& subscriber : eventToSubscriberLists_[event] )
             {
                 subscriber();
             }
@@ -54,27 +55,27 @@ namespace snx
         void publishAll()
         {
             //* Iterate all subscribers
-            for (auto& [event, subscriberList] :
-                 eventToSubscriberLists_)
+            for ( auto& [event, subscriberList] :
+                  eventToSubscriberLists_ )
             {
-                notifyAllSubscribers(subscriberList);
+                notifyAllSubscribers( subscriberList );
             }
         }
 
     private:
         //* Ensure subscriber list exists for given event
-        void ensureList(EventId event)
+        void ensureList( EventId event )
         {
-            if (eventToSubscriberLists_.find(event) == eventToSubscriberLists_.end())
+            if ( eventToSubscriberLists_.find( event ) == eventToSubscriberLists_.end() )
             {
                 eventToSubscriberLists_[event] = SubscriberList<TFunctor>();
             }
         }
 
         //* Execute all subscribers in subscriber list
-        void notifyAllSubscribers(SubscriberList<TFunctor>& subscriberList)
+        void notifyAllSubscribers( SubscriberList<TFunctor>& subscriberList )
         {
-            for (TFunctor& subscriber : subscriberList)
+            for ( TFunctor& subscriber : subscriberList )
             {
                 subscriber();
             }

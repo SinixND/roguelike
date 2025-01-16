@@ -8,24 +8,27 @@ struct Vector2I;
 
 namespace PanelSystem
 {
-    void init(Panels& panels);
+    void init( Panels& panels );
 
     void drawGameInfoPanelContent(
         Panels const& panels,
-        int level);
+        int level
+    );
 
     void drawHeroInfoPanelContent(
         Panels const& panels,
-        Hero const& hero);
+        Hero const& hero
+    );
 
     void drawTileInfoPanelContent(
         Panels const& panels,
         Objects const& objects,
-        Vector2I const& cursorPosition);
+        Vector2I const& cursorPosition
+    );
 
-    void drawLogPanelContent(Panels const& panels);
+    void drawLogPanelContent( Panels const& panels );
 
-    void drawPanelBorders(Panels const& panels);
+    void drawPanelBorders( Panels const& panels );
 }
 
 #endif

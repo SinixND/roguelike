@@ -3,9 +3,9 @@
 
 struct HealthComponent
 {
-    int maxHealth{1};
-    int regenRate{0};
-    int currentHealth{maxHealth};
+    int maxHealth{ 1 };
+    int regenRate{ 0 };
+    int currentHealth{ maxHealth };
 };
 
 namespace HealthModule
@@ -14,14 +14,16 @@ namespace HealthModule
     //* Reduces health to 0 with no argument
     bool damage(
         HealthComponent& health,
-        int value = 0);
+        int value = 0
+    );
 
     //* Fully heals with no argument
     void heal(
         HealthComponent& health,
-        int value = 0);
+        int value = 0
+    );
 
-    void regenerate(HealthComponent& health);
+    void regenerate( HealthComponent& health );
 }
 
 #endif

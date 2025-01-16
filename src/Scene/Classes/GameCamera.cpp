@@ -9,7 +9,8 @@
 void GameCameraModule::init(
     GameCamera& gameCamera,
     RectangleEx const& viewport,
-    Vector2 const& heroPosition)
+    Vector2 const& heroPosition
+)
 {
     gameCamera.viewport = &viewport;
 
@@ -17,43 +18,51 @@ void GameCameraModule::init(
         viewport.center(),
         heroPosition,
         0,
-        0.75};
+        0.75
+    };
 
-    snx::PublisherStatic::publish(EventId::CAMERA_CHANGED);
+    snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
 }
 
 void GameCameraModule::setOffset(
     GameCamera& gameCamera,
-    Vector2 const& offset)
+    Vector2 const& offset
+)
 {
     gameCamera.camera.offset = offset;
-    snx::PublisherStatic::publish(EventId::CAMERA_CHANGED);
+    snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
 }
 
 void GameCameraModule::setTarget(
     GameCamera& gameCamera,
-    Vector2 const& target)
+    Vector2 const& target
+)
 {
     gameCamera.camera.target = target;
-    snx::PublisherStatic::publish(EventId::CAMERA_CHANGED);
+    snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
 }
 
 void GameCameraModule::setZoom(
     GameCamera& gameCamera,
-    float zoom)
+    float zoom
+)
 {
     gameCamera.camera.zoom = zoom;
-    snx::PublisherStatic::publish(EventId::CAMERA_CHANGED);
+    snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
 }
 
 RectangleExI GameCameraModule::viewportInTiles(
-    GameCamera& gameCamera)
+    GameCamera& gameCamera
+)
 {
     return RectangleExI{
         Convert::screenToTile(
             gameCamera.viewport->topLeft(),
-            gameCamera.camera),
+            gameCamera.camera
+        ),
         Convert::screenToTile(
             gameCamera.viewport->bottomRight(),
-            gameCamera.camera)};
+            gameCamera.camera
+        )
+    };
 }

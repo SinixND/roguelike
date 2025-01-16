@@ -9,7 +9,7 @@ namespace snx
 {
     struct IScene
     {
-        float const borderWidth{1};
+        float const borderWidth{ 1 };
 
         virtual void update() {}
 
@@ -18,7 +18,8 @@ namespace snx
             DrawRectangleLinesEx(
                 GetWindowRec(),
                 borderWidth,
-                Colors::border);
+                Colors::border
+            );
         }
 
         virtual ~IScene() = default;

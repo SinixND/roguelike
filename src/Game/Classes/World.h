@@ -8,22 +8,22 @@
 //* World holds maps which are identified by a mapLevel (int)
 struct World
 {
-#if defined(DEBUG)
-    std::vector<Map> maps{MapGeneratorSystem::createTestRoom()};
+#if defined( DEBUG )
+    std::vector<Map> maps{ MapGeneratorSystem::createTestRoom() };
 #else
-    std::vector<Map> maps{MapGeneratorSystem::createStartRoom()};
+    std::vector<Map> maps{ MapGeneratorSystem::createStartRoom() };
 #endif
 
     int maxMapLevel{};
     int currentMapLevel{};
 
-    Map* currentMap{&maps.back()};
+    Map* currentMap{ &maps.back() };
 };
 
 namespace WorldModule
 {
-    void increaseMapLevel(World& world);
-    void decreaseMapLevel(World& world);
+    void increaseMapLevel( World& world );
+    void decreaseMapLevel( World& world );
 }
 
 #endif

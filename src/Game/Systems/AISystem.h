@@ -23,7 +23,8 @@ namespace AISystem
         Hero& hero,
         size_t& activeEnemyId,
         GameCamera const& gameCamera,
-        int turn);
+        int turn
+    );
 
     //* Return if multi-frame action taken
     bool takeAction(
@@ -36,7 +37,8 @@ namespace AISystem
         Map const& map,
         Vector2I const& heroPosition,
         HealthComponent& heroHealth,
-        GameCamera const& gameCamera);
+        GameCamera const& gameCamera
+    );
 }
 
 #endif

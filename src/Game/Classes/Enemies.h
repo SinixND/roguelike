@@ -38,31 +38,37 @@ namespace EnemiesModule
         Map const& map,
         RenderId enemyId,
         bool randomPosition = true,
-        Vector2I tilePosition = Vector2I{0, 0});
+        Vector2I tilePosition = Vector2I{ 0, 0 }
+    );
 
     void init(
         Enemies& enemies,
         int mapLevel,
-        Map const& map);
+        Map const& map
+    );
 
     void remove(
         Enemies& enemies,
-        size_t id);
+        size_t id
+    );
 
-    bool regenerate(Enemies& enemies);
+    bool regenerate( Enemies& enemies );
 
     void update(
         Enemies& enemies,
-        Vector2 const& heroPosition);
+        Vector2 const& heroPosition
+    );
 
     size_t getActive(
         snx::DenseMap<size_t, EnergyComponent> const& energies,
         snx::DenseMap<size_t, AIComponent> const& ais,
-        int const turn);
+        int const turn
+    );
 
     void replaceDead(
         Enemies& enemies,
-        Map const& map);
+        Map const& map
+    );
 }
 
 #endif

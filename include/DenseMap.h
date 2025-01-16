@@ -44,96 +44,101 @@ namespace snx
         //* MODIFIERS
         Type* assign(
             Key const& key,
-            Type const& value = Type{})
+            Type const& value = Type{}
+        )
         {
-            if (!keyToIndex_.contains(key))
+            if ( !keyToIndex_.contains( key ) )
             {
                 return nullptr;
             }
 
-            at(key) = value;
+            at( key ) = value;
 
-            return &at(key);
+            return &at( key );
         }
 
         Type const& insert(
             Key const& key,
-            Type const& value = Type{})
+            Type const& value = Type{}
+        )
         {
-            if (keyToIndex_.contains(key))
+            if ( keyToIndex_.contains( key ) )
             {
-                return at(key);
+                return at( key );
             }
 
             //* Get new list index for value before modifying values_
             size_t valueIndex = size();
 
             //* Add key to valueIndex mapping
-            keyToIndex_.insert({key, valueIndex});
+            keyToIndex_.insert( { key, valueIndex } );
 
             //* Add valueIndex to key mapping (internal use only to keep list contiguous)
-            indexToKey_.push_back(key);
+            indexToKey_.push_back( key );
 
             //* Add new value to list
-            values_.push_back(value);
+            values_.push_back( value );
 
-            assert((keyToIndex_.size() == indexToKey_.size()) && "Internal mismatch!");
+            assert( ( keyToIndex_.size() == indexToKey_.size() ) && "Internal mismatch!" );
 
-            return at(key);
+            return at( key );
         }
 
         Type const& insert_or_assign(
             Key const& key,
-            Type const& value = Type{})
+            Type const& value = Type{}
+        )
         {
-            if (!keyToIndex_.contains(key))
+            if ( !keyToIndex_.contains( key ) )
             {
-                return insert(key, value);
+                return insert( key, value );
             }
 
-            return *assign(key, value);
+            return *assign( key, value );
         }
 
         template <typename... Args>
         Type const& emplace(
             Key const& key,
-            Args&&... args)
+            Args&&... args
+        )
         {
-            Type value{std::forward<Args>(args)...};
+            Type value{ std::forward<Args>( args )... };
 
-            return insert(key, value);
+            return insert( key, value );
         }
 
         template <typename... Args>
         Type const& emplace_or_assign(
             Key const& key,
-            Args&&... args)
+            Args&&... args
+        )
         {
-            Type value{std::forward<Args>(args)...};
+            Type value{ std::forward<Args>( args )... };
 
-            if (!keyToIndex_.contains(key))
+            if ( !keyToIndex_.contains( key ) )
             {
-                return insert(key, value);
+                return insert( key, value );
             }
 
-            return *assign(key, value);
+            return *assign( key, value );
         }
 
         //* Moves last value to gap
-        void erase(Key const& key)
+        void erase( Key const& key )
         {
-            if (!keyToIndex_.contains(key))
+            if ( !keyToIndex_.contains( key ) )
             {
                 return;
             }
 
             //* Get list index of removed value
-            size_t removedValueIndex{keyToIndex_[key]};
+            size_t removedValueIndex{ keyToIndex_[key] };
             size_t keptValueIndex{};
-            size_t size{this->size()};
+            size_t size{ this->size() };
 
             //* Replace removed value with last value before popping (if more than one value exists) to keep values contiguous
-            if (size > 1)
+            if ( size > 1 )
             {
                 //* Get index of (kept) last value that replaces removed value
                 keptValueIndex = size - 1;
@@ -155,7 +160,7 @@ namespace snx
             }
 
             //* Remove removed key from mapping
-            keyToIndex_.erase(key);
+            keyToIndex_.erase( key );
 
             //* Remove (duplicate) last value
             values_.pop_back();
@@ -166,18 +171,19 @@ namespace snx
 
         void changeKey(
             Key const& from,
-            Key const& to)
+            Key const& to
+        )
         {
-            assert(!contains(to) && "Key already exists, possible loss of data!");
+            assert( !contains( to ) && "Key already exists, possible loss of data!" );
 
             //* Add new key with old index
-            keyToIndex_[to] = keyToIndex_.at(from);
+            keyToIndex_[to] = keyToIndex_.at( from );
 
             //* Remove old key
-            keyToIndex_.erase(from);
+            keyToIndex_.erase( from );
 
             //* Remap index to new key
-            indexToKey_[keyToIndex_.at(to)] = to;
+            indexToKey_[keyToIndex_.at( to )] = to;
         }
 
         //* Empty all containers
@@ -190,37 +196,37 @@ namespace snx
 
         //* LOOKUP
         //* Access
-        Type const& at(Key const& key) const
+        Type const& at( Key const& key ) const
         {
-            return values_.at(keyToIndex_.at(key));
+            return values_.at( keyToIndex_.at( key ) );
         }
 
         //* Allow non-const call
-        Type& at(Key const& key)
+        Type& at( Key const& key )
         {
-            return const_cast<Type&>(std::as_const(*this).at(key));
+            return const_cast<Type&>( std::as_const( *this ).at( key ) );
         }
 
         //* Access or insert
-        Type& operator[](Key const& key)
+        Type& operator[]( Key const& key )
         {
-            if (!contains(key))
+            if ( !contains( key ) )
             {
-                insert(key);
+                insert( key );
             }
 
-            return at(key);
+            return at( key );
         }
 
-        bool contains(Key const& key) const
+        bool contains( Key const& key ) const
         {
-            return keyToIndex_.contains(key);
+            return keyToIndex_.contains( key );
         }
 
         //* Get key for value index
-        Key const& key(size_t index) const
+        Key const& key( size_t index ) const
         {
-            return indexToKey_.at(index);
+            return indexToKey_.at( index );
         }
 
         //* Return vector (contiguous memory)
@@ -232,7 +238,7 @@ namespace snx
         //* Allow non-const call
         std::vector<Type>& values()
         {
-            return const_cast<std::vector<Type>&>(std::as_const(*this).values());
+            return const_cast<std::vector<Type>&>( std::as_const( *this ).values() );
         }
 
         void validate()

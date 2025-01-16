@@ -18,28 +18,34 @@ namespace GameCameraModule
     void init(
         GameCamera& gameCamera,
         RectangleEx const& viewport,
-        Vector2 const& heroPosition);
+        Vector2 const& heroPosition
+    );
 
     RectangleExI viewportInTiles(
-        GameCamera& gameCamera);
+        GameCamera& gameCamera
+    );
 
     //* Screen offset to draw target at
     void setOffset(
         GameCamera& gameCamera,
-        Vector2 const& offset);
+        Vector2 const& offset
+    );
 
     //* World position to draw at offset
     void setTarget(
         GameCamera& gameCamera,
-        Vector2 const& target);
+        Vector2 const& target
+    );
 
     void setZoom(
         GameCamera& gameCamera,
-        float zoom);
+        float zoom
+    );
 
     void updateViewport(
         GameCamera& gameCamera,
-        RectangleEx const& viewport);
+        RectangleEx const& viewport
+    );
 }
 
 #endif

@@ -6,7 +6,7 @@
 class DeveloperMode : public snx::Singleton<DeveloperMode>
 {
 private:
-    static inline bool debugMode_{true};
+    static inline bool debugMode_{ true };
 
 public:
     static bool isActive()

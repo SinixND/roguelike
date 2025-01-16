@@ -12,17 +12,18 @@ struct RatedTile
     Vector2I tilePosition{};
     Vector2I distanceToTarget{};
     int stepsNeeded{};
-    RatedTile* ancestor{nullptr};
+    RatedTile* ancestor{ nullptr };
 
     RatedTile(
         Vector2I const& tilePosition,
         Vector2I const& target,
         int stepsNeeded,
-        RatedTile* ancestor = nullptr)
-        : tilePosition(tilePosition)
-        , distanceToTarget(Vector2Subtract(target, tilePosition))
-        , stepsNeeded(stepsNeeded)
-        , ancestor(ancestor)
+        RatedTile* ancestor = nullptr
+    )
+        : tilePosition( tilePosition )
+        , distanceToTarget( Vector2Subtract( target, tilePosition ) )
+        , stepsNeeded( stepsNeeded )
+        , ancestor( ancestor )
     {
     }
 };
@@ -30,11 +31,12 @@ struct RatedTile
 namespace RatedTileModule
 {
     //* Heuristic used to rate tiles
-    int getRating(RatedTile const& ratedTile);
+    int getRating( RatedTile const& ratedTile );
 
     void reconstructPath(
         RatedTile const& ratedTile,
-        std::vector<Vector2I>& path);
+        std::vector<Vector2I>& path
+    );
 }
 
 namespace PathfinderSystem
@@ -47,7 +49,8 @@ namespace PathfinderSystem
         Vector2I const& target,
         GameCamera const& gameCamera,
         bool skipInvisibleTiles = true,
-        int maxRange = 0);
+        int maxRange = 0
+    );
 }
 
 #endif

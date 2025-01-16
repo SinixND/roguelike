@@ -21,31 +21,34 @@
 
 Vector2I getRandomPosition(
     Enemies const& enemies,
-    Tiles const& tiles)
+    Tiles const& tiles
+)
 {
-    RectangleExI const& mapSize{tiles.mapSize};
+    RectangleExI const& mapSize{ tiles.mapSize };
 
     Vector2I randomPosition{};
 
-    while (true)
+    while ( true )
     {
         randomPosition.x = snx::RNG::random(
             mapSize.left(),
-            mapSize.right());
+            mapSize.right()
+        );
 
         randomPosition.y = snx::RNG::random(
             mapSize.top(),
-            mapSize.bottom());
+            mapSize.bottom()
+        );
 
         //* Check if random position is
         //* - on map
         //* - not visible
         //* - not solid
         //* - not occupied by other enemy
-        if (tiles.positions.contains(randomPosition)
-            && !(tiles.visibilityIds.at(randomPosition) == VisibilityId::VISIBILE)
-            && !tiles.isSolids.contains(randomPosition)
-            && !enemies.ids.contains(randomPosition))
+        if ( tiles.positions.contains( randomPosition )
+             && !( tiles.visibilityIds.at( randomPosition ) == VisibilityId::VISIBILE )
+             && !tiles.isSolids.contains( randomPosition )
+             && !enemies.ids.contains( randomPosition ) )
         {
             return randomPosition;
         }
@@ -62,17 +65,18 @@ void insert(
     HealthComponent const& health,
     DamageComponent const& damage,
     int scanRange,
-    Vector2I const& tilePosition)
+    Vector2I const& tilePosition
+)
 {
-    enemies.ids.insert(tilePosition, id);
-    enemies.positions.insert(id, Convert::tileToWorld(tilePosition));
-    enemies.renderIds.insert(id, renderId);
-    enemies.transforms.insert(id, transform);
-    enemies.movements.insert(id, movement);
-    enemies.energies.insert(id, energy);
-    enemies.healths.insert(id, health);
-    enemies.damages.insert(id, damage);
-    enemies.ais.insert(id, AIComponent{scanRange});
+    enemies.ids.insert( tilePosition, id );
+    enemies.positions.insert( id, Convert::tileToWorld( tilePosition ) );
+    enemies.renderIds.insert( id, renderId );
+    enemies.transforms.insert( id, transform );
+    enemies.movements.insert( id, movement );
+    enemies.energies.insert( id, energy );
+    enemies.healths.insert( id, health );
+    enemies.damages.insert( id, damage );
+    enemies.ais.insert( id, AIComponent{ scanRange } );
 }
 
 void EnemiesModule::createSingle(
@@ -80,19 +84,21 @@ void EnemiesModule::createSingle(
     Map const& map,
     RenderId renderId,
     bool randomPosition,
-    Vector2I tilePosition)
+    Vector2I tilePosition
+)
 {
     //* Allow creating enemy at specified position
-    if (randomPosition)
+    if ( randomPosition )
     {
         tilePosition = getRandomPosition(
             enemies,
-            map.tiles);
+            map.tiles
+        );
     }
 
-    size_t enemyId{enemies.idManager.requestId()};
+    size_t enemyId{ enemies.idManager.requestId() };
 
-    switch (renderId)
+    switch ( renderId )
     {
         default:
         case RenderId::GOBLIN:
@@ -105,11 +111,13 @@ void EnemiesModule::createSingle(
                 MovementComponent{},
                 EnergyComponent{
                     EnemyData::goblinEnergyMax,
-                    EnemyData::goblinEnergyRegenBase},
-                HealthComponent{EnemyData::goblinHealthBase},
-                DamageComponent{EnemyData::goblinDamageBase},
+                    EnemyData::goblinEnergyRegenBase
+                },
+                HealthComponent{ EnemyData::goblinHealthBase },
+                DamageComponent{ EnemyData::goblinDamageBase },
                 EnemyData::goblinScanRange,
-                tilePosition);
+                tilePosition
+            );
 
             break;
         }
@@ -118,40 +126,43 @@ void EnemiesModule::createSingle(
 
 void EnemiesModule::remove(
     Enemies& enemies,
-    size_t id)
+    size_t id
+)
 {
-    enemies.ids.erase(Convert::worldToTile(enemies.positions.at(id)));
-    enemies.positions.erase(id);
-    enemies.renderIds.erase(id);
-    enemies.transforms.erase(id);
-    enemies.movements.erase(id);
-    enemies.energies.erase(id);
-    enemies.healths.erase(id);
-    enemies.damages.erase(id);
-    enemies.ais.erase(id);
+    enemies.ids.erase( Convert::worldToTile( enemies.positions.at( id ) ) );
+    enemies.positions.erase( id );
+    enemies.renderIds.erase( id );
+    enemies.transforms.erase( id );
+    enemies.movements.erase( id );
+    enemies.energies.erase( id );
+    enemies.healths.erase( id );
+    enemies.damages.erase( id );
+    enemies.ais.erase( id );
 }
 
 void EnemiesModule::init(
     Enemies& enemies,
     int mapLevel,
-    Map const& map)
+    Map const& map
+)
 {
-    while (static_cast<int>(enemies.renderIds.size()) < ((mapLevel + 1) * 5))
+    while ( static_cast<int>( enemies.renderIds.size() ) < ( ( mapLevel + 1 ) * 5 ) )
     {
         EnemiesModule::createSingle(
             enemies,
             map,
-            RenderId::GOBLIN);
+            RenderId::GOBLIN
+        );
     }
 }
 
-bool EnemiesModule::regenerate(Enemies& enemies)
+bool EnemiesModule::regenerate( Enemies& enemies )
 {
-    bool isEnemyReady{false};
+    bool isEnemyReady{ false };
 
-    for (EnergyComponent& energy : enemies.energies)
+    for ( EnergyComponent& energy : enemies.energies )
     {
-        if (!EnergyModule::regenerate(energy))
+        if ( !EnergyModule::regenerate( energy ) )
         {
             isEnemyReady = true;
         }
@@ -162,31 +173,34 @@ bool EnemiesModule::regenerate(Enemies& enemies)
 
 void EnemiesModule::update(
     Enemies& enemies,
-    Vector2 const& heroPosition)
+    Vector2 const& heroPosition
+)
 {
     Vector2* currentPosition{};
     Vector2I oldPosition{};
 
-    for (size_t idx{0}; idx < enemies.transforms.size(); ++idx)
+    for ( size_t idx{ 0 }; idx < enemies.transforms.size(); ++idx )
     {
-        currentPosition = &enemies.positions.values().at(idx);
+        currentPosition = &enemies.positions.values().at( idx );
 
-        oldPosition = Convert::worldToTile(*currentPosition);
+        oldPosition = Convert::worldToTile( *currentPosition );
 
         //* Update movement
         //* Update ids_ key if tilePosition changes
         MovementSystem::updateHero(
-            enemies.transforms.values().at(idx),
+            enemies.transforms.values().at( idx ),
             // enemies.movements.values().at(i),
             *currentPosition,
-            enemies.energies.values().at(idx),
-            heroPosition);
+            enemies.energies.values().at( idx ),
+            heroPosition
+        );
 
-        if (oldPosition != Convert::worldToTile(*currentPosition))
+        if ( oldPosition != Convert::worldToTile( *currentPosition ) )
         {
             enemies.ids.changeKey(
                 oldPosition,
-                Convert::worldToTile(*currentPosition));
+                Convert::worldToTile( *currentPosition )
+            );
         }
     }
 }
@@ -194,16 +208,17 @@ void EnemiesModule::update(
 size_t EnemiesModule::getActive(
     snx::DenseMap<size_t, EnergyComponent> const& energies,
     snx::DenseMap<size_t, AIComponent> const& ais,
-    int const turn)
+    int const turn
+)
 {
-    size_t activeEnemyId{0};
+    size_t activeEnemyId{ 0 };
 
-    for (size_t idx{0}; idx < energies.size(); ++idx)
+    for ( size_t idx{ 0 }; idx < energies.size(); ++idx )
     {
-        if (energies.values().at(idx).state == EnergyState::READY
-            && ais.values().at(idx).turn < turn)
+        if ( energies.values().at( idx ).state == EnergyState::READY
+             && ais.values().at( idx ).turn < turn )
         {
-            activeEnemyId = energies.key(idx);
+            activeEnemyId = energies.key( idx );
             break;
         }
     }
@@ -213,24 +228,27 @@ size_t EnemiesModule::getActive(
 
 void EnemiesModule::replaceDead(
     Enemies& enemies,
-    Map const& map)
+    Map const& map
+)
 {
-    size_t idx{0};
+    size_t idx{ 0 };
 
-    while (idx < enemies.ids.values().size())
+    while ( idx < enemies.ids.values().size() )
     {
         //* Kill enemy at 0 health
-        if (enemies.healths.values().at(idx).currentHealth <= 0)
+        if ( enemies.healths.values().at( idx ).currentHealth <= 0 )
         {
             EnemiesModule::remove(
                 enemies,
-                enemies.ids.values().at(idx));
+                enemies.ids.values().at( idx )
+            );
 
             //* Spawn new enemy
             EnemiesModule::createSingle(
                 enemies,
                 map,
-                RenderId::GOBLIN);
+                RenderId::GOBLIN
+            );
 
             continue;
         }

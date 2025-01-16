@@ -6,25 +6,25 @@
 #include "RNG.h"
 #include <raylib.h>
 
-#if defined(DEBUG) && defined(DEBUG_DAMAGE)
+#if defined( DEBUG ) && defined( DEBUG_DAMAGE )
 #include "Debugger.h"
 #include <string>
 #endif
 
-int DamageModule::damageRNG(DamageComponent const& damageComponent)
+int DamageModule::damageRNG( DamageComponent const& damageComponent )
 {
     int damage = damageComponent.baseDamage
-                 + (damageComponent.baseDamage
-                    * (snx::RNG::random(0.0f, 100.0f)
-                       < damageComponent.critChanceFactor)
-                    * damageComponent.critDamageFactor);
+                 + ( damageComponent.baseDamage
+                     * ( snx::RNG::random( 0.0f, 100.0f )
+                         < damageComponent.critChanceFactor )
+                     * damageComponent.critDamageFactor );
 
-    snx::Logger::logAppend(TextFormat("%i damage", damage));
+    snx::Logger::logAppend( TextFormat( "%i damage", damage ) );
 
     return damage;
 }
 
-int DamageModule::damageAverage(DamageComponent const& damageComponent)
+int DamageModule::damageAverage( DamageComponent const& damageComponent )
 {
-    return damageComponent.baseDamage + (damageComponent.baseDamage * damageComponent.critChanceFactor * damageComponent.critDamageFactor);
+    return damageComponent.baseDamage + ( damageComponent.baseDamage * damageComponent.critChanceFactor * damageComponent.critDamageFactor );
 }

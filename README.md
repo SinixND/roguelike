@@ -6,18 +6,18 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Update data structure
-- [ ] Output > IO > Input; References > const refs > values
+- [ ] Refactor parameters to low level
+- [ ] (Output >) IO (References) > Input (const ref > values);
+- [ ] Check for invariants
 - [ ] Fix web bug -> cursor not moving when mouse active
 - [ ] Refactor: Extract possible NMNF functions
-    - [ ] ~~Pass by rawPtr (if modified)~~ Add in/out/io information to function parameters
 
 - [ ] Split Component(temp) and Data(persistent)? (existential)
 
 
 ## Shortterm
+- [ ] Restructure: main = App { Scene, Game { World=>Levels, Fogs }}
 - [ ] Implement ncurses
-- [ ] Restructure main = App { Scene, Game { World=>Levels, Fogs }}
 - [ ] End/Restart game on death
 - [ ] Add AI behaviour with new enemy types
 

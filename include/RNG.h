@@ -18,24 +18,26 @@ namespace snx
             rd_(),
             rd_(),
             rd_(),
-            rd_()};
+            rd_()
+        };
 
-        static inline std::mt19937 rng_{ss_};
+        static inline std::mt19937 rng_{ ss_ };
 
     public:
-        static inline void seed(int seed)
+        static inline void seed( int seed )
         {
-            rng_.seed(seed);
+            rng_.seed( seed );
         }
 
         //* Returns 0 or 1 with no arguments provided
         static inline int random(
             int min = 0,
-            int max = 1)
+            int max = 1
+        )
         {
-            std::uniform_int_distribution<int> distribution{min, max};
+            std::uniform_int_distribution<int> distribution{ min, max };
 
-            return distribution(rng_);
+            return distribution( rng_ );
         }
     };
 }

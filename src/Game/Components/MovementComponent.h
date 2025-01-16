@@ -6,12 +6,12 @@
 #include <vector>
 
 //* Movementspeed in tiles per second
-constexpr int MOVEMENT_SPEED{20};
+constexpr int MOVEMENT_SPEED{ 20 };
 
 struct MovementComponent
 {
     std::vector<Vector2I> path{};
-    float baseSpeed{MOVEMENT_SPEED * TileData::tileSize};
+    float baseSpeed{ MOVEMENT_SPEED * TileData::tileSize };
 };
 
 #endif

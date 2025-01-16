@@ -22,7 +22,7 @@ namespace snx
         }
 
         template <typename Arg>
-        static void cliPrint(Arg message)
+        static void cliPrint( Arg message )
         {
             std::cout << message;
         }
@@ -30,28 +30,30 @@ namespace snx
         template <typename Arg, typename... Args>
         static void cliPrint(
             Arg message,
-            Args... args)
+            Args... args
+        )
         {
-            cliPrint(message);
-            cliPrint(args...);
+            cliPrint( message );
+            cliPrint( args... );
             std::cout << "\n";
         }
 
         template <typename Arg>
-        static void cliLog(Arg message)
+        static void cliLog( Arg message )
         {
             auto now = std::chrono::system_clock::now();
-            std::string formatted_time = std::format("{0:%T}", now);
+            std::string formatted_time = std::format( "{0:%T}", now );
             std::cout << "[" << formatted_time << "] " << message;
         }
 
         template <typename Arg, typename... Args>
         static void cliLog(
             Arg message,
-            Args... args)
+            Args... args
+        )
         {
-            cliLog(message);
-            cliPrint(args...);
+            cliLog( message );
+            cliPrint( args... );
             std::cout << "\n";
         }
     };

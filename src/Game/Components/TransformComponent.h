@@ -8,7 +8,7 @@ struct TransformComponent
 {
     Vector2I direction{};
     float speed{};
-    float cumulativeDistance{0};
+    float cumulativeDistance{ 0 };
 };
 
 #endif
