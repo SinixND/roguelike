@@ -8,7 +8,7 @@
 #include "EnergyComponent.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
-#include "Map.h"
+#include "MovementComponent.h"
 #include "MovementSystem.h"
 #include "RNG.h"
 #include "RenderId.h"
@@ -19,9 +19,31 @@
 #include <cstddef>
 #include <vector>
 
+bool isSpawnPositionValid(
+    Tiles const& tiles,
+    snx::DenseMap<Vector2I, size_t> const& enemiesIds,
+    Vector2I const& tilePosition
+)
+{
+    //* Check if random position is
+    //* - on map
+    //* - not visible
+    //* - not solid
+    //* - not occupied by other enemy
+    if ( tiles.positions.contains( tilePosition )
+         && !( tiles.visibilityIds.at( tilePosition ) == VisibilityId::VISIBILE )
+         && !tiles.isSolids.contains( tilePosition )
+         && !enemiesIds.contains( tilePosition ) )
+    {
+        return true;
+    }
+
+    return false;
+}
+
 Vector2I getRandomPosition(
-    Enemies const& enemies,
-    Tiles const& tiles
+    Tiles const& tiles,
+    snx::DenseMap<Vector2I, size_t> const& enemiesIds
 )
 {
     RectangleExI const& mapSize{ tiles.mapSize };
@@ -40,62 +62,56 @@ Vector2I getRandomPosition(
             mapSize.bottom()
         );
 
-        //* Check if random position is
-        //* - on map
-        //* - not visible
-        //* - not solid
-        //* - not occupied by other enemy
-        if ( tiles.positions.contains( randomPosition )
-             && !( tiles.visibilityIds.at( randomPosition ) == VisibilityId::VISIBILE )
-             && !tiles.isSolids.contains( randomPosition )
-             && !enemies.ids.contains( randomPosition ) )
+        if ( isSpawnPositionValid(
+                 tiles,
+                 enemiesIds,
+                 randomPosition
+             ) )
         {
             return randomPosition;
-        }
+        };
     }
 }
 
-void insert(
+void insertSingle(
     Enemies& enemies,
-    size_t id,
-    RenderId renderId,
     TransformComponent const& transform,
     MovementComponent const& movement,
     EnergyComponent const& energy,
     HealthComponent const& health,
     DamageComponent const& damage,
-    int scanRange,
-    Vector2I const& tilePosition
+    Vector2I const& tilePosition,
+    size_t enemyId,
+    RenderId renderId,
+    int scanRange
 )
 {
-    enemies.ids.insert( tilePosition, id );
-    enemies.positions.insert( id, Convert::tileToWorld( tilePosition ) );
-    enemies.renderIds.insert( id, renderId );
-    enemies.transforms.insert( id, transform );
-    enemies.movements.insert( id, movement );
-    enemies.energies.insert( id, energy );
-    enemies.healths.insert( id, health );
-    enemies.damages.insert( id, damage );
-    enemies.ais.insert( id, AIComponent{ scanRange } );
+    enemies.ids.insert( tilePosition, enemyId );
+    enemies.positions.insert( enemyId, Convert::tileToWorld( tilePosition ) );
+    enemies.renderIds.insert( enemyId, renderId );
+    enemies.transforms.insert( enemyId, transform );
+    enemies.movements.insert( enemyId, movement );
+    enemies.energies.insert( enemyId, energy );
+    enemies.healths.insert( enemyId, health );
+    enemies.damages.insert( enemyId, damage );
+    enemies.ais.insert( enemyId, AIComponent{ scanRange } );
 }
 
-void EnemiesModule::createSingle(
+void EnemiesModule::createAtPosition(
     Enemies& enemies,
-    Map const& map,
+    Tiles const& tiles,
     RenderId renderId,
-    bool randomPosition,
     Vector2I tilePosition
 )
 {
-    //* Allow creating enemy at specified position
-    if ( randomPosition )
+    if ( !isSpawnPositionValid(
+             tiles,
+             enemies.ids,
+             tilePosition
+         ) )
     {
-        tilePosition = getRandomPosition(
-            enemies,
-            map.tiles
-        );
+        return;
     }
-
     size_t enemyId{ enemies.idManager.requestId() };
 
     switch ( renderId )
@@ -103,10 +119,8 @@ void EnemiesModule::createSingle(
         default:
         case RenderId::GOBLIN:
         {
-            insert(
+            insertSingle(
                 enemies,
-                enemyId,
-                RenderId::GOBLIN,
                 TransformComponent{},
                 MovementComponent{},
                 EnergyComponent{
@@ -115,13 +129,34 @@ void EnemiesModule::createSingle(
                 },
                 HealthComponent{ EnemyData::goblinHealthBase },
                 DamageComponent{ EnemyData::goblinDamageBase },
-                EnemyData::goblinScanRange,
-                tilePosition
+                tilePosition,
+                enemyId,
+                RenderId::GOBLIN,
+                EnemyData::goblinScanRange
             );
 
             break;
         }
     }
+}
+
+void EnemiesModule::createAtRandomPosition(
+    Enemies& enemies,
+    Tiles const& tiles,
+    RenderId renderId
+)
+{
+    Vector2I tilePosition = getRandomPosition(
+        tiles,
+        enemies.ids
+    );
+
+    createAtPosition(
+        enemies,
+        tiles,
+        renderId,
+        tilePosition
+    );
 }
 
 void EnemiesModule::remove(
@@ -140,27 +175,27 @@ void EnemiesModule::remove(
     enemies.ais.erase( id );
 }
 
-void EnemiesModule::init(
+void EnemiesModule::fillEnemies(
     Enemies& enemies,
-    int mapLevel,
-    Map const& map
+    Tiles const& tiles,
+    int mapLevel
 )
 {
-    while ( static_cast<int>( enemies.renderIds.size() ) < ( ( mapLevel + 1 ) * 5 ) )
+    while ( enemies.renderIds.size() < static_cast<size_t>( ( mapLevel + 1 ) * 3 ) )
     {
-        EnemiesModule::createSingle(
+        EnemiesModule::createAtRandomPosition(
             enemies,
-            map,
+            tiles,
             RenderId::GOBLIN
         );
     }
 }
 
-bool EnemiesModule::regenerate( Enemies& enemies )
+bool EnemiesModule::regenerate( snx::DenseMap<size_t, EnergyComponent>& energies )
 {
     bool isEnemyReady{ false };
 
-    for ( EnergyComponent& energy : enemies.energies )
+    for ( EnergyComponent& energy : energies )
     {
         if ( !EnergyModule::regenerate( energy ) )
         {
@@ -228,7 +263,7 @@ size_t EnemiesModule::getActive(
 
 void EnemiesModule::replaceDead(
     Enemies& enemies,
-    Map const& map
+    Tiles const& tiles
 )
 {
     size_t idx{ 0 };
@@ -244,9 +279,9 @@ void EnemiesModule::replaceDead(
             );
 
             //* Spawn new enemy
-            EnemiesModule::createSingle(
+            EnemiesModule::createAtRandomPosition(
                 enemies,
-                map,
+                tiles,
                 RenderId::GOBLIN
             );
 

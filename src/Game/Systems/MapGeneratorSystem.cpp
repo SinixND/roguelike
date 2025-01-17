@@ -1,6 +1,7 @@
 #include "MapGeneratorSystem.h"
 
 #include "Directions.h"
+#include "Enemies.h"
 #include "EventId.h"
 #include "Map.h"
 #include "Objects.h"
@@ -200,10 +201,10 @@ Map createGridRooms( int level )
     //     EventId::nextLevel);
 
     //* Add enemies
-    EnemiesModule::init(
+    EnemiesModule::fillEnemies(
         map.enemies,
-        level,
-        map
+        map.tiles,
+        level
     );
 
     return map;
@@ -372,11 +373,10 @@ Map MapGeneratorSystem::createTestRoom()
         EventId::NEXT_LEVEL
     );
 
-    EnemiesModule::createSingle(
+    EnemiesModule::createAtPosition(
         testRoom.enemies,
-        testRoom,
+        testRoom.tiles,
         RenderId::GOBLIN,
-        false,
         Vector2I{ 3, 0 }
     );
 
