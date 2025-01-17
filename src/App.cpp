@@ -47,42 +47,41 @@ void updateDeveloperMode()
     }
 }
 
-App AppModule::init()
+void AppModule::init(
+    Scene& scene,
+    AppConfig const& config
+)
 {
-    App app{};
-
     //* TODO: Import configs from user file
 
     //* Raylib flags
     SetConfigFlags( FLAG_WINDOW_RESIZABLE );
-    if ( app.config.vSync )
+    if ( config.vSync )
     {
         SetConfigFlags( FLAG_VSYNC_HINT );
     }
 
     //* Initialize window
-    InitWindow( app.config.windowWidth, app.config.windowHeight, "Roguelike" );
+    InitWindow( config.windowWidth, config.windowHeight, "Roguelike" );
 
     //* Raylib Settings
-    SetWindowIcon( app.config.favicon );
+    SetWindowIcon( config.favicon );
     SetWindowMinSize( 640, 480 );
 #if defined( EMSCRIPTEN )
     MaximizeWindow();
 #endif
     SetExitKey( KEY_F4 );
-    SetTargetFPS( app.config.fpsTarget );
+    SetTargetFPS( config.fpsTarget );
 
     //* Fonts
     GameFont::load();
     GuiSetStyle( DEFAULT, TEXT_SIZE, GameFont::fontHeight );
 
     //* Scene
-    SceneModule::init( app.scene );
-
-    return app;
+    SceneModule::init( scene );
 }
 
-void AppModule::update( App& app )
+void AppModule::update( Scene& scene )
 {
 #if defined( EMSCRIPTEN )
     emscripten_set_main_loop_arg( emscriptenLoop, &app, 60 /*FPS*/, 1 /*Simulate infinite loop*/ );
@@ -92,15 +91,15 @@ void AppModule::update( App& app )
         updateWindow();
         updateDeveloperMode();
 
-        SceneModule::update( app.scene );
+        SceneModule::update( scene );
     }
 #endif
 }
 
-void AppModule::deinit( App& app )
+void AppModule::deinit( Scene& scene )
 {
     GameFont::unload();
-    SceneModule::deinitialize( app.scene );
+    SceneModule::deinitialize( scene );
 
     //* Close window and opengl context
     CloseWindow();

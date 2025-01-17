@@ -3,20 +3,20 @@ A roguelike made with raylib to practise programming (concepts).
 Platforms: Linux, Windows, Browser
 
 
-
 # TODOs
 ## Active 
 - [ ] Refactor parameters to low level
-- [ ] (Output >) IO (References) > Input (const ref > values);
-- [ ] Check for invariants
-- [ ] Fix web bug -> cursor not moving when mouse active
-- [ ] Refactor: Extract possible NMNF functions
-
-- [ ] Split Component(temp) and Data(persistent)? (existential)
+    - [ ] Output > IO (References) > Input (const ref > values);
+- [ ] Refactor to DenseMap<size_t, Type> (instead of SparseSet -> check emscripten)
 
 
 ## Shortterm
-- [ ] Restructure: main = App { Scene, Game { World=>Levels, Fogs }}
+- [ ] Restructure: main { App { Scene, Game { World=>Levels, Fogs(?) }}}
+- [ ] Check for struct/class invariants
+    - [ ] Refactor: Extract possible NMNF functions
+
+- [ ] Fix web bug -> cursor not moving when mouse active
+- [ ] Split Component(temp) and Data(persistent)? (existential)
 - [ ] Implement ncurses
 - [ ] End/Restart game on death
 - [ ] Add AI behaviour with new enemy types
