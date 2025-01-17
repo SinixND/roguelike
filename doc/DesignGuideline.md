@@ -1,12 +1,6 @@
 # Design guideline
-## Prefer struct over class (**not used in favor of fail save invariant handling of classes**)
-Noel's blog: https://gamesfromwithin.com/category/c
-- Handle invariants via Module functions (replace member functions)
-- Structur (example): 
-    - namespace Class::Hero (struct/class)
-    - namespace Component::Health (struct/class)
-    - namespace Module::certHealth(health) -> health (eg. handle invariants)
-    - namespace System::regen(health) -> health (eg. use certHealth())
+## Links
+[Noel's blog](https://gamesfromwithin.com/category/c)
 
 ## Struct/Class general
 - Struct: POD (Plain Old Data) -> no functions
@@ -15,30 +9,26 @@ Noel's blog: https://gamesfromwithin.com/category/c
 - Prefer NMNF function [Nmsp::f(C& o)] over member functions [o.f()], if no need for private access / public API (interface) is sufficient
 
 ## Class members (variables) and methods (member functions)
-**NOTE**: Encapsulation (:= How much has to change if implementation changes)
-- Default: `private` (eg. due to internal dependencies)
-    - If read access needed (trivial and non-trivial): `const` getter
-    - If non-trivial write access needed: setter
-- If non-const access or trivial write access needed: `public`
-
-#### **NOTE**: 
-Although trivial getters + setter provide more flexibility for later change, as they do not tie to a specific implementation. they hide the (pontentially high) cost of calling the function. 
-
-*Better refactor `public` to getter/setter later if actually needed.*
+- Use struct as default
+- class with private members 
+**NOTE**: Encapsulation (:= How much has to change if implementation changes) -> Low level parameters
+- `public/struct` = default (KISS)
+- `private/class` + non-trivial getter/setter= to handle invariants or restrict to (controlled) access
+**NOTE**: refactor `public` -> getter/setter later if actually needed.*
 
 
 # Concepts
 ## SoA
 - := Struct of Arrays (of (entity-)members)
 <!-- - If access other than by index needed: Add an additional mapping-member Id(entifier)->Index 
- - Decide if duplication for mapping, or support O(n) lookup of values -->
+ - Decide if duplication for mapping, or require O(n) lookup of values -->
 - Add utility methods to modify containers. Also eg. for accessing individual members and/or returning a single entity struct
 - Transient (= Intermediate/Temporary/TransMoveation) data `struct`:
     - Forward declared `unique_ptr` member in `SoA.h`
     - Define it (and its member structs) in `SoA.cpp`
 
 ## SparseSet
-- Maps _integer_ `id` to `idx` and `idx` to `data` (array to array)
+- Maps _integer_ `id` to `idx` and `idx` to `data` (array to array) (potentially BIG!)
 
 ## DenseMap 
 - Maps _arbitrary_ `id` to `idx` and `idx` to `data` (hashmap to array)

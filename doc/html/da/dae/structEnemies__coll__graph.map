@@ -1,0 +1,23 @@
+<map id="Enemies" name="Enemies">
+<area shape="rect" id="Node000001" title=" " alt="" coords="337,326,414,354"/>
+<area shape="rect" id="Node000002" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="9,5,203,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="218,45,270,68,294,84,315,103,334,130,349,161,368,225,376,283,377,325,372,326,371,284,363,226,344,163,330,133,311,107,291,88,268,72,216,50"/>
+<area shape="rect" id="Node000003" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="25,75,187,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="203,114,262,139,290,156,315,178,341,215,358,256,369,295,375,325,370,326,364,296,353,258,336,218,311,181,287,161,260,144,201,119"/>
+<area shape="rect" id="Node000004" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="25,144,187,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="203,187,261,210,314,244,333,264,349,285,370,324,366,327,345,288,329,267,311,248,258,215,201,192"/>
+<area shape="rect" id="Node000005" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="25,213,187,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="203,256,258,273,314,296,357,323,355,328,311,301,257,278,201,261"/>
+<area shape="rect" id="Node000006" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="8,283,204,327"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="220,317,337,332,336,337,220,322"/>
+<area shape="rect" id="Node000007" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="5,352,207,397"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="222,363,312,351,336,347,337,352,313,357,222,368"/>
+<area shape="rect" id="Node000008" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="18,421,194,466"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="209,422,261,406,311,385,336,369,357,352,361,356,340,374,314,390,263,411,210,427"/>
+<area shape="rect" id="Node000009" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="19,491,193,535"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="207,490,261,469,311,439,331,418,346,395,367,353,371,355,351,398,335,422,314,443,264,474,209,495"/>
+<area shape="rect" id="Node000010" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="13,560,199,605"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="213,559,266,537,290,522,311,504,337,467,355,424,365,384,370,353,375,354,370,385,360,426,342,469,315,508,293,527,268,542,215,564"/>
+<area shape="rect" id="Node000011" href="$d0/d85/classsnx_1_1IdManager.html" title=" " alt="" coords="45,628,167,656"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="182,635,216,628,251,616,283,599,311,576,330,550,345,520,364,456,371,397,372,354,377,354,376,397,369,457,350,522,335,552,315,580,286,604,253,621,217,633,183,640"/>
+</map>

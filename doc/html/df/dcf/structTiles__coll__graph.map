@@ -1,0 +1,15 @@
+<map id="Tiles" name="Tiles">
+<area shape="rect" id="Node000001" title=" " alt="" coords="482,152,534,180"/>
+<area shape="rect" id="Node000002" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="162,5,355,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="371,52,417,72,460,98,485,124,502,151,497,154,481,127,456,102,414,76,369,57"/>
+<area shape="rect" id="Node000003" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="162,75,355,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="371,116,459,141,482,151,480,156,457,146,370,121"/>
+<area shape="rect" id="Node000004" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="162,144,355,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="371,164,482,164,482,169,371,169"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="187,213,330,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="345,230,401,221,457,203,476,192,492,179,495,183,479,196,459,208,403,226,346,235"/>
+<area shape="rect" id="Node000006" href="$da/dba/structVector2I.html" title=" " alt="" coords="5,222,80,250"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="95,233,187,233,187,238,95,238"/>
+<area shape="rect" id="Node000007" href="$d2/dbc/classRectangleExI.html" title=" " alt="" coords="205,282,312,310"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="327,291,393,278,426,265,456,248,472,233,484,215,500,180,505,182,489,217,476,236,460,252,429,270,395,283,328,296"/>
+</map>

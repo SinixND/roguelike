@@ -15,8 +15,12 @@ struct App
 
 namespace AppModule
 {
-    App init();
-    void update( App& app );
-    void deinit( App& app );
+    void init(
+        Scene& scene,
+        AppConfig const& config
+    );
+
+    void update( Scene& scene );
+    void deinit( Scene& scene );
 }
 #endif
