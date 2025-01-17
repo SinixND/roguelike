@@ -106,7 +106,7 @@ void GameModule::updateState(
     {
         EnemiesModule::replaceDead(
             game.world.currentMap->enemies,
-            *game.world.currentMap
+            game.world.currentMap->tiles
         );
     }
     //* Update multi-frame actions
@@ -139,7 +139,7 @@ void GameModule::updateState(
         while ( !isUnitReady )
         {
             isUnitReady = EnergyModule::regenerate( game.hero.energy );
-            isUnitReady |= EnemiesModule::regenerate( game.world.currentMap->enemies );
+            isUnitReady |= EnemiesModule::regenerate( game.world.currentMap->enemies.energies );
         }
 
         //* Progess turn when hero is ready

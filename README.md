@@ -5,12 +5,12 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Refactor parameters to low level
+- [ ] Refactor parameters to low level ( if < 3 members used )
     - [ ] Output > IO (References) > Input (const ref > values);
-- [ ] Refactor to DenseMap<size_t, Type> (instead of SparseSet -> check emscripten)
 
 
 ## Shortterm
+- [ ] Refactor to DenseMap<size_t, Type> (instead of SparseSet -> check emscripten)
 - [ ] Restructure: main { App { Scene, Game { World=>Levels, Fogs(?) }}}
 - [ ] Check for struct/class invariants
     - [ ] Refactor: Extract possible NMNF functions
