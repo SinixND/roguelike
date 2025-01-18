@@ -12,6 +12,7 @@
 #include "DenseMap.h"
 #include "Game.h"
 #include "GameCamera.h"
+#include "InputId.h"
 #include "Panels.h"
 #include "RenderSystem.h"
 #include "VisibilitySystem.h"
@@ -26,8 +27,6 @@ struct Scene
     GameCamera gameCamera{};
     RenderData renderData{};
 
-    Cursor cursor{};
-
     snx::DenseMap<Vector2I, Chunk> chunks{};
     snx::DenseMap<Vector2I, Fog> fogs{};
 
@@ -38,13 +37,18 @@ struct Scene
 
 namespace SceneModule
 {
-    void init( Scene& scene );
-    void update( Scene& scene );
+    void init(
+        Scene& scene,
+        Cursor const& cursor
+    );
+
+    void update(
+        Scene& scene,
+        Cursor& cursor,
+        InputId currentInputId,
+        float dt
+    );
+
     void deinitialize( Scene& scene );
-    void processInput( Scene& scene );
-    void updateState( Scene& scene );
-    void renderOutput( Scene& scene );
-    void setupSceneEvents( Scene& scene );
-    void drawSceneBorder();
 }
 #endif

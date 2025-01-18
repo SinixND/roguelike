@@ -1,9 +1,0 @@
-<map id="RectangleEx::offsetRight" name="RectangleEx::offsetRight">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,57,187,85"/>
-<area shape="rect" id="Node000002" href="$d3/ddc/classRectangleEx.html#aea92e0c78238c59b227f4e4f23ceb232" title=" " alt="" coords="236,5,427,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,54,250,34,251,40,163,59"/>
-<area shape="rect" id="Node000003" href="$d3/ddc/classRectangleEx.html#a0df958c1bc2884da5da0e5833c30a21f" title=" " alt="" coords="261,57,402,85"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,68,246,68,246,74,187,74"/>
-<area shape="rect" id="Node000004" href="$d3/ddc/classRectangleEx.html#a58c5eaa8cc35f985e69266a1506c5184" title=" " alt="" coords="235,109,428,137"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="163,83,251,103,250,108,162,88"/>
-</map>

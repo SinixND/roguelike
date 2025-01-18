@@ -1,9 +1,0 @@
-<map id="include/Observer/Publisher.h" name="include/Observer/Publisher.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="67,5,274,33"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,104,109"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,36,89,75,87,70,148,31"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="127,81,214,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,34,173,65,168,65,168,34"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="238,81,362,109"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="195,31,265,71,262,75,192,36"/>
-</map>

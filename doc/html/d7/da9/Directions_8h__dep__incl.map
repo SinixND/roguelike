@@ -1,7 +1,0 @@
-<map id="src/Game/Data/Directions.h" name="src/Game/Data/Directions.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="149,5,350,33"/>
-<area shape="rect" id="Node000002" href="$d2/d79/MapGeneratorSystem_8cpp.html" title=" " alt="" coords="5,81,246,126"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="218,44,160,83,157,78,215,40"/>
-<area shape="rect" id="Node000003" href="$d0/d41/UserInputSystem_8cpp.html" title=" " alt="" coords="270,81,480,126"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="283,39,343,78,340,83,281,44"/>
-</map>

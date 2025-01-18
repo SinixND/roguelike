@@ -1,6 +1,4 @@
 #include "Scene.h"
-#include "SceneData.h"
-#include "VisibilityId.h"
 
 #define DEBUG_TILEINFO
 //* #define DEBUG_FOG
@@ -14,10 +12,13 @@
 #include "EventId.h"
 #include "Game.h"
 #include "GameCamera.h"
+#include "InputId.h"
 #include "Objects.h"
 #include "PanelSystem.h"
 #include "PublisherStatic.h"
 #include "RenderSystem.h"
+#include "SceneData.h"
+#include "VisibilityId.h"
 #include "VisibilitySystem.h"
 #include "raylibEx.h"
 #include <cstddef>
@@ -30,36 +31,10 @@
 #include <string>
 #endif
 
-void SceneModule::init( Scene& scene )
-{
-    GameModule::init( scene.game );
-
-    PanelSystem::init( scene.panels );
-
-    GameCameraModule::init(
-        scene.gameCamera,
-        scene.panels.map,
-        scene.game.hero.position
-    );
-
-#if defined( DEBUG )
-    snx::debug::gcam() = scene.gameCamera;
-#endif
-
-    RenderSystem::loadRenderData( scene.renderData );
-
-    ChunkSystem::init(
-        scene.renderData.textures,
-        scene.chunks,
-        scene.game.world.currentMap->tiles.positions,
-        scene.game.world.currentMap->tiles.renderIds
-    );
-
-    //* Setup events
-    SceneModule::setupSceneEvents( scene );
-}
-
-void SceneModule::setupSceneEvents( Scene& scene )
+void setupSceneEvents(
+    Scene& scene,
+    Cursor const& cursor
+)
 {
     snx::PublisherStatic::addSubscriber(
         EventId::WINDOW_RESIZED,
@@ -91,6 +66,18 @@ void SceneModule::setupSceneEvents( Scene& scene )
         }
     );
 
+    snx::PublisherStatic::addSubscriber(
+        EventId::CHANGE_COLOR_THEME,
+        [&]()
+        {
+            RenderSystem::cycleThemes( scene.renderData.theme );
+            RenderSystem::loadRenderData( scene.renderData );
+
+            snx::PublisherStatic::publish( EventId::MAP_CHANGE );
+        }
+    );
+
+    //* Game events
     snx::PublisherStatic::addSubscriber(
         EventId::HERO_MOVED,
         [&]()
@@ -132,31 +119,12 @@ void SceneModule::setupSceneEvents( Scene& scene )
         }
     );
 
-    snx::PublisherStatic::addSubscriber(
-        EventId::COLOR_THEME_CHANGE,
-        [&]()
-        {
-            RenderSystem::cycleThemes( scene.renderData.theme );
-            RenderSystem::loadRenderData( scene.renderData );
-
-            snx::PublisherStatic::publish( EventId::MAP_CHANGE );
-        }
-    );
-
-    snx::PublisherStatic::addSubscriber(
-        EventId::CURSOR_TOGGLE,
-        [&]()
-        {
-            CursorModule::toggle( scene.cursor );
-        }
-    );
-
 #if defined( DEBUG ) && defined( DEBUG_TILEINFO )
     snx::PublisherStatic::addSubscriber(
         EventId::CURSOR_POSITION_CHANGED,
         [&]()
         {
-            Vector2I cursorPos{ Convert::worldToTile( scene.cursor.position ) };
+            Vector2I cursorPos{ Convert::worldToTile( cursor.position ) };
 
             if ( !scene.game.world.currentMap->tiles.positions.contains( cursorPos ) )
             {
@@ -250,46 +218,45 @@ void SceneModule::setupSceneEvents( Scene& scene )
 #endif
 }
 
-void SceneModule::processInput( Scene& scene )
+void SceneModule::init(
+    Scene& scene,
+    Cursor const& cursor
+)
 {
-    //* Color theme
-    if ( IsKeyPressed( KEY_F2 ) )
-    {
-        snx::PublisherStatic::publish( EventId::COLOR_THEME_CHANGE );
-    }
+    GameModule::init( scene.game );
 
-    //* Allow input if hero is ready (= full energy)
-    if ( scene.game.hero.energy.state == EnergyState::READY )
-    {
-        GameModule::processInput(
-            scene.game.inputMappings,
-            scene.cursor.isActive,
-            scene.game.inputHandler,
-            scene.game.inputAction
-        );
-    }
-}
+    PanelSystem::init( scene.panels );
 
-void SceneModule::updateState( Scene& scene )
-{
-    CursorModule::update(
-        scene.cursor,
-        scene.gameCamera.camera,
-        Convert::worldToTile( scene.game.hero.position )
-    );
-
-    GameModule::updateState(
-        scene.game,
+    GameCameraModule::init(
         scene.gameCamera,
-        scene.cursor
+        scene.panels.map,
+        scene.game.hero.position
     );
 
 #if defined( DEBUG )
     snx::debug::gcam() = scene.gameCamera;
 #endif
+
+    RenderSystem::loadRenderData( scene.renderData );
+
+    ChunkSystem::init(
+        scene.renderData.textures,
+        scene.chunks,
+        scene.game.world.currentMap->tiles.positions,
+        scene.game.world.currentMap->tiles.renderIds
+    );
+
+    //* Setup events
+    setupSceneEvents(
+        scene,
+        cursor
+    );
 }
 
-void SceneModule::renderOutput( Scene& scene )
+void renderOutput(
+    Scene& scene,
+    Cursor const& cursor
+)
 {
     //* Draw map panel content
     BeginMode2D( scene.gameCamera.camera );
@@ -360,12 +327,12 @@ void SceneModule::renderOutput( Scene& scene )
 
     //* UI
     //* Draw cursor
-    if ( scene.cursor.isActive )
+    if ( cursor.isActive )
     {
         RenderSystem::renderTile(
             scene.renderData.textures,
-            scene.cursor.renderId,
-            scene.cursor.position
+            cursor.renderId,
+            cursor.position
         );
     }
 
@@ -382,7 +349,7 @@ void SceneModule::renderOutput( Scene& scene )
     PanelSystem::drawTileInfoPanelContent(
         scene.panels,
         scene.game.world.currentMap->objects,
-        Convert::worldToTile( scene.cursor.position )
+        Convert::worldToTile( cursor.position )
     );
 
     PanelSystem::drawGameInfoPanelContent(
@@ -393,16 +360,52 @@ void SceneModule::renderOutput( Scene& scene )
     PanelSystem::drawPanelBorders( scene.panels );
 }
 
-void SceneModule::update( Scene& scene )
+void drawSceneBorder()
 {
-    processInput( scene );
-    updateState( scene );
+    DrawRectangleLinesEx(
+        GetWindowRec(),
+        SceneData::borderWidth,
+        Colors::border
+    );
+}
 
+void SceneModule::update(
+    Scene& scene,
+    Cursor& cursor,
+    InputId currentInputId,
+    float dt
+)
+{
+    if ( currentInputId == InputId::CYCLE_THEME )
+    {
+        snx::PublisherStatic::publish( EventId::CHANGE_COLOR_THEME );
+    }
+
+    CursorModule::update(
+        cursor,
+        scene.gameCamera.camera,
+        Convert::worldToTile( scene.game.hero.position )
+    );
+
+    GameModule::update(
+        scene.game,
+        scene.gameCamera,
+        cursor,
+        currentInputId,
+        dt
+    );
+
+#if defined( DEBUG )
+    snx::debug::gcam() = scene.gameCamera;
+#endif
     BeginDrawing();
 
     ClearBackground( Colors::bg );
 
-    renderOutput( scene );
+    renderOutput(
+        scene,
+        cursor
+    );
 
     //* Draw simple frame
     drawSceneBorder();
@@ -420,11 +423,3 @@ void SceneModule::deinitialize( Scene& scene )
     RenderSystem::deinit( scene.renderData.textures );
 }
 
-void SceneModule::drawSceneBorder()
-{
-    DrawRectangleLinesEx(
-        GetWindowRec(),
-        SceneData::borderWidth,
-        Colors::border
-    );
-}

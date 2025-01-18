@@ -208,7 +208,8 @@ bool EnemiesModule::regenerate( snx::DenseMap<size_t, EnergyComponent>& energies
 
 void EnemiesModule::update(
     Enemies& enemies,
-    Vector2 const& heroPosition
+    Vector2 const& heroPosition,
+    float dt
 )
 {
     Vector2* currentPosition{};
@@ -222,12 +223,13 @@ void EnemiesModule::update(
 
         //* Update movement
         //* Update ids_ key if tilePosition changes
-        MovementSystem::updateHero(
+        MovementSystem::update(
             enemies.transforms.values().at( idx ),
             // enemies.movements.values().at(i),
             *currentPosition,
             enemies.energies.values().at( idx ),
-            heroPosition
+            heroPosition,
+            dt
         );
 
         if ( oldPosition != Convert::worldToTile( *currentPosition ) )

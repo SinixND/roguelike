@@ -13,17 +13,19 @@ struct Enemies;
 
 namespace MovementSystem
 {
-    void updateHero(
+    void update(
         TransformComponent& transform,
         // MovementComponent& movement,
         Vector2& position,
         EnergyComponent& energy,
-        Vector2 const& heroPosition
+        Vector2 const& heroPosition,
+        float dt
     );
 
     void updateEnemies(
         Enemies& enemies,
-        Vector2 const& heroPosition
+        Vector2 const& heroPosition,
+        float dt
     );
 
     void prepareByDirection(
@@ -57,7 +59,10 @@ namespace MovementSystem
     void resetCumulativeDistance( TransformComponent& transform );
 
     //* Calculate distance for this frame
-    Vector2 frameOffset( TransformComponent const& transform );
+    Vector2 frameOffset(
+        TransformComponent const& transform,
+        float dt
+    );
 };
 
 #endif

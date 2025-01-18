@@ -1,7 +1,0 @@
-<map id="Convert::octantToTile" name="Convert::octantToTile">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,32,165,60"/>
-<area shape="rect" id="Node000002" href="$db/dba/namespaceConvert.html#a7b64b6a94bcb47d1102e121f159500f6" title=" " alt="" coords="213,5,433,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,34,197,31,197,36,166,40"/>
-<area shape="rect" id="Node000003" href="$df/d66/raylibEx_8h.html#a58f1f52a8d565d491f0351a6d98a62b4" title=" " alt="" coords="275,57,370,85"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="166,52,260,62,259,67,165,57"/>
-</map>
