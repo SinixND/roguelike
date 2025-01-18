@@ -1,4 +1,5 @@
 #include "App.h"
+
 #include "DeveloperMode.h"
 #include "EventId.h"
 #include "GameFont.h"
@@ -11,6 +12,11 @@
 #include <emscripten/html5.h>
 #endif
 
+/**
+ * @brief Separate game loop function needed for emscripten
+ *
+ * @param arg Application variable
+ */
 void emscriptenLoop( void* arg )
 {
     App* app = (App*)arg;
@@ -18,7 +24,10 @@ void emscriptenLoop( void* arg )
     SceneModule::update( app->scene );
 }
 
-void updateWindow()
+/**
+ * @brief Allows maximizing window; Handles resize event
+ */
+void updateWindowState()
 {
     if ( IsKeyPressed( KEY_F11 ) )
     {
@@ -47,13 +56,11 @@ void updateDeveloperMode()
     }
 }
 
-void AppModule::init(
-    Scene& scene,
+void setupRaylib(
     AppConfig const& config
 )
 {
     //* TODO: Import configs from user file
-
     //* Raylib flags
     SetConfigFlags( FLAG_WINDOW_RESIZABLE );
     if ( config.vSync )
@@ -76,31 +83,48 @@ void AppModule::init(
     //* Fonts
     GameFont::load();
     GuiSetStyle( DEFAULT, TEXT_SIZE, GameFont::fontHeight );
-
-    //* Scene
-    SceneModule::init( scene );
 }
 
-void AppModule::update( Scene& scene )
+void setupNcurses() {}
+
+void setupFrameworks( AppConfig const& config )
+{
+    setupRaylib( config );
+    setupNcurses();
+}
+
+void update( App& app )
 {
 #if defined( EMSCRIPTEN )
     emscripten_set_main_loop_arg( emscriptenLoop, &app, 60 /*FPS*/, 1 /*Simulate infinite loop*/ );
 #else
     while ( !( WindowShouldClose() ) )
     {
-        updateWindow();
+        updateWindowState();
+#if defined( DEBUG )
         updateDeveloperMode();
+#endif
 
-        SceneModule::update( scene );
+        SceneModule::update( app.scene );
     }
 #endif
 }
 
-void AppModule::deinit( Scene& scene )
+void deinit( Scene& scene )
 {
     GameFont::unload();
     SceneModule::deinitialize( scene );
 
     //* Close window and opengl context
     CloseWindow();
+}
+
+void AppModule::run( App& app )
+{
+    setupFrameworks( app.config );
+
+    SceneModule::init( app.scene );
+
+    update( app );
+    deinit( app.scene );
 }

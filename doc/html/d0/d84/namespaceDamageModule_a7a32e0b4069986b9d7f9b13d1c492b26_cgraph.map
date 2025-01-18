@@ -1,0 +1,7 @@
+<map id="DamageModule::damageRNG" name="DamageModule::damageRNG">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,32,220,60"/>
+<area shape="rect" id="Node000002" href="$d8/d19/classsnx_1_1Logger.html#ac19b4845ab1ff0331fbb8c47448bd62d" title=" " alt="" coords="268,5,441,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,31,252,28,252,33,220,37"/>
+<area shape="rect" id="Node000003" href="$d4/d7d/classsnx_1_1RNG.html#ab8376e90222b83afb8ae6a276e44091f" title=" " alt="" coords="285,57,424,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,54,270,60,269,65,220,60"/>
+</map>

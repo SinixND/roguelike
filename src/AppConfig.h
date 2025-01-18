@@ -1,7 +1,10 @@
 #ifndef IG20240529010632
 #define IG20240529010632
 
-//* Configs imported from user file
+/**
+ * @file
+ * @brief Configuration variables
+ */
 
 #include <raylib.h>
 struct AppConfig

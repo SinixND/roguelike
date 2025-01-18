@@ -11,18 +11,11 @@
 <script type="text/javascript" src="../../dynsections.js"></script>
 <script type="text/javascript" src="../../clipboard.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../cookie.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -35,18 +28,6 @@
    <div id="projectname">Roguelike
    </div>
   </td>
-    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
-          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td>
  </tr>
  </tbody>
 </table>
@@ -63,23 +44,22 @@ var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 $(function() { codefold.init(1); });
 /* @license-end */
 </script>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('dc/d91/structRatedTile.html','../../'); initResizable(true); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search',false);
+  $(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -101,6 +81,8 @@ $(function(){initNavTree('dc/d91/structRatedTile.html','../../'); initResizable(
 </div>
 </div>
 
+</div><!-- top -->
+<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -109,6 +91,8 @@ $(function(){initNavTree('dc/d91/structRatedTile.html','../../'); initResizable(
   <div class="headertitle"><div class="title">RatedTile Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html">PathfinderSystem.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for RatedTile:</div>
 <div class="dyncontent">
@@ -119,11 +103,11 @@ Collaboration diagram for RatedTile:</div>
 <area shape="rect" href="../../da/dba/structVector2I.html" title=" " alt="" coords="10,5,84,33"/>
 <area shape="poly" title=" " alt="" coords="50,48,50,115,44,115,44,48"/>
 </map>
-<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac6ba40f1b6d1c20b921425429a0a5f08" id="r_ac6ba40f1b6d1c20b921425429a0a5f08"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6ba40f1b6d1c20b921425429a0a5f08">RatedTile</a> (<a class="el" href="../../da/dba/structVector2I.html">Vector2I</a> const &amp;tilePosition, <a class="el" href="../../da/dba/structVector2I.html">Vector2I</a> const &amp;target, int stepsNeeded, <a class="el" href="../../dc/d91/structRatedTile.html">RatedTile</a> *ancestor=nullptr)</td></tr>
+<tr class="memitem:ac6ba40f1b6d1c20b921425429a0a5f08" id="r_ac6ba40f1b6d1c20b921425429a0a5f08"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6ba40f1b6d1c20b921425429a0a5f08">RatedTile</a> (<a class="el" href="../../da/dba/structVector2I.html">Vector2I</a> const &amp;<a class="el" href="#ad254d25309ad6e6a57a088c07606e8d0">tilePosition</a>, <a class="el" href="../../da/dba/structVector2I.html">Vector2I</a> const &amp;target, int <a class="el" href="#a28a734890453e4e99af843e9c23b723e">stepsNeeded</a>, <a class="el" href="../../dc/d91/structRatedTile.html">RatedTile</a> *<a class="el" href="#a84500612c65d38240cc53fa9c13525e0">ancestor</a>=nullptr)</td></tr>
 <tr class="separator:ac6ba40f1b6d1c20b921425429a0a5f08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -179,13 +163,42 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00017">17</a> of file <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html">PathfinderSystem.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   23</span>        : tilePosition( tilePosition )</div>
-<div class="line"><span class="lineno">   24</span>        , distanceToTarget( Vector2Subtract( target, tilePosition ) )</div>
-<div class="line"><span class="lineno">   25</span>        , stepsNeeded( stepsNeeded )</div>
-<div class="line"><span class="lineno">   26</span>        , ancestor( ancestor )</div>
+<div class="fragment"><div class="line"><span class="lineno">   23</span>        : <a class="code hl_variable" href="#ad254d25309ad6e6a57a088c07606e8d0">tilePosition</a>( <a class="code hl_variable" href="#ad254d25309ad6e6a57a088c07606e8d0">tilePosition</a> )</div>
+<div class="line"><span class="lineno">   24</span>        , <a class="code hl_variable" href="#a00e152a1399e24db4e8d1210fa071f69">distanceToTarget</a>( <a class="code hl_function" href="../../df/d66/raylibEx_8h.html#af1dbf5fb2b73052b21ee78600ee861f6">Vector2Subtract</a>( target, <a class="code hl_variable" href="#ad254d25309ad6e6a57a088c07606e8d0">tilePosition</a> ) )</div>
+<div class="line"><span class="lineno">   25</span>        , <a class="code hl_variable" href="#a28a734890453e4e99af843e9c23b723e">stepsNeeded</a>( <a class="code hl_variable" href="#a28a734890453e4e99af843e9c23b723e">stepsNeeded</a> )</div>
+<div class="line"><span class="lineno">   26</span>        , <a class="code hl_variable" href="#a84500612c65d38240cc53fa9c13525e0">ancestor</a>( <a class="code hl_variable" href="#a84500612c65d38240cc53fa9c13525e0">ancestor</a> )</div>
 <div class="line"><span class="lineno">   27</span>    {</div>
 <div class="line"><span class="lineno">   28</span>    }</div>
+<div class="ttc" id="araylibEx_8h_html_af1dbf5fb2b73052b21ee78600ee861f6"><div class="ttname"><a href="../../df/d66/raylibEx_8h.html#af1dbf5fb2b73052b21ee78600ee861f6">Vector2Subtract</a></div><div class="ttdeci">RMAPI Vector2I Vector2Subtract(Vector2I const &amp;v1, Vector2I const &amp;v2)</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00581">raylibEx.h:581</a></div></div>
+<div class="ttc" id="astructRatedTile_html_a00e152a1399e24db4e8d1210fa071f69"><div class="ttname"><a href="#a00e152a1399e24db4e8d1210fa071f69">RatedTile::distanceToTarget</a></div><div class="ttdeci">Vector2I distanceToTarget</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d2e/PathfinderSystem_8h_source.html#l00013">PathfinderSystem.h:13</a></div></div>
+<div class="ttc" id="astructRatedTile_html_a28a734890453e4e99af843e9c23b723e"><div class="ttname"><a href="#a28a734890453e4e99af843e9c23b723e">RatedTile::stepsNeeded</a></div><div class="ttdeci">int stepsNeeded</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d2e/PathfinderSystem_8h_source.html#l00014">PathfinderSystem.h:14</a></div></div>
+<div class="ttc" id="astructRatedTile_html_a84500612c65d38240cc53fa9c13525e0"><div class="ttname"><a href="#a84500612c65d38240cc53fa9c13525e0">RatedTile::ancestor</a></div><div class="ttdeci">RatedTile * ancestor</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d2e/PathfinderSystem_8h_source.html#l00015">PathfinderSystem.h:15</a></div></div>
+<div class="ttc" id="astructRatedTile_html_ad254d25309ad6e6a57a088c07606e8d0"><div class="ttname"><a href="#ad254d25309ad6e6a57a088c07606e8d0">RatedTile::tilePosition</a></div><div class="ttdeci">Vector2I tilePosition</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d2e/PathfinderSystem_8h_source.html#l00012">PathfinderSystem.h:12</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00015">ancestor</a>, <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00013">distanceToTarget</a>, <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00017">RatedTile()</a>, <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00014">stepsNeeded</a>, <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00012">tilePosition</a>, and <a class="el" href="../../df/d66/raylibEx_8h_source.html#l00581">Vector2Subtract()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00017">RatedTile()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d91/structRatedTile_ac6ba40f1b6d1c20b921425429a0a5f08_cgraph.png" border="0" usemap="#adc/d91/structRatedTile_ac6ba40f1b6d1c20b921425429a0a5f08_cgraph" alt=""/></div>
+<map name="adc/d91/structRatedTile_ac6ba40f1b6d1c20b921425429a0a5f08_cgraph" id="adc/d91/structRatedTile_ac6ba40f1b6d1c20b921425429a0a5f08_cgraph">
+<area shape="rect" title=" " alt="" coords="5,29,159,57"/>
+<area shape="poly" title=" " alt="" coords="50,30,44,20,48,11,61,5,82,3,104,5,116,12,114,16,103,10,82,8,63,10,52,15,50,20,54,27"/>
+<area shape="rect" href="../../df/d66/raylibEx_8h.html#af1dbf5fb2b73052b21ee78600ee861f6" title=" " alt="" coords="207,29,331,57"/>
+<area shape="poly" title=" " alt="" coords="159,40,191,40,191,46,159,46"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d91/structRatedTile_ac6ba40f1b6d1c20b921425429a0a5f08_icgraph.png" border="0" usemap="#adc/d91/structRatedTile_ac6ba40f1b6d1c20b921425429a0a5f08_icgraph" alt=""/></div>
+<map name="adc/d91/structRatedTile_ac6ba40f1b6d1c20b921425429a0a5f08_icgraph" id="adc/d91/structRatedTile_ac6ba40f1b6d1c20b921425429a0a5f08_icgraph">
+<area shape="rect" title=" " alt="" coords="5,29,159,57"/>
+<area shape="poly" title=" " alt="" coords="107,16,98,10,82,8,66,10,58,14,56,20,60,28,55,30,51,20,54,11,65,5,82,3,100,5,110,11"/>
+</map>
+</div>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -204,6 +217,8 @@ Public Attributes</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00015">15</a> of file <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html">PathfinderSystem.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   15</span>{ <span class="keyword">nullptr</span> };</div>
 </div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00017">RatedTile()</a>, and <a class="el" href="../../d3/d8b/PathfinderSystem_8cpp_source.html#l00042">RatedTileModule::reconstructPath()</a>.</p>
+
 </div>
 </div>
 <a id="a00e152a1399e24db4e8d1210fa071f69" name="a00e152a1399e24db4e8d1210fa071f69"></a>
@@ -221,6 +236,8 @@ Public Attributes</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00013">13</a> of file <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html">PathfinderSystem.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   13</span>{};</div>
 </div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="../../d3/d8b/PathfinderSystem_8cpp_source.html#l00034">RatedTileModule::getRating()</a>, and <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00017">RatedTile()</a>.</p>
+
 </div>
 </div>
 <a id="a28a734890453e4e99af843e9c23b723e" name="a28a734890453e4e99af843e9c23b723e"></a>
@@ -238,6 +255,8 @@ Public Attributes</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00014">14</a> of file <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html">PathfinderSystem.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   14</span>{};</div>
 </div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="../../d3/d8b/PathfinderSystem_8cpp_source.html#l00034">RatedTileModule::getRating()</a>, and <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00017">RatedTile()</a>.</p>
+
 </div>
 </div>
 <a id="ad254d25309ad6e6a57a088c07606e8d0" name="ad254d25309ad6e6a57a088c07606e8d0"></a>
@@ -255,19 +274,18 @@ Public Attributes</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00012">12</a> of file <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html">PathfinderSystem.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   12</span>{};</div>
 </div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html#l00017">RatedTile()</a>, and <a class="el" href="../../d3/d8b/PathfinderSystem_8cpp_source.html#l00042">RatedTileModule::reconstructPath()</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li><a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html">PathfinderSystem.h</a></li>
+<li>src/Game/Systems/<a class="el" href="../../d2/d2e/PathfinderSystem_8h_source.html">PathfinderSystem.h</a></li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="../../dc/d91/structRatedTile.html">RatedTile</a></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
 </body>
 </html>

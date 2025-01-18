@@ -1,4 +1,13 @@
 # Design guideline
+
+> - Simple is better than complex.
+> - Complex is better than complicated.
+> - Flat is better than nested.
+> - Sparse (data) is better than dense.
+> - Readability counts.
+> - Practicality beats purity.
+> - Now is better than never.
+
 ## Links
 [Noel's blog](https://gamesfromwithin.com/category/c)
 

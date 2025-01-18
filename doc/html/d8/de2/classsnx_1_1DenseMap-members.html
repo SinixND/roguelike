@@ -11,18 +11,11 @@
 <script type="text/javascript" src="../../dynsections.js"></script>
 <script type="text/javascript" src="../../clipboard.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../cookie.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -35,18 +28,6 @@
    <div id="projectname">Roguelike
    </div>
   </td>
-    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
-          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td>
  </tr>
  </tbody>
 </table>
@@ -63,23 +44,22 @@ var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 $(function() { codefold.init(1); });
 /* @license-end */
 </script>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('d1/d71/classsnx_1_1DenseMap.html','../../'); initResizable(true); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search',false);
+  $(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -101,6 +81,12 @@ $(function(){initNavTree('d1/d71/classsnx_1_1DenseMap.html','../../'); initResiz
 </div>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="../../db/dc7/namespacesnx.html">snx</a></li><li class="navelem"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">DenseMap</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">snx::DenseMap&lt; Key, Type &gt; Member List</div></div>
 </div><!--header-->
@@ -108,34 +94,35 @@ $(function(){initNavTree('d1/d71/classsnx_1_1DenseMap.html','../../'); initResiz
 
 <p>This is the complete list of members for <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>assign</b>(Key const &amp;key, Type const &amp;value=Type{}) (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>at</b>(Key const &amp;key) const (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>at</b>(Key const &amp;key) (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>begin</b>() const (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>begin</b>() (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>changeKey</b>(Key const &amp;from, Key const &amp;to) (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>clear</b>() (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>contains</b>(Key const &amp;key) const (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>emplace</b>(Key const &amp;key, Args &amp;&amp;... args) (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>emplace_or_assign</b>(Key const &amp;key, Args &amp;&amp;... args) (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>end</b>() const (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>end</b>() (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>erase</b>(Key const &amp;key) (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>insert</b>(Key const &amp;key, Type const &amp;value=Type{}) (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>insert_or_assign</b>(Key const &amp;key, Type const &amp;value=Type{}) (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>key</b>(size_t index) const (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>operator[]</b>(Key const &amp;key) (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>size</b>() const (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>validate</b>() (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>values</b>() const (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>values</b>() (defined in <a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a>)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a8c14b2563eff212c2152d1ce9fe97324">assign</a>(Key const &amp;key, Type const &amp;value=Type{})</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#afcea13badc5b773f33da12d0c54732bf">at</a>(Key const &amp;key) const</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#ad9c662038e59f64ef410a7e45e90407e">at</a>(Key const &amp;key)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#aa33c58611881268436337bcdbe1b1301">begin</a>() const</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a4db5defe6bf7ac9cc1eea30dfd6992d9">begin</a>()</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#ae683498dc2b94659ac9c01cf203fd4ac">changeKey</a>(Key const &amp;from, Key const &amp;to)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a4fd45a1ff90f5a57893fdd0bd88f3d19">clear</a>()</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a6b8453f740a1191ca8743a017a36dc81">contains</a>(Key const &amp;key) const</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#af0bfdac633389e7774d2065f5be32b61">emplace</a>(Key const &amp;key, Args &amp;&amp;... args)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a4174bb264c7f2745c7e6c25aadd4e470">emplace_or_assign</a>(Key const &amp;key, Args &amp;&amp;... args)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a03d076b4ea321de3501e677de088efd4">end</a>() const</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#aea73ecb6502bfb42abcda6a86bb77416">end</a>()</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#ae860492291f8e044719584d85dfdc415">erase</a>(Key const &amp;key)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#ac2412b3da2646c057371668e051401e1">indexToKey_</a></td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a754db698c82ac1d13d535202406214bf">insert</a>(Key const &amp;key, Type const &amp;value=Type{})</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a86961bd00132eee8c9394f4befc7f880">insert_or_assign</a>(Key const &amp;key, Type const &amp;value=Type{})</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a3b91ca342d509a4f0544b458cca1cd14">key</a>(size_t index) const</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#ae9fa9985bc61474002a73007a135daff">keyToIndex_</a></td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#ab7b528c6034f28c3bf19f698fab1e7a3">operator[]</a>(Key const &amp;key)</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#ac1c9d7941c7aeaa152552d82e47033f7">size</a>() const</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a8f2e3f17760962e4dd7ad7406ed1de7c">validate</a>()</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a862a3a04c6e2f7136528522aca86c2c4">values</a>() const</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a0c2b07f008fbb224c44465857ceb9844">values</a>()</td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html#a37586ce2e7e6f2414f447159c80f9e93">values_</a></td><td class="entry"><a class="el" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt; Key, Type &gt;</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
 </table></div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
 </body>
 </html>

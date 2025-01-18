@@ -5,24 +5,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Roguelike: CollisionSystem.cpp Source File</title>
+<title>Roguelike: src/Game/Systems/CollisionSystem.cpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
 <script type="text/javascript" src="../../clipboard.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../cookie.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -35,18 +28,6 @@
    <div id="projectname">Roguelike
    </div>
   </td>
-    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
-          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td>
  </tr>
  </tbody>
 </table>
@@ -63,23 +44,22 @@ var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 $(function() { codefold.init(1); });
 /* @license-end */
 </script>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('d0/d4f/CollisionSystem_8cpp_source.html','../../'); initResizable(true); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search',false);
+  $(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -101,25 +81,32 @@ $(function(){initNavTree('d0/d4f/CollisionSystem_8cpp_source.html','../../'); in
 </div>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="../../dir_b43036362fece0f978c3c8156df55d19.html">Game</a></li><li class="navelem"><a class="el" href="../../dir_13d34b211ae47a7ed32640f04380e200.html">Systems</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">CollisionSystem.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;CollisionSystem.h&quot;</span></div>
+<a href="../../d0/d4f/CollisionSystem_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d1a/CollisionSystem_8h.html">CollisionSystem.h</a>&quot;</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;Convert.h&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;Enemies.h&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Tiles.h&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;raylibEx.h&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d42/Convert_8h.html">Convert.h</a>&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/dc1/Enemies_8h.html">Enemies.h</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d13/Tiles_8h.html">Tiles.h</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="../../df/d66/raylibEx_8h.html">raylibEx.h</a>&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keywordtype">bool</span> checkCollisionWithNextPosition(</div>
+<div class="foldopen" id="foldopen00008" data-start="{" data-end="}">
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="../../d0/d4f/CollisionSystem_8cpp.html#aed9eb95269eb2b162ad116ef0d8f742c">    8</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="../../d0/d4f/CollisionSystem_8cpp.html#aed9eb95269eb2b162ad116ef0d8f742c">checkCollisionWithNextPosition</a>(</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <a class="code hl_struct" href="../../d8/d32/structEnemies.html">Enemies</a> <span class="keyword">const</span>&amp; enemies,</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <a class="code hl_struct" href="../../da/dba/structVector2I.html">Vector2I</a> <span class="keyword">const</span>&amp; tilePositionToCheck</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>)</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>{</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keywordflow">for</span> ( <span class="keywordtype">size_t</span> idx{ 0 }; idx &lt; enemies.transforms.size(); ++idx )</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keywordflow">for</span> ( <span class="keywordtype">size_t</span> idx{ 0 }; idx &lt; enemies.<a class="code hl_variable" href="../../d8/d32/structEnemies.html#a63924b89627c2968923361afd9d91a38">transforms</a>.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#ac1c9d7941c7aeaa152552d82e47033f7">size</a>(); ++idx )</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        <span class="keywordflow">if</span> ( Vector2Equals( tilePositionToCheck, Vector2Add( Convert::worldToTile( enemies.positions.values().at( idx ) ), enemies.transforms.values().at( idx ).direction ) ) )</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        <span class="keywordflow">if</span> ( <a class="code hl_function" href="../../df/d66/raylibEx_8h.html#a2e0ce0f6ccae05e15ca02a19d8dc759d">Vector2Equals</a>( tilePositionToCheck, <a class="code hl_function" href="../../df/d66/raylibEx_8h.html#a58f1f52a8d565d491f0351a6d98a62b4">Vector2Add</a>( <a class="code hl_function" href="../../db/dba/namespaceConvert.html#aefecf933e03deb2b5b7fc600d831c587">Convert::worldToTile</a>( enemies.<a class="code hl_variable" href="../../d8/d32/structEnemies.html#a23b47e6604f6ee0581abc5c0df7ae971">positions</a>.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#a862a3a04c6e2f7136528522aca86c2c4">values</a>().at( idx ) ), enemies.<a class="code hl_variable" href="../../d8/d32/structEnemies.html#a63924b89627c2968923361afd9d91a38">transforms</a>.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#a862a3a04c6e2f7136528522aca86c2c4">values</a>().at( idx ).direction ) ) )</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        {</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        }</div>
@@ -127,8 +114,10 @@ $(function(){initNavTree('d0/d4f/CollisionSystem_8cpp_source.html','../../'); in
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>}</div>
+</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keywordtype">bool</span> CollisionSystem::checkCollision(</div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="}">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="../../da/d86/namespaceCollisionSystem.html#adca6281a0dd373d6beb487a170cbd137">   24</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="../../da/d86/namespaceCollisionSystem.html#adca6281a0dd373d6beb487a170cbd137">CollisionSystem::checkCollision</a>(</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <a class="code hl_struct" href="../../db/d9b/structTiles.html">Tiles</a> <span class="keyword">const</span>&amp; tiles,</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <a class="code hl_struct" href="../../d8/d32/structEnemies.html">Enemies</a> <span class="keyword">const</span>&amp; enemies,</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="comment">// Objects const&amp; objects,</span></div>
@@ -138,27 +127,42 @@ $(function(){initNavTree('d0/d4f/CollisionSystem_8cpp_source.html','../../'); in
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordflow">return</span> (</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="comment">//* Next tilePosition unit moves to</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        enemies.ids.contains( tilePositionToCheck )</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        enemies.<a class="code hl_variable" href="../../d8/d32/structEnemies.html#adcbd6b2918313683e130a2c7f363887a">ids</a>.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#a6b8453f740a1191ca8743a017a36dc81">contains</a>( tilePositionToCheck )</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="comment">// || map.objects_.getIsSolids().contains(tilePositionToCheck)</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        || tiles.isSolids.contains( tilePositionToCheck )</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        || Vector2Equals( tilePositionToCheck, heroPosition )</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        || checkCollisionWithNextPosition(</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        || tiles.<a class="code hl_variable" href="../../db/d9b/structTiles.html#a0194616a38b1a24d118db706ef335104">isSolids</a>.contains( tilePositionToCheck )</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        || <a class="code hl_function" href="../../df/d66/raylibEx_8h.html#a2e0ce0f6ccae05e15ca02a19d8dc759d">Vector2Equals</a>( tilePositionToCheck, heroPosition )</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        || <a class="code hl_function" href="../../d0/d4f/CollisionSystem_8cpp.html#aed9eb95269eb2b162ad116ef0d8f742c">checkCollisionWithNextPosition</a>(</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            enemies,</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            tilePositionToCheck</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        )</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    );</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>}</div>
+</div>
+<div class="ttc" id="aCollisionSystem_8cpp_html_aed9eb95269eb2b162ad116ef0d8f742c"><div class="ttname"><a href="../../d0/d4f/CollisionSystem_8cpp.html#aed9eb95269eb2b162ad116ef0d8f742c">checkCollisionWithNextPosition</a></div><div class="ttdeci">bool checkCollisionWithNextPosition(Enemies const &amp;enemies, Vector2I const &amp;tilePositionToCheck)</div><div class="ttdef"><b>Definition</b> <a href="#l00008">CollisionSystem.cpp:8</a></div></div>
+<div class="ttc" id="aCollisionSystem_8h_html"><div class="ttname"><a href="../../d5/d1a/CollisionSystem_8h.html">CollisionSystem.h</a></div></div>
+<div class="ttc" id="aConvert_8h_html"><div class="ttname"><a href="../../de/d42/Convert_8h.html">Convert.h</a></div></div>
+<div class="ttc" id="aEnemies_8h_html"><div class="ttname"><a href="../../d6/dc1/Enemies_8h.html">Enemies.h</a></div></div>
+<div class="ttc" id="aTiles_8h_html"><div class="ttname"><a href="../../d5/d13/Tiles_8h.html">Tiles.h</a></div></div>
+<div class="ttc" id="aclasssnx_1_1DenseMap_html_a6b8453f740a1191ca8743a017a36dc81"><div class="ttname"><a href="../../d1/d71/classsnx_1_1DenseMap.html#a6b8453f740a1191ca8743a017a36dc81">snx::DenseMap::contains</a></div><div class="ttdeci">bool contains(Key const &amp;key) const</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d73/DenseMap_8h_source.html#l00221">DenseMap.h:221</a></div></div>
+<div class="ttc" id="aclasssnx_1_1DenseMap_html_a862a3a04c6e2f7136528522aca86c2c4"><div class="ttname"><a href="../../d1/d71/classsnx_1_1DenseMap.html#a862a3a04c6e2f7136528522aca86c2c4">snx::DenseMap::values</a></div><div class="ttdeci">std::vector&lt; Type &gt; const &amp; values() const</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d73/DenseMap_8h_source.html#l00233">DenseMap.h:233</a></div></div>
+<div class="ttc" id="aclasssnx_1_1DenseMap_html_ac1c9d7941c7aeaa152552d82e47033f7"><div class="ttname"><a href="../../d1/d71/classsnx_1_1DenseMap.html#ac1c9d7941c7aeaa152552d82e47033f7">snx::DenseMap::size</a></div><div class="ttdeci">size_t size() const</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d73/DenseMap_8h_source.html#l00039">DenseMap.h:39</a></div></div>
+<div class="ttc" id="anamespaceCollisionSystem_html_adca6281a0dd373d6beb487a170cbd137"><div class="ttname"><a href="../../da/d86/namespaceCollisionSystem.html#adca6281a0dd373d6beb487a170cbd137">CollisionSystem::checkCollision</a></div><div class="ttdeci">bool checkCollision(Tiles const &amp;tiles, Enemies const &amp;enemies, Vector2I const &amp;tilePositionToCheck, Vector2I const &amp;heroPosition)</div><div class="ttdef"><b>Definition</b> <a href="#l00024">CollisionSystem.cpp:24</a></div></div>
+<div class="ttc" id="anamespaceConvert_html_aefecf933e03deb2b5b7fc600d831c587"><div class="ttname"><a href="../../db/dba/namespaceConvert.html#aefecf933e03deb2b5b7fc600d831c587">Convert::worldToTile</a></div><div class="ttdeci">Vector2I worldToTile(Vector2 const &amp;pixel)</div><div class="ttdef"><b>Definition</b> <a href="../../de/d42/Convert_8h_source.html#l00020">Convert.h:20</a></div></div>
+<div class="ttc" id="araylibEx_8h_html"><div class="ttname"><a href="../../df/d66/raylibEx_8h.html">raylibEx.h</a></div></div>
+<div class="ttc" id="araylibEx_8h_html_a2e0ce0f6ccae05e15ca02a19d8dc759d"><div class="ttname"><a href="../../df/d66/raylibEx_8h.html#a2e0ce0f6ccae05e15ca02a19d8dc759d">Vector2Equals</a></div><div class="ttdeci">RMAPI bool Vector2Equals(Vector2I const &amp;v1, Vector2I const &amp;v2)</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00615">raylibEx.h:615</a></div></div>
+<div class="ttc" id="araylibEx_8h_html_a58f1f52a8d565d491f0351a6d98a62b4"><div class="ttname"><a href="../../df/d66/raylibEx_8h.html#a58f1f52a8d565d491f0351a6d98a62b4">Vector2Add</a></div><div class="ttdeci">RMAPI Vector2I Vector2Add(Vector2I const &amp;v1, Vector2I const &amp;v2)</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00564">raylibEx.h:564</a></div></div>
 <div class="ttc" id="astructEnemies_html"><div class="ttname"><a href="../../d8/d32/structEnemies.html">Enemies</a></div><div class="ttdef"><b>Definition</b> <a href="../../d6/dc1/Enemies_8h_source.html#l00019">Enemies.h:20</a></div></div>
+<div class="ttc" id="astructEnemies_html_a23b47e6604f6ee0581abc5c0df7ae971"><div class="ttname"><a href="../../d8/d32/structEnemies.html#a23b47e6604f6ee0581abc5c0df7ae971">Enemies::positions</a></div><div class="ttdeci">snx::DenseMap&lt; size_t, Vector2 &gt; positions</div><div class="ttdef"><b>Definition</b> <a href="../../d6/dc1/Enemies_8h_source.html#l00023">Enemies.h:23</a></div></div>
+<div class="ttc" id="astructEnemies_html_a63924b89627c2968923361afd9d91a38"><div class="ttname"><a href="../../d8/d32/structEnemies.html#a63924b89627c2968923361afd9d91a38">Enemies::transforms</a></div><div class="ttdeci">snx::DenseMap&lt; size_t, TransformComponent &gt; transforms</div><div class="ttdef"><b>Definition</b> <a href="../../d6/dc1/Enemies_8h_source.html#l00025">Enemies.h:25</a></div></div>
+<div class="ttc" id="astructEnemies_html_adcbd6b2918313683e130a2c7f363887a"><div class="ttname"><a href="../../d8/d32/structEnemies.html#adcbd6b2918313683e130a2c7f363887a">Enemies::ids</a></div><div class="ttdeci">snx::DenseMap&lt; Vector2I, size_t &gt; ids</div><div class="ttdef"><b>Definition</b> <a href="../../d6/dc1/Enemies_8h_source.html#l00021">Enemies.h:21</a></div></div>
 <div class="ttc" id="astructTiles_html"><div class="ttname"><a href="../../db/d9b/structTiles.html">Tiles</a></div><div class="ttdef"><b>Definition</b> <a href="../../d5/d13/Tiles_8h_source.html#l00010">Tiles.h:11</a></div></div>
+<div class="ttc" id="astructTiles_html_a0194616a38b1a24d118db706ef335104"><div class="ttname"><a href="../../db/d9b/structTiles.html#a0194616a38b1a24d118db706ef335104">Tiles::isSolids</a></div><div class="ttdeci">std::unordered_set&lt; Vector2I &gt; isSolids</div><div class="ttdef"><b>Definition</b> <a href="../../d5/d13/Tiles_8h_source.html#l00015">Tiles.h:15</a></div></div>
 <div class="ttc" id="astructVector2I_html"><div class="ttname"><a href="../../da/dba/structVector2I.html">Vector2I</a></div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00281">raylibEx.h:282</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="../../dir_b43036362fece0f978c3c8156df55d19.html">Game</a></li><li class="navelem"><a class="el" href="../../dir_13d34b211ae47a7ed32640f04380e200.html">Systems</a></li><li class="navelem"><b>CollisionSystem.cpp</b></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
 </body>
 </html>

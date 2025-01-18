@@ -5,24 +5,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Roguelike: ChunkSystem.cpp Source File</title>
+<title>Roguelike: src/Scene/Systems/ChunkSystem.cpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
 <script type="text/javascript" src="../../clipboard.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../cookie.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -35,18 +28,6 @@
    <div id="projectname">Roguelike
    </div>
   </td>
-    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
-          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td>
  </tr>
  </tbody>
 </table>
@@ -63,23 +44,22 @@ var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 $(function() { codefold.init(1); });
 /* @license-end */
 </script>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('d0/df3/ChunkSystem_8cpp_source.html','../../'); initResizable(true); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search',false);
+  $(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -101,43 +81,52 @@ $(function(){initNavTree('d0/df3/ChunkSystem_8cpp_source.html','../../'); initRe
 </div>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="../../dir_204260ac86670e69c647eaba8962e745.html">Scene</a></li><li class="navelem"><a class="el" href="../../dir_680c0cbfb09800d74ae0cd6bbfb8565e.html">Systems</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">ChunkSystem.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;ChunkSystem.h&quot;</span></div>
+<a href="../../d0/df3/ChunkSystem_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;<a class="code" href="../../d4/deb/ChunkSystem_8h.html">ChunkSystem.h</a>&quot;</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;Chunk.h&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;ChunkData.h&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Colors.h&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;Convert.h&quot;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;DenseMap.h&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;RenderSystem.h&quot;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;raylibEx.h&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="../../db/d9d/Chunk_8h.html">Chunk.h</a>&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="../../da/d1d/ChunkData_8h.html">ChunkData.h</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="../../da/d4f/Colors_8h.html">Colors.h</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d42/Convert_8h.html">Convert.h</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="../../dc/d73/DenseMap_8h.html">DenseMap.h</a>&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d45/RenderSystem_8h.html">RenderSystem.h</a>&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="../../df/d66/raylibEx_8h.html">raylibEx.h</a>&quot;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;raylib.h&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keywordtype">void</span> verifyRequiredChunkExists(</div>
+<div class="foldopen" id="foldopen00012" data-start="{" data-end="}">
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="../../d0/df3/ChunkSystem_8cpp.html#a63065905118dcfbd2eeaacbb1c23d1ca">   12</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d0/df3/ChunkSystem_8cpp.html#a63065905118dcfbd2eeaacbb1c23d1ca">verifyRequiredChunkExists</a>(</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <a class="code hl_struct" href="../../da/dba/structVector2I.html">Vector2I</a> <span class="keyword">const</span>&amp; tilePosition,</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <a class="code hl_class" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt;Vector2I, Chunk&gt;</a>&amp; chunks</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>)</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>{</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <a class="code hl_struct" href="../../da/dba/structVector2I.html">Vector2I</a> chunkPosition{ Convert::tileToChunk( tilePosition ) };</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <a class="code hl_struct" href="../../da/dba/structVector2I.html">Vector2I</a> chunkPosition{ <a class="code hl_function" href="../../db/dba/namespaceConvert.html#ac292770cc27a6326c3b5407637f919d4">Convert::tileToChunk</a>( tilePosition ) };</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="comment">//* If clause is needed due to exclude unnecessary LoadRenderTexture() calls</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keywordflow">if</span> ( !chunks.contains( chunkPosition ) )</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keywordflow">if</span> ( !chunks.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#a6b8453f740a1191ca8743a017a36dc81">contains</a>( chunkPosition ) )</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    {</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        chunks.emplace(</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        chunks.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#af0bfdac633389e7774d2065f5be32b61">emplace</a>(</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>            chunkPosition,</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            Convert::tileToWorld( chunkPosition ),</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            <a class="code hl_function" href="../../db/dba/namespaceConvert.html#a3d9e49969e066c257b2a94720e1902ff">Convert::tileToWorld</a>( chunkPosition ),</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            LoadRenderTexture(</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                ChunkData::chunkSize_f,</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>                ChunkData::chunkSize_f</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                <a class="code hl_variable" href="../../d6/de3/namespaceChunkData.html#adb19e23b911135c9486b6cba903894ee">ChunkData::chunkSize_f</a>,</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>                <a class="code hl_variable" href="../../d6/de3/namespaceChunkData.html#adb19e23b911135c9486b6cba903894ee">ChunkData::chunkSize_f</a></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            )</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        );</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    }</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}</div>
+</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keywordtype">void</span> ChunkSystem::init(</div>
+<div class="foldopen" id="foldopen00033" data-start="{" data-end="}">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="../../d5/d6f/namespaceChunkSystem.html#ada4d86f41206d0929a41b09131d06450">   33</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d5/d6f/namespaceChunkSystem.html#ada4d86f41206d0929a41b09131d06450">ChunkSystem::init</a>(</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <a class="code hl_struct" href="../../dd/d9b/structTextures.html">Textures</a> <span class="keyword">const</span>&amp; textures,</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <a class="code hl_class" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt;Vector2I, Chunk&gt;</a>&amp; chunks,</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <a class="code hl_class" href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap&lt;Vector2I, Vector2&gt;</a> <span class="keyword">const</span>&amp; tilesPositions,</div>
@@ -150,13 +139,13 @@ $(function(){initNavTree('d0/df3/ChunkSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        UnloadRenderTexture( chunk.renderTexture );</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    }</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    chunks.clear();</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    chunks.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#a4fd45a1ff90f5a57893fdd0bd88f3d19">clear</a>();</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">//* Create necessary chunks</span></div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordflow">for</span> ( Vector2 <span class="keyword">const</span>&amp; position : tilesPositions )</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        verifyRequiredChunkExists(</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            Convert::worldToTile( position ),</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <a class="code hl_function" href="../../d0/df3/ChunkSystem_8cpp.html#a63065905118dcfbd2eeaacbb1c23d1ca">verifyRequiredChunkExists</a>(</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            <a class="code hl_function" href="../../db/dba/namespaceConvert.html#aefecf933e03deb2b5b7fc600d831c587">Convert::worldToTile</a>( position ),</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            chunks</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        );</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    }</div>
@@ -168,7 +157,7 @@ $(function(){initNavTree('d0/df3/ChunkSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        BeginTextureMode( chunk.renderTexture );</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        ClearBackground( Colors::bg );</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        ClearBackground( <a class="code hl_variable" href="../../d0/d95/namespaceColors.html#a2443c7939d10a7364589982d0e82c913">Colors::bg</a> );</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="comment">//* Iterate all tilePositions in chunk</span></div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordflow">for</span> ( <span class="keywordtype">int</span> x{ chunkSize.left() - 1 }; x &lt; ( chunkSize.right() + 2 ); ++x )</div>
@@ -177,15 +166,15 @@ $(function(){initNavTree('d0/df3/ChunkSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            {</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                <a class="code hl_struct" href="../../da/dba/structVector2I.html">Vector2I</a> tilePosition{ x, y };</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                <span class="keywordflow">if</span> ( !tilesRenderIds.contains( tilePosition ) )</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                <span class="keywordflow">if</span> ( !tilesRenderIds.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#a6b8453f740a1191ca8743a017a36dc81">contains</a>( tilePosition ) )</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                {</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                    <span class="keywordflow">continue</span>;</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                }</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                RenderSystem::renderToChunk(</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                <a class="code hl_function" href="../../d0/d48/namespaceRenderSystem.html#a5b6e9bb87ae5ced1329a0301045ce2f1">RenderSystem::renderToChunk</a>(</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                    textures,</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                    tilesRenderIds.at( tilePosition ),</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                    tilesPositions.at( tilePosition ),</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                    tilesRenderIds.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#afcea13badc5b773f33da12d0c54732bf">at</a>( tilePosition ),</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                    tilesPositions.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#afcea13badc5b773f33da12d0c54732bf">at</a>( tilePosition ),</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                    chunk</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                );</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            }</div>
@@ -194,19 +183,37 @@ $(function(){initNavTree('d0/df3/ChunkSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        EndTextureMode();</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    }</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>}</div>
+</div>
+<div class="ttc" id="aChunkData_8h_html"><div class="ttname"><a href="../../da/d1d/ChunkData_8h.html">ChunkData.h</a></div></div>
+<div class="ttc" id="aChunkSystem_8cpp_html_a63065905118dcfbd2eeaacbb1c23d1ca"><div class="ttname"><a href="../../d0/df3/ChunkSystem_8cpp.html#a63065905118dcfbd2eeaacbb1c23d1ca">verifyRequiredChunkExists</a></div><div class="ttdeci">void verifyRequiredChunkExists(Vector2I const &amp;tilePosition, snx::DenseMap&lt; Vector2I, Chunk &gt; &amp;chunks)</div><div class="ttdef"><b>Definition</b> <a href="#l00012">ChunkSystem.cpp:12</a></div></div>
+<div class="ttc" id="aChunkSystem_8h_html"><div class="ttname"><a href="../../d4/deb/ChunkSystem_8h.html">ChunkSystem.h</a></div></div>
+<div class="ttc" id="aChunk_8h_html"><div class="ttname"><a href="../../db/d9d/Chunk_8h.html">Chunk.h</a></div></div>
+<div class="ttc" id="aColors_8h_html"><div class="ttname"><a href="../../da/d4f/Colors_8h.html">Colors.h</a></div></div>
+<div class="ttc" id="aConvert_8h_html"><div class="ttname"><a href="../../de/d42/Convert_8h.html">Convert.h</a></div></div>
+<div class="ttc" id="aDenseMap_8h_html"><div class="ttname"><a href="../../dc/d73/DenseMap_8h.html">DenseMap.h</a></div></div>
+<div class="ttc" id="aRenderSystem_8h_html"><div class="ttname"><a href="../../de/d45/RenderSystem_8h.html">RenderSystem.h</a></div></div>
 <div class="ttc" id="aclassRectangleExI_html"><div class="ttname"><a href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00287">raylibEx.h:288</a></div></div>
 <div class="ttc" id="aclasssnx_1_1DenseMap_html"><div class="ttname"><a href="../../d1/d71/classsnx_1_1DenseMap.html">snx::DenseMap</a></div><div class="ttdef"><b>Definition</b> <a href="../../dc/d73/DenseMap_8h_source.html#l00013">DenseMap.h:14</a></div></div>
+<div class="ttc" id="aclasssnx_1_1DenseMap_html_a4fd45a1ff90f5a57893fdd0bd88f3d19"><div class="ttname"><a href="../../d1/d71/classsnx_1_1DenseMap.html#a4fd45a1ff90f5a57893fdd0bd88f3d19">snx::DenseMap::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d73/DenseMap_8h_source.html#l00190">DenseMap.h:190</a></div></div>
+<div class="ttc" id="aclasssnx_1_1DenseMap_html_a6b8453f740a1191ca8743a017a36dc81"><div class="ttname"><a href="../../d1/d71/classsnx_1_1DenseMap.html#a6b8453f740a1191ca8743a017a36dc81">snx::DenseMap::contains</a></div><div class="ttdeci">bool contains(Key const &amp;key) const</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d73/DenseMap_8h_source.html#l00221">DenseMap.h:221</a></div></div>
+<div class="ttc" id="aclasssnx_1_1DenseMap_html_af0bfdac633389e7774d2065f5be32b61"><div class="ttname"><a href="../../d1/d71/classsnx_1_1DenseMap.html#af0bfdac633389e7774d2065f5be32b61">snx::DenseMap::emplace</a></div><div class="ttdeci">Type const &amp; emplace(Key const &amp;key, Args &amp;&amp;... args)</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d73/DenseMap_8h_source.html#l00101">DenseMap.h:101</a></div></div>
+<div class="ttc" id="aclasssnx_1_1DenseMap_html_afcea13badc5b773f33da12d0c54732bf"><div class="ttname"><a href="../../d1/d71/classsnx_1_1DenseMap.html#afcea13badc5b773f33da12d0c54732bf">snx::DenseMap::at</a></div><div class="ttdeci">Type const &amp; at(Key const &amp;key) const</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d73/DenseMap_8h_source.html#l00199">DenseMap.h:199</a></div></div>
+<div class="ttc" id="anamespaceChunkData_html_adb19e23b911135c9486b6cba903894ee"><div class="ttname"><a href="../../d6/de3/namespaceChunkData.html#adb19e23b911135c9486b6cba903894ee">ChunkData::chunkSize_f</a></div><div class="ttdeci">float constexpr chunkSize_f</div><div class="ttdef"><b>Definition</b> <a href="../../da/d1d/ChunkData_8h_source.html#l00011">ChunkData.h:11</a></div></div>
+<div class="ttc" id="anamespaceChunkSystem_html_ada4d86f41206d0929a41b09131d06450"><div class="ttname"><a href="../../d5/d6f/namespaceChunkSystem.html#ada4d86f41206d0929a41b09131d06450">ChunkSystem::init</a></div><div class="ttdeci">void init(Textures const &amp;textures, snx::DenseMap&lt; Vector2I, Chunk &gt; &amp;chunks, snx::DenseMap&lt; Vector2I, Vector2 &gt; const &amp;tilesPositions, snx::DenseMap&lt; Vector2I, RenderId &gt; const &amp;tilesRenderIds)</div><div class="ttdef"><b>Definition</b> <a href="#l00033">ChunkSystem.cpp:33</a></div></div>
+<div class="ttc" id="anamespaceColors_html_a2443c7939d10a7364589982d0e82c913"><div class="ttname"><a href="../../d0/d95/namespaceColors.html#a2443c7939d10a7364589982d0e82c913">Colors::bg</a></div><div class="ttdeci">Color constexpr bg</div><div class="ttdef"><b>Definition</b> <a href="../../da/d4f/Colors_8h_source.html#l00009">Colors.h:9</a></div></div>
+<div class="ttc" id="anamespaceConvert_html_a3d9e49969e066c257b2a94720e1902ff"><div class="ttname"><a href="../../db/dba/namespaceConvert.html#a3d9e49969e066c257b2a94720e1902ff">Convert::tileToWorld</a></div><div class="ttdeci">Vector2 tileToWorld(Vector2I const &amp;tilePosition)</div><div class="ttdef"><b>Definition</b> <a href="../../de/d42/Convert_8h_source.html#l00030">Convert.h:30</a></div></div>
+<div class="ttc" id="anamespaceConvert_html_ac292770cc27a6326c3b5407637f919d4"><div class="ttname"><a href="../../db/dba/namespaceConvert.html#ac292770cc27a6326c3b5407637f919d4">Convert::tileToChunk</a></div><div class="ttdeci">Vector2I tileToChunk(Vector2I const &amp;tilePosition)</div><div class="ttdef"><b>Definition</b> <a href="../../de/d42/Convert_8h_source.html#l00069">Convert.h:69</a></div></div>
+<div class="ttc" id="anamespaceConvert_html_aefecf933e03deb2b5b7fc600d831c587"><div class="ttname"><a href="../../db/dba/namespaceConvert.html#aefecf933e03deb2b5b7fc600d831c587">Convert::worldToTile</a></div><div class="ttdeci">Vector2I worldToTile(Vector2 const &amp;pixel)</div><div class="ttdef"><b>Definition</b> <a href="../../de/d42/Convert_8h_source.html#l00020">Convert.h:20</a></div></div>
+<div class="ttc" id="anamespaceRenderSystem_html_a5b6e9bb87ae5ced1329a0301045ce2f1"><div class="ttname"><a href="../../d0/d48/namespaceRenderSystem.html#a5b6e9bb87ae5ced1329a0301045ce2f1">RenderSystem::renderToChunk</a></div><div class="ttdeci">void renderToChunk(Textures const &amp;textures, RenderId renderId, Vector2 const &amp;worldPixel, Chunk &amp;chunk, Color const &amp;tint=WHITE)</div><div class="ttdef"><b>Definition</b> <a href="../../db/daa/RenderSystem_8cpp_source.html#l00087">RenderSystem.cpp:87</a></div></div>
+<div class="ttc" id="araylibEx_8h_html"><div class="ttname"><a href="../../df/d66/raylibEx_8h.html">raylibEx.h</a></div></div>
 <div class="ttc" id="astructChunk_html"><div class="ttname"><a href="../../de/df5/structChunk.html">Chunk</a></div><div class="ttdef"><b>Definition</b> <a href="../../db/d9d/Chunk_8h_source.html#l00013">Chunk.h:14</a></div></div>
 <div class="ttc" id="astructTextures_html"><div class="ttname"><a href="../../dd/d9b/structTextures.html">Textures</a></div><div class="ttdef"><b>Definition</b> <a href="../../d4/dc1/Textures_8h_source.html#l00009">Textures.h:10</a></div></div>
 <div class="ttc" id="astructVector2I_html"><div class="ttname"><a href="../../da/dba/structVector2I.html">Vector2I</a></div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00281">raylibEx.h:282</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="../../dir_204260ac86670e69c647eaba8962e745.html">Scene</a></li><li class="navelem"><a class="el" href="../../dir_680c0cbfb09800d74ae0cd6bbfb8565e.html">Systems</a></li><li class="navelem"><b>ChunkSystem.cpp</b></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
 </body>
 </html>

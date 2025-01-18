@@ -1,0 +1,15 @@
+<map id="src/Game/Components/HealthComponent.cpp" name="src/Game/Components/HealthComponent.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="78,5,249,50"/>
+<area shape="rect" id="Node000002" href="$d2/dad/HealthComponent_8h.html" title=" " alt="" coords="5,98,157,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,52,107,89,103,85,140,49"/>
+<area shape="rect" id="Node000003" href="$d9/d04/PublisherStatic_8h.html" title=" " alt="" coords="181,98,312,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,49,224,85,220,89,184,52"/>
+<area shape="rect" id="Node000004" href="$dd/d09/EventId_8h.html" title=" " alt="" coords="33,174,116,201"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="217,129,120,170,118,165,215,124"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="140,174,238,201"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="238,128,211,163,206,160,234,125"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="262,174,348,201"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="259,125,287,160,283,163,255,128"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="373,174,496,201"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="281,124,388,165,386,170,279,129"/>
+</map>

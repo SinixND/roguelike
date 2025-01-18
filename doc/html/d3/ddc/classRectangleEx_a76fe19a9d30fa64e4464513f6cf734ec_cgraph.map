@@ -1,0 +1,9 @@
+<map id="RectangleEx::resizeHeightBottom" name="RectangleEx::resizeHeightBottom">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,49,198,94"/>
+<area shape="rect" id="Node000002" href="$d3/ddc/classRectangleEx.html#a795f8fad6f209a194eae06229e8fcc5c" title=" " alt="" coords="272,5,423,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,48,263,34,264,39,199,53"/>
+<area shape="rect" id="Node000003" href="$d3/ddc/classRectangleEx.html#aea92e0c78238c59b227f4e4f23ceb232" title=" " alt="" coords="252,57,443,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="198,68,236,68,236,74,198,74"/>
+<area shape="rect" id="Node000004" href="$d3/ddc/classRectangleEx.html#ac9f509d19e26eda1087221b3a2f79d65" title=" " alt="" coords="246,109,449,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="199,89,264,103,263,108,198,94"/>
+</map>

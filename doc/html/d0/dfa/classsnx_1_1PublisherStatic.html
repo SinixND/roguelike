@@ -11,18 +11,11 @@
 <script type="text/javascript" src="../../dynsections.js"></script>
 <script type="text/javascript" src="../../clipboard.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../cookie.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -35,18 +28,6 @@
    <div id="projectname">Roguelike
    </div>
   </td>
-    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
-          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td>
  </tr>
  </tbody>
 </table>
@@ -63,23 +44,22 @@ var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 $(function() { codefold.init(1); });
 /* @license-end */
 </script>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('d0/dfa/classsnx_1_1PublisherStatic.html','../../'); initResizable(true); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search',false);
+  $(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -101,22 +81,56 @@ $(function(){initNavTree('d0/dfa/classsnx_1_1PublisherStatic.html','../../'); in
 </div>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="../../db/dc7/namespacesnx.html">snx</a></li><li class="navelem"><a class="el" href="../../d0/dfa/classsnx_1_1PublisherStatic.html">PublisherStatic</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="../../de/d19/classsnx_1_1PublisherStatic-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">snx::PublisherStatic Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="../../d9/d04/PublisherStatic_8h_source.html">PublisherStatic.h</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for snx::PublisherStatic:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../de/d19/classsnx_1_1PublisherStatic__coll__graph.png" border="0" usemap="#asnx_1_1PublisherStatic_coll__map" alt="Collaboration graph"/></div>
+<map name="asnx_1_1PublisherStatic_coll__map" id="asnx_1_1PublisherStatic_coll__map">
+<area shape="rect" title=" " alt="" coords="30,225,180,252"/>
+<area shape="rect" title=" " alt="" coords="5,115,205,160"/>
+<area shape="poly" title=" " alt="" coords="108,175,108,225,102,225,102,175"/>
+<area shape="rect" title=" " alt="" coords="36,5,174,50"/>
+<area shape="poly" title=" " alt="" coords="108,66,108,114,102,114,102,66"/>
+</map>
+<center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a0923b71c9471ac292b5055b9ab0f3c40" id="r_a0923b71c9471ac292b5055b9ab0f3c40"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0923b71c9471ac292b5055b9ab0f3c40">addSubscriber</a> (EventId event, LambdaVoid subscriber, bool fireOnCreation=false)</td></tr>
+<tr class="memitem:a0923b71c9471ac292b5055b9ab0f3c40" id="r_a0923b71c9471ac292b5055b9ab0f3c40"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0923b71c9471ac292b5055b9ab0f3c40">addSubscriber</a> (<a class="el" href="../../dd/d09/EventId_8h.html#a4cf8d4a4d56e9f795518b6541ddeb5bf">EventId</a> event, <a class="el" href="../../d9/d04/PublisherStatic_8h.html#ad802ebaba39f6a8983406bae533f9c8d">LambdaVoid</a> subscriber, bool fireOnCreation=false)</td></tr>
 <tr class="separator:a0923b71c9471ac292b5055b9ab0f3c40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1587ad36250954b028369e9a408410e1" id="r_a1587ad36250954b028369e9a408410e1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1587ad36250954b028369e9a408410e1">publish</a> (EventId event)</td></tr>
+<tr class="memitem:a1587ad36250954b028369e9a408410e1" id="r_a1587ad36250954b028369e9a408410e1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1587ad36250954b028369e9a408410e1">publish</a> (<a class="el" href="../../dd/d09/EventId_8h.html#a4cf8d4a4d56e9f795518b6541ddeb5bf">EventId</a> event)</td></tr>
 <tr class="separator:a1587ad36250954b028369e9a408410e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a415483c71ae9e4da99ba68016cf7b4e0" id="r_a415483c71ae9e4da99ba68016cf7b4e0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a415483c71ae9e4da99ba68016cf7b4e0">publishAll</a> ()</td></tr>
 <tr class="separator:a415483c71ae9e4da99ba68016cf7b4e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
+Static Private Member Functions</h2></td></tr>
+<tr class="memitem:a617ae16410e2fa223ebc40e882205254" id="r_a617ae16410e2fa223ebc40e882205254"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a617ae16410e2fa223ebc40e882205254">ensureList</a> (<a class="el" href="../../dd/d09/EventId_8h.html#a4cf8d4a4d56e9f795518b6541ddeb5bf">EventId</a> event)</td></tr>
+<tr class="separator:a617ae16410e2fa223ebc40e882205254"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30350ce126189f65760b37adcad1e17d" id="r_a30350ce126189f65760b37adcad1e17d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30350ce126189f65760b37adcad1e17d">notifyAllSubscribers</a> (std::forward_list&lt; <a class="el" href="../../d9/d04/PublisherStatic_8h.html#ad802ebaba39f6a8983406bae533f9c8d">LambdaVoid</a> &gt; &amp;subscriberList)</td></tr>
+<tr class="separator:a30350ce126189f65760b37adcad1e17d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:a9eb721818107fde658b27613229d67f2" id="r_a9eb721818107fde658b27613229d67f2"><td class="memItemLeft" align="right" valign="top">static std::unordered_map&lt; <a class="el" href="../../dd/d09/EventId_8h.html#a4cf8d4a4d56e9f795518b6541ddeb5bf">EventId</a>, <a class="el" href="../../db/dc7/namespacesnx.html#aa86e15ee66c97bfa65e7794280a2bf2f">SubscriberList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9eb721818107fde658b27613229d67f2">eventToSubscriberLists_</a> { {} }</td></tr>
+<tr class="separator:a9eb721818107fde658b27613229d67f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
@@ -134,12 +148,12 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">static void snx::PublisherStatic::addSubscriber </td>
           <td>(</td>
-          <td class="paramtype">EventId</td>          <td class="paramname"><span class="paramname"><em>event</em></span>, </td>
+          <td class="paramtype"><a class="el" href="../../dd/d09/EventId_8h.html#a4cf8d4a4d56e9f795518b6541ddeb5bf">EventId</a></td>          <td class="paramname"><span class="paramname"><em>event</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">LambdaVoid</td>          <td class="paramname"><span class="paramname"><em>subscriber</em></span>, </td>
+          <td class="paramtype"><a class="el" href="../../d9/d04/PublisherStatic_8h.html#ad802ebaba39f6a8983406bae533f9c8d">LambdaVoid</a></td>          <td class="paramname"><span class="paramname"><em>subscriber</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -156,16 +170,163 @@ Static Public Member Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00025">25</a> of file <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html">PublisherStatic.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   30</span>        {</div>
-<div class="line"><span class="lineno">   31</span>            ensureList( event );</div>
+<div class="line"><span class="lineno">   31</span>            <a class="code hl_function" href="#a617ae16410e2fa223ebc40e882205254">ensureList</a>( event );</div>
 <div class="line"><span class="lineno">   32</span> </div>
-<div class="line"><span class="lineno">   33</span>            eventToSubscriberLists_[event].push_front( subscriber );</div>
+<div class="line"><span class="lineno">   33</span>            <a class="code hl_variable" href="#a9eb721818107fde658b27613229d67f2">eventToSubscriberLists_</a>[event].push_front( subscriber );</div>
 <div class="line"><span class="lineno">   34</span> </div>
 <div class="line"><span class="lineno">   35</span>            <span class="keywordflow">if</span> ( fireOnCreation )</div>
 <div class="line"><span class="lineno">   36</span>            {</div>
-<div class="line"><span class="lineno">   37</span>                publish( event );</div>
+<div class="line"><span class="lineno">   37</span>                <a class="code hl_function" href="#a1587ad36250954b028369e9a408410e1">publish</a>( event );</div>
 <div class="line"><span class="lineno">   38</span>            }</div>
 <div class="line"><span class="lineno">   39</span>        }</div>
+<div class="ttc" id="aclasssnx_1_1PublisherStatic_html_a1587ad36250954b028369e9a408410e1"><div class="ttname"><a href="#a1587ad36250954b028369e9a408410e1">snx::PublisherStatic::publish</a></div><div class="ttdeci">static void publish(EventId event)</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d04/PublisherStatic_8h_source.html#l00042">PublisherStatic.h:42</a></div></div>
+<div class="ttc" id="aclasssnx_1_1PublisherStatic_html_a617ae16410e2fa223ebc40e882205254"><div class="ttname"><a href="#a617ae16410e2fa223ebc40e882205254">snx::PublisherStatic::ensureList</a></div><div class="ttdeci">static void ensureList(EventId event)</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d04/PublisherStatic_8h_source.html#l00062">PublisherStatic.h:62</a></div></div>
+<div class="ttc" id="aclasssnx_1_1PublisherStatic_html_a9eb721818107fde658b27613229d67f2"><div class="ttname"><a href="#a9eb721818107fde658b27613229d67f2">snx::PublisherStatic::eventToSubscriberLists_</a></div><div class="ttdeci">static std::unordered_map&lt; EventId, SubscriberList &gt; eventToSubscriberLists_</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d04/PublisherStatic_8h_source.html#l00020">PublisherStatic.h:20</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00062">ensureList()</a>, <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00020">eventToSubscriberLists_</a>, and <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00042">publish()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d0/dc4/Game_8cpp_source.html#l00154">GameModule::setupGameEvents()</a>, and <a class="el" href="../../de/d15/Scene_8cpp_source.html#l00062">SceneModule::setupSceneEvents()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d0/dfa/classsnx_1_1PublisherStatic_a0923b71c9471ac292b5055b9ab0f3c40_cgraph.png" border="0" usemap="#ad0/dfa/classsnx_1_1PublisherStatic_a0923b71c9471ac292b5055b9ab0f3c40_cgraph" alt=""/></div>
+<map name="ad0/dfa/classsnx_1_1PublisherStatic_a0923b71c9471ac292b5055b9ab0f3c40_cgraph" id="ad0/dfa/classsnx_1_1PublisherStatic_a0923b71c9471ac292b5055b9ab0f3c40_cgraph">
+<area shape="rect" title=" " alt="" coords="5,40,155,85"/>
+<area shape="rect" href="../../d0/dfa/classsnx_1_1PublisherStatic.html#a617ae16410e2fa223ebc40e882205254" title=" " alt="" coords="203,5,352,50"/>
+<area shape="poly" title=" " alt="" coords="154,47,187,41,188,46,155,52"/>
+<area shape="rect" href="../../d0/dfa/classsnx_1_1PublisherStatic.html#a1587ad36250954b028369e9a408410e1" title=" " alt="" coords="203,75,352,119"/>
+<area shape="poly" title=" " alt="" coords="155,73,188,79,187,84,154,78"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d0/dfa/classsnx_1_1PublisherStatic_a0923b71c9471ac292b5055b9ab0f3c40_icgraph.png" border="0" usemap="#ad0/dfa/classsnx_1_1PublisherStatic_a0923b71c9471ac292b5055b9ab0f3c40_icgraph" alt=""/></div>
+<map name="ad0/dfa/classsnx_1_1PublisherStatic_a0923b71c9471ac292b5055b9ab0f3c40_icgraph" id="ad0/dfa/classsnx_1_1PublisherStatic_a0923b71c9471ac292b5055b9ab0f3c40_icgraph">
+<area shape="rect" title=" " alt="" coords="1031,24,1180,68"/>
+<area shape="rect" href="../../d6/d0d/namespaceGameModule.html#accf8a0cbfecc800a3b58b2b404d89741" title=" " alt="" coords="748,7,983,34"/>
+<area shape="poly" title=" " alt="" coords="1015,39,983,36,984,30,1016,34"/>
+<area shape="rect" href="../../dd/de5/namespaceSceneModule.html#ac49e6cc1481066b0e6982034e8fa52f2" title=" " alt="" coords="464,57,700,85"/>
+<area shape="poly" title=" " alt="" coords="1016,53,700,68,700,63,1016,47"/>
+<area shape="rect" href="../../d6/d0d/namespaceGameModule.html#a1d421fde007b2b7c4612614fcb5991db" title=" " alt="" coords="513,5,651,33"/>
+<area shape="poly" title=" " alt="" coords="732,23,651,22,651,17,732,17"/>
+<area shape="rect" href="../../dd/de5/namespaceSceneModule.html#aeb33d40e45e0eb72482839819417b422" title=" " alt="" coords="279,32,416,60"/>
+<area shape="poly" title=" " alt="" coords="498,31,417,41,416,35,498,26"/>
+<area shape="rect" href="../../d4/d85/namespaceAppModule.html#a1d404de4fa1dc0fc9b1180af341d3a74" title=" " alt="" coords="108,32,231,60"/>
+<area shape="poly" title=" " alt="" coords="263,48,232,48,232,43,263,43"/>
+<area shape="rect" href="../../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Entrypoint." alt="" coords="5,32,60,60"/>
+<area shape="poly" title=" " alt="" coords="92,48,60,48,60,43,92,43"/>
+<area shape="poly" title=" " alt="" coords="448,59,416,56,417,51,449,54"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a617ae16410e2fa223ebc40e882205254" name="a617ae16410e2fa223ebc40e882205254"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a617ae16410e2fa223ebc40e882205254">&#9670;&#160;</a></span>ensureList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void snx::PublisherStatic::ensureList </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../dd/d09/EventId_8h.html#a4cf8d4a4d56e9f795518b6541ddeb5bf">EventId</a></td>          <td class="paramname"><span class="paramname"><em>event</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00062">62</a> of file <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html">PublisherStatic.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   63</span>        {</div>
+<div class="line"><span class="lineno">   64</span>            <span class="keywordflow">if</span> ( <a class="code hl_variable" href="#a9eb721818107fde658b27613229d67f2">eventToSubscriberLists_</a>.find( event ) == <a class="code hl_variable" href="#a9eb721818107fde658b27613229d67f2">eventToSubscriberLists_</a>.end() )</div>
+<div class="line"><span class="lineno">   65</span>            {</div>
+<div class="line"><span class="lineno">   66</span>                <a class="code hl_variable" href="#a9eb721818107fde658b27613229d67f2">eventToSubscriberLists_</a>[event] = <a class="code hl_typedef" href="../../db/dc7/namespacesnx.html#aa86e15ee66c97bfa65e7794280a2bf2f">SubscriberList</a>();</div>
+<div class="line"><span class="lineno">   67</span>            }</div>
+<div class="line"><span class="lineno">   68</span>        }</div>
+<div class="ttc" id="anamespacesnx_html_aa86e15ee66c97bfa65e7794280a2bf2f"><div class="ttname"><a href="../../db/dc7/namespacesnx.html#aa86e15ee66c97bfa65e7794280a2bf2f">snx::SubscriberList</a></div><div class="ttdeci">std::forward_list&lt; TFunctor &gt; SubscriberList</div><div class="ttdef"><b>Definition</b> <a href="../../d3/dbf/Publisher_8h_source.html#l00014">Publisher.h:14</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00020">eventToSubscriberLists_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00025">addSubscriber()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d0/dfa/classsnx_1_1PublisherStatic_a617ae16410e2fa223ebc40e882205254_icgraph.png" border="0" usemap="#ad0/dfa/classsnx_1_1PublisherStatic_a617ae16410e2fa223ebc40e882205254_icgraph" alt=""/></div>
+<map name="ad0/dfa/classsnx_1_1PublisherStatic_a617ae16410e2fa223ebc40e882205254_icgraph" id="ad0/dfa/classsnx_1_1PublisherStatic_a617ae16410e2fa223ebc40e882205254_icgraph">
+<area shape="rect" title=" " alt="" coords="1228,24,1378,68"/>
+<area shape="rect" href="../../d0/dfa/classsnx_1_1PublisherStatic.html#a0923b71c9471ac292b5055b9ab0f3c40" title=" " alt="" coords="1031,24,1180,68"/>
+<area shape="poly" title=" " alt="" coords="1213,48,1181,48,1181,43,1213,43"/>
+<area shape="rect" href="../../d6/d0d/namespaceGameModule.html#accf8a0cbfecc800a3b58b2b404d89741" title=" " alt="" coords="748,7,983,34"/>
+<area shape="poly" title=" " alt="" coords="1015,39,983,36,984,30,1016,34"/>
+<area shape="rect" href="../../dd/de5/namespaceSceneModule.html#ac49e6cc1481066b0e6982034e8fa52f2" title=" " alt="" coords="464,57,700,85"/>
+<area shape="poly" title=" " alt="" coords="1016,53,700,68,700,63,1016,47"/>
+<area shape="rect" href="../../d6/d0d/namespaceGameModule.html#a1d421fde007b2b7c4612614fcb5991db" title=" " alt="" coords="513,5,651,33"/>
+<area shape="poly" title=" " alt="" coords="732,23,651,22,651,17,732,17"/>
+<area shape="rect" href="../../dd/de5/namespaceSceneModule.html#aeb33d40e45e0eb72482839819417b422" title=" " alt="" coords="279,32,416,60"/>
+<area shape="poly" title=" " alt="" coords="498,31,417,41,416,35,498,26"/>
+<area shape="rect" href="../../d4/d85/namespaceAppModule.html#a1d404de4fa1dc0fc9b1180af341d3a74" title=" " alt="" coords="108,32,231,60"/>
+<area shape="poly" title=" " alt="" coords="263,48,232,48,232,43,263,43"/>
+<area shape="rect" href="../../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Entrypoint." alt="" coords="5,32,60,60"/>
+<area shape="poly" title=" " alt="" coords="92,48,60,48,60,43,92,43"/>
+<area shape="poly" title=" " alt="" coords="448,59,416,56,417,51,449,54"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a30350ce126189f65760b37adcad1e17d" name="a30350ce126189f65760b37adcad1e17d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30350ce126189f65760b37adcad1e17d">&#9670;&#160;</a></span>notifyAllSubscribers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void snx::PublisherStatic::notifyAllSubscribers </td>
+          <td>(</td>
+          <td class="paramtype">std::forward_list&lt; <a class="el" href="../../d9/d04/PublisherStatic_8h.html#ad802ebaba39f6a8983406bae533f9c8d">LambdaVoid</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>subscriberList</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00071">71</a> of file <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html">PublisherStatic.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   72</span>        {</div>
+<div class="line"><span class="lineno">   73</span>            <span class="keywordflow">for</span> ( <a class="code hl_typedef" href="../../d9/d04/PublisherStatic_8h.html#ad802ebaba39f6a8983406bae533f9c8d">LambdaVoid</a>&amp; subscriber : subscriberList )</div>
+<div class="line"><span class="lineno">   74</span>            {</div>
+<div class="line"><span class="lineno">   75</span>                subscriber();</div>
+<div class="line"><span class="lineno">   76</span>            }</div>
+<div class="line"><span class="lineno">   77</span>        }</div>
+<div class="ttc" id="aPublisherStatic_8h_html_ad802ebaba39f6a8983406bae533f9c8d"><div class="ttname"><a href="../../d9/d04/PublisherStatic_8h.html#ad802ebaba39f6a8983406bae533f9c8d">LambdaVoid</a></div><div class="ttdeci">std::function&lt; void()&gt; LambdaVoid</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d04/PublisherStatic_8h_source.html#l00010">PublisherStatic.h:10</a></div></div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00051">publishAll()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d0/dfa/classsnx_1_1PublisherStatic_a30350ce126189f65760b37adcad1e17d_icgraph.png" border="0" usemap="#ad0/dfa/classsnx_1_1PublisherStatic_a30350ce126189f65760b37adcad1e17d_icgraph" alt=""/></div>
+<map name="ad0/dfa/classsnx_1_1PublisherStatic_a30350ce126189f65760b37adcad1e17d_icgraph" id="ad0/dfa/classsnx_1_1PublisherStatic_a30350ce126189f65760b37adcad1e17d_icgraph">
+<area shape="rect" title=" " alt="" coords="203,5,361,50"/>
+<area shape="rect" href="../../d0/dfa/classsnx_1_1PublisherStatic.html#a415483c71ae9e4da99ba68016cf7b4e0" title=" " alt="" coords="5,5,155,50"/>
+<area shape="poly" title=" " alt="" coords="187,30,155,30,155,25,187,25"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a1587ad36250954b028369e9a408410e1" name="a1587ad36250954b028369e9a408410e1"></a>
@@ -180,7 +341,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">static void snx::PublisherStatic::publish </td>
           <td>(</td>
-          <td class="paramtype">EventId</td>          <td class="paramname"><span class="paramname"><em>event</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="../../dd/d09/EventId_8h.html#a4cf8d4a4d56e9f795518b6541ddeb5bf">EventId</a></td>          <td class="paramname"><span class="paramname"><em>event</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -193,12 +354,108 @@ Static Public Member Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00042">42</a> of file <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html">PublisherStatic.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   43</span>        {</div>
-<div class="line"><span class="lineno">   44</span>            <span class="keywordflow">for</span> ( LambdaVoid&amp; subscriber : eventToSubscriberLists_[event] )</div>
+<div class="line"><span class="lineno">   44</span>            <span class="keywordflow">for</span> ( <a class="code hl_typedef" href="../../d9/d04/PublisherStatic_8h.html#ad802ebaba39f6a8983406bae533f9c8d">LambdaVoid</a>&amp; subscriber : <a class="code hl_variable" href="#a9eb721818107fde658b27613229d67f2">eventToSubscriberLists_</a>[event] )</div>
 <div class="line"><span class="lineno">   45</span>            {</div>
 <div class="line"><span class="lineno">   46</span>                subscriber();</div>
 <div class="line"><span class="lineno">   47</span>            }</div>
 <div class="line"><span class="lineno">   48</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00020">eventToSubscriberLists_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00025">addSubscriber()</a>, <a class="el" href="../../d6/dab/InputHandler_8cpp_source.html#l00070">InputModule::checkGesture()</a>, <a class="el" href="../../db/d77/HealthComponent_8cpp_source.html#l00010">HealthModule::damage()</a>, <a class="el" href="../../d3/d6a/GameCamera_8cpp_source.html#l00009">GameCameraModule::init()</a>, <a class="el" href="../../d0/dc4/Game_8cpp_source.html#l00031">GameModule::init()</a>, <a class="el" href="../../db/d5e/PanelSystem_8cpp_source.html#l00017">PanelSystem::init()</a>, <a class="el" href="../../de/d15/Scene_8cpp_source.html#l00253">SceneModule::processInput()</a>, <a class="el" href="../../d3/d6a/GameCamera_8cpp_source.html#l00027">GameCameraModule::setOffset()</a>, <a class="el" href="../../d3/d6a/GameCamera_8cpp_source.html#l00036">GameCameraModule::setTarget()</a>, <a class="el" href="../../d0/dc4/Game_8cpp_source.html#l00154">GameModule::setupGameEvents()</a>, <a class="el" href="../../de/d15/Scene_8cpp_source.html#l00062">SceneModule::setupSceneEvents()</a>, <a class="el" href="../../d3/d6a/GameCamera_8cpp_source.html#l00045">GameCameraModule::setZoom()</a>, <a class="el" href="../../d0/d41/UserInputSystem_8cpp_source.html#l00089">UserInputSystem::takeAction()</a>, <a class="el" href="../../d3/d37/Cursor_8cpp_source.html#l00022">CursorModule::update()</a>, <a class="el" href="../../d3/d4d/MovementSystem_8cpp_source.html#l00013">MovementSystem::updateHero()</a>, and <a class="el" href="../../db/d4d/App_8cpp_source.html#l00021">updateWindowState()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d0/dfa/classsnx_1_1PublisherStatic_a1587ad36250954b028369e9a408410e1_icgraph.png" border="0" usemap="#ad0/dfa/classsnx_1_1PublisherStatic_a1587ad36250954b028369e9a408410e1_icgraph" alt=""/></div>
+<map name="ad0/dfa/classsnx_1_1PublisherStatic_a1587ad36250954b028369e9a408410e1_icgraph" id="ad0/dfa/classsnx_1_1PublisherStatic_a1587ad36250954b028369e9a408410e1_icgraph">
+<area shape="rect" title=" " alt="" coords="2548,398,2697,443"/>
+<area shape="rect" href="../../d0/dfa/classsnx_1_1PublisherStatic.html#a0923b71c9471ac292b5055b9ab0f3c40" title=" " alt="" coords="2312,212,2461,256"/>
+<area shape="poly" title=" " alt="" coords="2597,387,2555,331,2528,302,2499,277,2460,257,2462,252,2501,273,2532,298,2560,327,2602,383"/>
+<area shape="rect" href="../../d6/d0d/namespaceGameModule.html#accf8a0cbfecc800a3b58b2b404d89741" title=" " alt="" coords="1989,249,2225,277"/>
+<area shape="poly" title=" " alt="" coords="2587,389,2547,356,2499,328,2431,304,2359,287,2289,276,2225,269,2226,264,2290,270,2361,282,2432,299,2501,323,2550,352,2590,385"/>
+<area shape="rect" href="../../d6/d0d/namespaceGameModule.html#a1d421fde007b2b7c4612614fcb5991db" title=" " alt="" coords="1773,249,1910,277"/>
+<area shape="poly" title=" " alt="" coords="2550,395,2499,379,2358,346,2246,328,2133,313,1989,291,1910,278,1911,272,1990,286,2134,308,2247,322,2359,341,2501,374,2551,390"/>
+<area shape="rect" href="../../dd/de5/namespaceSceneModule.html#ac49e6cc1481066b0e6982034e8fa52f2" title=" " alt="" coords="1989,109,2225,137"/>
+<area shape="poly" title=" " alt="" coords="2609,384,2594,341,2571,291,2540,242,2520,220,2499,202,2462,191,2383,175,2192,140,2193,135,2384,170,2463,186,2501,197,2524,216,2544,239,2576,288,2599,339,2614,383"/>
+<area shape="rect" href="../../d7/dbb/namespaceInputModule.html#a64b95223960c297f4c635a76002829dc" title=" " alt="" coords="2287,636,2486,664"/>
+<area shape="poly" title=" " alt="" coords="2611,458,2594,496,2570,540,2540,583,2502,620,2468,638,2465,633,2498,616,2536,580,2566,537,2589,494,2606,456"/>
+<area shape="rect" href="../../dd/de5/namespaceSceneModule.html#a3ec3950544d078c72ca74ebceb041191" title=" " alt="" coords="1742,687,1941,714"/>
+<area shape="poly" title=" " alt="" coords="2618,459,2606,510,2584,571,2569,601,2550,630,2528,656,2501,677,2458,696,2398,709,2327,717,2248,721,2084,719,1942,711,1942,706,2084,714,2248,716,2326,712,2397,704,2456,691,2499,673,2524,652,2546,627,2564,599,2580,569,2601,509,2613,457"/>
+<area shape="rect" href="../../de/d61/namespaceHealthModule.html#ad0f642b36a46e42c57cec3b2205c0f45" title=" " alt="" coords="2300,483,2473,510"/>
+<area shape="poly" title=" " alt="" coords="2548,451,2501,467,2442,485,2440,480,2499,462,2546,446"/>
+<area shape="rect" href="../../de/d03/namespaceUserInputSystem.html#a31864472a96828d67dee3a47e8735889" title=" " alt="" coords="1192,433,1402,461"/>
+<area shape="poly" title=" " alt="" coords="2532,430,2338,442,2108,448,1840,448,1403,449,1403,444,1840,443,2108,443,2338,437,2532,425"/>
+<area shape="rect" href="../../d5/d73/namespaceGameCameraModule.html#af37605cf0c66707c2a6b020a7e3202db" title=" " alt="" coords="2292,5,2480,33"/>
+<area shape="poly" title=" " alt="" coords="2618,383,2611,311,2593,220,2578,173,2557,127,2531,85,2498,48,2480,35,2483,31,2502,44,2535,82,2562,125,2583,171,2598,219,2617,310,2623,382"/>
+<area shape="rect" href="../../d6/d4d/namespacePanelSystem.html#a41938816dc9fac8ee50ed1e72fb36de9" title=" " alt="" coords="2319,57,2454,85"/>
+<area shape="poly" title=" " alt="" coords="2616,383,2606,321,2586,244,2571,204,2551,166,2527,131,2498,100,2477,87,2453,78,2455,73,2480,82,2502,96,2531,127,2556,163,2575,202,2591,242,2611,320,2621,382"/>
+<area shape="rect" href="../../d5/d73/namespaceGameCameraModule.html#a11a3cf50a5d237253a43d37099a8fef5" title=" " alt="" coords="2273,789,2500,817"/>
+<area shape="poly" title=" " alt="" coords="2622,459,2614,526,2594,610,2578,655,2558,698,2533,738,2502,773,2474,791,2471,787,2498,769,2529,735,2554,695,2573,652,2589,609,2608,525,2617,458"/>
+<area shape="rect" href="../../d5/d73/namespaceGameCameraModule.html#a7b8e9e6fd340a45de3697bf881a6d285" title=" " alt="" coords="2273,109,2500,137"/>
+<area shape="poly" title=" " alt="" coords="2612,384,2599,332,2577,271,2544,210,2523,182,2498,157,2469,140,2471,135,2502,153,2527,178,2548,207,2581,269,2604,331,2617,382"/>
+<area shape="rect" href="../../d5/d73/namespaceGameCameraModule.html#a78f4c1066a7cd6bdc8c59712c3ff0eae" title=" " alt="" coords="2274,841,2499,869"/>
+<area shape="poly" title=" " alt="" coords="2625,459,2620,537,2603,637,2587,689,2566,741,2538,789,2502,830,2484,843,2481,839,2498,827,2534,786,2561,738,2582,688,2598,635,2615,536,2619,458"/>
+<area shape="rect" href="../../d8/d68/namespaceCursorModule.html#a9dcc47f57e0516f1bf7f827c22c2063a" title=" " alt="" coords="944,395,1109,422"/>
+<area shape="poly" title=" " alt="" coords="2532,416,2338,404,2108,398,1581,398,1323,401,1110,408,1109,403,1323,396,1580,393,2108,393,2338,399,2532,411"/>
+<area shape="rect" href="../../d1/d47/namespaceMovementSystem.html#a5ce09c2b0194d81dd86e1eeeb34cf5bc" title=" " alt="" coords="1470,637,1694,665"/>
+<area shape="poly" title=" " alt="" coords="2593,456,2552,493,2501,524,2434,547,2344,568,2124,603,1890,629,1695,646,1694,640,1889,623,2123,597,2343,562,2433,542,2499,519,2549,489,2589,452"/>
+<area shape="rect" href="../../db/d4d/App_8cpp.html#a01ba0eff1d9e4b966ea6f4b7eeb426f2" title=" " alt="" coords="707,739,860,766"/>
+<area shape="poly" title=" " alt="" coords="2621,459,2612,519,2592,593,2576,630,2556,666,2532,698,2501,725,2467,742,2422,752,2368,758,2311,760,2196,758,2108,755,1296,755,860,755,860,750,1296,750,2108,750,2197,753,2310,755,2368,752,2421,747,2466,737,2499,721,2528,695,2552,663,2571,628,2587,591,2607,518,2616,458"/>
+<area shape="poly" title=" " alt="" coords="2296,246,2225,253,2225,248,2296,241"/>
+<area shape="poly" title=" " alt="" coords="2306,208,2272,195,2140,140,2142,135,2274,190,2308,203"/>
+<area shape="poly" title=" " alt="" coords="1974,266,1911,266,1911,260,1974,260"/>
+<area shape="rect" href="../../dd/de5/namespaceSceneModule.html#aeb33d40e45e0eb72482839819417b422" title=" " alt="" coords="1513,109,1650,137"/>
+<area shape="poly" title=" " alt="" coords="1799,244,1608,140,1611,135,1802,239"/>
+<area shape="rect" href="../../d4/d85/namespaceAppModule.html#a1d404de4fa1dc0fc9b1180af341d3a74" title=" " alt="" coords="495,459,619,486"/>
+<area shape="poly" title=" " alt="" coords="1525,145,602,461,600,456,1524,140"/>
+<area shape="rect" href="../../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Entrypoint." alt="" coords="5,521,60,549"/>
+<area shape="poly" title=" " alt="" coords="480,484,60,535,60,529,479,479"/>
+<area shape="poly" title=" " alt="" coords="1974,126,1651,126,1651,120,1974,120"/>
+<area shape="rect" href="../../d6/d0d/namespaceGameModule.html#a0afa3b61d28e0cb92e73e8a398b49b9a" title=" " alt="" coords="2007,636,2207,664"/>
+<area shape="poly" title=" " alt="" coords="2271,652,2207,652,2207,647,2271,647"/>
+<area shape="poly" title=" " alt="" coords="2016,670,1919,689,1918,683,2015,665"/>
+<area shape="rect" href="../../dd/de5/namespaceSceneModule.html#a719f60e29b743e0b74d79aed2edbd3bd" title=" " alt="" coords="476,535,638,562"/>
+<area shape="poly" title=" " alt="" coords="1726,704,1298,704,1025,704,958,700,891,688,825,670,762,649,655,603,582,565,584,561,657,598,764,644,826,665,892,683,959,695,1025,699,1298,699,1726,698"/>
+<area shape="rect" href="../../db/d4d/App_8cpp.html#a0788d600601c2b17eaba4462da9e9d8c" title=" " alt="" coords="303,521,428,549"/>
+<area shape="poly" title=" " alt="" coords="461,544,428,542,429,537,461,539"/>
+<area shape="rect" href="../../d4/d85/namespaceAppModule.html#adbc208784105c60f684faf4a3fb81803" title=" " alt="" coords="108,547,255,574"/>
+<area shape="poly" title=" " alt="" coords="461,561,428,563,255,565,255,560,428,558,460,556"/>
+<area shape="poly" title=" " alt="" coords="288,548,256,553,255,548,288,543"/>
+<area shape="poly" title=" " alt="" coords="92,548,60,542,61,537,93,543"/>
+<area shape="rect" href="../../d7/d6c/namespaceDamageSystem.html#ac48a0e15ce5c7d8b9036def251a717c4" title=" " alt="" coords="2020,483,2194,510"/>
+<area shape="poly" title=" " alt="" coords="2284,499,2195,499,2195,494,2284,494"/>
+<area shape="rect" href="../../d0/d41/UserInputSystem_8cpp.html#a7bf9395cc536ca0155395d22812ec817" title=" " alt="" coords="1784,483,1899,510"/>
+<area shape="poly" title=" " alt="" coords="2004,499,1900,499,1900,494,2004,494"/>
+<area shape="rect" href="../../d3/d0d/namespaceAISystem.html#a90d062d7b8305388a983934172b917a7" title=" " alt="" coords="1762,535,1922,562"/>
+<area shape="poly" title=" " alt="" coords="2018,517,1917,537,1916,531,2017,511"/>
+<area shape="rect" href="../../d0/d41/UserInputSystem_8cpp.html#a7b662fa1ca3a513daf3d55aad289743c" title=" " alt="" coords="1494,533,1670,561"/>
+<area shape="poly" title=" " alt="" coords="1769,513,1657,535,1656,530,1768,508"/>
+<area shape="poly" title=" " alt="" coords="1768,493,1469,467,1402,461,1403,455,1470,462,1769,488"/>
+<area shape="poly" title=" " alt="" coords="1500,531,1468,517,1444,499,1420,482,1372,464,1374,459,1423,477,1447,495,1471,513,1502,526"/>
+<area shape="rect" href="../../d6/d0d/namespaceGameModule.html#ae3acc29cd71f708bd80c85c484119d90" title=" " alt="" coords="929,509,1124,537"/>
+<area shape="poly" title=" " alt="" coords="1224,468,1173,482,1074,511,1073,506,1172,477,1223,463"/>
+<area shape="rect" href="../../dd/de5/namespaceSceneModule.html#af4663a9cf9e9c3687d19dd084d62ee4e" title=" " alt="" coords="686,509,881,537"/>
+<area shape="poly" title=" " alt="" coords="913,526,881,526,881,520,913,520"/>
+<area shape="poly" title=" " alt="" coords="670,538,638,542,638,537,670,533"/>
+<area shape="rect" href="../../d3/d0d/namespaceAISystem.html#a1d284b7f96c7da50c25767c4fa677565" title=" " alt="" coords="1498,585,1666,613"/>
+<area shape="poly" title=" " alt="" coords="1753,569,1657,587,1656,582,1752,563"/>
+<area shape="poly" title=" " alt="" coords="1485,582,1468,575,1453,564,1444,552,1435,541,1421,532,1381,520,1341,511,1257,503,1178,504,1109,511,1108,506,1177,499,1257,497,1341,505,1383,514,1423,527,1439,537,1448,548,1457,560,1471,570,1487,577"/>
+<area shape="poly" title=" " alt="" coords="2277,26,2031,44,1886,60,1743,82,1682,96,1628,111,1626,106,1681,90,1741,77,1886,54,2031,38,2276,21"/>
+<area shape="poly" title=" " alt="" coords="2301,40,2274,48,2198,80,2136,111,2133,106,2195,75,2272,43,2299,35"/>
+<area shape="poly" title=" " alt="" coords="2304,76,2053,87,1742,107,1651,117,1651,112,1742,102,2053,82,2304,71"/>
+<area shape="poly" title=" " alt="" coords="2304,89,2186,111,2185,106,2303,84"/>
+<area shape="poly" title=" " alt="" coords="2257,126,2225,126,2225,120,2257,120"/>
+<area shape="poly" title=" " alt="" coords="983,432,816,511,814,506,981,427"/>
+<area shape="poly" title=" " alt="" coords="1482,634,1468,627,1453,614,1444,600,1435,587,1420,576,1367,559,1291,547,1125,531,1125,526,1292,541,1369,554,1423,571,1439,584,1448,597,1457,610,1471,622,1484,629"/>
+<area shape="rect" href="../../d3/d3e/namespaceEnemiesModule.html#a21e8d2151a524ff076d5541ffa50e2c1" title=" " alt="" coords="1208,637,1386,665"/>
+<area shape="poly" title=" " alt="" coords="1454,654,1387,654,1387,648,1454,648"/>
+<area shape="rect" href="../../d1/d47/namespaceMovementSystem.html#a9cf0b9fbafb533b5b11d76e8b877330e" title=" " alt="" coords="1172,585,1422,613"/>
+<area shape="poly" title=" " alt="" coords="1486,637,1377,616,1377,611,1487,631"/>
+<area shape="poly" title=" " alt="" coords="1223,584,1172,570,1073,540,1074,535,1173,565,1224,578"/>
+<area shape="poly" title=" " alt="" coords="722,736,227,578,229,572,723,731"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a415483c71ae9e4da99ba68016cf7b4e0" name="a415483c71ae9e4da99ba68016cf7b4e0"></a>
@@ -227,25 +484,63 @@ Static Public Member Functions</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00051">51</a> of file <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html">PublisherStatic.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   52</span>        {</div>
 <div class="line"><span class="lineno">   53</span>            <span class="comment">//* Iterate all subscribers</span></div>
-<div class="line"><span class="lineno">   54</span>            <span class="keywordflow">for</span> ( <span class="keyword">auto</span>&amp; [event, list] : eventToSubscriberLists_ )</div>
+<div class="line"><span class="lineno">   54</span>            <span class="keywordflow">for</span> ( <span class="keyword">auto</span>&amp; [event, list] : <a class="code hl_variable" href="#a9eb721818107fde658b27613229d67f2">eventToSubscriberLists_</a> )</div>
 <div class="line"><span class="lineno">   55</span>            {</div>
-<div class="line"><span class="lineno">   56</span>                notifyAllSubscribers( list );</div>
+<div class="line"><span class="lineno">   56</span>                <a class="code hl_function" href="#a30350ce126189f65760b37adcad1e17d">notifyAllSubscribers</a>( list );</div>
 <div class="line"><span class="lineno">   57</span>            }</div>
 <div class="line"><span class="lineno">   58</span>        }</div>
+<div class="ttc" id="aclasssnx_1_1PublisherStatic_html_a30350ce126189f65760b37adcad1e17d"><div class="ttname"><a href="#a30350ce126189f65760b37adcad1e17d">snx::PublisherStatic::notifyAllSubscribers</a></div><div class="ttdeci">static void notifyAllSubscribers(std::forward_list&lt; LambdaVoid &gt; &amp;subscriberList)</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d04/PublisherStatic_8h_source.html#l00071">PublisherStatic.h:71</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00020">eventToSubscriberLists_</a>, and <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00071">notifyAllSubscribers()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d0/dfa/classsnx_1_1PublisherStatic_a415483c71ae9e4da99ba68016cf7b4e0_cgraph.png" border="0" usemap="#ad0/dfa/classsnx_1_1PublisherStatic_a415483c71ae9e4da99ba68016cf7b4e0_cgraph" alt=""/></div>
+<map name="ad0/dfa/classsnx_1_1PublisherStatic_a415483c71ae9e4da99ba68016cf7b4e0_cgraph" id="ad0/dfa/classsnx_1_1PublisherStatic_a415483c71ae9e4da99ba68016cf7b4e0_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,155,50"/>
+<area shape="rect" href="../../d0/dfa/classsnx_1_1PublisherStatic.html#a30350ce126189f65760b37adcad1e17d" title=" " alt="" coords="203,5,361,50"/>
+<area shape="poly" title=" " alt="" coords="155,25,187,25,187,30,155,30"/>
+</map>
+</div>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a9eb721818107fde658b27613229d67f2" name="a9eb721818107fde658b27613229d67f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9eb721818107fde658b27613229d67f2">&#9670;&#160;</a></span>eventToSubscriberLists_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unordered_map&lt;<a class="el" href="../../dd/d09/EventId_8h.html#a4cf8d4a4d56e9f795518b6541ddeb5bf">EventId</a>, <a class="el" href="../../db/dc7/namespacesnx.html#aa86e15ee66c97bfa65e7794280a2bf2f">SubscriberList</a>&gt; snx::PublisherStatic::eventToSubscriberLists_ { {} }</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00020">20</a> of file <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html">PublisherStatic.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   20</span>{ {} };</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00025">addSubscriber()</a>, <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00062">ensureList()</a>, <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00042">publish()</a>, and <a class="el" href="../../d9/d04/PublisherStatic_8h_source.html#l00051">publishAll()</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="../../d9/d04/PublisherStatic_8h_source.html">PublisherStatic.h</a></li>
+<li>include/Observer/<a class="el" href="../../d9/d04/PublisherStatic_8h_source.html">PublisherStatic.h</a></li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><b>snx</b></li><li class="navelem"><a class="el" href="../../d0/dfa/classsnx_1_1PublisherStatic.html">PublisherStatic</a></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
 </body>
 </html>

@@ -11,18 +11,11 @@
 <script type="text/javascript" src="../../dynsections.js"></script>
 <script type="text/javascript" src="../../clipboard.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../cookie.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -35,18 +28,6 @@
    <div id="projectname">Roguelike
    </div>
   </td>
-    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
-          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td>
  </tr>
  </tbody>
 </table>
@@ -63,23 +44,22 @@ var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 $(function() { codefold.init(1); });
 /* @license-end */
 </script>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('d2/dbc/classRectangleExI.html','../../'); initResizable(true); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search',false);
+  $(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -101,6 +81,8 @@ $(function(){initNavTree('d2/dbc/classRectangleExI.html','../../'); initResizabl
 </div>
 </div>
 
+</div><!-- top -->
+<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">RectangleExI Member List</div></div>
 </div><!--header-->
@@ -108,39 +90,50 @@ $(function(){initNavTree('d2/dbc/classRectangleExI.html','../../'); initResizabl
 
 <p>This is the complete list of members for <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>bottom</b>() const (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>bottomRight</b>() const (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>center</b>() const (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>height</b>() const (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>left</b>() const (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>offsetBottom</b>(int bottom) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>offsetLeft</b>(int left) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>offsetRight</b>(int right) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>offsetTop</b>(int top) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>rectangle</b>() const (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>RectangleExI</b>()=default (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>RectangleExI</b>(int left, int top, int width=1, int height=1) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>RectangleExI</b>(Vector2I const &amp;topLeft, Vector2I const &amp;bottomRight={ 0, 0 }) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>RectangleExI</b>(Vector2I const &amp;center, int width, int height) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>resizeHeightBottom</b>(int height) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>resizeHeightTop</b>(int height) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>resizeWidthLeft</b>(int width) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>resizeWidthRight</b>(int width) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>right</b>() const (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>setBottom</b>(int bottom) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>setLeft</b>(int left) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>setRight</b>(int right) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>setTop</b>(int top) (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>top</b>() const (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>topLeft</b>() const (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>width</b>() const (defined in <a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a>)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a530db7b6ed378580a34b2377210b2d0f">bottom</a>() const</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a9e5059131a3e7630a5bf45a8e5b47f39">bottom_</a></td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a6c7beb9fbfb67907ff7777578b7bd556">bottomRight</a>() const</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a23683753fd0a821348744be9e09a3a2f">center</a>() const</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#aaf6fc827f5cdc40283904a1d3b45e4e2">height</a>() const</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a641fc023461d22e2d956b2e4db6e432f">height_</a></td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a8db2b4aa93134af970cc244719083036">left</a>() const</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a52cb72be7f6452bea8a307a681479e72">left_</a></td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a05fe8360804b2c6144ec532376cbb4fd">offsetBottom</a>(int bottom)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a8b2ea2b2e26296edac205702bb67986f">offsetLeft</a>(int left)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#acfbe66ca6a83727c76e6e96a6becdd28">offsetRight</a>(int right)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a1027f852259e3f92c21dbc5a07f65709">offsetTop</a>(int top)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a31683b1780cbdd32f7aca07ff2508f53">rectangle</a>() const</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a52737ca89fbc99c2114901d930763f67">RectangleExI</a>()=default</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#aec15f99d7556acdc80dc66be484aae07">RectangleExI</a>(int left, int top, int width=1, int height=1)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#ac8d0fc6528ac642a2bbd9991efa09a68">RectangleExI</a>(Vector2I const &amp;topLeft, Vector2I const &amp;bottomRight={ 0, 0 })</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a46742af3cc7438769ccb284a85be251c">RectangleExI</a>(Vector2I const &amp;center, int width, int height)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a69b0fe5ac0100aba09ed21b53b7f5e62">resizeHeightBottom</a>(int height)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a271388e1a41c72ff9fd6ee504e60c6f4">resizeHeightTop</a>(int height)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a9bf84203755220f9c74339509b3d42bb">resizeWidthLeft</a>(int width)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a31f180111618a4ae6888cd86d00361d5">resizeWidthRight</a>(int width)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a03fb7ee7f1aa6770f9d734fb31cdc05d">right</a>() const</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a3351d9ffc809c37297280e63da89c4a8">right_</a></td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#aa56f3348bbac8d478aed3062fb8ec463">setBottom</a>(int bottom)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a36a8e3b67b243087421501dd1c3f6255">setLeft</a>(int left)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a95c457bc1ef09e6201702b4994b83eb0">setRight</a>(int right)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a5575b96e68531b1823bf46f36ee109e5">setTop</a>(int top)</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a2c17dbcdff18f2facb827d4c6c026468">top</a>() const</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a235fed831eebe166d6e3dfd7c9828ebc">top_</a></td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a60b71731f4c9596602d9f0d314556799">topLeft</a>() const</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#ad364bcb52f1372c6eda799c5297a75fd">updateBottom</a>()</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#ab0323fd897b72fdb5a758c9a685d3735">updateHeight</a>()</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a7b6e20c3d52bbb8cd4cf980be87766ab">updateLeft</a>()</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#aa321856f530db2b52ef619113b041ac3">updateRight</a>()</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a71e6cd690b2fc7437c47048dd71e8f20">updateTop</a>()</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a40743a12fa0a9c3121a635cafa22ad6b">updateWidth</a>()</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#a7db418faa619e9f276d7469cd8d5c158">validate</a>()</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#ab0212ad472c6828bbe55830192fe11e1">width</a>() const</td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html#ada8fd4dba632d00a5b230de025dea959">width_</a></td><td class="entry"><a class="el" href="../../d2/dbc/classRectangleExI.html">RectangleExI</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
 </table></div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
 </body>
 </html>

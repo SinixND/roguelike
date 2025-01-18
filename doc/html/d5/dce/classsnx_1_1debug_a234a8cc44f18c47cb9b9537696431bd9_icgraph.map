@@ -1,0 +1,35 @@
+<map id="snx::debug::gcam" name="snx::debug::gcam">
+<area shape="rect" id="Node000001" title=" " alt="" coords="2075,105,2211,133"/>
+<area shape="rect" id="Node000002" href="$d3/d8b/PathfinderSystem_8cpp.html#a8bb30048f156ac60adba586b90128096" title=" " alt="" coords="1896,29,2020,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="2092,101,1993,60,1995,55,2094,96"/>
+<area shape="rect" id="Node000003" href="$dc/dfe/namespacePathfinderSystem.html#ab6dd174332eeb1d2ddd2d12b4112458f" title=" " alt="" coords="1646,55,1841,82"/>
+<area shape="poly" id="edge15_Node000001_Node000003" title=" " alt="" coords="2059,111,1841,83,1842,78,2059,106"/>
+<area shape="rect" id="Node000007" href="$dd/de5/namespaceSceneModule.html#af4663a9cf9e9c3687d19dd084d62ee4e" title=" " alt="" coords="686,105,881,133"/>
+<area shape="poly" id="edge19_Node000001_Node000007" title=" " alt="" coords="2060,130,1913,141,1745,147,1255,147,1055,141,881,130,882,125,1055,136,1255,142,1745,142,1913,136,2059,125"/>
+<area shape="rect" id="Node000013" href="$dd/de5/namespaceSceneModule.html#aeb33d40e45e0eb72482839819417b422" title=" " alt="" coords="1889,181,2027,209"/>
+<area shape="poly" id="edge16_Node000001_Node000013" title=" " alt="" coords="2094,142,1995,183,1993,178,2092,137"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="1989,16,1978,10,1958,8,1939,10,1929,15,1926,20,1931,27,1926,30,1921,20,1925,11,1938,5,1958,3,1980,5,1992,12"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="1881,55,1842,60,1842,54,1880,50"/>
+<area shape="rect" id="Node000004" href="$d3/d0d/namespaceAISystem.html#a90d062d7b8305388a983934172b917a7" title=" " alt="" coords="1413,28,1573,56"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="1631,59,1573,53,1574,48,1631,54"/>
+<area shape="rect" id="Node000012" href="$de/d03/namespaceUserInputSystem.html#a31864472a96828d67dee3a47e8735889" title=" " alt="" coords="1388,80,1598,108"/>
+<area shape="poly" id="edge13_Node000003_Node000012" title=" " alt="" coords="1631,83,1599,86,1598,81,1630,77"/>
+<area shape="rect" id="Node000005" href="$d3/d0d/namespaceAISystem.html#a1d284b7f96c7da50c25767c4fa677565" title=" " alt="" coords="1172,29,1340,57"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="1397,45,1340,45,1340,40,1397,40"/>
+<area shape="rect" id="Node000006" href="$d6/d0d/namespaceGameModule.html#ae3acc29cd71f708bd80c85c484119d90" title=" " alt="" coords="929,80,1124,108"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="1176,63,1093,82,1092,77,1175,58"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="914,108,882,112,881,106,913,103"/>
+<area shape="rect" id="Node000008" href="$dd/de5/namespaceSceneModule.html#a719f60e29b743e0b74d79aed2edbd3bd" title=" " alt="" coords="476,105,638,133"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="670,122,638,122,638,116,670,116"/>
+<area shape="rect" id="Node000009" href="$db/d4d/App_8cpp.html#a0788d600601c2b17eaba4462da9e9d8c" title=" " alt="" coords="303,80,428,108"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="461,109,428,105,429,99,462,104"/>
+<area shape="rect" id="Node000010" href="$d4/d85/namespaceAppModule.html#adbc208784105c60f684faf4a3fb81803" title=" " alt="" coords="108,131,255,158"/>
+<area shape="poly" id="edge12_Node000008_Node000010" title=" " alt="" coords="461,128,255,142,255,137,461,123"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="299,115,235,133,234,128,298,110"/>
+<area shape="rect" id="Node000011" href="$df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Entrypoint." alt="" coords="5,156,60,184"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="93,162,61,168,60,163,92,157"/>
+<area shape="poly" id="edge14_Node000012_Node000006" title=" " alt="" coords="1372,96,1125,96,1125,91,1372,91"/>
+<area shape="rect" id="Node000014" href="$d4/d85/namespaceAppModule.html#a1d404de4fa1dc0fc9b1180af341d3a74" title=" " alt="" coords="1194,181,1318,209"/>
+<area shape="poly" id="edge17_Node000013_Node000014" title=" " alt="" coords="1874,198,1318,198,1318,192,1874,192"/>
+<area shape="poly" id="edge18_Node000014_Node000011" title=" " alt="" coords="1179,198,785,198,364,198,277,195,190,189,60,176,60,171,191,184,277,190,364,193,785,192,1179,192"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="EnemiesModule::getActive" name="EnemiesModule::getActive">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,57,201,85"/>
+<area shape="rect" id="Node000002" href="$d1/d71/classsnx_1_1DenseMap.html#a3b91ca342d509a4f0544b458cca1cd14" title=" " alt="" coords="259,5,411,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,54,254,34,255,40,169,59"/>
+<area shape="rect" id="Node000003" href="$d1/d71/classsnx_1_1DenseMap.html#ac1c9d7941c7aeaa152552d82e47033f7" title=" " alt="" coords="257,57,412,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="201,68,242,68,242,74,201,74"/>
+<area shape="rect" id="Node000004" href="$d1/d71/classsnx_1_1DenseMap.html#a862a3a04c6e2f7136528522aca86c2c4" title=" " alt="" coords="249,109,421,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="169,83,255,103,254,108,168,88"/>
+</map>
