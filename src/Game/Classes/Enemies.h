@@ -61,7 +61,8 @@ namespace EnemiesModule
 
     void update(
         Enemies& enemies,
-        Vector2 const& heroPosition
+        Vector2 const& heroPosition,
+        float dt
     );
 
     size_t getActive(

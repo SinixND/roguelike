@@ -1,7 +1,0 @@
-<map id="PanelSystem::drawHeroInfoPanelContent" name="PanelSystem::drawHeroInfoPanelContent">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,24,207,68"/>
-<area shape="rect" id="Node000002" href="$de/da7/classGameFont.html#a70834f8eb6bf20d79d6648ec17189ae2" title=" " alt="" coords="255,5,377,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,30,239,26,240,31,208,36"/>
-<area shape="rect" id="Node000003" href="$db/d5e/PanelSystem_8cpp.html#a7d41a124953698ce8c3e5cf6c8f15bfc" title=" " alt="" coords="278,57,354,85"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,55,263,62,262,67,207,61"/>
-</map>

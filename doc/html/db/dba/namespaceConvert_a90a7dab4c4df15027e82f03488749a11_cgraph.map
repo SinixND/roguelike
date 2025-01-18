@@ -1,7 +1,0 @@
-<map id="Convert::getMouseTile" name="Convert::getMouseTile">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,174,33"/>
-<area shape="rect" id="Node000002" href="$db/dba/namespaceConvert.html#aa714c1bcfd0c17e893514b638cc3d45e" title=" " alt="" coords="222,5,383,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,16,206,16,206,22,174,22"/>
-<area shape="rect" id="Node000003" href="$db/dba/namespaceConvert.html#aefecf933e03deb2b5b7fc600d831c587" title=" " alt="" coords="431,5,585,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="383,16,416,16,416,22,383,22"/>
-</map>

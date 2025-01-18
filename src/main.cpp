@@ -15,11 +15,22 @@
 
 int main( /* int argc, char** argv */ )
 {
+    AppConfig config{};
+
     App app{};
 
-    AppModule::run( app );
+    AppModule::init(
+        app,
+        config
+    );
 
-    return 0;
+    SceneModule::init(
+        app.scene,
+        app.cursor
+    );
+
+    AppModule::run( app );
+    AppModule::deinit( app.scene );
 
     return 0;
 }

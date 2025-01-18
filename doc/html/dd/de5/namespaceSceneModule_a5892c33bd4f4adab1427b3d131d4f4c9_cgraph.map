@@ -1,7 +1,0 @@
-<map id="SceneModule::deinitialize" name="SceneModule::deinitialize">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,194,33"/>
-<area shape="rect" id="Node000002" href="$d0/d48/namespaceRenderSystem.html#adcaeeb468464c26a013e16a275981f65" title=" " alt="" coords="242,5,403,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,16,226,16,226,22,194,22"/>
-<area shape="rect" id="Node000003" href="$d2/d1f/namespaceTexturesModule.html#ace79a10d1a252500aeba66486fe8698c" title=" " alt="" coords="451,5,660,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="403,16,435,16,435,22,403,22"/>
-</map>

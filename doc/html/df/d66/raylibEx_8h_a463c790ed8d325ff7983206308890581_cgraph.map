@@ -1,9 +1,0 @@
-<map id="Vector2MainDirection" name="Vector2MainDirection">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,32,167,60"/>
-<area shape="rect" id="Node000002" href="$df/d66/raylibEx_8h.html#a19c493423012d8bb06af77548bc685cd" title=" " alt="" coords="215,5,376,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,33,199,29,200,34,168,38"/>
-<area shape="rect" id="Node000004" href="$df/d66/raylibEx_8h.html#af1dbf5fb2b73052b21ee78600ee861f6" title=" " alt="" coords="233,57,358,85"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="168,53,218,59,218,65,167,58"/>
-<area shape="rect" id="Node000003" href="$df/d66/raylibEx_8h.html#a856402b0f7d15e2a6dcbf71929db12cc" title=" " alt="" coords="424,5,561,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="376,16,408,16,408,22,376,22"/>
-</map>

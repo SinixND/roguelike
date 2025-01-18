@@ -25,6 +25,31 @@
 - `private/class` + non-trivial getter/setter= to handle invariants or restrict to (controlled) access
 **NOTE**: refactor `public` -> getter/setter later if actually needed.*
 
+## Example
+```cpp
+// Module.h
+class C { // has_invariant ? class : struct
+public:
+    // independent members
+public:
+    // interface/functions for invariants
+// private: 
+    // internal helper functions belong to .cpp 
+private:
+    // invariant members
+};
+
+namespace CModule {
+    // functions for C only modification
+}
+
+// System.h
+namespace SSystem {
+    // functions for multi-class modification
+    // -> use multiple modules
+}
+
+```
 
 # Concepts
 ## SoA

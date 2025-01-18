@@ -1,9 +1,0 @@
-<map id="RectangleEx::resizeWidthRight" name="RectangleEx::resizeWidthRight">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,49,193,94"/>
-<area shape="rect" id="Node000002" href="$d3/ddc/classRectangleEx.html#aea92e0c78238c59b227f4e4f23ceb232" title=" " alt="" coords="241,5,432,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,48,254,34,255,40,194,53"/>
-<area shape="rect" id="Node000003" href="$d3/ddc/classRectangleEx.html#ad85344952a75532dcc69c938b2c657a3" title=" " alt="" coords="242,57,431,85"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="193,68,226,68,226,74,193,74"/>
-<area shape="rect" id="Node000004" href="$d3/ddc/classRectangleEx.html#acf8b75057886cbb239b53d8ac8f3a1c9" title=" " alt="" coords="263,109,410,137"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="194,89,255,103,254,108,193,94"/>
-</map>

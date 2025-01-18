@@ -1,9 +1,0 @@
-<map id="snx::debug" name="snx::debug">
-<area shape="rect" id="Node000001" title=" " alt="" coords="72,191,164,218"/>
-<area shape="rect" id="Node000002" href="$db/d87/classsnx_1_1Singleton.html" title=" " alt="" coords="5,98,189,126"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,140,118,190,113,191,101,142"/>
-<area shape="rect" id="Node000003" href="$d9/df7/structGameCamera.html" title=" " alt="" coords="213,98,325,126"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="236,136,142,192,139,188,233,132"/>
-<area shape="rect" id="Node000004" href="$d3/ddc/classRectangleEx.html" title=" " alt="" coords="218,5,320,33"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="272,48,272,98,266,98,266,48"/>
-</map>

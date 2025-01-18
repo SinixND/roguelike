@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include "AISystem.h"
+#include "ActionSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
 #include "Enemies.h"
@@ -8,14 +9,10 @@
 #include "EventId.h"
 #include "GameCamera.h"
 #include "Hero.h"
-#include "InputActionId.h"
-#include "InputHandler.h"
-#include "InputMappings.h"
 #include "MovementSystem.h"
 #include "Objects.h"
 #include "PublisherStatic.h"
 #include "RenderId.h"
-#include "UserInputSystem.h"
 #include "World.h"
 #include "raylibEx.h"
 #include <Logger.h>
@@ -42,38 +39,12 @@ void GameModule::init( Game& game )
 #endif
 }
 
-void GameModule::processInput(
-    InputMappings const& inputMappings,
-    bool isCursorActive,
-    InputHandler& inputHandler,
-    InputActionId& inputActionId
-)
-{
-    //* Take input from mouse, keys or gestures
-    inputActionId = InputModule::checkKeyboard(
-        inputHandler,
-        inputMappings
-    );
-
-    if ( inputActionId != InputActionId::NONE )
-    {
-        return;
-    }
-
-    inputActionId = InputModule::checkMouse( inputMappings, isCursorActive );
-
-    if ( inputActionId != InputActionId::NONE )
-    {
-        return;
-    }
-
-    inputActionId = InputModule::checkGesture( inputHandler );
-}
-
-void GameModule::updateState(
+void GameModule::update(
     Game& game,
     GameCamera const& gameCamera,
-    Cursor const& cursor
+    Cursor const& cursor,
+    InputId currentInputId,
+    float dt
 )
 {
     //* AI
@@ -92,8 +63,8 @@ void GameModule::updateState(
     if ( !game.isMultiFrameActionActive
          && game.hero.energy.state == EnergyState::READY )
     {
-        game.isMultiFrameActionActive = UserInputSystem::takeAction(
-            game.inputAction,
+        game.isMultiFrameActionActive = ActionSystem::takeAction(
+            currentInputId,
             game.hero,
             cursor,
             *game.world.currentMap,
@@ -113,18 +84,20 @@ void GameModule::updateState(
     else
     {
         //* Update hero
-        MovementSystem::updateHero(
+        MovementSystem::update(
             game.hero.transform,
             // game.hero.movement,
             game.hero.position,
             game.hero.energy,
-            game.hero.position
+            game.hero.position,
+            dt
         );
 
         //* Update enemies
         MovementSystem::updateEnemies(
             game.world.currentMap->enemies,
-            game.hero.position
+            game.hero.position,
+            dt
         );
     }
 
@@ -142,7 +115,7 @@ void GameModule::updateState(
             isUnitReady |= EnemiesModule::regenerate( game.world.currentMap->enemies.energies );
         }
 
-        //* Progess turn when hero is ready
+        //* Increment turn when hero is ready
         if ( game.hero.energy.state == EnergyState::READY )
         {
             ++game.turn;

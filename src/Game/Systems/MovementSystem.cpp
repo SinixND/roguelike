@@ -10,29 +10,15 @@
 #include "raylibEx.h"
 #include <raymath.h>
 
-void MovementSystem::updateHero(
+void MovementSystem::update(
     TransformComponent& transform,
     // MovementComponent& movement,
     Vector2& position,
     EnergyComponent& energy,
-    Vector2 const& heroPosition
+    Vector2 const& heroPosition,
+    float dt
 )
 {
-    //* Start movement from path
-    // if (!movement.path.empty()
-    //     && !transform.speed
-    //     // && !CollisionSystem::checkCollision(
-    //     //          map.tiles,
-    //     //          map.enemies,
-    //     //          target,
-    //     //          Convert::worldToTile(hero.position))
-    //     )
-    // {
-    //     prepareFromExistingPath(
-    //         movement,
-    //         transform);
-    // }
-
     //* Check if action is in progress
     if ( transform.speed )
     {
@@ -45,7 +31,7 @@ void MovementSystem::updateHero(
         return;
     }
 
-    Vector2 offset{ frameOffset( transform ) };
+    Vector2 offset{ frameOffset( transform, dt ) };
 
     transform.cumulativeDistance += Vector2Length( offset );
 
@@ -97,7 +83,8 @@ void MovementSystem::updateHero(
 
 void MovementSystem::updateEnemies(
     Enemies& enemies,
-    Vector2 const& heroPosition
+    Vector2 const& heroPosition,
+    float dt
 )
 {
     Vector2* currentPosition{};
@@ -115,12 +102,13 @@ void MovementSystem::updateEnemies(
 
         //* Update movement
         //* Update ids_ key if tilePosition changes
-        MovementSystem::updateHero(
+        MovementSystem::update(
             enemies.transforms.values().at( idx ),
             // enemies.movements.values().at(i),
             *currentPosition,
             enemies.energies.values().at( idx ),
-            heroPosition
+            heroPosition,
+            dt
         );
 
         if ( oldPosition != Convert::worldToTile( *currentPosition ) )
@@ -209,10 +197,13 @@ void MovementSystem::resetCumulativeDistance( TransformComponent& transform )
     transform.cumulativeDistance = 0;
 }
 
-Vector2 MovementSystem::frameOffset( TransformComponent const& transform )
+Vector2 MovementSystem::frameOffset(
+    TransformComponent const& transform,
+    float dt
+)
 {
     return Vector2Scale(
         transform.direction,
-        transform.speed * GetFrameTime()
+        transform.speed * dt
     );
 }

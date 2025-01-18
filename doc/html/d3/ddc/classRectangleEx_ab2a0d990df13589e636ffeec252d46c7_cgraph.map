@@ -1,9 +1,0 @@
-<map id="RectangleEx::setTop" name="RectangleEx::setTop">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,57,158,85"/>
-<area shape="rect" id="Node000002" href="$d3/ddc/classRectangleEx.html#aea92e0c78238c59b227f4e4f23ceb232" title=" " alt="" coords="209,5,400,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,54,227,35,228,40,145,59"/>
-<area shape="rect" id="Node000003" href="$d3/ddc/classRectangleEx.html#a2229f380af32c5173f61328c653f239c" title=" " alt="" coords="239,57,370,85"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,68,224,68,224,74,158,74"/>
-<area shape="rect" id="Node000004" href="$d3/ddc/classRectangleEx.html#a23350633eabe94ed08b9e857709c83e2" title=" " alt="" coords="206,109,404,137"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="145,83,228,103,227,108,144,88"/>
-</map>
