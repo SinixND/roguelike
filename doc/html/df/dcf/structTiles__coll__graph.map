@@ -1,15 +1,31 @@
 <map id="Tiles" name="Tiles">
-<area shape="rect" id="Node000001" title=" " alt="" coords="482,152,534,180"/>
-<area shape="rect" id="Node000002" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="162,5,355,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="371,52,417,72,460,98,485,124,502,151,497,154,481,127,456,102,414,76,369,57"/>
-<area shape="rect" id="Node000003" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="162,75,355,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="371,116,459,141,482,151,480,156,457,146,370,121"/>
-<area shape="rect" id="Node000004" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="162,144,355,189"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="371,164,482,164,482,169,371,169"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="187,213,330,258"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="345,230,401,221,457,203,476,192,492,179,495,183,479,196,459,208,403,226,346,235"/>
-<area shape="rect" id="Node000006" href="$da/dba/structVector2I.html" title=" " alt="" coords="5,222,80,250"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="95,233,187,233,187,238,95,238"/>
-<area shape="rect" id="Node000007" href="$d2/dbc/classRectangleExI.html" title=" " alt="" coords="205,282,312,310"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="327,291,393,278,426,265,456,248,472,233,484,215,500,180,505,182,489,217,476,236,460,252,429,270,395,283,328,296"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="893,335,945,362"/>
+<area shape="rect" id="Node000002" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="572,93,766,138"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="718,145,792,203,871,276,894,305,911,333,907,336,890,309,867,280,789,207,714,149"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="203,5,372,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="387,29,467,43,549,63,620,90,618,95,548,68,466,48,387,34"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="212,130,363,175"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="338,120,370,105,405,94,448,87,491,86,572,92,572,98,491,91,448,93,407,99,372,110,340,125"/>
+<area shape="rect" id="Node000007" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="572,326,766,371"/>
+<area shape="poly" id="edge9_Node000007_Node000004" title=" " alt="" coords="339,180,407,212,447,219,481,218,514,220,532,226,550,239,561,254,564,269,566,284,574,299,607,323,604,328,570,302,561,286,559,270,556,256,546,242,529,231,513,225,481,223,447,225,405,217,337,185"/>
+<area shape="rect" id="Node000009" href="$d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="572,244,766,288"/>
+<area shape="poly" id="edge13_Node000009_Node000004" title=" " alt="" coords="378,129,419,125,463,124,507,129,549,142,584,162,614,188,656,241,652,245,610,192,581,166,547,147,506,135,462,130,419,130,378,134"/>
+<area shape="rect" id="Node000005" href="$da/dba/structVector2I.html" title=" " alt="" coords="5,297,80,325"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="77,286,250,173,253,178,80,291"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="201,297,374,325"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="95,308,200,308,200,314,95,314"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="406,434,548,479"/>
+<area shape="poly" id="edge16_Node000011_Node000005" title=" " alt="" coords="69,334,122,383,157,407,194,426,247,443,303,452,357,457,406,458,406,463,357,462,303,458,246,448,192,431,154,412,119,387,65,338"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="376,287,380,283,388,272,391,261,391,238,391,214,395,202,404,191,422,177,439,170,472,168,507,170,548,164,621,136,623,141,549,169,507,175,472,173,440,175,424,182,408,194,400,205,396,215,396,238,396,262,393,274,384,286,380,290"/>
+<area shape="poly" id="edge10_Node000007_Node000006" title=" " alt="" coords="334,329,369,342,406,351,491,358,572,356,572,362,491,364,406,356,368,347,332,334"/>
+<area shape="poly" id="edge14_Node000009_Node000006" title=" " alt="" coords="389,300,548,283,572,280,572,285,549,288,390,305"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="781,346,892,346,892,351,781,351"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="198,389,376,417"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="392,398,469,392,548,382,600,369,601,374,549,387,469,398,392,403"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="771,290,870,323,893,334,891,338,868,328,769,296"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="193,245,382,273"/>
+<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="398,258,572,261,572,267,398,264"/>
+<area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="563,449,661,437,765,415,834,388,891,360,893,365,836,393,766,420,662,442,564,454"/>
+<area shape="rect" id="Node000012" href="$d2/dbc/classRectangleExI.html" title=" " alt="" coords="616,476,722,504"/>
+<area shape="poly" id="edge17_Node000001_Node000012" title=" " alt="" coords="737,494,770,494,804,489,837,479,867,462,887,440,901,413,913,362,919,364,906,415,892,443,870,466,839,484,805,494,770,499,737,500"/>
 </map>

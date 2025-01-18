@@ -11,18 +11,11 @@
 <script type="text/javascript" src="../../dynsections.js"></script>
 <script type="text/javascript" src="../../clipboard.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../cookie.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -35,18 +28,6 @@
    <div id="projectname">Roguelike
    </div>
   </td>
-    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
-          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td>
  </tr>
  </tbody>
 </table>
@@ -63,23 +44,22 @@ var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 $(function() { codefold.init(1); });
 /* @license-end */
 </script>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('d2/d2a/structApp.html','../../'); initResizable(true); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search',false);
+  $(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -101,6 +81,8 @@ $(function(){initNavTree('d2/d2a/structApp.html','../../'); initResizable(true);
 </div>
 </div>
 
+</div><!-- top -->
+<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a> &#124;
@@ -108,112 +90,137 @@ $(function(){initNavTree('d2/d2a/structApp.html','../../'); initResizable(true);
   <div class="headertitle"><div class="title">App Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="../../de/d8b/App_8h_source.html">App.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for App:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../d6/db1/structApp__coll__graph.png" border="0" usemap="#aApp_coll__map" alt="Collaboration graph"/></div>
 <map name="aApp_coll__map" id="aApp_coll__map">
-<area shape="rect" title=" " alt="" coords="2211,643,2258,670"/>
-<area shape="rect" href="../../d9/d99/structAppConfig.html" title=" " alt="" coords="2033,617,2120,645"/>
-<area shape="poly" title=" " alt="" coords="2136,638,2211,650,2211,656,2135,643"/>
-<area shape="rect" href="../../d9/d27/structScene.html" title=" " alt="" coords="2046,669,2107,697"/>
-<area shape="poly" title=" " alt="" coords="2122,677,2187,668,2210,662,2212,667,2188,673,2123,683"/>
-<area shape="rect" href="../../de/de9/structGame.html" title=" " alt="" coords="1766,405,1826,433"/>
-<area shape="poly" title=" " alt="" coords="1842,436,1882,458,1928,487,1973,524,2011,567,2022,591,2023,613,2025,633,2035,655,2048,667,2044,671,2031,658,2020,634,2018,613,2017,592,2007,570,1969,527,1925,491,1880,462,1839,441"/>
-<area shape="rect" href="../../d7/d3f/structWorld.html" title=" " alt="" coords="1464,472,1522,500"/>
-<area shape="poly" title=" " alt="" coords="1537,474,1765,423,1766,428,1538,479"/>
-<area shape="rect" title=" " alt="" coords="1067,472,1215,500"/>
-<area shape="poly" title=" " alt="" coords="1231,483,1463,483,1463,488,1231,488"/>
-<area shape="rect" href="../../da/ddc/structMap.html" title=" " alt="" coords="894,527,944,554"/>
-<area shape="poly" title=" " alt="" coords="959,538,1078,535,1224,526,1358,507,1463,489,1464,494,1359,513,1225,531,1078,540,959,543"/>
-<area shape="poly" title=" " alt="" coords="957,523,968,519,1066,496,1067,501,970,524,959,528"/>
-<area shape="rect" href="../../db/d9b/structTiles.html" title=" " alt="" coords="660,549,713,577"/>
-<area shape="poly" title=" " alt="" coords="728,557,893,540,894,546,729,562"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="197,482,390,527"/>
-<area shape="poly" title=" " alt="" coords="406,526,418,528,555,547,660,558,660,564,554,552,418,533,405,531"/>
-<area shape="rect" href="../../d0/db3/structObjects.html" title=" " alt="" coords="651,375,722,402"/>
-<area shape="poly" title=" " alt="" coords="405,510,492,504,536,495,578,480,608,464,634,442,672,401,676,405,638,446,611,468,580,485,538,500,493,509,406,515"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="197,409,390,454"/>
-<area shape="poly" title=" " alt="" coords="406,439,514,451,580,463,611,482,638,504,677,547,673,551,634,508,608,486,578,468,513,456,405,444"/>
-<area shape="poly" title=" " alt="" coords="405,416,651,390,651,395,406,422"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="197,606,390,651"/>
-<area shape="poly" title=" " alt="" coords="405,624,491,616,579,602,621,588,659,573,661,578,623,593,580,607,492,622,406,629"/>
-<area shape="rect" title=" " alt="" coords="222,676,364,720"/>
-<area shape="poly" title=" " alt="" coords="380,699,427,698,478,692,529,681,578,663,609,644,635,620,673,576,677,579,639,624,612,648,581,668,531,686,479,697,427,703,380,705"/>
-<area shape="rect" href="../../da/dba/structVector2I.html" title=" " alt="" coords="5,215,80,242"/>
-<area shape="poly" title=" " alt="" coords="48,258,57,337,80,445,99,503,124,560,155,614,194,661,223,680,220,685,191,665,151,617,119,563,94,505,75,447,52,338,43,258"/>
-<area shape="rect" href="../../d4/dcb/structTransformComponent.html" title=" " alt="" coords="418,164,579,192"/>
-<area shape="poly" title=" " alt="" coords="93,207,103,205,186,191,271,182,418,175,418,180,271,187,187,196,104,210,94,212"/>
-<area shape="rect" title=" " alt="" coords="207,215,380,242"/>
-<area shape="poly" title=" " alt="" coords="95,226,207,226,207,231,95,231"/>
-<area shape="rect" href="../../d2/dbc/classRectangleExI.html" title=" " alt="" coords="240,555,346,582"/>
-<area shape="poly" title=" " alt="" coords="362,572,464,578,579,576,660,565,660,571,580,581,464,583,362,578"/>
-<area shape="poly" title=" " alt="" coords="723,409,897,524,894,528,720,413"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="197,269,390,314"/>
-<area shape="poly" title=" " alt="" coords="406,300,492,315,580,337,623,353,661,372,658,376,621,358,579,342,491,320,405,305"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="197,338,390,383"/>
-<area shape="poly" title=" " alt="" coords="406,358,491,361,580,367,651,379,651,384,579,372,491,366,406,363"/>
-<area shape="rect" href="../../d8/d32/structEnemies.html" title=" " alt="" coords="648,1012,725,1040"/>
-<area shape="poly" title=" " alt="" coords="699,997,908,553,913,556,703,999"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="197,796,390,840"/>
-<area shape="poly" title=" " alt="" coords="406,823,495,843,539,860,581,882,616,912,645,948,681,1010,676,1013,641,951,612,916,578,887,537,865,493,848,405,828"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="212,865,374,910"/>
-<area shape="poly" title=" " alt="" coords="390,898,484,918,533,933,580,951,631,980,670,1009,667,1014,628,984,578,956,531,938,483,924,389,903"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="212,934,374,979"/>
-<area shape="poly" title=" " alt="" coords="390,968,580,1001,648,1015,647,1020,579,1006,389,973"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="212,1004,374,1048"/>
-<area shape="poly" title=" " alt="" coords="390,1023,647,1023,647,1028,390,1028"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="195,1073,392,1118"/>
-<area shape="poly" title=" " alt="" coords="406,1075,579,1046,647,1032,648,1037,580,1051,407,1080"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="193,1142,394,1187"/>
-<area shape="poly" title=" " alt="" coords="409,1145,493,1125,578,1095,628,1067,667,1038,670,1042,631,1072,580,1100,495,1130,410,1150"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="205,1212,382,1256"/>
-<area shape="poly" title=" " alt="" coords="396,1224,441,1217,488,1205,535,1188,578,1165,612,1135,640,1100,676,1039,681,1041,645,1103,616,1139,581,1169,537,1193,490,1210,442,1222,397,1230"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="206,1281,380,1326"/>
-<area shape="poly" title=" " alt="" coords="396,1302,442,1296,490,1286,536,1269,578,1243,602,1221,622,1195,652,1136,671,1080,680,1039,685,1040,676,1082,657,1138,626,1197,606,1224,581,1248,538,1273,491,1291,443,1302,396,1307"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="200,1350,386,1395"/>
-<area shape="poly" title=" " alt="" coords="402,1377,447,1373,494,1364,538,1347,578,1322,608,1290,631,1253,650,1213,663,1171,678,1094,682,1040,688,1040,683,1095,668,1172,655,1215,636,1256,612,1294,581,1326,541,1352,495,1369,448,1378,402,1382"/>
-<area shape="rect" href="../../d0/d85/classsnx_1_1IdManager.html" title=" " alt="" coords="233,744,354,772"/>
-<area shape="poly" title=" " alt="" coords="370,750,420,752,476,760,531,777,581,805,606,828,626,855,657,914,676,970,685,1011,680,1012,671,971,652,916,622,857,602,831,578,809,529,782,475,766,420,758,369,756"/>
-<area shape="rect" href="../../d9/dda/structHero.html" title=" " alt="" coords="893,137,945,165"/>
-<area shape="poly" title=" " alt="" coords="961,157,1084,184,1262,229,1469,287,1677,358,1727,380,1770,402,1768,407,1725,385,1675,363,1467,292,1261,234,1082,190,960,162"/>
-<area shape="poly" title=" " alt="" coords="594,172,769,163,892,151,893,157,770,168,595,177"/>
-<area shape="rect" href="../../d0/d6b/structMovementComponent.html" title=" " alt="" coords="603,225,770,253"/>
-<area shape="poly" title=" " alt="" coords="785,236,827,228,867,211,892,189,908,164,913,167,896,192,870,216,829,233,786,242"/>
-<area shape="poly" title=" " alt="" coords="396,229,603,234,603,240,395,234"/>
-<area shape="rect" href="../../d8/d98/structEnergyComponent.html" title=" " alt="" coords="616,5,757,33"/>
-<area shape="poly" title=" " alt="" coords="773,25,824,40,870,65,887,81,900,100,916,136,911,138,895,103,883,85,867,69,821,44,772,30"/>
-<area shape="rect" href="../../d1/d29/structHealthComponent.html" title=" " alt="" coords="617,57,756,85"/>
-<area shape="poly" title=" " alt="" coords="772,81,821,93,870,111,904,135,901,139,867,116,820,98,771,86"/>
-<area shape="rect" href="../../de/d24/structDamageComponent.html" title=" " alt="" coords="611,109,762,137"/>
-<area shape="poly" title=" " alt="" coords="778,131,893,145,892,151,777,137"/>
-<area shape="rect" href="../../d2/d63/structInputMappings.html" title=" " alt="" coords="1434,353,1552,381"/>
-<area shape="poly" title=" " alt="" coords="1568,377,1766,411,1765,417,1567,382"/>
-<area shape="rect" title=" " alt="" coords="1060,345,1222,390"/>
-<area shape="poly" title=" " alt="" coords="1238,364,1434,364,1434,370,1238,370"/>
-<area shape="rect" href="../../d8/d52/structInputHandler.html" title=" " alt="" coords="1440,405,1546,433"/>
-<area shape="poly" title=" " alt="" coords="1561,416,1766,416,1766,422,1561,422"/>
-<area shape="rect" href="../../d5/df3/structPanels.html" title=" " alt="" coords="1765,565,1828,593"/>
-<area shape="poly" title=" " alt="" coords="1844,577,1882,581,1925,588,1969,602,2011,622,2024,638,2035,655,2051,667,2048,671,2031,658,2020,641,2007,627,1967,607,1924,594,1881,586,1843,583"/>
-<area shape="rect" href="../../d3/ddc/classRectangleEx.html" title=" " alt="" coords="1442,593,1544,621"/>
-<area shape="poly" title=" " alt="" coords="1559,598,1764,579,1765,585,1560,604"/>
-<area shape="rect" href="../../d9/df7/structGameCamera.html" title=" " alt="" coords="1741,617,1852,645"/>
-<area shape="poly" title=" " alt="" coords="1553,623,1576,627,1662,633,1740,632,1740,637,1662,638,1575,632,1552,628"/>
-<area shape="poly" title=" " alt="" coords="1867,637,2010,661,2047,671,2045,676,2008,666,1867,642"/>
-<area shape="rect" href="../../d3/d27/structRenderData.html" title=" " alt="" coords="1747,669,1846,697"/>
-<area shape="poly" title=" " alt="" coords="1861,680,2046,680,2046,686,1861,686"/>
-<area shape="rect" href="../../dd/d9b/structTextures.html" title=" " alt="" coords="1455,669,1531,697"/>
-<area shape="poly" title=" " alt="" coords="1547,680,1747,680,1747,686,1547,686"/>
-<area shape="rect" title=" " alt="" coords="1058,661,1224,706"/>
-<area shape="poly" title=" " alt="" coords="1240,680,1454,680,1454,686,1240,686"/>
-<area shape="rect" href="../../d7/d97/structCursor.html" title=" " alt="" coords="1765,721,1828,749"/>
-<area shape="poly" title=" " alt="" coords="1843,729,1921,719,2008,703,2045,692,2047,697,2010,708,1922,724,1844,734"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="1700,773,1893,818"/>
-<area shape="poly" title=" " alt="" coords="1907,777,1959,763,2008,742,2038,720,2062,696,2066,699,2042,724,2010,746,1961,768,1909,782"/>
-<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="1700,842,1893,887"/>
-<area shape="poly" title=" " alt="" coords="1907,844,1960,825,2007,797,2030,773,2047,746,2069,697,2073,699,2052,748,2034,777,2011,801,1962,830,1909,849"/>
+<area shape="rect" title=" " alt="" coords="2532,908,2578,936"/>
+<area shape="rect" href="../../d9/d99/structAppConfig.html" title=" " alt="" coords="2354,883,2441,911"/>
+<area shape="poly" title=" " alt="" coords="2457,904,2532,916,2531,921,2456,909"/>
+<area shape="rect" href="../../d9/d27/structScene.html" title=" " alt="" coords="2367,935,2428,963"/>
+<area shape="poly" title=" " alt="" coords="2443,943,2507,934,2531,928,2532,933,2509,939,2444,949"/>
+<area shape="rect" href="../../de/de9/structGame.html" title=" " alt="" coords="2128,839,2188,867"/>
+<area shape="poly" title=" " alt="" coords="2204,868,2368,935,2366,940,2202,873"/>
+<area shape="rect" href="../../d7/d3f/structWorld.html" title=" " alt="" coords="1866,735,1925,763"/>
+<area shape="poly" title=" " alt="" coords="1941,751,2008,764,2044,775,2080,789,2116,812,2144,837,2141,841,2113,817,2077,794,2042,780,2006,769,1940,756"/>
+<area shape="rect" title=" " alt="" coords="1470,763,1618,791"/>
+<area shape="poly" title=" " alt="" coords="1633,767,1866,749,1866,754,1633,773"/>
+<area shape="rect" href="../../da/ddc/structMap.html" title=" " alt="" coords="1298,763,1348,791"/>
+<area shape="poly" title=" " alt="" coords="1362,755,1371,752,1493,725,1590,716,1688,720,1813,732,1866,740,1865,745,1813,737,1688,726,1590,722,1494,730,1372,757,1363,760"/>
+<area shape="poly" title=" " alt="" coords="1363,774,1469,774,1469,780,1363,780"/>
+<area shape="rect" href="../../db/d9b/structTiles.html" title=" " alt="" coords="1126,1040,1178,1068"/>
+<area shape="poly" title=" " alt="" coords="1156,1024,1175,957,1191,919,1212,883,1227,867,1241,857,1256,848,1272,835,1310,790,1314,793,1276,839,1259,853,1244,862,1230,871,1216,887,1196,921,1180,959,1161,1026"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="786,976,979,1021"/>
+<area shape="poly" title=" " alt="" coords="989,1022,1008,1026,1125,1048,1124,1053,1006,1031,988,1027"/>
+<area shape="rect" href="../../d0/db3/structObjects.html" title=" " alt="" coords="1116,824,1187,852"/>
+<area shape="poly" title=" " alt="" coords="971,968,1040,943,1087,919,1119,885,1141,851,1145,854,1124,888,1091,923,1042,948,973,973"/>
+<area shape="rect" title=" " alt="" coords="410,757,561,802"/>
+<area shape="poly" title=" " alt="" coords="534,810,556,831,575,856,584,884,583,910,584,933,589,944,598,955,628,970,675,981,786,993,785,998,674,987,626,975,595,959,584,947,579,934,578,910,579,885,570,858,552,835,530,814"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="786,907,979,951"/>
+<area shape="poly" title=" " alt="" coords="525,811,574,855,585,868,598,877,640,892,675,897,712,897,758,902,786,907,785,913,757,908,711,903,674,902,638,898,595,882,582,871,570,859,522,815"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="786,1045,979,1090"/>
+<area shape="poly" title=" " alt="" coords="536,810,557,831,575,856,581,876,583,901,582,962,584,1021,589,1044,598,1059,610,1066,628,1072,674,1078,729,1079,785,1076,785,1081,729,1084,674,1083,626,1077,608,1071,594,1063,584,1046,579,1022,577,963,577,902,575,877,570,858,553,834,532,814"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="786,768,979,813"/>
+<area shape="poly" title=" " alt="" coords="525,746,558,726,595,710,641,697,680,689,717,692,759,711,769,721,773,732,776,743,784,754,801,765,798,770,780,758,771,746,768,734,765,724,756,715,715,698,680,695,643,702,597,716,561,730,528,750"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="786,837,979,882"/>
+<area shape="poly" title=" " alt="" coords="577,792,758,826,792,834,791,839,757,832,576,797"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="786,560,979,605"/>
+<area shape="poly" title=" " alt="" coords="492,741,504,699,524,650,554,603,573,583,595,567,621,554,649,546,707,540,765,546,815,557,814,562,764,551,707,546,650,551,623,559,598,571,576,587,558,607,529,652,509,700,497,743"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="786,75,979,119"/>
+<area shape="poly" title=" " alt="" coords="492,741,528,609,557,528,594,450,615,418,636,393,678,355,718,316,737,291,755,258,762,240,764,223,762,192,763,162,768,146,780,130,793,118,796,122,784,133,773,149,768,163,767,192,769,224,767,241,760,260,742,294,722,320,681,359,640,397,619,421,599,453,562,530,533,611,497,743"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="786,5,979,50"/>
+<area shape="poly" title=" " alt="" coords="493,741,529,570,570,345,572,295,573,230,578,166,584,140,594,121,624,98,672,78,784,45,786,50,673,83,627,103,598,124,589,142,583,167,578,230,578,295,575,345,534,571,498,742"/>
+<area shape="rect" href="../../da/dba/structVector2I.html" title=" " alt="" coords="212,1010,286,1038"/>
+<area shape="poly" title=" " alt="" coords="262,995,282,960,308,925,343,888,381,854,449,801,453,805,384,858,347,892,312,928,286,963,266,998"/>
+<area shape="rect" title=" " alt="" coords="399,868,572,896"/>
+<area shape="poly" title=" " alt="" coords="285,999,459,894,462,899,288,1004"/>
+<area shape="rect" title=" " alt="" coords="606,1195,748,1239"/>
+<area shape="poly" title=" " alt="" coords="294,1042,429,1106,597,1183,619,1192,617,1197,595,1187,427,1111,292,1047"/>
+<area shape="rect" href="../../d4/dcb/structTransformComponent.html" title=" " alt="" coords="596,1331,758,1359"/>
+<area shape="poly" title=" " alt="" coords="260,1052,277,1104,305,1169,346,1234,372,1263,401,1288,447,1314,497,1330,548,1340,596,1344,596,1349,548,1345,496,1336,444,1319,397,1293,368,1267,342,1237,301,1171,272,1106,255,1054"/>
+<area shape="poly" title=" " alt="" coords="502,909,518,936,539,966,566,994,598,1016,624,1026,651,1032,708,1035,763,1029,812,1019,814,1024,764,1035,708,1041,650,1037,622,1031,595,1020,562,998,535,970,513,939,497,911"/>
+<area shape="poly" title=" " alt="" coords="533,900,597,919,693,930,785,932,785,937,693,936,596,925,531,905"/>
+<area shape="poly" title=" " alt="" coords="504,909,575,1052,580,1071,582,1087,586,1100,598,1112,619,1124,637,1131,673,1133,711,1124,757,1112,781,1100,811,1088,813,1093,783,1105,759,1116,712,1129,673,1138,636,1136,616,1129,595,1116,582,1103,577,1088,575,1072,570,1054,500,911"/>
+<area shape="poly" title=" " alt="" coords="520,857,546,836,570,813,577,802,580,792,585,782,595,773,621,762,649,754,707,749,763,754,813,765,812,770,762,759,707,754,650,759,623,767,598,778,589,785,585,794,582,804,574,816,549,840,523,861"/>
+<area shape="poly" title=" " alt="" coords="553,862,596,854,693,849,785,850,785,856,694,854,597,860,554,867"/>
+<area shape="poly" title=" " alt="" coords="525,858,550,838,570,813,578,793,581,774,577,738,576,703,581,685,594,667,614,651,633,643,671,640,711,642,733,639,756,632,780,615,807,603,809,608,783,619,759,636,734,644,711,647,671,645,634,648,616,656,598,671,586,688,581,704,582,738,586,775,584,795,575,816,554,841,529,862"/>
+<area shape="rect" href="../../d0/d6b/structMovementComponent.html" title=" " alt="" coords="799,1114,966,1142"/>
+<area shape="poly" title=" " alt="" coords="505,908,540,972,575,1052,580,1084,579,1111,582,1135,587,1145,598,1156,618,1169,636,1175,653,1177,671,1175,710,1165,757,1155,834,1139,835,1145,758,1161,711,1171,672,1181,653,1183,635,1181,615,1174,595,1160,583,1148,577,1136,574,1111,575,1084,570,1054,535,975,501,911"/>
+<area shape="poly" title=" " alt="" coords="526,858,550,838,570,813,576,796,578,772,578,713,580,656,585,632,594,615,615,601,636,596,657,598,678,602,699,607,719,608,738,603,755,590,765,562,769,509,768,363,767,215,771,161,779,130,792,118,795,122,784,133,776,162,772,215,774,363,774,509,770,563,760,593,740,608,719,613,698,612,677,607,656,603,636,601,617,606,598,619,590,634,585,656,584,713,584,772,581,797,575,816,554,842,529,862"/>
+<area shape="poly" title=" " alt="" coords="526,858,551,838,570,813,578,787,581,751,578,665,577,580,582,545,594,519,614,502,634,495,677,495,699,497,719,495,738,488,756,472,764,457,770,438,775,390,773,332,768,269,762,206,760,147,765,98,770,77,780,61,792,49,795,52,784,64,775,79,770,99,765,148,768,206,773,268,778,331,780,390,775,439,769,459,760,476,741,493,720,500,699,502,677,500,635,500,616,507,598,523,587,547,582,580,583,665,586,751,583,788,575,816,554,842,529,862"/>
+<area shape="poly" title=" " alt="" coords="972,955,984,961,1008,978,1049,994,1090,1009,1134,1038,1131,1042,1088,1014,1047,999,1006,983,982,966,969,960"/>
+<area shape="poly" title=" " alt="" coords="993,900,1088,869,1125,850,1128,855,1090,874,995,905"/>
+<area shape="poly" title=" " alt="" coords="994,1079,1042,1079,1088,1074,1124,1063,1126,1068,1090,1079,1042,1084,994,1084"/>
+<area shape="poly" title=" " alt="" coords="764,1219,815,1217,870,1212,927,1202,982,1185,1030,1159,1074,1126,1136,1067,1140,1071,1078,1130,1033,1163,984,1189,929,1207,871,1217,815,1223,764,1224"/>
+<area shape="rect" href="../../d2/dbc/classRectangleExI.html" title=" " alt="" coords="5,1226,112,1254"/>
+<area shape="poly" title=" " alt="" coords="128,1248,186,1255,248,1258,884,1258,945,1263,994,1270,1016,1271,1039,1267,1062,1257,1087,1240,1105,1222,1119,1200,1138,1152,1146,1104,1148,1068,1153,1069,1151,1105,1143,1153,1124,1203,1110,1225,1091,1244,1065,1262,1040,1272,1017,1276,994,1276,944,1269,884,1264,247,1264,186,1261,127,1254"/>
+<area shape="rect" href="../../de/df5/structChunk.html" title=" " alt="" coords="218,912,280,940"/>
+<area shape="poly" title=" " alt="" coords="74,1211,237,939,241,942,78,1214"/>
+<area shape="poly" title=" " alt="" coords="1201,818,1297,783,1299,788,1202,823"/>
+<area shape="poly" title=" " alt="" coords="995,802,1090,818,1117,825,1115,830,1088,824,994,807"/>
+<area shape="poly" title=" " alt="" coords="994,848,1116,838,1117,844,995,853"/>
+<area shape="rect" href="../../d8/d32/structEnemies.html" title=" " alt="" coords="1113,464,1190,492"/>
+<area shape="poly" title=" " alt="" coords="1171,505,1316,761,1311,764,1166,507"/>
+<area shape="poly" title=" " alt="" coords="994,558,1042,543,1088,524,1113,508,1134,491,1137,495,1116,512,1090,528,1043,548,995,563"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="801,699,964,743"/>
+<area shape="poly" title=" " alt="" coords="977,702,1036,679,1063,663,1087,643,1114,605,1131,563,1141,523,1146,492,1152,493,1147,524,1136,565,1118,608,1091,646,1066,667,1038,684,979,707"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="801,144,964,189"/>
+<area shape="poly" title=" " alt="" coords="980,179,1039,202,1067,220,1091,242,1111,269,1126,299,1144,363,1152,422,1153,464,1148,464,1147,422,1139,364,1121,301,1106,272,1087,245,1064,224,1037,207,978,184"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="801,213,964,258"/>
+<area shape="poly" title=" " alt="" coords="980,253,1039,277,1066,295,1091,317,1117,354,1135,395,1146,434,1151,464,1146,465,1140,435,1130,397,1112,356,1087,320,1063,299,1036,282,978,258"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="784,283,980,327"/>
+<area shape="poly" title=" " alt="" coords="994,330,1044,352,1091,383,1110,402,1125,424,1147,463,1142,465,1121,427,1106,406,1087,387,1042,357,992,335"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="782,352,983,397"/>
+<area shape="poly" title=" " alt="" coords="995,399,1043,415,1090,435,1134,462,1131,466,1088,439,1041,420,994,404"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="794,421,970,466"/>
+<area shape="poly" title=" " alt="" coords="986,454,1113,471,1112,476,985,460"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="795,491,970,535"/>
+<area shape="poly" title=" " alt="" coords="985,503,1089,490,1112,485,1113,491,1089,495,985,508"/>
+<area shape="rect" href="../../d1/d71/classsnx_1_1DenseMap.html" title=" " alt="" coords="789,629,976,674"/>
+<area shape="poly" title=" " alt="" coords="989,627,1041,606,1087,577,1107,557,1123,534,1143,491,1148,494,1127,536,1111,561,1091,581,1043,611,991,632"/>
+<area shape="rect" href="../../d9/dda/structHero.html" title=" " alt="" coords="1126,1326,1178,1354"/>
+<area shape="poly" title=" " alt="" coords="1155,1311,1175,1206,1210,1070,1233,1006,1259,952,1288,915,1305,905,1321,901,1733,901,1848,896,1960,884,2127,856,2128,862,1961,889,1848,901,1733,906,1322,906,1307,910,1292,919,1264,955,1238,1008,1216,1072,1181,1207,1160,1312"/>
+<area shape="poly" title=" " alt="" coords="773,1351,782,1351,882,1354,983,1351,1125,1340,1125,1345,983,1357,882,1360,782,1357,773,1356"/>
+<area shape="poly" title=" " alt="" coords="958,1145,984,1159,1037,1200,1082,1246,1143,1324,1139,1327,1078,1250,1033,1204,982,1163,955,1150"/>
+<area shape="rect" href="../../d8/d98/structEnergyComponent.html" title=" " alt="" coords="812,1298,953,1326"/>
+<area shape="poly" title=" " alt="" coords="969,1318,1125,1334,1125,1340,968,1323"/>
+<area shape="rect" href="../../d1/d29/structHealthComponent.html" title=" " alt="" coords="813,1414,952,1442"/>
+<area shape="poly" title=" " alt="" coords="967,1427,1028,1419,1059,1411,1088,1400,1117,1377,1139,1352,1143,1355,1121,1381,1090,1404,1061,1416,1029,1424,968,1432"/>
+<area shape="rect" href="../../de/d24/structDamageComponent.html" title=" " alt="" coords="807,1466,958,1494"/>
+<area shape="poly" title=" " alt="" coords="973,1480,1032,1470,1061,1460,1087,1445,1109,1425,1125,1400,1144,1353,1149,1355,1130,1402,1113,1428,1091,1449,1063,1465,1034,1475,974,1485"/>
+<area shape="rect" href="../../d2/d63/structInputMappings.html" title=" " alt="" coords="1837,787,1954,815"/>
+<area shape="poly" title=" " alt="" coords="1970,810,2079,830,2128,842,2127,848,2078,836,1969,815"/>
+<area shape="rect" title=" " alt="" coords="1463,815,1625,859"/>
+<area shape="poly" title=" " alt="" coords="1640,825,1836,804,1837,810,1641,830"/>
+<area shape="rect" href="../../d8/d52/structInputHandler.html" title=" " alt="" coords="1843,839,1948,867"/>
+<area shape="poly" title=" " alt="" coords="1964,850,2127,850,2127,856,1964,856"/>
+<area shape="rect" href="../../d5/df3/structPanels.html" title=" " alt="" coords="2126,935,2190,963"/>
+<area shape="poly" title=" " alt="" coords="2205,946,2367,946,2367,952,2205,952"/>
+<area shape="rect" href="../../d3/ddc/classRectangleEx.html" title=" " alt="" coords="1844,1012,1947,1040"/>
+<area shape="poly" title=" " alt="" coords="1962,1027,2020,1020,2049,1013,2077,1001,2089,989,2101,974,2125,959,2127,964,2104,978,2093,992,2080,1006,2051,1018,2021,1026,1962,1032"/>
+<area shape="rect" href="../../d9/df7/structGameCamera.html" title=" " alt="" coords="2102,987,2214,1015"/>
+<area shape="poly" title=" " alt="" coords="1945,1043,1975,1052,2009,1057,2044,1057,2077,1049,2089,1039,2101,1026,2122,1013,2124,1018,2104,1030,2093,1043,2080,1054,2045,1062,2009,1063,1974,1057,1943,1048"/>
+<area shape="poly" title=" " alt="" coords="2229,989,2329,969,2366,957,2367,963,2330,974,2230,994"/>
+<area shape="rect" href="../../d3/d27/structRenderData.html" title=" " alt="" coords="2109,1039,2207,1067"/>
+<area shape="poly" title=" " alt="" coords="2222,1043,2275,1030,2328,1009,2359,986,2383,961,2387,965,2363,990,2331,1014,2277,1035,2223,1048"/>
+<area shape="rect" href="../../dd/d9b/structTextures.html" title=" " alt="" coords="1858,1087,1934,1115"/>
+<area shape="poly" title=" " alt="" coords="1949,1097,2011,1092,2078,1081,2124,1065,2126,1070,2079,1086,2012,1097,1950,1102"/>
+<area shape="rect" title=" " alt="" coords="1461,1079,1627,1123"/>
+<area shape="poly" title=" " alt="" coords="1643,1098,1857,1098,1857,1104,1643,1104"/>
+<area shape="rect" href="../../d7/d97/structCursor.html" title=" " alt="" coords="2126,1091,2190,1119"/>
+<area shape="poly" title=" " alt="" coords="2204,1101,2267,1091,2299,1079,2328,1063,2351,1040,2369,1012,2389,962,2394,964,2373,1015,2355,1043,2331,1067,2301,1084,2268,1096,2205,1107"/>
+<area shape="poly" title=" " alt="" coords="995,108,1071,114,1150,117,2160,117,2178,126,2194,150,2209,186,2223,234,2250,353,2273,493,2316,765,2336,866,2346,900,2356,921,2368,933,2365,937,2352,924,2341,902,2331,867,2311,766,2268,493,2244,354,2218,235,2204,188,2189,152,2174,130,2159,122,1150,122,1071,120,994,113"/>
+<area shape="rect" title=" " alt="" coords="405,306,566,334"/>
+<area shape="poly" title=" " alt="" coords="517,294,630,216,704,170,781,129,808,117,810,122,783,134,706,175,633,220,520,298"/>
+<area shape="poly" title=" " alt="" coords="259,897,476,333,481,335,264,899"/>
+<area shape="poly" title=" " alt="" coords="995,31,1150,34,2160,34,2183,40,2196,55,2216,100,2247,165,2270,222,2287,273,2298,323,2314,427,2332,561,2336,641,2334,746,2337,848,2344,890,2356,921,2369,934,2365,938,2351,924,2339,891,2332,848,2328,746,2330,641,2327,561,2309,428,2293,324,2282,275,2265,224,2243,167,2211,102,2192,58,2180,45,2159,40,1150,40,994,36"/>
+<area shape="rect" title=" " alt="" coords="414,14,557,42"/>
+<area shape="poly" title=" " alt="" coords="573,25,785,25,785,30,573,30"/>
 </map>
-<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -258,19 +265,18 @@ Public Attributes</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="../../de/d8b/App_8h_source.html#l00013">13</a> of file <a class="el" href="../../de/d8b/App_8h_source.html">App.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   13</span>{};</div>
 </div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="../../db/d4d/App_8cpp_source.html#l00014">emscriptenLoop()</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li><a class="el" href="../../de/d8b/App_8h_source.html">App.h</a></li>
+<li>src/<a class="el" href="../../de/d8b/App_8h_source.html">App.h</a></li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="../../d2/d2a/structApp.html">App</a></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
 </body>
 </html>

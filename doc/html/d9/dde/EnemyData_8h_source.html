@@ -5,24 +5,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Roguelike: EnemyData.h Source File</title>
+<title>Roguelike: src/Game/Data/EnemyData.h Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
 <script type="text/javascript" src="../../clipboard.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../cookie.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -35,18 +28,6 @@
    <div id="projectname">Roguelike
    </div>
   </td>
-    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
-          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td>
  </tr>
  </tbody>
 </table>
@@ -63,23 +44,22 @@ var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 $(function() { codefold.init(1); });
 /* @license-end */
 </script>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('d9/dde/EnemyData_8h_source.html','../../'); initResizable(true); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search',false);
+  $(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -101,33 +81,45 @@ $(function(){initNavTree('d9/dde/EnemyData_8h_source.html','../../'); initResiza
 </div>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="../../dir_b43036362fece0f978c3c8156df55d19.html">Game</a></li><li class="navelem"><a class="el" href="../../dir_2dc6d130883746fe595682ecce2b61f8.html">Data</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">EnemyData.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef IG20240909162923</span></div>
+<a href="../../d9/dde/EnemyData_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef IG20240909162923</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define IG20240909162923</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="keyword">namespace </span>EnemyData</div>
+<div class="foldopen" id="foldopen00004" data-start="{" data-end="}">
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno"><a class="line" href="../../d7/de4/namespaceEnemyData.html">    4</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d7/de4/namespaceEnemyData.html">EnemyData</a></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>{</div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    <span class="comment">//* Goblin</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    <span class="keywordtype">int</span> <span class="keyword">constexpr</span> goblinEnergyMax{ 10 };</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keywordtype">int</span> <span class="keyword">constexpr</span> goblinEnergyRegenBase{ 1 };</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <span class="keywordtype">int</span> <span class="keyword">constexpr</span> goblinAgilityBase{ 1 };</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keywordtype">int</span> <span class="keyword">constexpr</span> goblinScanRange{ 10 };</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keywordtype">int</span> <span class="keyword">constexpr</span> goblinHealthBase{ 5 };</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keywordtype">int</span> <span class="keyword">constexpr</span> goblinDamageBase{ 1 };</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="../../d7/de4/namespaceEnemyData.html#a4cb441602815108c53516e362b94bf66">    7</a></span>    <span class="keywordtype">int</span> <span class="keyword">constexpr</span> <a class="code hl_variable" href="../../d7/de4/namespaceEnemyData.html#a4cb441602815108c53516e362b94bf66">goblinEnergyMax</a>{ 10 };</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="../../d7/de4/namespaceEnemyData.html#a46b3accc13a253e2aeb1561539161bac">    8</a></span>    <span class="keywordtype">int</span> <span class="keyword">constexpr</span> <a class="code hl_variable" href="../../d7/de4/namespaceEnemyData.html#a46b3accc13a253e2aeb1561539161bac">goblinEnergyRegenBase</a>{ 1 };</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="../../d7/de4/namespaceEnemyData.html#af5e63fb0f6b0debba9cf87fea8c7fe51">    9</a></span>    <span class="keywordtype">int</span> <span class="keyword">constexpr</span> <a class="code hl_variable" href="../../d7/de4/namespaceEnemyData.html#af5e63fb0f6b0debba9cf87fea8c7fe51">goblinAgilityBase</a>{ 1 };</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="../../d7/de4/namespaceEnemyData.html#a6491c550e547ed424ba2e3685585b34e">   10</a></span>    <span class="keywordtype">int</span> <span class="keyword">constexpr</span> <a class="code hl_variable" href="../../d7/de4/namespaceEnemyData.html#a6491c550e547ed424ba2e3685585b34e">goblinScanRange</a>{ 10 };</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="../../d7/de4/namespaceEnemyData.html#a72f81388c6d8b42ade1854e29c0c24e6">   11</a></span>    <span class="keywordtype">int</span> <span class="keyword">constexpr</span> <a class="code hl_variable" href="../../d7/de4/namespaceEnemyData.html#a72f81388c6d8b42ade1854e29c0c24e6">goblinHealthBase</a>{ 5 };</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="../../d7/de4/namespaceEnemyData.html#a3cbca37a12c59f777e4078aa5e0964ce">   12</a></span>    <span class="keywordtype">int</span> <span class="keyword">constexpr</span> <a class="code hl_variable" href="../../d7/de4/namespaceEnemyData.html#a3cbca37a12c59f777e4078aa5e0964ce">goblinDamageBase</a>{ 1 };</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>}</div>
+</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="anamespaceEnemyData_html"><div class="ttname"><a href="../../d7/de4/namespaceEnemyData.html">EnemyData</a></div><div class="ttdef"><b>Definition</b> <a href="#l00004">EnemyData.h:5</a></div></div>
+<div class="ttc" id="anamespaceEnemyData_html_a3cbca37a12c59f777e4078aa5e0964ce"><div class="ttname"><a href="../../d7/de4/namespaceEnemyData.html#a3cbca37a12c59f777e4078aa5e0964ce">EnemyData::goblinDamageBase</a></div><div class="ttdeci">int constexpr goblinDamageBase</div><div class="ttdef"><b>Definition</b> <a href="#l00012">EnemyData.h:12</a></div></div>
+<div class="ttc" id="anamespaceEnemyData_html_a46b3accc13a253e2aeb1561539161bac"><div class="ttname"><a href="../../d7/de4/namespaceEnemyData.html#a46b3accc13a253e2aeb1561539161bac">EnemyData::goblinEnergyRegenBase</a></div><div class="ttdeci">int constexpr goblinEnergyRegenBase</div><div class="ttdef"><b>Definition</b> <a href="#l00008">EnemyData.h:8</a></div></div>
+<div class="ttc" id="anamespaceEnemyData_html_a4cb441602815108c53516e362b94bf66"><div class="ttname"><a href="../../d7/de4/namespaceEnemyData.html#a4cb441602815108c53516e362b94bf66">EnemyData::goblinEnergyMax</a></div><div class="ttdeci">int constexpr goblinEnergyMax</div><div class="ttdef"><b>Definition</b> <a href="#l00007">EnemyData.h:7</a></div></div>
+<div class="ttc" id="anamespaceEnemyData_html_a6491c550e547ed424ba2e3685585b34e"><div class="ttname"><a href="../../d7/de4/namespaceEnemyData.html#a6491c550e547ed424ba2e3685585b34e">EnemyData::goblinScanRange</a></div><div class="ttdeci">int constexpr goblinScanRange</div><div class="ttdef"><b>Definition</b> <a href="#l00010">EnemyData.h:10</a></div></div>
+<div class="ttc" id="anamespaceEnemyData_html_a72f81388c6d8b42ade1854e29c0c24e6"><div class="ttname"><a href="../../d7/de4/namespaceEnemyData.html#a72f81388c6d8b42ade1854e29c0c24e6">EnemyData::goblinHealthBase</a></div><div class="ttdeci">int constexpr goblinHealthBase</div><div class="ttdef"><b>Definition</b> <a href="#l00011">EnemyData.h:11</a></div></div>
+<div class="ttc" id="anamespaceEnemyData_html_af5e63fb0f6b0debba9cf87fea8c7fe51"><div class="ttname"><a href="../../d7/de4/namespaceEnemyData.html#af5e63fb0f6b0debba9cf87fea8c7fe51">EnemyData::goblinAgilityBase</a></div><div class="ttdeci">int constexpr goblinAgilityBase</div><div class="ttdef"><b>Definition</b> <a href="#l00009">EnemyData.h:9</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="../../dir_b43036362fece0f978c3c8156df55d19.html">Game</a></li><li class="navelem"><a class="el" href="../../dir_2dc6d130883746fe595682ecce2b61f8.html">Data</a></li><li class="navelem"><b>EnemyData.h</b></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
 </body>
 </html>

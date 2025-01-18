@@ -1,0 +1,28 @@
+<map id="checkCollisionWithNextPosition" name="checkCollisionWithNextPosition">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1930,56,2159,84"/>
+<area shape="rect" id="Node000002" href="$da/d86/namespaceCollisionSystem.html#adca6281a0dd373d6beb487a170cbd137" title=" " alt="" coords="1654,56,1882,84"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1915,72,1883,72,1883,67,1915,67"/>
+<area shape="rect" id="Node000003" href="$d0/d41/UserInputSystem_8cpp.html#a7b662fa1ca3a513daf3d55aad289743c" title=" " alt="" coords="1431,5,1606,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1681,55,1589,36,1591,31,1682,50"/>
+<area shape="rect" id="Node000004" href="$de/d03/namespaceUserInputSystem.html#a31864472a96828d67dee3a47e8735889" title=" " alt="" coords="1172,55,1383,82"/>
+<area shape="poly" id="edge14_Node000002_Node000004" title=" " alt="" coords="1639,72,1383,71,1383,66,1639,67"/>
+<area shape="rect" id="Node000011" href="$d3/d0d/namespaceAISystem.html#a90d062d7b8305388a983934172b917a7" title=" " alt="" coords="1438,107,1598,134"/>
+<area shape="poly" id="edge11_Node000002_Node000011" title=" " alt="" coords="1682,90,1591,109,1589,103,1681,85"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1433,39,1349,57,1348,51,1432,34"/>
+<area shape="rect" id="Node000005" href="$d6/d0d/namespaceGameModule.html#ae3acc29cd71f708bd80c85c484119d90" title=" " alt="" coords="929,81,1124,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1157,84,1125,87,1124,82,1157,79"/>
+<area shape="rect" id="Node000006" href="$dd/de5/namespaceSceneModule.html#af4663a9cf9e9c3687d19dd084d62ee4e" title=" " alt="" coords="686,81,881,109"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="913,98,881,98,881,92,913,92"/>
+<area shape="rect" id="Node000007" href="$dd/de5/namespaceSceneModule.html#a719f60e29b743e0b74d79aed2edbd3bd" title=" " alt="" coords="476,81,638,109"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="670,98,638,98,638,92,670,92"/>
+<area shape="rect" id="Node000008" href="$db/d4d/App_8cpp.html#a0788d600601c2b17eaba4462da9e9d8c" title=" " alt="" coords="303,56,428,84"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="461,85,428,81,429,75,462,80"/>
+<area shape="rect" id="Node000009" href="$d4/d85/namespaceAppModule.html#adbc208784105c60f684faf4a3fb81803" title=" " alt="" coords="108,81,255,109"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="461,98,255,98,255,92,461,92"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="288,83,256,88,255,82,288,78"/>
+<area shape="rect" id="Node000010" href="$df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Entrypoint." alt="" coords="5,81,60,109"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="92,98,60,98,60,92,92,92"/>
+<area shape="rect" id="Node000012" href="$d3/d0d/namespaceAISystem.html#a1d284b7f96c7da50c25767c4fa677565" title=" " alt="" coords="1194,107,1361,134"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="1422,123,1361,123,1361,118,1422,118"/>
+<area shape="poly" id="edge13_Node000012_Node000005" title=" " alt="" coords="1178,113,1124,108,1125,102,1178,108"/>
+</map>

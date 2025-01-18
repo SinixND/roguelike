@@ -1,0 +1,14 @@
+<map id="getRandomPosition" name="getRandomPosition">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,57,154,85"/>
+<area shape="rect" id="Node000002" href="$d0/d03/Enemies_8cpp.html#ae67caa8104f58255d0b66d412f4efd57" title=" " alt="" coords="202,31,361,58"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,59,186,54,186,60,154,64"/>
+<area shape="rect" id="Node000006" href="$d4/d7d/classsnx_1_1RNG.html#ab8376e90222b83afb8ae6a276e44091f" title=" " alt="" coords="212,83,351,110"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="154,78,197,83,196,89,154,83"/>
+<area shape="rect" id="Node000003" href="$d1/d71/classsnx_1_1DenseMap.html#afcea13badc5b773f33da12d0c54732bf" title=" " alt="" coords="430,5,572,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="361,33,414,26,415,32,361,38"/>
+<area shape="rect" id="Node000005" href="$d1/d71/classsnx_1_1DenseMap.html#a6b8453f740a1191ca8743a017a36dc81" title=" " alt="" coords="409,57,593,85"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="361,51,394,55,393,61,361,57"/>
+<area shape="rect" id="Node000004" href="$d1/d71/classsnx_1_1DenseMap.html#a3b91ca342d509a4f0544b458cca1cd14" title=" " alt="" coords="641,32,794,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="573,25,626,32,626,37,572,31"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="593,58,625,54,626,59,594,63"/>
+</map>

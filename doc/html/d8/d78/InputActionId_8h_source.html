@@ -5,24 +5,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Roguelike: InputActionId.h Source File</title>
+<title>Roguelike: src/Game/Enums/InputActionId.h Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
 <script type="text/javascript" src="../../clipboard.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../cookie.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -35,18 +28,6 @@
    <div id="projectname">Roguelike
    </div>
   </td>
-    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
-          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td>
  </tr>
  </tbody>
 </table>
@@ -63,23 +44,22 @@ var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 $(function() { codefold.init(1); });
 /* @license-end */
 </script>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('d8/d78/InputActionId_8h_source.html','../../'); initResizable(true); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search',false);
+  $(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -101,38 +81,53 @@ $(function(){initNavTree('d8/d78/InputActionId_8h_source.html','../../'); initRe
 </div>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="../../dir_b43036362fece0f978c3c8156df55d19.html">Game</a></li><li class="navelem"><a class="el" href="../../dir_86634adf096e265ab1474f28fe0443fa.html">Enums</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">InputActionId.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef IG20240719133200</span></div>
+<a href="../../d8/d78/InputActionId_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef IG20240719133200</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define IG20240719133200</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="keyword">enum class</span> InputActionId</div>
+<div class="foldopen" id="foldopen00004" data-start="{" data-end="};">
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno"><a class="line" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9c">    4</a></span><span class="keyword">enum class</span> <a class="code hl_enumeration" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9c">InputActionId</a></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>{</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    NONE = 0,</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno"><a class="line" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cab50339a10e1de285ac99d4c3990b8693">    6</a></span>    <a class="code hl_enumvalue" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cab50339a10e1de285ac99d4c3990b8693">NONE</a> = 0,</div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    <span class="comment">//* Actions</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    ACT_UP,</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    ACT_LEFT,</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    ACT_DOWN,</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    ACT_RIGHT,</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    MOVE_TO_TARGET,</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    ACT_IN_PLACE,</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cae0addab6610d903c953b7ebcd268c3e3">    8</a></span>    <a class="code hl_enumvalue" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cae0addab6610d903c953b7ebcd268c3e3">ACT_UP</a>,</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9caf0d3251430c4f9504daef4b7ab52a10c">    9</a></span>    <a class="code hl_enumvalue" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9caf0d3251430c4f9504daef4b7ab52a10c">ACT_LEFT</a>,</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cae0ef202ac77027154b04ae87e1fd6832">   10</a></span>    <a class="code hl_enumvalue" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cae0ef202ac77027154b04ae87e1fd6832">ACT_DOWN</a>,</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9ca294470728645d2abc0be8c577c3265c7">   11</a></span>    <a class="code hl_enumvalue" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9ca294470728645d2abc0be8c577c3265c7">ACT_RIGHT</a>,</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cadc1202dd2f7cabcf0d44994daf968865">   12</a></span>    <a class="code hl_enumvalue" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cadc1202dd2f7cabcf0d44994daf968865">MOVE_TO_TARGET</a>,</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9ca75ab5a9f62032c4f090127faca006e07">   13</a></span>    <a class="code hl_enumvalue" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9ca75ab5a9f62032c4f090127faca006e07">ACT_IN_PLACE</a>,</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="comment">//* Utility</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    TOGGLE_CURSOR,</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cac8c682726bb08ce09634051af7c1066b">   15</a></span>    <a class="code hl_enumvalue" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cac8c682726bb08ce09634051af7c1066b">TOGGLE_CURSOR</a>,</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="comment">//* Modifiers</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    MOD,</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cac5a28f4b35a2884fa3277150ac5d0967">   17</a></span>    <a class="code hl_enumvalue" href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cac5a28f4b35a2884fa3277150ac5d0967">MOD</a>,</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>};</div>
+</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aInputActionId_8h_html_a3ac08c47938a8954fe0f6e7927c63e9c"><div class="ttname"><a href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9c">InputActionId</a></div><div class="ttdeci">InputActionId</div><div class="ttdef"><b>Definition</b> <a href="#l00004">InputActionId.h:5</a></div></div>
+<div class="ttc" id="aInputActionId_8h_html_a3ac08c47938a8954fe0f6e7927c63e9ca294470728645d2abc0be8c577c3265c7"><div class="ttname"><a href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9ca294470728645d2abc0be8c577c3265c7">InputActionId::ACT_RIGHT</a></div><div class="ttdeci">@ ACT_RIGHT</div><div class="ttdef"><b>Definition</b> <a href="#l00011">InputActionId.h:11</a></div></div>
+<div class="ttc" id="aInputActionId_8h_html_a3ac08c47938a8954fe0f6e7927c63e9ca75ab5a9f62032c4f090127faca006e07"><div class="ttname"><a href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9ca75ab5a9f62032c4f090127faca006e07">InputActionId::ACT_IN_PLACE</a></div><div class="ttdeci">@ ACT_IN_PLACE</div><div class="ttdef"><b>Definition</b> <a href="#l00013">InputActionId.h:13</a></div></div>
+<div class="ttc" id="aInputActionId_8h_html_a3ac08c47938a8954fe0f6e7927c63e9cab50339a10e1de285ac99d4c3990b8693"><div class="ttname"><a href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cab50339a10e1de285ac99d4c3990b8693">InputActionId::NONE</a></div><div class="ttdeci">@ NONE</div><div class="ttdef"><b>Definition</b> <a href="#l00006">InputActionId.h:6</a></div></div>
+<div class="ttc" id="aInputActionId_8h_html_a3ac08c47938a8954fe0f6e7927c63e9cac5a28f4b35a2884fa3277150ac5d0967"><div class="ttname"><a href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cac5a28f4b35a2884fa3277150ac5d0967">InputActionId::MOD</a></div><div class="ttdeci">@ MOD</div><div class="ttdef"><b>Definition</b> <a href="#l00017">InputActionId.h:17</a></div></div>
+<div class="ttc" id="aInputActionId_8h_html_a3ac08c47938a8954fe0f6e7927c63e9cac8c682726bb08ce09634051af7c1066b"><div class="ttname"><a href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cac8c682726bb08ce09634051af7c1066b">InputActionId::TOGGLE_CURSOR</a></div><div class="ttdeci">@ TOGGLE_CURSOR</div><div class="ttdef"><b>Definition</b> <a href="#l00015">InputActionId.h:15</a></div></div>
+<div class="ttc" id="aInputActionId_8h_html_a3ac08c47938a8954fe0f6e7927c63e9cadc1202dd2f7cabcf0d44994daf968865"><div class="ttname"><a href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cadc1202dd2f7cabcf0d44994daf968865">InputActionId::MOVE_TO_TARGET</a></div><div class="ttdeci">@ MOVE_TO_TARGET</div><div class="ttdef"><b>Definition</b> <a href="#l00012">InputActionId.h:12</a></div></div>
+<div class="ttc" id="aInputActionId_8h_html_a3ac08c47938a8954fe0f6e7927c63e9cae0addab6610d903c953b7ebcd268c3e3"><div class="ttname"><a href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cae0addab6610d903c953b7ebcd268c3e3">InputActionId::ACT_UP</a></div><div class="ttdeci">@ ACT_UP</div><div class="ttdef"><b>Definition</b> <a href="#l00008">InputActionId.h:8</a></div></div>
+<div class="ttc" id="aInputActionId_8h_html_a3ac08c47938a8954fe0f6e7927c63e9cae0ef202ac77027154b04ae87e1fd6832"><div class="ttname"><a href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9cae0ef202ac77027154b04ae87e1fd6832">InputActionId::ACT_DOWN</a></div><div class="ttdeci">@ ACT_DOWN</div><div class="ttdef"><b>Definition</b> <a href="#l00010">InputActionId.h:10</a></div></div>
+<div class="ttc" id="aInputActionId_8h_html_a3ac08c47938a8954fe0f6e7927c63e9caf0d3251430c4f9504daef4b7ab52a10c"><div class="ttname"><a href="../../d8/d78/InputActionId_8h.html#a3ac08c47938a8954fe0f6e7927c63e9caf0d3251430c4f9504daef4b7ab52a10c">InputActionId::ACT_LEFT</a></div><div class="ttdeci">@ ACT_LEFT</div><div class="ttdef"><b>Definition</b> <a href="#l00009">InputActionId.h:9</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="../../dir_b43036362fece0f978c3c8156df55d19.html">Game</a></li><li class="navelem"><a class="el" href="../../dir_86634adf096e265ab1474f28fe0443fa.html">Enums</a></li><li class="navelem"><b>InputActionId.h</b></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
 </body>
 </html>

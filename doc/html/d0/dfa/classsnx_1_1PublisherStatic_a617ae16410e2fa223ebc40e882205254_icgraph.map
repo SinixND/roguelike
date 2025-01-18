@@ -1,0 +1,18 @@
+<map id="snx::PublisherStatic::ensureList" name="snx::PublisherStatic::ensureList">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1228,24,1378,68"/>
+<area shape="rect" id="Node000002" href="$d0/dfa/classsnx_1_1PublisherStatic.html#a0923b71c9471ac292b5055b9ab0f3c40" title=" " alt="" coords="1031,24,1180,68"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1213,48,1181,48,1181,43,1213,43"/>
+<area shape="rect" id="Node000003" href="$d6/d0d/namespaceGameModule.html#accf8a0cbfecc800a3b58b2b404d89741" title=" " alt="" coords="748,7,983,34"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1015,39,983,36,984,30,1016,34"/>
+<area shape="rect" id="Node000008" href="$dd/de5/namespaceSceneModule.html#ac49e6cc1481066b0e6982034e8fa52f2" title=" " alt="" coords="464,57,700,85"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="1016,53,700,68,700,63,1016,47"/>
+<area shape="rect" id="Node000004" href="$d6/d0d/namespaceGameModule.html#a1d421fde007b2b7c4612614fcb5991db" title=" " alt="" coords="513,5,651,33"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="732,23,651,22,651,17,732,17"/>
+<area shape="rect" id="Node000005" href="$dd/de5/namespaceSceneModule.html#aeb33d40e45e0eb72482839819417b422" title=" " alt="" coords="279,32,416,60"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="498,31,417,41,416,35,498,26"/>
+<area shape="rect" id="Node000006" href="$d4/d85/namespaceAppModule.html#a1d404de4fa1dc0fc9b1180af341d3a74" title=" " alt="" coords="108,32,231,60"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="263,48,232,48,232,43,263,43"/>
+<area shape="rect" id="Node000007" href="$df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Entrypoint." alt="" coords="5,32,60,60"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="92,48,60,48,60,43,92,43"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="448,59,416,56,417,51,449,54"/>
+</map>

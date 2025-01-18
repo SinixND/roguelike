@@ -1,0 +1,14 @@
+<map id="EnemiesModule::remove" name="EnemiesModule::remove">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,57,189,85"/>
+<area shape="rect" id="Node000002" href="$d1/d71/classsnx_1_1DenseMap.html#afcea13badc5b773f33da12d0c54732bf" title=" " alt="" coords="248,5,390,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,54,242,35,243,40,160,59"/>
+<area shape="rect" id="Node000004" href="$d1/d71/classsnx_1_1DenseMap.html#ae860492291f8e044719584d85dfdc415" title=" " alt="" coords="237,57,402,85"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="189,68,221,68,221,74,189,74"/>
+<area shape="rect" id="Node000006" href="$db/dba/namespaceConvert.html#aefecf933e03deb2b5b7fc600d831c587" title=" " alt="" coords="242,109,396,137"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="160,83,243,103,242,108,159,88"/>
+<area shape="rect" id="Node000003" href="$d1/d71/classsnx_1_1DenseMap.html#a3b91ca342d509a4f0544b458cca1cd14" title=" " alt="" coords="452,5,604,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="391,16,436,16,436,22,391,22"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="377,54,454,35,455,40,379,59"/>
+<area shape="rect" id="Node000005" href="$d1/d71/classsnx_1_1DenseMap.html#ac1c9d7941c7aeaa152552d82e47033f7" title=" " alt="" coords="450,57,605,85"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="403,68,434,68,434,74,403,74"/>
+</map>

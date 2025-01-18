@@ -1,0 +1,7 @@
+<map id="HealthModule::damage" name="HealthModule::damage">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,36,179,64"/>
+<area shape="rect" id="Node000002" href="$d5/dce/classsnx_1_1debug.html#a32c693943c53c5db6f0018b7b50f1147" title=" " alt="" coords="232,5,370,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,34,216,29,217,34,180,40"/>
+<area shape="rect" id="Node000003" href="$d0/dfa/classsnx_1_1PublisherStatic.html#a1587ad36250954b028369e9a408410e1" title=" " alt="" coords="227,57,376,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,59,212,64,211,69,179,65"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="RectangleEx::validate" name="RectangleEx::validate">
+<area shape="rect" id="Node000001" title=" " alt="" coords="245,57,408,85"/>
+<area shape="rect" id="Node000002" href="$d3/ddc/classRectangleEx.html#a4510a99bb03a8682bc95a9ab471be976" title=" " alt="" coords="5,5,197,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="248,56,164,36,165,31,249,51"/>
+<area shape="rect" id="Node000003" href="$d3/ddc/classRectangleEx.html#ad78d019554c6f7529a52f790fe8ffbb3" title=" " alt="" coords="5,57,197,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="230,74,197,74,197,68,230,68"/>
+<area shape="rect" id="Node000004" href="$d3/ddc/classRectangleEx.html#a26f56caa676619427a463fa7542d94c0" title=" " alt="" coords="5,109,197,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="249,92,165,111,164,106,248,87"/>
+</map>

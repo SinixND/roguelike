@@ -1,0 +1,5 @@
+<map id="PanelSystem::drawPanelBorders" name="PanelSystem::drawPanelBorders">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,236,33"/>
+<area shape="rect" id="Node000002" href="$d3/ddc/classRectangleEx.html#a57622b0841c3d286aee2b7d6fedaf183" title=" " alt="" coords="284,5,455,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="236,16,268,16,268,22,236,22"/>
+</map>

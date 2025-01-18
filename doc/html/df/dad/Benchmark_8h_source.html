@@ -5,24 +5,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Roguelike: Benchmark.h Source File</title>
+<title>Roguelike: include/Benchmark.h Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
 <script type="text/javascript" src="../../clipboard.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../cookie.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -35,18 +28,6 @@
    <div id="projectname">Roguelike
    </div>
   </td>
-    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
-          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td>
  </tr>
  </tbody>
 </table>
@@ -63,23 +44,22 @@ var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 $(function() { codefold.init(1); });
 /* @license-end */
 </script>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('df/dad/Benchmark_8h_source.html','../../'); initResizable(true); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search',false);
+  $(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -101,11 +81,17 @@ $(function(){initNavTree('df/dad/Benchmark_8h_source.html','../../'); initResiza
 </div>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">Benchmark.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef IG20240724124336</span></div>
+<a href="../../df/dad/Benchmark_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef IG20240724124336</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define IG20240724124336</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;chrono&gt;</span></div>
@@ -115,48 +101,54 @@ $(function(){initNavTree('df/dad/Benchmark_8h_source.html','../../'); initResiza
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span>snx</div>
+<div class="foldopen" id="foldopen00011" data-start="{" data-end="}">
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="../../db/dc7/namespacesnx.html">   11</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../db/dc7/namespacesnx.html">snx</a></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>{</div>
 <div class="foldopen" id="foldopen00013" data-start="{" data-end="};">
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="../../d7/ddc/classsnx_1_1BM.html">   13</a></span>    <span class="keyword">class </span><a class="code hl_class" href="../../d7/ddc/classsnx_1_1BM.html">BM</a></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        <span class="keyword">static</span> <span class="keyword">inline</span> std::unordered_map&lt;std::string, std::chrono::time_point&lt;std::chrono::high_resolution_clock&gt;&gt; starts_;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="keyword">static</span> <span class="keyword">inline</span> std::unordered_map&lt;std::string, std::chrono::nanoseconds::rep&gt; durations_;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keyword">static</span> <span class="keyword">inline</span> std::unordered_map&lt;std::string, size_t&gt; measurementCounts_;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="../../d7/ddc/classsnx_1_1BM.html#a91a0b2a0f2d52b6cc63b2b138d5e9cd0">   15</a></span>        <span class="keyword">static</span> <span class="keyword">inline</span> std::unordered_map&lt;std::string, std::chrono::time_point&lt;std::chrono::high_resolution_clock&gt;&gt; <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#a91a0b2a0f2d52b6cc63b2b138d5e9cd0">starts_</a>;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="../../d7/ddc/classsnx_1_1BM.html#a72a49e19401f93180dedb8bd59fbceda">   16</a></span>        <span class="keyword">static</span> <span class="keyword">inline</span> std::unordered_map&lt;std::string, std::chrono::nanoseconds::rep&gt; <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#a72a49e19401f93180dedb8bd59fbceda">durations_</a>;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="../../d7/ddc/classsnx_1_1BM.html#ad839fd4b2ee2aec3a7592292ed462764">   17</a></span>        <span class="keyword">static</span> <span class="keyword">inline</span> std::unordered_map&lt;std::string, size_t&gt; <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#ad839fd4b2ee2aec3a7592292ed462764">measurementCounts_</a>;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> start( std::string bmName = <span class="stringliteral">&quot;&quot;</span> )</div>
+<div class="foldopen" id="foldopen00020" data-start="{" data-end="}">
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="../../d7/ddc/classsnx_1_1BM.html#aeaa74760639ef004865f9edb074964f4">   20</a></span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d7/ddc/classsnx_1_1BM.html#aeaa74760639ef004865f9edb074964f4">start</a>( std::string bmName = <span class="stringliteral">&quot;&quot;</span> )</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        {</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            <span class="keywordflow">if</span> ( !starts_.contains( bmName ) )</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            <span class="keywordflow">if</span> ( !<a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#a91a0b2a0f2d52b6cc63b2b138d5e9cd0">starts_</a>.contains( bmName ) )</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>            {</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>                starts_.insert( { bmName, std::chrono::high_resolution_clock::now() } );</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>                <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#a91a0b2a0f2d52b6cc63b2b138d5e9cd0">starts_</a>.insert( { bmName, std::chrono::high_resolution_clock::now() } );</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            }</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            starts_.at( bmName ) = std::chrono::high_resolution_clock::now();</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#a91a0b2a0f2d52b6cc63b2b138d5e9cd0">starts_</a>.at( bmName ) = std::chrono::high_resolution_clock::now();</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        }</div>
+</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> stop( std::string bmName = <span class="stringliteral">&quot;&quot;</span> )</div>
+<div class="foldopen" id="foldopen00031" data-start="{" data-end="}">
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="../../d7/ddc/classsnx_1_1BM.html#a933bf5e167da35f08a87dc6c326da2fb">   31</a></span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d7/ddc/classsnx_1_1BM.html#a933bf5e167da35f08a87dc6c326da2fb">stop</a>( std::string bmName = <span class="stringliteral">&quot;&quot;</span> )</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        {</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            <span class="keyword">auto</span> end = std::chrono::high_resolution_clock::now();</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            <span class="keywordflow">if</span> ( !durations_.contains( bmName ) )</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            <span class="keywordflow">if</span> ( !<a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#a72a49e19401f93180dedb8bd59fbceda">durations_</a>.contains( bmName ) )</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                durations_.insert( { bmName, ( end - starts_[bmName] ).count() } );</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#a72a49e19401f93180dedb8bd59fbceda">durations_</a>.insert( { bmName, ( end - <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#a91a0b2a0f2d52b6cc63b2b138d5e9cd0">starts_</a>[bmName] ).count() } );</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                measurementCounts_.insert( { bmName, 1 } );</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#ad839fd4b2ee2aec3a7592292ed462764">measurementCounts_</a>.insert( { bmName, 1 } );</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            }</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                durations_.at( bmName ) += ( end - starts_[bmName] ).count();</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                ++measurementCounts_.at( bmName );</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#a72a49e19401f93180dedb8bd59fbceda">durations_</a>.at( bmName ) += ( end - <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#a91a0b2a0f2d52b6cc63b2b138d5e9cd0">starts_</a>[bmName] ).count();</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                ++<a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#ad839fd4b2ee2aec3a7592292ed462764">measurementCounts_</a>.at( bmName );</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            }</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        }</div>
+</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> report( std::string bmName = <span class="stringliteral">&quot;&quot;</span> )</div>
+<div class="foldopen" id="foldopen00049" data-start="{" data-end="}">
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="../../d7/ddc/classsnx_1_1BM.html#a5200749df9d79ae9223eff42553f524f">   49</a></span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d7/ddc/classsnx_1_1BM.html#a5200749df9d79ae9223eff42553f524f">report</a>( std::string bmName = <span class="stringliteral">&quot;&quot;</span> )</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keyword">auto</span> average = ( durations_.at( bmName ) / measurementCounts_.at( bmName ) );</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keyword">auto</span> average = ( <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#a72a49e19401f93180dedb8bd59fbceda">durations_</a>.at( bmName ) / <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#ad839fd4b2ee2aec3a7592292ed462764">measurementCounts_</a>.at( bmName ) );</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            std::cout</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                &lt;&lt; <span class="stringliteral">&quot;\&quot;&quot;</span></div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                &lt;&lt; bmName</div>
@@ -166,29 +158,38 @@ $(function(){initNavTree('df/dad/Benchmark_8h_source.html','../../'); initResiza
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                &lt;&lt; <span class="stringliteral">&quot; ms / &quot;</span></div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                &lt;&lt; 1 / ( average * 10E-9 )</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                &lt;&lt; <span class="stringliteral">&quot; 1/s over &quot;</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                &lt;&lt; measurementCounts_.at( bmName )</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                &lt;&lt; <a class="code hl_variable" href="../../d7/ddc/classsnx_1_1BM.html#ad839fd4b2ee2aec3a7592292ed462764">measurementCounts_</a>.at( bmName )</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                &lt;&lt; <span class="stringliteral">&quot; iterations\n&quot;</span>;</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        }</div>
+</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> stopAndReport( std::string bmName = <span class="stringliteral">&quot;&quot;</span> )</div>
+<div class="foldopen" id="foldopen00065" data-start="{" data-end="}">
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="../../d7/ddc/classsnx_1_1BM.html#a6fe408d962c58006361bbdfdee76e534">   65</a></span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d7/ddc/classsnx_1_1BM.html#a6fe408d962c58006361bbdfdee76e534">stopAndReport</a>( std::string bmName = <span class="stringliteral">&quot;&quot;</span> )</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            stop( bmName );</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            report( bmName );</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            <a class="code hl_function" href="../../d7/ddc/classsnx_1_1BM.html#a933bf5e167da35f08a87dc6c326da2fb">stop</a>( bmName );</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            <a class="code hl_function" href="../../d7/ddc/classsnx_1_1BM.html#a5200749df9d79ae9223eff42553f524f">report</a>( bmName );</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        }</div>
+</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    };</div>
 </div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>};</div>
+</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclasssnx_1_1BM_html"><div class="ttname"><a href="../../d7/ddc/classsnx_1_1BM.html">snx::BM</a></div><div class="ttdef"><b>Definition</b> <a href="#l00013">Benchmark.h:14</a></div></div>
+<div class="ttc" id="aclasssnx_1_1BM_html_a5200749df9d79ae9223eff42553f524f"><div class="ttname"><a href="../../d7/ddc/classsnx_1_1BM.html#a5200749df9d79ae9223eff42553f524f">snx::BM::report</a></div><div class="ttdeci">static void report(std::string bmName=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> <a href="#l00049">Benchmark.h:49</a></div></div>
+<div class="ttc" id="aclasssnx_1_1BM_html_a6fe408d962c58006361bbdfdee76e534"><div class="ttname"><a href="../../d7/ddc/classsnx_1_1BM.html#a6fe408d962c58006361bbdfdee76e534">snx::BM::stopAndReport</a></div><div class="ttdeci">static void stopAndReport(std::string bmName=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> <a href="#l00065">Benchmark.h:65</a></div></div>
+<div class="ttc" id="aclasssnx_1_1BM_html_a72a49e19401f93180dedb8bd59fbceda"><div class="ttname"><a href="../../d7/ddc/classsnx_1_1BM.html#a72a49e19401f93180dedb8bd59fbceda">snx::BM::durations_</a></div><div class="ttdeci">static std::unordered_map&lt; std::string, std::chrono::nanoseconds::rep &gt; durations_</div><div class="ttdef"><b>Definition</b> <a href="#l00016">Benchmark.h:16</a></div></div>
+<div class="ttc" id="aclasssnx_1_1BM_html_a91a0b2a0f2d52b6cc63b2b138d5e9cd0"><div class="ttname"><a href="../../d7/ddc/classsnx_1_1BM.html#a91a0b2a0f2d52b6cc63b2b138d5e9cd0">snx::BM::starts_</a></div><div class="ttdeci">static std::unordered_map&lt; std::string, std::chrono::time_point&lt; std::chrono::high_resolution_clock &gt; &gt; starts_</div><div class="ttdef"><b>Definition</b> <a href="#l00015">Benchmark.h:15</a></div></div>
+<div class="ttc" id="aclasssnx_1_1BM_html_a933bf5e167da35f08a87dc6c326da2fb"><div class="ttname"><a href="../../d7/ddc/classsnx_1_1BM.html#a933bf5e167da35f08a87dc6c326da2fb">snx::BM::stop</a></div><div class="ttdeci">static void stop(std::string bmName=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> <a href="#l00031">Benchmark.h:31</a></div></div>
+<div class="ttc" id="aclasssnx_1_1BM_html_ad839fd4b2ee2aec3a7592292ed462764"><div class="ttname"><a href="../../d7/ddc/classsnx_1_1BM.html#ad839fd4b2ee2aec3a7592292ed462764">snx::BM::measurementCounts_</a></div><div class="ttdeci">static std::unordered_map&lt; std::string, size_t &gt; measurementCounts_</div><div class="ttdef"><b>Definition</b> <a href="#l00017">Benchmark.h:17</a></div></div>
+<div class="ttc" id="aclasssnx_1_1BM_html_aeaa74760639ef004865f9edb074964f4"><div class="ttname"><a href="../../d7/ddc/classsnx_1_1BM.html#aeaa74760639ef004865f9edb074964f4">snx::BM::start</a></div><div class="ttdeci">static void start(std::string bmName=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> <a href="#l00020">Benchmark.h:20</a></div></div>
+<div class="ttc" id="anamespacesnx_html"><div class="ttname"><a href="../../db/dc7/namespacesnx.html">snx</a></div><div class="ttdef"><b>Definition</b> <a href="#l00011">Benchmark.h:12</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><b>Benchmark.h</b></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
 </body>
 </html>

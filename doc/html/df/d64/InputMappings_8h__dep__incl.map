@@ -1,0 +1,25 @@
+<map id="src/Game/Classes/InputMappings.h" name="src/Game/Classes/InputMappings.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="146,5,395,33"/>
+<area shape="rect" id="Node000002" href="$df/d2f/InputHandler_8h.html" title=" " alt="" coords="152,81,389,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="273,49,273,81,268,81,268,49"/>
+<area shape="rect" id="Node000004" href="$d0/dc4/Game_8cpp.html" title=" " alt="" coords="235,232,388,260"/>
+<area shape="poly" id="edge12_Node000001_Node000004" title=" " alt="" coords="197,40,122,63,85,78,53,96,28,115,12,136,9,158,22,183,35,194,55,203,109,219,173,230,235,237,234,242,172,235,108,224,53,208,32,198,18,186,4,159,7,134,24,111,50,91,83,74,121,58,196,35"/>
+<area shape="rect" id="Node000005" href="$d3/d5f/Game_8h.html" title=" " alt="" coords="357,157,496,184"/>
+<area shape="poly" id="edge13_Node000001_Node000005" title=" " alt="" coords="339,36,373,54,403,79,415,98,423,119,429,156,423,157,417,120,410,100,399,83,370,58,336,41"/>
+<area shape="rect" id="Node000003" href="$d6/dab/InputHandler_8cpp.html" title=" " alt="" coords="31,157,283,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="239,120,179,158,176,154,236,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="285,122,297,156,313,232,307,233,292,157,280,124"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="313,113,400,154,398,159,311,118"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="395,195,333,234,331,230,392,191"/>
+<area shape="rect" id="Node000006" href="$de/d15/Scene_8cpp.html" title=" " alt="" coords="350,308,503,336"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="429,200,429,307,424,307,424,200"/>
+<area shape="rect" id="Node000007" href="$d5/d2d/Scene_8h.html" title=" " alt="" coords="464,232,602,260"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="459,191,516,230,513,234,456,196"/>
+<area shape="poly" id="edge11_Node000007_Node000006" title=" " alt="" coords="503,271,447,310,444,305,500,267"/>
+<area shape="rect" id="Node000008" href="$de/d8b/App_8h.html" title=" " alt="" coords="527,308,608,336"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="548,273,564,306,559,309,543,275"/>
+<area shape="rect" id="Node000009" href="$db/d4d/App_8cpp.html" title=" " alt="" coords="457,384,553,411"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="549,349,518,385,514,381,545,346"/>
+<area shape="rect" id="Node000010" href="$df/d0a/main_8cpp.html" title="Entrypoint." alt="" coords="577,384,681,411"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="590,346,620,382,616,385,586,349"/>
+</map>

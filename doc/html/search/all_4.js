@@ -1,5 +1,29 @@
 var searchData=
 [
-  ['enemies_0',['Enemies',['../d8/d32/structEnemies.html',1,'']]],
-  ['energycomponent_1',['EnergyComponent',['../d8/d98/structEnergyComponent.html',1,'']]]
+  ['emplace_0',['emplace',['../d1/d71/classsnx_1_1DenseMap.html#af0bfdac633389e7774d2065f5be32b61',1,'snx::DenseMap::emplace()'],['../dc/d6e/classsnx_1_1SparseSet.html#a473de00bcf81a44f38a1b6efa910b474',1,'snx::SparseSet::emplace()']]],
+  ['emplace_5for_5fassign_1',['emplace_or_assign',['../d1/d71/classsnx_1_1DenseMap.html#a4174bb264c7f2745c7e6c25aadd4e470',1,'snx::DenseMap::emplace_or_assign()'],['../dc/d6e/classsnx_1_1SparseSet.html#ad08f7495473074e3d2288cefad6ec20b',1,'snx::SparseSet::emplace_or_assign()']]],
+  ['emscriptenloop_2',['emscriptenLoop',['../db/d4d/App_8cpp.html#a0788d600601c2b17eaba4462da9e9d8c',1,'App.cpp']]],
+  ['end_3',['end',['../d1/d71/classsnx_1_1DenseMap.html#a03d076b4ea321de3501e677de088efd4',1,'snx::DenseMap::end() const'],['../d1/d71/classsnx_1_1DenseMap.html#aea73ecb6502bfb42abcda6a86bb77416',1,'snx::DenseMap::end()'],['../dc/d6e/classsnx_1_1SparseSet.html#a4e2ea94c137dda9721723af9fe3f9f6c',1,'snx::SparseSet::end() const'],['../dc/d6e/classsnx_1_1SparseSet.html#a6b248fea56f170c0d20e1791bcf55bf0',1,'snx::SparseSet::end()']]],
+  ['enemies_4',['Enemies',['../d8/d32/structEnemies.html',1,'']]],
+  ['enemies_5',['enemies',['../da/ddc/structMap.html#a69bc01a95dba8d7c7476f61c79d166a7',1,'Map']]],
+  ['enemies_2ecpp_6',['Enemies.cpp',['../d0/d03/Enemies_8cpp.html',1,'']]],
+  ['enemies_2eh_7',['Enemies.h',['../d6/dc1/Enemies_8h.html',1,'']]],
+  ['enemiesmodule_8',['EnemiesModule',['../d3/d3e/namespaceEnemiesModule.html',1,'']]],
+  ['enemydata_9',['EnemyData',['../d7/de4/namespaceEnemyData.html',1,'']]],
+  ['enemydata_2eh_10',['EnemyData.h',['../d9/dde/EnemyData_8h.html',1,'']]],
+  ['energies_11',['energies',['../d8/d32/structEnemies.html#ae76db49c844055c420dc41cd2c0254a3',1,'Enemies']]],
+  ['energy_12',['energy',['../d9/dda/structHero.html#aa03ca32aca48f9a34b2732b5abf00c2a',1,'Hero']]],
+  ['energycomponent_13',['EnergyComponent',['../d8/d98/structEnergyComponent.html',1,'']]],
+  ['energycomponent_2ecpp_14',['EnergyComponent.cpp',['../dd/d42/EnergyComponent_8cpp.html',1,'']]],
+  ['energycomponent_2eh_15',['EnergyComponent.h',['../d3/dfd/EnergyComponent_8h.html',1,'']]],
+  ['energymax_16',['energyMax',['../d0/d18/namespaceHeroData.html#aba2325e067345799de14a75f9dd6f8db',1,'HeroData']]],
+  ['energymodule_17',['EnergyModule',['../d7/d91/namespaceEnergyModule.html',1,'']]],
+  ['energyregenbase_18',['energyRegenBase',['../d0/d18/namespaceHeroData.html#a546d203d010eaaebf5a96ae5712f32a3',1,'HeroData']]],
+  ['energystate_19',['EnergyState',['../d3/dfd/EnergyComponent_8h.html#a9cb0755b176581c8f34a3099b053ef27',1,'EnergyComponent.h']]],
+  ['ensurelist_20',['ensureList',['../db/da9/classsnx_1_1Publisher.html#ad817fb3bb5f01b9a16370cdc9411f09b',1,'snx::Publisher::ensureList()'],['../d0/dfa/classsnx_1_1PublisherStatic.html#a617ae16410e2fa223ebc40e882205254',1,'snx::PublisherStatic::ensureList()']]],
+  ['erase_21',['erase',['../d1/d71/classsnx_1_1DenseMap.html#ae860492291f8e044719584d85dfdc415',1,'snx::DenseMap::erase()'],['../dc/d6e/classsnx_1_1SparseSet.html#a9c1f8816854a3eea386c749dbd2b87ed',1,'snx::SparseSet::erase()']]],
+  ['eventid_22',['EventId',['../dd/d09/EventId_8h.html#a4cf8d4a4d56e9f795518b6541ddeb5bf',1,'EventId.h']]],
+  ['eventid_2eh_23',['EventId.h',['../dd/d09/EventId_8h.html',1,'']]],
+  ['events_24',['events',['../d0/db3/structObjects.html#ab58411805af382f415e2a73fc2d9b87a',1,'Objects']]],
+  ['eventtosubscriberlists_5f_25',['eventToSubscriberLists_',['../db/da9/classsnx_1_1Publisher.html#a265e56632aed0932f270f958ccb39464',1,'snx::Publisher::eventToSubscriberLists_'],['../d0/dfa/classsnx_1_1PublisherStatic.html#a9eb721818107fde658b27613229d67f2',1,'snx::PublisherStatic::eventToSubscriberLists_']]]
 ];

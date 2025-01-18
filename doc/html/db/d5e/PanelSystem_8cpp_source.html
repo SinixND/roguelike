@@ -5,24 +5,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Roguelike: PanelSystem.cpp Source File</title>
+<title>Roguelike: src/Scene/Systems/PanelSystem.cpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
 <script type="text/javascript" src="../../clipboard.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../cookie.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -35,18 +28,6 @@
    <div id="projectname">Roguelike
    </div>
   </td>
-    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
-          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td>
  </tr>
  </tbody>
 </table>
@@ -63,23 +44,22 @@ var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 $(function() { codefold.init(1); });
 /* @license-end */
 </script>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initResizable(true); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search',false);
+  $(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -101,85 +81,94 @@ $(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initRe
 </div>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="../../dir_204260ac86670e69c647eaba8962e745.html">Scene</a></li><li class="navelem"><a class="el" href="../../dir_680c0cbfb09800d74ae0cd6bbfb8565e.html">Systems</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">PanelSystem.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;PanelSystem.h&quot;</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;EventId.h&quot;</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;GameFont.h&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;Hero.h&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Logger.h&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;Objects.h&quot;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;Panels.h&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;PublisherStatic.h&quot;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;raylibEx.h&quot;</span></div>
+<a href="../../db/d5e/PanelSystem_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;<a class="code" href="../../d4/da9/PanelSystem_8h.html">PanelSystem.h</a>&quot;</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;<a class="code" href="../../dd/d09/EventId_8h.html">EventId.h</a>&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="../../d4/d3c/GameFont_8h.html">GameFont.h</a>&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/db4/Hero_8h.html">Hero.h</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="../../dd/da4/Logger_8h.html">Logger.h</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="../../d9/d00/Objects_8h.html">Objects.h</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d17/Panels_8h.html">Panels.h</a>&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="../../d9/d04/PublisherStatic_8h.html">PublisherStatic.h</a>&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="../../df/d66/raylibEx_8h.html">raylibEx.h</a>&quot;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;raygui.h&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;raylib.h&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;raymath.h&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keywordtype">int</span> <span class="keyword">constexpr</span> infoPanelWidth{ 16 };</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="../../db/d5e/PanelSystem_8cpp.html#ab59ba69da0e99027310cacf100249efd">   15</a></span><span class="keywordtype">int</span> <span class="keyword">constexpr</span> <a class="code hl_variable" href="../../db/d5e/PanelSystem_8cpp.html#ab59ba69da0e99027310cacf100249efd">infoPanelWidth</a>{ 16 };</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keywordtype">void</span> PanelSystem::init( <a class="code hl_struct" href="../../d5/df3/structPanels.html">Panels</a>&amp; panels )</div>
+<div class="foldopen" id="foldopen00017" data-start="{" data-end="}">
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="../../d6/d4d/namespacePanelSystem.html#a41938816dc9fac8ee50ed1e72fb36de9">   17</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d6/d4d/namespacePanelSystem.html#a41938816dc9fac8ee50ed1e72fb36de9">PanelSystem::init</a>( <a class="code hl_struct" href="../../d5/df3/structPanels.html">Panels</a>&amp; panels )</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>{</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    std::string widthString{};</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keywordflow">for</span> ( <span class="keywordtype">int</span> n{ 0 }; n &lt; infoPanelWidth; ++n )</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keywordflow">for</span> ( <span class="keywordtype">int</span> n{ 0 }; n &lt; <a class="code hl_variable" href="../../db/d5e/PanelSystem_8cpp.html#ab59ba69da0e99027310cacf100249efd">infoPanelWidth</a>; ++n )</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        widthString.append( <span class="stringliteral">&quot;I&quot;</span> );</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    }</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keywordtype">float</span> heroInfoPanelWidth =</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        MeasureTextEx(</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            GameFont::font(),</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            <a class="code hl_function" href="../../de/da7/classGameFont.html#a70834f8eb6bf20d79d6648ec17189ae2">GameFont::font</a>(),</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            widthString.c_str(),</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            GameFont::fontHeight,</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            <a class="code hl_variable" href="../../de/da7/classGameFont.html#a38ab9c95f72775c4064aceae5e639f2f">GameFont::fontHeight</a>,</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            0</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        )</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            .x;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordtype">float</span> gameInfoPanelHeight =</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            ( <span class="comment">/*Number of lines to print*/</span> 1 * GameFont::fontHeight )</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            + GameFont::fontHeight</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            ( <span class="comment">/*Number of lines to print*/</span> 1 * <a class="code hl_variable" href="../../de/da7/classGameFont.html#a38ab9c95f72775c4064aceae5e639f2f">GameFont::fontHeight</a> )</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            + <a class="code hl_variable" href="../../de/da7/classGameFont.html#a38ab9c95f72775c4064aceae5e639f2f">GameFont::fontHeight</a></div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        );</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">float</span> logPanelHeight =</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            ( <span class="comment">/*Number of lines to print*/</span> 4 * GameFont::fontHeight )</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            + GameFont::fontHeight</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            ( <span class="comment">/*Number of lines to print*/</span> 4 * <a class="code hl_variable" href="../../de/da7/classGameFont.html#a38ab9c95f72775c4064aceae5e639f2f">GameFont::fontHeight</a> )</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            + <a class="code hl_variable" href="../../de/da7/classGameFont.html#a38ab9c95f72775c4064aceae5e639f2f">GameFont::fontHeight</a></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        );</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    panels.tileInfo</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        .setRight( <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>( GetRenderWidth() ) )</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        .setBottom( <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>( GetRenderHeight() ) )</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        .resizeWidthLeft( heroInfoPanelWidth )</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        .resizeHeightTop( logPanelHeight );</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#a69c3d4b189ab6b66015dd206afbf0b6c">tileInfo</a></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a5286193bb438c93e79260d80ab9b8f78">setRight</a>( <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>( GetRenderWidth() ) )</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#acf7565235449496d40cfa0567760e3f0">setBottom</a>( <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>( GetRenderHeight() ) )</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#af9bcba6b1c617a8fc1180187dfe62974">resizeWidthLeft</a>( heroInfoPanelWidth )</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a3387568ac967a074b36650c3a2a34370">resizeHeightTop</a>( logPanelHeight );</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    panels.heroInfo</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        .setRight( <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>( GetRenderWidth() ) )</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        .setBottom( panels.tileInfo.top() )</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        .resizeWidthLeft( heroInfoPanelWidth );</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#a7277cb3d550da8b91e4bb87740cff049">heroInfo</a></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a5286193bb438c93e79260d80ab9b8f78">setRight</a>( <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>( GetRenderWidth() ) )</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#acf7565235449496d40cfa0567760e3f0">setBottom</a>( panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#a69c3d4b189ab6b66015dd206afbf0b6c">tileInfo</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a2229f380af32c5173f61328c653f239c">top</a>() )</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#af9bcba6b1c617a8fc1180187dfe62974">resizeWidthLeft</a>( heroInfoPanelWidth );</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    panels.status</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        .setRight( panels.tileInfo.left() )</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        .setBottom( gameInfoPanelHeight );</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#a210b5a2d595ad64dbb99b10156b059a0">status</a></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a5286193bb438c93e79260d80ab9b8f78">setRight</a>( panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#a69c3d4b189ab6b66015dd206afbf0b6c">tileInfo</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a9cf26b9f4517f6d4d0d13866e4f7cfe6">left</a>() )</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#acf7565235449496d40cfa0567760e3f0">setBottom</a>( gameInfoPanelHeight );</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    panels.log</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        .setRight( panels.tileInfo.left() )</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        .setBottom( <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>( GetRenderHeight() ) )</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        .resizeHeightTop( logPanelHeight );</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#ab9728f756ae218d17161b1d9473c87e1">log</a></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a5286193bb438c93e79260d80ab9b8f78">setRight</a>( panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#a69c3d4b189ab6b66015dd206afbf0b6c">tileInfo</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a9cf26b9f4517f6d4d0d13866e4f7cfe6">left</a>() )</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#acf7565235449496d40cfa0567760e3f0">setBottom</a>( <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>( GetRenderHeight() ) )</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a3387568ac967a074b36650c3a2a34370">resizeHeightTop</a>( logPanelHeight );</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    panels.map</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        .setRight( panels.tileInfo.left() )</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        .setBottom( panels.log.top() )</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        .setTop( panels.status.bottom() );</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#abca275b1ff239131fbf207054a214cd7">map</a></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a5286193bb438c93e79260d80ab9b8f78">setRight</a>( panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#a69c3d4b189ab6b66015dd206afbf0b6c">tileInfo</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a9cf26b9f4517f6d4d0d13866e4f7cfe6">left</a>() )</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#acf7565235449496d40cfa0567760e3f0">setBottom</a>( panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#ab9728f756ae218d17161b1d9473c87e1">log</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a2229f380af32c5173f61328c653f239c">top</a>() )</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        .<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#ab2a0d990df13589e636ffeec252d46c7">setTop</a>( panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#a210b5a2d595ad64dbb99b10156b059a0">status</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#aaa3c68d4f205462b522f457b77c58b57">bottom</a>() );</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    snx::PublisherStatic::publish( EventId::PANELS_RESIZED );</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <a class="code hl_function" href="../../d0/dfa/classsnx_1_1PublisherStatic.html#a1587ad36250954b028369e9a408410e1">snx::PublisherStatic::publish</a>( <a class="code hl_enumvalue" href="../../dd/d09/EventId_8h.html#a4cf8d4a4d56e9f795518b6541ddeb5bfa67f65e5a54e5734fe7a84549af1f12b8">EventId::PANELS_RESIZED</a> );</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>}</div>
+</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keywordtype">void</span> PanelSystem::drawGameInfoPanelContent(</div>
+<div class="foldopen" id="foldopen00075" data-start="{" data-end="}">
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="../../d6/d4d/namespacePanelSystem.html#a268e233588747558244831eea1c839bb">   75</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d6/d4d/namespacePanelSystem.html#a268e233588747558244831eea1c839bb">PanelSystem::drawGameInfoPanelContent</a>(</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <a class="code hl_struct" href="../../d5/df3/structPanels.html">Panels</a> <span class="keyword">const</span>&amp; panels,</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordtype">int</span> level</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>)</div>
@@ -187,9 +176,9 @@ $(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">//* Draw text for current level</span></div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordtype">char</span> <span class="keyword">const</span>* currentLevel{ TextFormat( <span class="stringliteral">&quot;Level %i&quot;</span>, level ) };</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    Font <span class="keyword">const</span>&amp; font{ GameFont::font() };</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    Font <span class="keyword">const</span>&amp; font{ <a class="code hl_function" href="../../de/da7/classGameFont.html#a70834f8eb6bf20d79d6648ec17189ae2">GameFont::font</a>() };</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordtype">float</span> fontSize{ GameFont::fontHeight };</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordtype">float</span> fontSize{ <a class="code hl_variable" href="../../de/da7/classGameFont.html#a38ab9c95f72775c4064aceae5e639f2f">GameFont::fontHeight</a> };</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    Vector2 textDimensions{</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        MeasureTextEx(</div>
@@ -204,7 +193,7 @@ $(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        font,</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        currentLevel,</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        Vector2{</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            ( ( 0.5f * panels.map.width() ) - ( 0.5f * textDimensions.x ) ),</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            ( ( 0.5f * panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#abca275b1ff239131fbf207054a214cd7">map</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#acf8b75057886cbb239b53d8ac8f3a1c9">width</a>() ) - ( 0.5f * textDimensions.x ) ),</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            ( 0.5f * fontSize )</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        },</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        fontSize,</div>
@@ -212,14 +201,16 @@ $(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        RAYWHITE</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    );</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>}</div>
+</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>std::string printInfo( std::string <span class="keyword">const</span>&amp; text )</div>
+<div class="foldopen" id="foldopen00109" data-start="{" data-end="}">
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="../../db/d5e/PanelSystem_8cpp.html#a7d41a124953698ce8c3e5cf6c8f15bfc">  109</a></span>std::string <a class="code hl_function" href="../../db/d5e/PanelSystem_8cpp.html#a7d41a124953698ce8c3e5cf6c8f15bfc">printInfo</a>( std::string <span class="keyword">const</span>&amp; text )</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>{</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    std::string info{ <span class="stringliteral">&quot;|&quot;</span> };</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    info.append( text );</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordflow">while</span> ( info.length() &lt; ( infoPanelWidth - 2 ) )</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordflow">while</span> ( info.length() &lt; ( <a class="code hl_variable" href="../../db/d5e/PanelSystem_8cpp.html#ab59ba69da0e99027310cacf100249efd">infoPanelWidth</a> - 2 ) )</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    {</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        info.append( <span class="stringliteral">&quot; &quot;</span> );</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    }</div>
@@ -228,8 +219,10 @@ $(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keywordflow">return</span> info;</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>}</div>
+</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="keywordtype">void</span> PanelSystem::drawHeroInfoPanelContent(</div>
+<div class="foldopen" id="foldopen00125" data-start="{" data-end="}">
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno"><a class="line" href="../../d6/d4d/namespacePanelSystem.html#a80e225518adc0aeb5fd3597071205dc6">  125</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d6/d4d/namespacePanelSystem.html#a80e225518adc0aeb5fd3597071205dc6">PanelSystem::drawHeroInfoPanelContent</a>(</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <a class="code hl_struct" href="../../d5/df3/structPanels.html">Panels</a> <span class="keyword">const</span>&amp; panels,</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    [[maybe_unused]] <a class="code hl_struct" href="../../d9/dda/structHero.html">Hero</a> <span class="keyword">const</span>&amp; hero</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>)</div>
@@ -249,7 +242,7 @@ $(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    info.append( <span class="stringliteral">&quot;|= HERO ======|\n&quot;</span> );</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    info.append(</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>        printInfo(</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>        <a class="code hl_function" href="../../db/d5e/PanelSystem_8cpp.html#a7d41a124953698ce8c3e5cf6c8f15bfc">printInfo</a>(</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>            <span class="stringliteral">&quot;HP : &quot;</span></div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>            + std::to_string( hero.health.currentHealth )</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            + <span class="stringliteral">&quot;/&quot;</span></div>
@@ -257,7 +250,7 @@ $(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        )</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    );</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    info.append( printInfo(</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    info.append( <a class="code hl_function" href="../../db/d5e/PanelSystem_8cpp.html#a7d41a124953698ce8c3e5cf6c8f15bfc">printInfo</a>(</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        <span class="stringliteral">&quot;ATK : &quot;</span></div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        + std::to_string( hero.damage.baseDamage )</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    ) );</div>
@@ -265,7 +258,7 @@ $(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    info.append( <span class="stringliteral">&quot;|_____________|&quot;</span> );</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    DrawTextEx(</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        GameFont::font(),</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        <a class="code hl_function" href="../../de/da7/classGameFont.html#a70834f8eb6bf20d79d6648ec17189ae2">GameFont::font</a>(),</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        TextFormat(</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            info.c_str()</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        ),</div>
@@ -278,14 +271,16 @@ $(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        LIGHTGRAY</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    );</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>}</div>
+</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="keywordtype">void</span> PanelSystem::drawTileInfoPanelContent(</div>
+<div class="foldopen" id="foldopen00175" data-start="{" data-end="}">
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno"><a class="line" href="../../d6/d4d/namespacePanelSystem.html#add45e8a24cfe301471e508856ed4136f">  175</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d6/d4d/namespacePanelSystem.html#add45e8a24cfe301471e508856ed4136f">PanelSystem::drawTileInfoPanelContent</a>(</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <a class="code hl_struct" href="../../d5/df3/structPanels.html">Panels</a> <span class="keyword">const</span>&amp; panels,</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <a class="code hl_struct" href="../../d0/db3/structObjects.html">Objects</a> <span class="keyword">const</span>&amp; objects,</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <a class="code hl_struct" href="../../da/dba/structVector2I.html">Vector2I</a> <span class="keyword">const</span>&amp; cursorPosition</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>)</div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>{</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="keywordflow">if</span> ( !objects.names.contains( cursorPosition ) )</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="keywordflow">if</span> ( !objects.<a class="code hl_variable" href="../../d0/db3/structObjects.html#ac8d43359689cfed57ccbec89b325be93">names</a>.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#a6b8453f740a1191ca8743a017a36dc81">contains</a>( cursorPosition ) )</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    {</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    }</div>
@@ -294,8 +289,8 @@ $(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="comment">//* Draw tag and action from tile under cursor</span></div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    DrawTextEx(</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        GameFont::font(),</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        TextFormat( <span class="stringliteral">&quot;Object: %s\nAction: %s&quot;</span>, objects.names.at( cursorPosition ).c_str(), objects.actions.at( cursorPosition ).c_str() ),</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <a class="code hl_function" href="../../de/da7/classGameFont.html#a70834f8eb6bf20d79d6648ec17189ae2">GameFont::font</a>(),</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        TextFormat( <span class="stringliteral">&quot;Object: %s\nAction: %s&quot;</span>, objects.<a class="code hl_variable" href="../../d0/db3/structObjects.html#ac8d43359689cfed57ccbec89b325be93">names</a>.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#afcea13badc5b773f33da12d0c54732bf">at</a>( cursorPosition ).c_str(), objects.<a class="code hl_variable" href="../../d0/db3/structObjects.html#af9d8c4d6791c3232f887e807404b13db">actions</a>.<a class="code hl_function" href="../../d1/d71/classsnx_1_1DenseMap.html#afcea13badc5b773f33da12d0c54732bf">at</a>( cursorPosition ).c_str() ),</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        Vector2{</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            panels.tileInfo.left() + ( 0.5f * GameFont::fontWidth ),</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            panels.tileInfo.top() + ( 0.5f * fontSize )</div>
@@ -305,21 +300,23 @@ $(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        LIGHTGRAY</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    );</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>}</div>
+</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span><span class="keywordtype">void</span> PanelSystem::drawLogPanelContent( <a class="code hl_struct" href="../../d5/df3/structPanels.html">Panels</a> <span class="keyword">const</span>&amp; panels )</div>
+<div class="foldopen" id="foldopen00202" data-start="{" data-end="}">
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno"><a class="line" href="../../d6/d4d/namespacePanelSystem.html#a7fdd8443a542feeae9e689a59a46e1cd">  202</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d6/d4d/namespacePanelSystem.html#a7fdd8443a542feeae9e689a59a46e1cd">PanelSystem::drawLogPanelContent</a>( <a class="code hl_struct" href="../../d5/df3/structPanels.html">Panels</a> <span class="keyword">const</span>&amp; panels )</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>{</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="keywordtype">int</span> fontSize{ GuiGetStyle( DEFAULT, TEXT_SIZE ) };</div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keywordtype">double</span> lines{ ( panels.log.height() / ( 1.5 * fontSize ) ) - 1 };</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keywordtype">double</span> lines{ ( panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#ab9728f756ae218d17161b1d9473c87e1">log</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a795f8fad6f209a194eae06229e8fcc5c">height</a>() / ( 1.5 * fontSize ) ) - 1 };</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordflow">for</span> ( <span class="keywordtype">int</span> n{ 0 }; n &lt; lines; ++n )</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    {</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        DrawTextEx(</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            GameFont::font(),</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            snx::Logger::getMessage( n ).c_str(),</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            <a class="code hl_function" href="../../de/da7/classGameFont.html#a70834f8eb6bf20d79d6648ec17189ae2">GameFont::font</a>(),</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            <a class="code hl_function" href="../../d8/d19/classsnx_1_1Logger.html#a65b663862440ee689faea732a251a17b">snx::Logger::getMessage</a>( n ).c_str(),</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            Vector2{</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                panels.log.left() + ( 0.5f * fontSize ),</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                panels.log.bottom() - ( fontSize * 1.5f ) - ( n * 1.5f * fontSize )</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#ab9728f756ae218d17161b1d9473c87e1">log</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a9cf26b9f4517f6d4d0d13866e4f7cfe6">left</a>() + ( 0.5f * fontSize ),</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#ab9728f756ae218d17161b1d9473c87e1">log</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#aaa3c68d4f205462b522f457b77c58b57">bottom</a>() - ( fontSize * 1.5f ) - ( n * 1.5f * fontSize )</div>
 <div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>            },</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            fontSize,</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>            0,</div>
@@ -327,55 +324,97 @@ $(function(){initNavTree('db/d5e/PanelSystem_8cpp_source.html','../../'); initRe
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        );</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    }</div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>}</div>
+</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="keywordtype">void</span> PanelSystem::drawPanelBorders(</div>
+<div class="foldopen" id="foldopen00224" data-start="{" data-end="}">
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno"><a class="line" href="../../d6/d4d/namespacePanelSystem.html#a2d8657ec85f5293111841deaab39f828">  224</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d6/d4d/namespacePanelSystem.html#a2d8657ec85f5293111841deaab39f828">PanelSystem::drawPanelBorders</a>(</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <a class="code hl_struct" href="../../d5/df3/structPanels.html">Panels</a> <span class="keyword">const</span>&amp; panels</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>)</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>{</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    <span class="keywordtype">float</span> panelBorderWeight = 1;</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    DrawRectangleLinesEx(</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        panels.tileInfo.rectangle(),</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#a69c3d4b189ab6b66015dd206afbf0b6c">tileInfo</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a57622b0841c3d286aee2b7d6fedaf183">rectangle</a>(),</div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        panelBorderWeight,</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        Color{ 25, 25, 25, 255 }</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    );</div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    DrawRectangleLinesEx(</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        panels.heroInfo.rectangle(),</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#a7277cb3d550da8b91e4bb87740cff049">heroInfo</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a57622b0841c3d286aee2b7d6fedaf183">rectangle</a>(),</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        panelBorderWeight,</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        Color{ 25, 25, 25, 255 }</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    );</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    DrawRectangleLinesEx(</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        panels.status.rectangle(),</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#a210b5a2d595ad64dbb99b10156b059a0">status</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a57622b0841c3d286aee2b7d6fedaf183">rectangle</a>(),</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        panelBorderWeight,</div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        Color{ 25, 25, 25, 255 }</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    );</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    DrawRectangleLinesEx(</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        panels.log.rectangle(),</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#ab9728f756ae218d17161b1d9473c87e1">log</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a57622b0841c3d286aee2b7d6fedaf183">rectangle</a>(),</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        panelBorderWeight,</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        Color{ 25, 25, 25, 255 }</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    );</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    DrawRectangleLinesEx(</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        panels.map.rectangle(),</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        panels.<a class="code hl_variable" href="../../d5/df3/structPanels.html#abca275b1ff239131fbf207054a214cd7">map</a>.<a class="code hl_function" href="../../d3/ddc/classRectangleEx.html#a57622b0841c3d286aee2b7d6fedaf183">rectangle</a>(),</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        panelBorderWeight,</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        Color{ 25, 25, 25, 255 }</div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    );</div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>}</div>
+</div>
+<div class="ttc" id="aEventId_8h_html"><div class="ttname"><a href="../../dd/d09/EventId_8h.html">EventId.h</a></div></div>
+<div class="ttc" id="aEventId_8h_html_a4cf8d4a4d56e9f795518b6541ddeb5bfa67f65e5a54e5734fe7a84549af1f12b8"><div class="ttname"><a href="../../dd/d09/EventId_8h.html#a4cf8d4a4d56e9f795518b6541ddeb5bfa67f65e5a54e5734fe7a84549af1f12b8">EventId::PANELS_RESIZED</a></div><div class="ttdeci">@ PANELS_RESIZED</div><div class="ttdef"><b>Definition</b> <a href="../../dd/d09/EventId_8h_source.html#l00009">EventId.h:9</a></div></div>
+<div class="ttc" id="aGameFont_8h_html"><div class="ttname"><a href="../../d4/d3c/GameFont_8h.html">GameFont.h</a></div></div>
+<div class="ttc" id="aHero_8h_html"><div class="ttname"><a href="../../d8/db4/Hero_8h.html">Hero.h</a></div></div>
+<div class="ttc" id="aLogger_8h_html"><div class="ttname"><a href="../../dd/da4/Logger_8h.html">Logger.h</a></div></div>
+<div class="ttc" id="aObjects_8h_html"><div class="ttname"><a href="../../d9/d00/Objects_8h.html">Objects.h</a></div></div>
+<div class="ttc" id="aPanelSystem_8cpp_html_a7d41a124953698ce8c3e5cf6c8f15bfc"><div class="ttname"><a href="../../db/d5e/PanelSystem_8cpp.html#a7d41a124953698ce8c3e5cf6c8f15bfc">printInfo</a></div><div class="ttdeci">std::string printInfo(std::string const &amp;text)</div><div class="ttdef"><b>Definition</b> <a href="#l00109">PanelSystem.cpp:109</a></div></div>
+<div class="ttc" id="aPanelSystem_8cpp_html_ab59ba69da0e99027310cacf100249efd"><div class="ttname"><a href="../../db/d5e/PanelSystem_8cpp.html#ab59ba69da0e99027310cacf100249efd">infoPanelWidth</a></div><div class="ttdeci">int constexpr infoPanelWidth</div><div class="ttdef"><b>Definition</b> <a href="#l00015">PanelSystem.cpp:15</a></div></div>
+<div class="ttc" id="aPanelSystem_8h_html"><div class="ttname"><a href="../../d4/da9/PanelSystem_8h.html">PanelSystem.h</a></div></div>
+<div class="ttc" id="aPanels_8h_html"><div class="ttname"><a href="../../d8/d17/Panels_8h.html">Panels.h</a></div></div>
+<div class="ttc" id="aPublisherStatic_8h_html"><div class="ttname"><a href="../../d9/d04/PublisherStatic_8h.html">PublisherStatic.h</a></div></div>
+<div class="ttc" id="aclassGameFont_html_a38ab9c95f72775c4064aceae5e639f2f"><div class="ttname"><a href="../../de/da7/classGameFont.html#a38ab9c95f72775c4064aceae5e639f2f">GameFont::fontHeight</a></div><div class="ttdeci">static float const fontHeight</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d3c/GameFont_8h_source.html#l00011">GameFont.h:11</a></div></div>
+<div class="ttc" id="aclassGameFont_html_a70834f8eb6bf20d79d6648ec17189ae2"><div class="ttname"><a href="../../de/da7/classGameFont.html#a70834f8eb6bf20d79d6648ec17189ae2">GameFont::font</a></div><div class="ttdeci">static Font const &amp; font()</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d3c/GameFont_8h_source.html#l00039">GameFont.h:39</a></div></div>
+<div class="ttc" id="aclassRectangleEx_html_a2229f380af32c5173f61328c653f239c"><div class="ttname"><a href="../../d3/ddc/classRectangleEx.html#a2229f380af32c5173f61328c653f239c">RectangleEx::top</a></div><div class="ttdeci">float top() const</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00122">raylibEx.h:122</a></div></div>
+<div class="ttc" id="aclassRectangleEx_html_a3387568ac967a074b36650c3a2a34370"><div class="ttname"><a href="../../d3/ddc/classRectangleEx.html#a3387568ac967a074b36650c3a2a34370">RectangleEx::resizeHeightTop</a></div><div class="ttdeci">RectangleEx &amp; resizeHeightTop(float height)</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00191">raylibEx.h:191</a></div></div>
+<div class="ttc" id="aclassRectangleEx_html_a5286193bb438c93e79260d80ab9b8f78"><div class="ttname"><a href="../../d3/ddc/classRectangleEx.html#a5286193bb438c93e79260d80ab9b8f78">RectangleEx::setRight</a></div><div class="ttdeci">RectangleEx &amp; setRight(float right)</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00108">raylibEx.h:108</a></div></div>
+<div class="ttc" id="aclassRectangleEx_html_a57622b0841c3d286aee2b7d6fedaf183"><div class="ttname"><a href="../../d3/ddc/classRectangleEx.html#a57622b0841c3d286aee2b7d6fedaf183">RectangleEx::rectangle</a></div><div class="ttdeci">Rectangle rectangle() const</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00222">raylibEx.h:222</a></div></div>
+<div class="ttc" id="aclassRectangleEx_html_a795f8fad6f209a194eae06229e8fcc5c"><div class="ttname"><a href="../../d3/ddc/classRectangleEx.html#a795f8fad6f209a194eae06229e8fcc5c">RectangleEx::height</a></div><div class="ttdeci">float height() const</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00179">raylibEx.h:179</a></div></div>
+<div class="ttc" id="aclassRectangleEx_html_a9cf26b9f4517f6d4d0d13866e4f7cfe6"><div class="ttname"><a href="../../d3/ddc/classRectangleEx.html#a9cf26b9f4517f6d4d0d13866e4f7cfe6">RectangleEx::left</a></div><div class="ttdeci">float left() const</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00084">raylibEx.h:84</a></div></div>
+<div class="ttc" id="aclassRectangleEx_html_aaa3c68d4f205462b522f457b77c58b57"><div class="ttname"><a href="../../d3/ddc/classRectangleEx.html#aaa3c68d4f205462b522f457b77c58b57">RectangleEx::bottom</a></div><div class="ttdeci">float bottom() const</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00141">raylibEx.h:141</a></div></div>
+<div class="ttc" id="aclassRectangleEx_html_ab2a0d990df13589e636ffeec252d46c7"><div class="ttname"><a href="../../d3/ddc/classRectangleEx.html#ab2a0d990df13589e636ffeec252d46c7">RectangleEx::setTop</a></div><div class="ttdeci">RectangleEx &amp; setTop(float top)</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00127">raylibEx.h:127</a></div></div>
+<div class="ttc" id="aclassRectangleEx_html_acf7565235449496d40cfa0567760e3f0"><div class="ttname"><a href="../../d3/ddc/classRectangleEx.html#acf7565235449496d40cfa0567760e3f0">RectangleEx::setBottom</a></div><div class="ttdeci">RectangleEx &amp; setBottom(float bottom)</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00146">raylibEx.h:146</a></div></div>
+<div class="ttc" id="aclassRectangleEx_html_acf8b75057886cbb239b53d8ac8f3a1c9"><div class="ttname"><a href="../../d3/ddc/classRectangleEx.html#acf8b75057886cbb239b53d8ac8f3a1c9">RectangleEx::width</a></div><div class="ttdeci">float width() const</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00160">raylibEx.h:160</a></div></div>
+<div class="ttc" id="aclassRectangleEx_html_af9bcba6b1c617a8fc1180187dfe62974"><div class="ttname"><a href="../../d3/ddc/classRectangleEx.html#af9bcba6b1c617a8fc1180187dfe62974">RectangleEx::resizeWidthLeft</a></div><div class="ttdeci">RectangleEx &amp; resizeWidthLeft(float width)</div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00172">raylibEx.h:172</a></div></div>
+<div class="ttc" id="aclasssnx_1_1DenseMap_html_a6b8453f740a1191ca8743a017a36dc81"><div class="ttname"><a href="../../d1/d71/classsnx_1_1DenseMap.html#a6b8453f740a1191ca8743a017a36dc81">snx::DenseMap::contains</a></div><div class="ttdeci">bool contains(Key const &amp;key) const</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d73/DenseMap_8h_source.html#l00221">DenseMap.h:221</a></div></div>
+<div class="ttc" id="aclasssnx_1_1DenseMap_html_afcea13badc5b773f33da12d0c54732bf"><div class="ttname"><a href="../../d1/d71/classsnx_1_1DenseMap.html#afcea13badc5b773f33da12d0c54732bf">snx::DenseMap::at</a></div><div class="ttdeci">Type const &amp; at(Key const &amp;key) const</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d73/DenseMap_8h_source.html#l00199">DenseMap.h:199</a></div></div>
+<div class="ttc" id="aclasssnx_1_1Logger_html_a65b663862440ee689faea732a251a17b"><div class="ttname"><a href="../../d8/d19/classsnx_1_1Logger.html#a65b663862440ee689faea732a251a17b">snx::Logger::getMessage</a></div><div class="ttdeci">static std::string const &amp; getMessage(int number)</div><div class="ttdef"><b>Definition</b> <a href="../../dd/da4/Logger_8h_source.html#l00033">Logger.h:33</a></div></div>
+<div class="ttc" id="aclasssnx_1_1PublisherStatic_html_a1587ad36250954b028369e9a408410e1"><div class="ttname"><a href="../../d0/dfa/classsnx_1_1PublisherStatic.html#a1587ad36250954b028369e9a408410e1">snx::PublisherStatic::publish</a></div><div class="ttdeci">static void publish(EventId event)</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d04/PublisherStatic_8h_source.html#l00042">PublisherStatic.h:42</a></div></div>
+<div class="ttc" id="anamespacePanelSystem_html_a268e233588747558244831eea1c839bb"><div class="ttname"><a href="../../d6/d4d/namespacePanelSystem.html#a268e233588747558244831eea1c839bb">PanelSystem::drawGameInfoPanelContent</a></div><div class="ttdeci">void drawGameInfoPanelContent(Panels const &amp;panels, int level)</div><div class="ttdef"><b>Definition</b> <a href="#l00075">PanelSystem.cpp:75</a></div></div>
+<div class="ttc" id="anamespacePanelSystem_html_a2d8657ec85f5293111841deaab39f828"><div class="ttname"><a href="../../d6/d4d/namespacePanelSystem.html#a2d8657ec85f5293111841deaab39f828">PanelSystem::drawPanelBorders</a></div><div class="ttdeci">void drawPanelBorders(Panels const &amp;panels)</div><div class="ttdef"><b>Definition</b> <a href="#l00224">PanelSystem.cpp:224</a></div></div>
+<div class="ttc" id="anamespacePanelSystem_html_a41938816dc9fac8ee50ed1e72fb36de9"><div class="ttname"><a href="../../d6/d4d/namespacePanelSystem.html#a41938816dc9fac8ee50ed1e72fb36de9">PanelSystem::init</a></div><div class="ttdeci">void init(Panels &amp;panels)</div><div class="ttdef"><b>Definition</b> <a href="#l00017">PanelSystem.cpp:17</a></div></div>
+<div class="ttc" id="anamespacePanelSystem_html_a7fdd8443a542feeae9e689a59a46e1cd"><div class="ttname"><a href="../../d6/d4d/namespacePanelSystem.html#a7fdd8443a542feeae9e689a59a46e1cd">PanelSystem::drawLogPanelContent</a></div><div class="ttdeci">void drawLogPanelContent(Panels const &amp;panels)</div><div class="ttdef"><b>Definition</b> <a href="#l00202">PanelSystem.cpp:202</a></div></div>
+<div class="ttc" id="anamespacePanelSystem_html_a80e225518adc0aeb5fd3597071205dc6"><div class="ttname"><a href="../../d6/d4d/namespacePanelSystem.html#a80e225518adc0aeb5fd3597071205dc6">PanelSystem::drawHeroInfoPanelContent</a></div><div class="ttdeci">void drawHeroInfoPanelContent(Panels const &amp;panels, Hero const &amp;hero)</div><div class="ttdef"><b>Definition</b> <a href="#l00125">PanelSystem.cpp:125</a></div></div>
+<div class="ttc" id="anamespacePanelSystem_html_add45e8a24cfe301471e508856ed4136f"><div class="ttname"><a href="../../d6/d4d/namespacePanelSystem.html#add45e8a24cfe301471e508856ed4136f">PanelSystem::drawTileInfoPanelContent</a></div><div class="ttdeci">void drawTileInfoPanelContent(Panels const &amp;panels, Objects const &amp;objects, Vector2I const &amp;cursorPosition)</div><div class="ttdef"><b>Definition</b> <a href="#l00175">PanelSystem.cpp:175</a></div></div>
+<div class="ttc" id="araylibEx_8h_html"><div class="ttname"><a href="../../df/d66/raylibEx_8h.html">raylibEx.h</a></div></div>
 <div class="ttc" id="astructHero_html"><div class="ttname"><a href="../../d9/dda/structHero.html">Hero</a></div><div class="ttdef"><b>Definition</b> <a href="../../d8/db4/Hero_8h_source.html#l00012">Hero.h:13</a></div></div>
 <div class="ttc" id="astructObjects_html"><div class="ttname"><a href="../../d0/db3/structObjects.html">Objects</a></div><div class="ttdef"><b>Definition</b> <a href="../../d9/d00/Objects_8h_source.html#l00010">Objects.h:11</a></div></div>
+<div class="ttc" id="astructObjects_html_ac8d43359689cfed57ccbec89b325be93"><div class="ttname"><a href="../../d0/db3/structObjects.html#ac8d43359689cfed57ccbec89b325be93">Objects::names</a></div><div class="ttdeci">snx::DenseMap&lt; Vector2I, std::string &gt; names</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d00/Objects_8h_source.html#l00014">Objects.h:14</a></div></div>
+<div class="ttc" id="astructObjects_html_af9d8c4d6791c3232f887e807404b13db"><div class="ttname"><a href="../../d0/db3/structObjects.html#af9d8c4d6791c3232f887e807404b13db">Objects::actions</a></div><div class="ttdeci">snx::DenseMap&lt; Vector2I, std::string &gt; actions</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d00/Objects_8h_source.html#l00015">Objects.h:15</a></div></div>
 <div class="ttc" id="astructPanels_html"><div class="ttname"><a href="../../d5/df3/structPanels.html">Panels</a></div><div class="ttdef"><b>Definition</b> <a href="../../d8/d17/Panels_8h_source.html#l00006">Panels.h:7</a></div></div>
+<div class="ttc" id="astructPanels_html_a210b5a2d595ad64dbb99b10156b059a0"><div class="ttname"><a href="../../d5/df3/structPanels.html#a210b5a2d595ad64dbb99b10156b059a0">Panels::status</a></div><div class="ttdeci">RectangleEx status</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d17/Panels_8h_source.html#l00010">Panels.h:10</a></div></div>
+<div class="ttc" id="astructPanels_html_a69c3d4b189ab6b66015dd206afbf0b6c"><div class="ttname"><a href="../../d5/df3/structPanels.html#a69c3d4b189ab6b66015dd206afbf0b6c">Panels::tileInfo</a></div><div class="ttdeci">RectangleEx tileInfo</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d17/Panels_8h_source.html#l00008">Panels.h:8</a></div></div>
+<div class="ttc" id="astructPanels_html_a7277cb3d550da8b91e4bb87740cff049"><div class="ttname"><a href="../../d5/df3/structPanels.html#a7277cb3d550da8b91e4bb87740cff049">Panels::heroInfo</a></div><div class="ttdeci">RectangleEx heroInfo</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d17/Panels_8h_source.html#l00009">Panels.h:9</a></div></div>
+<div class="ttc" id="astructPanels_html_ab9728f756ae218d17161b1d9473c87e1"><div class="ttname"><a href="../../d5/df3/structPanels.html#ab9728f756ae218d17161b1d9473c87e1">Panels::log</a></div><div class="ttdeci">RectangleEx log</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d17/Panels_8h_source.html#l00011">Panels.h:11</a></div></div>
+<div class="ttc" id="astructPanels_html_abca275b1ff239131fbf207054a214cd7"><div class="ttname"><a href="../../d5/df3/structPanels.html#abca275b1ff239131fbf207054a214cd7">Panels::map</a></div><div class="ttdeci">RectangleEx map</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d17/Panels_8h_source.html#l00012">Panels.h:12</a></div></div>
 <div class="ttc" id="astructVector2I_html"><div class="ttname"><a href="../../da/dba/structVector2I.html">Vector2I</a></div><div class="ttdef"><b>Definition</b> <a href="../../df/d66/raylibEx_8h_source.html#l00281">raylibEx.h:282</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="../../dir_204260ac86670e69c647eaba8962e745.html">Scene</a></li><li class="navelem"><a class="el" href="../../dir_680c0cbfb09800d74ae0cd6bbfb8565e.html">Systems</a></li><li class="navelem"><b>PanelSystem.cpp</b></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
 </body>
 </html>

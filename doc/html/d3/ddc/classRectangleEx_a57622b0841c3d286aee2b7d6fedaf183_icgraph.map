@@ -1,0 +1,20 @@
+<map id="RectangleEx::rectangle" name="RectangleEx::rectangle">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1214,57,1386,85"/>
+<area shape="rect" id="Node000002" href="$df/d66/raylibEx_8h.html#ae806f98940be6869b0e54190037892fa" title=" " alt="" coords="964,5,1138,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1215,56,1121,36,1122,31,1216,51"/>
+<area shape="rect" id="Node000003" href="$d6/d4d/namespacePanelSystem.html#a2d8657ec85f5293111841deaab39f828" title=" " alt="" coords="936,57,1166,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1199,74,1167,74,1167,68,1199,68"/>
+<area shape="rect" id="Node000009" href="$d3/ddc/classRectangleEx.html#ad78d019554c6f7529a52f790fe8ffbb3" title=" " alt="" coords="956,109,1147,137"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="1216,91,1122,111,1121,106,1215,86"/>
+<area shape="rect" id="Node000004" href="$dd/de5/namespaceSceneModule.html#a193815fdac5858c2dc42abe67c04fe40" title=" " alt="" coords="686,57,888,85"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="920,74,888,74,888,68,920,68"/>
+<area shape="rect" id="Node000005" href="$dd/de5/namespaceSceneModule.html#a719f60e29b743e0b74d79aed2edbd3bd" title=" " alt="" coords="476,57,638,85"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="670,74,638,74,638,68,670,68"/>
+<area shape="rect" id="Node000006" href="$db/d4d/App_8cpp.html#a0788d600601c2b17eaba4462da9e9d8c" title=" " alt="" coords="303,32,428,60"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="461,61,428,57,429,51,462,56"/>
+<area shape="rect" id="Node000007" href="$d4/d85/namespaceAppModule.html#adbc208784105c60f684faf4a3fb81803" title=" " alt="" coords="108,57,255,85"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="461,74,255,74,255,68,461,68"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="288,59,256,64,255,58,288,54"/>
+<area shape="rect" id="Node000008" href="$df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Entrypoint." alt="" coords="5,57,60,85"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="92,74,60,74,60,68,92,68"/>
+</map>

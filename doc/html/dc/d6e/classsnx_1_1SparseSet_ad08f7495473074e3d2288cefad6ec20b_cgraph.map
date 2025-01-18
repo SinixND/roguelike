@@ -1,0 +1,14 @@
+<map id="snx::SparseSet::emplace_or_assign" name="snx::SparseSet::emplace_or_assign">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,73,187,118"/>
+<area shape="rect" id="Node000002" href="$dc/d6e/classsnx_1_1SparseSet.html#a70b37ebecec0f9a3a8c5b86652104841" title=" " alt="" coords="241,5,408,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,70,265,36,267,41,166,75"/>
+<area shape="rect" id="Node000003" href="$dc/d6e/classsnx_1_1SparseSet.html#a9d80d987eb86449658feb08eb991f5ec" title=" " alt="" coords="463,81,611,109"/>
+<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="187,92,447,92,447,98,187,98"/>
+<area shape="rect" id="Node000004" href="$dc/d6e/classsnx_1_1SparseSet.html#ad149013483030fed43dc29f2c053beef" title=" " alt="" coords="235,107,415,134"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="187,103,219,106,219,111,186,108"/>
+<area shape="rect" id="Node000005" href="$dc/d6e/classsnx_1_1SparseSet.html#aa1ea81e26d0981d1bed25513782f72c8" title=" " alt="" coords="244,159,406,186"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="158,116,236,143,260,151,258,156,234,148,156,121"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="367,31,416,49,484,73,482,78,414,54,366,36"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="415,107,447,103,448,108,415,112"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="377,156,414,143,489,113,491,118,416,148,378,161"/>
+</map>

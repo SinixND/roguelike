@@ -1,0 +1,46 @@
+<map id="EnemiesModule::replaceDead" name="EnemiesModule::replaceDead">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,296,221,324"/>
+<area shape="rect" id="Node000002" href="$d3/d3e/namespaceEnemiesModule.html#a023bf8495cd38c8d1fb2a25011b7fa1c" title=" " alt="" coords="269,222,511,267"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,293,277,268,278,274,176,298"/>
+<area shape="rect" id="Node000016" href="$d3/d3e/namespaceEnemiesModule.html#ac4f4a5e2bea02024dbb66d662ce82b3d" title=" " alt="" coords="851,317,1034,345"/>
+<area shape="poly" id="edge18_Node000001_Node000016" title=" " alt="" coords="221,310,836,326,836,331,221,315"/>
+<area shape="rect" id="Node000020" href="$d1/d71/classsnx_1_1DenseMap.html#a862a3a04c6e2f7136528522aca86c2c4" title=" " alt="" coords="304,347,476,374"/>
+<area shape="poly" id="edge24_Node000001_Node000020" title=" " alt="" coords="193,322,296,341,295,346,192,327"/>
+<area shape="rect" id="Node000003" href="$d3/d3e/namespaceEnemiesModule.html#aca98dcb7009feba381874bfa5346e65d" title=" " alt="" coords="559,168,799,196"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="496,219,596,197,598,202,497,224"/>
+<area shape="rect" id="Node000014" href="$d0/d03/Enemies_8cpp.html#a4e5d504088a51bc811c8034841f281cc" title=" " alt="" coords="605,231,753,258"/>
+<area shape="poly" id="edge15_Node000002_Node000014" title=" " alt="" coords="511,242,589,242,589,247,511,247"/>
+<area shape="rect" id="Node000004" href="$d0/d03/Enemies_8cpp.html#a5b2620238a01e828bdb0920a00777276" title=" " alt="" coords="893,57,992,85"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="714,165,892,89,894,94,716,170"/>
+<area shape="rect" id="Node000008" href="$d0/d03/Enemies_8cpp.html#ae67caa8104f58255d0b66d412f4efd57" title=" " alt="" coords="863,213,1022,241"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="764,194,848,208,847,213,763,199"/>
+<area shape="rect" id="Node000011" href="$d0/d85/classsnx_1_1IdManager.html#a0374f27541d860035b336fcaffc9a771" title=" " alt="" coords="847,161,1038,189"/>
+<area shape="poly" id="edge12_Node000003_Node000011" title=" " alt="" coords="800,176,832,175,832,181,800,181"/>
+<area shape="rect" id="Node000005" href="$d1/d71/classsnx_1_1DenseMap.html#a754db698c82ac1d13d535202406214bf" title=" " alt="" coords="1114,5,1280,33"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="991,59,1110,34,1111,39,992,64"/>
+<area shape="rect" id="Node000007" href="$db/dba/namespaceConvert.html#a3d9e49969e066c257b2a94720e1902ff" title=" " alt="" coords="1121,57,1274,85"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="992,68,1106,68,1106,74,992,74"/>
+<area shape="rect" id="Node000006" href="$d1/d71/classsnx_1_1DenseMap.html#a3b91ca342d509a4f0544b458cca1cd14" title=" " alt="" coords="1358,240,1511,268"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1282,29,1310,44,1333,63,1353,85,1387,135,1411,184,1427,225,1422,226,1406,186,1382,137,1349,89,1329,67,1308,48,1280,34"/>
+<area shape="rect" id="Node000009" href="$d1/d71/classsnx_1_1DenseMap.html#afcea13badc5b773f33da12d0c54732bf" title=" " alt="" coords="1126,265,1268,293"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1015,239,1112,259,1111,264,1014,244"/>
+<area shape="rect" id="Node000010" href="$d1/d71/classsnx_1_1DenseMap.html#a6b8453f740a1191ca8743a017a36dc81" title=" " alt="" coords="1105,213,1290,241"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="1023,224,1089,224,1089,230,1023,230"/>
+<area shape="poly" id="edge9_Node000009_Node000006" title=" " alt="" coords="1269,269,1343,261,1343,266,1269,274"/>
+<area shape="poly" id="edge11_Node000010_Node000006" title=" " alt="" coords="1290,235,1343,241,1343,246,1290,240"/>
+<area shape="rect" id="Node000012" href="$d0/d85/classsnx_1_1IdManager.html#a9dfbd370c322147fd05ab870d0873202" title=" " alt="" coords="1086,109,1309,137"/>
+<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="1014,158,1111,138,1112,143,1015,163"/>
+<area shape="rect" id="Node000013" href="$d0/d85/classsnx_1_1IdManager.html#af1d5ece90ecfde80bb8554e22e02fd94" title=" " alt="" coords="1099,161,1296,189"/>
+<area shape="poly" id="edge14_Node000011_Node000013" title=" " alt="" coords="1038,172,1084,172,1084,178,1038,178"/>
+<area shape="poly" id="edge16_Node000014_Node000008" title=" " alt="" coords="754,237,847,231,847,236,754,242"/>
+<area shape="rect" id="Node000015" href="$d4/d7d/classsnx_1_1RNG.html#ab8376e90222b83afb8ae6a276e44091f" title=" " alt="" coords="873,265,1012,293"/>
+<area shape="poly" id="edge17_Node000014_Node000015" title=" " alt="" coords="754,252,858,265,857,271,753,257"/>
+<area shape="poly" id="edge19_Node000016_Node000009" title=" " alt="" coords="1014,314,1111,294,1112,299,1015,319"/>
+<area shape="rect" id="Node000017" href="$d1/d71/classsnx_1_1DenseMap.html#ae860492291f8e044719584d85dfdc415" title=" " alt="" coords="1115,317,1280,345"/>
+<area shape="poly" id="edge20_Node000016_Node000017" title=" " alt="" coords="1035,328,1099,328,1099,334,1035,334"/>
+<area shape="rect" id="Node000019" href="$db/dba/namespaceConvert.html#aefecf933e03deb2b5b7fc600d831c587" title=" " alt="" coords="1120,369,1274,397"/>
+<area shape="poly" id="edge23_Node000016_Node000019" title=" " alt="" coords="1015,343,1112,363,1111,368,1014,348"/>
+<area shape="poly" id="edge21_Node000017_Node000006" title=" " alt="" coords="1265,314,1308,302,1387,272,1389,277,1310,307,1266,319"/>
+<area shape="rect" id="Node000018" href="$d1/d71/classsnx_1_1DenseMap.html#ac1c9d7941c7aeaa152552d82e47033f7" title=" " alt="" coords="1357,317,1512,345"/>
+<area shape="poly" id="edge22_Node000017_Node000018" title=" " alt="" coords="1280,328,1341,328,1341,334,1280,334"/>
+</map>

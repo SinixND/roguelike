@@ -11,18 +11,11 @@
 <script type="text/javascript" src="../../dynsections.js"></script>
 <script type="text/javascript" src="../../clipboard.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../cookie.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -35,18 +28,6 @@
    <div id="projectname">Roguelike
    </div>
   </td>
-    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
-          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td>
  </tr>
  </tbody>
 </table>
@@ -63,23 +44,22 @@ var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 $(function() { codefold.init(1); });
 /* @license-end */
 </script>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('dc/d6e/classsnx_1_1SparseSet.html','../../'); initResizable(true); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search',false);
+  $(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -101,13 +81,34 @@ $(function(){initNavTree('dc/d6e/classsnx_1_1SparseSet.html','../../'); initResi
 </div>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="../../db/dc7/namespacesnx.html">snx</a></li><li class="navelem"><a class="el" href="../../dc/d6e/classsnx_1_1SparseSet.html">SparseSet</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="../../d5/d9b/classsnx_1_1SparseSet-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">snx::SparseSet&lt; Type &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for snx::SparseSet&lt; Type &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d2/d58/classsnx_1_1SparseSet__coll__graph.png" border="0" usemap="#asnx_1_1SparseSet_3_01Type_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="asnx_1_1SparseSet_3_01Type_01_4_coll__map" id="asnx_1_1SparseSet_3_01Type_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="81,115,258,143"/>
+<area shape="rect" title=" " alt="" coords="5,5,156,33"/>
+<area shape="poly" title=" " alt="" coords="103,44,161,113,157,117,99,47"/>
+<area shape="rect" title=" " alt="" coords="180,5,338,33"/>
+<area shape="poly" title=" " alt="" coords="241,47,182,117,178,113,236,44"/>
+</map>
+<center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -121,31 +122,31 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6b248fea56f170c0d20e1791bcf55bf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a665858634ee9448048729bda62aa4247" id="r_a665858634ee9448048729bda62aa4247"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a665858634ee9448048729bda62aa4247">size</a> () const</td></tr>
 <tr class="separator:a665858634ee9448048729bda62aa4247"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70b37ebecec0f9a3a8c5b86652104841" id="r_a70b37ebecec0f9a3a8c5b86652104841"><td class="memItemLeft" align="right" valign="top">Type *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70b37ebecec0f9a3a8c5b86652104841">assign</a> (size_t key, Type const &amp;value=Type{})</td></tr>
+<tr class="memitem:a70b37ebecec0f9a3a8c5b86652104841" id="r_a70b37ebecec0f9a3a8c5b86652104841"><td class="memItemLeft" align="right" valign="top">Type *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70b37ebecec0f9a3a8c5b86652104841">assign</a> (size_t <a class="el" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>, Type const &amp;value=Type{})</td></tr>
 <tr class="separator:a70b37ebecec0f9a3a8c5b86652104841"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1ea81e26d0981d1bed25513782f72c8" id="r_aa1ea81e26d0981d1bed25513782f72c8"><td class="memItemLeft" align="right" valign="top">Type const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1ea81e26d0981d1bed25513782f72c8">insert</a> (size_t key, Type const &amp;value=Type{})</td></tr>
+<tr class="memitem:aa1ea81e26d0981d1bed25513782f72c8" id="r_aa1ea81e26d0981d1bed25513782f72c8"><td class="memItemLeft" align="right" valign="top">Type const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1ea81e26d0981d1bed25513782f72c8">insert</a> (size_t <a class="el" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>, Type const &amp;value=Type{})</td></tr>
 <tr class="separator:aa1ea81e26d0981d1bed25513782f72c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30f88844493e47cde03d5713e7ffc65d" id="r_a30f88844493e47cde03d5713e7ffc65d"><td class="memItemLeft" align="right" valign="top">Type const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30f88844493e47cde03d5713e7ffc65d">insert</a> (Type const &amp;value=Type{})</td></tr>
 <tr class="separator:a30f88844493e47cde03d5713e7ffc65d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11a26f4a8cefc9774d53cd266eae4652" id="r_a11a26f4a8cefc9774d53cd266eae4652"><td class="memItemLeft" align="right" valign="top">Type const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a11a26f4a8cefc9774d53cd266eae4652">insert_or_assign</a> (size_t key, Type const &amp;value=Type{})</td></tr>
+<tr class="memitem:a11a26f4a8cefc9774d53cd266eae4652" id="r_a11a26f4a8cefc9774d53cd266eae4652"><td class="memItemLeft" align="right" valign="top">Type const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a11a26f4a8cefc9774d53cd266eae4652">insert_or_assign</a> (size_t <a class="el" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>, Type const &amp;value=Type{})</td></tr>
 <tr class="separator:a11a26f4a8cefc9774d53cd266eae4652"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a473de00bcf81a44f38a1b6efa910b474" id="r_a473de00bcf81a44f38a1b6efa910b474"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
-<tr class="memitem:a473de00bcf81a44f38a1b6efa910b474"><td class="memTemplItemLeft" align="right" valign="top">Type const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a473de00bcf81a44f38a1b6efa910b474">emplace</a> (size_t key, Args &amp;&amp;... args)</td></tr>
+<tr class="memitem:a473de00bcf81a44f38a1b6efa910b474"><td class="memTemplItemLeft" align="right" valign="top">Type const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a473de00bcf81a44f38a1b6efa910b474">emplace</a> (size_t <a class="el" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a473de00bcf81a44f38a1b6efa910b474"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad08f7495473074e3d2288cefad6ec20b" id="r_ad08f7495473074e3d2288cefad6ec20b"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
-<tr class="memitem:ad08f7495473074e3d2288cefad6ec20b"><td class="memTemplItemLeft" align="right" valign="top">Type const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ad08f7495473074e3d2288cefad6ec20b">emplace_or_assign</a> (size_t key, Args &amp;&amp;... args)</td></tr>
+<tr class="memitem:ad08f7495473074e3d2288cefad6ec20b"><td class="memTemplItemLeft" align="right" valign="top">Type const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ad08f7495473074e3d2288cefad6ec20b">emplace_or_assign</a> (size_t <a class="el" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:ad08f7495473074e3d2288cefad6ec20b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c1f8816854a3eea386c749dbd2b87ed" id="r_a9c1f8816854a3eea386c749dbd2b87ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c1f8816854a3eea386c749dbd2b87ed">erase</a> (size_t keyToRemove)</td></tr>
 <tr class="separator:a9c1f8816854a3eea386c749dbd2b87ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2835cfc9fb192c64a99aa23ee0f7efb2" id="r_a2835cfc9fb192c64a99aa23ee0f7efb2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2835cfc9fb192c64a99aa23ee0f7efb2">clear</a> ()</td></tr>
 <tr class="separator:a2835cfc9fb192c64a99aa23ee0f7efb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ca6ff9e616aaa4c7502bfebbb862e12" id="r_a4ca6ff9e616aaa4c7502bfebbb862e12"><td class="memItemLeft" align="right" valign="top">Type const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ca6ff9e616aaa4c7502bfebbb862e12">at</a> (size_t key) const</td></tr>
+<tr class="memitem:a4ca6ff9e616aaa4c7502bfebbb862e12" id="r_a4ca6ff9e616aaa4c7502bfebbb862e12"><td class="memItemLeft" align="right" valign="top">Type const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ca6ff9e616aaa4c7502bfebbb862e12">at</a> (size_t <a class="el" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>) const</td></tr>
 <tr class="separator:a4ca6ff9e616aaa4c7502bfebbb862e12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac035aac9756b5dde26cd424eb7fe0b11" id="r_ac035aac9756b5dde26cd424eb7fe0b11"><td class="memItemLeft" align="right" valign="top">Type &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac035aac9756b5dde26cd424eb7fe0b11">at</a> (size_t key)</td></tr>
+<tr class="memitem:ac035aac9756b5dde26cd424eb7fe0b11" id="r_ac035aac9756b5dde26cd424eb7fe0b11"><td class="memItemLeft" align="right" valign="top">Type &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac035aac9756b5dde26cd424eb7fe0b11">at</a> (size_t <a class="el" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>)</td></tr>
 <tr class="separator:ac035aac9756b5dde26cd424eb7fe0b11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc2fe4a9b52f5b06eab93658b6869f6c" id="r_adc2fe4a9b52f5b06eab93658b6869f6c"><td class="memItemLeft" align="right" valign="top">Type &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc2fe4a9b52f5b06eab93658b6869f6c">operator[]</a> (size_t key)</td></tr>
+<tr class="memitem:adc2fe4a9b52f5b06eab93658b6869f6c" id="r_adc2fe4a9b52f5b06eab93658b6869f6c"><td class="memItemLeft" align="right" valign="top">Type &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc2fe4a9b52f5b06eab93658b6869f6c">operator[]</a> (size_t <a class="el" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>)</td></tr>
 <tr class="separator:adc2fe4a9b52f5b06eab93658b6869f6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad149013483030fed43dc29f2c053beef" id="r_ad149013483030fed43dc29f2c053beef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad149013483030fed43dc29f2c053beef">contains</a> (size_t key) const</td></tr>
+<tr class="memitem:ad149013483030fed43dc29f2c053beef" id="r_ad149013483030fed43dc29f2c053beef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad149013483030fed43dc29f2c053beef">contains</a> (size_t <a class="el" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>) const</td></tr>
 <tr class="separator:ad149013483030fed43dc29f2c053beef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2521310a1c5c9d8d4b276cb606463427" id="r_a2521310a1c5c9d8d4b276cb606463427"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2521310a1c5c9d8d4b276cb606463427">find</a> (Type const &amp;value) const</td></tr>
 <tr class="separator:a2521310a1c5c9d8d4b276cb606463427"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -157,6 +158,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a28bb315d0584b86e8d3f0a0f11ac90d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a853a80031eb85fc03f2fa0b54a7665de" id="r_a853a80031eb85fc03f2fa0b54a7665de"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt; const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a853a80031eb85fc03f2fa0b54a7665de">keys</a> () const</td></tr>
 <tr class="separator:a853a80031eb85fc03f2fa0b54a7665de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:abab096a6eb04c3b83ae0155c5c86cbf2" id="r_abab096a6eb04c3b83ae0155c5c86cbf2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a> { Type{} }</td></tr>
+<tr class="separator:abab096a6eb04c3b83ae0155c5c86cbf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a749095d91ef035152ba1b67c9b6487b9" id="r_a749095d91ef035152ba1b67c9b6487b9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a749095d91ef035152ba1b67c9b6487b9">keyToIndex_</a> {}</td></tr>
+<tr class="separator:a749095d91ef035152ba1b67c9b6487b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34c040c9124bc5b8c3f648092a9d26d9" id="r_a34c040c9124bc5b8c3f648092a9d26d9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a34c040c9124bc5b8c3f648092a9d26d9">indexToKey_</a> { 0 }</td></tr>
+<tr class="separator:a34c040c9124bc5b8c3f648092a9d26d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename Type&gt;<br />
@@ -196,18 +206,45 @@ template&lt;typename Type&gt; </div>
 <div class="fragment"><div class="line"><span class="lineno">   46</span>                                    {}</div>
 <div class="line"><span class="lineno">   47</span>        )</div>
 <div class="line"><span class="lineno">   48</span>        {</div>
-<div class="line"><span class="lineno">   49</span>            <span class="keywordflow">if</span> ( keyToIndex_.size() &lt;= key</div>
-<div class="line"><span class="lineno">   50</span>                 || !keyToIndex_.at( key ) )</div>
+<div class="line"><span class="lineno">   49</span>            <span class="keywordflow">if</span> ( <a class="code hl_variable" href="#a749095d91ef035152ba1b67c9b6487b9">keyToIndex_</a>.size() &lt;= <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a></div>
+<div class="line"><span class="lineno">   50</span>                 || !<a class="code hl_variable" href="#a749095d91ef035152ba1b67c9b6487b9">keyToIndex_</a>.at( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> ) )</div>
 <div class="line"><span class="lineno">   51</span>            {</div>
 <div class="line"><span class="lineno">   52</span>                <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
 <div class="line"><span class="lineno">   53</span>            }</div>
 <div class="line"><span class="lineno">   54</span> </div>
-<div class="line"><span class="lineno">   55</span>            at( key ) = <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a>;</div>
+<div class="line"><span class="lineno">   55</span>            <a class="code hl_function" href="#a4ca6ff9e616aaa4c7502bfebbb862e12">at</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> ) = <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a>;</div>
 <div class="line"><span class="lineno">   56</span> </div>
-<div class="line"><span class="lineno">   57</span>            <span class="keywordflow">return</span> &amp;at( key );</div>
+<div class="line"><span class="lineno">   57</span>            <span class="keywordflow">return</span> &amp;<a class="code hl_function" href="#a4ca6ff9e616aaa4c7502bfebbb862e12">at</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> );</div>
 <div class="line"><span class="lineno">   58</span>        }</div>
 <div class="ttc" id="aclasssnx_1_1SparseSet_html"><div class="ttname"><a href="../../dc/d6e/classsnx_1_1SparseSet.html">snx::SparseSet</a></div><div class="ttdef"><b>Definition</b> <a href="../../de/d7c/SparseSet_8h_source.html#l00012">SparseSet.h:13</a></div></div>
+<div class="ttc" id="aclasssnx_1_1SparseSet_html_a4ca6ff9e616aaa4c7502bfebbb862e12"><div class="ttname"><a href="#a4ca6ff9e616aaa4c7502bfebbb862e12">snx::SparseSet::at</a></div><div class="ttdeci">Type const &amp; at(size_t key) const</div><div class="ttdef"><b>Definition</b> <a href="../../de/d7c/SparseSet_8h_source.html#l00197">SparseSet.h:197</a></div></div>
+<div class="ttc" id="aclasssnx_1_1SparseSet_html_a749095d91ef035152ba1b67c9b6487b9"><div class="ttname"><a href="#a749095d91ef035152ba1b67c9b6487b9">snx::SparseSet::keyToIndex_</a></div><div class="ttdeci">std::vector&lt; size_t &gt; keyToIndex_</div><div class="ttdef"><b>Definition</b> <a href="../../de/d7c/SparseSet_8h_source.html#l00270">SparseSet.h:270</a></div></div>
+<div class="ttc" id="aclasssnx_1_1SparseSet_html_a9d80d987eb86449658feb08eb991f5ec"><div class="ttname"><a href="#a9d80d987eb86449658feb08eb991f5ec">snx::SparseSet::key</a></div><div class="ttdeci">size_t key(size_t index) const</div><div class="ttdef"><b>Definition</b> <a href="../../de/d7c/SparseSet_8h_source.html#l00243">SparseSet.h:243</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00243">key()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00127">emplace_or_assign()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_a70b37ebecec0f9a3a8c5b86652104841_cgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_a70b37ebecec0f9a3a8c5b86652104841_cgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_a70b37ebecec0f9a3a8c5b86652104841_cgraph" id="adc/d6e/classsnx_1_1SparseSet_a70b37ebecec0f9a3a8c5b86652104841_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,173,33"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9d80d987eb86449658feb08eb991f5ec" title=" " alt="" coords="221,5,369,33"/>
+<area shape="poly" title=" " alt="" coords="173,16,205,16,205,22,173,22"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_a70b37ebecec0f9a3a8c5b86652104841_icgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_a70b37ebecec0f9a3a8c5b86652104841_icgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_a70b37ebecec0f9a3a8c5b86652104841_icgraph" id="adc/d6e/classsnx_1_1SparseSet_a70b37ebecec0f9a3a8c5b86652104841_icgraph">
+<area shape="rect" title=" " alt="" coords="235,14,402,42"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#ad08f7495473074e3d2288cefad6ec20b" title=" " alt="" coords="5,5,187,50"/>
+<area shape="poly" title=" " alt="" coords="220,30,187,30,187,25,220,25"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="ac035aac9756b5dde26cd424eb7fe0b11" name="ac035aac9756b5dde26cd424eb7fe0b11"></a>
@@ -237,9 +274,21 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00203">203</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  204</span>        {</div>
-<div class="line"><span class="lineno">  205</span>            <span class="keywordflow">return</span> <span class="keyword">const_cast&lt;</span><a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">Type</a>&amp;<span class="keyword">&gt;</span>( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">std::as_const</a>( *this ).at( key ) );</div>
+<div class="line"><span class="lineno">  205</span>            <span class="keywordflow">return</span> <span class="keyword">const_cast&lt;</span><a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">Type</a>&amp;<span class="keyword">&gt;</span>( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">std::as_const</a>( *this ).<a class="code hl_function" href="#a4ca6ff9e616aaa4c7502bfebbb862e12">at</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> ) );</div>
 <div class="line"><span class="lineno">  206</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00243">key()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_ac035aac9756b5dde26cd424eb7fe0b11_cgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_ac035aac9756b5dde26cd424eb7fe0b11_cgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_ac035aac9756b5dde26cd424eb7fe0b11_cgraph" id="adc/d6e/classsnx_1_1SparseSet_ac035aac9756b5dde26cd424eb7fe0b11_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,144,33"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9d80d987eb86449658feb08eb991f5ec" title=" " alt="" coords="192,5,340,33"/>
+<area shape="poly" title=" " alt="" coords="144,16,176,16,176,22,144,22"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a4ca6ff9e616aaa4c7502bfebbb862e12" name="a4ca6ff9e616aaa4c7502bfebbb862e12"></a>
@@ -269,9 +318,34 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00197">197</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  198</span>        {</div>
-<div class="line"><span class="lineno">  199</span>            <span class="keywordflow">return</span> values_.at( keyToIndex_.at( key ) );</div>
+<div class="line"><span class="lineno">  199</span>            <span class="keywordflow">return</span> <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>.at( <a class="code hl_variable" href="#a749095d91ef035152ba1b67c9b6487b9">keyToIndex_</a>.at( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> ) );</div>
 <div class="line"><span class="lineno">  200</span>        }</div>
+<div class="ttc" id="aclasssnx_1_1SparseSet_html_abab096a6eb04c3b83ae0155c5c86cbf2"><div class="ttname"><a href="#abab096a6eb04c3b83ae0155c5c86cbf2">snx::SparseSet::values_</a></div><div class="ttdeci">std::vector&lt; Type &gt; values_</div><div class="ttdef"><b>Definition</b> <a href="../../de/d7c/SparseSet_8h_source.html#l00267">SparseSet.h:267</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00243">key()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00270">keyToIndex_</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00267">values_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00209">operator[]()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_a4ca6ff9e616aaa4c7502bfebbb862e12_cgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_a4ca6ff9e616aaa4c7502bfebbb862e12_cgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_a4ca6ff9e616aaa4c7502bfebbb862e12_cgraph" id="adc/d6e/classsnx_1_1SparseSet_a4ca6ff9e616aaa4c7502bfebbb862e12_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,144,33"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9d80d987eb86449658feb08eb991f5ec" title=" " alt="" coords="192,5,340,33"/>
+<area shape="poly" title=" " alt="" coords="144,16,176,16,176,22,144,22"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_a4ca6ff9e616aaa4c7502bfebbb862e12_icgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_a4ca6ff9e616aaa4c7502bfebbb862e12_icgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_a4ca6ff9e616aaa4c7502bfebbb862e12_icgraph" id="adc/d6e/classsnx_1_1SparseSet_a4ca6ff9e616aaa4c7502bfebbb862e12_icgraph">
+<area shape="rect" title=" " alt="" coords="244,5,382,33"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#adc2fe4a9b52f5b06eab93658b6869f6c" title=" " alt="" coords="5,5,196,33"/>
+<area shape="poly" title=" " alt="" coords="228,22,196,22,196,16,228,16"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="aed549a8aa6b2665488d777909454fda2" name="aed549a8aa6b2665488d777909454fda2"></a>
@@ -301,9 +375,11 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00021">21</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   22</span>        {</div>
-<div class="line"><span class="lineno">   23</span>            <span class="keywordflow">return</span> values_.begin();</div>
+<div class="line"><span class="lineno">   23</span>            <span class="keywordflow">return</span> <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>.begin();</div>
 <div class="line"><span class="lineno">   24</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00267">values_</a>.</p>
+
 </div>
 </div>
 <a id="a34b327dfc88206bef83ffb435dc23667" name="a34b327dfc88206bef83ffb435dc23667"></a>
@@ -333,9 +409,11 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00016">16</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   17</span>        {</div>
-<div class="line"><span class="lineno">   18</span>            <span class="keywordflow">return</span> values_.begin();</div>
+<div class="line"><span class="lineno">   18</span>            <span class="keywordflow">return</span> <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>.begin();</div>
 <div class="line"><span class="lineno">   19</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00267">values_</a>.</p>
+
 </div>
 </div>
 <a id="a2835cfc9fb192c64a99aa23ee0f7efb2" name="a2835cfc9fb192c64a99aa23ee0f7efb2"></a>
@@ -365,11 +443,14 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00188">188</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  189</span>        {</div>
-<div class="line"><span class="lineno">  190</span>            values_.clear();</div>
-<div class="line"><span class="lineno">  191</span>            keyToIndex_.clear();</div>
-<div class="line"><span class="lineno">  192</span>            indexToKey_.clear();</div>
+<div class="line"><span class="lineno">  190</span>            <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>.clear();</div>
+<div class="line"><span class="lineno">  191</span>            <a class="code hl_variable" href="#a749095d91ef035152ba1b67c9b6487b9">keyToIndex_</a>.clear();</div>
+<div class="line"><span class="lineno">  192</span>            <a class="code hl_variable" href="#a34c040c9124bc5b8c3f648092a9d26d9">indexToKey_</a>.clear();</div>
 <div class="line"><span class="lineno">  193</span>        }</div>
+<div class="ttc" id="aclasssnx_1_1SparseSet_html_a34c040c9124bc5b8c3f648092a9d26d9"><div class="ttname"><a href="#a34c040c9124bc5b8c3f648092a9d26d9">snx::SparseSet::indexToKey_</a></div><div class="ttdeci">std::vector&lt; size_t &gt; indexToKey_</div><div class="ttdef"><b>Definition</b> <a href="../../de/d7c/SparseSet_8h_source.html#l00273">SparseSet.h:273</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00273">indexToKey_</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00270">keyToIndex_</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00267">values_</a>.</p>
+
 </div>
 </div>
 <a id="ad149013483030fed43dc29f2c053beef" name="ad149013483030fed43dc29f2c053beef"></a>
@@ -399,14 +480,42 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00219">219</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  220</span>        {</div>
-<div class="line"><span class="lineno">  221</span>            <span class="keywordflow">if</span> ( keyToIndex_.size() &lt;= key )</div>
+<div class="line"><span class="lineno">  221</span>            <span class="keywordflow">if</span> ( <a class="code hl_variable" href="#a749095d91ef035152ba1b67c9b6487b9">keyToIndex_</a>.size() &lt;= <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> )</div>
 <div class="line"><span class="lineno">  222</span>            {</div>
 <div class="line"><span class="lineno">  223</span>                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><span class="lineno">  224</span>            }</div>
 <div class="line"><span class="lineno">  225</span> </div>
-<div class="line"><span class="lineno">  226</span>            <span class="keywordflow">return</span> keyToIndex_[key];</div>
+<div class="line"><span class="lineno">  226</span>            <span class="keywordflow">return</span> <a class="code hl_variable" href="#a749095d91ef035152ba1b67c9b6487b9">keyToIndex_</a>[<a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>];</div>
 <div class="line"><span class="lineno">  227</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00243">key()</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00270">keyToIndex_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00127">emplace_or_assign()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00145">erase()</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00209">operator[]()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_ad149013483030fed43dc29f2c053beef_cgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_ad149013483030fed43dc29f2c053beef_cgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_ad149013483030fed43dc29f2c053beef_cgraph" id="adc/d6e/classsnx_1_1SparseSet_ad149013483030fed43dc29f2c053beef_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,186,33"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9d80d987eb86449658feb08eb991f5ec" title=" " alt="" coords="234,5,382,33"/>
+<area shape="poly" title=" " alt="" coords="186,16,218,16,218,22,186,22"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_ad149013483030fed43dc29f2c053beef_icgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_ad149013483030fed43dc29f2c053beef_icgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_ad149013483030fed43dc29f2c053beef_icgraph" id="adc/d6e/classsnx_1_1SparseSet_ad149013483030fed43dc29f2c053beef_icgraph">
+<area shape="rect" title=" " alt="" coords="244,74,424,102"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#ad08f7495473074e3d2288cefad6ec20b" title=" " alt="" coords="10,5,191,50"/>
+<area shape="poly" title=" " alt="" coords="262,72,189,53,191,48,263,67"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9c1f8816854a3eea386c749dbd2b87ed" title=" " alt="" coords="20,74,181,102"/>
+<area shape="poly" title=" " alt="" coords="228,90,182,90,182,85,228,85"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#adc2fe4a9b52f5b06eab93658b6869f6c" title=" " alt="" coords="5,126,196,154"/>
+<area shape="poly" title=" " alt="" coords="254,108,167,128,166,123,253,103"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a473de00bcf81a44f38a1b6efa910b474" name="a473de00bcf81a44f38a1b6efa910b474"></a>
@@ -444,9 +553,25 @@ template&lt;typename... Args&gt; </div>
 <div class="fragment"><div class="line"><span class="lineno">  120</span>        {</div>
 <div class="line"><span class="lineno">  121</span>            <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">Type</a> <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a>{ <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">std::forward&lt;Args&gt;</a>( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">args</a> )... };</div>
 <div class="line"><span class="lineno">  122</span> </div>
-<div class="line"><span class="lineno">  123</span>            <span class="keywordflow">return</span> insert( key, <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> );</div>
+<div class="line"><span class="lineno">  123</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="#aa1ea81e26d0981d1bed25513782f72c8">insert</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>, <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> );</div>
 <div class="line"><span class="lineno">  124</span>        }</div>
+<div class="ttc" id="aclasssnx_1_1SparseSet_html_aa1ea81e26d0981d1bed25513782f72c8"><div class="ttname"><a href="#aa1ea81e26d0981d1bed25513782f72c8">snx::SparseSet::insert</a></div><div class="ttdeci">Type const &amp; insert(size_t key, Type const &amp;value=Type{})</div><div class="ttdef"><b>Definition</b> <a href="../../de/d7c/SparseSet_8h_source.html#l00060">SparseSet.h:60</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00060">insert()</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00243">key()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_a473de00bcf81a44f38a1b6efa910b474_cgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_a473de00bcf81a44f38a1b6efa910b474_cgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_a473de00bcf81a44f38a1b6efa910b474_cgraph" id="adc/d6e/classsnx_1_1SparseSet_a473de00bcf81a44f38a1b6efa910b474_cgraph">
+<area shape="rect" title=" " alt="" coords="5,31,187,58"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#aa1ea81e26d0981d1bed25513782f72c8" title=" " alt="" coords="235,5,397,33"/>
+<area shape="poly" title=" " alt="" coords="187,31,219,28,219,33,187,37"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9d80d987eb86449658feb08eb991f5ec" title=" " alt="" coords="445,31,593,58"/>
+<area shape="poly" title=" " alt="" coords="187,42,429,42,429,47,187,47"/>
+<area shape="poly" title=" " alt="" coords="398,27,430,31,429,36,397,32"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="ad08f7495473074e3d2288cefad6ec20b" name="ad08f7495473074e3d2288cefad6ec20b"></a>
@@ -486,14 +611,37 @@ template&lt;typename... Args&gt; </div>
 <div class="line"><span class="lineno">  133</span> </div>
 <div class="line"><span class="lineno">  134</span>            <span class="comment">// if ( keyToIndex_.size() &lt;= key</span></div>
 <div class="line"><span class="lineno">  135</span>            <span class="comment">//      || !keyToIndex_.at( key ) )</span></div>
-<div class="line"><span class="lineno">  136</span>            <span class="keywordflow">if</span> ( !contains( key ) )</div>
+<div class="line"><span class="lineno">  136</span>            <span class="keywordflow">if</span> ( !<a class="code hl_function" href="#ad149013483030fed43dc29f2c053beef">contains</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> ) )</div>
 <div class="line"><span class="lineno">  137</span>            {</div>
-<div class="line"><span class="lineno">  138</span>                <span class="keywordflow">return</span> insert( key, <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> );</div>
+<div class="line"><span class="lineno">  138</span>                <span class="keywordflow">return</span> <a class="code hl_function" href="#aa1ea81e26d0981d1bed25513782f72c8">insert</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>, <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> );</div>
 <div class="line"><span class="lineno">  139</span>            }</div>
 <div class="line"><span class="lineno">  140</span> </div>
-<div class="line"><span class="lineno">  141</span>            <span class="keywordflow">return</span> *assign( key, <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> );</div>
+<div class="line"><span class="lineno">  141</span>            <span class="keywordflow">return</span> *<a class="code hl_function" href="#a70b37ebecec0f9a3a8c5b86652104841">assign</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>, <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> );</div>
 <div class="line"><span class="lineno">  142</span>        }</div>
+<div class="ttc" id="aclasssnx_1_1SparseSet_html_a70b37ebecec0f9a3a8c5b86652104841"><div class="ttname"><a href="#a70b37ebecec0f9a3a8c5b86652104841">snx::SparseSet::assign</a></div><div class="ttdeci">Type * assign(size_t key, Type const &amp;value=Type{})</div><div class="ttdef"><b>Definition</b> <a href="../../de/d7c/SparseSet_8h_source.html#l00044">SparseSet.h:44</a></div></div>
+<div class="ttc" id="aclasssnx_1_1SparseSet_html_ad149013483030fed43dc29f2c053beef"><div class="ttname"><a href="#ad149013483030fed43dc29f2c053beef">snx::SparseSet::contains</a></div><div class="ttdeci">bool contains(size_t key) const</div><div class="ttdef"><b>Definition</b> <a href="../../de/d7c/SparseSet_8h_source.html#l00219">SparseSet.h:219</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00044">assign()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00219">contains()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00060">insert()</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00243">key()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_ad08f7495473074e3d2288cefad6ec20b_cgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_ad08f7495473074e3d2288cefad6ec20b_cgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_ad08f7495473074e3d2288cefad6ec20b_cgraph" id="adc/d6e/classsnx_1_1SparseSet_ad08f7495473074e3d2288cefad6ec20b_cgraph">
+<area shape="rect" title=" " alt="" coords="5,73,187,118"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a70b37ebecec0f9a3a8c5b86652104841" title=" " alt="" coords="241,5,408,33"/>
+<area shape="poly" title=" " alt="" coords="164,70,265,36,267,41,166,75"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9d80d987eb86449658feb08eb991f5ec" title=" " alt="" coords="463,81,611,109"/>
+<area shape="poly" title=" " alt="" coords="187,92,447,92,447,98,187,98"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#ad149013483030fed43dc29f2c053beef" title=" " alt="" coords="235,107,415,134"/>
+<area shape="poly" title=" " alt="" coords="187,103,219,106,219,111,186,108"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#aa1ea81e26d0981d1bed25513782f72c8" title=" " alt="" coords="244,159,406,186"/>
+<area shape="poly" title=" " alt="" coords="158,116,236,143,260,151,258,156,234,148,156,121"/>
+<area shape="poly" title=" " alt="" coords="367,31,416,49,484,73,482,78,414,54,366,36"/>
+<area shape="poly" title=" " alt="" coords="415,107,447,103,448,108,415,112"/>
+<area shape="poly" title=" " alt="" coords="377,156,414,143,489,113,491,118,416,148,378,161"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a6b248fea56f170c0d20e1791bcf55bf0" name="a6b248fea56f170c0d20e1791bcf55bf0"></a>
@@ -523,9 +671,11 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00031">31</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   32</span>        {</div>
-<div class="line"><span class="lineno">   33</span>            <span class="keywordflow">return</span> values_.end();</div>
+<div class="line"><span class="lineno">   33</span>            <span class="keywordflow">return</span> <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>.end();</div>
 <div class="line"><span class="lineno">   34</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00267">values_</a>.</p>
+
 </div>
 </div>
 <a id="a4e2ea94c137dda9721723af9fe3f9f6c" name="a4e2ea94c137dda9721723af9fe3f9f6c"></a>
@@ -555,9 +705,11 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00026">26</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   27</span>        {</div>
-<div class="line"><span class="lineno">   28</span>            <span class="keywordflow">return</span> values_.end();</div>
+<div class="line"><span class="lineno">   28</span>            <span class="keywordflow">return</span> <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>.end();</div>
 <div class="line"><span class="lineno">   29</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00267">values_</a>.</p>
+
 </div>
 </div>
 <a id="a9c1f8816854a3eea386c749dbd2b87ed" name="a9c1f8816854a3eea386c749dbd2b87ed"></a>
@@ -588,45 +740,62 @@ template&lt;typename Type&gt; </div>
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00145">145</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  146</span>        {</div>
 <div class="line"><span class="lineno">  147</span>            <span class="comment">// if ( keyToRemove &gt; ( keyToIndex_.size() - 1 )</span></div>
-<div class="line"><span class="lineno">  148</span>            <span class="keywordflow">if</span> ( !contains( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keyToRemove</a> ) )</div>
+<div class="line"><span class="lineno">  148</span>            <span class="keywordflow">if</span> ( !<a class="code hl_function" href="#ad149013483030fed43dc29f2c053beef">contains</a>( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keyToRemove</a> ) )</div>
 <div class="line"><span class="lineno">  149</span>            {</div>
 <div class="line"><span class="lineno">  150</span>                <span class="keywordflow">return</span>;</div>
 <div class="line"><span class="lineno">  151</span>            }</div>
 <div class="line"><span class="lineno">  152</span> </div>
-<div class="line"><span class="lineno">  153</span>            <span class="keywordtype">size_t</span> size{ this-&gt;size() };</div>
+<div class="line"><span class="lineno">  153</span>            <span class="keywordtype">size_t</span> <a class="code hl_function" href="#a665858634ee9448048729bda62aa4247">size</a>{ this-&gt;<a class="code hl_function" href="#a665858634ee9448048729bda62aa4247">size</a>() };</div>
 <div class="line"><span class="lineno">  154</span> </div>
 <div class="line"><span class="lineno">  155</span>            <span class="comment">//* Replace removed value with last value before popping (if more than one value exists) to keep values contiguous without rearranging the whole vector</span></div>
-<div class="line"><span class="lineno">  156</span>            <span class="keywordflow">if</span> ( size &gt; 1 )</div>
+<div class="line"><span class="lineno">  156</span>            <span class="keywordflow">if</span> ( <a class="code hl_function" href="#a665858634ee9448048729bda62aa4247">size</a> &gt; 1 )</div>
 <div class="line"><span class="lineno">  157</span>            {</div>
 <div class="line"><span class="lineno">  158</span>                <span class="comment">//* Get list index of removed value</span></div>
-<div class="line"><span class="lineno">  159</span>                <span class="keywordtype">size_t</span> <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">replacedIndex</a>{ keyToIndex_[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keyToRemove</a>] };</div>
+<div class="line"><span class="lineno">  159</span>                <span class="keywordtype">size_t</span> <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">replacedIndex</a>{ <a class="code hl_variable" href="#a749095d91ef035152ba1b67c9b6487b9">keyToIndex_</a>[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keyToRemove</a>] };</div>
 <div class="line"><span class="lineno">  160</span> </div>
 <div class="line"><span class="lineno">  161</span>                <span class="comment">//* Get index of (kept) last value that replaces removed value</span></div>
-<div class="line"><span class="lineno">  162</span>                <span class="keywordtype">size_t</span> <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keptIndex</a>{ size - 1 };</div>
+<div class="line"><span class="lineno">  162</span>                <span class="keywordtype">size_t</span> <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keptIndex</a>{ <a class="code hl_function" href="#a665858634ee9448048729bda62aa4247">size</a> - 1 };</div>
 <div class="line"><span class="lineno">  163</span> </div>
 <div class="line"><span class="lineno">  164</span>                <span class="comment">//* Get key of replacing/kept value</span></div>
-<div class="line"><span class="lineno">  165</span>                <span class="keywordtype">size_t</span> <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keptkey</a> = indexToKey_[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keptIndex</a>];</div>
+<div class="line"><span class="lineno">  165</span>                <span class="keywordtype">size_t</span> <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keptkey</a> = <a class="code hl_variable" href="#a34c040c9124bc5b8c3f648092a9d26d9">indexToKey_</a>[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keptIndex</a>];</div>
 <div class="line"><span class="lineno">  166</span> </div>
 <div class="line"><span class="lineno">  167</span>                <span class="comment">//* Replace (removed) value with kept value (by index) so last entry (duplicate) can be popped</span></div>
-<div class="line"><span class="lineno">  168</span>                values_[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">replacedIndex</a>] = values_[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keptIndex</a>];</div>
+<div class="line"><span class="lineno">  168</span>                <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">replacedIndex</a>] = <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keptIndex</a>];</div>
 <div class="line"><span class="lineno">  169</span> </div>
 <div class="line"><span class="lineno">  170</span>                <span class="comment">//* Update key to valueIndex mapping for kept key</span></div>
-<div class="line"><span class="lineno">  171</span>                keyToIndex_[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keptkey</a>] = <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">replacedIndex</a>;</div>
+<div class="line"><span class="lineno">  171</span>                <a class="code hl_variable" href="#a749095d91ef035152ba1b67c9b6487b9">keyToIndex_</a>[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keptkey</a>] = <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">replacedIndex</a>;</div>
 <div class="line"><span class="lineno">  172</span> </div>
 <div class="line"><span class="lineno">  173</span>                <span class="comment">//* Update index to key mapping for kept key</span></div>
-<div class="line"><span class="lineno">  174</span>                indexToKey_[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">replacedIndex</a>] = <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keptkey</a>;</div>
+<div class="line"><span class="lineno">  174</span>                <a class="code hl_variable" href="#a34c040c9124bc5b8c3f648092a9d26d9">indexToKey_</a>[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">replacedIndex</a>] = <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keptkey</a>;</div>
 <div class="line"><span class="lineno">  175</span>            }</div>
 <div class="line"><span class="lineno">  176</span> </div>
 <div class="line"><span class="lineno">  177</span>            <span class="comment">//* Reset removed key in mapping</span></div>
-<div class="line"><span class="lineno">  178</span>            keyToIndex_[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keyToRemove</a>] = 0;</div>
+<div class="line"><span class="lineno">  178</span>            <a class="code hl_variable" href="#a749095d91ef035152ba1b67c9b6487b9">keyToIndex_</a>[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">keyToRemove</a>] = 0;</div>
 <div class="line"><span class="lineno">  179</span> </div>
 <div class="line"><span class="lineno">  180</span>            <span class="comment">//* Remove (duplicate) last value</span></div>
-<div class="line"><span class="lineno">  181</span>            values_.pop_back();</div>
+<div class="line"><span class="lineno">  181</span>            <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>.pop_back();</div>
 <div class="line"><span class="lineno">  182</span> </div>
 <div class="line"><span class="lineno">  183</span>            <span class="comment">//* Remove removed value from mapping</span></div>
-<div class="line"><span class="lineno">  184</span>            indexToKey_.pop_back();</div>
+<div class="line"><span class="lineno">  184</span>            <a class="code hl_variable" href="#a34c040c9124bc5b8c3f648092a9d26d9">indexToKey_</a>.pop_back();</div>
 <div class="line"><span class="lineno">  185</span>        }</div>
+<div class="ttc" id="aclasssnx_1_1SparseSet_html_a665858634ee9448048729bda62aa4247"><div class="ttname"><a href="#a665858634ee9448048729bda62aa4247">snx::SparseSet::size</a></div><div class="ttdeci">size_t size() const</div><div class="ttdef"><b>Definition</b> <a href="../../de/d7c/SparseSet_8h_source.html#l00038">SparseSet.h:38</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00219">contains()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00273">indexToKey_</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00270">keyToIndex_</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00038">size()</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00267">values_</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_a9c1f8816854a3eea386c749dbd2b87ed_cgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_a9c1f8816854a3eea386c749dbd2b87ed_cgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_a9c1f8816854a3eea386c749dbd2b87ed_cgraph" id="adc/d6e/classsnx_1_1SparseSet_a9c1f8816854a3eea386c749dbd2b87ed_cgraph">
+<area shape="rect" title=" " alt="" coords="5,32,167,60"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#ad149013483030fed43dc29f2c053beef" title=" " alt="" coords="215,5,395,33"/>
+<area shape="poly" title=" " alt="" coords="167,33,199,29,199,35,168,39"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a665858634ee9448048729bda62aa4247" title=" " alt="" coords="229,57,380,85"/>
+<area shape="poly" title=" " alt="" coords="168,53,214,58,213,63,167,58"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9d80d987eb86449658feb08eb991f5ec" title=" " alt="" coords="443,5,591,33"/>
+<area shape="poly" title=" " alt="" coords="395,16,428,16,428,22,395,22"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a2521310a1c5c9d8d4b276cb606463427" name="a2521310a1c5c9d8d4b276cb606463427"></a>
@@ -656,17 +825,19 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00229">229</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  230</span>        {</div>
-<div class="line"><span class="lineno">  231</span>            <span class="keywordflow">for</span> ( <span class="keywordtype">size_t</span> <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">idx</a>{ 0 }; <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">idx</a> &lt; values_.size(); ++<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">idx</a> )</div>
+<div class="line"><span class="lineno">  231</span>            <span class="keywordflow">for</span> ( <span class="keywordtype">size_t</span> <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">idx</a>{ 0 }; <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">idx</a> &lt; <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>.size(); ++<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">idx</a> )</div>
 <div class="line"><span class="lineno">  232</span>            {</div>
-<div class="line"><span class="lineno">  233</span>                <span class="keywordflow">if</span> ( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> == values_.at( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">idx</a> ) )</div>
+<div class="line"><span class="lineno">  233</span>                <span class="keywordflow">if</span> ( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> == <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>.at( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">idx</a> ) )</div>
 <div class="line"><span class="lineno">  234</span>                {</div>
-<div class="line"><span class="lineno">  235</span>                    <span class="keywordflow">return</span> indexToKey_[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">idx</a>];</div>
+<div class="line"><span class="lineno">  235</span>                    <span class="keywordflow">return</span> <a class="code hl_variable" href="#a34c040c9124bc5b8c3f648092a9d26d9">indexToKey_</a>[<a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">idx</a>];</div>
 <div class="line"><span class="lineno">  236</span>                }</div>
 <div class="line"><span class="lineno">  237</span>            }</div>
 <div class="line"><span class="lineno">  238</span> </div>
 <div class="line"><span class="lineno">  239</span>            <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">  240</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00273">indexToKey_</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00267">values_</a>.</p>
+
 </div>
 </div>
 <a id="aa1ea81e26d0981d1bed25513782f72c8" name="aa1ea81e26d0981d1bed25513782f72c8"></a>
@@ -704,29 +875,57 @@ template&lt;typename Type&gt; </div>
 <div class="line"><span class="lineno">   64</span>        {</div>
 <div class="line"><span class="lineno">   65</span>            <span class="comment">// if ( keyToIndex_.size() &gt; key</span></div>
 <div class="line"><span class="lineno">   66</span>            <span class="comment">//      &amp;&amp; keyToIndex_.at( key ) )</span></div>
-<div class="line"><span class="lineno">   67</span>            <span class="keywordflow">if</span> ( contains( key ) )</div>
+<div class="line"><span class="lineno">   67</span>            <span class="keywordflow">if</span> ( <a class="code hl_function" href="#ad149013483030fed43dc29f2c053beef">contains</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> ) )</div>
 <div class="line"><span class="lineno">   68</span>            {</div>
-<div class="line"><span class="lineno">   69</span>                <span class="keywordflow">return</span> at( key );</div>
+<div class="line"><span class="lineno">   69</span>                <span class="keywordflow">return</span> <a class="code hl_function" href="#a4ca6ff9e616aaa4c7502bfebbb862e12">at</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> );</div>
 <div class="line"><span class="lineno">   70</span>            }</div>
 <div class="line"><span class="lineno">   71</span> </div>
 <div class="line"><span class="lineno">   72</span>            <span class="comment">//* Get new list index for value before modifying values_</span></div>
-<div class="line"><span class="lineno">   73</span>            <span class="keywordtype">size_t</span> <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">valueIndex</a> = values_.size();</div>
+<div class="line"><span class="lineno">   73</span>            <span class="keywordtype">size_t</span> <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">valueIndex</a> = <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>.size();</div>
 <div class="line"><span class="lineno">   74</span> </div>
 <div class="line"><span class="lineno">   75</span>            <span class="comment">//* Check size</span></div>
-<div class="line"><span class="lineno">   76</span>            keyToIndex_.resize( key + 1, 0 );</div>
+<div class="line"><span class="lineno">   76</span>            <a class="code hl_variable" href="#a749095d91ef035152ba1b67c9b6487b9">keyToIndex_</a>.resize( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> + 1, 0 );</div>
 <div class="line"><span class="lineno">   77</span> </div>
 <div class="line"><span class="lineno">   78</span>            <span class="comment">//* Add key to valueIndex mapping</span></div>
-<div class="line"><span class="lineno">   79</span>            keyToIndex_[key] = <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">valueIndex</a>;</div>
+<div class="line"><span class="lineno">   79</span>            <a class="code hl_variable" href="#a749095d91ef035152ba1b67c9b6487b9">keyToIndex_</a>[<a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>] = <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">valueIndex</a>;</div>
 <div class="line"><span class="lineno">   80</span> </div>
 <div class="line"><span class="lineno">   81</span>            <span class="comment">//* Add valueIndex to key mapping (internal use only to keep list contiguous)</span></div>
-<div class="line"><span class="lineno">   82</span>            indexToKey_.push_back( key );</div>
+<div class="line"><span class="lineno">   82</span>            <a class="code hl_variable" href="#a34c040c9124bc5b8c3f648092a9d26d9">indexToKey_</a>.push_back( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> );</div>
 <div class="line"><span class="lineno">   83</span> </div>
 <div class="line"><span class="lineno">   84</span>            <span class="comment">//* Add new value to list</span></div>
-<div class="line"><span class="lineno">   85</span>            values_.push_back( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> );</div>
+<div class="line"><span class="lineno">   85</span>            <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>.push_back( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> );</div>
 <div class="line"><span class="lineno">   86</span> </div>
-<div class="line"><span class="lineno">   87</span>            <span class="keywordflow">return</span> at( key );</div>
+<div class="line"><span class="lineno">   87</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="#a4ca6ff9e616aaa4c7502bfebbb862e12">at</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> );</div>
 <div class="line"><span class="lineno">   88</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00243">key()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00116">emplace()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00127">emplace_or_assign()</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00209">operator[]()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_aa1ea81e26d0981d1bed25513782f72c8_cgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_aa1ea81e26d0981d1bed25513782f72c8_cgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_aa1ea81e26d0981d1bed25513782f72c8_cgraph" id="adc/d6e/classsnx_1_1SparseSet_aa1ea81e26d0981d1bed25513782f72c8_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,168,33"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9d80d987eb86449658feb08eb991f5ec" title=" " alt="" coords="216,5,364,33"/>
+<area shape="poly" title=" " alt="" coords="168,16,200,16,200,22,168,22"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_aa1ea81e26d0981d1bed25513782f72c8_icgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_aa1ea81e26d0981d1bed25513782f72c8_icgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_aa1ea81e26d0981d1bed25513782f72c8_icgraph" id="adc/d6e/classsnx_1_1SparseSet_aa1ea81e26d0981d1bed25513782f72c8_icgraph">
+<area shape="rect" title=" " alt="" coords="244,65,406,93"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a473de00bcf81a44f38a1b6efa910b474" title=" " alt="" coords="10,5,191,33"/>
+<area shape="poly" title=" " alt="" coords="255,63,195,47,155,36,156,31,196,42,257,58"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#ad08f7495473074e3d2288cefad6ec20b" title=" " alt="" coords="10,57,191,102"/>
+<area shape="poly" title=" " alt="" coords="228,82,192,82,192,76,228,76"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#adc2fe4a9b52f5b06eab93658b6869f6c" title=" " alt="" coords="5,125,196,153"/>
+<area shape="poly" title=" " alt="" coords="257,100,196,116,156,127,155,122,195,111,255,95"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a30f88844493e47cde03d5713e7ffc65d" name="a30f88844493e47cde03d5713e7ffc65d"></a>
@@ -758,8 +957,8 @@ template&lt;typename Type&gt; </div>
 <div class="fragment"><div class="line"><span class="lineno">   91</span>                                    {}</div>
 <div class="line"><span class="lineno">   92</span>        )</div>
 <div class="line"><span class="lineno">   93</span>        {</div>
-<div class="line"><span class="lineno">   94</span>            <span class="keywordflow">return</span> insert(</div>
-<div class="line"><span class="lineno">   95</span>                indexToKey_,</div>
+<div class="line"><span class="lineno">   94</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="#aa1ea81e26d0981d1bed25513782f72c8">insert</a>(</div>
+<div class="line"><span class="lineno">   95</span>                <a class="code hl_variable" href="#a34c040c9124bc5b8c3f648092a9d26d9">indexToKey_</a>,</div>
 <div class="line"><span class="lineno">   96</span>                <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a></div>
 <div class="line"><span class="lineno">   97</span>            );</div>
 <div class="line"><span class="lineno">   98</span>        }</div>
@@ -801,14 +1000,26 @@ template&lt;typename Type&gt; </div>
 <div class="line"><span class="lineno">  104</span>        {</div>
 <div class="line"><span class="lineno">  105</span>            <span class="comment">// if ( keyToIndex_.size() &lt;= key</span></div>
 <div class="line"><span class="lineno">  106</span>            <span class="comment">//      || !keyToIndex_.at( key ) )</span></div>
-<div class="line"><span class="lineno">  107</span>            <span class="keywordflow">if</span> ( !contains( key ) )</div>
+<div class="line"><span class="lineno">  107</span>            <span class="keywordflow">if</span> ( !<a class="code hl_function" href="#ad149013483030fed43dc29f2c053beef">contains</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> ) )</div>
 <div class="line"><span class="lineno">  108</span>            {</div>
-<div class="line"><span class="lineno">  109</span>                <span class="keywordflow">return</span> insert( key, <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> );</div>
+<div class="line"><span class="lineno">  109</span>                <span class="keywordflow">return</span> <a class="code hl_function" href="#aa1ea81e26d0981d1bed25513782f72c8">insert</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>, <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> );</div>
 <div class="line"><span class="lineno">  110</span>            }</div>
 <div class="line"><span class="lineno">  111</span> </div>
-<div class="line"><span class="lineno">  112</span>            <span class="keywordflow">return</span> *assign( key, <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> );</div>
+<div class="line"><span class="lineno">  112</span>            <span class="keywordflow">return</span> *<a class="code hl_function" href="#a70b37ebecec0f9a3a8c5b86652104841">assign</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a>, <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">value</a> );</div>
 <div class="line"><span class="lineno">  113</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00243">key()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_a11a26f4a8cefc9774d53cd266eae4652_cgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_a11a26f4a8cefc9774d53cd266eae4652_cgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_a11a26f4a8cefc9774d53cd266eae4652_cgraph" id="adc/d6e/classsnx_1_1SparseSet_a11a26f4a8cefc9774d53cd266eae4652_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,168,50"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9d80d987eb86449658feb08eb991f5ec" title=" " alt="" coords="216,14,364,42"/>
+<area shape="poly" title=" " alt="" coords="168,25,200,25,200,30,168,30"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a9d80d987eb86449658feb08eb991f5ec" name="a9d80d987eb86449658feb08eb991f5ec"></a>
@@ -838,9 +1049,48 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00243">243</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  244</span>        {</div>
-<div class="line"><span class="lineno">  245</span>            <span class="keywordflow">return</span> indexToKey_.at( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">index</a> );</div>
+<div class="line"><span class="lineno">  245</span>            <span class="keywordflow">return</span> <a class="code hl_variable" href="#a34c040c9124bc5b8c3f648092a9d26d9">indexToKey_</a>.at( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">index</a> );</div>
 <div class="line"><span class="lineno">  246</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00273">indexToKey_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00044">assign()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00203">at()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00197">at()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00219">contains()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00116">emplace()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00127">emplace_or_assign()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00060">insert()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00100">insert_or_assign()</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00209">operator[]()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_a9d80d987eb86449658feb08eb991f5ec_icgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_a9d80d987eb86449658feb08eb991f5ec_icgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_a9d80d987eb86449658feb08eb991f5ec_icgraph" id="adc/d6e/classsnx_1_1SparseSet_a9d80d987eb86449658feb08eb991f5ec_icgraph">
+<area shape="rect" title=" " alt="" coords="472,209,620,237"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a70b37ebecec0f9a3a8c5b86652104841" title=" " alt="" coords="250,5,418,33"/>
+<area shape="poly" title=" " alt="" coords="530,196,488,125,458,87,422,53,390,36,393,31,426,49,462,83,492,122,534,194"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#ad08f7495473074e3d2288cefad6ec20b" title=" " alt="" coords="10,48,191,92"/>
+<area shape="poly" title=" " alt="" coords="526,198,484,144,455,118,423,98,366,77,306,66,246,62,192,63,192,57,246,57,306,61,367,72,425,93,459,114,488,141,530,195"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#ac035aac9756b5dde26cd424eb7fe0b11" title=" " alt="" coords="265,361,403,389"/>
+<area shape="poly" title=" " alt="" coords="526,251,483,299,455,324,425,345,388,363,386,358,423,341,452,319,479,295,523,247"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a4ca6ff9e616aaa4c7502bfebbb862e12" title=" " alt="" coords="265,260,403,288"/>
+<area shape="poly" title=" " alt="" coords="471,244,395,262,394,257,470,239"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#adc2fe4a9b52f5b06eab93658b6869f6c" title=" " alt="" coords="5,189,196,217"/>
+<area shape="poly" title=" " alt="" coords="456,222,196,210,196,205,457,217"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#ad149013483030fed43dc29f2c053beef" title=" " alt="" coords="244,107,424,134"/>
+<area shape="poly" title=" " alt="" coords="512,202,471,175,423,150,391,137,392,132,425,145,473,171,515,198"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a473de00bcf81a44f38a1b6efa910b474" title=" " alt="" coords="10,265,191,293"/>
+<area shape="poly" title=" " alt="" coords="519,249,476,278,425,302,353,314,280,314,213,307,156,296,157,291,213,302,281,309,353,309,423,297,474,274,516,245"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#aa1ea81e26d0981d1bed25513782f72c8" title=" " alt="" coords="253,159,415,186"/>
+<area shape="poly" title=" " alt="" coords="470,208,394,190,395,184,471,203"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a11a26f4a8cefc9774d53cd266eae4652" title=" " alt="" coords="253,413,415,458"/>
+<area shape="poly" title=" " alt="" coords="535,252,493,326,462,367,426,403,407,415,404,410,422,398,458,363,489,323,530,249"/>
+<area shape="poly" title=" " alt="" coords="253,39,192,53,191,48,252,34"/>
+<area shape="poly" title=" " alt="" coords="270,257,148,220,150,215,271,252"/>
+<area shape="poly" title=" " alt="" coords="252,106,191,92,192,87,253,100"/>
+<area shape="poly" title=" " alt="" coords="268,142,245,150,137,191,135,186,243,145,266,137"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9c1f8816854a3eea386c749dbd2b87ed" title=" " alt="" coords="20,116,181,144"/>
+<area shape="poly" title=" " alt="" coords="229,127,182,129,182,124,228,122"/>
+<area shape="poly" title=" " alt="" coords="257,155,242,148,227,138,218,127,194,107,171,95,173,90,197,102,221,124,231,134,245,144,259,150"/>
+<area shape="poly" title=" " alt="" coords="238,188,196,193,196,188,237,183"/>
+<area shape="poly" title=" " alt="" coords="289,196,134,267,132,262,286,191"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a853a80031eb85fc03f2fa0b54a7665de" name="a853a80031eb85fc03f2fa0b54a7665de"></a>
@@ -870,9 +1120,11 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00260">260</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  261</span>        {</div>
-<div class="line"><span class="lineno">  262</span>            <span class="keywordflow">return</span> indexToKey_;</div>
+<div class="line"><span class="lineno">  262</span>            <span class="keywordflow">return</span> <a class="code hl_variable" href="#a34c040c9124bc5b8c3f648092a9d26d9">indexToKey_</a>;</div>
 <div class="line"><span class="lineno">  263</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00273">indexToKey_</a>.</p>
+
 </div>
 </div>
 <a id="adc2fe4a9b52f5b06eab93658b6869f6c" name="adc2fe4a9b52f5b06eab93658b6869f6c"></a>
@@ -902,14 +1154,35 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00209">209</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  210</span>        {</div>
-<div class="line"><span class="lineno">  211</span>            <span class="keywordflow">if</span> ( !contains( key ) )</div>
+<div class="line"><span class="lineno">  211</span>            <span class="keywordflow">if</span> ( !<a class="code hl_function" href="#ad149013483030fed43dc29f2c053beef">contains</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> ) )</div>
 <div class="line"><span class="lineno">  212</span>            {</div>
-<div class="line"><span class="lineno">  213</span>                insert( key );</div>
+<div class="line"><span class="lineno">  213</span>                <a class="code hl_function" href="#aa1ea81e26d0981d1bed25513782f72c8">insert</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> );</div>
 <div class="line"><span class="lineno">  214</span>            }</div>
 <div class="line"><span class="lineno">  215</span> </div>
-<div class="line"><span class="lineno">  216</span>            <span class="keywordflow">return</span> at( key );</div>
+<div class="line"><span class="lineno">  216</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="#a4ca6ff9e616aaa4c7502bfebbb862e12">at</a>( <a class="code hl_function" href="#a9d80d987eb86449658feb08eb991f5ec">key</a> );</div>
 <div class="line"><span class="lineno">  217</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00197">at()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00219">contains()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00060">insert()</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00243">key()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_adc2fe4a9b52f5b06eab93658b6869f6c_cgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_adc2fe4a9b52f5b06eab93658b6869f6c_cgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_adc2fe4a9b52f5b06eab93658b6869f6c_cgraph" id="adc/d6e/classsnx_1_1SparseSet_adc2fe4a9b52f5b06eab93658b6869f6c_cgraph">
+<area shape="rect" title=" " alt="" coords="5,81,196,109"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a4ca6ff9e616aaa4c7502bfebbb862e12" title=" " alt="" coords="265,5,403,33"/>
+<area shape="poly" title=" " alt="" coords="145,78,274,36,275,41,147,83"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9d80d987eb86449658feb08eb991f5ec" title=" " alt="" coords="472,81,620,109"/>
+<area shape="poly" title=" " alt="" coords="196,92,457,92,457,98,196,98"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#ad149013483030fed43dc29f2c053beef" title=" " alt="" coords="244,107,424,134"/>
+<area shape="poly" title=" " alt="" coords="197,103,229,106,228,112,196,108"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#aa1ea81e26d0981d1bed25513782f72c8" title=" " alt="" coords="253,159,415,186"/>
+<area shape="poly" title=" " alt="" coords="141,107,245,143,270,151,268,156,243,148,139,112"/>
+<area shape="poly" title=" " alt="" coords="376,31,425,49,493,73,491,78,423,54,375,36"/>
+<area shape="poly" title=" " alt="" coords="424,107,456,103,457,108,424,112"/>
+<area shape="poly" title=" " alt="" coords="386,156,423,143,498,113,500,118,425,148,387,161"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a665858634ee9448048729bda62aa4247" name="a665858634ee9448048729bda62aa4247"></a>
@@ -939,9 +1212,23 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00038">38</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   39</span>        {</div>
-<div class="line"><span class="lineno">   40</span>            <span class="keywordflow">return</span> values_.size();</div>
+<div class="line"><span class="lineno">   40</span>            <span class="keywordflow">return</span> <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>.size();</div>
 <div class="line"><span class="lineno">   41</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00267">values_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00145">erase()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d6e/classsnx_1_1SparseSet_a665858634ee9448048729bda62aa4247_icgraph.png" border="0" usemap="#adc/d6e/classsnx_1_1SparseSet_a665858634ee9448048729bda62aa4247_icgraph" alt=""/></div>
+<map name="adc/d6e/classsnx_1_1SparseSet_a665858634ee9448048729bda62aa4247_icgraph" id="adc/d6e/classsnx_1_1SparseSet_a665858634ee9448048729bda62aa4247_icgraph">
+<area shape="rect" title=" " alt="" coords="215,5,366,33"/>
+<area shape="rect" href="../../dc/d6e/classsnx_1_1SparseSet.html#a9c1f8816854a3eea386c749dbd2b87ed" title=" " alt="" coords="5,5,167,33"/>
+<area shape="poly" title=" " alt="" coords="199,22,167,22,167,16,199,16"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a28bb315d0584b86e8d3f0a0f11ac90d4" name="a28bb315d0584b86e8d3f0a0f11ac90d4"></a>
@@ -971,8 +1258,9 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00255">255</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  256</span>        {</div>
-<div class="line"><span class="lineno">  257</span>            <span class="keywordflow">return</span> <span class="keyword">const_cast&lt;</span><a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">std::vector&lt;Type&gt;</a>&amp;<span class="keyword">&gt;</span>( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">std::as_const</a>( *this ).values() );</div>
+<div class="line"><span class="lineno">  257</span>            <span class="keywordflow">return</span> <span class="keyword">const_cast&lt;</span><a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">std::vector&lt;Type&gt;</a>&amp;<span class="keyword">&gt;</span>( <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">std::as_const</a>( *this ).<a class="code hl_function" href="#ae64fcc71070afc482435c82340aef337">values</a>() );</div>
 <div class="line"><span class="lineno">  258</span>        }</div>
+<div class="ttc" id="aclasssnx_1_1SparseSet_html_ae64fcc71070afc482435c82340aef337"><div class="ttname"><a href="#ae64fcc71070afc482435c82340aef337">snx::SparseSet::values</a></div><div class="ttdeci">std::vector&lt; Type &gt; const &amp; values() const</div><div class="ttdef"><b>Definition</b> <a href="../../de/d7c/SparseSet_8h_source.html#l00249">SparseSet.h:249</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1003,22 +1291,109 @@ template&lt;typename Type&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00249">249</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  250</span>        {</div>
-<div class="line"><span class="lineno">  251</span>            <span class="keywordflow">return</span> values_;</div>
+<div class="line"><span class="lineno">  251</span>            <span class="keywordflow">return</span> <a class="code hl_variable" href="#abab096a6eb04c3b83ae0155c5c86cbf2">values_</a>;</div>
 <div class="line"><span class="lineno">  252</span>        }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00267">values_</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a34c040c9124bc5b8c3f648092a9d26d9" name="a34c040c9124bc5b8c3f648092a9d26d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34c040c9124bc5b8c3f648092a9d26d9">&#9670;&#160;</a></span>indexToKey_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Type&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;size_t&gt; <a class="el" href="../../dc/d6e/classsnx_1_1SparseSet.html">snx::SparseSet</a>&lt; Type &gt;::indexToKey_ { 0 }</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00273">273</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  273</span>{ 0 };</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00188">clear()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00145">erase()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00229">find()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00243">key()</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00260">keys()</a>.</p>
+
+</div>
+</div>
+<a id="a749095d91ef035152ba1b67c9b6487b9" name="a749095d91ef035152ba1b67c9b6487b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a749095d91ef035152ba1b67c9b6487b9">&#9670;&#160;</a></span>keyToIndex_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Type&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;size_t&gt; <a class="el" href="../../dc/d6e/classsnx_1_1SparseSet.html">snx::SparseSet</a>&lt; Type &gt;::keyToIndex_ {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00270">270</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  270</span>{};</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00197">at()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00188">clear()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00219">contains()</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00145">erase()</a>.</p>
+
+</div>
+</div>
+<a id="abab096a6eb04c3b83ae0155c5c86cbf2" name="abab096a6eb04c3b83ae0155c5c86cbf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abab096a6eb04c3b83ae0155c5c86cbf2">&#9670;&#160;</a></span>values_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Type&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;Type&gt; <a class="el" href="../../dc/d6e/classsnx_1_1SparseSet.html">snx::SparseSet</a>&lt; Type &gt;::values_ { Type{} }</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00267">267</a> of file <a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  267</span>{ <a class="code hl_class" href="../../dc/d6e/classsnx_1_1SparseSet.html">Type</a>{} };</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00197">at()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00021">begin()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00016">begin()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00188">clear()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00031">end()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00026">end()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00145">erase()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00229">find()</a>, <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00038">size()</a>, and <a class="el" href="../../de/d7c/SparseSet_8h_source.html#l00249">values()</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a></li>
+<li>include/<a class="el" href="../../de/d7c/SparseSet_8h_source.html">SparseSet.h</a></li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><b>snx</b></li><li class="navelem"><a class="el" href="../../dc/d6e/classsnx_1_1SparseSet.html">SparseSet</a></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
 </body>
 </html>
