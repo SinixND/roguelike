@@ -201,7 +201,7 @@ Map createGridRooms( int level )
     //     EventId::nextLevel);
 
     //* Add enemies
-    EnemiesModule::fillEnemies(
+    map.enemies = EnemiesModule::fillEnemies(
         map.enemies,
         map.tiles,
         level
@@ -373,7 +373,7 @@ Map MapGeneratorSystem::createTestRoom()
         EventId::NEXT_LEVEL
     );
 
-    EnemiesModule::createAtPosition(
+    testRoom.enemies = EnemiesModule::createAtPosition(
         testRoom.enemies,
         testRoom.tiles,
         RenderId::GOBLIN,

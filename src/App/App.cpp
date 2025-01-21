@@ -13,11 +13,7 @@
 #include <emscripten/html5.h>
 #endif
 
-/**
- * @brief Separate game loop function needed for emscripten
- *
- * @param arg Application variable
- */
+/// @brief A separate game loop function needed for emscripten
 void emscriptenLoop( void* arg )
 {
     App* app = (App*)arg;
@@ -30,9 +26,6 @@ void emscriptenLoop( void* arg )
     );
 }
 
-/**
- * @brief Allows maximizing window; Handles resize event
- */
 void updateWindowState()
 {
     if ( IsKeyPressed( KEY_F11 ) )
@@ -66,7 +59,6 @@ void setupRaylib(
     AppConfig const& config
 )
 {
-    //* TODO: Import configs from user file
     //* Raylib flags
     SetConfigFlags( FLAG_WINDOW_RESIZABLE );
     if ( config.vSync )
@@ -99,33 +91,17 @@ void setupFrameworks( AppConfig const& config )
     setupNcurses();
 }
 
-void AppModule::init(
-    App& app,
-    AppConfig const& config
-)
-{
-    setupFrameworks( config );
-
-    snx::PublisherStatic::addSubscriber(
-        EventId::CURSOR_TOGGLE,
-        [&]()
-        {
-            CursorModule::toggle( app.cursor );
-        }
-    );
-}
-
 InputId getUserInput(
     InputHandler& inputHandler,
-    InputMappings const& inputMappings,
-    bool& isCursorActive
+    bool& isCursorActive,
+    InputMappings const& inputMappings
 )
 {
     InputId inputId{};
 
     //* Take input from mouse, keys or gestures
-    inputId = InputHandlerModule::checkKeyboard(
-        inputHandler,
+    inputId = InputModule::fromKeyboard(
+        &inputHandler,
         inputMappings.keyboardToInput,
         inputMappings.inputIdToKeyboard
     );
@@ -135,9 +111,9 @@ InputId getUserInput(
         return inputId;
     }
 
-    inputId = InputHandlerModule::checkMouse(
-        inputMappings.mouseToInput,
-        isCursorActive
+    inputId = InputModule::fromMouse(
+        &isCursorActive,
+        inputMappings.mouseToInput
     );
 
     if ( inputId != InputId::NONE )
@@ -145,49 +121,78 @@ InputId getUserInput(
         return inputId;
     }
 
-    inputId = InputHandlerModule::checkGesture(
-        inputHandler
-    );
+    inputId = InputModule::fromGesture( &inputHandler );
 
     return inputId;
 }
 
-void AppModule::run( App& app )
+namespace AppModule
 {
-#if defined( EMSCRIPTEN )
-    emscripten_set_main_loop_arg( emscriptenLoop, &app, 60 /*FPS*/, 1 /*Simulate infinite loop*/ );
-#else
-    while ( !( WindowShouldClose() ) )
+    App const& init(
+        App& app,
+        AppConfig const& config
+    )
     {
-        updateWindowState();
-#if defined( DEBUG )
-        updateDeveloperMode();
-#endif
+        setupFrameworks( config );
 
-        app.currentInputId = getUserInput(
-            app.inputHandler,
-            app.inputMappings,
-            app.cursor.isActive
+        snx::PublisherStatic::addSubscriber(
+            EventId::CURSOR_TOGGLE,
+            [&]()
+            {
+                CursorModule::toggle( app.cursor );
+            }
         );
 
-        app.dt = GetFrameTime();
-
-        SceneModule::update(
+        SceneModule::init(
             app.scene,
-            app.cursor,
-            app.currentInputId,
-            app.dt
+            app.cursor
         );
+
+        return app;
     }
+
+    void run( App& app )
+    {
+#if defined( EMSCRIPTEN )
+        emscripten_set_main_loop_arg(
+            emscriptenLoop,
+            &app,
+            60 /*FPS*/,
+            1 /*Simulate infinite loop*/
+        );
+#else
+        while ( !( WindowShouldClose() ) )
+        {
+            updateWindowState();
+#if defined( DEBUG )
+            updateDeveloperMode();
 #endif
-}
 
-void AppModule::deinit( Scene& scene )
-{
-    GameFont::unload();
-    SceneModule::deinitialize( scene );
+            app.currentInputId = getUserInput(
+                app.inputHandler,
+                app.cursor.isActive,
+                app.inputMappings
+            );
 
-    //* Close window and opengl context
-    CloseWindow();
+            app.dt = GetFrameTime();
+
+            SceneModule::update(
+                app.scene,
+                app.cursor,
+                app.currentInputId,
+                app.dt
+            );
+        }
+#endif
+    }
+
+    void deinit( App& app )
+    {
+        GameFont::unload();
+        SceneModule::deinitialize( app.scene );
+
+        //* Close window and opengl context
+        CloseWindow();
+    }
 }
 

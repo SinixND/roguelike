@@ -1,11 +1,6 @@
 #ifndef IG20231203204746
 #define IG20231203204746
 
-/**
- * @file
- * @brief Handle UI, host game;
- */
-
 #include "Chunk.h"
 #include "Cursor.h"
 #include "Data/RenderData.h"

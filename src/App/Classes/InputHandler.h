@@ -22,20 +22,20 @@ struct InputHandler
     bool isCursorActive{};
 };
 
-namespace InputHandlerModule
+namespace InputModule
 {
-    InputId checkKeyboard(
-        InputHandler& inputHandler,
+    InputId fromKeyboard(
+        InputHandler* inputHandler,
         std::unordered_map<int, InputId> const& keyboardToInput,
         std::unordered_map<InputId, int> const& modifiers
     );
 
-    InputId checkMouse(
-        std::unordered_map<int, InputId> const& mouseToInput,
-        bool& isCursorActive
+    InputId fromMouse(
+        bool* isCursorActive,
+        std::unordered_map<int, InputId> const& mouseToInput
     );
 
-    InputId checkGesture( InputHandler& handler );
+    InputId fromGesture( InputHandler* handler );
 }
 
 #endif
