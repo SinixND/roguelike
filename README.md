@@ -5,15 +5,16 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Refactor parameters to low level ( if < 3 members used )
-    - [ ] Output > IO (References) > Input (const ref > values);
+- [ ] Refactor parameters to low/member level ( if < 3 members used )
+    [Status] App folder done; Continue with Game folder
+    - Parameter order -> Check `DesignGuideline.md` for fake return
 
 
 ## Shortterm
 - [ ] Refactor to DenseMap<size_t, Type> (instead of SparseSet -> check emscripten)
 - [ ] Restructure: main { App { Scene, Game { World=>Levels, Fogs(?) }}}
 - [ ] Check for struct/class invariants
-    - [ ] Refactor: Extract possible NMNF functions
+    - Refactor: Extract possible NMNF functions
 
 - [ ] Fix web bug -> cursor not moving when mouse active
 - [ ] Split Component(temp) and Data(persistent)? (existential)
@@ -21,14 +22,14 @@ Platforms: Linux, Windows, Browser
 - [ ] End/Restart game on death
 - [ ] Add AI behaviour with new enemy types
 
-| Default state before attacked                          | Name       |
-| ------------------------------------------------------ | ---------- |
-| stationary, defensive                                  | [M]imic    |
-| moving, defensive                                      | [G]olem    |
-| moving, aggressive                                     | [R]at      |
-| moving, aggressive, invisible till (near or first hit) | [P]redator |
-| Passes solids                                          | [S]hade    |
-|                                                        | [D]jin     |
+    | Default state before attacked                          | Name       |
+    | ------------------------------------------------------ | ---------- |
+    | stationary, defensive                                  | [M]imic    |
+    | moving, defensive                                      | [G]olem    |
+    | moving, aggressive                                     | [R]at      |
+    | moving, aggressive, invisible till (near or first hit) | [P]redator |
+    | Passes solids                                          | [S]hade    |
+    |                                                        | [D]jin     |
 
 
 ## Longterm

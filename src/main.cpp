@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Entrypoint
- */
-
 #include "App.h"
 
 //* Only define once
@@ -19,18 +14,13 @@ int main( /* int argc, char** argv */ )
 
     App app{};
 
-    AppModule::init(
+    app = AppModule::init(
         app,
         config
     );
 
-    SceneModule::init(
-        app.scene,
-        app.cursor
-    );
-
     AppModule::run( app );
-    AppModule::deinit( app.scene );
+    AppModule::deinit( app );
 
     return 0;
 }

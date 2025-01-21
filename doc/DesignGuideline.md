@@ -11,6 +11,27 @@
 ## Links
 [Noel's blog](https://gamesfromwithin.com/category/c)
 
+## Functions parameters 
+- Input last (can have default value, needs to be rightmost in this case)
+    `(out >) io > in` 
+- According to the above (see below example why to avoid ptr parameters for non-sideeffect like parameters)
+    `(&/* >) const& > v `
+
+### Example: Fake-pure, but copy-less/performant and clear intention:
+```cpp
+// only use for non-returned, but modified (side effect) parameters
+[[nodiscard]] S const& f(S* ioPtr)
+// or to avoid ptr->ref conversion
+[[nodiscard]] S const& f(S& ioRef)
+{
+    // Forces &-operator usage if ptr is further passed to additional functions -> tramp data
+    S& ref(*ptr); 
+
+    ++ref.m;
+    return m;
+}
+```
+
 ## Struct/Class general
 - Struct: POD (Plain Old Data) -> no functions
 - Name private member variables: name_
@@ -28,7 +49,8 @@
 ## Example
 ```cpp
 // Module.h
-class C { // has_invariant ? class : struct
+class C 
+{ // has_invariant ? class : struct
 public:
     // independent members
 public:
@@ -39,12 +61,14 @@ private:
     // invariant members
 };
 
-namespace CModule {
+namespace CModule
+{
     // functions for C only modification
 }
 
 // System.h
-namespace SSystem {
+namespace SSystem
+{
     // functions for multi-class modification
     // -> use multiple modules
 }

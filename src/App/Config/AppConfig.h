@@ -1,12 +1,9 @@
 #ifndef IG20240529010632
 #define IG20240529010632
 
-/**
- * @file
- * @brief Configuration variables
- */
-
 #include <raylib.h>
+
+/// Configurations for the application
 struct AppConfig
 {
     //* Window dimensions

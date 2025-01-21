@@ -218,41 +218,6 @@ void setupSceneEvents(
 #endif
 }
 
-void SceneModule::init(
-    Scene& scene,
-    Cursor const& cursor
-)
-{
-    GameModule::init( scene.game );
-
-    PanelSystem::init( scene.panels );
-
-    GameCameraModule::init(
-        scene.gameCamera,
-        scene.panels.map,
-        scene.game.hero.position
-    );
-
-#if defined( DEBUG )
-    snx::debug::gcam() = scene.gameCamera;
-#endif
-
-    RenderSystem::loadRenderData( scene.renderData );
-
-    ChunkSystem::init(
-        scene.renderData.textures,
-        scene.chunks,
-        scene.game.world.currentMap->tiles.positions,
-        scene.game.world.currentMap->tiles.renderIds
-    );
-
-    //* Setup events
-    setupSceneEvents(
-        scene,
-        cursor
-    );
-}
-
 void renderOutput(
     Scene& scene,
     Cursor const& cursor
@@ -364,62 +329,99 @@ void drawSceneBorder()
 {
     DrawRectangleLinesEx(
         GetWindowRec(),
-        SceneData::borderWidth,
+        SceneData::borderWeight,
         Colors::border
     );
 }
 
-void SceneModule::update(
-    Scene& scene,
-    Cursor& cursor,
-    InputId currentInputId,
-    float dt
-)
+namespace SceneModule
 {
-    if ( currentInputId == InputId::CYCLE_THEME )
+    void init(
+        Scene& scene,
+        Cursor const& cursor
+    )
     {
-        snx::PublisherStatic::publish( EventId::CHANGE_COLOR_THEME );
-    }
+        GameModule::init( scene.game );
 
-    CursorModule::update(
-        cursor,
-        scene.gameCamera.camera,
-        Convert::worldToTile( scene.game.hero.position )
-    );
+        PanelSystem::init( scene.panels );
 
-    GameModule::update(
-        scene.game,
-        scene.gameCamera,
-        cursor,
-        currentInputId,
-        dt
-    );
+        GameCameraModule::init(
+            scene.gameCamera,
+            scene.panels.map,
+            scene.game.hero.position
+        );
 
 #if defined( DEBUG )
-    snx::debug::gcam() = scene.gameCamera;
+        snx::debug::gcam() = scene.gameCamera;
 #endif
-    BeginDrawing();
 
-    ClearBackground( Colors::bg );
+        RenderSystem::loadRenderData( scene.renderData );
 
-    renderOutput(
-        scene,
-        cursor
-    );
+        ChunkSystem::init(
+            scene.renderData.textures,
+            scene.chunks,
+            scene.game.world.currentMap->tiles.positions,
+            scene.game.world.currentMap->tiles.renderIds
+        );
 
-    //* Draw simple frame
-    drawSceneBorder();
-
-    if ( DeveloperMode::isActive() )
-    {
-        DrawFPS( 0, 0 );
+        //* Setup events
+        setupSceneEvents(
+            scene,
+            cursor
+        );
     }
 
-    EndDrawing();
-}
+    void update(
+        Scene& scene,
+        Cursor& cursor,
+        InputId currentInputId,
+        float dt
+    )
+    {
+        if ( currentInputId == InputId::CYCLE_THEME )
+        {
+            snx::PublisherStatic::publish( EventId::CHANGE_COLOR_THEME );
+        }
 
-void SceneModule::deinitialize( Scene& scene )
-{
-    RenderSystem::deinit( scene.renderData.textures );
-}
+        CursorModule::update(
+            cursor,
+            scene.gameCamera.camera,
+            Convert::worldToTile( scene.game.hero.position )
+        );
 
+        GameModule::update(
+            scene.game,
+            scene.gameCamera,
+            cursor,
+            currentInputId,
+            dt
+        );
+
+#if defined( DEBUG )
+        snx::debug::gcam() = scene.gameCamera;
+#endif
+        BeginDrawing();
+
+        ClearBackground( Colors::bg );
+
+        renderOutput(
+            scene,
+            cursor
+        );
+
+        //* Draw simple frame
+        drawSceneBorder();
+
+        if ( DeveloperMode::isActive() )
+        {
+            DrawFPS( 0, 0 );
+        }
+
+        EndDrawing();
+    }
+
+    void deinitialize( Scene& scene )
+    {
+        RenderSystem::deinit( scene.renderData.textures );
+    }
+}

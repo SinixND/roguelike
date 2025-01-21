@@ -73,7 +73,8 @@ Vector2I getRandomPosition(
     }
 }
 
-void insertSingle(
+[[nodiscard]]
+Enemies const& insertSingle(
     Enemies& enemies,
     TransformComponent const& transform,
     MovementComponent const& movement,
@@ -95,9 +96,11 @@ void insertSingle(
     enemies.healths.insert( enemyId, health );
     enemies.damages.insert( enemyId, damage );
     enemies.ais.insert( enemyId, AIComponent{ scanRange } );
+
+    return enemies;
 }
 
-void EnemiesModule::createAtPosition(
+Enemies const& EnemiesModule::createAtPosition(
     Enemies& enemies,
     Tiles const& tiles,
     RenderId renderId,
@@ -110,7 +113,7 @@ void EnemiesModule::createAtPosition(
              tilePosition
          ) )
     {
-        return;
+        return enemies;
     }
     size_t enemyId{ enemies.idManager.requestId() };
 
@@ -119,7 +122,7 @@ void EnemiesModule::createAtPosition(
         default:
         case RenderId::GOBLIN:
         {
-            insertSingle(
+            enemies = insertSingle(
                 enemies,
                 TransformComponent{},
                 MovementComponent{},
@@ -138,9 +141,11 @@ void EnemiesModule::createAtPosition(
             break;
         }
     }
+
+    return enemies;
 }
 
-void EnemiesModule::createAtRandomPosition(
+Enemies const& EnemiesModule::createAtRandomPosition(
     Enemies& enemies,
     Tiles const& tiles,
     RenderId renderId
@@ -151,15 +156,17 @@ void EnemiesModule::createAtRandomPosition(
         enemies.ids
     );
 
-    createAtPosition(
+    enemies = createAtPosition(
         enemies,
         tiles,
         renderId,
         tilePosition
     );
+
+    return enemies;
 }
 
-void EnemiesModule::remove(
+Enemies const& EnemiesModule::remove(
     Enemies& enemies,
     size_t id
 )
@@ -173,9 +180,11 @@ void EnemiesModule::remove(
     enemies.healths.erase( id );
     enemies.damages.erase( id );
     enemies.ais.erase( id );
+
+    return enemies;
 }
 
-void EnemiesModule::fillEnemies(
+Enemies const& EnemiesModule::fillEnemies(
     Enemies& enemies,
     Tiles const& tiles,
     int mapLevel
@@ -183,19 +192,21 @@ void EnemiesModule::fillEnemies(
 {
     while ( enemies.renderIds.size() < static_cast<size_t>( ( mapLevel + 1 ) * 3 ) )
     {
-        EnemiesModule::createAtRandomPosition(
+        enemies = EnemiesModule::createAtRandomPosition(
             enemies,
             tiles,
             RenderId::GOBLIN
         );
     }
+
+    return enemies;
 }
 
-bool EnemiesModule::regenerate( snx::DenseMap<size_t, EnergyComponent>& energies )
+bool EnemiesModule::regenerate( snx::DenseMap<size_t, EnergyComponent>* energies )
 {
     bool isEnemyReady{ false };
 
-    for ( EnergyComponent& energy : energies )
+    for ( EnergyComponent& energy : *energies )
     {
         if ( !EnergyModule::regenerate( energy ) )
         {
@@ -206,7 +217,7 @@ bool EnemiesModule::regenerate( snx::DenseMap<size_t, EnergyComponent>& energies
     return isEnemyReady;
 }
 
-void EnemiesModule::update(
+Enemies const& EnemiesModule::update(
     Enemies& enemies,
     Vector2 const& heroPosition,
     float dt
@@ -240,6 +251,8 @@ void EnemiesModule::update(
             );
         }
     }
+
+    return enemies;
 }
 
 size_t EnemiesModule::getActive(
@@ -263,7 +276,7 @@ size_t EnemiesModule::getActive(
     return activeEnemyId;
 }
 
-void EnemiesModule::replaceDead(
+Enemies const& EnemiesModule::replaceDead(
     Enemies& enemies,
     Tiles const& tiles
 )
@@ -275,13 +288,13 @@ void EnemiesModule::replaceDead(
         //* Kill enemy at 0 health
         if ( enemies.healths.values().at( idx ).currentHealth <= 0 )
         {
-            EnemiesModule::remove(
+            enemies = EnemiesModule::remove(
                 enemies,
                 enemies.ids.values().at( idx )
             );
 
             //* Spawn new enemy
-            EnemiesModule::createAtRandomPosition(
+            enemies = EnemiesModule::createAtRandomPosition(
                 enemies,
                 tiles,
                 RenderId::GOBLIN
@@ -292,4 +305,6 @@ void EnemiesModule::replaceDead(
 
         ++idx;
     }
+
+    return enemies;
 }

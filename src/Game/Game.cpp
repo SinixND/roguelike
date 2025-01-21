@@ -75,7 +75,7 @@ void GameModule::update(
     //* Update instant actions
     if ( !game.isMultiFrameActionActive )
     {
-        EnemiesModule::replaceDead(
+        game.world.currentMap->enemies = EnemiesModule::replaceDead(
             game.world.currentMap->enemies,
             game.world.currentMap->tiles
         );

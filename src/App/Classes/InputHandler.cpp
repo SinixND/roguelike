@@ -13,319 +13,322 @@ double constexpr minHoldTime{ 0.3f };
 //* Maximum time between taps for double tap event to trigger
 double constexpr maxDoubleTapTime{ 0.3f };
 
-InputId InputHandlerModule::checkKeyboard(
-    InputHandler& inputHandler,
-    std::unordered_map<int, InputId> const& keyboardToInput,
-    std::unordered_map<InputId, int> const& modifiers
-)
+namespace InputModule
 {
-    //* Update key pressed
-    //* Set lastKey only to valid inputs (associated with actions)
-    inputHandler.lastKey = ( inputHandler.currentKey ) ? inputHandler.currentKey : inputHandler.lastKey;
-    inputHandler.currentKey = GetKeyPressed();
-
-    //* Check modifiers
-    inputHandler.isModifierActive = IsKeyDown( modifiers.at( InputId::MOD ) );
-
-    //* Repeat last key if no input but modifier down
-    if ( ( inputHandler.isModifierActive
-           && !inputHandler.currentKey )
-#if !defined( TERMUX )
-         || IsKeyPressedRepeat( inputHandler.lastKey )
-#endif
+    InputId fromKeyboard(
+        InputHandler* inputHandler,
+        std::unordered_map<int, InputId> const& keyboardToInput,
+        std::unordered_map<InputId, int> const& modifiers
     )
     {
-        inputHandler.currentKey = inputHandler.lastKey;
-    }
+        //* Update key pressed
+        //* Set lastKey only to valid inputs (associated with actions)
+        inputHandler->lastKey = ( inputHandler->currentKey ) ? inputHandler->currentKey : inputHandler->lastKey;
+        inputHandler->currentKey = GetKeyPressed();
 
-    if ( !keyboardToInput.contains( inputHandler.currentKey ) )
-    {
-        return InputId::NONE;
-    }
+        //* Check modifiers
+        inputHandler->isModifierActive = IsKeyDown( modifiers.at( InputId::MOD ) );
 
-    return keyboardToInput.at( inputHandler.currentKey );
-}
-
-InputId InputHandlerModule::checkMouse(
-    std::unordered_map<int, InputId> const& mouseToInput,
-    bool& isCursorActive
-)
-{
-    InputId inputId{ InputId::NONE };
-
-    for ( int mouseButton : { MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT } )
-    {
-        if ( ( isCursorActive
-               || mouseToInput.at( mouseButton ) == InputId::TOGGLE_CURSOR )
-             && IsMouseButtonPressed( mouseButton ) )
+        //* Repeat last key if no input but modifier down
+        if ( ( inputHandler->isModifierActive
+               && !inputHandler->currentKey )
+#if !defined( TERMUX )
+             || IsKeyPressedRepeat( inputHandler.lastKey )
+#endif
+        )
         {
-            inputId = mouseToInput.at( mouseButton );
+            inputHandler->currentKey = inputHandler->lastKey;
         }
+
+        if ( !keyboardToInput.contains( inputHandler->currentKey ) )
+        {
+            return InputId::NONE;
+        }
+
+        return keyboardToInput.at( inputHandler->currentKey );
     }
 
-    return inputId;
-}
-
-InputId InputHandlerModule::checkGesture( InputHandler& inputHandler )
-{
-    InputId inputId{ InputId::NONE };
-
-    //* IMPORTANT NOTE:
-    //* Implemented events TAP, DOUBLETAP and HOLD as raylib gesture registration was unreliable
-    //* Therefore disabled any functionality of GESTURE_TAP and GESTURE_DOUBLE_TAP
-    //* but left in game logging so it gets noticed when it was fixed
-
-    //* Update gestures
-    inputHandler.lastGesture = inputHandler.currentGesture;
-    inputHandler.currentGesture = GetGestureDetected();
-
-    //* Detect gesture change
-    if ( inputHandler.currentGesture != inputHandler.lastGesture )
+    InputId fromMouse(
+        bool* isCursorActive,
+        std::unordered_map<int, InputId> const& mouseToInput
+    )
     {
-        switch ( inputHandler.currentGesture )
+        InputId inputId{ InputId::NONE };
+
+        for ( int mouseButton : { MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT } )
         {
-            default:
-            case GESTURE_NONE:
+            if ( ( isCursorActive
+                   || mouseToInput.at( mouseButton ) == InputId::TOGGLE_CURSOR )
+                 && IsMouseButtonPressed( mouseButton ) )
             {
-#if defined( DEBUG ) && defined( DEBUG_GESTURES )
-                snx::Logger::log( "Triggered GESTURE_NONE\n" );
-                snx::debug::cliLog( "Triggered GESTURE_NONE\n" );
-#endif
-#if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
-                snx::Logger::log( "Triggered TOUCH UP EVENT\n" );
-                snx::debug::cliLog( "Triggered TOUCH UP EVENT\n" );
-#endif
-                inputHandler.touchUpTime = GetTime();
+                inputId = mouseToInput.at( mouseButton );
+            }
+        }
 
-                //* Reset hold duration
-                inputHandler.touchHoldDuration = 0;
+        return inputId;
+    }
 
-                //* Check for Tap events
-                if ( inputHandler.lastGesture == GESTURE_HOLD
-                     && ( inputHandler.touchUpTime - inputHandler.touchDownTime ) < maxTapTime )
+    InputId fromGesture( InputHandler* inputHandler )
+    {
+        InputId inputId{ InputId::NONE };
+
+        //* IMPORTANT NOTE:
+        //* Implemented events TAP, DOUBLETAP and HOLD as raylib gesture registration was unreliable
+        //* Therefore disabled any functionality of GESTURE_TAP and GESTURE_DOUBLE_TAP
+        //* but left in game logging so it gets noticed when it was fixed
+
+        //* Update gestures
+        inputHandler->lastGesture = inputHandler->currentGesture;
+        inputHandler->currentGesture = GetGestureDetected();
+
+        //* Detect gesture change
+        if ( inputHandler->currentGesture != inputHandler->lastGesture )
+        {
+            switch ( inputHandler->currentGesture )
+            {
+                default:
+                case GESTURE_NONE:
                 {
-                    //* Check for double tap
-                    if ( ( inputHandler.touchUpTime - inputHandler.lastTap ) < maxDoubleTapTime )
-                    {
-#if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
-                        snx::Logger::log( "Triggered DOUBLE TAP EVENT\n" );
-                        snx::debug::cliLog( "Triggered DOUBLE TAP EVENT\n" );
+#if defined( DEBUG ) && defined( DEBUG_GESTURES )
+                    snx::Logger::log( "Triggered GESTURE_NONE\n" );
+                    snx::debug::cliLog( "Triggered GESTURE_NONE\n" );
 #endif
-                        inputId = InputId::ACT_IN_PLACE;
-                    }
-                    else
-                    {
 #if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
-                        snx::Logger::log( "Triggered TAP EVENT\n" );
-                        snx::debug::cliLog( "Triggered TAP EVENT\n" );
+                    snx::Logger::log( "Triggered TOUCH UP EVENT\n" );
+                    snx::debug::cliLog( "Triggered TOUCH UP EVENT\n" );
 #endif
+                    inputHandler->touchUpTime = GetTime();
+
+                    //* Reset hold duration
+                    inputHandler->touchHoldDuration = 0;
+
+                    //* Check for Tap events
+                    if ( inputHandler->lastGesture == GESTURE_HOLD
+                         && ( inputHandler->touchUpTime - inputHandler->touchDownTime ) < maxTapTime )
+                    {
+                        //* Check for double tap
+                        if ( ( inputHandler->touchUpTime - inputHandler->lastTap ) < maxDoubleTapTime )
+                        {
+#if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
+                            snx::Logger::log( "Triggered DOUBLE TAP EVENT\n" );
+                            snx::debug::cliLog( "Triggered DOUBLE TAP EVENT\n" );
+#endif
+                            inputId = InputId::ACT_IN_PLACE;
+                        }
+                        else
+                        {
+#if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
+                            snx::Logger::log( "Triggered TAP EVENT\n" );
+                            snx::debug::cliLog( "Triggered TAP EVENT\n" );
+#endif
+                        }
+
+                        inputHandler->lastTap = inputHandler->touchUpTime;
+
+                        break;
                     }
 
-                    inputHandler.lastTap = inputHandler.touchUpTime;
+                    inputId = InputId::NONE;
 
                     break;
                 }
 
-                inputId = InputId::NONE;
-
-                break;
-            }
-
-            case GESTURE_TAP:
-            {
+                case GESTURE_TAP:
+                {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
-                snx::Logger::log( "Triggered GESTURE_TAP\n" );
+                    snx::Logger::log( "Triggered GESTURE_TAP\n" );
 #endif
-                // touchDownTime = GetTime();
+                    // touchDownTime = GetTime();
 
-                break;
-            }
+                    break;
+                }
 
-            case GESTURE_DOUBLETAP:
-            {
+                case GESTURE_DOUBLETAP:
+                {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
-                snx::Logger::log( "Triggered GESTURE_DOUBLETAP\n" );
+                    snx::Logger::log( "Triggered GESTURE_DOUBLETAP\n" );
 #endif
-                // inputInput = InputId::actInPlace;
+                    // inputInput = InputId::actInPlace;
 
-                break;
-            }
+                    break;
+                }
 
-            case GESTURE_HOLD:
-            {
+                case GESTURE_HOLD:
+                {
 #if defined( DEBUG ) && ( defined( DEBUG_GESTURES ) || defined( DEBUG_GESTURE_EVENTS ) )
-                snx::Logger::log( "Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n" );
-                snx::debug::cliLog( "Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n" );
+                    snx::Logger::log( "Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n" );
+                    snx::debug::cliLog( "Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n" );
 #endif
-                inputHandler.touchDownTime = GetTime();
+                    inputHandler->touchDownTime = GetTime();
 
-                break;
-            }
+                    break;
+                }
 
-            case GESTURE_DRAG:
-            {
-#if defined( DEBUG ) && defined( DEBUG_GESTURES )
-                snx::Logger::log( "Triggered first GESTURE_DRAG\n" );
-                snx::debug::cliLog( "Triggered first GESTURE_DRAG\n" );
-#endif
-                //* Set modifier
-                inputHandler.isModifierActive = true;
-
-                Vector2 direction = Vector2MainDirection( GetGestureDragVector() );
-                if ( direction == Vector2{ 0, -1 } )
+                case GESTURE_DRAG:
                 {
+#if defined( DEBUG ) && defined( DEBUG_GESTURES )
+                    snx::Logger::log( "Triggered first GESTURE_DRAG\n" );
+                    snx::debug::cliLog( "Triggered first GESTURE_DRAG\n" );
+#endif
+                    //* Set modifier
+                    inputHandler->isModifierActive = true;
+
+                    Vector2 direction = Vector2MainDirection( GetGestureDragVector() );
+                    if ( direction == Vector2{ 0, -1 } )
+                    {
+                        inputId = InputId::ACT_UP;
+                    }
+
+                    else if ( direction == Vector2{ -1, 0 } )
+                    {
+                        inputId = InputId::ACT_LEFT;
+                    }
+
+                    else if ( direction == Vector2{ 0, 1 } )
+                    {
+                        inputId = InputId::ACT_DOWN;
+                    }
+
+                    else if ( direction == Vector2{ 1, 0 } )
+                    {
+                        inputId = InputId::ACT_RIGHT;
+                    }
+
+                    break;
+                }
+
+                case GESTURE_SWIPE_UP:
+                {
+#if defined( DEBUG ) && defined( DEBUG_GESTURES )
+                    snx::Logger::log( "Triggered GESTURE_SWIPE_UP\n" );
+                    snx::debug::cliLog( "Triggered GESTURE_SWIPE_UP\n" );
+#endif
                     inputId = InputId::ACT_UP;
+
+                    break;
                 }
 
-                else if ( direction == Vector2{ -1, 0 } )
+                case GESTURE_SWIPE_LEFT:
                 {
+#if defined( DEBUG ) && defined( DEBUG_GESTURES )
+                    snx::Logger::log( "Triggered GESTURE_SWIPE_LEFT\n" );
+                    snx::debug::cliLog( "Triggered GESTURE_SWIPE_LEFT\n" );
+#endif
                     inputId = InputId::ACT_LEFT;
+
+                    break;
                 }
 
-                else if ( direction == Vector2{ 0, 1 } )
+                case GESTURE_SWIPE_DOWN:
                 {
+#if defined( DEBUG ) && defined( DEBUG_GESTURES )
+                    snx::Logger::log( "Triggered GESTURE_SWIPE_DOWN\n" );
+                    snx::debug::cliLog( "Triggered GESTURE_SWIPE_DOWN\n" );
+#endif
                     inputId = InputId::ACT_DOWN;
+
+                    break;
                 }
 
-                else if ( direction == Vector2{ 1, 0 } )
+                case GESTURE_SWIPE_RIGHT:
                 {
+#if defined( DEBUG ) && defined( DEBUG_GESTURES )
+                    snx::Logger::log( "Triggered GESTURE_SWIPE_RIGHT\n" );
+                    snx::debug::cliLog( "Triggered GESTURE_SWIPE_RIGHT\n" );
+#endif
                     inputId = InputId::ACT_RIGHT;
+
+                    break;
                 }
 
-                break;
-            }
-
-            case GESTURE_SWIPE_UP:
-            {
+                case GESTURE_PINCH_IN:
+                {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
-                snx::Logger::log( "Triggered GESTURE_SWIPE_UP\n" );
-                snx::debug::cliLog( "Triggered GESTURE_SWIPE_UP\n" );
-#endif
-                inputId = InputId::ACT_UP;
-
-                break;
-            }
-
-            case GESTURE_SWIPE_LEFT:
-            {
-#if defined( DEBUG ) && defined( DEBUG_GESTURES )
-                snx::Logger::log( "Triggered GESTURE_SWIPE_LEFT\n" );
-                snx::debug::cliLog( "Triggered GESTURE_SWIPE_LEFT\n" );
-#endif
-                inputId = InputId::ACT_LEFT;
-
-                break;
-            }
-
-            case GESTURE_SWIPE_DOWN:
-            {
-#if defined( DEBUG ) && defined( DEBUG_GESTURES )
-                snx::Logger::log( "Triggered GESTURE_SWIPE_DOWN\n" );
-                snx::debug::cliLog( "Triggered GESTURE_SWIPE_DOWN\n" );
-#endif
-                inputId = InputId::ACT_DOWN;
-
-                break;
-            }
-
-            case GESTURE_SWIPE_RIGHT:
-            {
-#if defined( DEBUG ) && defined( DEBUG_GESTURES )
-                snx::Logger::log( "Triggered GESTURE_SWIPE_RIGHT\n" );
-                snx::debug::cliLog( "Triggered GESTURE_SWIPE_RIGHT\n" );
-#endif
-                inputId = InputId::ACT_RIGHT;
-
-                break;
-            }
-
-            case GESTURE_PINCH_IN:
-            {
-#if defined( DEBUG ) && defined( DEBUG_GESTURES )
-                snx::Logger::log( "Triggered GESTURE_PINCH_IN\n" );
-                snx::debug::cliLog( "Triggered GESTURE_PINCH_IN\n" );
+                    snx::Logger::log( "Triggered GESTURE_PINCH_IN\n" );
+                    snx::debug::cliLog( "Triggered GESTURE_PINCH_IN\n" );
 #endif
 
-                break;
-            }
+                    break;
+                }
 
-            case GESTURE_PINCH_OUT:
-            {
+                case GESTURE_PINCH_OUT:
+                {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
-                snx::Logger::log( "Triggered GESTURE_PINCH_OUT\n" );
-                snx::debug::cliLog( "Triggered GESTURE_PINCH_OUT\n" );
+                    snx::Logger::log( "Triggered GESTURE_PINCH_OUT\n" );
+                    snx::debug::cliLog( "Triggered GESTURE_PINCH_OUT\n" );
 #endif
 
-                break;
+                    break;
+                }
             }
         }
-    }
 
-    //* Detect continuous gestures
-    //* if (currentGesture_ == lastGesture_)
-    else
-    {
-        switch ( inputHandler.currentGesture )
+        //* Detect continuous gestures
+        //* if (currentGesture_ == lastGesture_)
+        else
         {
-            default:
-            case GESTURE_NONE:
+            switch ( inputHandler->currentGesture )
             {
-                inputId = InputId::NONE;
-
-                break;
-            }
-
-            case GESTURE_HOLD:
-            {
-                inputHandler.touchHoldDuration = GetTime() - inputHandler.touchDownTime;
-
-                if ( ( inputHandler.touchHoldDuration ) > minHoldTime )
+                default:
+                case GESTURE_NONE:
                 {
+                    inputId = InputId::NONE;
+
+                    break;
+                }
+
+                case GESTURE_HOLD:
+                {
+                    inputHandler->touchHoldDuration = GetTime() - inputHandler->touchDownTime;
+
+                    if ( ( inputHandler->touchHoldDuration ) > minHoldTime )
+                    {
 #if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
-                    snx::Logger::log( "Triggered HOLD EVENT\n" );
-                    snx::debug::cliLog( "Triggered HOLD EVENT\n" );
+                        snx::Logger::log( "Triggered HOLD EVENT\n" );
+                        snx::debug::cliLog( "Triggered HOLD EVENT\n" );
 #endif
-                    //* Get/Set info panel reference to tile/object/enemy at current position
-                    snx::PublisherStatic::publish( EventId::CURSOR_POSITION_CHANGED );
+                        //* Get/Set info panel reference to tile/object/enemy at current position
+                        snx::PublisherStatic::publish( EventId::CURSOR_POSITION_CHANGED );
+                    }
+
+                    break;
                 }
 
-                break;
-            }
-
-            case GESTURE_DRAG:
-            {
+                case GESTURE_DRAG:
+                {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
-                snx::Logger::log( "Triggered GESTURE_DRAG\n" );
-                snx::debug::cliLog( "Triggered GESTURE_DRAG\n" );
+                    snx::Logger::log( "Triggered GESTURE_DRAG\n" );
+                    snx::debug::cliLog( "Triggered GESTURE_DRAG\n" );
 #endif
-                //* Set modifier
-                inputHandler.isModifierActive = true;
+                    //* Set modifier
+                    inputHandler->isModifierActive = true;
 
-                Vector2 direction = Vector2MainDirection( GetGestureDragVector() );
-                if ( direction == Vector2{ 0, -1 } )
-                {
-                    inputId = InputId::ACT_UP;
+                    Vector2 direction = Vector2MainDirection( GetGestureDragVector() );
+                    if ( direction == Vector2{ 0, -1 } )
+                    {
+                        inputId = InputId::ACT_UP;
+                    }
+
+                    else if ( direction == Vector2{ -1, 0 } )
+                    {
+                        inputId = InputId::ACT_LEFT;
+                    }
+
+                    else if ( direction == Vector2{ 0, 1 } )
+                    {
+                        inputId = InputId::ACT_DOWN;
+                    }
+
+                    else if ( direction == Vector2{ 1, 0 } )
+                    {
+                        inputId = InputId::ACT_RIGHT;
+                    }
+
+                    break;
                 }
-
-                else if ( direction == Vector2{ -1, 0 } )
-                {
-                    inputId = InputId::ACT_LEFT;
-                }
-
-                else if ( direction == Vector2{ 0, 1 } )
-                {
-                    inputId = InputId::ACT_DOWN;
-                }
-
-                else if ( direction == Vector2{ 1, 0 } )
-                {
-                    inputId = InputId::ACT_RIGHT;
-                }
-
-                break;
             }
         }
-    }
 
-    return inputId;
+        return inputId;
+    }
 }

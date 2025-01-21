@@ -33,33 +33,38 @@ struct Enemies
 
 namespace EnemiesModule
 {
-    void createAtPosition(
+    [[nodiscard]]
+    Enemies const& createAtPosition(
         Enemies& enemies,
         Tiles const& tiles,
         RenderId enemyId,
         Vector2I tilePosition
     );
 
-    void createAtRandomPosition(
+    [[nodiscard]]
+    Enemies const& createAtRandomPosition(
         Enemies& enemies,
         Tiles const& tiles,
         RenderId enemyId
     );
 
-    void fillEnemies(
+    [[nodiscard]]
+    Enemies const& fillEnemies(
         Enemies& enemies,
         Tiles const& tiles,
         int mapLevel
     );
 
-    void remove(
+    [[nodiscard]]
+    Enemies const& remove(
         Enemies& enemies,
         size_t id
     );
 
-    bool regenerate( snx::DenseMap<size_t, EnergyComponent>& energies );
+    bool regenerate( snx::DenseMap<size_t, EnergyComponent>* energies );
 
-    void update(
+    [[nodiscard]]
+    Enemies const& update(
         Enemies& enemies,
         Vector2 const& heroPosition,
         float dt
@@ -71,7 +76,8 @@ namespace EnemiesModule
         int const turn
     );
 
-    void replaceDead(
+    [[nodiscard]]
+    Enemies const& replaceDead(
         Enemies& enemies,
         Tiles const& tiles
     );
