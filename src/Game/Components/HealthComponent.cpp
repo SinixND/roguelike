@@ -7,61 +7,64 @@
 #include <string>
 #endif
 
-bool HealthModule::damage(
-    HealthComponent& health,
-    int value
-)
+namespace HealthModule
 {
+    bool damage(
+        HealthComponent& health,
+        int value
+    )
+    {
 #if defined( DEBUG ) && defined( DEBUG_HEALTH )
-    snx::debug::cliLog( "Remove " + std::to_string( value ) + " from " + std::to_string( health.currentHealth ) + " health\n" );
+        snx::debug::cliLog( "Remove " + std::to_string( value ) + " from " + std::to_string( health.currentHealth ) + " health\n" );
 #endif
-    if ( value )
-    {
-        health.currentHealth -= value;
-    }
-    else
-    {
-        health.currentHealth = 0;
-    }
+        if ( value )
+        {
+            health.currentHealth -= value;
+        }
+        else
+        {
+            health.currentHealth = 0;
+        }
 
-    snx::PublisherStatic::publish( EventId::INTERRUPT_MOVEMENT );
+        snx::PublisherStatic::publish( EventId::INTERRUPT_MOVEMENT );
 
-    if ( health.currentHealth <= 0 )
-    {
-        return true;
-    }
+        if ( health.currentHealth <= 0 )
+        {
+            return true;
+        }
 
-    return false;
-}
-
-void HealthModule::heal(
-    HealthComponent& health,
-    int value
-)
-{
-    if ( value )
-    {
-        health.currentHealth += value;
-    }
-    else
-    {
-        health.currentHealth = health.maxHealth;
+        return false;
     }
 
-    if ( health.currentHealth > health.maxHealth )
+    void heal(
+        HealthComponent& health,
+        int value
+    )
     {
-        health.currentHealth = health.maxHealth;
-    }
-}
+        if ( value )
+        {
+            health.currentHealth += value;
+        }
+        else
+        {
+            health.currentHealth = health.maxHealth;
+        }
 
-void HealthModule::regenerate( HealthComponent& health )
-{
+        if ( health.currentHealth > health.maxHealth )
+        {
+            health.currentHealth = health.maxHealth;
+        }
+    }
+
+    void regenerate( HealthComponent& health )
+    {
 #if defined( DEBUG ) && defined( DEBUG_HEALTH )
-    snx::debug::cliLog( "Gain " + std::to_string( health.regenRate ) + " to " + std::to_string( health.currentHealth ) + " health\n" );
+        snx::debug::cliLog( "Gain " + std::to_string( health.regenRate ) + " to " + std::to_string( health.currentHealth ) + " health\n" );
 #endif
 
-    HealthModule::heal(
-        health,
-        health.regenRate
-    );
+        HealthModule::heal(
+            health,
+            health.regenRate
+        );
+    }
 }

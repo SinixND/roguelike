@@ -6,40 +6,43 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-void CursorModule::toggle( Cursor& cursor )
+namespace CursorModule
 {
-    cursor.isActive = !cursor.isActive;
-
-    if ( cursor.isActive )
+    void toggle( Cursor& cursor )
     {
-        HideCursor();
-        return;
-    }
+        cursor.isActive = !cursor.isActive;
 
-    ShowCursor();
-}
-
-void CursorModule::update(
-    Cursor& cursor,
-    Camera2D const& camera,
-    Vector2I const& heroPosition
-)
-{
-    //* Update cursor position if active
-    if ( cursor.isActive )
-    {
-        Vector2I mouseTile{ Convert::screenToTile( GetMousePosition(), camera ) };
-
-        if ( !( Convert::worldToTile( cursor.position ) == mouseTile ) )
+        if ( cursor.isActive )
         {
-            cursor.position = Convert::tileToWorld( mouseTile );
-
-            snx::PublisherStatic::publish( EventId::CURSOR_POSITION_CHANGED );
+            HideCursor();
+            return;
         }
 
-        return;
+        ShowCursor();
     }
 
-    //* Keep cursor on hero if inactive
-    cursor.position = Convert::tileToWorld( heroPosition );
+    void update(
+        Cursor& cursor,
+        Camera2D const& camera,
+        Vector2I const& heroPosition
+    )
+    {
+        //* Update cursor position if active
+        if ( cursor.isActive )
+        {
+            Vector2I mouseTile{ Convert::screenToTile( GetMousePosition(), camera ) };
+
+            if ( !( Convert::worldToTile( cursor.position ) == mouseTile ) )
+            {
+                cursor.position = Convert::tileToWorld( mouseTile );
+
+                snx::PublisherStatic::publish( EventId::CURSOR_POSITION_CHANGED );
+            }
+
+            return;
+        }
+
+        //* Keep cursor on hero if inactive
+        cursor.position = Convert::tileToWorld( heroPosition );
+    }
 }

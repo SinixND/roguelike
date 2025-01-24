@@ -30,37 +30,61 @@
 //* bias < 1: prioritize closer to target
 int constexpr bias{ 2 };
 
-// float rating(RatedTile const& ratedTile)
-int RatedTileModule::getRating( RatedTile const& ratedTile )
+struct RatedTile
 {
-    return
-        //* Distance to target
-        Vector2Length( ratedTile.distanceToTarget )
-        + bias * ratedTile.stepsNeeded;
-}
+    Vector2I tilePosition{};
+    Vector2I distanceToTarget{};
+    int stepsNeeded{};
+    RatedTile* ancestor{ nullptr };
 
-void RatedTileModule::reconstructPath(
-    RatedTile const& ratedTile,
-    std::vector<Vector2I>& path
-)
-{
-    //* Add this to path
-    path.push_back( ratedTile.tilePosition );
-
-    //* Abort (includes root/start)
-    if ( !ratedTile.ancestor )
+    RatedTile(
+        Vector2I const& tilePosition,
+        Vector2I const& target,
+        int stepsNeeded,
+        RatedTile* ancestor = nullptr
+    )
+        : tilePosition( tilePosition )
+        , distanceToTarget( Vector2Subtract( target, tilePosition ) )
+        , stepsNeeded( stepsNeeded )
+        , ancestor( ancestor )
     {
-        return;
+    }
+};
+
+namespace RatedTileModule
+{
+    //* Heuristic used to rate tiles
+    int getRating( RatedTile const& ratedTile )
+    {
+        return
+            //* Distance to target
+            Vector2Length( ratedTile.distanceToTarget )
+            + bias * ratedTile.stepsNeeded;
     }
 
-    //* Add ancestor to path
-    reconstructPath(
-        *ratedTile.ancestor,
-        path
-    );
+    void reconstructPath(
+        RatedTile const& ratedTile,
+        std::vector<Vector2I>& path
+    )
+    {
+        //* Add this to path
+        path.push_back( ratedTile.tilePosition );
+
+        //* Abort (includes root/start)
+        if ( !ratedTile.ancestor )
+        {
+            return;
+        }
+
+        //* Add ancestor to path
+        reconstructPath(
+            *ratedTile.ancestor,
+            path
+        );
+    }
+
 }
 
-//* PathfinderSystem
 //* Adds three new neighbours for all tiles of current best rating to the rating list,
 //* then deleting current rating in map
 //* and restarting with new best rating,
@@ -280,88 +304,91 @@ bool checkRatingList(
     return false;
 }
 
-std::vector<Vector2I> PathfinderSystem::findPath(
-    Map const& map,
-    Vector2I const& start,
-    Vector2I const& target,
-    GameCamera const& gameCamera,
-    bool skipInvisibleTiles,
-    int maxRange
-)
+namespace PathfinderSystem
 {
+    std::vector<Vector2I> findPath(
+        Map const& map,
+        Vector2I const& start,
+        Vector2I const& target,
+        GameCamera const& gameCamera,
+        bool skipInvisibleTiles,
+        int maxRange
+    )
+    {
 #if defined( DEBUG ) && defined( DEBUG_PATHFINDER )
-    BeginDrawing();
+        BeginDrawing();
 #endif
 
-    std::vector<Vector2I> path{};
+        std::vector<Vector2I> path{};
 
-    //* Return empty path if target is
-    //* - Not in map
-    //* - Is invisible
-    //* - Not accessible
-    //* - Equal to start
-    if ( !map.tiles.visibilityIds.contains( target )
-         || ( skipInvisibleTiles
-              && ( map.tiles.visibilityIds.at( target ) == VisibilityId::INVISIBLE ) )
-         || map.tiles.isSolids.contains( target )
-         || ( start == target ) )
-    {
+        //* Return empty path if target is
+        //* - Not in map
+        //* - Is invisible
+        //* - Not accessible
+        //* - Equal to start
+        if ( !map.tiles.visibilityIds.contains( target )
+             || ( skipInvisibleTiles
+                  && ( map.tiles.visibilityIds.at( target ) == VisibilityId::INVISIBLE ) )
+             || map.tiles.isSolids.contains( target )
+             || ( start == target ) )
+        {
+            return path;
+        }
+
+        //* Create tile to start
+        RatedTile firstTile{
+            start,
+            target,
+            0,
+            nullptr
+        };
+
+        //* Vector of rated tiles (persistent for ancestor pointers)
+        std::forward_list<RatedTile> ratedTiles{ firstTile };
+
+        //* Map of tile pointers, sorted by rating (lowest first)
+        std::map<int, std::vector<RatedTile*>> ratingList{};
+
+        ratingList[RatedTileModule::getRating( firstTile )].push_back( &ratedTiles.front() );
+
+        //* List of ignored tiles to avoid double checks
+        std::unordered_set<Vector2I> tilesToIgnore{ start };
+
+        checkRatingList(
+            RatedTileModule::getRating( firstTile ),
+            ratedTiles,
+            ratingList,
+            tilesToIgnore,
+            map,
+            target,
+            gameCamera,
+            maxRange,
+            path
+        );
+
+        //* Path is either empty or has at least 2 entries (target and start)
+#if defined( DEBUG ) && defined( DEBUG_PATHFINDER )
+        for ( Vector2I const& position : path )
+        {
+            DrawCircleV(
+                Vector2Add(
+                    Convert::tileToScreen(
+                        position,
+                        snx::debug::gcam().camera()
+                    ),
+                    Vector2{ TileData::TILE_SIZE_HALF, TileData::TILE_SIZE_HALF }
+                ),
+                5,
+                ColorAlpha(
+                    GREEN,
+                    0.5
+                )
+            );
+        }
+
+        EndDrawing();
+#endif
+
         return path;
     }
-
-    //* Create tile to start
-    RatedTile firstTile{
-        start,
-        target,
-        0,
-        nullptr
-    };
-
-    //* Vector of rated tiles (persistent for ancestor pointers)
-    std::forward_list<RatedTile> ratedTiles{ firstTile };
-
-    //* Map of tile pointers, sorted by rating (lowest first)
-    std::map<int, std::vector<RatedTile*>> ratingList{};
-
-    ratingList[RatedTileModule::getRating( firstTile )].push_back( &ratedTiles.front() );
-
-    //* List of ignored tiles to avoid double checks
-    std::unordered_set<Vector2I> tilesToIgnore{ start };
-
-    checkRatingList(
-        RatedTileModule::getRating( firstTile ),
-        ratedTiles,
-        ratingList,
-        tilesToIgnore,
-        map,
-        target,
-        gameCamera,
-        maxRange,
-        path
-    );
-
-    //* Path is either empty or has at least 2 entries (target and start)
-#if defined( DEBUG ) && defined( DEBUG_PATHFINDER )
-    for ( Vector2I const& position : path )
-    {
-        DrawCircleV(
-            Vector2Add(
-                Convert::tileToScreen(
-                    position,
-                    snx::debug::gcam().camera()
-                ),
-                Vector2{ TileData::TILE_SIZE_HALF, TileData::TILE_SIZE_HALF }
-            ),
-            5,
-            ColorAlpha(
-                GREEN,
-                0.5
-            )
-        );
-    }
-
-    EndDrawing();
-#endif
-
-    return path;
 }

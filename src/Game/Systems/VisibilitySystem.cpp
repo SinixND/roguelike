@@ -19,7 +19,6 @@
 #include "TileData.h"
 #endif
 
-//* Shadow
 Shadow::Shadow( Vector2I const& octantPosition )
 {
     ShadowModule::setSlopeLeft(
@@ -32,100 +31,103 @@ Shadow::Shadow( Vector2I const& octantPosition )
     );
 }
 
-float ShadowModule::slopeLeft(
-    Shadow const& shadow
-)
+namespace ShadowModule
 {
-    return shadow.slopeLeft;
-}
+    float slopeLeft(
+        Shadow const& shadow
+    )
+    {
+        return shadow.slopeLeft;
+    }
 
-void ShadowModule::setSlopeLeft(
-    Shadow& shadow,
-    Vector2I const& octantPosition
-)
-{
-    shadow.slopeLeft = ( octantPosition.y + 0.5f ) / ( octantPosition.x - 0.5f );
-}
+    void setSlopeLeft(
+        Shadow& shadow,
+        Vector2I const& octantPosition
+    )
+    {
+        shadow.slopeLeft = ( octantPosition.y + 0.5f ) / ( octantPosition.x - 0.5f );
+    }
 
-void ShadowModule::setSlopeLeft(
-    Shadow& shadow,
-    float slopeLeft
-)
-{
-    shadow.slopeLeft = slopeLeft;
-}
+    void setSlopeLeft(
+        Shadow& shadow,
+        float slopeLeft
+    )
+    {
+        shadow.slopeLeft = slopeLeft;
+    }
 
-float ShadowModule::slopeRight(
-    Shadow const& shadow
-)
-{
-    return shadow.slopeRight;
-}
+    float slopeRight(
+        Shadow const& shadow
+    )
+    {
+        return shadow.slopeRight;
+    }
 
-void ShadowModule::setSlopeRight(
-    Shadow& shadow,
-    Vector2I const& octantPosition
-)
-{
-    shadow.slopeRight = std::max( EPSILON, ( octantPosition.y - 0.5f ) / ( octantPosition.x + 0.5f ) );
-}
+    void setSlopeRight(
+        Shadow& shadow,
+        Vector2I const& octantPosition
+    )
+    {
+        shadow.slopeRight = std::max( EPSILON, ( octantPosition.y - 0.5f ) / ( octantPosition.x + 0.5f ) );
+    }
 
-void ShadowModule::setSlopeRight(
-    Shadow& shadow,
-    float slopeRight
-)
-{
-    shadow.slopeRight = slopeRight;
-}
+    void setSlopeRight(
+        Shadow& shadow,
+        float slopeRight
+    )
+    {
+        shadow.slopeRight = slopeRight;
+    }
 
-float ShadowModule::getLeftAtTop(
-    Shadow const& shadow,
-    Vector2I const& octantPosition
-)
-{
-    return ( octantPosition.y + 0.5f ) / shadow.slopeLeft;
-}
+    float getLeftAtTop(
+        Shadow const& shadow,
+        Vector2I const& octantPosition
+    )
+    {
+        return ( octantPosition.y + 0.5f ) / shadow.slopeLeft;
+    }
 
-float ShadowModule::getLeftAtBottom(
-    Shadow const& shadow,
-    Vector2I const& octantPosition
-)
-{
-    return ( octantPosition.y - 0.5f ) / shadow.slopeLeft;
-}
+    float getLeftAtBottom(
+        Shadow const& shadow,
+        Vector2I const& octantPosition
+    )
+    {
+        return ( octantPosition.y - 0.5f ) / shadow.slopeLeft;
+    }
 
-float ShadowModule::getLeft(
-    Shadow const& shadow,
-    int octantPositionHeight
-)
-{
-    //* NOTE: x = y / m
-    return ( octantPositionHeight ) / shadow.slopeLeft;
-}
+    float getLeft(
+        Shadow const& shadow,
+        int octantPositionHeight
+    )
+    {
+        //* NOTE: x = y / m
+        return ( octantPositionHeight ) / shadow.slopeLeft;
+    }
 
-float ShadowModule::getRightAtTop(
-    Shadow const& shadow,
-    Vector2I const& octantPosition
-)
-{
-    return ( octantPosition.y + 0.5f ) / shadow.slopeRight;
-}
+    float getRightAtTop(
+        Shadow const& shadow,
+        Vector2I const& octantPosition
+    )
+    {
+        return ( octantPosition.y + 0.5f ) / shadow.slopeRight;
+    }
 
-float ShadowModule::getRightAtBottom(
-    Shadow const& shadow,
-    Vector2I const& octantPosition
-)
-{
-    return ( octantPosition.y - 0.5f ) / shadow.slopeRight;
-}
+    float getRightAtBottom(
+        Shadow const& shadow,
+        Vector2I const& octantPosition
+    )
+    {
+        return ( octantPosition.y - 0.5f ) / shadow.slopeRight;
+    }
 
-float ShadowModule::getRight(
-    Shadow const& shadow,
-    int octantPositionHeight
-)
-{
-    //* NOTE: x = y / m
-    return ( octantPositionHeight ) / shadow.slopeRight;
+    float getRight(
+        Shadow const& shadow,
+        int octantPositionHeight
+    )
+    {
+        //* NOTE: x = y / m
+        return ( octantPositionHeight ) / shadow.slopeRight;
+    }
 }
 
 //* VisibilitySystem
@@ -501,7 +503,8 @@ void VisibilitySystem::calculateVisibilitiesInOctant(
                         //* If top-left tile corner is left (<) from slopeLeft (at same height = tileTop)
                         //* OR
                         //* If slopeRight is left (<) from bottom-right tile corner (at same height = tileBottom)
-                        [[maybe_unused]] auto test{ sqrt( pow( octX, 2 ) + pow( octY, 2 ) ) };
+                        [[maybe_unused]]
+                        auto test{ sqrt( pow( octX, 2 ) + pow( octY, 2 ) ) };
                         if ( ( ( octX - 0.5f ) < ( ShadowModule::getLeftAtTop(
                                    shadow,
                                    octantPosition

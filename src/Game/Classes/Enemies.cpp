@@ -100,211 +100,214 @@ Enemies const& insertSingle(
     return enemies;
 }
 
-Enemies const& EnemiesModule::createAtPosition(
-    Enemies& enemies,
-    Tiles const& tiles,
-    RenderId renderId,
-    Vector2I tilePosition
-)
+namespace EnemiesModule
 {
-    if ( !isSpawnPositionValid(
-             tiles,
-             enemies.ids,
-             tilePosition
-         ) )
+    Enemies const& createAtPosition(
+        Enemies& enemies,
+        Tiles const& tiles,
+        RenderId renderId,
+        Vector2I tilePosition
+    )
     {
+        if ( !isSpawnPositionValid(
+                 tiles,
+                 enemies.ids,
+                 tilePosition
+             ) )
+        {
+            return enemies;
+        }
+        size_t enemyId{ enemies.idManager.requestId() };
+
+        switch ( renderId )
+        {
+            default:
+            case RenderId::GOBLIN:
+            {
+                enemies = insertSingle(
+                    enemies,
+                    TransformComponent{},
+                    MovementComponent{},
+                    EnergyComponent{
+                        EnemyData::goblinEnergyMax,
+                        EnemyData::goblinEnergyRegenBase
+                    },
+                    HealthComponent{ EnemyData::goblinHealthBase },
+                    DamageComponent{ EnemyData::goblinDamageBase },
+                    tilePosition,
+                    enemyId,
+                    RenderId::GOBLIN,
+                    EnemyData::goblinScanRange
+                );
+
+                break;
+            }
+        }
+
         return enemies;
     }
-    size_t enemyId{ enemies.idManager.requestId() };
 
-    switch ( renderId )
+    Enemies const& createAtRandomPosition(
+        Enemies& enemies,
+        Tiles const& tiles,
+        RenderId renderId
+    )
     {
-        default:
-        case RenderId::GOBLIN:
-        {
-            enemies = insertSingle(
-                enemies,
-                TransformComponent{},
-                MovementComponent{},
-                EnergyComponent{
-                    EnemyData::goblinEnergyMax,
-                    EnemyData::goblinEnergyRegenBase
-                },
-                HealthComponent{ EnemyData::goblinHealthBase },
-                DamageComponent{ EnemyData::goblinDamageBase },
-                tilePosition,
-                enemyId,
-                RenderId::GOBLIN,
-                EnemyData::goblinScanRange
-            );
+        Vector2I tilePosition = getRandomPosition(
+            tiles,
+            enemies.ids
+        );
 
-            break;
-        }
-    }
-
-    return enemies;
-}
-
-Enemies const& EnemiesModule::createAtRandomPosition(
-    Enemies& enemies,
-    Tiles const& tiles,
-    RenderId renderId
-)
-{
-    Vector2I tilePosition = getRandomPosition(
-        tiles,
-        enemies.ids
-    );
-
-    enemies = createAtPosition(
-        enemies,
-        tiles,
-        renderId,
-        tilePosition
-    );
-
-    return enemies;
-}
-
-Enemies const& EnemiesModule::remove(
-    Enemies& enemies,
-    size_t id
-)
-{
-    enemies.ids.erase( Convert::worldToTile( enemies.positions.at( id ) ) );
-    enemies.positions.erase( id );
-    enemies.renderIds.erase( id );
-    enemies.transforms.erase( id );
-    enemies.movements.erase( id );
-    enemies.energies.erase( id );
-    enemies.healths.erase( id );
-    enemies.damages.erase( id );
-    enemies.ais.erase( id );
-
-    return enemies;
-}
-
-Enemies const& EnemiesModule::fillEnemies(
-    Enemies& enemies,
-    Tiles const& tiles,
-    int mapLevel
-)
-{
-    while ( enemies.renderIds.size() < static_cast<size_t>( ( mapLevel + 1 ) * 3 ) )
-    {
-        enemies = EnemiesModule::createAtRandomPosition(
+        enemies = createAtPosition(
             enemies,
             tiles,
-            RenderId::GOBLIN
-        );
-    }
-
-    return enemies;
-}
-
-bool EnemiesModule::regenerate( snx::DenseMap<size_t, EnergyComponent>* energies )
-{
-    bool isEnemyReady{ false };
-
-    for ( EnergyComponent& energy : *energies )
-    {
-        if ( !EnergyModule::regenerate( energy ) )
-        {
-            isEnemyReady = true;
-        }
-    }
-
-    return isEnemyReady;
-}
-
-Enemies const& EnemiesModule::update(
-    Enemies& enemies,
-    Vector2 const& heroPosition,
-    float dt
-)
-{
-    Vector2* currentPosition{};
-    Vector2I oldPosition{};
-
-    for ( size_t idx{ 0 }; idx < enemies.transforms.size(); ++idx )
-    {
-        currentPosition = &enemies.positions.values().at( idx );
-
-        oldPosition = Convert::worldToTile( *currentPosition );
-
-        //* Update movement
-        //* Update ids_ key if tilePosition changes
-        MovementSystem::update(
-            enemies.transforms.values().at( idx ),
-            // enemies.movements.values().at(i),
-            *currentPosition,
-            enemies.energies.values().at( idx ),
-            heroPosition,
-            dt
+            renderId,
+            tilePosition
         );
 
-        if ( oldPosition != Convert::worldToTile( *currentPosition ) )
-        {
-            enemies.ids.changeKey(
-                oldPosition,
-                Convert::worldToTile( *currentPosition )
-            );
-        }
+        return enemies;
     }
 
-    return enemies;
-}
-
-size_t EnemiesModule::getActive(
-    snx::DenseMap<size_t, EnergyComponent> const& energies,
-    snx::DenseMap<size_t, AIComponent> const& ais,
-    int const turn
-)
-{
-    size_t activeEnemyId{ 0 };
-
-    for ( size_t idx{ 0 }; idx < energies.size(); ++idx )
+    Enemies const& fillEnemies(
+        Enemies& enemies,
+        Tiles const& tiles,
+        int mapLevel
+    )
     {
-        if ( energies.values().at( idx ).state == EnergyState::READY
-             && ais.values().at( idx ).turn < turn )
+        while ( enemies.renderIds.size() < static_cast<size_t>( ( mapLevel + 1 ) * 3 ) )
         {
-            activeEnemyId = energies.key( idx );
-            break;
-        }
-    }
-
-    return activeEnemyId;
-}
-
-Enemies const& EnemiesModule::replaceDead(
-    Enemies& enemies,
-    Tiles const& tiles
-)
-{
-    size_t idx{ 0 };
-
-    while ( idx < enemies.ids.values().size() )
-    {
-        //* Kill enemy at 0 health
-        if ( enemies.healths.values().at( idx ).currentHealth <= 0 )
-        {
-            enemies = EnemiesModule::remove(
-                enemies,
-                enemies.ids.values().at( idx )
-            );
-
-            //* Spawn new enemy
-            enemies = EnemiesModule::createAtRandomPosition(
+            enemies = createAtRandomPosition(
                 enemies,
                 tiles,
                 RenderId::GOBLIN
             );
-
-            continue;
         }
 
-        ++idx;
+        return enemies;
     }
 
-    return enemies;
+    Enemies const& remove(
+        Enemies& enemies,
+        size_t id
+    )
+    {
+        enemies.ids.erase( Convert::worldToTile( enemies.positions.at( id ) ) );
+        enemies.positions.erase( id );
+        enemies.renderIds.erase( id );
+        enemies.transforms.erase( id );
+        enemies.movements.erase( id );
+        enemies.energies.erase( id );
+        enemies.healths.erase( id );
+        enemies.damages.erase( id );
+        enemies.ais.erase( id );
+
+        return enemies;
+    }
+
+    bool regenerate( snx::DenseMap<size_t, EnergyComponent>* energies )
+    {
+        bool isEnemyReady{ false };
+
+        for ( EnergyComponent& energy : *energies )
+        {
+            if ( !EnergyModule::regenerate( energy ) )
+            {
+                isEnemyReady = true;
+            }
+        }
+
+        return isEnemyReady;
+    }
+
+    Enemies const& update(
+        Enemies& enemies,
+        Vector2 const& heroPosition,
+        float dt
+    )
+    {
+        Vector2* currentPosition{};
+        Vector2I oldPosition{};
+
+        for ( size_t idx{ 0 }; idx < enemies.transforms.size(); ++idx )
+        {
+            currentPosition = &enemies.positions.values().at( idx );
+
+            oldPosition = Convert::worldToTile( *currentPosition );
+
+            //* Update movement
+            //* Update ids_ key if tilePosition changes
+            MovementSystem::update(
+                enemies.transforms.values().at( idx ),
+                // enemies.movements.values().at(i),
+                *currentPosition,
+                enemies.energies.values().at( idx ),
+                heroPosition,
+                dt
+            );
+
+            if ( oldPosition != Convert::worldToTile( *currentPosition ) )
+            {
+                enemies.ids.changeKey(
+                    oldPosition,
+                    Convert::worldToTile( *currentPosition )
+                );
+            }
+        }
+
+        return enemies;
+    }
+
+    size_t getActive(
+        snx::DenseMap<size_t, EnergyComponent> const& energies,
+        snx::DenseMap<size_t, AIComponent> const& ais,
+        int const turn
+    )
+    {
+        size_t activeEnemyId{ 0 };
+
+        for ( size_t idx{ 0 }; idx < energies.size(); ++idx )
+        {
+            if ( energies.values().at( idx ).state == EnergyState::READY
+                 && ais.values().at( idx ).turn < turn )
+            {
+                activeEnemyId = energies.key( idx );
+                break;
+            }
+        }
+
+        return activeEnemyId;
+    }
+
+    Enemies const& replaceDead(
+        Enemies& enemies,
+        Tiles const& tiles
+    )
+    {
+        size_t idx{ 0 };
+
+        while ( idx < enemies.ids.values().size() )
+        {
+            //* Kill enemy at 0 health
+            if ( enemies.healths.values().at( idx ).currentHealth <= 0 )
+            {
+                enemies = remove(
+                    enemies,
+                    enemies.ids.values().at( idx )
+                );
+
+                //* Spawn new enemy
+                enemies = createAtRandomPosition(
+                    enemies,
+                    tiles,
+                    RenderId::GOBLIN
+                );
+
+                continue;
+            }
+
+            ++idx;
+        }
+
+        return enemies;
+    }
 }

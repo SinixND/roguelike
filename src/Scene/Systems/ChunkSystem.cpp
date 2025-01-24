@@ -30,60 +30,63 @@ void verifyRequiredChunkExists(
     }
 }
 
-void ChunkSystem::init(
-    Textures const& textures,
-    snx::DenseMap<Vector2I, Chunk>& chunks,
-    snx::DenseMap<Vector2I, Vector2> const& tilesPositions,
-    snx::DenseMap<Vector2I, RenderId> const& tilesRenderIds
-)
+namespace ChunkSystem
 {
-    //* Reset
-    for ( Chunk const& chunk : chunks )
+    void init(
+        Textures const& textures,
+        snx::DenseMap<Vector2I, Chunk>& chunks,
+        snx::DenseMap<Vector2I, Vector2> const& tilesPositions,
+        snx::DenseMap<Vector2I, RenderId> const& tilesRenderIds
+    )
     {
-        UnloadRenderTexture( chunk.renderTexture );
-    }
-
-    chunks.clear();
-
-    //* Create necessary chunks
-    for ( Vector2 const& position : tilesPositions )
-    {
-        verifyRequiredChunkExists(
-            Convert::worldToTile( position ),
-            chunks
-        );
-    }
-
-    //* Render to chunk
-    for ( Chunk& chunk : chunks )
-    {
-        RectangleExI const& chunkSize{ chunk.corners };
-
-        BeginTextureMode( chunk.renderTexture );
-
-        ClearBackground( Colors::bg );
-
-        //* Iterate all tilePositions in chunk
-        for ( int x{ chunkSize.left() - 1 }; x < ( chunkSize.right() + 2 ); ++x )
+        //* Reset
+        for ( Chunk const& chunk : chunks )
         {
-            for ( int y{ chunkSize.top() - 1 }; y < ( chunkSize.bottom() + 2 ); ++y )
-            {
-                Vector2I tilePosition{ x, y };
-
-                if ( !tilesRenderIds.contains( tilePosition ) )
-                {
-                    continue;
-                }
-
-                RenderSystem::renderToChunk(
-                    textures,
-                    tilesRenderIds.at( tilePosition ),
-                    tilesPositions.at( tilePosition ),
-                    chunk
-                );
-            }
+            UnloadRenderTexture( chunk.renderTexture );
         }
 
-        EndTextureMode();
+        chunks.clear();
+
+        //* Create necessary chunks
+        for ( Vector2 const& position : tilesPositions )
+        {
+            verifyRequiredChunkExists(
+                Convert::worldToTile( position ),
+                chunks
+            );
+        }
+
+        //* Render to chunk
+        for ( Chunk& chunk : chunks )
+        {
+            RectangleExI const& chunkSize{ chunk.corners };
+
+            BeginTextureMode( chunk.renderTexture );
+
+            ClearBackground( Colors::bg );
+
+            //* Iterate all tilePositions in chunk
+            for ( int x{ chunkSize.left() - 1 }; x < ( chunkSize.right() + 2 ); ++x )
+            {
+                for ( int y{ chunkSize.top() - 1 }; y < ( chunkSize.bottom() + 2 ); ++y )
+                {
+                    Vector2I tilePosition{ x, y };
+
+                    if ( !tilesRenderIds.contains( tilePosition ) )
+                    {
+                        continue;
+                    }
+
+                    RenderSystem::renderToChunk(
+                        textures,
+                        tilesRenderIds.at( tilePosition ),
+                        tilesPositions.at( tilePosition ),
+                        chunk
+                    );
+                }
+            }
+
+            EndTextureMode();
+        }
     }
 }

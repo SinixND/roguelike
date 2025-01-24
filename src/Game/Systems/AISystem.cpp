@@ -16,125 +16,128 @@
 #include <cstddef>
 #include <vector>
 
-bool AISystem::takeActions(
-    World& world,
-    Hero& hero,
-    size_t& activeEnemyId,
-    GameCamera const& gameCamera,
-    int turn
-)
+namespace AISystem
 {
-    bool multiFrameActionActive{ false };
-
-    Enemies& enemies{ world.currentMap->enemies };
-
-    do
+    bool takeActions(
+        World& world,
+        Hero& hero,
+        size_t& activeEnemyId,
+        GameCamera const& gameCamera,
+        int turn
+    )
     {
-        activeEnemyId = EnemiesModule::getActive(
-            enemies.energies,
-            enemies.ais,
-            turn
-        );
+        bool multiFrameActionActive{ false };
 
-        if ( activeEnemyId )
+        Enemies& enemies{ world.currentMap->enemies };
+
+        do
         {
-            enemies.ais[activeEnemyId].turn = turn;
-
-            multiFrameActionActive |= AISystem::takeAction(
-                enemies.ais.at( activeEnemyId ),
-                enemies.positions.at( activeEnemyId ),
-                enemies.movements.at( activeEnemyId ),
-                enemies.transforms.at( activeEnemyId ),
-                enemies.energies.at( activeEnemyId ),
-                enemies.damages.at( activeEnemyId ),
-                *world.currentMap,
-                Convert::worldToTile( hero.position ),
-                hero.health,
-                gameCamera
+            activeEnemyId = EnemiesModule::getActive(
+                enemies.energies,
+                enemies.ais,
+                turn
             );
-        }
-    } while ( activeEnemyId );
 
-    return multiFrameActionActive;
-}
+            if ( activeEnemyId )
+            {
+                enemies.ais[activeEnemyId].turn = turn;
 
-bool AISystem::takeAction(
-    AIComponent const& ai,
-    Vector2& position,
-    MovementComponent& movement,
-    TransformComponent& transform,
-    EnergyComponent& energy,
-    DamageComponent& damage,
-    Map const& map,
-    Vector2I const& heroPosition,
-    HealthComponent& heroHealth,
-    GameCamera const& gameCamera
-)
-{
-    bool isActionMultiFrame{ false };
+                multiFrameActionActive |= AISystem::takeAction(
+                    enemies.ais.at( activeEnemyId ),
+                    enemies.positions.at( activeEnemyId ),
+                    enemies.movements.at( activeEnemyId ),
+                    enemies.transforms.at( activeEnemyId ),
+                    enemies.energies.at( activeEnemyId ),
+                    enemies.damages.at( activeEnemyId ),
+                    *world.currentMap,
+                    Convert::worldToTile( hero.position ),
+                    hero.health,
+                    gameCamera
+                );
+            }
+        } while ( activeEnemyId );
 
-    //* Instant action: attack
-    if ( Vector2Length(
-             Vector2Subtract(
-                 Convert::worldToTile( position ),
-                 heroPosition
-             )
-         )
-         == 1 )
-    {
-        //* Attack
-        snx::Logger::log( "Hero takes " );
-
-        DamageSystem::attack(
-            damage,
-            heroHealth
-        );
-
-        EnergyModule::consume( energy );
+        return multiFrameActionActive;
     }
-    //* Check path
-    else
+
+    bool takeAction(
+        AIComponent const& ai,
+        Vector2& position,
+        MovementComponent& movement,
+        TransformComponent& transform,
+        EnergyComponent& energy,
+        DamageComponent& damage,
+        Map const& map,
+        Vector2I const& heroPosition,
+        HealthComponent& heroHealth,
+        GameCamera const& gameCamera
+    )
     {
-        std::vector<Vector2I> path{ PathfinderSystem::findPath(
-            map,
-            Convert::worldToTile( position ),
-            heroPosition,
-            gameCamera,
-            false,
-            ai.scanRange
-        ) };
+        bool isActionMultiFrame{ false };
 
-        size_t pathSize{ path.size() };
-
-        //* Path is valid: has at least 2 entries (start and target) -> Multi-frame action: move
-        //* TODO: Check all enemies->next position to avoid two enemies moving to the same spot
-        if ( pathSize > 2
-             && !CollisionSystem::checkCollision(
-                 map.tiles,
-                 map.enemies,
-                 path.rbegin()[1],
-                 heroPosition
-             ) )
+        //* Instant action: attack
+        if ( Vector2Length(
+                 Vector2Subtract(
+                     Convert::worldToTile( position ),
+                     heroPosition
+                 )
+             )
+             == 1 )
         {
-            //* Prepare multi-frame action
-            MovementSystem::prepareByFromTo(
-                movement,
-                transform,
-                Convert::worldToTile( position ),
-                path.rbegin()[1]
+            //* Attack
+            snx::Logger::log( "Hero takes " );
+
+            DamageSystem::attack(
+                damage,
+                heroHealth
             );
 
             EnergyModule::consume( energy );
-
-            isActionMultiFrame = true;
         }
-        //* Path is empty -> Instant action: wait
+        //* Check path
         else
         {
-            //* Wait
-            EnergyModule::consume( energy );
+            std::vector<Vector2I> path{ PathfinderSystem::findPath(
+                map,
+                Convert::worldToTile( position ),
+                heroPosition,
+                gameCamera,
+                false,
+                ai.scanRange
+            ) };
+
+            size_t pathSize{ path.size() };
+
+            //* Path is valid: has at least 2 entries (start and target) -> Multi-frame action: move
+            //* TODO: Check all enemies->next position to avoid two enemies moving to the same spot
+            if ( pathSize > 2
+                 && !CollisionSystem::checkCollision(
+                     map.tiles,
+                     map.enemies,
+                     path.rbegin()[1],
+                     heroPosition
+                 ) )
+            {
+                //* Prepare multi-frame action
+                MovementSystem::prepareByFromTo(
+                    movement,
+                    transform,
+                    Convert::worldToTile( position ),
+                    path.rbegin()[1]
+                );
+
+                EnergyModule::consume( energy );
+
+                isActionMultiFrame = true;
+            }
+            //* Path is empty -> Instant action: wait
+            else
+            {
+                //* Wait
+                EnergyModule::consume( energy );
+            }
         }
+        // return false;
+        return isActionMultiFrame;
     }
-    // return false;
-    return isActionMultiFrame;
 }
