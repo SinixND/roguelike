@@ -56,7 +56,7 @@ void setupSceneEvents(
             );
 
             VisibilitySystem::update(
-                scene.fogs,
+                scene.game.world.currentMap->fogs,
                 scene.game.world.currentMap->tiles.visibilityIds,
                 scene.game.world.currentMap->tiles.isOpaques,
                 GameCameraModule::viewportInTiles( scene.gameCamera ),
@@ -95,7 +95,7 @@ void setupSceneEvents(
         {
             //* VisibilitySystem
             VisibilitySystem::update(
-                scene.fogs,
+                scene.game.world.currentMap->fogs,
                 scene.game.world.currentMap->tiles.visibilityIds,
                 scene.game.world.currentMap->tiles.isOpaques,
                 GameCameraModule::viewportInTiles( scene.gameCamera ),
@@ -274,11 +274,13 @@ void renderOutput(
     }
 
     //* VisibilitySystem
-    for ( size_t idx{ 0 }; idx < scene.fogs.size(); ++idx )
+    auto const& fogs{ scene.game.world.currentMap->fogs };
+
+    for ( size_t idx{ 0 }; idx < fogs.size(); ++idx )
     {
         RenderSystem::renderFog(
-            Convert::tileToWorld( scene.fogs.key( idx ) ),
-            scene.fogs.values().at( idx )
+            Convert::tileToWorld( fogs.key( idx ) ),
+            fogs.values().at( idx )
         );
     }
 

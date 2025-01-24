@@ -5,17 +5,20 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Refactor parameters to low/member level ( if < 3 members used )
-    [Status] App folder done; Continue with Game folder
-    - Parameter order -> Check `DesignGuideline.md` for fake return
+- [ ] Refactor
+    [Status] Current: Game folder -> Map done
+    - [ ] Refactor parameters to low/member level ( if < 3 members used )
+        - Parameter order -> Check `DesignGuideline.md` for fake return
+    - [ ] Refactor to DenseMap<size_t, Type> (instead of SparseSet -> check emscripten)
+    - [ ] Restructure: 
+        - [ ] main { App { Scene, Game }}
+        - [ ] World => Levels
+        - [ ] World/Levels { Fogs }
+    - [ ] Check for struct/class invariants
+        - Refactor: Extract possible NMNF functions
 
 
 ## Shortterm
-- [ ] Refactor to DenseMap<size_t, Type> (instead of SparseSet -> check emscripten)
-- [ ] Restructure: main { App { Scene, Game { World=>Levels, Fogs(?) }}}
-- [ ] Check for struct/class invariants
-    - Refactor: Extract possible NMNF functions
-
 - [ ] Fix web bug -> cursor not moving when mouse active
 - [ ] Split Component(temp) and Data(persistent)? (existential)
 - [ ] Implement ncurses

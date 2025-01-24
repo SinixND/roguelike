@@ -10,7 +10,6 @@
 #include "InputId.h"
 #include "Panels.h"
 #include "RenderSystem.h"
-#include "VisibilitySystem.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -23,7 +22,6 @@ struct Scene
     RenderData renderData{};
 
     snx::DenseMap<Vector2I, Chunk> chunks{};
-    snx::DenseMap<Vector2I, Fog> fogs{};
 
 #if defined( DEBUG )
     static inline Camera2D gcam{};

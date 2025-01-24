@@ -40,6 +40,7 @@ namespace EnergyModule
 
     bool regenerate( EnergyComponent& energy )
     {
+        //* If already full
         if ( energy.currentEnergy >= energy.maxEnergy )
         {
             return false;
@@ -53,7 +54,7 @@ namespace EnergyModule
             return true;
         }
 
-        //* Ensure energy does not exceed maxEnergy
+        //* Energy full: Ensure energy does not exceed maxEnergy
         energy.currentEnergy = energy.maxEnergy;
         energy.state = EnergyState::READY;
 

@@ -4,7 +4,7 @@
 #include "Convert.h"
 #include "DamageComponent.h"
 #include "DenseMap.h"
-#include "EnemyData.h"
+#include "EnemiesData.h"
 #include "EnergyComponent.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
@@ -18,6 +18,43 @@
 #include "raylibEx.h"
 #include <cstddef>
 #include <vector>
+
+void Enemies::insertSingle(
+    TransformComponent const& transform,
+    MovementComponent const& movement,
+    EnergyComponent const& energy,
+    HealthComponent const& health,
+    DamageComponent const& damage,
+    int scanRange,
+    Vector2I const& tilePosition,
+    RenderId renderId
+)
+{
+    size_t enemyId{ idManager.requestId() };
+
+    ids.insert( tilePosition, enemyId );
+    positions.insert( enemyId, Convert::tileToWorld( tilePosition ) );
+    renderIds.insert( enemyId, renderId );
+    transforms.insert( enemyId, transform );
+    movements.insert( enemyId, movement );
+    energies.insert( enemyId, energy );
+    healths.insert( enemyId, health );
+    damages.insert( enemyId, damage );
+    ais.insert( enemyId, AIComponent{ scanRange } );
+}
+
+void Enemies::remove( size_t id )
+{
+    ids.erase( Convert::worldToTile( positions.at( id ) ) );
+    positions.erase( id );
+    renderIds.erase( id );
+    transforms.erase( id );
+    movements.erase( id );
+    energies.erase( id );
+    healths.erase( id );
+    damages.erase( id );
+    ais.erase( id );
+}
 
 bool isSpawnPositionValid(
     Tiles const& tiles,
@@ -73,31 +110,16 @@ Vector2I getRandomPosition(
     }
 }
 
-[[nodiscard]]
-Enemies const& insertSingle(
-    Enemies& enemies,
-    TransformComponent const& transform,
-    MovementComponent const& movement,
-    EnergyComponent const& energy,
-    HealthComponent const& health,
-    DamageComponent const& damage,
-    Vector2I const& tilePosition,
-    size_t enemyId,
-    RenderId renderId,
-    int scanRange
-)
+EnemiesData::EnemyData getEnemyData( RenderId renderId )
 {
-    enemies.ids.insert( tilePosition, enemyId );
-    enemies.positions.insert( enemyId, Convert::tileToWorld( tilePosition ) );
-    enemies.renderIds.insert( enemyId, renderId );
-    enemies.transforms.insert( enemyId, transform );
-    enemies.movements.insert( enemyId, movement );
-    enemies.energies.insert( enemyId, energy );
-    enemies.healths.insert( enemyId, health );
-    enemies.damages.insert( enemyId, damage );
-    enemies.ais.insert( enemyId, AIComponent{ scanRange } );
-
-    return enemies;
+    switch ( renderId )
+    {
+        default:
+        case RenderId::GOBLIN:
+        {
+            return EnemiesData::goblin;
+        }
+    }
 }
 
 namespace EnemiesModule
@@ -117,32 +139,22 @@ namespace EnemiesModule
         {
             return enemies;
         }
-        size_t enemyId{ enemies.idManager.requestId() };
 
-        switch ( renderId )
-        {
-            default:
-            case RenderId::GOBLIN:
-            {
-                enemies = insertSingle(
-                    enemies,
-                    TransformComponent{},
-                    MovementComponent{},
-                    EnergyComponent{
-                        EnemyData::goblinEnergyMax,
-                        EnemyData::goblinEnergyRegenBase
-                    },
-                    HealthComponent{ EnemyData::goblinHealthBase },
-                    DamageComponent{ EnemyData::goblinDamageBase },
-                    tilePosition,
-                    enemyId,
-                    RenderId::GOBLIN,
-                    EnemyData::goblinScanRange
-                );
+        EnemiesData::EnemyData enemyData{ getEnemyData( renderId ) };
 
-                break;
-            }
-        }
+        enemies.insertSingle(
+            TransformComponent{},
+            MovementComponent{},
+            EnergyComponent{
+                enemyData.energyMax,
+                enemyData.energyRegenBase
+            },
+            HealthComponent{ enemyData.healthBase },
+            DamageComponent{ enemyData.damageBase },
+            enemyData.scanRange,
+            tilePosition,
+            RenderId::GOBLIN
+        );
 
         return enemies;
     }
@@ -168,13 +180,15 @@ namespace EnemiesModule
         return enemies;
     }
 
-    Enemies const& fillEnemies(
+    Enemies const& createForLevel(
         Enemies& enemies,
         Tiles const& tiles,
         int mapLevel
     )
     {
-        while ( enemies.renderIds.size() < static_cast<size_t>( ( mapLevel + 1 ) * 3 ) )
+        size_t const maxEnemies{ static_cast<size_t>( ( mapLevel + 1 ) * 3 ) };
+
+        while ( enemies.renderIds.size() < maxEnemies )
         {
             enemies = createAtRandomPosition(
                 enemies,
@@ -182,24 +196,6 @@ namespace EnemiesModule
                 RenderId::GOBLIN
             );
         }
-
-        return enemies;
-    }
-
-    Enemies const& remove(
-        Enemies& enemies,
-        size_t id
-    )
-    {
-        enemies.ids.erase( Convert::worldToTile( enemies.positions.at( id ) ) );
-        enemies.positions.erase( id );
-        enemies.renderIds.erase( id );
-        enemies.transforms.erase( id );
-        enemies.movements.erase( id );
-        enemies.energies.erase( id );
-        enemies.healths.erase( id );
-        enemies.damages.erase( id );
-        enemies.ais.erase( id );
 
         return enemies;
     }
@@ -219,12 +215,13 @@ namespace EnemiesModule
         return isEnemyReady;
     }
 
-    Enemies const& update(
+    Enemies const& updateMovements(
         Enemies& enemies,
         Vector2 const& heroPosition,
         float dt
     )
     {
+        //* Cache current position for later comparison
         Vector2* currentPosition{};
         Vector2I oldPosition{};
 
@@ -245,6 +242,7 @@ namespace EnemiesModule
                 dt
             );
 
+            //* Update position info
             if ( oldPosition != Convert::worldToTile( *currentPosition ) )
             {
                 enemies.ids.changeKey(
@@ -290,9 +288,7 @@ namespace EnemiesModule
             //* Kill enemy at 0 health
             if ( enemies.healths.values().at( idx ).currentHealth <= 0 )
             {
-                enemies = remove(
-                    enemies,
-                    enemies.ids.values().at( idx )
+                enemies.remove( enemies.ids.values().at( idx )
                 );
 
                 //* Spawn new enemy

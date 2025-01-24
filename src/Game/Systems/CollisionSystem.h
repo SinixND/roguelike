@@ -2,7 +2,7 @@
 #define IG20240914212555
 
 struct Tiles;
-struct Enemies;
+class Enemies;
 struct Objects;
 struct Vector2I;
 

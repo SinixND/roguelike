@@ -9,7 +9,7 @@ struct MovementComponent;
 struct Vector2;
 struct EnergyComponent;
 struct Map;
-struct Enemies;
+class Enemies;
 
 namespace MovementSystem
 {

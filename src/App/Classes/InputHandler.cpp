@@ -33,7 +33,7 @@ namespace InputModule
         if ( ( inputHandler->isModifierActive
                && !inputHandler->currentKey )
 #if !defined( TERMUX )
-             || IsKeyPressedRepeat( inputHandler.lastKey )
+             || IsKeyPressedRepeat( inputHandler->lastKey )
 #endif
         )
         {
