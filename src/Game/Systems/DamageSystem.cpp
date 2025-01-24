@@ -1,14 +1,18 @@
 #include "DamageSystem.h"
+
 #include "DamageComponent.h"
 #include "HealthComponent.h"
 
-void DamageSystem::attack(
-    DamageComponent const& attackerDamage,
-    HealthComponent& defenderHealth
-)
+namespace DamageSystem
 {
-    HealthModule::damage(
-        defenderHealth,
-        DamageModule::damageRNG( attackerDamage )
-    );
+    void attack(
+        DamageComponent const& attackerDamage,
+        HealthComponent& defenderHealth
+    )
+    {
+        HealthModule::damage(
+            defenderHealth,
+            DamageModule::damageRNG( attackerDamage )
+        );
+    }
 }

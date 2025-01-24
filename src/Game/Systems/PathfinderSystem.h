@@ -7,38 +7,6 @@
 struct Map;
 struct GameCamera;
 
-struct RatedTile
-{
-    Vector2I tilePosition{};
-    Vector2I distanceToTarget{};
-    int stepsNeeded{};
-    RatedTile* ancestor{ nullptr };
-
-    RatedTile(
-        Vector2I const& tilePosition,
-        Vector2I const& target,
-        int stepsNeeded,
-        RatedTile* ancestor = nullptr
-    )
-        : tilePosition( tilePosition )
-        , distanceToTarget( Vector2Subtract( target, tilePosition ) )
-        , stepsNeeded( stepsNeeded )
-        , ancestor( ancestor )
-    {
-    }
-};
-
-namespace RatedTileModule
-{
-    //* Heuristic used to rate tiles
-    int getRating( RatedTile const& ratedTile );
-
-    void reconstructPath(
-        RatedTile const& ratedTile,
-        std::vector<Vector2I>& path
-    );
-}
-
 namespace PathfinderSystem
 {
     //* Returns path from target (front()) to start (included, back())
