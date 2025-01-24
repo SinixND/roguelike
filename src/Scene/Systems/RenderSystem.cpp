@@ -1,5 +1,6 @@
 #include "RenderSystem.h"
 #include "Data/TextureData.h"
+#include "Fog.h"
 #include "RenderData.h"
 #include "raylibEx.h"
 

@@ -8,6 +8,9 @@
 #include <unordered_set>
 #include <vector>
 
+enum class Fog;
+enum class VisibilityId;
+
 struct Shadow
 {
     float slopeLeft{};
@@ -78,14 +81,6 @@ namespace ShadowModule
         int octantPositionHeight
     );
 }
-
-enum class Fog
-{
-    TRANSPARENT,
-    OPAQUE,
-};
-
-enum class VisibilityId;
 
 namespace VisibilitySystem
 {

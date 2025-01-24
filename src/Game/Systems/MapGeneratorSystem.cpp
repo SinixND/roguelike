@@ -201,7 +201,7 @@ Map createGridRooms( int level )
     //     EventId::nextLevel);
 
     //* Add enemies
-    map.enemies = EnemiesModule::fillEnemies(
+    map.enemies = EnemiesModule::createForLevel(
         map.enemies,
         map.tiles,
         level

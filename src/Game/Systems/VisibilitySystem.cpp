@@ -4,6 +4,7 @@
 
 #include "Convert.h"
 #include "DenseMap.h"
+#include "Fog.h"
 #include "VisibilityId.h"
 #include "raylibEx.h"
 #include <algorithm>

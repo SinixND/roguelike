@@ -16,8 +16,9 @@ struct Vector2I;
 struct Map;
 struct Tiles;
 
-struct Enemies
+class Enemies
 {
+public:
     snx::DenseMap<Vector2I, size_t> ids{};
     snx::DenseMap<size_t, AIComponent> ais{};
     snx::DenseMap<size_t, Vector2> positions{};
@@ -28,6 +29,21 @@ struct Enemies
     snx::DenseMap<size_t, HealthComponent> healths{};
     snx::DenseMap<size_t, DamageComponent> damages{};
 
+public:
+    void insertSingle(
+        TransformComponent const& transform,
+        MovementComponent const& movement,
+        EnergyComponent const& energy,
+        HealthComponent const& health,
+        DamageComponent const& damage,
+        int scanRange,
+        Vector2I const& tilePosition,
+        RenderId renderId
+    );
+
+    void remove( size_t id );
+
+private:
     snx::IdManager idManager{};
 };
 
@@ -49,7 +65,7 @@ namespace EnemiesModule
     );
 
     [[nodiscard]]
-    Enemies const& fillEnemies(
+    Enemies const& createForLevel(
         Enemies& enemies,
         Tiles const& tiles,
         int mapLevel
@@ -61,15 +77,17 @@ namespace EnemiesModule
         size_t id
     );
 
+    //* Returns if an enemy is ready
     bool regenerate( snx::DenseMap<size_t, EnergyComponent>* energies );
 
     [[nodiscard]]
-    Enemies const& update(
+    Enemies const& updateMovements(
         Enemies& enemies,
         Vector2 const& heroPosition,
         float dt
     );
 
+    //* Returns the id of the first ready enemy
     size_t getActive(
         snx::DenseMap<size_t, EnergyComponent> const& energies,
         snx::DenseMap<size_t, AIComponent> const& ais,

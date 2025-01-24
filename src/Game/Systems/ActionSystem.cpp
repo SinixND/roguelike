@@ -6,6 +6,7 @@
 #include "CollisionSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
+#include "DamageComponent.h"
 #include "DamageSystem.h"
 #include "Directions.h"
 #include "GameCamera.h"
@@ -22,15 +23,16 @@
 #include <raymath.h>
 
 void performAttack(
-    Hero& hero,
+    // Hero& hero,
     Enemies& enemies,
+    DamageComponent const& damage,
     Vector2I const& target
 )
 {
     snx::Logger::log( "Hero deals " );
 
     DamageSystem::attack(
-        hero.damage,
+        damage,
         enemies.healths.at(
             enemies.ids.at(
                 target
@@ -57,8 +59,8 @@ bool processDirectionalInput(
     if ( map.enemies.ids.contains( target ) )
     {
         performAttack(
-            hero,
             map.enemies,
+            hero.damage,
             target
         );
 
@@ -186,8 +188,8 @@ namespace ActionSystem
                     if ( map.enemies.ids.contains( path.rbegin()[1] ) )
                     {
                         performAttack(
-                            hero,
                             map.enemies,
+                            hero.damage,
                             path.rbegin()[1]
                         );
 
