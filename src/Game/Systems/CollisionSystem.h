@@ -3,7 +3,7 @@
 
 struct Tiles;
 class Enemies;
-struct Objects;
+class Objects;
 struct Vector2I;
 
 namespace CollisionSystem

@@ -174,31 +174,35 @@ void setupSceneEvents(
                 + "\n"
             );
 
-            if ( scene.game.world.currentMap->objects.positions.contains( cursorPos ) )
+            Objects& objects{ scene.game.world.currentMap->objects };
+
+            if ( objects.ids.contains( Convert::worldToTile( cursor.position ) ) )
             {
+                size_t objectId{ objects.ids.at( Convert::worldToTile( cursor.position ) ) };
+
                 snx::debug::cliLog( "OBJECT\n" );
 
                 snx::debug::cliLog(
                     "\nName: "
-                    + scene.game.world.currentMap->objects.names.at( cursorPos )
+                    + scene.game.world.currentMap->objects.names.at( objectId )
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "\nActions: "
-                    + scene.game.world.currentMap->objects.actions.at( cursorPos )
+                    + scene.game.world.currentMap->objects.actions.at( objectId )
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "RenderId: "
-                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.renderIds.at( cursorPos ) ) )
+                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.renderIds.at( objectId ) ) )
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "Event: "
-                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.events.at( cursorPos ) ) )
+                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.events.at( objectId ) ) )
                     + "\n"
                 );
             }

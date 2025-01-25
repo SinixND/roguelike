@@ -3,7 +3,7 @@
 
 struct Panels;
 struct Hero;
-struct Objects;
+class Objects;
 struct Vector2I;
 
 namespace PanelSystem

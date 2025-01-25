@@ -20,6 +20,7 @@ class Enemies
 {
 public:
     snx::DenseMap<Vector2I, size_t> ids{};
+
     snx::DenseMap<size_t, AIComponent> ais{};
     snx::DenseMap<size_t, Vector2> positions{};
     snx::DenseMap<size_t, RenderId> renderIds{};
@@ -30,7 +31,7 @@ public:
     snx::DenseMap<size_t, DamageComponent> damages{};
 
 public:
-    void insertSingle(
+    void insert(
         TransformComponent const& transform,
         MovementComponent const& movement,
         EnergyComponent const& energy,

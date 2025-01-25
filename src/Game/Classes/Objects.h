@@ -2,30 +2,36 @@
 #define IG20240908213935
 
 #include "DenseMap.h"
-#include "EventId.h"
-#include "RenderId.h"
+#include "IdManager.h"
 #include "raylibEx.h"
 #include <string>
 
-struct Objects
-{
-    snx::DenseMap<Vector2I, Vector2> positions{};
-    snx::DenseMap<Vector2I, RenderId> renderIds{};
-    snx::DenseMap<Vector2I, std::string> names{};
-    snx::DenseMap<Vector2I, std::string> actions{};
-    snx::DenseMap<Vector2I, EventId> events{};
-};
+struct Vector2;
+enum class RenderId;
+enum class EventId;
 
-namespace ObjectsModule
+class Objects
 {
-    void createSingle(
-        Objects& objects,
+public:
+    snx::DenseMap<Vector2I, size_t> ids{};
+
+    snx::DenseMap<size_t, Vector2> positions{};
+    snx::DenseMap<size_t, RenderId> renderIds{};
+    snx::DenseMap<size_t, std::string> names{};
+    snx::DenseMap<size_t, std::string> actions{};
+    snx::DenseMap<size_t, EventId> events{};
+
+public:
+    void insert(
         Vector2I const& tilePosition,
         RenderId renderId,
         std::string const& name,
         std::string const& action,
         EventId event
     );
-}
+
+private:
+    snx::IdManager idManager{};
+};
 
 #endif

@@ -181,17 +181,19 @@ namespace PanelSystem
         Vector2I const& cursorPosition
     )
     {
-        if ( !objects.names.contains( cursorPosition ) )
+        if ( !objects.ids.contains( cursorPosition ) )
         {
             return;
         }
+
+        size_t objectId{ objects.ids.at( cursorPosition ) };
 
         int fontSize{ GuiGetStyle( DEFAULT, TEXT_SIZE ) };
 
         //* Draw tag and action from tile under cursor
         DrawTextEx(
             GameFont::font(),
-            TextFormat( "Object: %s\nAction: %s", objects.names.at( cursorPosition ).c_str(), objects.actions.at( cursorPosition ).c_str() ),
+            TextFormat( "Object: %s\nAction: %s", objects.names.at( objectId ).c_str(), objects.actions.at( objectId ).c_str() ),
             Vector2{
                 panels.tileInfo.left() + ( 0.5f * GameFont::fontWidth ),
                 panels.tileInfo.top() + ( 0.5f * fontSize )
