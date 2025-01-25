@@ -178,8 +178,7 @@ Map createGridRooms( int level )
     }
 
     //* Add previous level trigger
-    ObjectsModule::createSingle(
-        map.objects,
+    map.objects.insert(
         Vector2I{
             0,
             0
@@ -363,8 +362,7 @@ namespace MapGeneratorSystem
         );
 
         //* Next level trigger
-        ObjectsModule::createSingle(
-            testRoom.objects,
+        testRoom.objects.insert(
             Vector2I{
                 0,
                 -5
@@ -402,8 +400,7 @@ namespace MapGeneratorSystem
         );
 
         //* Add next level trigger
-        ObjectsModule::createSingle(
-            startRoom.objects,
+        startRoom.objects.insert(
             Vector2I{
                 0,
                 -5

@@ -19,7 +19,7 @@
 #include <cstddef>
 #include <vector>
 
-void Enemies::insertSingle(
+void Enemies::insert(
     TransformComponent const& transform,
     MovementComponent const& movement,
     EnergyComponent const& energy,
@@ -30,17 +30,17 @@ void Enemies::insertSingle(
     RenderId renderId
 )
 {
-    size_t enemyId{ idManager.requestId() };
+    size_t id{ idManager.requestId() };
 
-    ids.insert( tilePosition, enemyId );
-    positions.insert( enemyId, Convert::tileToWorld( tilePosition ) );
-    renderIds.insert( enemyId, renderId );
-    transforms.insert( enemyId, transform );
-    movements.insert( enemyId, movement );
-    energies.insert( enemyId, energy );
-    healths.insert( enemyId, health );
-    damages.insert( enemyId, damage );
-    ais.insert( enemyId, AIComponent{ scanRange } );
+    ids.insert( tilePosition, id );
+    positions.insert( id, Convert::tileToWorld( tilePosition ) );
+    renderIds.insert( id, renderId );
+    transforms.insert( id, transform );
+    movements.insert( id, movement );
+    energies.insert( id, energy );
+    healths.insert( id, health );
+    damages.insert( id, damage );
+    ais.insert( id, AIComponent{ scanRange } );
 }
 
 void Enemies::remove( size_t id )
@@ -142,7 +142,7 @@ namespace EnemiesModule
 
         EnemiesData::EnemyData enemyData{ getEnemyData( renderId ) };
 
-        enemies.insertSingle(
+        enemies.insert(
             TransformComponent{},
             MovementComponent{},
             EnergyComponent{

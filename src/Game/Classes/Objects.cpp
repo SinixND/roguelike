@@ -7,25 +7,20 @@
 #include "raylibEx.h"
 #include <string>
 
-namespace ObjectsModule
+void Objects::insert(
+    Vector2I const& tilePosition,
+    RenderId renderId,
+    std::string const& name,
+    std::string const& action,
+    EventId event
+)
 {
-    void createSingle(
-        Objects& objects,
-        Vector2I const& tilePosition,
-        RenderId renderId,
-        std::string const& name,
-        std::string const& action,
-        EventId event
-    )
-    {
-        objects.positions[tilePosition] = Convert::tileToWorld( tilePosition );
+    size_t id{ idManager.requestId() };
 
-        objects.renderIds[tilePosition] = renderId;
-
-        objects.names[tilePosition] = name;
-
-        objects.actions[tilePosition] = action;
-
-        objects.events[tilePosition] = event;
-    }
+    ids.insert( tilePosition, id );
+    positions.insert( id, Convert::tileToWorld( tilePosition ) );
+    renderIds.insert( id, renderId );
+    names.insert( id, name );
+    actions.insert( id, action );
+    events.insert( id, event );
 }

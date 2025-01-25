@@ -227,10 +227,15 @@ namespace ActionSystem
 
             case InputId::ACT_IN_PLACE:
             {
-                Vector2I heroTilePosition{ Convert::worldToTile( hero.position ) };
+                if ( !map.objects.ids.contains( Convert::worldToTile( cursor.position ) ) )
+                {
+                    break;
+                }
+
+                size_t objectId{ map.objects.ids.at( Convert::worldToTile( hero.position ) ) };
 
                 //* Wait if nothing to interact
-                if ( !map.objects.events.contains( heroTilePosition ) )
+                if ( !map.objects.events.contains( objectId ) )
                 {
                     snx::Logger::log( "Hero waits..." );
 
@@ -241,7 +246,7 @@ namespace ActionSystem
                     break;
                 }
 
-                snx::PublisherStatic::publish( map.objects.events.at( heroTilePosition ) );
+                snx::PublisherStatic::publish( map.objects.events.at( objectId ) );
 
                 break;
             }
