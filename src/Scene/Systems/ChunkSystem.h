@@ -5,17 +5,15 @@
 
 struct Vector2I;
 struct Chunk;
-struct Vector2;
-enum class RenderId;
 struct Textures;
+class Tiles;
 
 namespace ChunkSystem
 {
     void init(
-        Textures const& textures,
         snx::DenseMap<Vector2I, Chunk>& chunks,
-        snx::DenseMap<Vector2I, Vector2> const& tilesPositions,
-        snx::DenseMap<Vector2I, RenderId> const& tilesRenderIds
+        Textures const& textures,
+        Tiles const& tiles
     );
 };
 

@@ -5,6 +5,8 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
+- [ ] Change `.at()` to `[]` for SoA access
+- [ ] Use `.ptr()` for `.contains() & .at()/[]` (uncomment in `DenseMap`)
 - [ ] Refactor
     [Status] Current: Game folder -> Map done
     - [ ] Refactor parameters to low/member level ( if < 3 members used )
@@ -19,6 +21,7 @@ Platforms: Linux, Windows, Browser
 
 
 ## Shortterm
+- [ ] Separate fog calculation from visibility calculation
 - [ ] Fix web bug -> cursor not moving when mouse active
 - [ ] Split Component(temp) and Data(persistent)? (existential)
 - [ ] Implement ncurses

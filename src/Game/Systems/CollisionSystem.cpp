@@ -35,7 +35,7 @@ namespace CollisionSystem
             //* Next tilePosition unit moves to
             enemies.ids.contains( tilePositionToCheck )
             // || map.objects_.getIsSolids().contains(tilePositionToCheck)
-            || tiles.isSolids.contains( tilePositionToCheck )
+            || tiles.isSolids.contains( tiles.ids.at( tilePositionToCheck ) )
             || Vector2Equals( tilePositionToCheck, heroPosition )
             || checkCollisionWithNextPosition(
                 enemies,

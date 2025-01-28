@@ -63,13 +63,19 @@ bool isSpawnPositionValid(
 )
 {
     //* Check if random position is
-    //* - on map
+    //* - on map (-> contains id)
     //* - not visible
     //* - not solid
     //* - not occupied by other enemy
-    if ( tiles.positions.contains( tilePosition )
-         && !( tiles.visibilityIds.at( tilePosition ) == VisibilityId::VISIBILE )
-         && !tiles.isSolids.contains( tilePosition )
+    if ( !tiles.ids.contains( tilePosition ) )
+    {
+        return false;
+    }
+
+    size_t tileId{ tiles.ids.at( tilePosition ) };
+
+    if ( !( tiles.visibilityIds.at( tileId ) == VisibilityId::VISIBILE )
+         && !tiles.isSolids.contains( tileId )
          && !enemiesIds.contains( tilePosition ) )
     {
         return true;

@@ -26,8 +26,7 @@ void addTiles(
     {
         for ( int y{ 0 }; y < rectangle.height(); ++y )
         {
-            TilesModule::createSingle(
-                tiles,
+            tiles.insert(
                 Vector2I{
                     rectangle.left() + x,
                     rectangle.top() + y
@@ -308,8 +307,7 @@ namespace MapGeneratorSystem
         );
 
         //* Tiles
-        TilesModule::createSingle(
-            testRoom.tiles,
+        testRoom.tiles.insert(
             Vector2I{
                 0,
                 -1
@@ -319,8 +317,7 @@ namespace MapGeneratorSystem
             true
         );
 
-        TilesModule::createSingle(
-            testRoom.tiles,
+        testRoom.tiles.insert(
             Vector2I{
                 5,
                 6
@@ -330,8 +327,7 @@ namespace MapGeneratorSystem
             true
         );
 
-        TilesModule::createSingle(
-            testRoom.tiles,
+        testRoom.tiles.insert(
             Vector2I{
                 6,
                 5
@@ -341,8 +337,7 @@ namespace MapGeneratorSystem
             true
         );
 
-        TilesModule::createSingle(
-            testRoom.tiles,
+        testRoom.tiles.insert(
             Vector2I{
                 5,
                 5
@@ -352,8 +347,7 @@ namespace MapGeneratorSystem
             true
         );
 
-        TilesModule::createSingle(
-            testRoom.tiles,
+        testRoom.tiles.insert(
             Vector2I{
                 -6,
                 5

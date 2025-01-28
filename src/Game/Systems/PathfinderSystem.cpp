@@ -181,7 +181,7 @@ bool checkRatingList(
                 )
             };
 
-            //* Needs to be in map panel
+            //* Needs to be in viewport
             if ( !CheckCollisionPointRec(
                      Convert::tileToScreen(
                          newTilePosition,
@@ -238,9 +238,16 @@ bool checkRatingList(
             //* - Is invisible
             //* - Not accessible
             //* - Steps needed exceed maxRange
-            if ( !map.tiles.visibilityIds.contains( newTilePosition )
-                 || ( map.tiles.visibilityIds.at( newTilePosition ) == VisibilityId::INVISIBLE )
-                 || map.tiles.isSolids.contains( newTilePosition )
+            if ( !map.tiles.ids.contains( newTilePosition ) )
+            {
+                return false;
+            }
+
+            size_t tileId{ map.tiles.ids.at( newTilePosition ) };
+
+            if ( !map.tiles.visibilityIds.contains( tileId )
+                 || ( map.tiles.visibilityIds.at( tileId ) == VisibilityId::INVISIBLE )
+                 || map.tiles.isSolids.contains( tileId )
                  || ( ( maxRange > 0 ) && ( newRatedTile.stepsNeeded > maxRange ) ) )
             {
                 //* Invalid! Add to ignore set so it doesn't get checked again
@@ -326,10 +333,17 @@ namespace PathfinderSystem
         //* - Is invisible
         //* - Not accessible
         //* - Equal to start
-        if ( !map.tiles.visibilityIds.contains( target )
+        if ( !map.tiles.ids.contains( target ) )
+        {
+            return path;
+        }
+
+        size_t tileId{ map.tiles.ids.at( target ) };
+
+        if ( !map.tiles.visibilityIds.contains( tileId )
              || ( skipInvisibleTiles
-                  && ( map.tiles.visibilityIds.at( target ) == VisibilityId::INVISIBLE ) )
-             || map.tiles.isSolids.contains( target )
+                  && ( map.tiles.visibilityIds.at( tileId ) == VisibilityId::INVISIBLE ) )
+             || map.tiles.isSolids.contains( tileId )
              || ( start == target ) )
         {
             return path;

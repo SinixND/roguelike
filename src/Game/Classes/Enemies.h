@@ -14,7 +14,7 @@
 
 struct Vector2I;
 struct Map;
-struct Tiles;
+class Tiles;
 
 class Enemies
 {

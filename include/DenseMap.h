@@ -218,6 +218,27 @@ namespace snx
             return at( key );
         }
 
+        // Type const& operator[]( Key const& key ) const
+        // {
+        //     return values_[keyToIndex_[key]];
+        // }
+        //
+        // //* Allow non-const call
+        // Type& operator[]( Key const& key )
+        // {
+        //     return const_cast<Type&>( std::as_const( *this )[key] );
+        // }
+        //
+        // Type* ptr( Key const& key ) const
+        // {
+        //     if ( keyToIndex_.find( key ) == keyToIndex_.end() )
+        //     {
+        //         return nullptr;
+        //     }
+        //
+        //     return &( values_[keyToIndex_[key]] );
+        // }
+
         bool contains( Key const& key ) const
         {
             return keyToIndex_.contains( key );
@@ -239,10 +260,6 @@ namespace snx
         std::vector<Type>& values()
         {
             return const_cast<std::vector<Type>&>( std::as_const( *this ).values() );
-        }
-
-        void validate()
-        {
         }
 
     private:

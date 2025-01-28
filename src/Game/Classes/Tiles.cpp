@@ -1,4 +1,5 @@
 #include "Tiles.h"
+
 #include "Convert.h"
 #include "DenseMap.h"
 #include "RenderId.h"
@@ -7,63 +8,52 @@
 #include <algorithm>
 #include <unordered_set>
 
-void updateMapSize(
-    Tiles& tiles,
-    Vector2I const& tilePosition
+void Tiles::insert(
+    Vector2I const& tilePosition,
+    RenderId renderId,
+    bool isSolid,
+    bool isOpaque,
+    VisibilityId visibilityId
 )
 {
-    tiles.mapSize = RectangleExI{
+    size_t id{ idManager.requestId() };
+
+    ids.insert_or_assign( tilePosition, id );
+
+    positions.insert_or_assign( id, Convert::tileToWorld( tilePosition ) );
+
+    renderIds.insert_or_assign( id, renderId );
+
+    visibilityIds.insert_or_assign( id, visibilityId );
+
+    if ( isSolid )
+    {
+        isSolids.insert( id );
+    }
+
+    else
+    {
+        isSolids.erase( id );
+    }
+
+    if ( isOpaque )
+    {
+        isOpaques.insert( id );
+    }
+
+    else
+    {
+        isOpaques.erase( id );
+    }
+
+    mapSize = RectangleExI{
         Vector2I{
-            std::min( tilePosition.x, tiles.mapSize.left() ),
-            std::min( tilePosition.y, tiles.mapSize.top() )
+            std::min( tilePosition.x, mapSize.left() ),
+            std::min( tilePosition.y, mapSize.top() )
         },
         Vector2I{
-            std::max( tilePosition.x, tiles.mapSize.right() ),
-            std::max( tilePosition.y, tiles.mapSize.bottom() )
+            std::max( tilePosition.x, mapSize.right() ),
+            std::max( tilePosition.y, mapSize.bottom() )
         }
     };
-}
-
-namespace TilesModule
-{
-    void createSingle(
-        Tiles& tiles,
-        Vector2I const& tilePosition,
-        RenderId renderId,
-        bool isSolid,
-        bool isOpaque,
-        VisibilityId visibilityId
-    )
-    {
-        tiles.positions[tilePosition] = Convert::tileToWorld( tilePosition );
-
-        tiles.renderIds[tilePosition] = renderId;
-
-        tiles.visibilityIds[tilePosition] = visibilityId;
-
-        if ( isSolid )
-        {
-            tiles.isSolids.insert( tilePosition );
-        }
-
-        else
-        {
-            tiles.isSolids.erase( tilePosition );
-        }
-
-        if ( isOpaque )
-        {
-            tiles.isOpaques.insert( tilePosition );
-        }
-
-        else
-        {
-            tiles.isOpaques.erase( tilePosition );
-        }
-
-        updateMapSize(
-            tiles,
-            tilePosition
-        );
-    }
 }

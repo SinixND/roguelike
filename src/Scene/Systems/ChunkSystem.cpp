@@ -6,6 +6,7 @@
 #include "Convert.h"
 #include "DenseMap.h"
 #include "RenderSystem.h"
+#include "Tiles.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -33,10 +34,9 @@ void verifyRequiredChunkExists(
 namespace ChunkSystem
 {
     void init(
-        Textures const& textures,
         snx::DenseMap<Vector2I, Chunk>& chunks,
-        snx::DenseMap<Vector2I, Vector2> const& tilesPositions,
-        snx::DenseMap<Vector2I, RenderId> const& tilesRenderIds
+        Textures const& textures,
+        Tiles const& tiles
     )
     {
         //* Reset
@@ -48,7 +48,7 @@ namespace ChunkSystem
         chunks.clear();
 
         //* Create necessary chunks
-        for ( Vector2 const& position : tilesPositions )
+        for ( Vector2 const& position : tiles.positions )
         {
             verifyRequiredChunkExists(
                 Convert::worldToTile( position ),
@@ -72,15 +72,17 @@ namespace ChunkSystem
                 {
                     Vector2I tilePosition{ x, y };
 
-                    if ( !tilesRenderIds.contains( tilePosition ) )
+                    if ( !tiles.ids.contains( tilePosition ) )
                     {
                         continue;
                     }
 
+                    size_t tileId{ tiles.ids.at( tilePosition ) };
+
                     RenderSystem::renderToChunk(
                         textures,
-                        tilesRenderIds.at( tilePosition ),
-                        tilesPositions.at( tilePosition ),
+                        tiles.renderIds.at( tileId ),
+                        tiles.positions.at( tileId ),
                         chunk
                     );
                 }

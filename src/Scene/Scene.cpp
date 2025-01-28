@@ -55,13 +55,12 @@ void setupSceneEvents(
                 scene.game.hero.position
             );
 
-            VisibilitySystem::update(
-                scene.game.world.currentMap->fogs,
-                scene.game.world.currentMap->tiles.visibilityIds,
-                scene.game.world.currentMap->tiles.isOpaques,
+            VisibilitySystem::calculateVisibilities(
+                &scene.game.world.currentMap->fogs,
+                &scene.game.world.currentMap->tiles,
                 GameCameraModule::viewportInTiles( scene.gameCamera ),
-                scene.game.hero.visionRange,
-                Convert::worldToTile( scene.game.hero.position )
+                Convert::worldToTile( scene.game.hero.position ),
+                scene.game.hero.visionRange
             );
         }
     );
@@ -94,13 +93,12 @@ void setupSceneEvents(
         [&]()
         {
             //* VisibilitySystem
-            VisibilitySystem::update(
-                scene.game.world.currentMap->fogs,
-                scene.game.world.currentMap->tiles.visibilityIds,
-                scene.game.world.currentMap->tiles.isOpaques,
+            VisibilitySystem::calculateVisibilities(
+                &scene.game.world.currentMap->fogs,
+                &scene.game.world.currentMap->tiles,
                 GameCameraModule::viewportInTiles( scene.gameCamera ),
-                scene.game.hero.visionRange,
-                Convert::worldToTile( scene.game.hero.position )
+                Convert::worldToTile( scene.game.hero.position ),
+                scene.game.hero.visionRange
             );
         },
         true
@@ -111,10 +109,9 @@ void setupSceneEvents(
         [&]()
         {
             ChunkSystem::init(
-                scene.renderData.textures,
                 scene.chunks,
-                scene.game.world.currentMap->tiles.positions,
-                scene.game.world.currentMap->tiles.renderIds
+                scene.renderData.textures,
+                scene.game.world.currentMap->tiles
             );
         }
     );
@@ -126,10 +123,14 @@ void setupSceneEvents(
         {
             Vector2I cursorPos{ Convert::worldToTile( cursor.position ) };
 
-            if ( !scene.game.world.currentMap->tiles.positions.contains( cursorPos ) )
+            Tiles& tiles{ scene.game.world.currentMap->tiles };
+
+            if ( !tiles.ids.contains( cursorPos ) )
             {
                 return;
             }
+
+            size_t tileId{ tiles.ids.at( cursorPos ) };
 
             snx::debug::cliPrint( "\n" );
             snx::debug::cliLog( "TILE:\n" );
@@ -144,33 +145,33 @@ void setupSceneEvents(
 
             snx::debug::cliLog(
                 "WorldPixel: "
-                + std::to_string( scene.game.world.currentMap->tiles.positions.at( cursorPos ).x )
+                + std::to_string( tiles.positions.at( tileId ).x )
                 + ", "
-                + std::to_string( scene.game.world.currentMap->tiles.positions.at( cursorPos ).y )
+                + std::to_string( tiles.positions.at( tileId ).y )
                 + "\n"
             );
 
             snx::debug::cliLog(
                 "RenderId: "
-                + std::to_string( static_cast<int>( scene.game.world.currentMap->tiles.renderIds.at( cursorPos ) ) )
+                + std::to_string( static_cast<int>( tiles.renderIds.at( tileId ) ) )
                 + "\n"
             );
 
             snx::debug::cliLog(
                 "VisibilityId: "
-                + std::to_string( static_cast<int>( scene.game.world.currentMap->tiles.visibilityIds.at( cursorPos ) ) )
+                + std::to_string( static_cast<int>( tiles.visibilityIds.at( tileId ) ) )
                 + "\n"
             );
 
             snx::debug::cliLog(
                 "IsSolid: "
-                + std::to_string( scene.game.world.currentMap->tiles.isSolids.contains( cursorPos ) )
+                + std::to_string( tiles.isSolids.contains( tileId ) )
                 + "\n"
             );
 
             snx::debug::cliLog(
                 "IsOpaque: "
-                + std::to_string( scene.game.world.currentMap->tiles.isOpaques.contains( cursorPos ) )
+                + std::to_string( tiles.isOpaques.contains( tileId ) )
                 + "\n"
             );
 
@@ -259,13 +260,24 @@ void renderOutput(
     }
 
     //* Draw enemies
+    auto const& tiles{ scene.game.world.currentMap->tiles };
+    auto const& tileVisibilityIds{ tiles.visibilityIds };
     auto const& enemies{ scene.game.world.currentMap->enemies };
     auto const& enemyRenderIds{ enemies.renderIds.values() };
     auto const& enemyPositions{ enemies.positions.values() };
 
     for ( size_t idx{ 0 }; idx < enemyRenderIds.size(); ++idx )
     {
-        if ( scene.game.world.currentMap->tiles.visibilityIds.at( Convert::worldToTile( enemyPositions.at( idx ) ) ) != VisibilityId::VISIBILE )
+        if (
+            tileVisibilityIds.at(
+                tiles.ids.at(
+                    Convert::worldToTile(
+                        enemyPositions.at( idx )
+                    )
+                )
+            )
+            != VisibilityId::VISIBILE
+        )
         {
             continue;
         }
@@ -364,10 +376,9 @@ namespace SceneModule
         RenderSystem::loadRenderData( scene.renderData );
 
         ChunkSystem::init(
-            scene.renderData.textures,
             scene.chunks,
-            scene.game.world.currentMap->tiles.positions,
-            scene.game.world.currentMap->tiles.renderIds
+            scene.renderData.textures,
+            scene.game.world.currentMap->tiles
         );
 
         //* Setup events

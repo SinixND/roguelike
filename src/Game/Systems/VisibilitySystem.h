@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include <vector>
 
+class Tiles;
 enum class Fog;
 enum class VisibilityId;
 
@@ -84,29 +85,13 @@ namespace ShadowModule
 
 namespace VisibilitySystem
 {
-    void update(
-        snx::DenseMap<Vector2I, Fog>& fogs,
-        snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
-        std::unordered_set<Vector2I> const& isOpaques,
-        RectangleExI const& viewportInTiles,
-        int visionRange,
-        Vector2I const& heroPosition
-    );
-
     //* If any part of tile is visible . whole tile is visible (so that "tunnel walls" stay visible)
-    void calculateVisibilitiesInOctant(
-        snx::DenseMap<Vector2I, Fog>& fogs,
-        int octant,
-        snx::DenseMap<Vector2I, VisibilityId>& visibilityIds,
-        std::unordered_set<Vector2I> const& isOpaques,
+    void calculateVisibilities(
+        snx::DenseMap<Vector2I, Fog>* fogsIO,
+        Tiles* tilesIO,
+        RectangleExI const& viewportInTiles,
         Vector2I const& heroPosition,
-        int visionRange,
-        int range
-    );
-
-    void updateShadowline(
-        std::vector<Shadow>& shadowline,
-        Vector2I const& octantPosition
+        int visionRange
     );
 };
 
