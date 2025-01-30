@@ -115,69 +115,60 @@ InputId getUserInput( InputHandler& inputHandler )
     return inputId;
 }
 
-namespace AppModule
+void App::init( AppConfig const& config )
 {
-    App const& init(
-        App& app,
-        AppConfig const& config
-    )
-    {
-        setupFrameworks( config );
+    setupFrameworks( config );
 
-        snx::PublisherStatic::addSubscriber(
-            EventId::CURSOR_TOGGLE,
-            [&]()
-            {
-                CursorModule::toggle( app.cursor );
-            }
-        );
-
-        SceneModule::init(
-            app.scene,
-            app.cursor
-        );
-
-        return app;
-    }
-
-    void run( App& app )
-    {
-#if defined( EMSCRIPTEN )
-        emscripten_set_main_loop_arg(
-            emscriptenLoop,
-            &app,
-            60 /*FPS*/,
-            1 /*Simulate infinite loop*/
-        );
-#else
-        while ( !( WindowShouldClose() ) )
+    snx::PublisherStatic::addSubscriber(
+        EventId::CURSOR_TOGGLE,
+        [&]()
         {
-            updateWindowState();
-#if defined( DEBUG )
-            updateDeveloperMode();
-#endif
-
-            app.currentInputId = getUserInput( app.inputHandler );
-
-            app.dt = GetFrameTime();
-
-            SceneModule::update(
-                app.scene,
-                app.cursor,
-                app.currentInputId,
-                app.dt
-            );
+            CursorModule::toggle( cursor );
         }
-#endif
-    }
+    );
 
-    void deinit( App& app )
-    {
-        GameFont::unload();
-        SceneModule::deinitialize( app.scene );
-
-        //* Close window and opengl context
-        CloseWindow();
-    }
+    SceneModule::init(
+        scene,
+        cursor
+    );
 }
 
+void App::run()
+{
+#if defined( EMSCRIPTEN )
+    emscripten_set_main_loop_arg(
+        emscriptenLoop,
+        &app,
+        60 /*FPS*/,
+        1 /*Simulate infinite loop*/
+    );
+#else
+    while ( !( WindowShouldClose() ) )
+    {
+        updateWindowState();
+#if defined( DEBUG )
+        updateDeveloperMode();
+#endif
+
+        currentInputId = getUserInput( inputHandler );
+
+        dt = GetFrameTime();
+
+        SceneModule::update(
+            scene,
+            cursor,
+            currentInputId,
+            dt
+        );
+    }
+#endif
+}
+
+void App::deinit()
+{
+    GameFont::unload();
+    SceneModule::deinitialize( scene );
+
+    //* Close window and opengl context
+    CloseWindow();
+}

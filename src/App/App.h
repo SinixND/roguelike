@@ -7,28 +7,25 @@
 #include "Scene.h"
 #include <raylib.h>
 
-struct App
+class App
 {
-    float dt{ 0 };
+public:
+    //* Scenes
+    Scene scene{};
 
     Cursor cursor{};
 
-    InputHandler inputHandler{};
     InputId currentInputId{ InputId::NONE };
 
-    //* Scenes
-    Scene scene{};
+    float dt{ 0 };
+
+public:
+    void init( AppConfig const& config );
+    void run();
+    void deinit();
+
+private:
+    InputHandler inputHandler{};
 };
 
-namespace AppModule
-{
-    [[nodiscard]]
-    App const& init(
-        App& app,
-        AppConfig const& config
-    );
-
-    void run( App& app );
-    void deinit( App& app );
-}
 #endif
