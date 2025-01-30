@@ -42,29 +42,24 @@ namespace snx
         }
 
         //* MODIFIERS
-        Type* assign(
+        Type& assign(
             Key const& key,
             Type const& value = Type{}
         )
         {
-            if ( !keyToIndex_.contains( key ) )
-            {
-                return nullptr;
-            }
+            ( *this )[key] = value;
 
-            at( key ) = value;
-
-            return &at( key );
+            return ( *this )[key];
         }
 
-        Type const& insert(
+        Type& insert(
             Key const& key,
             Type const& value = Type{}
         )
         {
             if ( keyToIndex_.contains( key ) )
             {
-                return at( key );
+                return ( *this )[key];
             }
 
             //* Get new list index for value before modifying values_
@@ -81,10 +76,10 @@ namespace snx
 
             assert( ( keyToIndex_.size() == indexToKey_.size() ) && "Internal mismatch!" );
 
-            return at( key );
+            return ( *this )[key];
         }
 
-        Type const& insert_or_assign(
+        Type& insert_or_assign(
             Key const& key,
             Type const& value = Type{}
         )
@@ -94,11 +89,11 @@ namespace snx
                 return insert( key, value );
             }
 
-            return *assign( key, value );
+            return assign( key, value );
         }
 
         template <typename... Args>
-        Type const& emplace(
+        Type& emplace(
             Key const& key,
             Args&&... args
         )
@@ -109,7 +104,7 @@ namespace snx
         }
 
         template <typename... Args>
-        Type const& emplace_or_assign(
+        Type& emplace_or_assign(
             Key const& key,
             Args&&... args
         )
@@ -121,7 +116,7 @@ namespace snx
                 return insert( key, value );
             }
 
-            return *assign( key, value );
+            return assign( key, value );
         }
 
         //* Moves last value to gap
@@ -196,47 +191,26 @@ namespace snx
 
         //* LOOKUP
         //* Access
-        Type const& at( Key const& key ) const
+        Type const& operator[]( Key const& key ) const
         {
-            return values_.at( keyToIndex_.at( key ) );
+            return values_[keyToIndex_.at( key )];
         }
 
-        //* Allow non-const call
-        Type& at( Key const& key )
+        //* Allow non-const calls
+        Type& operator[]( Key const& key )
         {
-            return const_cast<Type&>( std::as_const( *this ).at( key ) );
+            return const_cast<Type&>( std::as_const( *this )[key] );
         }
 
         //* Access or insert
-        Type& operator[]( Key const& key )
-        {
-            if ( !contains( key ) )
-            {
-                insert( key );
-            }
-
-            return at( key );
-        }
-
-        // Type const& operator[]( Key const& key ) const
-        // {
-        //     return values_[keyToIndex_[key]];
-        // }
-        //
-        // //* Allow non-const call
         // Type& operator[]( Key const& key )
         // {
-        //     return const_cast<Type&>( std::as_const( *this )[key] );
-        // }
-        //
-        // Type* ptr( Key const& key ) const
-        // {
-        //     if ( keyToIndex_.find( key ) == keyToIndex_.end() )
+        //     if ( !contains( key ) )
         //     {
-        //         return nullptr;
+        //         insert( key );
         //     }
         //
-        //     return &( values_[keyToIndex_[key]] );
+        //     return at( key );
         // }
 
         bool contains( Key const& key ) const
@@ -247,7 +221,7 @@ namespace snx
         //* Get key for value index
         Key const& key( size_t index ) const
         {
-            return indexToKey_.at( index );
+            return indexToKey_[index];
         }
 
         //* Return vector (contiguous memory)
@@ -260,6 +234,17 @@ namespace snx
         std::vector<Type>& values()
         {
             return const_cast<std::vector<Type>&>( std::as_const( *this ).values() );
+        }
+
+    private:
+        Type const& at( Key const& key ) const
+        {
+            return values_[keyToIndex_.at( key )];
+        }
+
+        Type& at( Key const& key )
+        {
+            return const_cast<Type&>( std::as_const( *this ).at( key ) );
         }
 
     private:

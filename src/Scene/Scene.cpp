@@ -130,7 +130,7 @@ void setupSceneEvents(
                 return;
             }
 
-            size_t tileId{ tiles.ids.at( cursorPos ) };
+            size_t tileId{ tiles.ids[cursorPos] };
 
             snx::debug::cliPrint( "\n" );
             snx::debug::cliLog( "TILE:\n" );
@@ -145,21 +145,21 @@ void setupSceneEvents(
 
             snx::debug::cliLog(
                 "WorldPixel: "
-                + std::to_string( tiles.positions.at( tileId ).x )
+                + std::to_string( tiles.positions[tileId].x )
                 + ", "
-                + std::to_string( tiles.positions.at( tileId ).y )
+                + std::to_string( tiles.positions[tileId].y )
                 + "\n"
             );
 
             snx::debug::cliLog(
                 "RenderId: "
-                + std::to_string( static_cast<int>( tiles.renderIds.at( tileId ) ) )
+                + std::to_string( static_cast<int>( tiles.renderIds[tileId] ) )
                 + "\n"
             );
 
             snx::debug::cliLog(
                 "VisibilityId: "
-                + std::to_string( static_cast<int>( tiles.visibilityIds.at( tileId ) ) )
+                + std::to_string( static_cast<int>( tiles.visibilityIds[tileId] ) )
                 + "\n"
             );
 
@@ -179,31 +179,31 @@ void setupSceneEvents(
 
             if ( objects.ids.contains( Convert::worldToTile( cursor.position ) ) )
             {
-                size_t objectId{ objects.ids.at( Convert::worldToTile( cursor.position ) ) };
+                size_t objectId{ objects.ids[Convert::worldToTile( cursor.position )] };
 
                 snx::debug::cliLog( "OBJECT\n" );
 
                 snx::debug::cliLog(
                     "\nName: "
-                    + scene.game.world.currentMap->objects.names.at( objectId )
+                    + scene.game.world.currentMap->objects.names[objectId]
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "\nActions: "
-                    + scene.game.world.currentMap->objects.actions.at( objectId )
+                    + scene.game.world.currentMap->objects.actions[objectId]
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "RenderId: "
-                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.renderIds.at( objectId ) ) )
+                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.renderIds[objectId] ) )
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "Event: "
-                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.events.at( objectId ) ) )
+                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.events[objectId] ) )
                     + "\n"
                 );
             }
@@ -214,7 +214,7 @@ void setupSceneEvents(
 
                 snx::debug::cliLog(
                     "Id: "
-                    + std::to_string( scene.game.world.currentMap->enemies.ids.at( cursorPos ) )
+                    + std::to_string( scene.game.world.currentMap->enemies.ids[cursorPos] )
                     + "\n"
                 );
             }
@@ -254,8 +254,8 @@ void renderOutput(
     {
         RenderSystem::renderTile(
             scene.renderData.textures,
-            objectRenderIds.at( idx ),
-            objectPositions.at( idx )
+            objectRenderIds[idx],
+            objectPositions[idx]
         );
     }
 
@@ -269,13 +269,9 @@ void renderOutput(
     for ( size_t idx{ 0 }; idx < enemyRenderIds.size(); ++idx )
     {
         if (
-            tileVisibilityIds.at(
-                tiles.ids.at(
-                    Convert::worldToTile(
-                        enemyPositions.at( idx )
-                    )
-                )
-            )
+            tileVisibilityIds[tiles.ids[Convert::worldToTile(
+                enemyPositions[idx]
+            )]]
             != VisibilityId::VISIBILE
         )
         {
@@ -284,8 +280,8 @@ void renderOutput(
 
         RenderSystem::renderTile(
             scene.renderData.textures,
-            enemyRenderIds.at( idx ),
-            enemyPositions.at( idx )
+            enemyRenderIds[idx],
+            enemyPositions[idx]
         );
     }
 
@@ -296,7 +292,7 @@ void renderOutput(
     {
         RenderSystem::renderFog(
             Convert::tileToWorld( fogs.key( idx ) ),
-            fogs.values().at( idx )
+            fogs.values()[idx]
         );
     }
 

@@ -243,10 +243,10 @@ bool checkRatingList(
                 return false;
             }
 
-            size_t tileId{ map.tiles.ids.at( newTilePosition ) };
+            size_t tileId{ map.tiles.ids[newTilePosition] };
 
             if ( !map.tiles.visibilityIds.contains( tileId )
-                 || ( map.tiles.visibilityIds.at( tileId ) == VisibilityId::INVISIBLE )
+                 || ( map.tiles.visibilityIds[tileId] == VisibilityId::INVISIBLE )
                  || map.tiles.isSolids.contains( tileId )
                  || ( ( maxRange > 0 ) && ( newRatedTile.stepsNeeded > maxRange ) ) )
             {
@@ -338,11 +338,11 @@ namespace PathfinderSystem
             return path;
         }
 
-        size_t tileId{ map.tiles.ids.at( target ) };
+        size_t tileId{ map.tiles.ids[target] };
 
         if ( !map.tiles.visibilityIds.contains( tileId )
              || ( skipInvisibleTiles
-                  && ( map.tiles.visibilityIds.at( tileId ) == VisibilityId::INVISIBLE ) )
+                  && ( map.tiles.visibilityIds[tileId] == VisibilityId::INVISIBLE ) )
              || map.tiles.isSolids.contains( tileId )
              || ( start == target ) )
         {

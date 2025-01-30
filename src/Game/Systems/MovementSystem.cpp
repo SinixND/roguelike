@@ -99,17 +99,17 @@ namespace MovementSystem
 
         for ( size_t idx{ 0 }; idx < enemies.transforms.size(); ++idx )
         {
-            currentPosition = &enemies.positions.values().at( idx );
+            currentPosition = &enemies.positions.values()[idx];
 
             oldPosition = Convert::worldToTile( *currentPosition );
 
             //* Update movement
             //* Update ids_ key if tilePosition changes
             MovementSystem::update(
-                enemies.transforms.values().at( idx ),
-                // enemies.movements.values().at(i),
+                enemies.transforms.values()[idx],
+                // enemies.movements.values()[i],
                 *currentPosition,
-                enemies.energies.values().at( idx ),
+                enemies.energies.values()[idx],
                 heroPosition,
                 dt
             );

@@ -176,9 +176,9 @@ namespace GameModule
 
                 for ( size_t idx{ 0 }; idx < renderIds.size(); ++idx )
                 {
-                    if ( renderIds.at( idx ) == RenderId::DESCEND )
+                    if ( renderIds[idx] == RenderId::DESCEND )
                     {
-                        game.hero.position = positions.at( idx );
+                        game.hero.position = positions[idx];
                     }
                 }
 

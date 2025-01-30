@@ -45,7 +45,7 @@ void Enemies::insert(
 
 void Enemies::remove( size_t id )
 {
-    ids.erase( Convert::worldToTile( positions.at( id ) ) );
+    ids.erase( Convert::worldToTile( positions[id] ) );
     positions.erase( id );
     renderIds.erase( id );
     transforms.erase( id );
@@ -72,9 +72,9 @@ bool isSpawnPositionValid(
         return false;
     }
 
-    size_t tileId{ tiles.ids.at( tilePosition ) };
+    size_t tileId{ tiles.ids[tilePosition] };
 
-    if ( !( tiles.visibilityIds.at( tileId ) == VisibilityId::VISIBILE )
+    if ( !( tiles.visibilityIds[tileId] == VisibilityId::VISIBILE )
          && !tiles.isSolids.contains( tileId )
          && !enemiesIds.contains( tilePosition ) )
     {
@@ -233,17 +233,17 @@ namespace EnemiesModule
 
         for ( size_t idx{ 0 }; idx < enemies.transforms.size(); ++idx )
         {
-            currentPosition = &enemies.positions.values().at( idx );
+            currentPosition = &enemies.positions.values()[idx];
 
             oldPosition = Convert::worldToTile( *currentPosition );
 
             //* Update movement
             //* Update ids_ key if tilePosition changes
             MovementSystem::update(
-                enemies.transforms.values().at( idx ),
-                // enemies.movements.values().at(i),
+                enemies.transforms.values()[idx],
+                // enemies.movements.values()[i),
                 *currentPosition,
-                enemies.energies.values().at( idx ),
+                enemies.energies.values()[idx],
                 heroPosition,
                 dt
             );
@@ -271,8 +271,8 @@ namespace EnemiesModule
 
         for ( size_t idx{ 0 }; idx < energies.size(); ++idx )
         {
-            if ( energies.values().at( idx ).state == EnergyState::READY
-                 && ais.values().at( idx ).turn < turn )
+            if ( energies.values()[idx].state == EnergyState::READY
+                 && ais.values()[idx].turn < turn )
             {
                 activeEnemyId = energies.key( idx );
                 break;
@@ -292,9 +292,9 @@ namespace EnemiesModule
         while ( idx < enemies.ids.values().size() )
         {
             //* Kill enemy at 0 health
-            if ( enemies.healths.values().at( idx ).currentHealth <= 0 )
+            if ( enemies.healths.values()[idx].currentHealth <= 0 )
             {
-                enemies.remove( enemies.ids.values().at( idx )
+                enemies.remove( enemies.ids.values()[idx]
                 );
 
                 //* Spawn new enemy

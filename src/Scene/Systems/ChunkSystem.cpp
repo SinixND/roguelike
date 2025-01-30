@@ -77,12 +77,12 @@ namespace ChunkSystem
                         continue;
                     }
 
-                    size_t tileId{ tiles.ids.at( tilePosition ) };
+                    size_t tileId{ tiles.ids[tilePosition] };
 
                     RenderSystem::renderToChunk(
                         textures,
-                        tiles.renderIds.at( tileId ),
-                        tiles.positions.at( tileId ),
+                        tiles.renderIds[tileId],
+                        tiles.positions[tileId],
                         chunk
                     );
                 }

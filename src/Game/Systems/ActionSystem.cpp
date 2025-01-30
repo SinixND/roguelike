@@ -6,7 +6,6 @@
 #include "CollisionSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
-#include "DamageComponent.h"
 #include "DamageSystem.h"
 #include "Directions.h"
 #include "GameCamera.h"
@@ -21,25 +20,6 @@
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
-
-void performAttack(
-    // Hero& hero,
-    Enemies& enemies,
-    DamageComponent const& damage,
-    Vector2I const& target
-)
-{
-    snx::Logger::log( "Hero deals " );
-
-    DamageSystem::attack(
-        damage,
-        enemies.healths.at(
-            enemies.ids.at(
-                target
-            )
-        )
-    );
-}
 
 bool processDirectionalInput(
     Hero& hero,
@@ -58,10 +38,11 @@ bool processDirectionalInput(
 
     if ( map.enemies.ids.contains( target ) )
     {
-        performAttack(
-            map.enemies,
+        snx::Logger::log( "Hero deals " );
+
+        DamageSystem::attack(
             hero.damage,
-            target
+            map.enemies.healths[map.enemies.ids[target]]
         );
 
         EnergyModule::consume( hero.energy );
@@ -187,10 +168,11 @@ namespace ActionSystem
                 {
                     if ( map.enemies.ids.contains( path.rbegin()[1] ) )
                     {
-                        performAttack(
-                            map.enemies,
+                        snx::Logger::log( "Hero deals " );
+
+                        DamageSystem::attack(
                             hero.damage,
-                            path.rbegin()[1]
+                            map.enemies.healths[map.enemies.ids[path.rbegin()[1]]]
                         );
 
                         EnergyModule::consume( hero.energy );
@@ -232,7 +214,7 @@ namespace ActionSystem
                     break;
                 }
 
-                size_t objectId{ map.objects.ids.at( Convert::worldToTile( hero.position ) ) };
+                size_t objectId{ map.objects.ids[Convert::worldToTile( hero.position )] };
 
                 //* Wait if nothing to interact
                 if ( !map.objects.events.contains( objectId ) )
@@ -246,7 +228,7 @@ namespace ActionSystem
                     break;
                 }
 
-                snx::PublisherStatic::publish( map.objects.events.at( objectId ) );
+                snx::PublisherStatic::publish( map.objects.events[objectId] );
 
                 break;
             }

@@ -32,7 +32,7 @@ namespace snx
 
         static std::string const& getMessage( int number )
         {
-            return history_.at( number );
+            return history_[number];
         }
 
         static void setStamp( std::string const& stamp )

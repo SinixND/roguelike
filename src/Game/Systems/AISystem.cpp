@@ -43,12 +43,12 @@ namespace AISystem
                 enemies.ais[activeEnemyId].turn = turn;
 
                 multiFrameActionActive |= AISystem::takeAction(
-                    enemies.ais.at( activeEnemyId ),
-                    enemies.positions.at( activeEnemyId ),
-                    enemies.movements.at( activeEnemyId ),
-                    enemies.transforms.at( activeEnemyId ),
-                    enemies.energies.at( activeEnemyId ),
-                    enemies.damages.at( activeEnemyId ),
+                    enemies.ais[activeEnemyId],
+                    enemies.positions[activeEnemyId],
+                    enemies.movements[activeEnemyId],
+                    enemies.transforms[activeEnemyId],
+                    enemies.energies[activeEnemyId],
+                    enemies.damages[activeEnemyId],
                     *world.currentMap,
                     Convert::worldToTile( hero.position ),
                     hero.health,

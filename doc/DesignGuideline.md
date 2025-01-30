@@ -33,17 +33,17 @@
 ```
 
 ## Struct/Class general
-- Struct: POD (Plain Old Data) -> no functions
-- Name private member variables: name_
+- `struct`: POD (Plain Old Data) -> no functions
+- Name `private` member variables: name_
 - OOP/AoS if there is 1; DOD/SoA if there are more
 - Prefer NMNF function [Nmsp::f(C& o)] over member functions [o.f()], if no need for private access / public API (interface) is sufficient
 
 ## Class members (variables) and methods (member functions)
-- Use struct as default
-- class with private members 
+- Use `struct` if members are POD/trivial; 
+- Use `class` if members are non-POD 
 **NOTE**: Encapsulation (:= How much has to change if implementation changes) -> Low level parameters
 - `public/struct` = default (KISS)
-- `private/class` + non-trivial getter/setter= to handle invariants or restrict to (controlled) access
+- `private/class` + non-trivial getter/setter= to handle invariants or restrict/ have controlled access
 **NOTE**: refactor `public` -> getter/setter later if actually needed.*
 
 ## Example
@@ -51,14 +51,14 @@
 // Module.h
 class C 
 { // has_invariant ? class : struct
+// private:
+    // invariant/internal members
 public:
     // independent members
 public:
     // interface/functions for invariants
 // private: 
     // internal helper functions belong to .cpp 
-private:
-    // invariant members
 };
 
 namespace CModule

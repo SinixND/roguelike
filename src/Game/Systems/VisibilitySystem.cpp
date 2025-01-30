@@ -466,9 +466,9 @@ void calculateVisibilitiesInOctant(
                 continue;
             }
 
-            size_t tileId{ tiles.ids.at( tilePosition ) };
+            size_t tileId{ tiles.ids[tilePosition] };
 
-            VisibilityId tileVisibilityOld{ tiles.visibilityIds.at( tileId ) };
+            VisibilityId tileVisibilityOld{ tiles.visibilityIds[tileId] };
 
             //* < : Update only octant tiles including diagonal tiles (spare last row tile, needed for correct diagonal visibility)
             if ( octX <= octY )
@@ -485,8 +485,8 @@ void calculateVisibilitiesInOctant(
                     );
 #endif
 
-                    tiles.visibilityIds.at( tileId ) = getOutOfVisionVisibility( tileVisibilityOld );
-                    fogs[tilePosition] = getFogOfWarState( tileVisibilityOld );
+                    tiles.visibilityIds[tileId] = getOutOfVisionVisibility( tileVisibilityOld );
+                    fogs.insert_or_assign( tilePosition ) = getFogOfWarState( tileVisibilityOld );
 
                     continue;
                 } //* Max shadow
@@ -551,13 +551,13 @@ void calculateVisibilitiesInOctant(
                 if ( isVisible )
                 {
                     //* Tile IS visible
-                    tiles.visibilityIds.at( tileId ) = VisibilityId::VISIBILE;
+                    tiles.visibilityIds[tileId] = VisibilityId::VISIBILE;
                 }
 
                 else
                 {
-                    tiles.visibilityIds.at( tileId ) = getOutOfVisionVisibility( tileVisibilityOld );
-                    fogs[tilePosition] = getFogOfWarState( tileVisibilityOld );
+                    tiles.visibilityIds[tileId] = getOutOfVisionVisibility( tileVisibilityOld );
+                    fogs.insert_or_assign( tilePosition ) = getFogOfWarState( tileVisibilityOld );
                 }
             } //* Octant tiles only
 
@@ -612,7 +612,7 @@ namespace VisibilitySystem
         fogs.clear();
 
         //* Hero is always visible
-        tiles.visibilityIds.at( tiles.ids.at( heroPosition ) ) = VisibilityId::VISIBILE;
+        tiles.visibilityIds[tiles.ids[heroPosition]] = VisibilityId::VISIBILE;
 
         //* Iterate octants
         //* Orientation dependent range (horizontal, vertical)

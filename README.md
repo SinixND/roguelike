@@ -5,22 +5,22 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Change `.at()` to `[]` for SoA access
-- [ ] Use `.ptr()` for `.contains() & .at()/[]` (uncomment in `DenseMap`)
 - [ ] Refactor
-    [Status] Current: Game folder -> Map done
+    [Status] Current: Game folder -> Tiles done
+    - [ ] Use `values()` of Densemap where 2+ SoA members needed
     - [ ] Refactor parameters to low/member level ( if < 3 members used )
         - Parameter order -> Check `DesignGuideline.md` for fake return
-    - [ ] Refactor to DenseMap<size_t, Type> (instead of SparseSet -> check emscripten)
     - [ ] Restructure: 
         - [ ] main { App { Scene, Game }}
         - [ ] World => Levels
         - [ ] World/Levels { Fogs }
     - [ ] Check for struct/class invariants
+    - `class` for "entities", `struct` for "components"
         - Refactor: Extract possible NMNF functions
 
 
 ## Shortterm
+- [ ] Make internal members private (no external references)
 - [ ] Separate fog calculation from visibility calculation
 - [ ] Fix web bug -> cursor not moving when mouse active
 - [ ] Split Component(temp) and Data(persistent)? (existential)
@@ -54,6 +54,7 @@ Platforms: Linux, Windows, Browser
 
 
 # Ideas
+- [ ] Make game a mix of `rogue` and `factorio`
 - [ ] (Hold) KEY to show map overview
 - [ ] Lua/Jinx settings file?
 - [ ] Use shaders (send matrix/vector of shadows by SetShaderValue()) and render one big black overlay with applied shader?
@@ -167,3 +168,4 @@ Platforms: Linux, Windows, Browser
 - [x] Split Transform (single turn) and Movement (multi-turn) data
 - [x] Refactor public/private (see Notes) ~~namespace Class/Module/System~~
 - [x] Separate System (not related to class) and Module (former member functions) via namespace?
+- [x] Refactor to DenseMap<size_t, Type> (instead of SparseSet -> check emscripten)
