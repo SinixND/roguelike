@@ -91,37 +91,26 @@ void setupFrameworks( AppConfig const& config )
     setupNcurses();
 }
 
-InputId getUserInput(
-    InputHandler& inputHandler,
-    bool& isCursorActive,
-    InputMappings const& inputMappings
-)
+InputId getUserInput( InputHandler& inputHandler )
 {
     InputId inputId{};
 
     //* Take input from mouse, keys or gestures
-    inputId = InputModule::fromKeyboard(
-        &inputHandler,
-        inputMappings.keyboardToInput,
-        inputMappings.inputIdToKeyboard
-    );
+    inputId = inputHandler.fromKeyboard();
 
     if ( inputId != InputId::NONE )
     {
         return inputId;
     }
 
-    inputId = InputModule::fromMouse(
-        &isCursorActive,
-        inputMappings.mouseToInput
-    );
+    inputId = inputHandler.fromMouse();
 
     if ( inputId != InputId::NONE )
     {
         return inputId;
     }
 
-    inputId = InputModule::fromGesture( &inputHandler );
+    inputId = inputHandler.fromGesture();
 
     return inputId;
 }
@@ -168,11 +157,7 @@ namespace AppModule
             updateDeveloperMode();
 #endif
 
-            app.currentInputId = getUserInput(
-                app.inputHandler,
-                app.cursor.isActive,
-                app.inputMappings
-            );
+            app.currentInputId = getUserInput( app.inputHandler );
 
             app.dt = GetFrameTime();
 

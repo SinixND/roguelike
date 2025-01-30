@@ -2,7 +2,7 @@
 #define IG20240531194629
 
 enum class InputId;
-struct InputHandler;
+class InputHandler;
 struct Hero;
 struct Cursor;
 struct Map;

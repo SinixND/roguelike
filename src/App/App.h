@@ -4,7 +4,6 @@
 #include "AppConfig.h"
 #include "InputHandler.h"
 #include "InputId.h"
-#include "InputMappings.h"
 #include "Scene.h"
 #include <raylib.h>
 
@@ -14,7 +13,6 @@ struct App
 
     Cursor cursor{};
 
-    InputMappings inputMappings;
     InputHandler inputHandler{};
     InputId currentInputId{ InputId::NONE };
 

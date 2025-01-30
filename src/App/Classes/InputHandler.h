@@ -2,11 +2,20 @@
 #define IG20250119163144
 
 #include "InputId.h"
+#include "InputMappings.h"
 #include <raylib.h>
-#include <unordered_map>
 
-struct InputHandler
+class InputHandler
 {
+public:
+    InputMappings mappings;
+
+public:
+    InputId fromKeyboard();
+    InputId fromMouse();
+    InputId fromGesture();
+
+private:
     int currentKey{ KEY_NULL };
     int lastKey{ KEY_NULL };
 
@@ -21,21 +30,5 @@ struct InputHandler
     bool isModifierActive{};
     bool isCursorActive{};
 };
-
-namespace InputModule
-{
-    InputId fromKeyboard(
-        InputHandler* inputHandler,
-        std::unordered_map<int, InputId> const& keyboardToInput,
-        std::unordered_map<InputId, int> const& modifiers
-    );
-
-    InputId fromMouse(
-        bool* isCursorActive,
-        std::unordered_map<int, InputId> const& mouseToInput
-    );
-
-    InputId fromGesture( InputHandler* handler );
-}
 
 #endif
