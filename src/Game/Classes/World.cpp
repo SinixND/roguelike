@@ -2,46 +2,43 @@
 
 #include "MapGeneratorSystem.h"
 
-void addNewMap( World& world )
+World::World()
 {
-    world.maps.push_back( MapGeneratorSystem::createRandomMap( world.maxMapLevel + 1 ) );
+    currentMap = &maps.back();
 }
 
-void setCurrentMap( World& world, int level )
+void World::increaseMapLevel()
 {
-    world.currentMap = &world.maps[level];
-}
-
-namespace WorldModule
-{
-    void increaseMapLevel( World& world )
+    if ( currentMapLevel == maxMapLevel )
     {
-        if ( world.currentMapLevel == world.maxMapLevel )
-        {
-            ++world.maxMapLevel;
-            addNewMap( world );
-        }
-
-        ++world.currentMapLevel;
-
-        setCurrentMap(
-            world,
-            world.currentMapLevel
-        );
+        ++maxMapLevel;
+        addNewMap();
     }
 
-    void decreaseMapLevel( World& world )
-    {
-        if ( world.currentMapLevel == 0 )
-        {
-            return;
-        }
+    ++currentMapLevel;
 
-        --world.currentMapLevel;
-
-        setCurrentMap(
-            world,
-            world.currentMapLevel
-        );
-    }
+    setCurrentMap( currentMapLevel );
 }
+
+void World::decreaseMapLevel()
+{
+    if ( currentMapLevel == 0 )
+    {
+        return;
+    }
+
+    --currentMapLevel;
+
+    setCurrentMap( currentMapLevel );
+}
+
+void World::addNewMap()
+{
+    maps.push_back( MapGeneratorSystem::createRandomMap( maxMapLevel + 1 ) );
+}
+
+void World::setCurrentMap( int level )
+{
+    currentMap = &maps[level];
+}
+

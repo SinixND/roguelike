@@ -4,7 +4,7 @@
 #include <cstddef>
 
 struct AIComponent;
-struct World;
+class World;
 struct Hero;
 struct Map;
 struct Vector2I;

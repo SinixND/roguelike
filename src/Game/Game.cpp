@@ -150,7 +150,7 @@ namespace GameModule
             {
                 snx::Logger::log( "Entered next level" );
 
-                WorldModule::increaseMapLevel( game.world );
+                game.world.increaseMapLevel();
 
                 //* Place Hero on the map entry position
                 game.hero.position = Convert::tileToWorld( Vector2I{ 0, 0 } );
@@ -167,7 +167,7 @@ namespace GameModule
             {
                 snx::Logger::log( "Entered previous level" );
 
-                WorldModule::decreaseMapLevel( game.world );
+                game.world.decreaseMapLevel();
 
                 //* Place Hero on the map exit
                 auto const& objects{ game.world.currentMap->objects };
