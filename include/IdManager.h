@@ -10,6 +10,9 @@ namespace snx
 {
     class IdManager
     {
+        size_t maxId = std::numeric_limits<size_t>::max();
+        size_t lastId{ 0 };
+
         std::unordered_set<size_t> activeIds_{};
         std::unordered_set<size_t> freeIds_{};
 
@@ -51,9 +54,6 @@ namespace snx
 
         size_t incrementedId()
         {
-            [[maybe_unused]] static size_t maxId = std::numeric_limits<size_t>::max();
-            static size_t lastId{ 0 };
-
             //* START WITH ID = 1
             ++lastId;
 
