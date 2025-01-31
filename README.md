@@ -6,7 +6,7 @@ Platforms: Linux, Windows, Browser
 # TODOs
 ## Active 
 - [ ] Refactor
-    [Status] Current: Game folder -> Components -> Energy done
+    [Status] Current: Game folder -> Systems -> ActionSystem done
     - [ ] Use `values()` of Densemap where 2+ SoA members needed
     - [ ] Refactor parameters to low/member level ( if < 3 members used );
         - Split modified and const members
