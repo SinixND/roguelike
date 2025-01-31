@@ -151,8 +151,8 @@ namespace MovementSystem
         //* Remove tilePosition moved from
         movement.path.pop_back();
 
-        //* Clear path guided movement after last trigger if target reched (path_.size() == 1 (target))
-        if ( movement.path.size() <= 1 )
+        //* Clear path guided movement after last trigger if target reched
+        if ( movement.path.size() < 2 )
         {
             movement.path.clear();
         }

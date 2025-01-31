@@ -1,6 +1,7 @@
 #ifndef IG20240601002118
 #define IG20240601002118
 
+#include <cassert>
 struct EnergyComponent
 {
     enum class State

@@ -63,7 +63,7 @@ bool executeAction(
              && !CollisionSystem::checkCollision(
                  map.tiles,
                  map.enemies,
-                 *path.rbegin(),
+                 path.rbegin()[1],
                  heroPosition
              ) )
         {
@@ -71,7 +71,7 @@ bool executeAction(
                 enemiesIO.movements[enemyId],
                 enemiesIO.transforms[enemyId],
                 Convert::worldToTile( enemiesIO.positions[enemyId] ),
-                *path.rbegin()
+                path.rbegin()[1]
             );
 
             EnergyModule::consume( enemiesIO.energies[enemyId] );

@@ -16,7 +16,6 @@
 #include "TransformComponent.h"
 #include "VisibilityId.h"
 #include "raylibEx.h"
-#include <cstddef>
 #include <vector>
 
 void Enemies::insert(
@@ -152,8 +151,8 @@ namespace EnemiesModule
             TransformComponent{},
             MovementComponent{},
             EnergyComponent{
-                enemyData.energyMax,
-                enemyData.energyRegenBase
+                enemyData.energyRegenBase,
+                enemyData.energyMax
             },
             HealthComponent{ enemyData.healthBase },
             DamageComponent{ enemyData.damageBase },
@@ -212,10 +211,7 @@ namespace EnemiesModule
 
         for ( EnergyComponent& energy : energiesIO )
         {
-            if ( !EnergyModule::regenerate( energy ) )
-            {
-                isEnemyReady = true;
-            }
+            isEnemyReady |= !EnergyModule::regenerate( energy );
         }
 
         return isEnemyReady;

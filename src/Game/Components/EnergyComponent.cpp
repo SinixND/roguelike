@@ -1,4 +1,5 @@
 #include "EnergyComponent.h"
+#include <cassert>
 
 namespace EnergyModule
 {

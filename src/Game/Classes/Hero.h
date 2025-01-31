@@ -15,8 +15,8 @@ struct Hero
     TransformComponent transform{};
     MovementComponent movement{};
     EnergyComponent energy{
-        HeroData::energyMax,
-        HeroData::energyRegenBase
+        HeroData::energyRegenBase,
+        HeroData::energyMax
     };
     Vector2 position{};
     HealthComponent health{
