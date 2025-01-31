@@ -3,41 +3,21 @@
 
 #include <cstddef>
 
-struct AIComponent;
-class World;
+class Enemies;
 struct Hero;
 struct Map;
-struct Vector2I;
 struct GameCamera;
-struct Vector2;
-struct TransformComponent;
-struct MovementComponent;
-struct EnergyComponent;
-struct DamageComponent;
-struct HealthComponent;
 
 namespace AISystem
 {
-    bool takeActions(
-        World& world,
-        Hero& hero,
-        size_t& activeEnemyId,
+    //* Return if multi-frame action taken
+    bool executeNextAction(
+        size_t* activeEnemyIdIO,
+        Enemies* enemiesIO,
+        Hero* heroIO,
+        Map const& map,
         GameCamera const& gameCamera,
         int turn
-    );
-
-    //* Return if multi-frame action taken
-    bool takeAction(
-        AIComponent const& ai,
-        Vector2& position,
-        MovementComponent& movement,
-        TransformComponent& transform,
-        EnergyComponent& energy,
-        DamageComponent& damage,
-        Map const& map,
-        Vector2I const& heroPosition,
-        HealthComponent& heroHealth,
-        GameCamera const& gameCamera
     );
 }
 

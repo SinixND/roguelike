@@ -52,10 +52,11 @@ namespace GameModule
         //* AI
         if ( !game.isMultiFrameActionActive )
         {
-            game.isMultiFrameActionActive = AISystem::takeActions(
-                game.world,
-                game.hero,
-                game.activeEnemyId,
+            game.isMultiFrameActionActive = AISystem::executeNextAction(
+                &game.activeEnemyId,
+                &game.world.currentMapPtr->enemies,
+                &game.hero,
+                *game.world.currentMapPtr,
                 gameCamera,
                 game.turn
             );

@@ -36,6 +36,7 @@ bool processDirectionalInput(
         )
     };
 
+    //* Attack
     if ( mapIO->enemies.ids.contains( target ) )
     {
         snx::Logger::log( "Hero deals " );
@@ -47,6 +48,7 @@ bool processDirectionalInput(
 
         EnergyModule::consume( &heroIO->energy );
     }
+    //* Move
     else if ( !CollisionSystem::checkCollision(
                   mapIO->tiles,
                   mapIO->enemies,
@@ -85,9 +87,11 @@ namespace ActionSystem
             default:
             case InputId::NONE:
             {
+                //* Multi-frame action
                 if ( !heroIO->movement.path.empty()
                      && !heroIO->transform.speed )
                 {
+                    //* Move
                     if ( !CollisionSystem::checkCollision(
                              mapIO->tiles,
                              mapIO->enemies,
@@ -102,6 +106,7 @@ namespace ActionSystem
 
                         isActionMultiFrame = true;
                     }
+                    //* Stop
                     else
                     {
                         MovementSystem::resetTransform( heroIO->transform );
