@@ -13,17 +13,19 @@ namespace HealthModule
     //* Returns true if health is <= 0
     //* Reduces health to 0 with no argument
     bool damage(
-        HealthComponent& health,
+        HealthComponent* health,
         int value = 0
     );
 
     //* Fully heals with no argument
-    void heal(
+    [[nodiscard]]
+    HealthComponent const& heal(
         HealthComponent& health,
         int value = 0
     );
 
-    void regenerate( HealthComponent& health );
+    [[nodiscard]]
+    HealthComponent const& regenerate( HealthComponent& health );
 }
 
 #endif

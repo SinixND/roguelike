@@ -10,25 +10,25 @@
 namespace HealthModule
 {
     bool damage(
-        HealthComponent& health,
+        HealthComponent* health,
         int value
     )
     {
 #if defined( DEBUG ) && defined( DEBUG_HEALTH )
-        snx::debug::cliLog( "Remove " + std::to_string( value ) + " from " + std::to_string( health.currentHealth ) + " health\n" );
+        snx::debug::cliLog( "Remove " + std::to_string( value ) + " from " + std::to_string( health->currentHealth ) + " health\n" );
 #endif
         if ( value )
         {
-            health.currentHealth -= value;
+            health->currentHealth -= value;
         }
         else
         {
-            health.currentHealth = 0;
+            health->currentHealth = 0;
         }
 
         snx::PublisherStatic::publish( EventId::INTERRUPT_MOVEMENT );
 
-        if ( health.currentHealth <= 0 )
+        if ( health->currentHealth <= 0 )
         {
             return true;
         }
@@ -36,7 +36,7 @@ namespace HealthModule
         return false;
     }
 
-    void heal(
+    HealthComponent const& heal(
         HealthComponent& health,
         int value
     )
@@ -54,17 +54,21 @@ namespace HealthModule
         {
             health.currentHealth = health.maxHealth;
         }
+
+        return health;
     }
 
-    void regenerate( HealthComponent& health )
+    HealthComponent const& regenerate( HealthComponent& health )
     {
 #if defined( DEBUG ) && defined( DEBUG_HEALTH )
         snx::debug::cliLog( "Gain " + std::to_string( health.regenRate ) + " to " + std::to_string( health.currentHealth ) + " health\n" );
 #endif
 
-        HealthModule::heal(
+        health = HealthModule::heal(
             health,
             health.regenRate
         );
+
+        return health;
     }
 }

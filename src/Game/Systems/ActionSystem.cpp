@@ -226,7 +226,7 @@ namespace ActionSystem
 
                 EnergyModule::consume( &hero.energy );
 
-                HealthModule::regenerate( hero.health );
+                hero.health = HealthModule::regenerate( hero.health );
 
                 break;
             }
