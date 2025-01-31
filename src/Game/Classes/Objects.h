@@ -24,9 +24,9 @@ public:
 public:
     void insert(
         Vector2I const& tilePosition,
-        RenderId renderId,
         std::string const& name,
         std::string const& action,
+        RenderId renderId,
         EventId event
     );
 

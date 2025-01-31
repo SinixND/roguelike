@@ -182,9 +182,9 @@ Map createGridRooms( int level )
             0,
             0
         },
-        RenderId::ASCEND,
         "Stairs",
         "Ascend",
+        RenderId::ASCEND,
         EventId::PREVIOUS_LEVEL
     );
 
@@ -361,9 +361,9 @@ namespace MapGeneratorSystem
                 0,
                 -5
             },
-            RenderId::DESCEND,
             "Stairs",
             "Descend",
+            RenderId::DESCEND,
             EventId::NEXT_LEVEL
         );
 
@@ -399,9 +399,9 @@ namespace MapGeneratorSystem
                 0,
                 -5
             },
-            RenderId::DESCEND,
             "Stairs",
             "Descend",
+            RenderId::DESCEND,
             EventId::NEXT_LEVEL
         );
 

@@ -19,16 +19,21 @@
 
 ### Example: Fake-pure, but copy-less/performant and clear intention:
 ```cpp
+[[nodiscard]] S const& f(S& s)
+{
+    ++s.m;
+
+    return s;
+}
+
 // only use for non-returned, but modified (side effect) parameters
-[[nodiscard]] S const& f(S* ioPtr)
-// or to avoid ptr->ref conversion
-[[nodiscard]] S const& f(S& ioRef)
+void f(S* ptrS)
 {
     // Forces &-operator usage if ptr is further passed to additional functions -> tramp data
-    S& ref(*ptr); 
+    S& ref(*ptrS); 
 
-    ++ref.m;
-    return m;
+    // Or just signal by naming ptrName
+    ++(*ptrS).m;
 }
 ```
 

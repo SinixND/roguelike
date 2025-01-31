@@ -37,8 +37,8 @@ public:
         EnergyComponent const& energy,
         HealthComponent const& health,
         DamageComponent const& damage,
-        int scanRange,
         Vector2I const& tilePosition,
+        int scanRange,
         RenderId renderId
     );
 
@@ -79,7 +79,7 @@ namespace EnemiesModule
     );
 
     //* Returns if an enemy is ready
-    bool regenerate( snx::DenseMap<size_t, EnergyComponent>* energies );
+    bool regenerate( snx::DenseMap<size_t, EnergyComponent>* energiesIO );
 
     [[nodiscard]]
     Enemies const& updateMovements(

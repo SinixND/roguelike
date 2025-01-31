@@ -56,8 +56,8 @@ void setupSceneEvents(
             );
 
             VisibilitySystem::calculateVisibilities(
-                &scene.game.world.currentMap->fogs,
-                &scene.game.world.currentMap->tiles,
+                &scene.game.world.currentMapPtr->fogs,
+                &scene.game.world.currentMapPtr->tiles,
                 GameCameraModule::viewportInTiles( scene.gameCamera ),
                 Convert::worldToTile( scene.game.hero.position ),
                 scene.game.hero.visionRange
@@ -94,8 +94,8 @@ void setupSceneEvents(
         {
             //* VisibilitySystem
             VisibilitySystem::calculateVisibilities(
-                &scene.game.world.currentMap->fogs,
-                &scene.game.world.currentMap->tiles,
+                &scene.game.world.currentMapPtr->fogs,
+                &scene.game.world.currentMapPtr->tiles,
                 GameCameraModule::viewportInTiles( scene.gameCamera ),
                 Convert::worldToTile( scene.game.hero.position ),
                 scene.game.hero.visionRange
@@ -111,7 +111,7 @@ void setupSceneEvents(
             ChunkSystem::init(
                 scene.chunks,
                 scene.renderData.textures,
-                scene.game.world.currentMap->tiles
+                scene.game.world.currentMapPtr->tiles
             );
         }
     );
@@ -123,7 +123,7 @@ void setupSceneEvents(
         {
             Vector2I cursorPos{ Convert::worldToTile( cursor.position ) };
 
-            Tiles& tiles{ scene.game.world.currentMap->tiles };
+            Tiles& tiles{ scene.game.world.currentMapPtr->tiles };
 
             if ( !tiles.ids.contains( cursorPos ) )
             {
@@ -175,7 +175,7 @@ void setupSceneEvents(
                 + "\n"
             );
 
-            Objects& objects{ scene.game.world.currentMap->objects };
+            Objects& objects{ scene.game.world.currentMapPtr->objects };
 
             if ( objects.ids.contains( Convert::worldToTile( cursor.position ) ) )
             {
@@ -185,36 +185,36 @@ void setupSceneEvents(
 
                 snx::debug::cliLog(
                     "\nName: "
-                    + scene.game.world.currentMap->objects.names[objectId]
+                    + scene.game.world.currentMapPtr->objects.names[objectId]
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "\nActions: "
-                    + scene.game.world.currentMap->objects.actions[objectId]
+                    + scene.game.world.currentMapPtr->objects.actions[objectId]
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "RenderId: "
-                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.renderIds[objectId] ) )
+                    + std::to_string( static_cast<int>( scene.game.world.currentMapPtr->objects.renderIds[objectId] ) )
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "Event: "
-                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.events[objectId] ) )
+                    + std::to_string( static_cast<int>( scene.game.world.currentMapPtr->objects.events[objectId] ) )
                     + "\n"
                 );
             }
 
-            if ( scene.game.world.currentMap->enemies.ids.contains( cursorPos ) )
+            if ( scene.game.world.currentMapPtr->enemies.ids.contains( cursorPos ) )
             {
                 snx::debug::cliLog( "ENEMY\n" );
 
                 snx::debug::cliLog(
                     "Id: "
-                    + std::to_string( scene.game.world.currentMap->enemies.ids[cursorPos] )
+                    + std::to_string( scene.game.world.currentMapPtr->enemies.ids[cursorPos] )
                     + "\n"
                 );
             }
@@ -246,7 +246,7 @@ void renderOutput(
     }
 
     //* Draw objects
-    auto const& objects{ scene.game.world.currentMap->objects };
+    auto const& objects{ scene.game.world.currentMapPtr->objects };
     auto const& objectRenderIds{ objects.renderIds.values() };
     auto const& objectPositions{ objects.positions.values() };
 
@@ -260,9 +260,9 @@ void renderOutput(
     }
 
     //* Draw enemies
-    auto const& tiles{ scene.game.world.currentMap->tiles };
+    auto const& tiles{ scene.game.world.currentMapPtr->tiles };
     auto const& tileVisibilityIds{ tiles.visibilityIds };
-    auto const& enemies{ scene.game.world.currentMap->enemies };
+    auto const& enemies{ scene.game.world.currentMapPtr->enemies };
     auto const& enemyRenderIds{ enemies.renderIds.values() };
     auto const& enemyPositions{ enemies.positions.values() };
 
@@ -286,7 +286,7 @@ void renderOutput(
     }
 
     //* VisibilitySystem
-    auto const& fogs{ scene.game.world.currentMap->fogs };
+    auto const& fogs{ scene.game.world.currentMapPtr->fogs };
 
     for ( size_t idx{ 0 }; idx < fogs.size(); ++idx )
     {
@@ -327,7 +327,7 @@ void renderOutput(
 
     PanelSystem::drawTileInfoPanelContent(
         scene.panels,
-        scene.game.world.currentMap->objects,
+        scene.game.world.currentMapPtr->objects,
         Convert::worldToTile( cursor.position )
     );
 
@@ -374,7 +374,7 @@ namespace SceneModule
         ChunkSystem::init(
             scene.chunks,
             scene.renderData.textures,
-            scene.game.world.currentMap->tiles
+            scene.game.world.currentMapPtr->tiles
         );
 
         //* Setup events

@@ -28,7 +28,7 @@ namespace AISystem
     {
         bool multiFrameActionActive{ false };
 
-        Enemies& enemies{ world.currentMap->enemies };
+        Enemies& enemies{ world.currentMapPtr->enemies };
 
         do
         {
@@ -49,7 +49,7 @@ namespace AISystem
                     enemies.transforms[activeEnemyId],
                     enemies.energies[activeEnemyId],
                     enemies.damages[activeEnemyId],
-                    *world.currentMap,
+                    *world.currentMapPtr,
                     Convert::worldToTile( hero.position ),
                     hero.health,
                     gameCamera

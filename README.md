@@ -8,7 +8,8 @@ Platforms: Linux, Windows, Browser
 - [ ] Refactor
     [Status] Current: Game folder -> Components -> Energy done
     - [ ] Use `values()` of Densemap where 2+ SoA members needed
-    - [ ] Refactor parameters to low/member level ( if < 3 members used )
+    - [ ] Refactor parameters to low/member level ( if < 3 members used );
+        - Split modified and const members
         - Parameter order -> Check `DesignGuideline.md` for fake return
     - [ ] Restructure: 
         - [ ] main { App { Scene, Game }}

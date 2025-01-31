@@ -65,21 +65,21 @@ namespace GameModule
         if ( !game.isMultiFrameActionActive
              && game.hero.energy.state == EnergyComponent::State::READY )
         {
-            game.isMultiFrameActionActive = ActionSystem::takeAction(
-                currentInputId,
-                game.hero,
+            game.isMultiFrameActionActive = ActionSystem::executeAction(
+                &game.hero,
+                game.world.currentMapPtr,
                 cursor,
-                *game.world.currentMap,
-                gameCamera
+                gameCamera,
+                currentInputId
             );
         }
 
         //* Update instant actions
         if ( !game.isMultiFrameActionActive )
         {
-            game.world.currentMap->enemies = EnemiesModule::replaceDead(
-                game.world.currentMap->enemies,
-                game.world.currentMap->tiles
+            game.world.currentMapPtr->enemies = EnemiesModule::replaceDead(
+                game.world.currentMapPtr->enemies,
+                game.world.currentMapPtr->tiles
             );
         }
         //* Update multi-frame actions
@@ -97,7 +97,7 @@ namespace GameModule
 
             //* Update enemies
             MovementSystem::updateEnemies(
-                game.world.currentMap->enemies,
+                game.world.currentMapPtr->enemies,
                 game.hero.position,
                 dt
             );
@@ -114,7 +114,7 @@ namespace GameModule
             while ( !isUnitReady )
             {
                 isUnitReady = EnergyModule::regenerate( &game.hero.energy );
-                isUnitReady |= EnemiesModule::regenerate( &game.world.currentMap->enemies.energies );
+                isUnitReady |= EnemiesModule::regenerate( &game.world.currentMapPtr->enemies.energies );
             }
 
             //* Increment turn when hero is ready
@@ -170,7 +170,7 @@ namespace GameModule
                 game.world.decreaseMapLevel();
 
                 //* Place Hero on the map exit
-                auto const& objects{ game.world.currentMap->objects };
+                auto const& objects{ game.world.currentMapPtr->objects };
                 auto const& renderIds{ objects.renderIds.values() };
                 auto const& positions{ objects.positions.values() };
 

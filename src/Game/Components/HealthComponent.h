@@ -13,7 +13,7 @@ namespace HealthModule
     //* Returns true if health is <= 0
     //* Reduces health to 0 with no argument
     bool damage(
-        HealthComponent* health,
+        HealthComponent* healthIO,
         int value = 0
     );
 

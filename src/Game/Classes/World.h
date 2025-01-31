@@ -10,7 +10,7 @@ class World
 {
 public:
     int currentMapLevel{};
-    Map* currentMap{};
+    Map* currentMapPtr{};
 
 public:
     World();

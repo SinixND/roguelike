@@ -25,8 +25,8 @@ void Enemies::insert(
     EnergyComponent const& energy,
     HealthComponent const& health,
     DamageComponent const& damage,
-    int scanRange,
     Vector2I const& tilePosition,
+    int scanRange,
     RenderId renderId
 )
 {
@@ -157,8 +157,8 @@ namespace EnemiesModule
             },
             HealthComponent{ enemyData.healthBase },
             DamageComponent{ enemyData.damageBase },
-            enemyData.scanRange,
             tilePosition,
+            enemyData.scanRange,
             RenderId::GOBLIN
         );
 
@@ -206,11 +206,11 @@ namespace EnemiesModule
         return enemies;
     }
 
-    bool regenerate( snx::DenseMap<size_t, EnergyComponent>* energies )
+    bool regenerate( snx::DenseMap<size_t, EnergyComponent>* energiesIO )
     {
         bool isEnemyReady{ false };
 
-        for ( EnergyComponent& energy : *energies )
+        for ( EnergyComponent& energy : *energiesIO )
         {
             if ( !EnergyModule::regenerate( &energy ) )
             {
@@ -227,8 +227,8 @@ namespace EnemiesModule
         float dt
     )
     {
-        //* Cache current position for later comparison
         Vector2* currentPosition{};
+        //* Cache current position for later comparison
         Vector2I oldPosition{};
 
         for ( size_t idx{ 0 }; idx < enemies.transforms.size(); ++idx )

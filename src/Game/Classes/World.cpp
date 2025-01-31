@@ -4,7 +4,7 @@
 
 World::World()
 {
-    currentMap = &maps.back();
+    currentMapPtr = &maps.back();
 }
 
 void World::increaseMapLevel()
@@ -39,6 +39,6 @@ void World::addNewMap()
 
 void World::setCurrentMap( int level )
 {
-    currentMap = &maps[level];
+    currentMapPtr = &maps[level];
 }
 
