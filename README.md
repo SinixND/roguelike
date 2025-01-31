@@ -6,7 +6,7 @@ Platforms: Linux, Windows, Browser
 # TODOs
 ## Active 
 - [ ] Refactor
-    [Status] Current: Game folder -> Tiles done
+    [Status] Current: Game folder -> Components -> Energy done
     - [ ] Use `values()` of Densemap where 2+ SoA members needed
     - [ ] Refactor parameters to low/member level ( if < 3 members used )
         - Parameter order -> Check `DesignGuideline.md` for fake return
@@ -15,7 +15,6 @@ Platforms: Linux, Windows, Browser
         - [ ] World => Levels
         - [ ] World/Levels { Fogs }
     - [ ] Check for struct/class invariants
-    - `class` for "entities", `struct` for "components"
         - Refactor: Extract possible NMNF functions
 
 

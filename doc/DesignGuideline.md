@@ -34,6 +34,7 @@
 
 ## Struct/Class general
 - `struct`: POD (Plain Old Data) -> no functions
+- `class` for "single/few entities", `struct` for "many components"
 - Name `private` member variables: name_
 - OOP/AoS if there is 1; DOD/SoA if there are more
 - Prefer NMNF function [Nmsp::f(C& o)] over member functions [o.f()], if no need for private access / public API (interface) is sufficient

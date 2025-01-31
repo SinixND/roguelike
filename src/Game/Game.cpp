@@ -63,7 +63,7 @@ namespace GameModule
 
         //* Hero
         if ( !game.isMultiFrameActionActive
-             && game.hero.energy.state == EnergyState::READY )
+             && game.hero.energy.state == EnergyComponent::State::READY )
         {
             game.isMultiFrameActionActive = ActionSystem::takeAction(
                 currentInputId,
@@ -105,7 +105,7 @@ namespace GameModule
 
         //* Regenerate energy if no action in progress
         if ( !game.isMultiFrameActionActive
-             && game.hero.energy.state == EnergyState::NOT_READY
+             && game.hero.energy.state == EnergyComponent::State::NOT_READY
              && !game.activeEnemyId )
         {
             bool isUnitReady{ false };
@@ -113,12 +113,12 @@ namespace GameModule
             //* Regenerate until one unit becomes ready
             while ( !isUnitReady )
             {
-                isUnitReady = EnergyModule::regenerate( game.hero.energy );
+                isUnitReady = EnergyModule::regenerate( &game.hero.energy );
                 isUnitReady |= EnemiesModule::regenerate( &game.world.currentMap->enemies.energies );
             }
 
             //* Increment turn when hero is ready
-            if ( game.hero.energy.state == EnergyState::READY )
+            if ( game.hero.energy.state == EnergyComponent::State::READY )
             {
                 ++game.turn;
                 snx::Logger::setStamp( std::to_string( game.turn ) );

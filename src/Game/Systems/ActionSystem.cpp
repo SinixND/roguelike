@@ -45,7 +45,7 @@ bool processDirectionalInput(
             map.enemies.healths[map.enemies.ids[target]]
         );
 
-        EnergyModule::consume( hero.energy );
+        EnergyModule::consume( &hero.energy );
     }
     else if ( !CollisionSystem::checkCollision(
                   map.tiles,
@@ -60,7 +60,7 @@ bool processDirectionalInput(
             hero.transform
         );
 
-        EnergyModule::consume( hero.energy );
+        EnergyModule::consume( &hero.energy );
 
         isActionMultiFrame = true;
     }
@@ -175,7 +175,7 @@ namespace ActionSystem
                             map.enemies.healths[map.enemies.ids[path.rbegin()[1]]]
                         );
 
-                        EnergyModule::consume( hero.energy );
+                        EnergyModule::consume( &hero.energy );
 
                         path.clear();
                     }
@@ -209,26 +209,24 @@ namespace ActionSystem
 
             case InputId::ACT_IN_PLACE:
             {
-                if ( !map.objects.ids.contains( Convert::worldToTile( cursor.position ) ) )
+                if ( map.objects.ids.contains( Convert::worldToTile( cursor.position ) ) )
                 {
-                    break;
+                    size_t objectId{ map.objects.ids[Convert::worldToTile( hero.position )] };
+
+                    //* Wait if nothing to interact
+                    if ( map.objects.events.contains( objectId ) )
+                    {
+                        snx::PublisherStatic::publish( map.objects.events[objectId] );
+
+                        break;
+                    }
                 }
 
-                size_t objectId{ map.objects.ids[Convert::worldToTile( hero.position )] };
+                snx::Logger::log( "Hero waits..." );
 
-                //* Wait if nothing to interact
-                if ( !map.objects.events.contains( objectId ) )
-                {
-                    snx::Logger::log( "Hero waits..." );
+                EnergyModule::consume( &hero.energy );
 
-                    EnergyModule::consume( hero.energy );
-
-                    HealthModule::regenerate( hero.health );
-
-                    break;
-                }
-
-                snx::PublisherStatic::publish( map.objects.events[objectId] );
+                HealthModule::regenerate( hero.health );
 
                 break;
             }

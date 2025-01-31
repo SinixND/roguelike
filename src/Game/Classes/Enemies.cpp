@@ -212,7 +212,7 @@ namespace EnemiesModule
 
         for ( EnergyComponent& energy : *energies )
         {
-            if ( !EnergyModule::regenerate( energy ) )
+            if ( !EnergyModule::regenerate( &energy ) )
             {
                 isEnemyReady = true;
             }
@@ -271,7 +271,7 @@ namespace EnemiesModule
 
         for ( size_t idx{ 0 }; idx < energies.size(); ++idx )
         {
-            if ( energies.values()[idx].state == EnergyState::READY
+            if ( energies.values()[idx].state == EnergyComponent::State::READY
                  && ais.values()[idx].turn < turn )
             {
                 activeEnemyId = energies.key( idx );

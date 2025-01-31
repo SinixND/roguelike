@@ -25,7 +25,7 @@ namespace MovementSystem
         //* Check if action is in progress
         if ( transform.speed )
         {
-            EnergyModule::consume( energy );
+            EnergyModule::consume( &energy );
 
             snx::PublisherStatic::publish( EventId::MULTIFRAME_ACTION_ACTIVE );
         }

@@ -92,7 +92,7 @@ namespace AISystem
                 heroHealth
             );
 
-            EnergyModule::consume( energy );
+            EnergyModule::consume( &energy );
         }
         //* Check path
         else
@@ -126,7 +126,7 @@ namespace AISystem
                     path.rbegin()[1]
                 );
 
-                EnergyModule::consume( energy );
+                EnergyModule::consume( &energy );
 
                 isActionMultiFrame = true;
             }
@@ -134,7 +134,7 @@ namespace AISystem
             else
             {
                 //* Wait
-                EnergyModule::consume( energy );
+                EnergyModule::consume( &energy );
             }
         }
         // return false;

@@ -28,6 +28,9 @@ namespace DamageModule
 
     int damageAverage( DamageComponent const& damageComponent )
     {
-        return damageComponent.baseDamage + ( damageComponent.baseDamage * damageComponent.critChanceFactor * damageComponent.critDamageFactor );
+        return damageComponent.baseDamage
+               + ( damageComponent.baseDamage
+                   * damageComponent.critChanceFactor
+                   * damageComponent.critDamageFactor );
     }
 }
