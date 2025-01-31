@@ -26,14 +26,10 @@
     return s;
 }
 
-// only use for non-returned, but modified (side effect) parameters
-void f(S* ptrS)
+// Use IO-suffix for non-returned, but modified (side effect) parameters
+void f(S& sIO)
 {
-    // Forces &-operator usage if ptr is further passed to additional functions -> tramp data
-    S& ref(*ptrS); 
-
-    // Or just signal by naming ptrName
-    ++(*ptrS).m;
+    ++sIO.m;
 }
 ```
 

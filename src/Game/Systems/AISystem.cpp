@@ -14,8 +14,8 @@
 #include <vector>
 
 bool executeAction(
-    Enemies* enemiesIO,
-    HealthComponent* heroHealthIO,
+    Enemies& enemiesIO,
+    HealthComponent& heroHealthIO,
     Map const& map,
     Vector2I const& heroPosition,
     GameCamera const& gameCamera,
@@ -27,7 +27,7 @@ bool executeAction(
     //* Instant action: attack
     if ( Vector2Length(
              Vector2Subtract(
-                 Convert::worldToTile( enemiesIO->positions[enemyId] ),
+                 Convert::worldToTile( enemiesIO.positions[enemyId] ),
                  heroPosition
              )
          )
@@ -37,22 +37,22 @@ bool executeAction(
         snx::Logger::log( "Hero takes " );
 
         DamageSystem::attack(
-            enemiesIO->damages[enemyId],
-            *heroHealthIO
+            enemiesIO.damages[enemyId],
+            heroHealthIO
         );
 
-        EnergyModule::consume( &enemiesIO->energies[enemyId] );
+        EnergyModule::consume( enemiesIO.energies[enemyId] );
     }
     //* Check path
     else
     {
         std::vector<Vector2I> path{ PathfinderSystem::findPath(
             map,
-            Convert::worldToTile( enemiesIO->positions[enemyId] ),
+            Convert::worldToTile( enemiesIO.positions[enemyId] ),
             heroPosition,
             gameCamera,
             false,
-            enemiesIO->ais[enemyId].scanRange
+            enemiesIO.ais[enemyId].scanRange
         ) };
 
         size_t pathSize{ path.size() };
@@ -68,13 +68,13 @@ bool executeAction(
              ) )
         {
             MovementSystem::prepareByFromTo(
-                enemiesIO->movements[enemyId],
-                enemiesIO->transforms[enemyId],
-                Convert::worldToTile( enemiesIO->positions[enemyId] ),
+                enemiesIO.movements[enemyId],
+                enemiesIO.transforms[enemyId],
+                Convert::worldToTile( enemiesIO.positions[enemyId] ),
                 *path.rbegin()
             );
 
-            EnergyModule::consume( &enemiesIO->energies[enemyId] );
+            EnergyModule::consume( enemiesIO.energies[enemyId] );
 
             isActionMultiFrame = true;
         }
@@ -83,7 +83,7 @@ bool executeAction(
         else
         {
             //* Wait
-            EnergyModule::consume( &enemiesIO->energies[enemyId] );
+            EnergyModule::consume( enemiesIO.energies[enemyId] );
         }
     }
     // return false;
@@ -93,9 +93,9 @@ bool executeAction(
 namespace AISystem
 {
     bool executeNextAction(
-        size_t* activeEnemyIdIO,
-        Enemies* enemiesIO,
-        Hero* heroIO,
+        size_t& activeEnemyIdIO,
+        Enemies& enemiesIO,
+        Hero& heroIO,
         Map const& map,
         GameCamera const& gameCamera,
         int turn
@@ -105,26 +105,26 @@ namespace AISystem
 
         do
         {
-            *activeEnemyIdIO = EnemiesModule::getActive(
-                enemiesIO->energies,
-                enemiesIO->ais,
+            activeEnemyIdIO = EnemiesModule::getActive(
+                enemiesIO.energies,
+                enemiesIO.ais,
                 turn
             );
 
-            if ( *activeEnemyIdIO )
+            if ( activeEnemyIdIO )
             {
-                enemiesIO->ais[*activeEnemyIdIO].turn = turn;
+                enemiesIO.ais[activeEnemyIdIO].turn = turn;
 
                 multiFrameActionActive |= executeAction(
                     enemiesIO,
-                    &heroIO->health,
+                    heroIO.health,
                     map,
-                    Convert::worldToTile( heroIO->position ),
+                    Convert::worldToTile( heroIO.position ),
                     gameCamera,
-                    *activeEnemyIdIO
+                    activeEnemyIdIO
                 );
             }
-        } while ( *activeEnemyIdIO );
+        } while ( activeEnemyIdIO );
 
         return multiFrameActionActive;
     }

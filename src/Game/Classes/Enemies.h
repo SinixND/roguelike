@@ -79,7 +79,7 @@ namespace EnemiesModule
     );
 
     //* Returns if an enemy is ready
-    bool regenerate( snx::DenseMap<size_t, EnergyComponent>* energiesIO );
+    bool regenerate( snx::DenseMap<size_t, EnergyComponent>& energiesIO );
 
     [[nodiscard]]
     Enemies const& updateMovements(

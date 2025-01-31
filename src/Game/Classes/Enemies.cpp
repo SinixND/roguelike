@@ -206,13 +206,13 @@ namespace EnemiesModule
         return enemies;
     }
 
-    bool regenerate( snx::DenseMap<size_t, EnergyComponent>* energiesIO )
+    bool regenerate( snx::DenseMap<size_t, EnergyComponent>& energiesIO )
     {
         bool isEnemyReady{ false };
 
-        for ( EnergyComponent& energy : *energiesIO )
+        for ( EnergyComponent& energy : energiesIO )
         {
-            if ( !EnergyModule::regenerate( &energy ) )
+            if ( !EnergyModule::regenerate( energy ) )
             {
                 isEnemyReady = true;
             }

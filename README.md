@@ -6,7 +6,7 @@ Platforms: Linux, Windows, Browser
 # TODOs
 ## Active 
 - [ ] Refactor
-    [Status] Current: Game folder -> Systems -> AISystem
+    [Status] Current: Game folder -> Systems -> CollisionSystem
     - [ ] Use `values()` of Densemap where 2+ SoA members needed
     - [ ] Refactor parameters to low/member level ( if < 3 members used );
         - Split modified and const members
@@ -20,7 +20,6 @@ Platforms: Linux, Windows, Browser
 
 
 ## Shortterm
-- [ ] Check "IO" parameters if is actually "Out"
 - [ ] Make internal members private (if no external references)
 - [ ] Separate fog calculation from visibility calculation
 - [ ] Fix web bug -> cursor not moving when mouse active

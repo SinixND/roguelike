@@ -16,13 +16,13 @@
 /// @brief A separate game loop function needed for emscripten
 void emscriptenLoop( void* arg )
 {
-    App* app = (App*)arg;
+    App& app = (App&)arg;
 
     SceneModule::update(
-        app->scene,
-        app->cursor,
-        app->currentInputId,
-        app->dt
+        app.scene,
+        app.cursor,
+        app.currentInputId,
+        app.dt
     );
 }
 

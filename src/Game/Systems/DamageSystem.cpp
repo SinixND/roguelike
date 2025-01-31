@@ -11,7 +11,7 @@ namespace DamageSystem
     )
     {
         HealthModule::damage(
-            &defenderHealth,
+            defenderHealth,
             DamageModule::damageRNG( attackerDamage )
         );
     }

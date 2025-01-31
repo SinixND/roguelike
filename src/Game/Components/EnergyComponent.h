@@ -19,15 +19,15 @@ struct EnergyComponent
 namespace EnergyModule
 {
     //* Consumes all energy remaining; Returns if consumption was successful
-    bool consume( EnergyComponent* energyIO );
+    bool consume( EnergyComponent& energyIO );
 
     //* Consumes energy; Returns if consumption was successful
     bool consume(
-        EnergyComponent* energyIO,
+        EnergyComponent& energyIO,
         int value
     );
 
     //* Returns true if energy was regenerated
-    bool regenerate( EnergyComponent* energyIO );
+    bool regenerate( EnergyComponent& energyIO );
 }
 #endif

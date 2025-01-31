@@ -417,16 +417,16 @@ void updateShadowline(
 }
 
 void calculateVisibilitiesInOctant(
-    Tiles* tilesIO,
-    snx::DenseMap<Vector2I, Fog>* fogsIO,
+    Tiles& tilesIO,
+    snx::DenseMap<Vector2I, Fog>& fogsIO,
     Vector2I const& heroPosition,
     int octant,
     int visionRange,
     int range
 )
 {
-    Tiles& tiles{ *tilesIO };
-    snx::DenseMap<Vector2I, Fog>& fogs{ *fogsIO };
+    Tiles& tiles{ tilesIO };
+    snx::DenseMap<Vector2I, Fog>& fogs{ fogsIO };
 
     //* !!! Octant coordinates are standard cartesian;
     //* x+ = right, y+ = up !!!
@@ -594,15 +594,15 @@ void calculateVisibilitiesInOctant(
 namespace VisibilitySystem
 {
     void calculateVisibilities(
-        snx::DenseMap<Vector2I, Fog>* fogsIO,
-        Tiles* tilesIO,
+        snx::DenseMap<Vector2I, Fog>& fogsIO,
+        Tiles& tilesIO,
         RectangleExI const& viewportInTiles,
         Vector2I const& heroPosition,
         int visionRange
     )
     {
-        Tiles& tiles{ *tilesIO };
-        snx::DenseMap<Vector2I, Fog>& fogs{ *fogsIO };
+        Tiles& tiles{ tilesIO };
+        snx::DenseMap<Vector2I, Fog>& fogs{ fogsIO };
 
         //* Input
         int quarterWidth{ 2 + ( viewportInTiles.width() / 2 ) };
@@ -640,8 +640,8 @@ namespace VisibilitySystem
 #endif
 
             calculateVisibilitiesInOctant(
-                &tiles,
-                &fogs,
+                tiles,
+                fogs,
                 heroPosition,
                 octant,
                 visionRange,

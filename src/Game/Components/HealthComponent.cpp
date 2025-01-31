@@ -10,25 +10,25 @@
 namespace HealthModule
 {
     bool damage(
-        HealthComponent* healthIO,
+        HealthComponent& healthIO,
         int value
     )
     {
 #if defined( DEBUG ) && defined( DEBUG_HEALTH )
-        snx::debug::cliLog( "Remove " + std::to_string( value ) + " from " + std::to_string( healthIO->currentHealth ) + " health\n" );
+        snx::debug::cliLog( "Remove " + std::to_string( value ) + " from " + std::to_string( healthIO.currentHealth ) + " health\n" );
 #endif
         if ( value )
         {
-            healthIO->currentHealth -= value;
+            healthIO.currentHealth -= value;
         }
         else
         {
-            healthIO->currentHealth = 0;
+            healthIO.currentHealth = 0;
         }
 
         snx::PublisherStatic::publish( EventId::INTERRUPT_MOVEMENT );
 
-        if ( healthIO->currentHealth <= 0 )
+        if ( healthIO.currentHealth <= 0 )
         {
             return true;
         }

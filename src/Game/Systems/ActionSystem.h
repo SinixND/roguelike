@@ -11,8 +11,8 @@ namespace ActionSystem
 {
     //* Return if multi-frame action taken
     bool executeAction(
-        Hero* heroIO,
-        Map* mapIO,
+        Hero& heroIO,
+        Map& mapIO,
         Cursor const& cursor,
         GameCamera const& gameCamera,
         InputId currentInput

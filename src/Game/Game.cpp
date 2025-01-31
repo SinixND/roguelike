@@ -53,10 +53,10 @@ namespace GameModule
         if ( !game.isMultiFrameActionActive )
         {
             game.isMultiFrameActionActive = AISystem::executeNextAction(
-                &game.activeEnemyId,
-                &game.world.currentMapPtr->enemies,
-                &game.hero,
-                *game.world.currentMapPtr,
+                game.activeEnemyId,
+                game.world.currentMap->enemies,
+                game.hero,
+                *game.world.currentMap,
                 gameCamera,
                 game.turn
             );
@@ -67,8 +67,8 @@ namespace GameModule
              && game.hero.energy.state == EnergyComponent::State::READY )
         {
             game.isMultiFrameActionActive = ActionSystem::executeAction(
-                &game.hero,
-                game.world.currentMapPtr,
+                game.hero,
+                *game.world.currentMap,
                 cursor,
                 gameCamera,
                 currentInputId
@@ -78,9 +78,9 @@ namespace GameModule
         //* Update instant actions
         if ( !game.isMultiFrameActionActive )
         {
-            game.world.currentMapPtr->enemies = EnemiesModule::replaceDead(
-                game.world.currentMapPtr->enemies,
-                game.world.currentMapPtr->tiles
+            game.world.currentMap->enemies = EnemiesModule::replaceDead(
+                game.world.currentMap->enemies,
+                game.world.currentMap->tiles
             );
         }
         //* Update multi-frame actions
@@ -98,7 +98,7 @@ namespace GameModule
 
             //* Update enemies
             MovementSystem::updateEnemies(
-                game.world.currentMapPtr->enemies,
+                game.world.currentMap->enemies,
                 game.hero.position,
                 dt
             );
@@ -114,8 +114,8 @@ namespace GameModule
             //* Regenerate until one unit becomes ready
             while ( !isUnitReady )
             {
-                isUnitReady = EnergyModule::regenerate( &game.hero.energy );
-                isUnitReady |= EnemiesModule::regenerate( &game.world.currentMapPtr->enemies.energies );
+                isUnitReady = EnergyModule::regenerate( game.hero.energy );
+                isUnitReady |= EnemiesModule::regenerate( game.world.currentMap->enemies.energies );
             }
 
             //* Increment turn when hero is ready
@@ -171,7 +171,7 @@ namespace GameModule
                 game.world.decreaseMapLevel();
 
                 //* Place Hero on the map exit
-                auto const& objects{ game.world.currentMapPtr->objects };
+                auto const& objects{ game.world.currentMap->objects };
                 auto const& renderIds{ objects.renderIds.values() };
                 auto const& positions{ objects.positions.values() };
 
