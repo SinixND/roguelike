@@ -1,15 +1,13 @@
 #ifndef IG20241029001208
 #define IG20241029001208
 
-float const baseCritChance{ 0.0f };
-
-float const baseCritDamage{ 0.50f };
+#include "DamageData.h"
 
 struct DamageComponent
 {
     int baseDamage{};
-    float critChanceFactor{ baseCritChance };
-    float critDamageFactor{ baseCritDamage };
+    float critChanceFactor{ DamageData::baseCritChance };
+    float critDamageFactor{ DamageData::baseCritDamage };
 };
 
 namespace DamageModule
