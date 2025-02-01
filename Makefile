@@ -43,7 +43,7 @@
 # - All source files are in ./src or its subfolders
 # - All header files are in ./include or ./src or their subfolders
 # Host OS: linux or termux
-# Target platforms: linux (default), web (with emscripten) or windows (with mingw32)
+# Target platforms: unix (default), web (with emscripten) or windows (with mingw32)
 
 
 #######################################
@@ -72,8 +72,8 @@ endif
 ### Default build mode (debug/release)
 BUILD 					?= debug
 
-### Default target platform (linux/web/windows)
-PLATFORM 				?= linux
+### Default target platform (unix/web/windows)
+PLATFORM 				?= unix
 
 
 # LBL_ProjectDirectories
@@ -101,7 +101,7 @@ ASSETS_DIR	 			:= ./assets
 
 # LBL_FileExtensions
 ### Set the targets file extension
-ifeq ($(PLATFORM),linux)
+ifeq ($(PLATFORM),unix)
     BIN_EXT 			:=
 endif
 ifeq ($(PLATFORM),windows)
@@ -115,15 +115,8 @@ endif
 SRC_EXT 				:= .cpp
 
 ### Set the used file extension for object files, usually .o
-### Distinction to be made for use of '-MJ $@.json' flag in linux debug builds (clang)
-OBJ_EXT_LIN 			:= .o
-OBJ_EXT_WIN				:= .obj
+OBJ_EXT					:= .o
 
-OBJ_EXT					:= $(OBJ_EXT_LIN)
-
-ifeq ($(PLATFORM),windows)
-    OBJ_EXT 			:= $(OBJ_EXT_WIN)
-endif
 
 ### Set the used file extension for dependency files, usually .d (header/source connection)
 DEP_EXT 				:= .d
@@ -138,12 +131,8 @@ endif
 ### Name that the created binary should have
 BIN 					:= main
 
-### Here the debug/release binaries will be output
-    BIN_DIR 			= $(BIN_DIR_ROOT)/$(BUILD)
-
-ifeq ($(PLATFORM),web)
-    BIN_DIR 			= $(WEB_DIR)
-endif
+### Here is the output directory for the binaries
+BIN_DIR 				= $(BIN_DIR_ROOT)/$(PLATFORM)/$(BUILD)
 
 
 # LBL_SourceFiles
@@ -162,11 +151,7 @@ SRC_NAMES 				= $(patsubst %$(SRC_EXT),%,$(SRC_FILES))
 
 
 # LBL_ObjectFiles
-ifeq ($(BUILD),debug)
-    BUILD_DIR 			= $(BUILD_DIR_ROOT)/debug
-else
-    BUILD_DIR 			= $(BUILD_DIR_ROOT)/release
-endif
+BUILD_DIR 			= $(BUILD_DIR_ROOT)/$(PLATFORM)/$(BUILD)
 
 ### Make list of object files need for linker command by changing ending of all source files to .o;
 ### IMPORTANT for linker dependency, so they are found as compile rule
@@ -289,7 +274,7 @@ INC_FLAGS 				+= $(addprefix -isystem,$(SYS_INC_DIRS))
 # LBL_Toolchain
 #######################################
 
-ifeq ($(PLATFORM),linux)
+ifeq ($(PLATFORM),unix)
     CXX 				:= clang++
 endif
 ifeq ($(PLATFORM),windows)
@@ -314,9 +299,13 @@ CXX_FLAGS 				:= -std=c++20 -MMD -MP -g
 FATAL					:= false
 
 ### Build specific flags 
-ifeq ($(OS),termux)
-    CXX_FLAGS 			+= -DTERMUX
+ifeq ($(OS),linux)
+    CXX_FLAGS 				+= 
+    ifeq ($(OS),termux)
+        CXX_FLAGS 				+= -DTERMUX
+    endif
 endif
+
 ifeq ($(PLATFORM),web)
     CXX_FLAGS 			+= -Os -Wall -DEMSCRIPTEN -DPLATFORM_WEB
     ifeq ($(BUILD),debug)
@@ -329,21 +318,21 @@ else
         CXX_FLAGS 			+= -g -ggdb -O0 -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -DDEBUG 
 
         ifeq ($(FATAL),true)
-        	CXX_FLAGS				+= -Wfatal-errors
+            CXX_FLAGS			+= -Wfatal-errors
         endif
 
         ifeq ($(OS),linux)
             CXX_FLAGS 		+= -pg
         endif
     else
-        CXX_FLAGS 			+= -O2 -DNDEBUG
+        CXX_FLAGS 		+= -O2 -DNDEBUG
     endif
 endif
 
 
 # LBL_LinkFlags
 ### Set link flags
-LD_FLAGS 				:= -lpthread #-fsanitize=address
+LD_FLAGS 			:= -lpthread #-fsanitize=address
 
 ifeq ($(PLATFORM),web)
     LD_FLAGS 			+= --preload-file $(ASSETS_DIR)/ -sUSE_GLFW=3
@@ -358,7 +347,7 @@ ifeq ($(PLATFORM),windows)
 endif
 
 ### Make link flags by prefixing every provided library with -l (should work for most libraries due to convention); probably pkg-config makes duplicates...
-LD_FLAGS 				+= $(addprefix -l,$(LIBRARIES))
+LD_FLAGS 			+= $(addprefix -l,$(LIBRARIES))
 
 
 #######################################
@@ -385,11 +374,18 @@ build: $(BIN_DIR)/$(BIN)$(BIN_EXT)
 clean:
 	$(info )
 	$(info === Clean ===)
-	@rm -rf $(BIN_DIR_ROOT)/debug/*
-	@rm -rf $(BIN_DIR_ROOT)/release/*
-	@rm -rf $(BUILD_DIR_ROOT)/debug/*
-	@rm -rf $(BUILD_DIR_ROOT)/release/*
-	@rm -rf $(WEB_DIR)/*
+	@rm -rf $(BIN_DIR_ROOT)/unix/debug/*
+	@rm -rf $(BIN_DIR_ROOT)/web/debug/*
+	@rm -rf $(BIN_DIR_ROOT)/windows/debug/*
+	@rm -rf $(BIN_DIR_ROOT)/unix/release/*
+	@rm -rf $(BIN_DIR_ROOT)/web/release/*
+	@rm -rf $(BIN_DIR_ROOT)/windows/release/*
+	@rm -rf $(BUILD_DIR_ROOT)/unix/debug/*
+	@rm -rf $(BUILD_DIR_ROOT)/web/debug/*
+	@rm -rf $(BUILD_DIR_ROOT)/windows/debug/*
+	@rm -rf $(BUILD_DIR_ROOT)/unix/release/*
+	@rm -rf $(BUILD_DIR_ROOT)/web/release/*
+	@rm -rf $(BUILD_DIR_ROOT)/windows/release/*
 
 ### Debug build
 debug: 
@@ -399,18 +395,27 @@ debug:
 	@$(MAKE) -s dtb
 
 ### Build compile_commands.json
-dtb: 
+dtb:
+	$(info )
+	$(info === Build compile_commands.json ===)
 	$(shell sed -e '1s/^/[\n/' -e '$$s/,$$/\n]/' $(BUILD_DIR)/*.o.json > compile_commands.json)
 
 ### Create necessary folders
 init:
 	$(info )
 	$(info === Init ===)
-	@mkdir -p $(BIN_DIR_ROOT)/debug
-	@mkdir -p $(BIN_DIR_ROOT)/release
-	@mkdir -p $(BUILD_DIR_ROOT)/debug
-	@mkdir -p $(BUILD_DIR_ROOT)/release
-	@mkdir -p $(WEB_DIR)
+	@mkdir -p $(BIN_DIR_ROOT)/unix/debug/
+	@mkdir -p $(BIN_DIR_ROOT)/web/debug/
+	@mkdir -p $(BIN_DIR_ROOT)/windows/debug/
+	@mkdir -p $(BIN_DIR_ROOT)/unix/release/
+	@mkdir -p $(BIN_DIR_ROOT)/web/release/
+	@mkdir -p $(BIN_DIR_ROOT)/windows/release/
+	@mkdir -p $(BUILD_DIR_ROOT)/unix/debug/
+	@mkdir -p $(BUILD_DIR_ROOT)/web/debug/
+	@mkdir -p $(BUILD_DIR_ROOT)/windows/debug/
+	@mkdir -p $(BUILD_DIR_ROOT)/unix/release/
+	@mkdir -p $(BUILD_DIR_ROOT)/web/release/
+	@mkdir -p $(BUILD_DIR_ROOT)/windows/release/
 
 ### Rule for complete compilation, ready to publish
 publish:
@@ -426,22 +431,22 @@ release:
 
 ### Run binary file
 run: 
-	$(BIN_DIR_ROOT)/$(BUILD)/$(BIN)$(BIN_EXT)
+	$(BIN_DIR_ROOT)/$(PLATFORM)/$(BUILD)/$(BIN)$(BIN_EXT)
 
 run_release:
 	@$(MAKE) BUILD=release run
 
 ### Rule for web build process
-web: 
+web:
 	$(info )
 	$(info === Web build ===)
-	@$(MAKE) BUILD=release PLATFORM=web build -B
+	@$(MAKE) PLATFORM=web BUILD=release build -B
 
 ### Rule for windows build process
-windows: 
+windows:
 	$(info )
 	$(info === Windows build ===)
-	@$(MAKE) BUILD=release PLATFORM=windows build
+	@$(MAKE) PLATFORM=windows BUILD=release build
 
 
 # LBL_BuildRules
@@ -451,31 +456,25 @@ windows:
 
 # === COMPILER COMMAND ===
 ### MAKE object files FROM source files; "%" pattern-matches (need pair of)
-$(BUILD_DIR)/%$(OBJ_EXT_LIN): %$(SRC_EXT) 
-	$(info )
-	$(info === Compile: BUILD=$(BUILD), PLATFORM=$(PLATFORM) ===)
-	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS) -MJ $@.json 
-
-$(BUILD_DIR)/%$(OBJ_EXT_WIN): %$(SRC_EXT) 
+$(BUILD_DIR)/%$(OBJ_EXT): %$(SRC_EXT) 
 	$(info )
 	$(info === Compile: BUILD=$(BUILD), PLATFORM=$(PLATFORM) ===)
 	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
+### Need separate compiler command for -MJ flag argument
+$(BUILD_DIR_ROOT)/unix/debug/%$(OBJ_EXT): %$(SRC_EXT) 
+	$(info )
+	$(info === Compile: PLATFORM=$(PLATFORM), BUILD=$(BUILD) ===)
+	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS) -MJ $@.json 
+
 
 # === LINKER COMMAND ===
 ### MAKE binary file FROM object files
-$(BIN_DIR_ROOT)/$(BUILD)/$(BIN)$(BIN_EXT): $(OBJS)
+$(BIN_DIR_ROOT)/$(PLATFORM)/$(BUILD)/$(BIN)$(BIN_EXT): $(OBJS)
 	$(info )
-	$(info === Link: BUILD=$(BUILD), PLATFORM=$(PLATFORM) ===)
+	$(info === Link: PLATFORM=$(PLATFORM), BUILD=$(BUILD) ===)
 	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
-
-# === WEB BUILD COMMAND ===
-### MAKE html file FROM source files
-$(WEB_DIR)/$(BIN)$(BIN_EXT): $(SRS) 
-	$(info )
-	$(info === Build: BUILD=$(BUILD), PLATFORM=$(PLATFORM) ===)
-	$(CXX) -o $(BIN_DIR)/$(BIN)$(BIN_EXT) $(SRCS) $(CXX_FLAGS) $(INC_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
 
 ### "-" surpresses error for initial missing .d files
 -include $(DEPS)

@@ -14,10 +14,13 @@ int main( /* int argc, char** argv */ )
 
     App app{};
 
-    app.init( config );
+    app = AppModule::init(
+        app,
+        config
+    );
 
-    app.run();
-    app.deinit();
+    AppModule::run( app );
+    AppModule::deinit( app );
 
     return 0;
 }

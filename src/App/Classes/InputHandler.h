@@ -15,6 +15,8 @@ public:
     InputId fromMouse();
     InputId fromGesture();
 
+    void toggleCursorState();
+
 private:
     int currentKey{ KEY_NULL };
     int lastKey{ KEY_NULL };

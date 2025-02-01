@@ -4,6 +4,7 @@
 #include "EventId.h"
 #include "GameFont.h"
 #include "InputHandler.h"
+#include "InputId.h"
 #include "PublisherStatic.h"
 #include <raygui.h>
 #include <raylib.h>
@@ -115,60 +116,73 @@ InputId getUserInput( InputHandler& inputHandler )
     return inputId;
 }
 
-void App::init( AppConfig const& config )
+namespace AppModule
 {
-    setupFrameworks( config );
-
-    snx::PublisherStatic::addSubscriber(
-        EventId::CURSOR_TOGGLE,
-        [&]()
-        {
-            CursorModule::toggle( cursor );
-        }
-    );
-
-    SceneModule::init(
-        scene,
-        cursor
-    );
-}
-
-void App::run()
-{
-#if defined( EMSCRIPTEN )
-    emscripten_set_main_loop_arg(
-        emscriptenLoop,
-        &app,
-        60 /*FPS*/,
-        1 /*Simulate infinite loop*/
-    );
-#else
-    while ( !( WindowShouldClose() ) )
+    App const& init(
+        App& appIO,
+        AppConfig const& config
+    )
     {
-        updateWindowState();
-#if defined( DEBUG )
-        updateDeveloperMode();
-#endif
+        setupFrameworks( config );
 
-        currentInputId = getUserInput( inputHandler );
-
-        dt = GetFrameTime();
-
-        SceneModule::update(
-            scene,
-            cursor,
-            currentInputId,
-            dt
+        snx::PublisherStatic::addSubscriber(
+            EventId::CURSOR_TOGGLE,
+            [&]()
+            {
+                CursorModule::toggle( appIO.cursor );
+            }
         );
+
+        SceneModule::init(
+            appIO.scene,
+            appIO.cursor
+        );
+
+        return appIO;
     }
+
+    void run( App& appIO )
+    {
+#if defined( EMSCRIPTEN )
+        emscripten_set_main_loop_arg(
+            emscriptenLoop,
+            &appIO,
+            60 /*FPS*/,
+            1 /*Simulate infinite loop*/
+        );
+#else
+        while ( !( WindowShouldClose() ) )
+        {
+            updateWindowState();
+#if defined( DEBUG )
+            updateDeveloperMode();
 #endif
-}
 
-void App::deinit()
-{
-    GameFont::unload();
-    SceneModule::deinitialize( scene );
+            appIO.currentInputId = getUserInput( appIO.inputHandler );
 
-    //* Close window and opengl context
-    CloseWindow();
+            if ( appIO.currentInputId == InputId::TOGGLE_CURSOR )
+            {
+                appIO.inputHandler.toggleCursorState();
+            }
+
+            appIO.dt = GetFrameTime();
+
+            SceneModule::update(
+                appIO.scene,
+                appIO.cursor,
+                appIO.currentInputId,
+                appIO.dt
+            );
+        }
+#endif
+    }
+
+    void deinit( App& appIO )
+    {
+        GameFont::unload();
+        SceneModule::deinitialize( appIO.scene );
+
+        //* Close window and opengl context
+        CloseWindow();
+    }
 }

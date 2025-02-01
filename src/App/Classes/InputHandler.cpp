@@ -1,10 +1,17 @@
 #include "InputHandler.h"
 
+// #define DEBUG_GESTURES
+
 #include "EventId.h"
 #include "InputId.h"
 #include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raylib.h>
+
+#if defined( DEBUG )
+#include "Debugger.h"
+#include "Logger.h"
+#endif
 
 //* Maximum hold time for tap event to trigger
 double constexpr maxTapTime{ 0.3f };
@@ -62,6 +69,11 @@ InputId InputHandler::fromMouse()
 InputId InputHandler::fromGesture()
 {
     InputId inputId{ InputId::NONE };
+
+    if ( isCursorActive )
+    {
+        return inputId;
+    }
 
     //* IMPORTANT NOTE:
     //* Implemented events TAP, DOUBLETAP and HOLD as raylib gesture registration was unreliable
@@ -321,4 +333,9 @@ InputId InputHandler::fromGesture()
     }
 
     return inputId;
+}
+
+void InputHandler::toggleCursorState()
+{
+    isCursorActive = !isCursorActive;
 }
