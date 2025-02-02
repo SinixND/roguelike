@@ -132,7 +132,6 @@ namespace MovementSystem
 
     TransformComponent const& resetTransform( TransformComponent& transform )
     {
-        // transform.isInProgress_ = false;
         transform.direction = Vector2I{ 0, 0 };
         transform.speed = .0f;
         transform.cumulativeDistance = 0;

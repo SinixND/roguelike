@@ -5,15 +5,15 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
+- [ ] Check Bug Enemy not moving and tile blocked (id4/idx3 transform does not reset)
 - [ ] Refactor
-    [Status] Current: Game folder -> Systems -> MovementSystem
+    [Status] Current: Game folder -> Systems -> PathfinderSystem
     - [ ] Use `values()` of Densemap where >1 SoA members needed
     - [ ] Refactor parameters to low/member level ( if < 3 members used );
         - Split modified and const members
         - Parameter order -> Check `DesignGuideline.md` for fake return
     - [ ] Restructure: 
         - [ ] main { App { Scene, Game }}
-        - [ ] World => Levels
         - [ ] World/Levels { Fogs }
     - [ ] Check for struct/class invariants
         - Refactor: Extract possible NMNF functions

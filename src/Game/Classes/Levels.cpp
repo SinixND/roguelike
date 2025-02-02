@@ -1,13 +1,13 @@
-#include "World.h"
+#include "Levels.h"
 
 #include "MapGeneratorSystem.h"
 
-World::World()
+Levels::Levels()
 {
     currentMap = &maps.back();
 }
 
-void World::increaseMapLevel()
+void Levels::increaseMapLevel()
 {
     if ( currentMapLevel == maxMapLevel )
     {
@@ -20,7 +20,7 @@ void World::increaseMapLevel()
     setCurrentMap( currentMapLevel );
 }
 
-void World::decreaseMapLevel()
+void Levels::decreaseMapLevel()
 {
     if ( currentMapLevel == 0 )
     {
@@ -32,12 +32,12 @@ void World::decreaseMapLevel()
     setCurrentMap( currentMapLevel );
 }
 
-void World::addNewMap()
+void Levels::addNewMap()
 {
     maps.push_back( MapGeneratorSystem::createRandomMapType( maxMapLevel + 1 ) );
 }
 
-void World::setCurrentMap( int level )
+void Levels::setCurrentMap( int level )
 {
     currentMap = &maps[level];
 }

@@ -3,14 +3,14 @@
 
 #include "Hero.h"
 #include "InputId.h"
-#include "World.h"
+#include "Levels.h"
 
 struct Cursor;
 struct GameCamera;
 
 struct Game
 {
-    World world{};
+    Levels world{};
 
     Hero hero{};
 

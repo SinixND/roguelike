@@ -6,14 +6,14 @@
 #include <vector>
 
 //* World holds maps which are identified by a mapLevel (int)
-class World
+class Levels
 {
 public:
     int currentMapLevel{};
     Map* currentMap{};
 
 public:
-    World();
+    Levels();
 
     void increaseMapLevel();
     void decreaseMapLevel();
