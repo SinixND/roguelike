@@ -84,7 +84,6 @@ namespace EnemiesModule
     [[nodiscard]]
     Enemies const& updateMovements(
         Enemies& enemies,
-        Vector2 const& heroPosition,
         float dt
     );
 

@@ -86,9 +86,10 @@ namespace ShadowModule
 namespace VisibilitySystem
 {
     //* If any part of tile is visible . whole tile is visible (so that "tunnel walls" stay visible)
-    void calculateVisibilities(
-        snx::DenseMap<Vector2I, Fog>& fogsIO,
+    [[nodiscard]]
+    Tiles const& calculateVisibilities(
         Tiles& tilesIO,
+        snx::DenseMap<Vector2I, Fog>& fogsIO,
         RectangleExI const& viewportInTiles,
         Vector2I const& heroPosition,
         int visionRange

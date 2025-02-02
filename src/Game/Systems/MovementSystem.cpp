@@ -1,6 +1,5 @@
 #include "MovementSystem.h"
 
-#include "Convert.h"
 #include "Enemies.h"
 #include "EnergyComponent.h"
 #include "EventId.h"
@@ -13,35 +12,22 @@
 
 namespace MovementSystem
 {
-    void update(
-        TransformComponent& transform,
-        // MovementComponent& movement,
+    Vector2 const& updateSingle(
         Vector2& position,
-        EnergyComponent& energy,
-        Vector2 const& heroPosition,
+        TransformComponent& transformIO,
+        // MovementComponent& movementIO,
+        EnergyComponent& energyIO,
         float dt
     )
     {
-        //* Check if action is in progress
-        if ( transform.speed )
-        {
-            EnergyModule::consume( energy );
+        EnergyModule::consume( energyIO );
 
-            snx::PublisherStatic::publish( EventId::MULTIFRAME_ACTION_ACTIVE );
-        }
-        else
-        {
-            return;
-        }
+        Vector2 offset{ frameOffset( transformIO, dt ) };
 
-        Vector2 offset{ frameOffset( transform, dt ) };
-
-        transform.cumulativeDistance += Vector2Length( offset );
-
-        Vector2I oldPosition{ Convert::worldToTile( position ) };
+        transformIO.cumulativeDistance += Vector2Length( offset );
 
         //* Check if movement exceeds tile length this frame
-        if ( transform.cumulativeDistance < TileData::tileSize )
+        if ( transformIO.cumulativeDistance < TileData::tileSize )
         {
             //* Move full distance this frame
             position += offset;
@@ -53,7 +39,7 @@ namespace MovementSystem
                 offset,
                 0,
                 TileData::tileSize
-                    - ( transform.cumulativeDistance
+                    - ( transformIO.cumulativeDistance
                         - Vector2Length( offset ) )
             );
 
@@ -62,142 +48,98 @@ namespace MovementSystem
             position = Vector2Round( position );
 
             //* Reset cumulativeDistance
-            resetCumulativeDistance( transform );
-
-            resetTransform( transform );
+            transformIO = resetTransform( transformIO );
 
             snx::PublisherStatic::publish( EventId::MULTIFRAME_ACTION_DONE );
         }
 
-        //* Check if unit moving is the hero
-        if ( position != heroPosition )
-        {
-            return;
-        }
-
-        //* Handle special case for hero
-        snx::PublisherStatic::publish( EventId::HERO_MOVED );
-
-        if ( oldPosition != Convert::worldToTile( position ) )
-        {
-            snx::PublisherStatic::publish( EventId::HERO_POSITION_CHANGED );
-        }
+        return position;
     }
 
-    void updateEnemies(
-        Enemies& enemies,
-        Vector2 const& heroPosition,
-        float dt
-    )
-    {
-        Vector2* currentPosition{};
-        Vector2I oldPosition{};
-
-        //* get new positions
-
-        //* update all positions/movements/transforms
-
-        for ( size_t idx{ 0 }; idx < enemies.transforms.size(); ++idx )
-        {
-            currentPosition = &enemies.positions.values()[idx];
-
-            oldPosition = Convert::worldToTile( *currentPosition );
-
-            //* Update movement
-            //* Update ids_ key if tilePosition changes
-            MovementSystem::update(
-                enemies.transforms.values()[idx],
-                // enemies.movements.values()[i],
-                *currentPosition,
-                enemies.energies.values()[idx],
-                heroPosition,
-                dt
-            );
-
-            if ( oldPosition != Convert::worldToTile( *currentPosition ) )
-            {
-                enemies.ids.changeKey(
-                    oldPosition,
-                    Convert::worldToTile( *currentPosition )
-                );
-            }
-        }
-    }
-
-    void prepareByDirection(
+    TransformComponent const& prepareByDirection(
+        TransformComponent& transform,
         MovementComponent const& movement,
-        Vector2I const& direction,
-        TransformComponent& transform
+        Vector2I const& direction
     )
     {
         transform.direction = direction;
         transform.speed = movement.baseSpeed;
+
+        snx::PublisherStatic::publish( EventId::MULTIFRAME_ACTION_ACTIVE );
+
+        return transform;
     }
 
-    void prepareFromExistingPath(
-        MovementComponent& movement,
-        TransformComponent& transform
-    )
-    {
-        prepareByDirection(
-            movement,
-            Vector2Subtract(
-                movement.path.rbegin()[1],
-                movement.path.rbegin()[0]
-            ),
-            transform
-        );
-
-        //* Remove tilePosition moved from
-        movement.path.pop_back();
-
-        //* Clear path guided movement after last trigger if target reched
-        if ( movement.path.size() < 2 )
-        {
-            movement.path.clear();
-        }
-    }
-
-    void prepareByNewPath(
+    MovementComponent const& prepareByNewPath(
         MovementComponent& movement,
         std::vector<Vector2I> const& path
     )
     {
         if ( path.empty() )
         {
-            return;
+            return movement;
         }
 
         movement.path = path;
+
+        return movement;
     }
 
-    void prepareByFromTo(
-        MovementComponent& movement,
+    TransformComponent const& prepareFromExistingPath(
         TransformComponent& transform,
+        MovementComponent& movementIO
+    )
+    {
+        transform = prepareByDirection(
+            transform,
+            movementIO,
+            Vector2Subtract(
+                movementIO.path.rbegin()[1],
+                movementIO.path.rbegin()[0]
+            )
+        );
+
+        //* Remove tilePosition moved from
+        movementIO.path.pop_back();
+
+        //* Clear path guided movement after last trigger if target reched
+        if ( movementIO.path.size() < 2 )
+        {
+            movementIO.path.clear();
+        }
+
+        return transform;
+    }
+
+    TransformComponent const& prepareByFromTo(
+        TransformComponent& transform,
+        MovementComponent const& movement,
         Vector2I const& from,
         Vector2I const& to
     )
     {
-        prepareByDirection(
+        transform = prepareByDirection(
+            transform,
             movement,
             Vector2Subtract(
                 to,
                 from
-            ),
-            transform
+            )
         );
+
+        return transform;
     }
 
-    void resetTransform( TransformComponent& transform )
+    TransformComponent const& resetTransform( TransformComponent& transform )
     {
         // transform.isInProgress_ = false;
         transform.direction = Vector2I{ 0, 0 };
         transform.speed = .0f;
-    }
-
-    void resetCumulativeDistance( TransformComponent& transform )
-    {
         transform.cumulativeDistance = 0;
+
+        snx::PublisherStatic::publish( EventId::MULTIFRAME_ACTION_DONE );
+
+        return transform;
     }
 
     Vector2 frameOffset(

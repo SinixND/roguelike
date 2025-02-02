@@ -55,9 +55,9 @@ void setupSceneEvents(
                 scene.game.hero.position
             );
 
-            VisibilitySystem::calculateVisibilities(
-                scene.game.world.currentMap->fogs,
+            scene.game.world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
                 scene.game.world.currentMap->tiles,
+                scene.game.world.currentMap->fogs,
                 GameCameraModule::viewportInTiles( scene.gameCamera ),
                 Convert::worldToTile( scene.game.hero.position ),
                 scene.game.hero.visionRange
@@ -93,9 +93,9 @@ void setupSceneEvents(
         [&]()
         {
             //* VisibilitySystem
-            VisibilitySystem::calculateVisibilities(
-                scene.game.world.currentMap->fogs,
+            scene.game.world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
                 scene.game.world.currentMap->tiles,
+                scene.game.world.currentMap->fogs,
                 GameCameraModule::viewportInTiles( scene.gameCamera ),
                 Convert::worldToTile( scene.game.hero.position ),
                 scene.game.hero.visionRange

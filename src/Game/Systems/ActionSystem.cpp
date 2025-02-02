@@ -52,10 +52,10 @@ bool processDirectionalInput(
                   Convert::worldToTile( heroIO.position )
               ) )
     {
-        MovementSystem::prepareByDirection(
+        heroIO.transform = MovementSystem::prepareByDirection(
+            heroIO.transform,
             heroIO.movement,
-            direction,
-            heroIO.transform
+            direction
         );
 
         EnergyModule::consume( heroIO.energy );
@@ -95,9 +95,9 @@ namespace ActionSystem
                              Convert::worldToTile( heroIO.position )
                          ) )
                     {
-                        MovementSystem::prepareFromExistingPath(
-                            heroIO.movement,
-                            heroIO.transform
+                        heroIO.transform = MovementSystem::prepareFromExistingPath(
+                            heroIO.transform,
+                            heroIO.movement
                         );
 
                         isActionMultiFrame = true;
@@ -187,14 +187,14 @@ namespace ActionSystem
                                   Convert::worldToTile( heroIO.position )
                               ) )
                     {
-                        MovementSystem::prepareByNewPath(
+                        heroIO.movement = MovementSystem::prepareByNewPath(
                             heroIO.movement,
                             path
                         );
 
-                        MovementSystem::prepareFromExistingPath(
-                            heroIO.movement,
-                            heroIO.transform
+                        heroIO.transform = MovementSystem::prepareFromExistingPath(
+                            heroIO.transform,
+                            heroIO.movement
                         );
                     }
                     else

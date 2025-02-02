@@ -416,7 +416,8 @@ void updateShadowline(
     }
 }
 
-void calculateVisibilitiesInOctant(
+[[nodiscard]]
+Tiles const& calculateVisibilitiesInOctant(
     Tiles& tilesIO,
     snx::DenseMap<Vector2I, Fog>& fogsIO,
     Vector2I const& heroPosition,
@@ -589,13 +590,16 @@ void calculateVisibilitiesInOctant(
 #if defined( DEBUG ) && defined( DEBUG_SHADOW )
     EndDrawing();
 #endif
+
+    return tiles;
 }
 
 namespace VisibilitySystem
 {
-    void calculateVisibilities(
-        snx::DenseMap<Vector2I, Fog>& fogsIO,
+    [[nodiscard]]
+    Tiles const& calculateVisibilities(
         Tiles& tilesIO,
+        snx::DenseMap<Vector2I, Fog>& fogsIO,
         RectangleExI const& viewportInTiles,
         Vector2I const& heroPosition,
         int visionRange
@@ -639,7 +643,7 @@ namespace VisibilitySystem
             );
 #endif
 
-            calculateVisibilitiesInOctant(
+            tiles = calculateVisibilitiesInOctant(
                 tiles,
                 fogs,
                 heroPosition,
@@ -648,5 +652,7 @@ namespace VisibilitySystem
                 range
             );
         }
+
+        return tiles;
     }
 }

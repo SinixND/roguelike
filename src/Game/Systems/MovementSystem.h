@@ -1,62 +1,55 @@
 #ifndef IG20241027130300
 #define IG20241027130300
 
+#include "MovementComponent.h"
 #include "raylibEx.h"
 #include <vector>
 
 struct TransformComponent;
-struct MovementComponent;
 struct Vector2;
 struct EnergyComponent;
-struct Map;
-class Enemies;
 
 namespace MovementSystem
 {
-    void update(
+    [[nodiscard]]
+    Vector2 const& updateSingle(
+        Vector2& positionIO,
+        TransformComponent& transformIO,
+        // MovementComponent& movementIO,
+        EnergyComponent& energyIO,
+        float dt
+    );
+
+    [[nodiscard]]
+    TransformComponent const& prepareByDirection(
         TransformComponent& transform,
-        // MovementComponent& movement,
-        Vector2& position,
-        EnergyComponent& energy,
-        Vector2 const& heroPosition,
-        float dt
-    );
-
-    void updateEnemies(
-        Enemies& enemies,
-        Vector2 const& heroPosition,
-        float dt
-    );
-
-    void prepareByDirection(
         MovementComponent const& movement,
-        Vector2I const& direction,
-        TransformComponent& transform
+        Vector2I const& direction
     );
 
-    void prepareByNewPath(
+    [[nodiscard]]
+    MovementComponent const& prepareByNewPath(
         MovementComponent& movement,
         std::vector<Vector2I> const& path
     );
 
     //* Triggers from and adjusts path
-    void prepareFromExistingPath(
-        MovementComponent& movement,
-        // Vector2 const& position);
-        TransformComponent& transform
+    [[nodiscard]]
+    TransformComponent const& prepareFromExistingPath(
+        TransformComponent& transform,
+        MovementComponent& movementIO
     );
 
     //* Sets direction, currentVelocity and isTriggered_
-    void prepareByFromTo(
-        MovementComponent& movement,
+    [[nodiscard]]
+    TransformComponent const& prepareByFromTo(
         TransformComponent& transform,
+        MovementComponent const& movement,
         Vector2I const& from,
         Vector2I const& to
     );
 
-    void resetTransform( TransformComponent& transform );
-
-    void resetCumulativeDistance( TransformComponent& transform );
+    TransformComponent const& resetTransform( TransformComponent& transform );
 
     //* Calculate distance for this frame
     Vector2 frameOffset(

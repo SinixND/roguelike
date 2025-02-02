@@ -219,7 +219,6 @@ namespace EnemiesModule
 
     Enemies const& updateMovements(
         Enemies& enemies,
-        Vector2 const& heroPosition,
         float dt
     )
     {
@@ -235,12 +234,11 @@ namespace EnemiesModule
 
             //* Update movement
             //* Update ids_ key if tilePosition changes
-            MovementSystem::update(
+            *currentPosition = MovementSystem::updateSingle(
+                *currentPosition,
                 enemies.transforms.values()[idx],
                 // enemies.movements.values()[i),
-                *currentPosition,
                 enemies.energies.values()[idx],
-                heroPosition,
                 dt
             );
 

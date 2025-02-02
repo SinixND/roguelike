@@ -85,24 +85,59 @@ namespace GameModule
             );
         }
         //* Update multi-frame actions
-        else
+        //* Hero
+        else if ( game.hero.transform.speed )
         {
-            //* Update hero
-            MovementSystem::update(
+            Vector2I oldPosition{ Convert::worldToTile( game.hero.position ) };
+
+            game.hero.position = MovementSystem::updateSingle(
+                game.hero.position,
                 game.hero.transform,
                 // game.hero.movement,
-                game.hero.position,
                 game.hero.energy,
-                game.hero.position,
                 dt
             );
 
-            //* Update enemies
-            MovementSystem::updateEnemies(
-                game.world.currentMap->enemies,
-                game.hero.position,
-                dt
-            );
+            snx::PublisherStatic::publish( EventId::HERO_MOVED );
+
+            if ( oldPosition != Convert::worldToTile( game.hero.position ) )
+            {
+                snx::PublisherStatic::publish( EventId::HERO_POSITION_CHANGED );
+            }
+        }
+        //* Enemies
+        else
+        {
+            Enemies& enemies{ game.world.currentMap->enemies };
+
+            Vector2* currentPosition{};
+
+            Vector2I oldPosition{};
+
+            for ( size_t idx{ 0 }; idx < enemies.transforms.size(); ++idx )
+            {
+                currentPosition = &enemies.positions.values()[idx];
+
+                oldPosition = Convert::worldToTile( *currentPosition );
+
+                //* Update movement
+                //* Update ids_ key if tilePosition changes
+                *currentPosition = MovementSystem::updateSingle(
+                    *currentPosition,
+                    enemies.transforms.values()[idx],
+                    // enemies.movements.values()[i],
+                    enemies.energies.values()[idx],
+                    dt
+                );
+
+                if ( oldPosition != Convert::worldToTile( *currentPosition ) )
+                {
+                    enemies.ids.changeKey(
+                        oldPosition,
+                        Convert::worldToTile( *currentPosition )
+                    );
+                }
+            }
         }
 
         //* Regenerate energy if no action in progress

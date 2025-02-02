@@ -66,9 +66,9 @@ bool executeAction(
                  heroPosition
              ) )
         {
-            MovementSystem::prepareByFromTo(
-                enemiesIO.movements[enemyId],
+            enemiesIO.transforms[enemyId] = MovementSystem::prepareByFromTo(
                 enemiesIO.transforms[enemyId],
+                enemiesIO.movements[enemyId],
                 Convert::worldToTile( enemiesIO.positions[enemyId] ),
                 path.rbegin()[1]
             );
