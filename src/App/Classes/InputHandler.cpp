@@ -1,6 +1,6 @@
 #include "InputHandler.h"
 
-// #define DEBUG_GESTURES
+#define DEBUG_GESTURES
 
 #include "EventId.h"
 #include "InputId.h"

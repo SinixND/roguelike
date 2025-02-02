@@ -7,7 +7,11 @@ namespace MapGeneratorSystem
 {
     Map createTestRoom();
     Map createStartRoom();
-    Map createRandomMap( int level );
+
+    //* Map types
+    Map createGridRooms( int level );
+
+    Map createRandomMapType( int level );
 }
 
 #endif

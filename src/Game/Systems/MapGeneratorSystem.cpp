@@ -14,7 +14,8 @@
 #include <string>
 #include <unordered_set>
 
-void addTiles(
+[[nodiscard]]
+Tiles const& addTiles(
     Tiles& tiles,
     RectangleExI const& rectangle,
     RenderId renderId,
@@ -37,19 +38,46 @@ void addTiles(
             );
         }
     }
+
+    return tiles;
 }
 
 //* Add room (floor with surrounding walls)
-void addRoom( Tiles& tiles, RectangleExI const& room )
+[[nodiscard]]
+Tiles const& addRoom(
+    Tiles& tilesIO,
+    RectangleExI const& room
+)
 {
     if ( room.width() < 2 || room.height() < 2 )
     {
-        return;
+        tilesIO.insert(
+            Vector2I{ room.left(), room.top() },
+            RenderId::WALL,
+            true,
+            true
+        );
+
+        return tilesIO;
     }
 
+    //* Floor
+    tilesIO = addTiles(
+        tilesIO,
+        RectangleExI{
+            room.left(),
+            room.top(),
+            room.width(),
+            room.height()
+        },
+        RenderId::FLOOR,
+        false,
+        false
+    );
+
     //* Top wall
-    addTiles(
-        tiles,
+    tilesIO = addTiles(
+        tilesIO,
         RectangleExI{
             room.left(),
             room.top(),
@@ -62,8 +90,8 @@ void addRoom( Tiles& tiles, RectangleExI const& room )
     );
 
     //* Right wall
-    addTiles(
-        tiles,
+    tilesIO = addTiles(
+        tilesIO,
         RectangleExI{
             room.right(),
             room.top(),
@@ -76,8 +104,8 @@ void addRoom( Tiles& tiles, RectangleExI const& room )
     );
 
     //* Bottom wall
-    addTiles(
-        tiles,
+    tilesIO = addTiles(
+        tilesIO,
         RectangleExI{
             room.left() + 1,
             room.bottom(),
@@ -90,8 +118,8 @@ void addRoom( Tiles& tiles, RectangleExI const& room )
     );
 
     //* Left wall
-    addTiles(
-        tiles,
+    tilesIO = addTiles(
+        tilesIO,
         RectangleExI{
             room.left(),
             room.top() + 1,
@@ -103,109 +131,7 @@ void addRoom( Tiles& tiles, RectangleExI const& room )
         true
     );
 
-    //* Floor
-    addTiles(
-        tiles,
-        RectangleExI{
-            room.left() + 1,
-            room.top() + 1,
-            room.width() - 2,
-            room.height() - 2
-        },
-        RenderId::FLOOR,
-        false,
-        false
-    );
-}
-
-Map createGridRooms( int level )
-{
-    Map map{};
-
-    Vector2I roomPosition{ 0, 0 };
-    int const roomWidth{ 15 };
-    int maxRoomOffset{ ( 2 + level ) * roomWidth };
-
-    //* Add first room
-    addRoom(
-        map.tiles,
-        RectangleExI{
-            roomPosition,
-            roomWidth,
-            roomWidth
-        }
-    );
-
-    std::unordered_set<Vector2I> usedPositions{ roomPosition };
-
-    //* Take random direction and add room
-    while ( Vector2Sum( roomPosition ) < maxRoomOffset )
-    {
-        //* (Update) Old room position used for room connection
-        Vector2I oldRoomPosition{ roomPosition };
-
-        //* Choose random direction
-        Vector2I direction{ Directions::directions[snx::RNG::random( 0, 3 )] };
-
-        //* Update new room position
-        roomPosition += Vector2Scale( direction, roomWidth );
-
-        //* Add new room if room position unused
-        if ( !usedPositions.contains( roomPosition ) )
-        {
-            usedPositions.insert( roomPosition );
-
-            addRoom(
-                map.tiles,
-                RectangleExI{
-                    roomPosition,
-                    roomWidth,
-                    roomWidth
-                }
-            );
-        }
-
-        //* Add connection gap in wall between old and new room
-        addTiles(
-            map.tiles,
-            RectangleExI{
-                oldRoomPosition,
-                roomPosition
-            },
-            RenderId::FLOOR
-        );
-    }
-
-    //* Add previous level trigger
-    map.objects.insert(
-        Vector2I{
-            0,
-            0
-        },
-        "Stairs",
-        "Ascend",
-        RenderId::ASCEND,
-        EventId::PREVIOUS_LEVEL
-    );
-
-    // Add next level trigger
-    // setObject(
-    //     map.objects_,
-    //     "Descend",
-    //     Vector2I{
-    //         0,
-    //         -5},
-    //     RenderId::descend,
-    //     EventId::nextLevel);
-
-    //* Add enemies
-    map.enemies = EnemiesModule::createForLevel(
-        map.enemies,
-        map.tiles,
-        level
-    );
-
-    return map;
+    return tilesIO;
 }
 
 namespace MapGeneratorSystem
@@ -215,7 +141,7 @@ namespace MapGeneratorSystem
         Map testRoom{};
 
         //* Rooms
-        addRoom(
+        testRoom.tiles = addRoom(
             testRoom.tiles,
             RectangleExI{
                 Vector2I{
@@ -227,7 +153,7 @@ namespace MapGeneratorSystem
             }
         );
 
-        addRoom(
+        testRoom.tiles = addRoom(
             testRoom.tiles,
             RectangleExI{
                 Vector2I{
@@ -239,7 +165,7 @@ namespace MapGeneratorSystem
             }
         );
 
-        addRoom(
+        testRoom.tiles = addRoom(
             testRoom.tiles,
             RectangleExI{
                 -7,
@@ -249,7 +175,7 @@ namespace MapGeneratorSystem
             }
         );
 
-        addRoom(
+        testRoom.tiles = addRoom(
             testRoom.tiles,
             RectangleExI{
                 3,
@@ -260,7 +186,7 @@ namespace MapGeneratorSystem
         );
 
         //* Add walls
-        addTiles(
+        testRoom.tiles = addTiles(
             testRoom.tiles,
             RectangleExI{
                 1,
@@ -273,7 +199,7 @@ namespace MapGeneratorSystem
             true
         );
 
-        addTiles(
+        testRoom.tiles = addTiles(
             testRoom.tiles,
             RectangleExI{
                 4,
@@ -284,7 +210,7 @@ namespace MapGeneratorSystem
             RenderId::FLOOR
         );
 
-        addTiles(
+        testRoom.tiles = addTiles(
             testRoom.tiles,
             RectangleExI{
                 3,
@@ -295,7 +221,7 @@ namespace MapGeneratorSystem
             RenderId::FLOOR
         );
 
-        addTiles(
+        testRoom.tiles = addTiles(
             testRoom.tiles,
             RectangleExI{
                 3,
@@ -381,7 +307,7 @@ namespace MapGeneratorSystem
     {
         Map startRoom{};
 
-        addRoom(
+        startRoom.tiles = addRoom(
             startRoom.tiles,
             RectangleExI{
                 Vector2I{
@@ -408,7 +334,97 @@ namespace MapGeneratorSystem
         return startRoom;
     }
 
-    Map createRandomMap( int level )
+    Map createGridRooms( int level )
+    {
+        Map map{};
+
+        Vector2I roomPosition{ 0, 0 };
+        int const roomWidth{ 15 };
+        int maxRoomOffset{ ( 2 + level ) * roomWidth };
+
+        //* Add first room
+        map.tiles = addRoom(
+            map.tiles,
+            RectangleExI{
+                roomPosition,
+                roomWidth,
+                roomWidth
+            }
+        );
+
+        std::unordered_set<Vector2I> usedPositions{ roomPosition };
+
+        //* Take random direction and add room
+        while ( Vector2Sum( roomPosition ) < maxRoomOffset )
+        {
+            //* (Update) Old room position used for room connection
+            Vector2I oldRoomPosition{ roomPosition };
+
+            //* Choose random direction
+            Vector2I direction{ Directions::directions[snx::RNG::random( 0, 3 )] };
+
+            //* Update new room position
+            roomPosition += Vector2Scale( direction, roomWidth );
+
+            //* Add new room if room position unused
+            if ( !usedPositions.contains( roomPosition ) )
+            {
+                usedPositions.insert( roomPosition );
+
+                map.tiles = addRoom(
+                    map.tiles,
+                    RectangleExI{
+                        roomPosition,
+                        roomWidth,
+                        roomWidth
+                    }
+                );
+            }
+
+            //* Add connection gap in wall between old and new room
+            map.tiles = addTiles(
+                map.tiles,
+                RectangleExI{
+                    oldRoomPosition,
+                    roomPosition
+                },
+                RenderId::FLOOR
+            );
+        }
+
+        //* Add previous level trigger
+        map.objects.insert(
+            Vector2I{
+                0,
+                0
+            },
+            "Stairs",
+            "Ascend",
+            RenderId::ASCEND,
+            EventId::PREVIOUS_LEVEL
+        );
+
+        // Add next level trigger
+        // setObject(
+        //     map.objects_,
+        //     "Descend",
+        //     Vector2I{
+        //         0,
+        //         -5},
+        //     RenderId::descend,
+        //     EventId::nextLevel);
+
+        //* Add enemies
+        map.enemies = EnemiesModule::createForLevel(
+            map.enemies,
+            map.tiles,
+            level
+        );
+
+        return map;
+    }
+
+    Map createRandomMapType( int level )
     {
         Map newMap{};
 

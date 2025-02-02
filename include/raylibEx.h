@@ -526,6 +526,8 @@ private:
 
     void validate()
     {
+        assert( width_ && height_ && "Width or height < 1" );
+
         if ( right_ < left_ )
         {
             int temp{ right_ };
