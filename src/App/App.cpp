@@ -14,48 +14,6 @@
 #include <emscripten/html5.h>
 #endif
 
-/// @brief A separate game loop function needed for emscripten
-void emscriptenLoop( void* arg )
-{
-    App* app = (App*)arg;
-
-    SceneModule::update(
-        app->scene,
-        app->cursor,
-        app->currentInputId,
-        app->dt
-    );
-}
-
-void updateWindowState()
-{
-    if ( IsKeyPressed( KEY_F11 ) )
-    {
-        if ( IsWindowMaximized() )
-        {
-            RestoreWindow();
-        }
-
-        else
-        {
-            MaximizeWindow();
-        }
-    }
-
-    if ( IsWindowResized() )
-    {
-        snx::PublisherStatic::publish( EventId::WINDOW_RESIZED );
-    }
-}
-
-void updateDeveloperMode()
-{
-    if ( IsKeyPressed( KEY_F1 ) )
-    {
-        DeveloperMode::toggle();
-    }
-}
-
 void setupRaylib(
     AppConfig const& config
 )
@@ -92,6 +50,35 @@ void setupFrameworks( AppConfig const& config )
     setupNcurses();
 }
 
+void updateWindowState()
+{
+    if ( IsKeyPressed( KEY_F11 ) )
+    {
+        if ( IsWindowMaximized() )
+        {
+            RestoreWindow();
+        }
+
+        else
+        {
+            MaximizeWindow();
+        }
+    }
+
+    if ( IsWindowResized() )
+    {
+        snx::PublisherStatic::publish( EventId::WINDOW_RESIZED );
+    }
+}
+
+void updateDeveloperMode()
+{
+    if ( IsKeyPressed( KEY_F1 ) )
+    {
+        DeveloperMode::toggle();
+    }
+}
+
 InputId getUserInput( InputHandler& inputHandler )
 {
     InputId inputId{};
@@ -114,6 +101,33 @@ InputId getUserInput( InputHandler& inputHandler )
     inputId = inputHandler.fromGesture();
 
     return inputId;
+}
+
+/// @brief Exact function signature needed for emscripten
+void updateApp( void* arg )
+{
+    App& app = *(App*)arg;
+
+    updateWindowState();
+#if defined( DEBUG )
+    updateDeveloperMode();
+#endif
+
+    app.currentInputId = getUserInput( app.inputHandler );
+
+    if ( app.currentInputId == InputId::TOGGLE_CURSOR )
+    {
+        app.inputHandler.toggleCursorState();
+    }
+
+    app.dt = GetFrameTime();
+
+    SceneModule::update(
+        app.scene,
+        app.cursor,
+        app.currentInputId,
+        app.dt
+    );
 }
 
 namespace AppModule
@@ -145,7 +159,7 @@ namespace AppModule
     {
 #if defined( EMSCRIPTEN )
         emscripten_set_main_loop_arg(
-            emscriptenLoop,
+            updateApp,
             &appIO,
             60 /*FPS*/,
             1 /*Simulate infinite loop*/
@@ -153,26 +167,7 @@ namespace AppModule
 #else
         while ( !( WindowShouldClose() ) )
         {
-            updateWindowState();
-#if defined( DEBUG )
-            updateDeveloperMode();
-#endif
-
-            appIO.currentInputId = getUserInput( appIO.inputHandler );
-
-            if ( appIO.currentInputId == InputId::TOGGLE_CURSOR )
-            {
-                appIO.inputHandler.toggleCursorState();
-            }
-
-            appIO.dt = GetFrameTime();
-
-            SceneModule::update(
-                appIO.scene,
-                appIO.cursor,
-                appIO.currentInputId,
-                appIO.dt
-            );
+            updateApp( &appIO );
         }
 #endif
     }

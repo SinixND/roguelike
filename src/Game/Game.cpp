@@ -4,6 +4,7 @@
 #include "ActionSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
+#include "Debugger.h"
 #include "Enemies.h"
 #include "EnergyComponent.h"
 #include "EventId.h"

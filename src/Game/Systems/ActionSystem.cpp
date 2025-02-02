@@ -1,8 +1,5 @@
 #include "ActionSystem.h"
 
-//* #define DEBUG_GESTURES
-//* #define DEBUG_GESTURE_EVENTS
-
 #include "CollisionSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
