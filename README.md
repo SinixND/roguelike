@@ -5,7 +5,6 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Move addSubscriber for cursor toggle in proper location
 - [ ] Refactor
     [Status] Current: Game folder -> Systems -> CollisionSystem
     - [ ] Use `values()` of Densemap where 2+ SoA members needed

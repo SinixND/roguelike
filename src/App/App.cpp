@@ -118,6 +118,7 @@ void updateApp( void* arg )
     if ( app.currentInputId == InputId::TOGGLE_CURSOR )
     {
         app.inputHandler.toggleCursorState();
+        snx::PublisherStatic::publish( EventId::CURSOR_TOGGLE );
     }
 
     app.dt = GetFrameTime();

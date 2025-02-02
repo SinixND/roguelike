@@ -232,13 +232,6 @@ namespace ActionSystem
 
                 break;
             }
-
-            case InputId::TOGGLE_CURSOR:
-            {
-                snx::PublisherStatic::publish( EventId::CURSOR_TOGGLE );
-
-                break;
-            }
         }
 
         return isActionMultiFrame;
