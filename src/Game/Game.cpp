@@ -4,7 +4,6 @@
 #include "ActionSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
-#include "Debugger.h"
 #include "Enemies.h"
 #include "EnergyComponent.h"
 #include "EventId.h"
@@ -23,6 +22,7 @@
 #include <raymath.h>
 
 #if defined( DEBUG )
+#include "Debugger.h"
 #include "RNG.h"
 #endif
 
@@ -53,9 +53,9 @@ namespace GameModule
         //* AI
         if ( !game.isMultiFrameActionActive )
         {
-            game.isMultiFrameActionActive = AISystem::executeNextAction(
-                game.activeEnemyId,
+            game.world.currentMap->enemies = AISystem::executeNextAction(
                 game.world.currentMap->enemies,
+                game.activeEnemyId,
                 game.hero,
                 *game.world.currentMap,
                 gameCamera,
@@ -67,7 +67,7 @@ namespace GameModule
         if ( !game.isMultiFrameActionActive
              && game.hero.energy.state == EnergyComponent::State::READY )
         {
-            game.isMultiFrameActionActive = ActionSystem::executeAction(
+            game.hero = ActionSystem::executeAction(
                 game.hero,
                 *game.world.currentMap,
                 cursor,

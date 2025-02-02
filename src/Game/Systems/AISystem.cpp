@@ -12,7 +12,7 @@
 #include <cstddef>
 #include <vector>
 
-bool executeAction(
+Enemies& executeAction(
     Enemies& enemiesIO,
     HealthComponent& heroHealthIO,
     Map const& map,
@@ -21,8 +21,6 @@ bool executeAction(
     size_t enemyId
 )
 {
-    bool isActionMultiFrame{ false };
-
     //* Instant action: attack
     if ( Vector2Length(
              Vector2Subtract(
@@ -74,8 +72,6 @@ bool executeAction(
             );
 
             EnergyModule::consume( enemiesIO.energies[enemyId] );
-
-            isActionMultiFrame = true;
         }
         //* Path is "empty"
         //* Wait
@@ -86,22 +82,20 @@ bool executeAction(
         }
     }
     // return false;
-    return isActionMultiFrame;
+    return enemiesIO;
 }
 
 namespace AISystem
 {
-    bool executeNextAction(
-        size_t& activeEnemyIdIO,
+    Enemies const& executeNextAction(
         Enemies& enemiesIO,
+        size_t& activeEnemyIdIO,
         Hero& heroIO,
         Map const& map,
         GameCamera const& gameCamera,
         int turn
     )
     {
-        bool multiFrameActionActive{ false };
-
         do
         {
             activeEnemyIdIO = EnemiesModule::getActive(
@@ -114,7 +108,7 @@ namespace AISystem
             {
                 enemiesIO.ais[activeEnemyIdIO].turn = turn;
 
-                multiFrameActionActive |= executeAction(
+                enemiesIO = executeAction(
                     enemiesIO,
                     heroIO.health,
                     map,
@@ -125,6 +119,6 @@ namespace AISystem
             }
         } while ( activeEnemyIdIO );
 
-        return multiFrameActionActive;
+        return enemiesIO;
     }
 }

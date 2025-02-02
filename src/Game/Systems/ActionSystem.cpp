@@ -17,14 +17,12 @@
 #include <raylib.h>
 #include <raymath.h>
 
-bool processDirectionalInput(
+Hero const& processDirectionalInput(
     Hero& heroIO,
     Map& mapIO,
     Vector2I direction
 )
 {
-    bool isActionMultiFrame = false;
-
     Vector2I target{
         Vector2Add(
             Convert::worldToTile( heroIO.position ),
@@ -59,16 +57,14 @@ bool processDirectionalInput(
         );
 
         EnergyModule::consume( heroIO.energy );
-
-        isActionMultiFrame = true;
     }
 
-    return isActionMultiFrame;
+    return heroIO;
 }
 
 namespace ActionSystem
 {
-    bool executeAction(
+    Hero const& executeAction(
         Hero& heroIO,
         Map& mapIO,
         Cursor const& cursor,
@@ -76,8 +72,6 @@ namespace ActionSystem
         InputId currentInput
     )
     {
-        bool isActionMultiFrame{ false };
-
         switch ( currentInput )
         {
             default:
@@ -99,8 +93,6 @@ namespace ActionSystem
                             heroIO.transform,
                             heroIO.movement
                         );
-
-                        isActionMultiFrame = true;
                     }
                     //* Stop
                     else
@@ -114,7 +106,7 @@ namespace ActionSystem
 
             case InputId::ACT_UP:
             {
-                isActionMultiFrame = processDirectionalInput(
+                heroIO = processDirectionalInput(
                     heroIO,
                     mapIO,
                     Directions::up
@@ -125,7 +117,7 @@ namespace ActionSystem
 
             case InputId::ACT_LEFT:
             {
-                isActionMultiFrame = processDirectionalInput(
+                heroIO = processDirectionalInput(
                     heroIO,
                     mapIO,
                     Directions::left
@@ -136,7 +128,7 @@ namespace ActionSystem
 
             case InputId::ACT_DOWN:
             {
-                isActionMultiFrame = processDirectionalInput(
+                heroIO = processDirectionalInput(
                     heroIO,
                     mapIO,
                     Directions::down
@@ -147,7 +139,7 @@ namespace ActionSystem
 
             case InputId::ACT_RIGHT:
             {
-                isActionMultiFrame = processDirectionalInput(
+                heroIO = processDirectionalInput(
                     heroIO,
                     mapIO,
                     Directions::right
@@ -203,8 +195,6 @@ namespace ActionSystem
                     }
                 }
 
-                isActionMultiFrame = !path.empty();
-
                 break;
             }
 
@@ -233,6 +223,6 @@ namespace ActionSystem
             }
         }
 
-        return isActionMultiFrame;
+        return heroIO;
     }
 }
