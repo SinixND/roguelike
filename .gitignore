@@ -1,5 +1,4 @@
 .cache
-bin
 doc/html
 build
 test

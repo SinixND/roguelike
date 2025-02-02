@@ -3,7 +3,6 @@
 #include "CollisionSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
-#include "DamageSystem.h"
 #include "Directions.h"
 #include "GameCamera.h"
 #include "HealthComponent.h"
@@ -38,9 +37,9 @@ bool processDirectionalInput(
     {
         snx::Logger::log( "Hero deals " );
 
-        DamageSystem::attack(
-            heroIO.damage,
-            mapIO.enemies.healths[mapIO.enemies.ids[target]]
+        HealthModule::damage(
+            mapIO.enemies.healths[mapIO.enemies.ids[target]],
+            DamageModule::damageRNG( heroIO.damage )
         );
 
         EnergyModule::consume( heroIO.energy );
@@ -172,9 +171,9 @@ namespace ActionSystem
                     {
                         snx::Logger::log( "Hero deals " );
 
-                        DamageSystem::attack(
-                            heroIO.damage,
-                            mapIO.enemies.healths[mapIO.enemies.ids[path.rbegin()[1]]]
+                        HealthModule::damage(
+                            mapIO.enemies.healths[mapIO.enemies.ids[path.rbegin()[1]]],
+                            DamageModule::damageRNG( heroIO.damage )
                         );
 
                         EnergyModule::consume( heroIO.energy );

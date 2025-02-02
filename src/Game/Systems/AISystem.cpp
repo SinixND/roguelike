@@ -2,7 +2,6 @@
 
 #include "CollisionSystem.h"
 #include "Convert.h"
-#include "DamageSystem.h"
 #include "Enemies.h"
 #include "HealthComponent.h"
 #include "Hero.h"
@@ -36,9 +35,9 @@ bool executeAction(
         //* Attack
         snx::Logger::log( "Hero takes " );
 
-        DamageSystem::attack(
-            enemiesIO.damages[enemyId],
-            heroHealthIO
+        HealthModule::damage(
+            heroHealthIO,
+            DamageModule::damageRNG( enemiesIO.damages[enemyId] )
         );
 
         EnergyModule::consume( enemiesIO.energies[enemyId] );
