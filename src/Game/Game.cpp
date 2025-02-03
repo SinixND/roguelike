@@ -86,7 +86,7 @@ namespace GameModule
         }
         //* Update multi-frame actions
         //* Hero
-        else if ( game.hero.transform.speed )
+        else if ( game.hero.transform.remainingDistance )
         {
             Vector2I oldPosition{ Convert::worldToTile( game.hero.position ) };
 

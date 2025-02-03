@@ -217,44 +217,6 @@ namespace EnemiesModule
         return isEnemyReady;
     }
 
-    Enemies const& updateMovements(
-        Enemies& enemies,
-        float dt
-    )
-    {
-        Vector2* currentPosition{};
-        //* Cache current position for later comparison
-        Vector2I oldPosition{};
-
-        for ( size_t idx{ 0 }; idx < enemies.transforms.size(); ++idx )
-        {
-            currentPosition = &enemies.positions.values()[idx];
-
-            oldPosition = Convert::worldToTile( *currentPosition );
-
-            //* Update movement
-            //* Update ids_ key if tilePosition changes
-            *currentPosition = MovementSystem::updateSingle(
-                *currentPosition,
-                enemies.transforms.values()[idx],
-                // enemies.movements.values()[i),
-                enemies.energies.values()[idx],
-                dt
-            );
-
-            //* Update position info
-            if ( oldPosition != Convert::worldToTile( *currentPosition ) )
-            {
-                enemies.ids.changeKey(
-                    oldPosition,
-                    Convert::worldToTile( *currentPosition )
-                );
-            }
-        }
-
-        return enemies;
-    }
-
     size_t getActive(
         snx::DenseMap<size_t, EnergyComponent> const& energies,
         snx::DenseMap<size_t, AIComponent> const& ais,

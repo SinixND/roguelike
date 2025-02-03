@@ -8,6 +8,7 @@
 #include "TileData.h"
 #include "TransformComponent.h"
 #include "raylibEx.h"
+#include <cassert>
 #include <raymath.h>
 
 namespace MovementSystem
@@ -20,28 +21,35 @@ namespace MovementSystem
         float dt
     )
     {
+        if ( !transformIO.speed )
+        {
+            return position;
+        }
+
         EnergyModule::consume( energyIO );
 
-        Vector2 offset{ frameOffset( transformIO, dt ) };
-
-        transformIO.cumulativeDistance += Vector2Length( offset );
+        float frameDistance{ transformIO.speed * dt };
 
         //* Check if movement exceeds tile length this frame
-        if ( transformIO.cumulativeDistance < TileData::tileSize )
+        if ( frameDistance < transformIO.remainingDistance )
         {
             //* Move full distance this frame
-            position += offset;
+            position += Vector2Scale(
+                transformIO.direction,
+                frameDistance
+            );
+
+            transformIO.remainingDistance -= frameDistance;
         }
         else
         {
-            //* Move by remaining distance until TILE_SIZE
-            position += Vector2ClampValue(
-                offset,
-                0,
-                TileData::tileSize
-                    - ( transformIO.cumulativeDistance
-                        - Vector2Length( offset ) )
+            //* Move by remaining distance
+            position += Vector2Scale(
+                transformIO.direction,
+                transformIO.remainingDistance
             );
+
+            transformIO.remainingDistance = 0;
 
             //* === Moved one tile ===
             //* Clean precision errors
@@ -62,6 +70,8 @@ namespace MovementSystem
         Vector2I const& direction
     )
     {
+        assert( Vector2Length( direction ) == 1 && "Direction not normalized" );
+
         transform.direction = direction;
         transform.speed = movement.baseSpeed;
 
@@ -134,21 +144,10 @@ namespace MovementSystem
     {
         transform.direction = Vector2I{ 0, 0 };
         transform.speed = .0f;
-        transform.cumulativeDistance = 0;
+        transform.remainingDistance = 0;
 
         snx::PublisherStatic::publish( EventId::MULTIFRAME_ACTION_DONE );
 
         return transform;
-    }
-
-    Vector2 frameOffset(
-        TransformComponent const& transform,
-        float dt
-    )
-    {
-        return Vector2Scale(
-            transform.direction,
-            transform.speed * dt
-        );
     }
 }

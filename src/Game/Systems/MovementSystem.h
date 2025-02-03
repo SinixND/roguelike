@@ -50,12 +50,6 @@ namespace MovementSystem
     );
 
     TransformComponent const& resetTransform( TransformComponent& transform );
-
-    //* Calculate distance for this frame
-    Vector2 frameOffset(
-        TransformComponent const& transform,
-        float dt
-    );
 };
 
 #endif
