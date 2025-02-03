@@ -1,7 +1,6 @@
 .cache
 doc/html
 build
-test
 perf.*
 callgrind*
 vgcore*

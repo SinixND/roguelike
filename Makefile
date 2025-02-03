@@ -6,6 +6,7 @@
 # LBL_Info
 
 # LBL_Makeflags
+# LBL_ExecFlags
 
 # LBL_EnvironmentVariables
 # LBL_ProjectDirectories
@@ -52,10 +53,20 @@
 #######################################
 
 # VERSION					?= $(shell date --iso=seconds)
+TESTMODE				:= false
 
 ### Automatically added flags to make command
 MAKEFLAGS 				:= --no-print-directory #-j
 
+#######################################
+### Execution flags
+# LBL_ExecFlags
+#######################################
+
+EXEC_ARGS				:= 
+ifeq ($(TESTMODE),true)
+    EXEC_ARGS 				:= --success
+endif
 
 #######################################
 ### Environment variables
@@ -92,23 +103,21 @@ LIB_DIR 				:= ./lib
 ### Here the object files will be outputted
 BUILD_DIR_ROOT 			:= ./build
 
-### Define folder for web content to export
-WEB_DIR 				:= ./web
-
 ### Define folder for resource files
 ASSETS_DIR	 			:= ./assets
+
+### Define folder for test files
+TEST_DIR	 			:= ./test
 
 
 # LBL_FileExtensions
 ### Set the targets file extension
-ifeq ($(PLATFORM),unix)
-    BIN_EXT 			:=
-endif
+BIN_EXT 				:=
 ifeq ($(PLATFORM),windows)
-    BIN_EXT 			:= .exe
+    BIN_EXT 				:= .exe
 endif
 ifeq ($(PLATFORM),web)
-    BIN_EXT				:= .html
+    BIN_EXT					:= .html
 endif
 
 ### Set the used file extension for source files, usually either .c or .cpp
@@ -120,7 +129,6 @@ OBJ_EXT					:= .o
 
 ### Set the used file extension for dependency files, usually .d (header/source connection)
 DEP_EXT 				:= .d
-
 ifeq ($(PLATFORM),windows)
     DEP_EXT 			:= .dep
 endif
@@ -130,6 +138,9 @@ endif
 # LBL_BinaryFiles
 ### Name that the created binary should have
 BIN 					:= main
+ifeq ($(TESTMODE),true)
+    BIN						:= test
+endif
 
 ### Here is the output directory for the binaries
 BIN_DIR 				= $(BIN_DIR_ROOT)/$(PLATFORM)/$(BUILD)
@@ -137,21 +148,32 @@ BIN_DIR 				= $(BIN_DIR_ROOT)/$(PLATFORM)/$(BUILD)
 
 # LBL_SourceFiles
 ### Get subdirs in ./src
-SRC_DIRS 				= $(shell find . -wholename "*$(SRC_DIR)*" -type d)
+SRC_DIRS 				:= $(shell find . -wholename "*$(SRC_DIR)*" -type d)
+
+TEST_DIRS 				:= $(shell find . -wholename "*$(TEST_DIR)*" -type d)
+
 
 ### List all source files found in source file directory w/ path from ./;
 SRCS 					:= $(shell find $(SRC_DIR) -wholename "*$(SRC_EXT)" -type f)
-#
+
+SRCS 					+= $(shell find $(TEST_DIR) -wholename "*$(SRC_EXT)" -type f)
+
 ### List all source files found in source file directory w/o path;
-SRC_FILES 					= $(notdir $(SRCS))
+SRC_FILES 				= $(notdir $(SRCS))
 
 ### Strip file extensions to get a list of sourcefile labels
 ### (patsubst pattern,replacement,target)
 SRC_NAMES 				= $(patsubst %$(SRC_EXT),%,$(SRC_FILES))
-
+### Strip main or test
+ifeq ($(TESTMODE),true)
+    TEMP_NAMES			:= $(filter-out main,$(SRC_NAMES))
+else
+    TEMP_NAMES			:= $(filter-out test,$(SRC_NAMES))
+endif
+SRC_NAMES				= $(TEMP_NAMES)
 
 # LBL_ObjectFiles
-BUILD_DIR 			= $(BUILD_DIR_ROOT)/$(PLATFORM)/$(BUILD)
+BUILD_DIR 				= $(BUILD_DIR_ROOT)/$(PLATFORM)/$(BUILD)
 
 ### Make list of object files need for linker command by changing ending of all source files to .o;
 ### IMPORTANT for linker dependency, so they are found as compile rule
@@ -189,7 +211,7 @@ ifeq ($(PLATFORM),windows)
     LIBRARIES 			+= opengl32 gdi32 winmm
 endif
 ifeq ($(OS),termux)
-    LIBRARIES 			+= #log
+    LIBRARIES 			+= log
 endif
 
 
@@ -244,6 +266,9 @@ INC_DIRS 				:= $(shell find . -wholename "*$(INC_DIR)*" -type d)
 
 ### Recursively add project src folder
 INC_DIRS 				+= $(SRC_DIRS)
+
+### Recursively add project test folder
+INC_DIRS 				+= $(TEST_DIRS)
 
 ### Get the locations of system header files; ignore for emscripten
 ifeq ($(PLATFORM),web)
@@ -316,7 +341,6 @@ ifeq ($(PLATFORM),web)
 else
     ifeq ($(BUILD),debug)
         CXX_FLAGS 			+= -g -ggdb -O0 -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -DDEBUG 
-
         ifeq ($(FATAL),true)
             CXX_FLAGS			+= -Wfatal-errors
         endif
@@ -359,10 +383,11 @@ LD_FLAGS 			+= $(addprefix -l,$(LIBRARIES))
 # Should not be needed: https://www.cmcrossroads.com/article/basics-vpath-and-vpath
 # VPATH 					:= $(shell find ./$(SRC_DIR) -type d):$(shell find ./$(INC_DIR) -type d)#:$(shell find ./$(BUILD_DIR) -type d)#:$(shell find . -type d)
 # better:
-vpath %$(SRC_EXT) $(SRC_DIRS)
+vpath %$(SRC_EXT) $(SRC_DIRS) $(TEST_DIRS)
+
 
 ### Non-file (.phony)targets (aka. rules)
-.PHONY: all build clean debug dtb init publish release run run_release web windows 
+.PHONY: all build clean debug dtb init publish release run rdebug rrelease rtest test web windows 
 
 ### Default rule by convention
 all: debug release
@@ -431,16 +456,31 @@ release:
 
 ### Run binary file
 run: 
-	$(BIN_DIR_ROOT)/$(PLATFORM)/$(BUILD)/$(BIN)$(BIN_EXT)
+	$(BIN_DIR_ROOT)/$(PLATFORM)/$(BUILD)/$(BIN)$(BIN_EXT) $(EXEC_ARGS)
 
-run_release:
+rdebug:
+	@$(MAKE) debug -j
+	@$(MAKE) BUILD=debug run
+
+rrelease:
+	@$(MAKE) release -j
 	@$(MAKE) BUILD=release run
+
+rtest:
+	@$(MAKE) test -j
+	@$(MAKE) TESTMODE=true run
+
+test:
+	$(info )
+	$(info === Test build ===)
+	@$(MAKE) TESTMODE=true BUILD=debug build
+	@$(MAKE) -s dtb
 
 ### Rule for web build process
 web:
 	$(info )
 	$(info === Web build ===)
-	@$(MAKE) PLATFORM=web BUILD=release build -B
+	@$(MAKE) PLATFORM=web BUILD=release build
 
 ### Rule for windows build process
 windows:
@@ -456,13 +496,13 @@ windows:
 
 # === COMPILER COMMAND ===
 ### MAKE object files FROM source files; "%" pattern-matches (need pair of)
-$(BUILD_DIR)/%$(OBJ_EXT): %$(SRC_EXT) 
+$(BUILD_DIR)/%$(OBJ_EXT) : %$(SRC_EXT) 
 	$(info )
 	$(info === Compile: BUILD=$(BUILD), PLATFORM=$(PLATFORM) ===)
 	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
 ### Need separate compiler command for -MJ flag argument
-$(BUILD_DIR_ROOT)/unix/debug/%$(OBJ_EXT): %$(SRC_EXT) 
+$(BUILD_DIR_ROOT)/unix/debug/%$(OBJ_EXT) : %$(SRC_EXT) 
 	$(info )
 	$(info === Compile: PLATFORM=$(PLATFORM), BUILD=$(BUILD) ===)
 	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS) -MJ $@.json 
@@ -470,7 +510,7 @@ $(BUILD_DIR_ROOT)/unix/debug/%$(OBJ_EXT): %$(SRC_EXT)
 
 # === LINKER COMMAND ===
 ### MAKE binary file FROM object files
-$(BIN_DIR_ROOT)/$(PLATFORM)/$(BUILD)/$(BIN)$(BIN_EXT): $(OBJS)
+$(BIN_DIR_ROOT)/$(PLATFORM)/$(BUILD)/$(BIN)$(BIN_EXT) : $(OBJS)
 	$(info )
 	$(info === Link: PLATFORM=$(PLATFORM), BUILD=$(BUILD) ===)
 	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LIB_FLAGS) $(LD_FLAGS)
