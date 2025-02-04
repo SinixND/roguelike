@@ -16,12 +16,14 @@ Platforms: Linux, Windows, Browser
         - [ ] World/Levels { Fogs }
     - [ ] Check for struct/class invariants
         - Refactor: Extract possible NMNF functions
+    - [ ] Extract function if code is `prepare -> do -> cleanup`? Or starts with `prepare` and ends with `cleanup`?
 
 
 ## Shortterm
 - [ ] Make internal members private (if no external references)
 - [ ] Separate fog calculation from visibility calculation
 - [ ] Split Component(temp) and Data(persistent)? (existential)
+- [ ] Implement tests/tdd (what behaviour do I want (to implement) -> test -> write code)
 - [ ] Implement ncurses
 - [ ] End/Restart game on death
 - [ ] Add AI behaviour with new enemy types

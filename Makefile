@@ -215,9 +215,6 @@ endif
 ifeq ($(OS),termux)
     LIBRARIES 			+= log
 endif
-ifeq ($(TESTMODE),true)
-    LIBRARIES 			+= gtest gtest_main
-endif
 
 
 # LBL_LibraryDirectories

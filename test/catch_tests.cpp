@@ -1,6 +1,3 @@
-#ifndef IG20250204120543
-#define IG20250204120543
-
 #include "Catch2.h"
 
 #include "MovementComponent.h"
@@ -31,4 +28,3 @@ TEST_CASE( "Preparing TransformationComponent" )
     }
 }
 
-#endif
