@@ -150,7 +150,7 @@ namespace ActionSystem
 
             case InputId::TARGET:
             {
-                std::vector<Vector2I> path{ PathfinderSystem::findPath(
+                std::vector<Vector2I> path{ PathfinderSystem::calculateAStarPath(
                     mapIO,
                     Convert::worldToTile( heroIO.position ),
                     Convert::worldToTile( cursor.position ),

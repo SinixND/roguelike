@@ -11,7 +11,7 @@ namespace PathfinderSystem
 {
     //* Returns path from target (front()) to start (included, back())
     //* Starting tile needed for initial direction
-    std::vector<Vector2I> findPath(
+    std::vector<Vector2I> calculateAStarPath(
         Map const& map,
         Vector2I const& start,
         Vector2I const& target,

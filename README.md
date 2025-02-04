@@ -20,6 +20,7 @@ Platforms: Linux, Windows, Browser
 
 
 ## Shortterm
+- [ ] Replace //* with /// for function descriptions)
 - [ ] Make internal members private (if no external references)
 - [ ] Separate fog calculation from visibility calculation
 - [ ] Split Component(temp) and Data(persistent)? (existential)

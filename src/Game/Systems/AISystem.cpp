@@ -43,7 +43,7 @@ Enemies& executeAction(
     //* Check path
     else
     {
-        std::vector<Vector2I> path{ PathfinderSystem::findPath(
+        std::vector<Vector2I> path{ PathfinderSystem::calculateAStarPath(
             map,
             Convert::worldToTile( enemiesIO.positions[enemyId] ),
             heroPosition,
