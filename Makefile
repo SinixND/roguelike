@@ -156,7 +156,9 @@ TEST_DIRS 				:= $(shell find . -wholename "*$(TEST_DIR)*" -type d)
 ### List all source files found in source file directory w/ path from ./;
 SRCS 					:= $(shell find $(SRC_DIR) -wholename "*$(SRC_EXT)" -type f)
 
-SRCS 					+= $(shell find $(TEST_DIR) -wholename "*$(SRC_EXT)" -type f)
+ifeq ($(TESTMODE),true)
+    SRCS 					+= $(shell find $(TEST_DIR) -wholename "*$(SRC_EXT)" -type f)
+endif
 
 ### List all source files found in source file directory w/o path;
 SRC_FILES 				= $(notdir $(SRCS))
@@ -268,7 +270,9 @@ INC_DIRS 				:= $(shell find . -wholename "*$(INC_DIR)*" -type d)
 INC_DIRS 				+= $(SRC_DIRS)
 
 ### Recursively add project test folder
-INC_DIRS 				+= $(TEST_DIRS)
+ifeq ($(TESTMODE),true)
+    INC_DIRS 				+= $(TEST_DIRS)
+endif
 
 ### Get the locations of system header files; ignore for emscripten
 ifeq ($(PLATFORM),web)
@@ -383,8 +387,10 @@ LD_FLAGS 			+= $(addprefix -l,$(LIBRARIES))
 # Should not be needed: https://www.cmcrossroads.com/article/basics-vpath-and-vpath
 # VPATH 					:= $(shell find ./$(SRC_DIR) -type d):$(shell find ./$(INC_DIR) -type d)#:$(shell find ./$(BUILD_DIR) -type d)#:$(shell find . -type d)
 # better:
-vpath %$(SRC_EXT) $(SRC_DIRS) $(TEST_DIRS)
-
+vpath %$(SRC_EXT) $(SRC_DIRS)
+ifeq ($(TESTMODE),true)
+    vpath %$(SRC_EXT) $(TEST_DIRS)
+endif
 
 ### Non-file (.phony)targets (aka. rules)
 .PHONY: all build clean debug dtb init publish release run rdebug rrelease rtest test web windows 
@@ -474,7 +480,6 @@ test:
 	$(info )
 	$(info === Test build ===)
 	@$(MAKE) TESTMODE=true BUILD=debug build
-	@$(MAKE) -s dtb
 
 ### Rule for web build process
 web:

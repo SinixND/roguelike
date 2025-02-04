@@ -49,16 +49,11 @@ namespace MovementSystem
                 transformIO.remainingDistance
             );
 
-            transformIO.remainingDistance = 0;
+            transformIO = resetTransform( transformIO );
 
             //* === Moved one tile ===
             //* Clean precision errors
             position = Vector2Round( position );
-
-            //* Reset cumulativeDistance
-            transformIO = resetTransform( transformIO );
-
-            snx::PublisherStatic::publish( EventId::MULTIFRAME_ACTION_DONE );
         }
 
         return position;
@@ -74,6 +69,7 @@ namespace MovementSystem
 
         transform.direction = direction;
         transform.speed = movement.baseSpeed;
+        transform.remainingDistance = TileData::tileSize;
 
         snx::PublisherStatic::publish( EventId::MULTIFRAME_ACTION_ACTIVE );
 

@@ -5,7 +5,6 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Check Bug Enemy not moving and tile blocked (id4/idx3 transform does not reset)
 - [ ] Refactor
     [Status] Current: Game folder -> Systems -> PathfinderSystem
     - [ ] Use `values()` of Densemap where >1 SoA members needed
@@ -22,7 +21,6 @@ Platforms: Linux, Windows, Browser
 ## Shortterm
 - [ ] Make internal members private (if no external references)
 - [ ] Separate fog calculation from visibility calculation
-- [ ] Fix web bug -> cursor not moving when mouse active
 - [ ] Split Component(temp) and Data(persistent)? (existential)
 - [ ] Implement ncurses
 - [ ] End/Restart game on death
