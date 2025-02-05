@@ -6,14 +6,14 @@ Platforms: Linux, Windows, Browser
 # TODOs
 ## Active 
 - [ ] Refactor
-    [Status] Current: Game folder -> Systems -> PathfinderSystem
-    - [ ] Use `values()` of Densemap where >1 SoA members needed
+    [Status] Current: Game folder -> Systems -> VisibilitySystem
+    - [ ] Use `values()` of Densemap where >1 SoA member-values needed
     - [ ] Refactor parameters to low/member level ( if < 3 members used );
         - Split modified and const members
         - Parameter order -> Check `DesignGuideline.md` for fake return
     - [ ] Restructure: 
         - [ ] main { App { Scene, Game }}
-        - [ ] World/Levels { Fogs }
+
     - [ ] Check for struct/class invariants
         - Refactor: Extract possible NMNF functions
     - [ ] Extract function if code is `prepare -> do -> cleanup`? Or starts with `prepare` and ends with `cleanup`?

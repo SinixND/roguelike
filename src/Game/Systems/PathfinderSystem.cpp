@@ -92,21 +92,21 @@ namespace AStarTileModule
 bool isTileValid(
     Vector2I const& targetToCheck,
     Vector2I const& start,
-    Map const& map,
+    Tiles const& tiles,
     bool skipInvisibleTiles
 )
 {
-    if ( !map.tiles.ids.contains( targetToCheck ) )
+    if ( !tiles.ids.contains( targetToCheck ) )
     {
         return false;
     }
 
-    size_t tileId{ map.tiles.ids[targetToCheck] };
+    size_t tileId{ tiles.ids[targetToCheck] };
 
     return !(
-        map.tiles.isSolids.contains( tileId )
+        tiles.isSolids.contains( tileId )
         || ( skipInvisibleTiles
-             && ( map.tiles.visibilityIds[tileId] == VisibilityId::INVISIBLE )
+             && ( tiles.visibilityIds[tileId] == VisibilityId::INVISIBLE )
         )
         || ( start == targetToCheck )
     );
@@ -119,20 +119,20 @@ bool isTileValid(
 /// - Steps needed within maxRange
 bool isTileValid(
     AStarTile const& targetToCheck,
-    Map const& map,
+    Tiles const& tiles,
     int maxRange
 )
 {
-    if ( !map.tiles.ids.contains( targetToCheck.tilePosition ) )
+    if ( !tiles.ids.contains( targetToCheck.tilePosition ) )
     {
         return false;
     }
 
-    size_t tileId{ map.tiles.ids[targetToCheck.tilePosition] };
+    size_t tileId{ tiles.ids[targetToCheck.tilePosition] };
 
     return !(
-        map.tiles.isSolids.contains( tileId )
-        || ( map.tiles.visibilityIds[tileId] == VisibilityId::INVISIBLE )
+        tiles.isSolids.contains( tileId )
+        || ( tiles.visibilityIds[tileId] == VisibilityId::INVISIBLE )
         || ( ( maxRange > 0 ) && ( targetToCheck.stepsNeeded > maxRange ) )
     );
 }
@@ -261,21 +261,21 @@ bool continueTargetSearch(
 
             //* Skip if
             if (
+                //* Ignore ancestor
+                ( currentTile->ancestor
+                  && ( newAStarTile.tilePosition == currentTile->ancestor->tilePosition ) )
+                || !isTileValid(
+                    newAStarTile,
+                    map.tiles,
+                    maxRange
+                )
                 //* Needs to be in viewport
-                !CheckCollisionPointRec(
+                || !CheckCollisionPointRec(
                     Convert::tileToScreen(
                         newAStarTile.tilePosition,
                         gameCamera.camera
                     ),
                     *gameCamera.viewport
-                )
-                //* Ignore ancestor
-                || ( currentTile->ancestor
-                     && ( newAStarTile.tilePosition == currentTile->ancestor->tilePosition ) )
-                || !isTileValid(
-                    newAStarTile,
-                    map,
-                    maxRange
                 )
             )
             {
@@ -358,9 +358,9 @@ bool continueTargetSearch(
 namespace PathfinderSystem
 {
     std::vector<Vector2I> calculateAStarPath(
-        Map const& map,
         Vector2I const& start,
         Vector2I const& target,
+        Map const& map,
         GameCamera const& gameCamera,
         bool skipInvisibleTiles,
         int maxRange
@@ -376,7 +376,7 @@ namespace PathfinderSystem
         if ( !isTileValid(
                  target,
                  start,
-                 map,
+                 map.tiles,
                  skipInvisibleTiles
              ) )
         {

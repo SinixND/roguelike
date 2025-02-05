@@ -44,9 +44,9 @@ Enemies& executeAction(
     else
     {
         std::vector<Vector2I> path{ PathfinderSystem::calculateAStarPath(
-            map,
             Convert::worldToTile( enemiesIO.positions[enemyId] ),
             heroPosition,
+            map,
             gameCamera,
             false,
             enemiesIO.ais[enemyId].scanRange
