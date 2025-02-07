@@ -150,7 +150,7 @@ struct GuidedDirectionRNG
         off = Vector2OffDirection( offset );
 
         //* Handle exceptions
-        //* Exception: |x| == |y| -> main is RNG, off is dependent
+        //* Exception: |x| == |y| => main is RNG, off is dependent
         if ( abs( offset.x ) == abs( offset.y ) )
         {
             if ( snx::RNG::random() )

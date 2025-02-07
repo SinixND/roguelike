@@ -77,7 +77,8 @@ namespace Convert
     //* Octant position to tile position
     //* https://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/
     //* Coordinates within octanct are usual cartesian
-    //* Octant[0] is from 0,1 (top) to 1,1 (top-right), going CW
+    //* Octant[0] is from vertical up CW,
+    //* Octants enumerated CW
     template <typename Type>
     inline Type transformFromOctant(
         Type const& octantPosition,

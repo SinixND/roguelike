@@ -172,13 +172,13 @@ namespace snx
             assert( !contains( to ) && "Key already exists, possible loss of data!" );
 
             //* Add new key with old index
-            keyToIndex_[to] = keyToIndex_.at( from );
+            keyToIndex_[to] = index( from );
 
             //* Remove old key
             keyToIndex_.erase( from );
 
             //* Remap index to new key
-            indexToKey_[keyToIndex_.at( to )] = to;
+            indexToKey_[index( to )] = to;
         }
 
         //* Empty all containers
@@ -193,7 +193,7 @@ namespace snx
         //* Access
         Type const& operator[]( Key const& key ) const
         {
-            return values_[keyToIndex_.at( key )];
+            return values_[index( key )];
         }
 
         //* Allow non-const calls
@@ -224,6 +224,12 @@ namespace snx
             return indexToKey_[index];
         }
 
+        //* Get value index for key
+        size_t const& index( Key const& key ) const
+        {
+            return keyToIndex_.at( key );
+        }
+
         //* Return vector (contiguous memory)
         std::vector<Type> const& values() const
         {
@@ -239,7 +245,7 @@ namespace snx
     private:
         Type const& at( Key const& key ) const
         {
-            return values_[keyToIndex_.at( key )];
+            return values_[index( key )];
         }
 
         Type& at( Key const& key )
