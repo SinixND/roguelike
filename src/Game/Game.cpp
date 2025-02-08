@@ -116,7 +116,7 @@ namespace GameModule
 
             for ( size_t idx{ 0 }; idx < enemies.transforms.size(); ++idx )
             {
-                currentPosition = &enemies.positions.values()[idx];
+                currentPosition = &enemies.positions[idx];
 
                 oldPosition = Convert::worldToTile( *currentPosition );
 
@@ -124,9 +124,9 @@ namespace GameModule
                 //* Update ids_ key if tilePosition changes
                 *currentPosition = MovementSystem::updateSingle(
                     *currentPosition,
-                    enemies.transforms.values()[idx],
-                    // enemies.movements.values()[i],
-                    enemies.energies.values()[idx],
+                    enemies.transforms[idx],
+                    // enemies.movements[i],
+                    enemies.energies[idx],
                     dt
                 );
 

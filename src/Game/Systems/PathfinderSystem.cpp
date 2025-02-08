@@ -101,12 +101,12 @@ bool isTileValid(
         return false;
     }
 
-    size_t tileId{ tiles.ids[targetToCheck] };
+    size_t tileId{ tiles.ids.at( targetToCheck ) };
 
     return !(
         tiles.isSolids.contains( tileId )
         || ( skipInvisibleTiles
-             && ( tiles.visibilityIds[tileId] == VisibilityId::INVISIBLE )
+             && ( tiles.visibilityIds.at( tileId ) == VisibilityId::INVISIBLE )
         )
         || ( start == targetToCheck )
     );
@@ -128,11 +128,11 @@ bool isTileValid(
         return false;
     }
 
-    size_t tileId{ tiles.ids[targetToCheck.tilePosition] };
+    size_t tileId{ tiles.ids.at( targetToCheck.tilePosition ) };
 
     return !(
         tiles.isSolids.contains( tileId )
-        || ( tiles.visibilityIds[tileId] == VisibilityId::INVISIBLE )
+        || ( tiles.visibilityIds.at( tileId ) == VisibilityId::INVISIBLE )
         || ( ( maxRange > 0 ) && ( targetToCheck.stepsNeeded > maxRange ) )
     );
 }

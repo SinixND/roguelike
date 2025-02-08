@@ -44,7 +44,7 @@ void Enemies::insert(
 
 void Enemies::remove( size_t id )
 {
-    ids.erase( Convert::worldToTile( positions[id] ) );
+    ids.erase( Convert::worldToTile( positions.at( id ) ) );
     positions.erase( id );
     renderIds.erase( id );
     transforms.erase( id );
@@ -71,9 +71,9 @@ bool isSpawnPositionValid(
         return false;
     }
 
-    size_t tileId{ tiles.ids[tilePosition] };
+    size_t tileId{ tiles.ids.at( tilePosition ) };
 
-    if ( !( tiles.visibilityIds[tileId] == VisibilityId::VISIBILE )
+    if ( !( tiles.visibilityIds.at( tileId ) == VisibilityId::VISIBILE )
          && !tiles.isSolids.contains( tileId )
          && !enemiesIds.contains( tilePosition ) )
     {
@@ -227,8 +227,8 @@ namespace EnemiesModule
 
         for ( size_t idx{ 0 }; idx < energies.size(); ++idx )
         {
-            if ( energies.values()[idx].state == EnergyComponent::State::READY
-                 && ais.values()[idx].turn < turn )
+            if ( energies[idx].state == EnergyComponent::State::READY
+                 && ais[idx].turn < turn )
             {
                 activeEnemyId = energies.key( idx );
                 break;
@@ -248,9 +248,9 @@ namespace EnemiesModule
         while ( idx < enemies.ids.values().size() )
         {
             //* Kill enemy at 0 health
-            if ( enemies.healths.values()[idx].currentHealth <= 0 )
+            if ( enemies.healths[idx].currentHealth <= 0 )
             {
-                enemies.remove( enemies.ids.values()[idx]
+                enemies.remove( enemies.ids[idx]
                 );
 
                 //* Spawn new enemy

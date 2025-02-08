@@ -24,7 +24,7 @@ Enemies& executeAction(
     //* Instant action: attack
     if ( Vector2Length(
              Vector2Subtract(
-                 Convert::worldToTile( enemiesIO.positions[enemyId] ),
+                 Convert::worldToTile( enemiesIO.positions.at( enemyId ) ),
                  heroPosition
              )
          )
@@ -35,21 +35,21 @@ Enemies& executeAction(
 
         HealthModule::damage(
             heroHealthIO,
-            DamageModule::damageRNG( enemiesIO.damages[enemyId] )
+            DamageModule::damageRNG( enemiesIO.damages.at( enemyId ) )
         );
 
-        EnergyModule::consume( enemiesIO.energies[enemyId] );
+        EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
     }
     //* Check path
     else
     {
         std::vector<Vector2I> path{ PathfinderSystem::calculateAStarPath(
-            Convert::worldToTile( enemiesIO.positions[enemyId] ),
+            Convert::worldToTile( enemiesIO.positions.at( enemyId ) ),
             heroPosition,
             map,
             gameCamera,
             false,
-            enemiesIO.ais[enemyId].scanRange
+            enemiesIO.ais.at( enemyId ).scanRange
         ) };
 
         size_t pathSize{ path.size() };
@@ -64,21 +64,21 @@ Enemies& executeAction(
                  heroPosition
              ) )
         {
-            enemiesIO.transforms[enemyId] = MovementSystem::prepareByFromTo(
-                enemiesIO.transforms[enemyId],
-                enemiesIO.movements[enemyId],
-                Convert::worldToTile( enemiesIO.positions[enemyId] ),
+            enemiesIO.transforms.at( enemyId ) = MovementSystem::prepareByFromTo(
+                enemiesIO.transforms.at( enemyId ),
+                enemiesIO.movements.at( enemyId ),
+                Convert::worldToTile( enemiesIO.positions.at( enemyId ) ),
                 path.rbegin()[1]
             );
 
-            EnergyModule::consume( enemiesIO.energies[enemyId] );
+            EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
         }
         //* Path is "empty"
         //* Wait
         else
         {
             //* Wait
-            EnergyModule::consume( enemiesIO.energies[enemyId] );
+            EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
         }
     }
     // return false;
@@ -106,7 +106,7 @@ namespace AISystem
 
             if ( activeEnemyIdIO )
             {
-                enemiesIO.ais[activeEnemyIdIO].turn = turn;
+                enemiesIO.ais.at( activeEnemyIdIO ).turn = turn;
 
                 enemiesIO = executeAction(
                     enemiesIO,

@@ -5,6 +5,7 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
+- [ ] Change DenseMap: .at(key), [idx]
 - [ ] Refactor
     [Status] Current: Game folder -> Systems -> VisibilitySystem
     - [ ] Use `values()` of Densemap where >1 SoA member-values needed

@@ -130,7 +130,7 @@ void setupSceneEvents(
                 return;
             }
 
-            size_t tileId{ tiles.ids[cursorPos] };
+            size_t tileId{ tiles.ids.at( cursorPos ) };
 
             snx::debug::cliPrint( "\n" );
             snx::debug::cliLog( "TILE:\n" );
@@ -145,21 +145,21 @@ void setupSceneEvents(
 
             snx::debug::cliLog(
                 "WorldPixel: "
-                + std::to_string( tiles.positions[tileId].x )
+                + std::to_string( tiles.positions.at( tileId ).x )
                 + ", "
-                + std::to_string( tiles.positions[tileId].y )
+                + std::to_string( tiles.positions.at( tileId ).y )
                 + "\n"
             );
 
             snx::debug::cliLog(
                 "RenderId: "
-                + std::to_string( static_cast<int>( tiles.renderIds[tileId] ) )
+                + std::to_string( static_cast<int>( tiles.renderIds.at( tileId ) ) )
                 + "\n"
             );
 
             snx::debug::cliLog(
                 "VisibilityId: "
-                + std::to_string( static_cast<int>( tiles.visibilityIds[tileId] ) )
+                + std::to_string( static_cast<int>( tiles.visibilityIds.at( tileId ) ) )
                 + "\n"
             );
 
@@ -179,31 +179,31 @@ void setupSceneEvents(
 
             if ( objects.ids.contains( Convert::worldToTile( cursor.position ) ) )
             {
-                size_t objectId{ objects.ids[Convert::worldToTile( cursor.position )] };
+                size_t objectId{ objects.ids.at( Convert::worldToTile( cursor.position ) ) };
 
                 snx::debug::cliLog( "OBJECT\n" );
 
                 snx::debug::cliLog(
                     "\nName: "
-                    + scene.game.world.currentMap->objects.names[objectId]
+                    + scene.game.world.currentMap->objects.names.at( objectId )
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "\nActions: "
-                    + scene.game.world.currentMap->objects.actions[objectId]
+                    + scene.game.world.currentMap->objects.actions.at( objectId )
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "RenderId: "
-                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.renderIds[objectId] ) )
+                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.renderIds.at( objectId ) ) )
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "Event: "
-                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.events[objectId] ) )
+                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.events.at( objectId ) ) )
                     + "\n"
                 );
             }
@@ -214,7 +214,7 @@ void setupSceneEvents(
 
                 snx::debug::cliLog(
                     "Id: "
-                    + std::to_string( scene.game.world.currentMap->enemies.ids[cursorPos] )
+                    + std::to_string( scene.game.world.currentMap->enemies.ids.at( cursorPos ) )
                     + "\n"
                 );
             }
@@ -269,9 +269,9 @@ void renderOutput(
     for ( size_t idx{ 0 }; idx < enemyRenderIds.size(); ++idx )
     {
         if (
-            tileVisibilityIds[tiles.ids[Convert::worldToTile(
+            tileVisibilityIds.at( tiles.ids.at( Convert::worldToTile(
                 enemyPositions[idx]
-            )]]
+            ) ) )
             != VisibilityId::VISIBILE
         )
         {
@@ -292,7 +292,7 @@ void renderOutput(
     {
         RenderSystem::renderFog(
             Convert::tileToWorld( fogs.key( idx ) ),
-            fogs.values()[idx]
+            fogs[idx]
         );
     }
 

@@ -47,9 +47,9 @@ namespace snx
             Type const& value = Type{}
         )
         {
-            ( *this )[key] = value;
+            ( *this ).at( key ) = value;
 
-            return ( *this )[key];
+            return ( *this ).at( key );
         }
 
         Type& insert(
@@ -59,7 +59,7 @@ namespace snx
         {
             if ( keyToIndex_.contains( key ) )
             {
-                return ( *this )[key];
+                return ( *this ).at( key );
             }
 
             //* Get new list index for value before modifying values_
@@ -76,7 +76,7 @@ namespace snx
 
             assert( ( keyToIndex_.size() == indexToKey_.size() ) && "Internal mismatch!" );
 
-            return ( *this )[key];
+            return ( *this ).at( key );
         }
 
         Type& insert_or_assign(
@@ -191,27 +191,37 @@ namespace snx
 
         //* LOOKUP
         //* Access
-        Type const& operator[]( Key const& key ) const
+        Type const& at( Key const& key ) const
         {
             return values_[index( key )];
         }
 
-        //* Allow non-const calls
-        Type& operator[]( Key const& key )
+        Type& at( Key const& key )
         {
-            return const_cast<Type&>( std::as_const( *this )[key] );
+            return const_cast<Type&>( std::as_const( *this ).at( key ) );
         }
 
-        //* Access or insert
+        // Type const& operator[]( Key const& key ) const
+        // {
+        //     return values_[index( key )];
+        // }
+        //
+        // //* Allow non-const calls
         // Type& operator[]( Key const& key )
         // {
-        //     if ( !contains( key ) )
-        //     {
-        //         insert( key );
-        //     }
-        //
-        //     return at( key );
+        //     return const_cast<Type&>( std::as_const( *this )[key] );
         // }
+
+        Type const& operator[]( size_t idx ) const
+        {
+            return values_[idx];
+        }
+
+        //* Allow non-const calls
+        Type& operator[]( size_t idx )
+        {
+            return const_cast<Type&>( std::as_const( *this )[idx] );
+        }
 
         bool contains( Key const& key ) const
         {
@@ -240,17 +250,6 @@ namespace snx
         std::vector<Type>& values()
         {
             return const_cast<std::vector<Type>&>( std::as_const( *this ).values() );
-        }
-
-    private:
-        Type const& at( Key const& key ) const
-        {
-            return values_[index( key )];
-        }
-
-        Type& at( Key const& key )
-        {
-            return const_cast<Type&>( std::as_const( *this ).at( key ) );
         }
 
     private:
