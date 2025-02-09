@@ -14,19 +14,19 @@
 #include <unordered_set>
 #include <vector>
 
-/// Horizontal shadow projection line, defined by left and right slope,
+/// Shadow sector, defined by left and right slope,
 /// get extended by opaque tiles while projected away from viewpoint (hero).
 /// Origin for slope is the viewpoint tile corner
 /// opposite to expansion direction, not the tiles center!
 /// See https://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/
-class ShadowLine
+class Shadow
 {
 public:
     float slopeLeft{};
     float slopeRight{};
 
 public:
-    explicit ShadowLine( Vector2I const& octantPosition )
+    explicit Shadow( Vector2I const& octantPosition )
     {
         assert( ( octantPosition.x || octantPosition.y ) && "Cant compute slope for origin" );
 
@@ -51,7 +51,7 @@ public:
 };
 
 //* VisibilitySystem
-VisibilityId getVisibilityOutOfVision( VisibilityId tileVisibilityOld )
+VisibilityId getOutOfVisionVisibility( VisibilityId tileVisibilityOld )
 {
     VisibilityId visibilityId{ tileVisibilityOld };
 
@@ -82,7 +82,7 @@ Fog getFogOfWarState( VisibilityId tileVisibility )
     return fog;
 }
 
-enum NewSlopesCovered
+enum SlopesCovered
 {
     NONE = 0,
     LEFT = 1,
@@ -91,39 +91,39 @@ enum NewSlopesCovered
 };
 
 /// Which newShadow slope is covered by the old shadow
-NewSlopesCovered getSlopesCovered(
-    ShadowLine const& oldShadowLine,
-    ShadowLine const& newShadowLine
+SlopesCovered getSlopesCovered(
+    Shadow const& oldShadow,
+    Shadow const& newShadow
 )
 {
     //* NOTE: Slope values get bigger CCW!
     bool isLeftCovered{
-        oldShadowLine.slopeLeft >= newShadowLine.slopeLeft
-        && newShadowLine.slopeLeft >= oldShadowLine.slopeRight
+        oldShadow.slopeLeft >= newShadow.slopeLeft
+        && newShadow.slopeLeft >= oldShadow.slopeRight
     };
 
     bool isRightCovered{
-        oldShadowLine.slopeLeft >= newShadowLine.slopeRight
-        && newShadowLine.slopeRight >= oldShadowLine.slopeRight
+        oldShadow.slopeLeft >= newShadow.slopeRight
+        && newShadow.slopeRight >= oldShadow.slopeRight
     };
 
-    return static_cast<NewSlopesCovered>( isLeftCovered ^ ( isRightCovered << 1 ) );
+    return static_cast<SlopesCovered>( isLeftCovered ^ ( isRightCovered << 1 ) );
 }
 
 [[nodiscard]]
-std::vector<ShadowLine>& mergeNewShadow(
-    std::vector<ShadowLine>& shadows,
+std::vector<Shadow>& mergeNewShadow(
+    std::vector<Shadow>& shadows,
     Vector2I const& octantPosition
 )
 {
-    ShadowLine newShadow{ octantPosition };
+    Shadow newShadow{ octantPosition };
 
     //* Merge newShadow with existing shadows
     auto itr{ shadows.begin() };
     // for ( size_t idx{ 0 }; idx < shadowsSize; ++idx )
     while ( itr != shadows.end() )
     {
-        ShadowLine& oldShadow{ *itr };
+        Shadow& oldShadow{ *itr };
 
         switch ( getSlopesCovered(
             oldShadow,
@@ -167,6 +167,65 @@ std::vector<ShadowLine>& mergeNewShadow(
     return shadows;
 }
 
+bool checkVisibility(
+    std::vector<Shadow> const& shadows,
+    int visionRange,
+    int octX,
+    int octY
+)
+{
+    //* Check if tile is out of range (viewport and visionRange)
+    if ( !( visionRange > sqrt( pow( octX, 2 ) + pow( octY, 2 ) ) ) )
+    {
+        return false;
+    }
+
+    //* Compare tile against all existing shadows
+    for ( Shadow const& oldShadow : shadows )
+    {
+        //* Compare if tile is covered in existing shadow
+        Shadow testShadow{ { octX, octY } };
+
+        if ( getSlopesCovered( oldShadow, testShadow ) == BOTH )
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+[[nodiscard]]
+VisibilityId& updateVisibilityId(
+    VisibilityId& visibilityId,
+    snx::DenseMap<Vector2I, Fog>& fogsIO,
+    std::vector<Shadow> const& shadows,
+    Vector2I const& tilePosition,
+    int visionRange,
+    Vector2I const& octantPosition
+)
+{
+    VisibilityId tileVisibilityOld{ visibilityId };
+
+    if ( checkVisibility(
+             shadows,
+             visionRange,
+             octantPosition.x,
+             octantPosition.y
+         ) )
+    {
+        //* Tile IS visible
+        visibilityId = VisibilityId::VISIBILE;
+    }
+    else
+    {
+        visibilityId = getOutOfVisionVisibility( tileVisibilityOld );
+        fogsIO.insert_or_assign( tilePosition ) = getFogOfWarState( tileVisibilityOld );
+    }
+
+    return visibilityId;
+}
+
 [[nodiscard]]
 Tiles const& calculateVisibilitiesInOctant(
     Tiles& tiles,
@@ -174,17 +233,17 @@ Tiles const& calculateVisibilitiesInOctant(
     Vector2I const& heroPosition,
     int octant,
     int visionRange,
-    int range
+    int viewportRange
 )
 {
     //* NOTE: Octant coordinates are standard cartesian tilePositions (centered)
     //* x+ = right, y+ = up !!!
-    std::vector<ShadowLine> shadows{};
+    std::vector<Shadow> shadows{};
 
-    //* Iterate octant
+    //* Iterate octant rows until diagonal + 1!
     //* Octant[0] is from vertical up CW,
     //* Octants enumerated CW
-    for ( int octY{ 0 }; octY < range; ++octY )
+    for ( int octY{ 0 }; octY < viewportRange; ++octY )
     {
         for ( int octX{ 0 }; octX <= octY + 1; ++octX )
         {
@@ -198,7 +257,7 @@ Tiles const& calculateVisibilitiesInOctant(
                 )
             };
 
-            //* Check existence
+            //* Ensure tile existence
             if ( !tiles.ids.contains( tilePosition ) )
             {
                 continue;
@@ -206,65 +265,20 @@ Tiles const& calculateVisibilitiesInOctant(
 
             size_t tileId{ tiles.ids.at( tilePosition ) };
 
-            VisibilityId tileVisibilityOld{ tiles.visibilityIds.at( tileId ) };
-
-            //* < : Update only octant tiles including diagonal tiles (spare last row tile, needed for correct diagonal visibility)
+            //* Update only octant tiles up to and including diagonal tiles
             if ( octX <= octY )
             {
-                //* Skip test (. set invis) if shadowline already covers whole octant
-                if ( shadows.size()
-                     && shadows[0].slopeLeft < 0
-                     && shadows[0].slopeRight < 1 )
-                {
-                    tiles.visibilityIds.at( tileId ) = getVisibilityOutOfVision( tileVisibilityOld );
-                    fogsIO.insert_or_assign( tilePosition ) = getFogOfWarState( tileVisibilityOld );
+                tiles.visibilityIds.at( tileId ) = updateVisibilityId(
+                    tiles.visibilityIds.at( tileId ),
+                    fogsIO,
+                    shadows,
+                    tilePosition,
+                    visionRange,
+                    octantPosition
+                );
+            }
 
-                    continue;
-                } //* Max shadow
-
-                //* Check visibility by intersection with shadow line elements
-                bool isVisible{ true };
-
-                //* Check if tile is out of range (viewport and visionRange)
-                if ( !(
-                         ( octY < ( range - 1 ) )
-                         && sqrt( pow( octX, 2 ) + pow( octY, 2 ) ) < visionRange
-                     ) )
-                {
-                    isVisible = false;
-                }
-                else
-                {
-                    for ( ShadowLine const& oldShadow : shadows )
-                    {
-                        //* Check if visible:
-                        //* If one shadow covers tile -> invis
-                        ShadowLine testShadow{ { octX, octY } };
-
-                        if ( getSlopesCovered( oldShadow, testShadow ) == BOTH )
-                        {
-                            isVisible = false;
-
-                            break;
-                        }
-                    }
-                }
-
-                //* Update visibility
-                if ( isVisible )
-                {
-                    //* Tile IS visible
-                    tiles.visibilityIds.at( tileId ) = VisibilityId::VISIBILE;
-                }
-
-                else
-                {
-                    tiles.visibilityIds.at( tileId ) = getVisibilityOutOfVision( tileVisibilityOld );
-                    fogsIO.insert_or_assign( tilePosition ) = getFogOfWarState( tileVisibilityOld );
-                }
-            } //* Octant tiles only
-
-            //* Update shadow line
+            //* Update shadows for all iterated tiles
             if ( !tiles.isOpaques.contains( tileId ) )
             {
                 continue;

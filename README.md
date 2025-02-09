@@ -5,9 +5,8 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Change DenseMap: .at(key), [idx]
 - [ ] Refactor
-    [Status] Current: Game folder -> Systems -> VisibilitySystem
+    [Status] Current: Game folder -> Game.cpp
     - [ ] Use `values()` of Densemap where >1 SoA member-values needed
     - [ ] Refactor parameters to low/member level ( if < 3 members used );
         - Split modified and const members

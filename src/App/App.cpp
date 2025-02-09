@@ -14,9 +14,7 @@
 #include <emscripten/html5.h>
 #endif
 
-void setupRaylib(
-    AppConfig const& config
-)
+void setupRaylib( AppConfig const& config )
 {
     //* Raylib flags
     SetConfigFlags( FLAG_WINDOW_RESIZABLE );
