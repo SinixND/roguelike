@@ -23,13 +23,11 @@ struct Game
 
 namespace GameModule
 {
-    void init( Game& game );
+    [[nodiscard]]
+    Game const& init( Game& game );
 
-    void setupGameEvents(
-        Game& game
-    );
-
-    void update(
+    [[nodiscard]]
+    Game const& update(
         Game& game,
         GameCamera const& gameCamera,
         Cursor const& cursor,

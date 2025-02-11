@@ -7,7 +7,7 @@ Platforms: Linux, Windows, Browser
 ## Active 
 - [ ] Refactor
     [Status] Current: Game folder -> Game.cpp
-    - [ ] Use `values()` of Densemap where >1 SoA member-values needed
+    - [ ] Use `values()` of Densemap where >1 SoA member-values needed (no `contains()`!)
     - [ ] Refactor parameters to low/member level ( if < 3 members used );
         - Split modified and const members
         - Parameter order -> Check `DesignGuideline.md` for fake return

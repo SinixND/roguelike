@@ -355,7 +355,7 @@ namespace SceneModule
         Cursor const& cursor
     )
     {
-        GameModule::init( scene.game );
+        scene.game = GameModule::init( scene.game );
 
         PanelSystem::init( scene.panels );
 
@@ -402,7 +402,7 @@ namespace SceneModule
             Convert::worldToTile( scene.game.hero.position )
         );
 
-        GameModule::update(
+        scene.game = GameModule::update(
             scene.game,
             scene.gameCamera,
             cursor,

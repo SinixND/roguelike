@@ -12,12 +12,12 @@
 [Noel's blog](https://gamesfromwithin.com/category/c)
 
 ## Functions parameters 
-- Input last (can have default value, needs to be rightmost in this case)
+- Input last (can have default value, needs to be rightmost in that case)
     `(out >) io > in` 
 - According to the above (see below example why to avoid ptr parameters for non-sideeffect like parameters)
     `(&/* >) const& > v `
 
-### Example: Fake-pure, but copy-less/performant and clear intention:
+### Example: Fake-pure, but copyless/performant and clear intention:
 ```cpp
 [[nodiscard]] S const& f(S& s)
 {
@@ -53,7 +53,7 @@ void f(S& sIO)
 // Module.h
 class C 
 { // has_invariant ? class : struct
-// private:
+private:
     // invariant/internal members
 public:
     // independent members
@@ -88,10 +88,10 @@ namespace SSystem
     - Define it (and its member structs) in `SoA.cpp`
 
 ## SparseSet
-- Maps _integer_ `id` to `idx` and `idx` to `data` (array to array) (potentially BIG!)
+- Maps _integer/size_t_ `id` => `idx` and `idx` => `data` (array to array) (potentially BIG!)
 
 ## DenseMap 
-- Maps _arbitrary_ `id` to `idx` and `idx` to `data` (hashmap to array)
+- Maps _arbitrary_ `id` => `idx` and `idx` => `data` (hashmap to array)
 
 ## Functor for existing function
 ```cpp

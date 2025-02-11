@@ -213,7 +213,9 @@ ifeq ($(PLATFORM),windows)
     LIBRARIES 			+= opengl32 gdi32 winmm
 endif
 ifeq ($(OS),termux)
-    LIBRARIES 			+= log
+    ifeq ($(PLATFORM),unix)
+		LIBRARIES 			+= log
+    endif
 endif
 
 
