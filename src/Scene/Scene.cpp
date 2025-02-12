@@ -49,7 +49,7 @@ void setupSceneEvents(
         EventId::PANELS_RESIZED,
         [&]()
         {
-            GameCameraModule::init(
+            scene.gameCamera = GameCameraModule::init(
                 scene.gameCamera,
                 scene.panels.map,
                 scene.game.hero.position
@@ -81,7 +81,7 @@ void setupSceneEvents(
         EventId::HERO_MOVED,
         [&]()
         {
-            GameCameraModule::setTarget(
+            scene.gameCamera = GameCameraModule::setTarget(
                 scene.gameCamera,
                 scene.game.hero.position
             );
@@ -108,7 +108,7 @@ void setupSceneEvents(
         EventId::MAP_CHANGE,
         [&]()
         {
-            ChunkSystem::init(
+            scene.chunks = ChunkSystem::renderChunks(
                 scene.chunks,
                 scene.renderData.textures,
                 scene.game.world.currentMap->tiles
@@ -359,7 +359,7 @@ namespace SceneModule
 
         PanelSystem::init( scene.panels );
 
-        GameCameraModule::init(
+        scene.gameCamera = GameCameraModule::init(
             scene.gameCamera,
             scene.panels.map,
             scene.game.hero.position
@@ -371,7 +371,7 @@ namespace SceneModule
 
         RenderSystem::loadRenderData( scene.renderData );
 
-        ChunkSystem::init(
+        scene.chunks = ChunkSystem::renderChunks(
             scene.chunks,
             scene.renderData.textures,
             scene.game.world.currentMap->tiles

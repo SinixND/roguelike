@@ -10,14 +10,15 @@
 #include "raylibEx.h"
 #include <raylib.h>
 
-void verifyRequiredChunkExists(
-    Vector2I const& tilePosition,
-    snx::DenseMap<Vector2I, Chunk>& chunks
+[[nodiscard]]
+snx::DenseMap<Vector2I, Chunk> const& requireChunk(
+    snx::DenseMap<Vector2I, Chunk>& chunks,
+    Vector2I const& tilePosition
 )
 {
     Vector2I chunkPosition{ Convert::tileToChunk( tilePosition ) };
 
-    //* If clause is needed due to exclude unnecessary LoadRenderTexture() calls
+    //* NOTE: !!! If clause is needed due to exclude unnecessary LoadRenderTexture() calls !!!
     if ( !chunks.contains( chunkPosition ) )
     {
         chunks.emplace(
@@ -29,30 +30,40 @@ void verifyRequiredChunkExists(
             )
         );
     }
+
+    return chunks;
+}
+
+[[nodiscard]]
+snx::DenseMap<Vector2I, Chunk> const& clearChunks( snx::DenseMap<Vector2I, Chunk>& chunks )
+{
+    for ( Chunk const& chunk : chunks )
+    {
+        UnloadRenderTexture( chunk.renderTexture );
+    }
+
+    chunks.clear();
+
+    return chunks;
 }
 
 namespace ChunkSystem
 {
-    void init(
+    [[nodiscard]]
+    snx::DenseMap<Vector2I, Chunk> const& renderChunks(
         snx::DenseMap<Vector2I, Chunk>& chunks,
         Textures const& textures,
         Tiles const& tiles
     )
     {
-        //* Reset
-        for ( Chunk const& chunk : chunks )
-        {
-            UnloadRenderTexture( chunk.renderTexture );
-        }
-
-        chunks.clear();
+        chunks = clearChunks( chunks );
 
         //* Create necessary chunks
         for ( Vector2 const& position : tiles.positions )
         {
-            verifyRequiredChunkExists(
-                Convert::worldToTile( position ),
-                chunks
+            chunks = requireChunk(
+                chunks,
+                Convert::worldToTile( position )
             );
         }
 
@@ -90,5 +101,7 @@ namespace ChunkSystem
 
             EndTextureMode();
         }
+
+        return chunks;
     }
 }

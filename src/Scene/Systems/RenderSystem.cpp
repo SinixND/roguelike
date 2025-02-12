@@ -2,14 +2,12 @@
 #include "Data/TextureData.h"
 #include "Fog.h"
 #include "RenderData.h"
-#include "raylibEx.h"
 
 //* #define DEBUG_CHUNKS
 #define DEBUG_VISIBILITY
 
 #include "Chunk.h"
 #include "ChunkData.h"
-#include "Convert.h"
 #include "RenderId.h"
 #include "TextureData.h"
 #include "Textures.h"
@@ -30,7 +28,7 @@ namespace RenderSystem
     void loadRenderData( RenderData& renderData )
     {
         //* Load texture atlas
-        TexturesModule::loadAtlas(
+        renderData.textures = TexturesModule::loadAtlas(
             renderData.textures,
             textureAtlasFileName(
                 renderData.theme
@@ -38,14 +36,14 @@ namespace RenderSystem
         );
 
         //* Register textures
-        TexturesModule::registerTexture( renderData.textures, RenderId::NONE, { 0, 0 } );
-        TexturesModule::registerTexture( renderData.textures, RenderId::CURSOR, { 35, 0 } );
-        TexturesModule::registerTexture( renderData.textures, RenderId::HERO, { 70, 0 } );
-        TexturesModule::registerTexture( renderData.textures, RenderId::WALL, { 105, 0 } );
-        TexturesModule::registerTexture( renderData.textures, RenderId::FLOOR, { 0, 35 } );
-        TexturesModule::registerTexture( renderData.textures, RenderId::DESCEND, { 35, 35 } );
-        TexturesModule::registerTexture( renderData.textures, RenderId::ASCEND, { 70, 35 } );
-        TexturesModule::registerTexture( renderData.textures, RenderId::GOBLIN, { 105, 35 } );
+        renderData.textures = TexturesModule::registerTexture( renderData.textures, RenderId::NONE, { 0, 0 } );
+        renderData.textures = TexturesModule::registerTexture( renderData.textures, RenderId::CURSOR, { 35, 0 } );
+        renderData.textures = TexturesModule::registerTexture( renderData.textures, RenderId::HERO, { 70, 0 } );
+        renderData.textures = TexturesModule::registerTexture( renderData.textures, RenderId::WALL, { 105, 0 } );
+        renderData.textures = TexturesModule::registerTexture( renderData.textures, RenderId::FLOOR, { 0, 35 } );
+        renderData.textures = TexturesModule::registerTexture( renderData.textures, RenderId::DESCEND, { 35, 35 } );
+        renderData.textures = TexturesModule::registerTexture( renderData.textures, RenderId::ASCEND, { 70, 35 } );
+        renderData.textures = TexturesModule::registerTexture( renderData.textures, RenderId::GOBLIN, { 105, 35 } );
     }
 
     void renderTile(
@@ -205,6 +203,6 @@ namespace RenderSystem
 
     void deinit( Textures& textures )
     {
-        TexturesModule::unloadAtlas( textures );
+        textures = TexturesModule::unloadAtlas( textures );
     }
 }

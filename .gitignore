@@ -1,8 +1,7 @@
 .cache
-bin/*
-!bin/web/
-bin/web/*
-!bin/web/release/
+bin/unix/debug/
+bin/web/debug/
+bin/windows/debug/
 doc/html
 build
 perf.*
