@@ -15,13 +15,17 @@ struct Textures
 
 namespace TexturesModule
 {
+    [[nodiscard]]
+    Textures const& unloadAtlas( Textures& textures );
     //* Texture atlas
-    void loadAtlas(
+    [[nodiscard]]
+    Textures const& loadAtlas(
         Textures& textures,
         std::string const& filename
     );
 
-    void registerTexture(
+    [[nodiscard]]
+    Textures const& registerTexture(
         Textures& textures,
         RenderId textureId,
         Vector2 position
@@ -30,10 +34,6 @@ namespace TexturesModule
     Vector2 const& getTexturePosition(
         Textures const& textures,
         RenderId renderId
-    );
-
-    void unloadAtlas(
-        Textures& textures
     );
 }
 #endif
