@@ -283,11 +283,14 @@ namespace GameModule
         }
 
         //* Regenerate energy until a unit becomes ready
-        while (
-            !EnergyModule::regenerate( game.hero.energy )
-            && !EnemiesModule::regenerate( game.world.currentMap->enemies.energies )
-        )
-            ;
+        bool isUnitReady{ false };
+
+        //* Regenerate until one unit becomes ready
+        while ( !isUnitReady )
+        {
+            isUnitReady = EnergyModule::regenerate( game.hero.energy );
+            isUnitReady |= EnemiesModule::regenerate( game.world.currentMap->enemies.energies );
+        }
 
         //* Increment turn when hero is ready
         if ( game.hero.energy.state == EnergyComponent::State::READY )

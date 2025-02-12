@@ -35,6 +35,7 @@ struct AStarTile
     Vector2I offsetToTarget{};
     int stepsNeeded{};
     AStarTile* ancestor{ nullptr };
+    int penalty{ 0 };
 
     AStarTile(
         Vector2I const& tilePosition,
@@ -291,15 +292,11 @@ bool continueTargetSearch(
 
             //* Add rating penalty if
             //* - enemy would block path
-            int penalty{ 0 };
-
             if ( map.enemies.ids.contains( newAStarTile.tilePosition ) )
             {
                 //* Penalty = 4 is equal to the direct path around the enemy
-                penalty += 4;
+                newAStarTile.penalty += 4;
             }
-
-            newAStarTile.stepsNeeded += penalty;
 
             //* Create and sort newRatedTile
             tileStorage.push_front( newAStarTile );
