@@ -142,7 +142,7 @@ namespace AppModule
             EventId::CURSOR_TOGGLE,
             [&]()
             {
-                CursorModule::toggle( appIO.cursor );
+                appIO.cursor = CursorModule::toggle( appIO.cursor );
             }
         );
 

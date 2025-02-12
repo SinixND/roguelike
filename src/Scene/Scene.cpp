@@ -396,7 +396,7 @@ namespace SceneModule
             snx::PublisherStatic::publish( EventId::CHANGE_COLOR_THEME );
         }
 
-        CursorModule::update(
+        cursor = CursorModule::update(
             cursor,
             scene.gameCamera.camera,
             Convert::worldToTile( scene.game.hero.position )
