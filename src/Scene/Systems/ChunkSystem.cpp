@@ -59,7 +59,7 @@ namespace ChunkSystem
         //* Render to chunk
         for ( Chunk& chunk : chunks )
         {
-            RectangleExI const& chunkSize{ chunk.corners };
+            RectangleExI const& chunkSize{ chunk.rectangle };
 
             BeginTextureMode( chunk.renderTexture );
 

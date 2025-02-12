@@ -12,7 +12,7 @@
 //* - center position
 struct Chunk
 {
-    RectangleExI corners{};
+    RectangleExI rectangle{};
     Vector2 position{};
     RenderTexture renderTexture{};
 
@@ -22,7 +22,7 @@ struct Chunk
         Vector2 const& position,
         RenderTexture const& texture
     )
-        : corners(
+        : rectangle(
               RectangleExI{
                   Convert::worldToTile( position ).x,
                   Convert::worldToTile( position ).y,

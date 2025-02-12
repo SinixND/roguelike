@@ -17,9 +17,11 @@ struct Cursor
 
 namespace CursorModule
 {
-    void toggle( Cursor& cursor );
+    [[nodiscard]]
+    Cursor const& toggle( Cursor& cursor );
 
-    void update(
+    [[nodiscard]]
+    Cursor const& update(
         Cursor& cursor,
         Camera2D const& camera,
         Vector2I const& heroPosition

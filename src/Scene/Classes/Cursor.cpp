@@ -8,20 +8,24 @@
 
 namespace CursorModule
 {
-    void toggle( Cursor& cursor )
+    [[nodiscard]]
+    Cursor const& toggle( Cursor& cursor )
     {
         cursor.isActive = !cursor.isActive;
 
         if ( cursor.isActive )
         {
             HideCursor();
-            return;
+            return cursor;
         }
 
         ShowCursor();
+
+        return cursor;
     }
 
-    void update(
+    [[nodiscard]]
+    Cursor const& update(
         Cursor& cursor,
         Camera2D const& camera,
         Vector2I const& heroPosition
@@ -39,10 +43,12 @@ namespace CursorModule
                 snx::PublisherStatic::publish( EventId::CURSOR_POSITION_CHANGED );
             }
 
-            return;
+            return cursor;
         }
 
         //* Keep cursor on hero if inactive
         cursor.position = Convert::tileToWorld( heroPosition );
+
+        return cursor;
     }
 }
