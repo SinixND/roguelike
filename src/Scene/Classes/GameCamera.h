@@ -15,7 +15,8 @@ struct GameCamera
 
 namespace GameCameraModule
 {
-    void init(
+    [[nodiscard]]
+    GameCamera const& init(
         GameCamera& gameCamera,
         RectangleEx const& viewport,
         Vector2 const& heroPosition
@@ -26,25 +27,23 @@ namespace GameCameraModule
     );
 
     //* Screen offset to draw target at
-    void setOffset(
+    [[nodiscard]]
+    GameCamera const& setOffset(
         GameCamera& gameCamera,
         Vector2 const& offset
     );
 
     //* World position to draw at offset
-    void setTarget(
+    [[nodiscard]]
+    GameCamera const& setTarget(
         GameCamera& gameCamera,
         Vector2 const& target
     );
 
-    void setZoom(
+    [[nodiscard]]
+    GameCamera const& setZoom(
         GameCamera& gameCamera,
         float zoom
-    );
-
-    void updateViewport(
-        GameCamera& gameCamera,
-        RectangleEx const& viewport
     );
 }
 

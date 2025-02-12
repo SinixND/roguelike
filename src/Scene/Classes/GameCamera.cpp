@@ -8,7 +8,8 @@
 
 namespace GameCameraModule
 {
-    void init(
+    [[nodiscard]]
+    GameCamera const& init(
         GameCamera& gameCamera,
         RectangleEx const& viewport,
         Vector2 const& heroPosition
@@ -24,33 +25,8 @@ namespace GameCameraModule
         };
 
         snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
-    }
 
-    void setOffset(
-        GameCamera& gameCamera,
-        Vector2 const& offset
-    )
-    {
-        gameCamera.camera.offset = offset;
-        snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
-    }
-
-    void setTarget(
-        GameCamera& gameCamera,
-        Vector2 const& target
-    )
-    {
-        gameCamera.camera.target = target;
-        snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
-    }
-
-    void setZoom(
-        GameCamera& gameCamera,
-        float zoom
-    )
-    {
-        gameCamera.camera.zoom = zoom;
-        snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
+        return gameCamera;
     }
 
     RectangleExI viewportInTiles(
@@ -67,5 +43,40 @@ namespace GameCameraModule
                 gameCamera.camera
             )
         };
+    }
+    [[nodiscard]]
+    GameCamera const& setOffset(
+        GameCamera& gameCamera,
+        Vector2 const& offset
+    )
+    {
+        gameCamera.camera.offset = offset;
+        snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
+
+        return gameCamera;
+    }
+
+    [[nodiscard]]
+    GameCamera const& setTarget(
+        GameCamera& gameCamera,
+        Vector2 const& target
+    )
+    {
+        gameCamera.camera.target = target;
+        snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
+
+        return gameCamera;
+    }
+
+    [[nodiscard]]
+    GameCamera const& setZoom(
+        GameCamera& gameCamera,
+        float zoom
+    )
+    {
+        gameCamera.camera.zoom = zoom;
+        snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
+
+        return gameCamera;
     }
 }
