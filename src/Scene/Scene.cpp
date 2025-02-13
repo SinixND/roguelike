@@ -41,14 +41,7 @@ void setupSceneEvents(
         [&]()
         {
             scene.panels = PanelSystem::init( scene.panels );
-        },
-        true
-    );
 
-    snx::PublisherStatic::addSubscriber(
-        EventId::PANELS_RESIZED,
-        [&]()
-        {
             scene.gameCamera = GameCameraModule::init(
                 scene.gameCamera,
                 scene.panels.map,
@@ -62,7 +55,8 @@ void setupSceneEvents(
                 Convert::worldToTile( scene.game.hero.position ),
                 scene.game.hero.visionRange
             );
-        }
+        },
+        true
     );
 
     snx::PublisherStatic::addSubscriber(
@@ -108,7 +102,7 @@ void setupSceneEvents(
         EventId::MAP_CHANGE,
         [&]()
         {
-            scene.chunks = ChunkSystem::renderChunks(
+            scene.chunks = ChunkSystem::renderToChunks(
                 scene.chunks,
                 scene.renderData.textures,
                 scene.game.world.currentMap->tiles
@@ -224,11 +218,11 @@ void setupSceneEvents(
 }
 
 void renderOutput(
-    Scene& scene,
+    Scene const& scene,
     Cursor const& cursor
 )
 {
-    //* Draw map panel content
+    //* Draw viewport content
     BeginMode2D( scene.gameCamera.camera );
     BeginScissorMode(
         scene.gameCamera.viewport->left(),
@@ -246,46 +240,43 @@ void renderOutput(
     }
 
     //* Draw objects
-    auto const& objects{ scene.game.world.currentMap->objects };
-    auto const& objectRenderIds{ objects.renderIds.values() };
-    auto const& objectPositions{ objects.positions.values() };
+    Objects const& objects{ scene.game.world.currentMap->objects };
 
-    for ( size_t idx{ 0 }; idx < objectRenderIds.size(); ++idx )
+    for ( size_t idx{ 0 }; idx < objects.renderIds.values().size(); ++idx )
     {
-        RenderSystem::renderTile(
+        RenderSystem::renderTexture(
             scene.renderData.textures,
-            objectPositions[idx],
-            objectRenderIds[idx]
+            objects.positions.values()[idx],
+            objects.renderIds.values()[idx]
         );
     }
 
     //* Draw enemies
-    auto const& tiles{ scene.game.world.currentMap->tiles };
-    auto const& tileVisibilityIds{ tiles.visibilityIds };
-    auto const& enemies{ scene.game.world.currentMap->enemies };
-    auto const& enemyRenderIds{ enemies.renderIds.values() };
-    auto const& enemyPositions{ enemies.positions.values() };
+    Tiles const& tiles{ scene.game.world.currentMap->tiles };
+    Enemies const& enemies{ scene.game.world.currentMap->enemies };
 
-    for ( size_t idx{ 0 }; idx < enemyRenderIds.size(); ++idx )
+    for ( size_t idx{ 0 }; idx < enemies.renderIds.values().size(); ++idx )
     {
         if (
-            tileVisibilityIds.at( tiles.ids.at( Convert::worldToTile(
-                enemyPositions[idx]
-            ) ) )
+            tiles.visibilityIds.at(
+                tiles.ids.at( Convert::worldToTile(
+                    enemies.positions.values()[idx]
+                ) )
+            )
             != VisibilityId::VISIBILE
         )
         {
             continue;
         }
 
-        RenderSystem::renderTile(
+        RenderSystem::renderTexture(
             scene.renderData.textures,
-            enemyPositions[idx],
-            enemyRenderIds[idx]
+            enemies.positions.values()[idx],
+            enemies.renderIds.values()[idx]
         );
     }
 
-    //* VisibilitySystem
+    //* Fog of war
     auto const& fogs{ scene.game.world.currentMap->fogs };
 
     for ( size_t idx{ 0 }; idx < fogs.size(); ++idx )
@@ -298,7 +289,7 @@ void renderOutput(
 
     //* Units
     //* Draw hero
-    RenderSystem::renderTile(
+    RenderSystem::renderTexture(
         scene.renderData.textures,
         scene.game.hero.position,
         scene.game.hero.renderId
@@ -308,7 +299,7 @@ void renderOutput(
     //* Draw cursor
     if ( cursor.isActive )
     {
-        RenderSystem::renderTile(
+        RenderSystem::renderTexture(
             scene.renderData.textures,
             cursor.position,
             cursor.renderId
@@ -339,7 +330,7 @@ void renderOutput(
     PanelSystem::drawPanelBorders( scene.panels );
 }
 
-void drawSceneBorder()
+void drawWindowBorder()
 {
     DrawRectangleLinesEx(
         GetWindowRec(),
@@ -350,7 +341,8 @@ void drawSceneBorder()
 
 namespace SceneModule
 {
-    void init(
+    [[nodiscard]]
+    Scene const& init(
         Scene& scene,
         Cursor const& cursor
     )
@@ -371,7 +363,7 @@ namespace SceneModule
 
         scene.renderData = RenderSystem::loadRenderData( scene.renderData );
 
-        scene.chunks = ChunkSystem::renderChunks(
+        scene.chunks = ChunkSystem::renderToChunks(
             scene.chunks,
             scene.renderData.textures,
             scene.game.world.currentMap->tiles
@@ -382,9 +374,12 @@ namespace SceneModule
             scene,
             cursor
         );
+
+        return scene;
     }
 
-    void update(
+    [[nodiscard]]
+    Scene const& update(
         Scene& scene,
         Cursor& cursor,
         InputId currentInputId,
@@ -414,7 +409,6 @@ namespace SceneModule
         snx::debug::gcam() = scene.gameCamera;
 #endif
         BeginDrawing();
-
         ClearBackground( Colors::bg );
 
         renderOutput(
@@ -423,7 +417,7 @@ namespace SceneModule
         );
 
         //* Draw simple frame
-        drawSceneBorder();
+        drawWindowBorder();
 
         if ( DeveloperMode::isActive() )
         {
@@ -431,6 +425,8 @@ namespace SceneModule
         }
 
         EndDrawing();
+
+        return scene;
     }
 
     void deinitialize( Scene& scene )

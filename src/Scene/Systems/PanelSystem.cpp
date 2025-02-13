@@ -89,8 +89,6 @@ namespace PanelSystem
             .setBottom( panels.log.top() )
             .setTop( panels.status.bottom() );
 
-        snx::PublisherStatic::publish( EventId::PANELS_RESIZED );
-
         return panels;
     }
 

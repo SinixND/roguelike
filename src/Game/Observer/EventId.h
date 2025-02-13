@@ -6,7 +6,6 @@ enum class EventId
     NONE = 0,
     //* Application interaction
     WINDOW_RESIZED,
-    PANELS_RESIZED,
     CAMERA_CHANGED,
     CURSOR_TOGGLE,
     CURSOR_POSITION_CHANGED,

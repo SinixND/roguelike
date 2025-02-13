@@ -30,12 +30,14 @@ struct Scene
 
 namespace SceneModule
 {
-    void init(
+    [[nodiscard]]
+    Scene const& init(
         Scene& scene,
         Cursor const& cursor
     );
 
-    void update(
+    [[nodiscard]]
+    Scene const& update(
         Scene& scene,
         Cursor& cursor,
         InputId currentInputId,

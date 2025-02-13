@@ -121,7 +121,7 @@ void updateApp( void* arg )
 
     app.dt = GetFrameTime();
 
-    SceneModule::update(
+    app.scene = SceneModule::update(
         app.scene,
         app.cursor,
         app.currentInputId,
@@ -146,7 +146,7 @@ namespace AppModule
             }
         );
 
-        SceneModule::init(
+        appIO.scene = SceneModule::init(
             appIO.scene,
             appIO.cursor
         );
