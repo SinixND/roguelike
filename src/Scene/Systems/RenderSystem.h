@@ -15,7 +15,7 @@ namespace RenderSystem
     [[nodiscard]]
     RenderData const& loadRenderData( RenderData& renderData );
 
-    void renderTile(
+    void renderTexture(
         Textures const& textures,
         Vector2 const& worldPixel,
         RenderId renderId,

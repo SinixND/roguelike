@@ -49,7 +49,7 @@ namespace RenderSystem
         return renderData;
     }
 
-    void renderTile(
+    void renderTexture(
         Textures const& textures,
         Vector2 const& worldPixel,
         RenderId renderId,

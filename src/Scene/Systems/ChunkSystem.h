@@ -11,7 +11,7 @@ class Tiles;
 namespace ChunkSystem
 {
     [[nodiscard]]
-    snx::DenseMap<Vector2I, Chunk> const& renderChunks(
+    snx::DenseMap<Vector2I, Chunk> const& renderToChunks(
         snx::DenseMap<Vector2I, Chunk>& chunks,
         Textures const& textures,
         Tiles const& tiles
