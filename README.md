@@ -22,10 +22,11 @@ Platforms: Linux, Windows, Browser
 ## Shortterm
 - [ ] Replace //* with /// for function descriptions)
 - [ ] Make internal members private (if no external references)
-- [ ] Separate fog calculation from visibility calculation
+- [x] Separate fog calculation from visibility calculation
 - [ ] Split Component(temp) and Data(persistent)? (existential)
 - [ ] Implement tests/tdd (what behaviour do I want (to implement) -> test -> write code)
-- [ ] Implement ncurses
+- [ ] Implement ncurses (raycurses?) -> Redesign Panels
+    - Layers (bottom-up): Map -> LevelInfo -> Stats (minimal: HP, EXP; overlay-toggle) -> Log/TileInfo (exclusive)
 - [ ] End/Restart game on death
 - [ ] Add AI behaviour with new enemy types
 

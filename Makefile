@@ -481,13 +481,13 @@ rtest:
 test:
 	$(info )
 	$(info === Test build ===)
-	@$(MAKE) TESTMODE=true BUILD=debug build
+	@$(MAKE) TESTMODE=true build
 
 ### Rule for web build process
 web:
 	$(info )
 	$(info === Web build ===)
-	@$(MAKE) PLATFORM=web BUILD=release build
+	@$(MAKE) PLATFORM=web build
 
 ### Rule for windows build process
 windows:

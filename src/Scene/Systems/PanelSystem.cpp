@@ -13,15 +13,15 @@
 #include <raymath.h>
 #include <string>
 
-int constexpr infoPanelWidth{ 16 };
+int constexpr INFO_PANEL_CHAR_WIDTH{ 16 };
 
-std::string printInfo( std::string const& text )
+std::string formatInfo( std::string const& text )
 {
     std::string info{ "|" };
 
     info.append( text );
 
-    while ( info.length() < ( infoPanelWidth - 2 ) )
+    while ( info.length() < ( INFO_PANEL_CHAR_WIDTH - 2 ) )
     {
         info.append( " " );
     }
@@ -33,11 +33,12 @@ std::string printInfo( std::string const& text )
 
 namespace PanelSystem
 {
-    void init( Panels& panels )
+    [[nodiscard]]
+    Panels const& init( Panels& panels )
     {
         std::string widthString{};
 
-        for ( int n{ 0 }; n < infoPanelWidth; ++n )
+        for ( int n{ 0 }; n < INFO_PANEL_CHAR_WIDTH; ++n )
         {
             widthString.append( "I" );
         }
@@ -89,6 +90,8 @@ namespace PanelSystem
             .setTop( panels.status.bottom() );
 
         snx::PublisherStatic::publish( EventId::PANELS_RESIZED );
+
+        return panels;
     }
 
     void drawGameInfoPanelContent(
@@ -145,7 +148,7 @@ namespace PanelSystem
         info.append( "|= HERO ======|\n" );
 
         info.append(
-            printInfo(
+            formatInfo(
                 "HP : "
                 + std::to_string( hero.health.currentHealth )
                 + "/"
@@ -153,7 +156,7 @@ namespace PanelSystem
             )
         );
 
-        info.append( printInfo(
+        info.append( formatInfo(
             "ATK : "
             + std::to_string( hero.damage.baseDamage )
         ) );
@@ -226,9 +229,7 @@ namespace PanelSystem
         }
     }
 
-    void drawPanelBorders(
-        Panels const& panels
-    )
+    void drawPanelBorders( Panels const& panels )
     {
         float panelBorderWeight = 1;
 

@@ -8,7 +8,8 @@ struct Vector2I;
 
 namespace PanelSystem
 {
-    void init( Panels& panels );
+    [[nodiscard]]
+    Panels const& init( Panels& panels );
 
     void drawGameInfoPanelContent(
         Panels const& panels,
