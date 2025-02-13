@@ -15,8 +15,8 @@ struct Textures
 
 namespace TexturesModule
 {
-    [[nodiscard]]
-    Textures const& unloadAtlas( Textures& textures );
+    void unloadAtlas( Textures const& textures );
+
     //* Texture atlas
     [[nodiscard]]
     Textures const& loadAtlas(

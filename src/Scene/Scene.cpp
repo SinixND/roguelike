@@ -40,7 +40,7 @@ void setupSceneEvents(
         EventId::WINDOW_RESIZED,
         [&]()
         {
-            PanelSystem::init( scene.panels );
+            scene.panels = PanelSystem::init( scene.panels );
         },
         true
     );
@@ -70,7 +70,7 @@ void setupSceneEvents(
         [&]()
         {
             RenderSystem::cycleThemes( scene.renderData.theme );
-            RenderSystem::loadRenderData( scene.renderData );
+            scene.renderData = RenderSystem::loadRenderData( scene.renderData );
 
             snx::PublisherStatic::publish( EventId::MAP_CHANGE );
         }
@@ -254,8 +254,8 @@ void renderOutput(
     {
         RenderSystem::renderTile(
             scene.renderData.textures,
-            objectRenderIds[idx],
-            objectPositions[idx]
+            objectPositions[idx],
+            objectRenderIds[idx]
         );
     }
 
@@ -280,8 +280,8 @@ void renderOutput(
 
         RenderSystem::renderTile(
             scene.renderData.textures,
-            enemyRenderIds[idx],
-            enemyPositions[idx]
+            enemyPositions[idx],
+            enemyRenderIds[idx]
         );
     }
 
@@ -300,8 +300,8 @@ void renderOutput(
     //* Draw hero
     RenderSystem::renderTile(
         scene.renderData.textures,
-        scene.game.hero.renderId,
-        scene.game.hero.position
+        scene.game.hero.position,
+        scene.game.hero.renderId
     );
 
     //* UI
@@ -310,8 +310,8 @@ void renderOutput(
     {
         RenderSystem::renderTile(
             scene.renderData.textures,
-            cursor.renderId,
-            cursor.position
+            cursor.position,
+            cursor.renderId
         );
     }
 
@@ -357,7 +357,7 @@ namespace SceneModule
     {
         scene.game = GameModule::init( scene.game );
 
-        PanelSystem::init( scene.panels );
+        scene.panels = PanelSystem::init( scene.panels );
 
         scene.gameCamera = GameCameraModule::init(
             scene.gameCamera,
@@ -369,7 +369,7 @@ namespace SceneModule
         snx::debug::gcam() = scene.gameCamera;
 #endif
 
-        RenderSystem::loadRenderData( scene.renderData );
+        scene.renderData = RenderSystem::loadRenderData( scene.renderData );
 
         scene.chunks = ChunkSystem::renderChunks(
             scene.chunks,

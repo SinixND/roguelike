@@ -25,7 +25,8 @@ std::string textureAtlasFileName( size_t theme )
 
 namespace RenderSystem
 {
-    void loadRenderData( RenderData& renderData )
+    [[nodiscard]]
+    RenderData const& loadRenderData( RenderData& renderData )
     {
         //* Load texture atlas
         renderData.textures = TexturesModule::loadAtlas(
@@ -44,12 +45,14 @@ namespace RenderSystem
         renderData.textures = TexturesModule::registerTexture( renderData.textures, RenderId::DESCEND, { 35, 35 } );
         renderData.textures = TexturesModule::registerTexture( renderData.textures, RenderId::ASCEND, { 70, 35 } );
         renderData.textures = TexturesModule::registerTexture( renderData.textures, RenderId::GOBLIN, { 105, 35 } );
+
+        return renderData;
     }
 
     void renderTile(
         Textures const& textures,
-        RenderId renderId,
         Vector2 const& worldPixel,
+        RenderId renderId,
         Color const& tint
     )
     {
@@ -75,46 +78,6 @@ namespace RenderSystem
             Rectangle{
                 worldPixel.x,
                 worldPixel.y,
-                TileData::tileSize,
-                TileData::tileSize
-            },
-            //* TileData::TILE_CENTER,
-            Vector2{ 0, 0 },
-            0,
-            tint
-        );
-    }
-
-    void renderToChunk(
-        Textures const& textures,
-        RenderId renderId,
-        Vector2 const& worldPixel,
-        Chunk& chunk,
-        Color const& tint
-    )
-    {
-        //* Use 0.5f pixel offset to avoid texture bleeding
-        DrawTexturePro(
-            textures.atlas,
-            Rectangle{
-                TexturesModule::getTexturePosition(
-                    textures,
-                    renderId
-                )
-                        .x
-                    + 0.5f,
-                TexturesModule::getTexturePosition(
-                    textures,
-                    renderId
-                )
-                        .y
-                    + 0.5f,
-                TextureData::textureSize - ( 2 * 0.5f ),
-                TextureData::textureSize - ( 2 * 0.5f )
-            },
-            Rectangle{
-                worldPixel.x - chunk.position.x,
-                worldPixel.y - chunk.position.y,
                 TileData::tileSize,
                 TileData::tileSize
             },
@@ -196,13 +159,16 @@ namespace RenderSystem
         );
     }
 
-    void cycleThemes( size_t& theme )
+    [[nodiscard]]
+    size_t cycleThemes( size_t theme )
     {
         theme = ( theme < TextureData::themes.size() - 1 ) ? ++theme : 0;
+
+        return theme;
     }
 
-    void deinit( Textures& textures )
+    void deinit( Textures const& textures )
     {
-        textures = TexturesModule::unloadAtlas( textures );
+        TexturesModule::unloadAtlas( textures );
     }
 }

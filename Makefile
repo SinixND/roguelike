@@ -395,7 +395,7 @@ ifeq ($(TESTMODE),true)
 endif
 
 ### Non-file (.phony)targets (aka. rules)
-.PHONY: all build clean debug dtb init publish release run rdebug rrelease rtest test web windows 
+.PHONY: all build clean debug dtb init publish release run rdebug rrelease rtest rweb test web windows 
 
 ### Default rule by convention
 all: debug release
@@ -477,6 +477,10 @@ rrelease:
 rtest:
 	@$(MAKE) test -j
 	@$(MAKE) TESTMODE=true run
+
+rweb:
+	@$(MAKE) BUILD=release web -j
+	http-server -o bin/web/release/$(BIN)$(BIN_EXT) -c-1
 
 test:
 	$(info )

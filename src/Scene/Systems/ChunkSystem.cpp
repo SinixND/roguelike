@@ -90,11 +90,13 @@ namespace ChunkSystem
 
                     size_t tileId{ tiles.ids.at( tilePosition ) };
 
-                    RenderSystem::renderToChunk(
+                    RenderSystem::renderTile(
                         textures,
-                        tiles.renderIds.at( tileId ),
-                        tiles.positions.at( tileId ),
-                        chunk
+                        Vector2Subtract(
+                            tiles.positions.at( tileId ),
+                            chunk.position
+                        ),
+                        tiles.renderIds.at( tileId )
                     );
                 }
             }

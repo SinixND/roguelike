@@ -9,24 +9,16 @@ struct Chunk;
 enum class Fog;
 struct RenderData;
 struct Textures;
-struct Vector2I;
 
 namespace RenderSystem
 {
-    void loadRenderData( RenderData& renderData );
+    [[nodiscard]]
+    RenderData const& loadRenderData( RenderData& renderData );
 
     void renderTile(
         Textures const& textures,
-        RenderId renderId,
         Vector2 const& worldPixel,
-        Color const& tint = WHITE
-    );
-
-    void renderToChunk(
-        Textures const& textures,
         RenderId renderId,
-        Vector2 const& worldPixel,
-        Chunk& chunk,
         Color const& tint = WHITE
     );
 
@@ -37,9 +29,9 @@ namespace RenderSystem
         Fog fog
     );
 
-    void cycleThemes( size_t& theme );
+    size_t cycleThemes( size_t theme );
 
-    void deinit( Textures& textures );
+    void deinit( Textures const& textures );
 }
 
 #endif

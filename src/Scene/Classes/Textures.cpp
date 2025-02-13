@@ -1,4 +1,5 @@
 #include "Textures.h"
+
 #include "RenderId.h"
 #include "TextureData.h"
 #include <raylib.h>
@@ -9,14 +10,11 @@ enum class RenderId;
 namespace TexturesModule
 {
 
-    [[nodiscard]]
-    Textures const& unloadAtlas(
-        Textures& textures
+    void unloadAtlas(
+        Textures const& textures
     )
     {
         UnloadTexture( textures.atlas );
-
-        return textures;
     }
 
     [[nodiscard]]
@@ -25,7 +23,8 @@ namespace TexturesModule
         std::string const& filename
     )
     {
-        textures = TexturesModule::unloadAtlas( textures );
+        TexturesModule::unloadAtlas( textures );
+
         textures.atlas = LoadTexture( ( TextureData::texturePath + filename ).c_str() );
 
         return textures;
