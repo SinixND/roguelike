@@ -2,6 +2,8 @@
 #define IG20240519210141
 
 #include "AppConfig.h"
+#include "Cursor.h"
+#include "Game.h"
 #include "InputHandler.h"
 #include "InputId.h"
 #include "Scene.h"
@@ -9,7 +11,8 @@
 
 struct App
 {
-    //* Scenes
+    Game game{};
+
     Scene scene{};
 
     InputHandler inputHandler{};

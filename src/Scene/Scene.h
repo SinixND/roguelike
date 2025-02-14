@@ -2,21 +2,19 @@
 #define IG20231203204746
 
 #include "Chunk.h"
-#include "Cursor.h"
-#include "Data/RenderData.h"
 #include "DenseMap.h"
-#include "Game.h"
 #include "GameCamera.h"
-#include "InputId.h"
 #include "Panels.h"
-#include "RenderSystem.h"
-#include "raylibEx.h"
-#include <raylib.h>
+#include "RenderData.h"
+
+struct Hero;
+struct Map;
+class Levels;
+struct Cursor;
+enum class InputId;
 
 struct Scene
 {
-    Game game{};
-
     Panels panels{};
     GameCamera gameCamera{};
     RenderData renderData{};
@@ -33,15 +31,18 @@ namespace SceneModule
     [[nodiscard]]
     Scene const& init(
         Scene& scene,
+        Hero const& hero,
+        Map& currentMap,
         Cursor const& cursor
     );
 
     [[nodiscard]]
     Scene const& update(
         Scene& scene,
+        Hero const& hero,
+        Levels const& levels,
         Cursor& cursor,
-        InputId currentInputId,
-        float dt
+        InputId currentInputId
     );
 
     void deinitialize( Scene& scene );

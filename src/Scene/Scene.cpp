@@ -13,6 +13,7 @@
 #include "Game.h"
 #include "GameCamera.h"
 #include "InputId.h"
+#include "Levels.h"
 #include "Objects.h"
 #include "PanelSystem.h"
 #include "PublisherStatic.h"
@@ -33,32 +34,11 @@
 
 void setupSceneEvents(
     Scene& scene,
+    Hero const& hero,
+    Map& currentMap,
     Cursor const& cursor
 )
 {
-    snx::PublisherStatic::addSubscriber(
-        EventId::WINDOW_RESIZED,
-        [&]()
-        {
-            scene.panels = PanelSystem::init( scene.panels );
-
-            scene.gameCamera = GameCameraModule::init(
-                scene.gameCamera,
-                scene.panels.map,
-                scene.game.hero.position
-            );
-
-            scene.game.world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
-                scene.game.world.currentMap->tiles,
-                scene.game.world.currentMap->fogs,
-                GameCameraModule::viewportInTiles( scene.gameCamera ),
-                Convert::worldToTile( scene.game.hero.position ),
-                scene.game.hero.visionRange
-            );
-        },
-        true
-    );
-
     snx::PublisherStatic::addSubscriber(
         EventId::CHANGE_COLOR_THEME,
         [&]()
@@ -77,7 +57,7 @@ void setupSceneEvents(
         {
             scene.gameCamera = GameCameraModule::setTarget(
                 scene.gameCamera,
-                scene.game.hero.position
+                hero.position
             );
         }
     );
@@ -87,12 +67,12 @@ void setupSceneEvents(
         [&]()
         {
             //* VisibilitySystem
-            scene.game.world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
-                scene.game.world.currentMap->tiles,
-                scene.game.world.currentMap->fogs,
+            currentMap.tiles = VisibilitySystem::calculateVisibilities(
+                currentMap.tiles,
+                currentMap.fogs,
                 GameCameraModule::viewportInTiles( scene.gameCamera ),
-                Convert::worldToTile( scene.game.hero.position ),
-                scene.game.hero.visionRange
+                Convert::worldToTile( hero.position ),
+                hero.visionRange
             );
         },
         true
@@ -105,7 +85,7 @@ void setupSceneEvents(
             scene.chunks = ChunkSystem::renderToChunks(
                 scene.chunks,
                 scene.renderData.textures,
-                scene.game.world.currentMap->tiles
+                currentMap.tiles
             );
         }
     );
@@ -117,7 +97,7 @@ void setupSceneEvents(
         {
             Vector2I cursorPos{ Convert::worldToTile( cursor.position ) };
 
-            Tiles& tiles{ scene.game.world.currentMap->tiles };
+            Tiles& tiles{ currentMap.tiles };
 
             if ( !tiles.ids.contains( cursorPos ) )
             {
@@ -169,7 +149,7 @@ void setupSceneEvents(
                 + "\n"
             );
 
-            Objects& objects{ scene.game.world.currentMap->objects };
+            Objects& objects{ currentMap.objects };
 
             if ( objects.ids.contains( Convert::worldToTile( cursor.position ) ) )
             {
@@ -179,36 +159,36 @@ void setupSceneEvents(
 
                 snx::debug::cliLog(
                     "\nName: "
-                    + scene.game.world.currentMap->objects.names.at( objectId )
+                    + currentMap.objects.names.at( objectId )
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "\nActions: "
-                    + scene.game.world.currentMap->objects.actions.at( objectId )
+                    + currentMap.objects.actions.at( objectId )
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "RenderId: "
-                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.renderIds.at( objectId ) ) )
+                    + std::to_string( static_cast<int>( currentMap.objects.renderIds.at( objectId ) ) )
                     + "\n"
                 );
 
                 snx::debug::cliLog(
                     "Event: "
-                    + std::to_string( static_cast<int>( scene.game.world.currentMap->objects.events.at( objectId ) ) )
+                    + std::to_string( static_cast<int>( currentMap.objects.events.at( objectId ) ) )
                     + "\n"
                 );
             }
 
-            if ( scene.game.world.currentMap->enemies.ids.contains( cursorPos ) )
+            if ( currentMap.enemies.ids.contains( cursorPos ) )
             {
                 snx::debug::cliLog( "ENEMY\n" );
 
                 snx::debug::cliLog(
                     "Id: "
-                    + std::to_string( scene.game.world.currentMap->enemies.ids.at( cursorPos ) )
+                    + std::to_string( currentMap.enemies.ids.at( cursorPos ) )
                     + "\n"
                 );
             }
@@ -219,7 +199,10 @@ void setupSceneEvents(
 
 void renderOutput(
     Scene const& scene,
-    Cursor const& cursor
+    Hero const& hero,
+    Map const& currentMap,
+    Cursor const& cursor,
+    int currentMapLevel
 )
 {
     //* Draw viewport content
@@ -231,7 +214,7 @@ void renderOutput(
         scene.gameCamera.viewport->height()
     );
 
-    //* World
+    //* Levels
     //* Draw map
     //* Draw tiles
     for ( Chunk const& chunk : scene.chunks )
@@ -240,7 +223,7 @@ void renderOutput(
     }
 
     //* Draw objects
-    Objects const& objects{ scene.game.world.currentMap->objects };
+    Objects const& objects{ currentMap.objects };
 
     for ( size_t idx{ 0 }; idx < objects.renderIds.values().size(); ++idx )
     {
@@ -252,8 +235,8 @@ void renderOutput(
     }
 
     //* Draw enemies
-    Tiles const& tiles{ scene.game.world.currentMap->tiles };
-    Enemies const& enemies{ scene.game.world.currentMap->enemies };
+    Tiles const& tiles{ currentMap.tiles };
+    Enemies const& enemies{ currentMap.enemies };
 
     for ( size_t idx{ 0 }; idx < enemies.renderIds.values().size(); ++idx )
     {
@@ -277,7 +260,7 @@ void renderOutput(
     }
 
     //* Fog of war
-    auto const& fogs{ scene.game.world.currentMap->fogs };
+    auto const& fogs{ currentMap.fogs };
 
     for ( size_t idx{ 0 }; idx < fogs.size(); ++idx )
     {
@@ -291,8 +274,8 @@ void renderOutput(
     //* Draw hero
     RenderSystem::renderTexture(
         scene.renderData.textures,
-        scene.game.hero.position,
-        scene.game.hero.renderId
+        hero.position,
+        hero.renderId
     );
 
     //* UI
@@ -313,18 +296,18 @@ void renderOutput(
 
     PanelSystem::drawHeroInfoPanelContent(
         scene.panels,
-        scene.game.hero
+        hero
     );
 
     PanelSystem::drawTileInfoPanelContent(
         scene.panels,
-        scene.game.world.currentMap->objects,
+        currentMap.objects,
         Convert::worldToTile( cursor.position )
     );
 
     PanelSystem::drawGameInfoPanelContent(
         scene.panels,
-        scene.game.world.currentMapLevel
+        currentMapLevel
     );
 
     PanelSystem::drawPanelBorders( scene.panels );
@@ -344,17 +327,17 @@ namespace SceneModule
     [[nodiscard]]
     Scene const& init(
         Scene& scene,
+        Hero const& hero,
+        Map& currentMap,
         Cursor const& cursor
     )
     {
-        scene.game = GameModule::init( scene.game );
-
         scene.panels = PanelSystem::init( scene.panels );
 
         scene.gameCamera = GameCameraModule::init(
             scene.gameCamera,
             scene.panels.map,
-            scene.game.hero.position
+            hero.position
         );
 
 #if defined( DEBUG )
@@ -366,12 +349,14 @@ namespace SceneModule
         scene.chunks = ChunkSystem::renderToChunks(
             scene.chunks,
             scene.renderData.textures,
-            scene.game.world.currentMap->tiles
+            currentMap.tiles
         );
 
         //* Setup events
         setupSceneEvents(
             scene,
+            hero,
+            currentMap,
             cursor
         );
 
@@ -381,29 +366,16 @@ namespace SceneModule
     [[nodiscard]]
     Scene const& update(
         Scene& scene,
+        Hero const& hero,
+        Levels const& levels,
         Cursor& cursor,
-        InputId currentInputId,
-        float dt
+        InputId currentInputId
     )
     {
         if ( currentInputId == InputId::CYCLE_THEME )
         {
             snx::PublisherStatic::publish( EventId::CHANGE_COLOR_THEME );
         }
-
-        cursor = CursorModule::update(
-            cursor,
-            scene.gameCamera.camera,
-            Convert::worldToTile( scene.game.hero.position )
-        );
-
-        scene.game = GameModule::update(
-            scene.game,
-            scene.gameCamera,
-            cursor,
-            currentInputId,
-            dt
-        );
 
 #if defined( DEBUG )
         snx::debug::gcam() = scene.gameCamera;
@@ -413,7 +385,10 @@ namespace SceneModule
 
         renderOutput(
             scene,
-            cursor
+            hero,
+            *levels.currentMap,
+            cursor,
+            levels.currentMapLevel
         );
 
         //* Draw simple frame

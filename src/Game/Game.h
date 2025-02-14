@@ -10,7 +10,7 @@ struct GameCamera;
 
 struct Game
 {
-    Levels world{};
+    Levels levels{};
 
     Hero hero{};
 

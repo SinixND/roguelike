@@ -51,7 +51,7 @@ Game const& setupGameEvents( Game& game )
         {
             snx::Logger::log( "Entered next level" );
 
-            game.world.increaseMapLevel();
+            game.levels.increaseMapLevel();
 
             //* Place Hero on the map entry position
             game.hero.position = Convert::tileToWorld( Vector2I{ 0, 0 } );
@@ -68,10 +68,10 @@ Game const& setupGameEvents( Game& game )
         {
             snx::Logger::log( "Entered previous level" );
 
-            game.world.decreaseMapLevel();
+            game.levels.decreaseMapLevel();
 
             //* Place Hero on the map exit
-            auto const& objects{ game.world.currentMap->objects };
+            auto const& objects{ game.levels.currentMap->objects };
             auto const& renderIds{ objects.renderIds.values() };
             auto const& positions{ objects.positions.values() };
 
@@ -178,8 +178,8 @@ Game const& continueMultiFrameActions(
     //* Enemies
     else
     {
-        game.world.currentMap->enemies = continueEnemyMovements(
-            game.world.currentMap->enemies,
+        game.levels.currentMap->enemies = continueEnemyMovements(
+            game.levels.currentMap->enemies,
             dt
         );
     }
@@ -200,7 +200,7 @@ Game const& executeInstantActions(
     {
         game.hero = ActionSystem::executeAction(
             game.hero,
-            *game.world.currentMap,
+            *game.levels.currentMap,
             cursor,
             gameCamera,
             currentInputId
@@ -210,11 +210,11 @@ Game const& executeInstantActions(
     //* Enemies
     else
     {
-        game.world.currentMap->enemies = AISystem::executeNextAction(
-            game.world.currentMap->enemies,
+        game.levels.currentMap->enemies = AISystem::executeNextAction(
+            game.levels.currentMap->enemies,
             game.activeEnemyId,
             game.hero,
-            *game.world.currentMap,
+            *game.levels.currentMap,
             gameCamera,
             game.turn
         );
@@ -236,7 +236,7 @@ namespace GameModule
         game = setupGameEvents( game );
 
 #if defined( DEBUG )
-        // snx::PublisherStatic::publish( EventId::NEXT_LEVEL );
+        snx::PublisherStatic::publish( EventId::NEXT_LEVEL );
 #endif
 
         return game;
@@ -258,7 +258,6 @@ namespace GameModule
                 dt
             );
         }
-
         else
         {
             game = executeInstantActions(
@@ -270,9 +269,9 @@ namespace GameModule
         }
 
         //* End turn
-        game.world.currentMap->enemies = EnemiesModule::replaceDead(
-            game.world.currentMap->enemies,
-            game.world.currentMap->tiles
+        game.levels.currentMap->enemies = EnemiesModule::replaceDead(
+            game.levels.currentMap->enemies,
+            game.levels.currentMap->tiles
         );
 
         //* Skip energy regeneration while a unit is ready
@@ -289,7 +288,7 @@ namespace GameModule
         while ( !isUnitReady )
         {
             isUnitReady = EnergyModule::regenerate( game.hero.energy );
-            isUnitReady |= EnemiesModule::regenerate( game.world.currentMap->enemies.energies );
+            isUnitReady |= EnemiesModule::regenerate( game.levels.currentMap->enemies.energies );
         }
 
         //* Increment turn when hero is ready

@@ -5,7 +5,9 @@
 #include "GameFont.h"
 #include "InputHandler.h"
 #include "InputId.h"
+#include "PanelSystem.h"
 #include "PublisherStatic.h"
+#include "VisibilitySystem.h"
 #include <raygui.h>
 #include <raylib.h>
 
@@ -121,11 +123,60 @@ void updateApp( void* arg )
 
     app.dt = GetFrameTime();
 
-    app.scene = SceneModule::update(
-        app.scene,
+    app.cursor = CursorModule::update(
+        app.cursor,
+        app.scene.gameCamera.camera,
+        Convert::worldToTile( app.game.hero.position )
+    );
+
+    app.game = GameModule::update(
+        app.game,
+        app.scene.gameCamera,
         app.cursor,
         app.currentInputId,
         app.dt
+    );
+
+    app.scene = SceneModule::update(
+        app.scene,
+        app.game.hero,
+        app.game.levels,
+        app.cursor,
+        app.currentInputId
+    );
+}
+
+void setupAppEvents( App& app )
+{
+    snx::PublisherStatic::addSubscriber(
+        EventId::CURSOR_TOGGLE,
+        [&]()
+        {
+            app.cursor = CursorModule::toggle( app.cursor );
+        }
+    );
+
+    snx::PublisherStatic::addSubscriber(
+        EventId::WINDOW_RESIZED,
+        [&]()
+        {
+            app.scene.panels = PanelSystem::init( app.scene.panels );
+
+            app.scene.gameCamera = GameCameraModule::init(
+                app.scene.gameCamera,
+                app.scene.panels.map,
+                app.game.hero.position
+            );
+
+            app.game.levels.currentMap->tiles = VisibilitySystem::calculateVisibilities(
+                app.game.levels.currentMap->tiles,
+                app.game.levels.currentMap->fogs,
+                GameCameraModule::viewportInTiles( app.scene.gameCamera ),
+                Convert::worldToTile( app.game.hero.position ),
+                app.game.hero.visionRange
+            );
+        },
+        true
     );
 }
 
@@ -138,18 +189,16 @@ namespace AppModule
     {
         setupFrameworks( config );
 
-        snx::PublisherStatic::addSubscriber(
-            EventId::CURSOR_TOGGLE,
-            [&]()
-            {
-                appIO.cursor = CursorModule::toggle( appIO.cursor );
-            }
-        );
+        appIO.game = GameModule::init( appIO.game );
 
         appIO.scene = SceneModule::init(
             appIO.scene,
+            appIO.game.hero,
+            *appIO.game.levels.currentMap,
             appIO.cursor
         );
+
+        setupAppEvents( appIO );
 
         return appIO;
     }

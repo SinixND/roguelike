@@ -5,7 +5,7 @@
 #include "MapGeneratorSystem.h"
 #include <vector>
 
-//* World holds maps which are identified by a mapLevel (int)
+/// Level holds maps which are identified by a mapLevel (int)
 class Levels
 {
 public:

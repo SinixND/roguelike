@@ -1,6 +1,7 @@
 #ifndef IG20240907173344
 #define IG20240907173344
 
+#include "DenseMap.h"
 #include "Enemies.h"
 #include "Fog.h"
 #include "Objects.h"

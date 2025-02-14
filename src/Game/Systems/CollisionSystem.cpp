@@ -12,7 +12,15 @@ bool checkCollisionWithNextPosition(
 {
     for ( size_t idx{ 0 }; idx < enemies.transforms.size(); ++idx )
     {
-        if ( Vector2Equals( tilePositionToCheck, Vector2Add( Convert::worldToTile( enemies.positions[idx] ), enemies.transforms.values()[idx].direction ) ) )
+        if ( Vector2Equals(
+                 tilePositionToCheck,
+                 Vector2Add(
+                     Convert::worldToTile(
+                         enemies.positions[idx]
+                     ),
+                     enemies.transforms.values()[idx].direction
+                 )
+             ) )
         {
             return true;
         }
