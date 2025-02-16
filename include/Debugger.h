@@ -38,7 +38,6 @@ namespace snx
         {
             cliPrint( message );
             cliPrint( args... );
-            std::cout << "\n";
         }
 
         template <typename Arg>
@@ -57,7 +56,6 @@ namespace snx
         {
             cliLog( message );
             cliPrint( args... );
-            std::cout << "\n";
         }
     };
 }

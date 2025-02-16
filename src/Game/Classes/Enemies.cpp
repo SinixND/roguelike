@@ -18,6 +18,10 @@
 #include "raylibEx.h"
 #include <vector>
 
+#if defined( DEBUG )
+#include "Debugger.h"
+#endif
+
 void Enemies::insert(
     TransformComponent const& transform,
     MovementComponent const& movement,
@@ -209,9 +213,13 @@ namespace EnemiesModule
     {
         bool isEnemyReady{ false };
 
-        for ( EnergyComponent& energy : energiesIO )
+        // for ( EnergyComponent& energy : energiesIO )
+        for ( size_t idx{ 0 }; idx < energiesIO.size(); ++idx )
         {
-            isEnemyReady |= !EnergyModule::regenerate( energy );
+#if defined( DEBUG )
+            snx::debug::cliPrint( "[", idx, "] " );
+#endif
+            isEnemyReady |= !EnergyModule::regenerate( energiesIO.values()[idx] );
         }
 
         return isEnemyReady;

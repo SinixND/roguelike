@@ -18,7 +18,7 @@ struct Game
     int turn{ 0 };
 
     size_t activeEnemyId{ 0 };
-    bool isMultiFrameActionActive{ false };
+    size_t multiFrameActionsActive{ 0 };
 };
 
 namespace GameModule

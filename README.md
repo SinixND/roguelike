@@ -11,8 +11,6 @@ Platforms: Linux, Windows, Browser
     - [ ] Refactor parameters to low/member level ( if < 3 members used );
         - Split modified and const members
         - Parameter order -> Check `DesignGuideline.md` for fake return
-    - [ ] Restructure: 
-        - [ ] main { App { Scene, Game }}
 
     - [ ] Check for struct/class invariants
         - Refactor: Extract possible NMNF functions
@@ -20,6 +18,7 @@ Platforms: Linux, Windows, Browser
 
 
 ## Shortterm
+- [ ] Check Event System for unnecessary complexity
 - [ ] Replace //* with /// for function descriptions)
 - [ ] Make internal members private (if no external references)
 - [x] Separate fog calculation from visibility calculation

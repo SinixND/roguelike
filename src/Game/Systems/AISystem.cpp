@@ -2,10 +2,10 @@
 
 #include "CollisionSystem.h"
 #include "Convert.h"
+#include "Debugger.h"
 #include "Enemies.h"
 #include "HealthComponent.h"
 #include "Hero.h"
-#include "Logger.h"
 #include "Map.h"
 #include "MovementSystem.h"
 #include "PathfinderSystem.h"
@@ -31,14 +31,15 @@ Enemies& executeAction(
          == 1 )
     {
         //* Attack
-        snx::Logger::log( "Hero takes " );
+#if defined( DEBUG )
+        snx::debug::cliLog( "Enemy[", enemyId, "] attacks.\n" );
+#endif
+        EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
 
         HealthModule::damage(
             heroHealthIO,
             DamageModule::damageRNG( enemiesIO.damages.at( enemyId ) )
         );
-
-        EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
     }
     //* Check path
     else
@@ -64,20 +65,26 @@ Enemies& executeAction(
                  heroPosition
              ) )
         {
+#if defined( DEBUG )
+            snx::debug::cliLog( "Enemy[", enemyId, "] moves.\n" );
+#endif
+            EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
+
             enemiesIO.transforms.at( enemyId ) = MovementSystem::prepareByFromTo(
                 enemiesIO.transforms.at( enemyId ),
                 enemiesIO.movements.at( enemyId ),
                 Convert::worldToTile( enemiesIO.positions.at( enemyId ) ),
                 path.rbegin()[1]
             );
-
-            EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
         }
         //* Path is "empty"
         //* Wait
         else
         {
             //* Wait
+#if defined( DEBUG )
+            snx::debug::cliLog( "Enemy[", enemyId, "] waits.\n" );
+#endif
             EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
         }
     }

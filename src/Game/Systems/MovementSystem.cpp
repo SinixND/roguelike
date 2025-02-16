@@ -11,13 +11,17 @@
 #include <cassert>
 #include <raymath.h>
 
+#if defined( DEBUG )
+#include "Debugger.h"
+#endif
+
 namespace MovementSystem
 {
     Vector2 const& updateSingle(
         Vector2& position,
         TransformComponent& transformIO,
         // MovementComponent& movementIO,
-        EnergyComponent& energyIO,
+        [[maybe_unused]] EnergyComponent& energyIO,
         float dt
     )
     {
@@ -26,7 +30,10 @@ namespace MovementSystem
             return position;
         }
 
-        EnergyModule::consume( energyIO );
+        // #if defined( DEBUG )
+        //         snx::debug::cliLog( "[!] Consume energy for movement.\n" );
+        // #endif
+        //         EnergyModule::consume( energyIO );
 
         float frameDistance{ transformIO.speed * dt };
 

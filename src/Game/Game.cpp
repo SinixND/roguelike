@@ -33,7 +33,7 @@ Game const& setupGameEvents( Game& game )
         EventId::MULTIFRAME_ACTION_ACTIVE,
         [&]()
         {
-            game.isMultiFrameActionActive = true;
+            ++game.multiFrameActionsActive;
         }
     );
 
@@ -41,7 +41,8 @@ Game const& setupGameEvents( Game& game )
         EventId::MULTIFRAME_ACTION_DONE,
         [&]()
         {
-            game.isMultiFrameActionActive = false;
+            assert( game.multiFrameActionsActive > 0 && "No multiframe actions left to decrement" );
+            --game.multiFrameActionsActive;
         }
     );
 
@@ -227,11 +228,6 @@ namespace GameModule
     [[nodiscard]]
     Game const& init( Game& game )
     {
-#if defined( DEBUG )
-        snx::RNG::seed( 1 );
-#endif
-
-        //* Setup events
         game = setupGameEvents( game );
 
 #if defined( DEBUG )
@@ -250,14 +246,7 @@ namespace GameModule
         float dt
     )
     {
-        if ( game.isMultiFrameActionActive )
-        {
-            game = continueMultiFrameActions(
-                game,
-                dt
-            );
-        }
-        else
+        if ( !game.multiFrameActionsActive )
         {
             game = executeInstantActions(
                 game,
@@ -265,6 +254,15 @@ namespace GameModule
                 cursor,
                 currentInputId
             );
+        }
+
+        if ( game.multiFrameActionsActive )
+        {
+            game = continueMultiFrameActions(
+                game,
+                dt
+            );
+            return game;
         }
 
         //* End turn
@@ -286,6 +284,9 @@ namespace GameModule
         //* Regenerate until one unit becomes ready
         while ( !isUnitReady )
         {
+#if defined( DEBUG )
+            snx::debug::cliLog( "Actions done. Regen units.\n" );
+#endif
             isUnitReady = EnergyModule::regenerate( game.hero.energy );
             isUnitReady |= EnemiesModule::regenerate( game.levels.currentMap->enemies.energies );
         }
@@ -293,6 +294,9 @@ namespace GameModule
         //* Increment turn when hero is ready
         if ( game.hero.energy.state == EnergyComponent::State::READY )
         {
+#if defined( DEBUG )
+            snx::debug::cliLog( "Hero ready. Next Turn\n\n" );
+#endif
             ++game.turn;
             snx::Logger::setStamp( std::to_string( game.turn ) );
         }

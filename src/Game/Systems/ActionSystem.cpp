@@ -17,6 +17,10 @@
 #include <raylib.h>
 #include <raymath.h>
 
+#if defined( DEBUG )
+#include "Debugger.h"
+#endif
+
 Hero const& processDirectionalInput(
     Hero& heroIO,
     Map& mapIO,
@@ -33,14 +37,15 @@ Hero const& processDirectionalInput(
     //* Attack
     if ( mapIO.enemies.ids.contains( target ) )
     {
-        snx::Logger::log( "Hero deals " );
+#if defined( DEBUG )
+        snx::debug::cliLog( "Hero attacks.\n" );
+#endif
+        EnergyModule::consume( heroIO.energy );
 
         HealthModule::damage(
             mapIO.enemies.healths.at( mapIO.enemies.ids.at( target ) ),
             DamageModule::damageRNG( heroIO.damage )
         );
-
-        EnergyModule::consume( heroIO.energy );
     }
     //* Move
     else if ( !CollisionSystem::checkCollision(
@@ -50,13 +55,16 @@ Hero const& processDirectionalInput(
                   Convert::worldToTile( heroIO.position )
               ) )
     {
+#if defined( DEBUG )
+        snx::debug::cliLog( "Hero moves.\n" );
+#endif
+        EnergyModule::consume( heroIO.energy );
+
         heroIO.transform = MovementSystem::prepareByDirection(
             heroIO.transform,
             heroIO.movement,
             direction
         );
-
-        EnergyModule::consume( heroIO.energy );
     }
 
     return heroIO;
@@ -89,6 +97,11 @@ namespace ActionSystem
                              Convert::worldToTile( heroIO.position )
                          ) )
                     {
+#if defined( DEBUG )
+                        snx::debug::cliLog( "Hero moves.\n" );
+#endif
+                        EnergyModule::consume( heroIO.energy );
+
                         heroIO.transform = MovementSystem::prepareFromExistingPath(
                             heroIO.transform,
                             heroIO.movement
@@ -161,14 +174,15 @@ namespace ActionSystem
                 {
                     if ( mapIO.enemies.ids.contains( path.rbegin()[1] ) )
                     {
-                        snx::Logger::log( "Hero deals " );
+#if defined( DEBUG )
+                        snx::debug::cliLog( "Hero attacks.\n" );
+#endif
+                        EnergyModule::consume( heroIO.energy );
 
                         HealthModule::damage(
                             mapIO.enemies.healths.at( mapIO.enemies.ids.at( path.rbegin()[1] ) ),
                             DamageModule::damageRNG( heroIO.damage )
                         );
-
-                        EnergyModule::consume( heroIO.energy );
 
                         path.clear();
                     }
@@ -179,6 +193,11 @@ namespace ActionSystem
                                   Convert::worldToTile( heroIO.position )
                               ) )
                     {
+#if defined( DEBUG )
+                        snx::debug::cliLog( "Hero moves.\n" );
+#endif
+                        EnergyModule::consume( heroIO.energy );
+
                         heroIO.movement = MovementSystem::prepareByNewPath(
                             heroIO.movement,
                             path
@@ -200,6 +219,7 @@ namespace ActionSystem
 
             case InputId::ACT_IN_PLACE:
             {
+                //* Interact
                 if ( mapIO.objects.ids.contains( Convert::worldToTile( cursor.position ) ) )
                 {
                     size_t objectId{ mapIO.objects.ids.at( Convert::worldToTile( heroIO.position ) ) };
@@ -207,12 +227,20 @@ namespace ActionSystem
                     //* Wait if nothing to interact
                     if ( mapIO.objects.events.contains( objectId ) )
                     {
+#if defined( DEBUG )
+                        snx::debug::cliLog( "Hero interacts.\n" );
+#endif
+                        EnergyModule::consume( heroIO.energy );
+
                         snx::PublisherStatic::publish( mapIO.objects.events.at( objectId ) );
 
                         break;
                     }
                 }
 
+#if defined( DEBUG )
+                snx::debug::cliLog( "Hero waits.\n" );
+#endif
                 snx::Logger::log( "Hero waits..." );
 
                 EnergyModule::consume( heroIO.energy );
