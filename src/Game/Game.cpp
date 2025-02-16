@@ -93,7 +93,6 @@ Game const& setupGameEvents( Game& game )
         EventId::INTERRUPT_MOVEMENT,
         [&]()
         {
-            MovementSystem::resetTransform( game.hero.transform );
             game.hero.movement.path.clear();
         }
     );
