@@ -78,7 +78,7 @@ namespace EnemiesModule
         size_t id
     );
 
-    //* Returns if an enemy is ready
+    //* Returns if an at least one regeneration was successful aka. one enemy is ready
     bool regenerate( snx::DenseMap<size_t, EnergyComponent>& energiesIO );
 
     [[nodiscard]]

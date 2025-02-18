@@ -1,7 +1,8 @@
 .cache
-bin/unix/debug/
+bin/unix
 bin/web/debug/
-bin/windows/debug/
+bin/windows
+bin/windows
 doc/html
 build
 perf.*

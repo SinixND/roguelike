@@ -15,10 +15,10 @@ struct Game
     Hero hero{};
 
     //* Track game turns
-    int turn{ 0 };
+    size_t turn{ 1 };
 
     size_t activeEnemyId{ 0 };
-    size_t multiFrameActionsActive{ 0 };
+    bool isMultiFrameActionActive{ false };
 };
 
 namespace GameModule

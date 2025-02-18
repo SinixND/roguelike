@@ -1,7 +1,6 @@
 #include "MovementSystem.h"
 
 #include "Enemies.h"
-#include "EnergyComponent.h"
 #include "EventId.h"
 #include "MovementComponent.h"
 #include "PublisherStatic.h"
@@ -21,7 +20,6 @@ namespace MovementSystem
         Vector2& position,
         TransformComponent& transformIO,
         // MovementComponent& movementIO,
-        [[maybe_unused]] EnergyComponent& energyIO,
         float dt
     )
     {
@@ -29,11 +27,6 @@ namespace MovementSystem
         {
             return position;
         }
-
-        // #if defined( DEBUG )
-        //         snx::debug::cliLog( "[!] Consume energy for movement.\n" );
-        // #endif
-        //         EnergyModule::consume( energyIO );
 
         float frameDistance{ transformIO.speed * dt };
 

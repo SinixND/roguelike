@@ -5,6 +5,7 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
+- [ ] Check map change
 - [ ] Refactor
     [Status] Current: Scene folder -> Scene
     - [ ] Use `values()` of Densemap where >1 SoA member-values needed (no `contains()`!)
@@ -18,7 +19,7 @@ Platforms: Linux, Windows, Browser
 
 
 ## Shortterm
-- [ ] Check Event System for unnecessary complexity
+- [ ] Check Event System for unnecessary complexity (only cross scene <-> game necessary?)
 - [ ] Replace //* with /// for function descriptions)
 - [ ] Make internal members private (if no external references)
 - [x] Separate fog calculation from visibility calculation

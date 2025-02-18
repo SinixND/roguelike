@@ -16,7 +16,6 @@ namespace MovementSystem
         Vector2& positionIO,
         TransformComponent& transformIO,
         // MovementComponent& movementIO,
-        EnergyComponent& energyIO,
         float dt
     );
 

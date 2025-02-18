@@ -33,7 +33,7 @@ Game const& setupGameEvents( Game& game )
         EventId::MULTIFRAME_ACTION_ACTIVE,
         [&]()
         {
-            ++game.multiFrameActionsActive;
+            game.isMultiFrameActionActive = true;
         }
     );
 
@@ -41,8 +41,7 @@ Game const& setupGameEvents( Game& game )
         EventId::MULTIFRAME_ACTION_DONE,
         [&]()
         {
-            assert( game.multiFrameActionsActive > 0 && "No multiframe actions left to decrement" );
-            --game.multiFrameActionsActive;
+            game.isMultiFrameActionActive = false;
         }
     );
 
@@ -50,7 +49,7 @@ Game const& setupGameEvents( Game& game )
         EventId::NEXT_LEVEL,
         [&]()
         {
-            snx::Logger::log( "Entered next level" );
+            snx::Logger::log( "Entered next level\n" );
 
             game.levels.increaseMapLevel();
 
@@ -67,7 +66,7 @@ Game const& setupGameEvents( Game& game )
         EventId::PREVIOUS_LEVEL,
         [&]()
         {
-            snx::Logger::log( "Entered previous level" );
+            snx::Logger::log( "Entered previous level\n" );
 
             game.levels.decreaseMapLevel();
 
@@ -113,7 +112,6 @@ Hero const& continueHeroMovement(
         hero.position,
         hero.transform,
         // hero.movement,
-        hero.energy,
         dt
     );
 
@@ -144,7 +142,6 @@ Enemies const& continueEnemyMovements(
             enemies.positions[idx],
             enemies.transforms[idx],
             // enemies.movements[idx],
-            enemies.energies[idx],
             dt
         );
 
@@ -246,7 +243,7 @@ namespace GameModule
         float dt
     )
     {
-        if ( !game.multiFrameActionsActive )
+        if ( !game.isMultiFrameActionActive )
         {
             game = executeInstantActions(
                 game,
@@ -256,12 +253,13 @@ namespace GameModule
             );
         }
 
-        if ( game.multiFrameActionsActive )
+        if ( game.isMultiFrameActionActive )
         {
             game = continueMultiFrameActions(
                 game,
                 dt
             );
+
             return game;
         }
 
@@ -282,13 +280,14 @@ namespace GameModule
         bool isUnitReady{ false };
 
         //* Regenerate until one unit becomes ready
+#if defined( DEBUG )
+        snx::debug::cliLog( "No action left. Regen units.\n" );
+#endif
         while ( !isUnitReady )
         {
-#if defined( DEBUG )
-            snx::debug::cliLog( "Actions done. Regen units.\n" );
-#endif
-            isUnitReady = EnergyModule::regenerate( game.hero.energy );
-            isUnitReady |= EnemiesModule::regenerate( game.levels.currentMap->enemies.energies );
+            //* Unit is ready when regenerate is _not_ successful
+            isUnitReady = !EnergyModule::regenerate( game.hero.energy );
+            isUnitReady |= !EnemiesModule::regenerate( game.levels.currentMap->enemies.energies );
         }
 
         //* Increment turn when hero is ready
@@ -298,7 +297,7 @@ namespace GameModule
             snx::debug::cliLog( "Hero ready. Next Turn\n\n" );
 #endif
             ++game.turn;
-            snx::Logger::setStamp( std::to_string( game.turn ) );
+            snx::Logger::setTurn( game.turn );
         }
 
         return game;

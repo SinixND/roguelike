@@ -128,7 +128,7 @@ namespace PanelSystem
 
     void drawHeroInfoPanelContent(
         Panels const& panels,
-        [[maybe_unused]] Hero const& hero
+        Hero const& hero
     )
     {
         int fontSize{ GuiGetStyle( DEFAULT, TEXT_SIZE ) };

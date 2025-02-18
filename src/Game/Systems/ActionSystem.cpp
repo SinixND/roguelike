@@ -40,6 +40,7 @@ Hero const& processDirectionalInput(
 #if defined( DEBUG )
         snx::debug::cliLog( "Hero attacks.\n" );
 #endif
+        snx::Logger::log( "Hero deals " );
         EnergyModule::consume( heroIO.energy );
 
         HealthModule::damage(
@@ -170,48 +171,51 @@ namespace ActionSystem
                     gameCamera
                 ) };
 
-                if ( !path.empty() )
+                if ( path.empty() )
                 {
-                    if ( mapIO.enemies.ids.contains( path.rbegin()[1] ) )
-                    {
+                    break;
+                }
+
+                if ( mapIO.enemies.ids.contains( path.rbegin()[1] ) )
+                {
 #if defined( DEBUG )
-                        snx::debug::cliLog( "Hero attacks.\n" );
+                    snx::debug::cliLog( "Hero attacks.\n" );
 #endif
-                        EnergyModule::consume( heroIO.energy );
+                    EnergyModule::consume( heroIO.energy );
 
-                        HealthModule::damage(
-                            mapIO.enemies.healths.at( mapIO.enemies.ids.at( path.rbegin()[1] ) ),
-                            DamageModule::damageRNG( heroIO.damage )
-                        );
+                    snx::Logger::log( "Hero deals " );
+                    HealthModule::damage(
+                        mapIO.enemies.healths.at( mapIO.enemies.ids.at( path.rbegin()[1] ) ),
+                        DamageModule::damageRNG( heroIO.damage )
+                    );
 
-                        path.clear();
-                    }
-                    else if ( !CollisionSystem::checkCollision(
-                                  mapIO.tiles,
-                                  mapIO.enemies,
-                                  path.rbegin()[1],
-                                  Convert::worldToTile( heroIO.position )
-                              ) )
-                    {
+                    path.clear();
+                }
+                else if ( !CollisionSystem::checkCollision(
+                              mapIO.tiles,
+                              mapIO.enemies,
+                              path.rbegin()[1],
+                              Convert::worldToTile( heroIO.position )
+                          ) )
+                {
 #if defined( DEBUG )
-                        snx::debug::cliLog( "Hero moves.\n" );
+                    snx::debug::cliLog( "Hero moves.\n" );
 #endif
-                        EnergyModule::consume( heroIO.energy );
+                    EnergyModule::consume( heroIO.energy );
 
-                        heroIO.movement = MovementSystem::prepareByNewPath(
-                            heroIO.movement,
-                            path
-                        );
+                    heroIO.movement = MovementSystem::prepareByNewPath(
+                        heroIO.movement,
+                        path
+                    );
 
-                        heroIO.transform = MovementSystem::prepareFromExistingPath(
-                            heroIO.transform,
-                            heroIO.movement
-                        );
-                    }
-                    else
-                    {
-                        path.clear();
-                    }
+                    heroIO.transform = MovementSystem::prepareFromExistingPath(
+                        heroIO.transform,
+                        heroIO.movement
+                    );
+                }
+                else
+                {
+                    path.clear();
                 }
 
                 break;
@@ -241,7 +245,7 @@ namespace ActionSystem
 #if defined( DEBUG )
                 snx::debug::cliLog( "Hero waits.\n" );
 #endif
-                snx::Logger::log( "Hero waits..." );
+                snx::Logger::log( "Hero waits...\n" );
 
                 EnergyModule::consume( heroIO.energy );
 
