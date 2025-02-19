@@ -1,12 +1,12 @@
 #include "App.h"
 
 #include "DeveloperMode.h"
-#include "EventId.h"
+#include "EventDispatcher.h"
+#include "Events.h"
 #include "GameFont.h"
 #include "InputHandler.h"
 #include "InputId.h"
 #include "PanelSystem.h"
-#include "PublisherStatic.h"
 #include "VisibilitySystem.h"
 #include <raygui.h>
 #include <raylib.h>
@@ -67,7 +67,7 @@ void updateWindowState()
 
     if ( IsWindowResized() )
     {
-        snx::PublisherStatic::publish( EventId::WINDOW_RESIZED );
+        snx::EventDispatcher::notify( EventId::WINDOW_RESIZED );
     }
 }
 
@@ -118,7 +118,7 @@ void updateApp( void* arg )
     if ( app.currentInputId == InputId::TOGGLE_CURSOR )
     {
         app.inputHandler.toggleCursorState();
-        snx::PublisherStatic::publish( EventId::CURSOR_TOGGLE );
+        snx::EventDispatcher::notify( EventId::CURSOR_TOGGLE );
     }
 
     app.dt = GetFrameTime();
@@ -148,7 +148,7 @@ void updateApp( void* arg )
 
 void setupAppEvents( App& app )
 {
-    snx::PublisherStatic::addSubscriber(
+    snx::EventDispatcher::addListener(
         EventId::CURSOR_TOGGLE,
         [&]()
         {
@@ -156,7 +156,7 @@ void setupAppEvents( App& app )
         }
     );
 
-    snx::PublisherStatic::addSubscriber(
+    snx::EventDispatcher::addListener(
         EventId::WINDOW_RESIZED,
         [&]()
         {

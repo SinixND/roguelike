@@ -9,14 +9,14 @@
 #include "Debugger.h"
 #include "DeveloperMode.h"
 #include "Enemies.h"
-#include "EventId.h"
+#include "EventDispatcher.h"
+#include "Events.h"
 #include "Game.h"
 #include "GameCamera.h"
 #include "InputId.h"
 #include "Levels.h"
 #include "Objects.h"
 #include "PanelSystem.h"
-#include "PublisherStatic.h"
 #include "RenderSystem.h"
 #include "SceneData.h"
 #include "VisibilityId.h"
@@ -39,19 +39,20 @@ void setupSceneEvents(
     Cursor const& cursor
 )
 {
-    snx::PublisherStatic::addSubscriber(
+    snx::EventDispatcher::addListener(
         EventId::CHANGE_COLOR_THEME,
         [&]()
         {
             RenderSystem::cycleThemes( scene.renderData.theme );
+
             scene.renderData = RenderSystem::loadRenderData( scene.renderData );
 
-            snx::PublisherStatic::publish( EventId::MAP_CHANGE );
+            snx::EventDispatcher::notify( EventId::MAP_CHANGE );
         }
     );
 
     //* Game events
-    snx::PublisherStatic::addSubscriber(
+    snx::EventDispatcher::addListener(
         EventId::HERO_MOVED,
         [&]()
         {
@@ -62,7 +63,7 @@ void setupSceneEvents(
         }
     );
 
-    snx::PublisherStatic::addSubscriber(
+    snx::EventDispatcher::addListener(
         EventId::HERO_POSITION_CHANGED,
         [&]()
         {
@@ -78,11 +79,11 @@ void setupSceneEvents(
         true
     );
 
-    snx::PublisherStatic::addSubscriber(
+    snx::EventDispatcher::addListener(
         EventId::MAP_CHANGE,
         [&]()
         {
-            scene.chunks = ChunkSystem::renderToChunks(
+            scene.chunks = ChunkSystem::reRenderChunks(
                 scene.chunks,
                 scene.renderData.textures,
                 currentMap.tiles
@@ -91,7 +92,7 @@ void setupSceneEvents(
     );
 
 #if defined( DEBUG ) && defined( DEBUG_TILEINFO )
-    snx::PublisherStatic::addSubscriber(
+    snx::EventDispatcher::addListener(
         EventId::CURSOR_POSITION_CHANGED,
         [&]()
         {
@@ -346,7 +347,7 @@ namespace SceneModule
 
         scene.renderData = RenderSystem::loadRenderData( scene.renderData );
 
-        scene.chunks = ChunkSystem::renderToChunks(
+        scene.chunks = ChunkSystem::reRenderChunks(
             scene.chunks,
             scene.renderData.textures,
             currentMap.tiles
@@ -374,7 +375,7 @@ namespace SceneModule
     {
         if ( currentInputId == InputId::CYCLE_THEME )
         {
-            snx::PublisherStatic::publish( EventId::CHANGE_COLOR_THEME );
+            snx::EventDispatcher::notify( EventId::CHANGE_COLOR_THEME );
         }
 
 #if defined( DEBUG )

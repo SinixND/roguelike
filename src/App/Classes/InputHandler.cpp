@@ -2,9 +2,9 @@
 
 #define DEBUG_GESTURES
 
-#include "EventId.h"
+#include "EventDispatcher.h"
+#include "Events.h"
 #include "InputId.h"
-#include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -291,7 +291,7 @@ InputId InputHandler::fromGesture()
                     snx::debug::cliLog( "Triggered HOLD EVENT\n" );
 #endif
                     //* Get/Set info panel reference to tile/object/enemy at current position
-                    snx::PublisherStatic::publish( EventId::CURSOR_POSITION_CHANGED );
+                    snx::EventDispatcher::notify( EventId::CURSOR_POSITION_CHANGED );
                 }
 
                 break;

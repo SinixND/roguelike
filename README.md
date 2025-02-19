@@ -41,6 +41,7 @@ Platforms: Linux, Windows, Browser
 
 
 ## Longterm
+- [ ] Regen when exploring undetected areas?
 - [ ] Add overlay boxes for enemy/object information (wanted?)
 - [ ] Changeable key bindings
 - [ ] Save/Load for Account > Character > CurrentRun

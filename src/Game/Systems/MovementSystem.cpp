@@ -1,9 +1,9 @@
 #include "MovementSystem.h"
 
 #include "Enemies.h"
-#include "EventId.h"
+#include "EventDispatcher.h"
+#include "Events.h"
 #include "MovementComponent.h"
-#include "PublisherStatic.h"
 #include "TileData.h"
 #include "TransformComponent.h"
 #include "raylibEx.h"
@@ -71,7 +71,7 @@ namespace MovementSystem
         transform.speed = movement.baseSpeed;
         transform.remainingDistance = TileData::tileSize;
 
-        snx::PublisherStatic::publish( EventId::MULTIFRAME_ACTION_ACTIVE );
+        snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTION_ACTIVE );
 
         return transform;
     }
@@ -142,7 +142,7 @@ namespace MovementSystem
         transform.speed = .0f;
         transform.remainingDistance = 0;
 
-        snx::PublisherStatic::publish( EventId::MULTIFRAME_ACTION_DONE );
+        snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTION_DONE );
 
         return transform;
     }

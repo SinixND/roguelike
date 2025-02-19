@@ -1,5 +1,5 @@
 #include "HealthComponent.h"
-#include "PublisherStatic.h"
+#include "EventDispatcher.h"
 #define DEBUG_HEALTH
 
 #if defined( DEBUG ) && defined( DEBUG_HEALTH )
@@ -26,7 +26,7 @@ namespace HealthModule
             healthIO.currentHealth = 0;
         }
 
-        snx::PublisherStatic::publish( EventId::INTERRUPT_MOVEMENT );
+        snx::EventDispatcher::notify( EventId::INTERRUPT_MOVEMENT );
 
         if ( healthIO.currentHealth <= 0 )
         {

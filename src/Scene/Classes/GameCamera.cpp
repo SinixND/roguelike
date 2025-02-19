@@ -1,8 +1,8 @@
 #include "GameCamera.h"
 
 #include "Convert.h"
-#include "EventId.h"
-#include "PublisherStatic.h"
+#include "EventDispatcher.h"
+#include "Events.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -24,7 +24,7 @@ namespace GameCameraModule
             0.75
         };
 
-        snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
+        snx::EventDispatcher::notify( EventId::CAMERA_CHANGED );
 
         return gameCamera;
     }
@@ -51,7 +51,7 @@ namespace GameCameraModule
     )
     {
         gameCamera.camera.offset = offset;
-        snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
+        snx::EventDispatcher::notify( EventId::CAMERA_CHANGED );
 
         return gameCamera;
     }
@@ -63,7 +63,7 @@ namespace GameCameraModule
     )
     {
         gameCamera.camera.target = target;
-        snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
+        snx::EventDispatcher::notify( EventId::CAMERA_CHANGED );
 
         return gameCamera;
     }
@@ -75,7 +75,7 @@ namespace GameCameraModule
     )
     {
         gameCamera.camera.zoom = zoom;
-        snx::PublisherStatic::publish( EventId::CAMERA_CHANGED );
+        snx::EventDispatcher::notify( EventId::CAMERA_CHANGED );
 
         return gameCamera;
     }

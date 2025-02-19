@@ -4,6 +4,7 @@
 #include "Convert.h"
 #include "Cursor.h"
 #include "Directions.h"
+#include "EventDispatcher.h"
 #include "GameCamera.h"
 #include "HealthComponent.h"
 #include "Hero.h"
@@ -12,7 +13,6 @@
 #include "Map.h"
 #include "MovementSystem.h"
 #include "PathfinderSystem.h"
-#include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raylib.h>
 #include <raymath.h>
@@ -236,7 +236,7 @@ namespace ActionSystem
 #endif
                         EnergyModule::consume( heroIO.energy );
 
-                        snx::PublisherStatic::publish( mapIO.objects.events.at( objectId ) );
+                        snx::EventDispatcher::notify( mapIO.objects.events.at( objectId ) );
 
                         break;
                     }

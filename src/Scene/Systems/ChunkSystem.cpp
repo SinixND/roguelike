@@ -50,7 +50,7 @@ snx::DenseMap<Vector2I, Chunk> const& clearChunks( snx::DenseMap<Vector2I, Chunk
 namespace ChunkSystem
 {
     [[nodiscard]]
-    snx::DenseMap<Vector2I, Chunk> const& renderToChunks(
+    snx::DenseMap<Vector2I, Chunk> const& reRenderChunks(
         snx::DenseMap<Vector2I, Chunk>& chunks,
         Textures const& textures,
         Tiles const& tiles

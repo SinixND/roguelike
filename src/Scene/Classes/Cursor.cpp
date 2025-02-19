@@ -1,8 +1,8 @@
 #include "Cursor.h"
 
 #include "Convert.h"
-#include "EventId.h"
-#include "PublisherStatic.h"
+#include "EventDispatcher.h"
+#include "Events.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -40,7 +40,7 @@ namespace CursorModule
             {
                 cursor.position = Convert::tileToWorld( mouseTile );
 
-                snx::PublisherStatic::publish( EventId::CURSOR_POSITION_CHANGED );
+                snx::EventDispatcher::notify( EventId::CURSOR_POSITION_CHANGED );
             }
 
             return cursor;

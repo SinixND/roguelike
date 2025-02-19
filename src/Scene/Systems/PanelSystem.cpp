@@ -1,12 +1,12 @@
 #include "PanelSystem.h"
 
-#include "EventId.h"
+#include "EventDispatcher.h"
+#include "Events.h"
 #include "GameFont.h"
 #include "Hero.h"
 #include "Logger.h"
 #include "Objects.h"
 #include "Panels.h"
-#include "PublisherStatic.h"
 #include "raylibEx.h"
 #include <raygui.h>
 #include <raylib.h>

@@ -6,13 +6,13 @@
 #include "Cursor.h"
 #include "Enemies.h"
 #include "EnergyComponent.h"
-#include "EventId.h"
+#include "EventDispatcher.h"
+#include "Events.h"
 #include "GameCamera.h"
 #include "Hero.h"
 #include "Levels.h"
 #include "MovementSystem.h"
 #include "Objects.h"
-#include "PublisherStatic.h"
 #include "RenderId.h"
 #include "raylibEx.h"
 #include <Logger.h>
@@ -29,7 +29,7 @@
 [[nodiscard]]
 Game const& setupGameEvents( Game& game )
 {
-    snx::PublisherStatic::addSubscriber(
+    snx::EventDispatcher::addListener(
         EventId::MULTIFRAME_ACTION_ACTIVE,
         [&]()
         {
@@ -37,7 +37,7 @@ Game const& setupGameEvents( Game& game )
         }
     );
 
-    snx::PublisherStatic::addSubscriber(
+    snx::EventDispatcher::addListener(
         EventId::MULTIFRAME_ACTION_DONE,
         [&]()
         {
@@ -45,7 +45,7 @@ Game const& setupGameEvents( Game& game )
         }
     );
 
-    snx::PublisherStatic::addSubscriber(
+    snx::EventDispatcher::addListener(
         EventId::NEXT_LEVEL,
         [&]()
         {
@@ -56,13 +56,13 @@ Game const& setupGameEvents( Game& game )
             //* Place Hero on the map entry position
             game.hero.position = Convert::tileToWorld( Vector2I{ 0, 0 } );
 
-            snx::PublisherStatic::publish( EventId::HERO_MOVED );
-            snx::PublisherStatic::publish( EventId::HERO_POSITION_CHANGED );
-            snx::PublisherStatic::publish( EventId::MAP_CHANGE );
+            snx::EventDispatcher::notify( EventId::HERO_MOVED );
+            snx::EventDispatcher::notify( EventId::HERO_POSITION_CHANGED );
+            snx::EventDispatcher::notify( EventId::MAP_CHANGE );
         }
     );
 
-    snx::PublisherStatic::addSubscriber(
+    snx::EventDispatcher::addListener(
         EventId::PREVIOUS_LEVEL,
         [&]()
         {
@@ -83,13 +83,13 @@ Game const& setupGameEvents( Game& game )
                 }
             }
 
-            snx::PublisherStatic::publish( EventId::HERO_MOVED );
-            snx::PublisherStatic::publish( EventId::HERO_POSITION_CHANGED );
-            snx::PublisherStatic::publish( EventId::MAP_CHANGE );
+            snx::EventDispatcher::notify( EventId::HERO_MOVED );
+            snx::EventDispatcher::notify( EventId::HERO_POSITION_CHANGED );
+            snx::EventDispatcher::notify( EventId::MAP_CHANGE );
         }
     );
 
-    snx::PublisherStatic::addSubscriber(
+    snx::EventDispatcher::addListener(
         EventId::INTERRUPT_MOVEMENT,
         [&]()
         {
@@ -115,11 +115,11 @@ Hero const& continueHeroMovement(
         dt
     );
 
-    snx::PublisherStatic::publish( EventId::HERO_MOVED );
+    snx::EventDispatcher::notify( EventId::HERO_MOVED );
 
     if ( oldPosition != Convert::worldToTile( hero.position ) )
     {
-        snx::PublisherStatic::publish( EventId::HERO_POSITION_CHANGED );
+        snx::EventDispatcher::notify( EventId::HERO_POSITION_CHANGED );
     }
 
     return hero;
@@ -228,7 +228,7 @@ namespace GameModule
         game = setupGameEvents( game );
 
 #if defined( DEBUG )
-        snx::PublisherStatic::publish( EventId::NEXT_LEVEL );
+        // snx::EventDispatcher::publish( EventId::NEXT_LEVEL );
 #endif
 
         return game;
