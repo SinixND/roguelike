@@ -32,7 +32,7 @@ struct InputMappings
 
     std::unordered_map<int, InputId> mouseToInput{
         { MOUSE_BUTTON_RIGHT, InputId::TOGGLE_CURSOR },
-        { MOUSE_BUTTON_LEFT, InputId::TARGET },
+        { MOUSE_BUTTON_LEFT, InputId::ACT_TO_TARGET },
     };
 };
 

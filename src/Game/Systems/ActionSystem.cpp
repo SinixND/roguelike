@@ -162,7 +162,8 @@ namespace ActionSystem
                 break;
             }
 
-            case InputId::TARGET:
+            //* NOTE: Fall through possible to ACT_IN_PLACE if cursor.position == hero.position
+            case InputId::ACT_TO_TARGET:
             {
                 std::vector<Vector2I> path{ PathfinderSystem::calculateAStarPath(
                     Convert::worldToTile( heroIO.position ),
@@ -171,12 +172,19 @@ namespace ActionSystem
                     gameCamera
                 ) };
 
-                if ( path.empty() )
+                if (
+                    Convert::worldToTile( heroIO.position )
+                    == Convert::worldToTile( cursor.position )
+                )
+                {
+                    //* NOTE: Fallthrough
+                }
+                else if ( path.empty() )
                 {
                     break;
                 }
-
-                if ( mapIO.enemies.ids.contains( path.rbegin()[1] ) )
+                //* Check if an enemy is at the first path tile
+                else if ( mapIO.enemies.ids.contains( path.rbegin()[1] ) )
                 {
 #if defined( DEBUG )
                     snx::debug::cliLog( "Hero attacks.\n" );
@@ -190,6 +198,7 @@ namespace ActionSystem
                     );
 
                     path.clear();
+                    break;
                 }
                 else if ( !CollisionSystem::checkCollision(
                               mapIO.tiles,
@@ -212,19 +221,21 @@ namespace ActionSystem
                         heroIO.transform,
                         heroIO.movement
                     );
+                    break;
                 }
                 else
                 {
                     path.clear();
+                    break;
                 }
-
-                break;
+                //* NOTE: Possible fallthrough to ACT_TO_TARGET
             }
 
+            //* NOTE: Possible fallthrough from ACT_TO_TARGET
             case InputId::ACT_IN_PLACE:
             {
                 //* Interact
-                if ( mapIO.objects.ids.contains( Convert::worldToTile( cursor.position ) ) )
+                if ( mapIO.objects.ids.contains( Convert::worldToTile( heroIO.position ) ) )
                 {
                     size_t objectId{ mapIO.objects.ids.at( Convert::worldToTile( heroIO.position ) ) };
 

@@ -34,7 +34,7 @@ void Levels::decreaseMapLevel()
 
 void Levels::addNewMap()
 {
-    maps.push_back( MapGeneratorSystem::createRandomMapType( maxMapLevel + 1 ) );
+    maps.push_back( MapGeneratorSystem::createRandomMapType( maxMapLevel ) );
 }
 
 void Levels::setCurrentMap( int level )

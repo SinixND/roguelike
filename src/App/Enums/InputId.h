@@ -9,7 +9,7 @@ enum class InputId
     ACT_LEFT,
     ACT_DOWN,
     ACT_RIGHT,
-    TARGET,
+    ACT_TO_TARGET,
     ACT_IN_PLACE,
     //* UI
     TOGGLE_CURSOR,

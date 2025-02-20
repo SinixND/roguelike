@@ -110,7 +110,7 @@ void setupSceneEvents(
             snx::debug::cliPrint( "\n" );
             snx::debug::cliLog( "TILE:\n" );
 
-            snx::debug::cliLog(
+            snx::debug::cliPrint(
                 "TilePosition: "
                 + std::to_string( cursorPos.x )
                 + ", "
@@ -118,7 +118,7 @@ void setupSceneEvents(
                 + "\n"
             );
 
-            snx::debug::cliLog(
+            snx::debug::cliPrint(
                 "WorldPixel: "
                 + std::to_string( tiles.positions.at( tileId ).x )
                 + ", "
@@ -126,25 +126,25 @@ void setupSceneEvents(
                 + "\n"
             );
 
-            snx::debug::cliLog(
+            snx::debug::cliPrint(
                 "RenderId: "
                 + std::to_string( static_cast<int>( tiles.renderIds.at( tileId ) ) )
                 + "\n"
             );
 
-            snx::debug::cliLog(
+            snx::debug::cliPrint(
                 "VisibilityId: "
                 + std::to_string( static_cast<int>( tiles.visibilityIds.at( tileId ) ) )
                 + "\n"
             );
 
-            snx::debug::cliLog(
+            snx::debug::cliPrint(
                 "IsSolid: "
                 + std::to_string( tiles.isSolids.contains( tileId ) )
                 + "\n"
             );
 
-            snx::debug::cliLog(
+            snx::debug::cliPrint(
                 "IsOpaque: "
                 + std::to_string( tiles.isOpaques.contains( tileId ) )
                 + "\n"
@@ -158,25 +158,25 @@ void setupSceneEvents(
 
                 snx::debug::cliLog( "OBJECT\n" );
 
-                snx::debug::cliLog(
-                    "\nName: "
+                snx::debug::cliPrint(
+                    "Name: "
                     + currentMap.objects.names.at( objectId )
                     + "\n"
                 );
 
-                snx::debug::cliLog(
-                    "\nActions: "
+                snx::debug::cliPrint(
+                    "Actions: "
                     + currentMap.objects.actions.at( objectId )
                     + "\n"
                 );
 
-                snx::debug::cliLog(
+                snx::debug::cliPrint(
                     "RenderId: "
                     + std::to_string( static_cast<int>( currentMap.objects.renderIds.at( objectId ) ) )
                     + "\n"
                 );
 
-                snx::debug::cliLog(
+                snx::debug::cliPrint(
                     "Event: "
                     + std::to_string( static_cast<int>( currentMap.objects.events.at( objectId ) ) )
                     + "\n"
@@ -187,7 +187,7 @@ void setupSceneEvents(
             {
                 snx::debug::cliLog( "ENEMY\n" );
 
-                snx::debug::cliLog(
+                snx::debug::cliPrint(
                     "Id: "
                     + std::to_string( currentMap.enemies.ids.at( cursorPos ) )
                     + "\n"
