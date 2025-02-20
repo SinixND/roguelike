@@ -194,7 +194,7 @@ namespace AppModule
         appIO.scene = SceneModule::init(
             appIO.scene,
             appIO.game.hero,
-            *appIO.game.levels.currentMap,
+            appIO.game.levels,
             appIO.cursor
         );
 

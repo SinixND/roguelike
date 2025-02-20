@@ -29,7 +29,7 @@ private:
     std::vector<Map> maps{ MapGeneratorSystem::createStartRoom() };
 #endif
 
-    int maxMapLevel{};
+    int maxMapLevel_{};
 };
 
 #endif

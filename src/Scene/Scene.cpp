@@ -35,7 +35,7 @@
 void setupSceneEvents(
     Scene& scene,
     Hero const& hero,
-    Map& currentMap,
+    Levels const& levels,
     Cursor const& cursor
 )
 {
@@ -68,9 +68,9 @@ void setupSceneEvents(
         [&]()
         {
             //* VisibilitySystem
-            currentMap.tiles = VisibilitySystem::calculateVisibilities(
-                currentMap.tiles,
-                currentMap.fogs,
+            levels.currentMap->tiles = VisibilitySystem::calculateVisibilities(
+                levels.currentMap->tiles,
+                levels.currentMap->fogs,
                 GameCameraModule::viewportInTiles( scene.gameCamera ),
                 Convert::worldToTile( hero.position ),
                 hero.visionRange
@@ -86,7 +86,7 @@ void setupSceneEvents(
             scene.chunks = ChunkSystem::reRenderChunks(
                 scene.chunks,
                 scene.renderData.textures,
-                currentMap.tiles
+                levels.currentMap->tiles
             );
         }
     );
@@ -98,7 +98,7 @@ void setupSceneEvents(
         {
             Vector2I cursorPos{ Convert::worldToTile( cursor.position ) };
 
-            Tiles& tiles{ currentMap.tiles };
+            Tiles& tiles{ levels.currentMap->tiles };
 
             if ( !tiles.ids.contains( cursorPos ) )
             {
@@ -150,7 +150,7 @@ void setupSceneEvents(
                 + "\n"
             );
 
-            Objects& objects{ currentMap.objects };
+            Objects& objects{ levels.currentMap->objects };
 
             if ( objects.ids.contains( Convert::worldToTile( cursor.position ) ) )
             {
@@ -160,36 +160,36 @@ void setupSceneEvents(
 
                 snx::debug::cliPrint(
                     "Name: "
-                    + currentMap.objects.names.at( objectId )
+                    + levels.currentMap->objects.names.at( objectId )
                     + "\n"
                 );
 
                 snx::debug::cliPrint(
                     "Actions: "
-                    + currentMap.objects.actions.at( objectId )
+                    + levels.currentMap->objects.actions.at( objectId )
                     + "\n"
                 );
 
                 snx::debug::cliPrint(
                     "RenderId: "
-                    + std::to_string( static_cast<int>( currentMap.objects.renderIds.at( objectId ) ) )
+                    + std::to_string( static_cast<int>( levels.currentMap->objects.renderIds.at( objectId ) ) )
                     + "\n"
                 );
 
                 snx::debug::cliPrint(
                     "Event: "
-                    + std::to_string( static_cast<int>( currentMap.objects.events.at( objectId ) ) )
+                    + std::to_string( static_cast<int>( levels.currentMap->objects.events.at( objectId ) ) )
                     + "\n"
                 );
             }
 
-            if ( currentMap.enemies.ids.contains( cursorPos ) )
+            if ( levels.currentMap->enemies.ids.contains( cursorPos ) )
             {
                 snx::debug::cliLog( "ENEMY\n" );
 
                 snx::debug::cliPrint(
                     "Id: "
-                    + std::to_string( currentMap.enemies.ids.at( cursorPos ) )
+                    + std::to_string( levels.currentMap->enemies.ids.at( cursorPos ) )
                     + "\n"
                 );
             }
@@ -329,7 +329,7 @@ namespace SceneModule
     Scene const& init(
         Scene& scene,
         Hero const& hero,
-        Map& currentMap,
+        Levels const& levels,
         Cursor const& cursor
     )
     {
@@ -350,14 +350,14 @@ namespace SceneModule
         scene.chunks = ChunkSystem::reRenderChunks(
             scene.chunks,
             scene.renderData.textures,
-            currentMap.tiles
+            levels.currentMap->tiles
         );
 
         //* Setup events
         setupSceneEvents(
             scene,
             hero,
-            currentMap,
+            levels,
             cursor
         );
 

@@ -8,7 +8,6 @@
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make (-j)",
             "program": "${workspaceFolder}/bin/unix/debug/main",
-            "stopAtEntry": true,
         },
         {
             "name": "Build (lldb, -j)",
@@ -25,7 +24,6 @@
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make debug FATAL=yes",
             "program": "${workspaceFolder}/bin/unix/debug/main",
-            "stopAtEntry": true,
         },
         {
             "name": "Build debug (cppdbg, -j)",
@@ -34,7 +32,6 @@
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make debug (-j)",
             "program": "${workspaceFolder}/bin/unix/debug/main",
-            "stopAtEntry": true,
         },
         {
             "name": "Build debug (lldb)",
@@ -59,7 +56,6 @@
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make release",
             "program": "${workspaceFolder}/bin/release/main",
-            "stopAtEntry": true,
         },
         {
             "name": "Build release (lldb)",
@@ -76,7 +72,6 @@
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make test",
             "program": "${workspaceFolder}/test/test.exe",
-            "stopAtEntry": true,
         }
     ]
 }

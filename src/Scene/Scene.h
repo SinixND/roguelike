@@ -32,7 +32,7 @@ namespace SceneModule
     Scene const& init(
         Scene& scene,
         Hero const& hero,
-        Map& currentMap,
+        Levels const& levels,
         Cursor const& cursor
     );
 

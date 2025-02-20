@@ -9,9 +9,9 @@ Levels::Levels()
 
 void Levels::increaseMapLevel()
 {
-    if ( currentMapLevel == maxMapLevel )
+    if ( currentMapLevel == maxMapLevel_ )
     {
-        ++maxMapLevel;
+        ++maxMapLevel_;
         addNewMap();
     }
 
@@ -34,7 +34,7 @@ void Levels::decreaseMapLevel()
 
 void Levels::addNewMap()
 {
-    maps.push_back( MapGeneratorSystem::createRandomMapType( maxMapLevel ) );
+    maps.push_back( MapGeneratorSystem::createRandomMapType( maxMapLevel_ ) );
 }
 
 void Levels::setCurrentMap( int level )
