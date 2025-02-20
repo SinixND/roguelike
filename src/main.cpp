@@ -1,7 +1,5 @@
 #include "App.h"
 
-#include "RNG.h"
-
 //* Only define once
 #define RAYGUI_IMPLEMENTATION
 //* Required for custom icons set
@@ -12,9 +10,6 @@
 
 int main( /* int argc, char** argv */ )
 {
-#if defined( DEBUG )
-    snx::RNG::seed( 1 );
-#endif
     AppConfig config{};
 
     App app{};

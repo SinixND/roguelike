@@ -7,38 +7,42 @@
 enum class EventId
 {
     NONE = 0,
-    //* Application interaction
-    WINDOW_RESIZED,
-    CAMERA_CHANGED,
-    CURSOR_TOGGLE,
+    //* Application events
     CURSOR_POSITION_CHANGED,
-    MAP_CHANGE,
+    CURSOR_TOGGLE,
+    WINDOW_RESIZED,
+    //* Scene events
+    CAMERA_CHANGED,
     CHANGE_COLOR_THEME,
     //* Game events
-    MULTIFRAME_ACTION_DONE,
-    MULTIFRAME_ACTION_ACTIVE,
     HERO_MOVED,
     HERO_POSITION_CHANGED,
+    INTERRUPT_MOVEMENT,
+    MAP_CHANGE,
+    MULTIFRAME_ACTION_ACTIVE,
+    MULTIFRAME_ACTION_DONE,
     NEXT_LEVEL,
     PREVIOUS_LEVEL,
-    INTERRUPT_MOVEMENT,
 };
 
 inline std::unordered_map<EventId, std::string> eventNames{
     { EventId::NONE, "None" },
-    { EventId::WINDOW_RESIZED, "Window resized" },
-    { EventId::CAMERA_CHANGED, "Camera changed" },
-    { EventId::CURSOR_TOGGLE, "Cursor toggle" },
+    //* Application events
     { EventId::CURSOR_POSITION_CHANGED, "Cursor position changed" },
-    { EventId::MAP_CHANGE, "Map change" },
+    { EventId::CURSOR_TOGGLE, "Cursor toggle" },
+    { EventId::WINDOW_RESIZED, "Window resized" },
+    //* Scene events
+    { EventId::CAMERA_CHANGED, "Camera changed" },
     { EventId::CHANGE_COLOR_THEME, "Change color theme" },
-    { EventId::MULTIFRAME_ACTION_DONE, "Multiframe action done" },
-    { EventId::MULTIFRAME_ACTION_ACTIVE, "Multiframe action active" },
+    //* Game events
     { EventId::HERO_MOVED, "Hero moved" },
     { EventId::HERO_POSITION_CHANGED, "Hero position changed" },
+    { EventId::INTERRUPT_MOVEMENT, "Interrupt movement" },
+    { EventId::MAP_CHANGE, "Map change" },
+    { EventId::MULTIFRAME_ACTION_ACTIVE, "Multiframe action active" },
+    { EventId::MULTIFRAME_ACTION_DONE, "Multiframe action done" },
     { EventId::NEXT_LEVEL, "Next level" },
     { EventId::PREVIOUS_LEVEL, "Previous level" },
-    { EventId::INTERRUPT_MOVEMENT, "Interrupt movement" }
 };
 
 #endif

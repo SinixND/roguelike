@@ -5,7 +5,6 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Check map change
 - [ ] Refactor
     [Status] Current: Scene folder -> Scene
     - [ ] Use `values()` of Densemap where >1 SoA member-values needed (no `contains()`!)
