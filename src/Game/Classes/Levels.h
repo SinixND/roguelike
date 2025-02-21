@@ -8,6 +8,14 @@
 /// Level holds maps which are identified by a mapLevel (int)
 class Levels
 {
+#if defined( DEBUG )
+    std::vector<Map> maps_{ MapGeneratorSystem::createTestRoom() };
+#else
+    std::vector<Map> maps_{ MapGeneratorSystem::createStartRoom() };
+#endif
+
+    int maxMapLevel_{};
+
 public:
     int currentMapLevel{};
     Map* currentMap{};
@@ -21,15 +29,6 @@ public:
 private:
     void addNewMap();
     void setCurrentMap( int level );
-
-private:
-#if defined( DEBUG )
-    std::vector<Map> maps{ MapGeneratorSystem::createTestRoom() };
-#else
-    std::vector<Map> maps{ MapGeneratorSystem::createStartRoom() };
-#endif
-
-    int maxMapLevel_{};
 };
 
 #endif

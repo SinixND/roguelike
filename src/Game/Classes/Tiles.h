@@ -10,6 +10,8 @@
 
 class Tiles
 {
+    snx::IdManager idManager{};
+
 public:
     snx::DenseMap<Vector2I, size_t> ids{};
 
@@ -29,9 +31,6 @@ public:
         bool isOpaque = false,
         VisibilityId visibilityId = VisibilityId::INVISIBLE
     );
-
-private:
-    snx::IdManager idManager{};
 };
 
 #endif

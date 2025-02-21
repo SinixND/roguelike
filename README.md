@@ -6,7 +6,6 @@ Platforms: Linux, Windows, Browser
 # TODOs
 ## Active 
 - [ ] Refactor
-    [Status] Current: Scene folder -> Scene
     - [ ] Use `values()` of Densemap where >1 SoA member-values needed (no `contains()`!)
     - [ ] Refactor parameters to low/member level ( if < 3 members used );
         - Split modified and const members

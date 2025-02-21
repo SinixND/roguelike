@@ -7,6 +7,20 @@
 
 class InputHandler
 {
+    int currentKey_{ KEY_NULL };
+    int lastKey_{ KEY_NULL };
+
+    int currentGesture_{ GESTURE_NONE };
+    int lastGesture{ GESTURE_NONE };
+
+    float touchDownTime_{ 0 };
+    float touchUpTime_{ 0.01 };
+    float touchHoldDuration_{ 0 };
+    float lastTap_{ 0 };
+
+    bool isModifierActive_{ false };
+    bool isCursorActive_{ false };
+
 public:
     InputMappings mappings;
 
@@ -16,21 +30,6 @@ public:
     InputId fromGesture();
 
     void toggleCursorState();
-
-private:
-    int currentKey{ KEY_NULL };
-    int lastKey{ KEY_NULL };
-
-    int currentGesture = { GESTURE_NONE };
-    int lastGesture = { GESTURE_NONE };
-
-    double touchDownTime{ 0 };
-    double touchUpTime{ 0.01 };
-    double touchHoldDuration{};
-    double lastTap{};
-
-    bool isModifierActive{};
-    bool isCursorActive{};
 };
 
 #endif

@@ -24,29 +24,29 @@ InputId InputHandler::fromKeyboard()
 {
     //* Update key pressed
     //* Set lastKey only to valid inputs (associated with actions)
-    lastKey = ( currentKey ) ? currentKey : lastKey;
-    currentKey = GetKeyPressed();
+    lastKey_ = ( currentKey_ ) ? currentKey_ : lastKey_;
+    currentKey_ = GetKeyPressed();
 
     //* Check modifiers
-    isModifierActive = IsKeyDown( mappings.modifiers.at( InputId::MOD ) );
+    isModifierActive_ = IsKeyDown( mappings.modifiers.at( InputId::MOD ) );
 
     //* Repeat last key if no input but modifier down
-    if ( ( isModifierActive
-           && !currentKey )
+    if ( ( isModifierActive_
+           && !currentKey_ )
 #if !defined( TERMUX )
-         || IsKeyPressedRepeat( lastKey )
+         || IsKeyPressedRepeat( lastKey_ )
 #endif
     )
     {
-        currentKey = lastKey;
+        currentKey_ = lastKey_;
     }
 
-    if ( !mappings.keyboardToInput.contains( currentKey ) )
+    if ( !mappings.keyboardToInput.contains( currentKey_ ) )
     {
         return InputId::NONE;
     }
 
-    return mappings.keyboardToInput.at( currentKey );
+    return mappings.keyboardToInput.at( currentKey_ );
 }
 
 InputId InputHandler::fromMouse()
@@ -55,7 +55,7 @@ InputId InputHandler::fromMouse()
 
     for ( int mouseButton : { MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT } )
     {
-        if ( ( isCursorActive
+        if ( ( isCursorActive_
                || mappings.mouseToInput.at( mouseButton ) == InputId::TOGGLE_CURSOR )
              && IsMouseButtonPressed( mouseButton ) )
         {
@@ -70,7 +70,7 @@ InputId InputHandler::fromGesture()
 {
     InputId inputId{ InputId::NONE };
 
-    if ( isCursorActive )
+    if ( isCursorActive_ )
     {
         return inputId;
     }
@@ -81,13 +81,13 @@ InputId InputHandler::fromGesture()
     //* but left in game logging so it gets noticed when it was fixed
 
     //* Update gestures
-    lastGesture = currentGesture;
-    currentGesture = GetGestureDetected();
+    lastGesture = currentGesture_;
+    currentGesture_ = GetGestureDetected();
 
     //* Detect gesture change
-    if ( currentGesture != lastGesture )
+    if ( currentGesture_ != lastGesture )
     {
-        switch ( currentGesture )
+        switch ( currentGesture_ )
         {
             default:
             case GESTURE_NONE:
@@ -100,17 +100,17 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered TOUCH UP EVENT\n" );
                 snx::debug::cliLog( "Triggered TOUCH UP EVENT\n" );
 #endif
-                touchUpTime = GetTime();
+                touchUpTime_ = GetTime();
 
                 //* Reset hold duration
-                touchHoldDuration = 0;
+                touchHoldDuration_ = 0;
 
                 //* Check for Tap events
                 if ( lastGesture == GESTURE_HOLD
-                     && ( touchUpTime - touchDownTime ) < maxTapTime )
+                     && ( touchUpTime_ - touchDownTime_ ) < maxTapTime )
                 {
                     //* Check for double tap
-                    if ( ( touchUpTime - lastTap ) < maxDoubleTapTime )
+                    if ( ( touchUpTime_ - lastTap_ ) < maxDoubleTapTime )
                     {
 #if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
                         snx::Logger::log( "Triggered DOUBLE TAP EVENT\n" );
@@ -126,7 +126,7 @@ InputId InputHandler::fromGesture()
 #endif
                     }
 
-                    lastTap = touchUpTime;
+                    lastTap_ = touchUpTime_;
 
                     break;
                 }
@@ -162,7 +162,7 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n" );
                 snx::debug::cliLog( "Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n" );
 #endif
-                touchDownTime = GetTime();
+                touchDownTime_ = GetTime();
 
                 break;
             }
@@ -174,7 +174,7 @@ InputId InputHandler::fromGesture()
                 snx::debug::cliLog( "Triggered first GESTURE_DRAG\n" );
 #endif
                 //* Set modifier
-                isModifierActive = true;
+                isModifierActive_ = true;
 
                 Vector2 direction = Vector2MainDirection( GetGestureDragVector() );
                 if ( direction == Vector2{ 0, -1 } )
@@ -270,7 +270,7 @@ InputId InputHandler::fromGesture()
     //* if (currentGesture_ == lastGesture_)
     else
     {
-        switch ( currentGesture )
+        switch ( currentGesture_ )
         {
             default:
             case GESTURE_NONE:
@@ -282,9 +282,9 @@ InputId InputHandler::fromGesture()
 
             case GESTURE_HOLD:
             {
-                touchHoldDuration = GetTime() - touchDownTime;
+                touchHoldDuration_ = GetTime() - touchDownTime_;
 
-                if ( ( touchHoldDuration ) > minHoldTime )
+                if ( ( touchHoldDuration_ ) > minHoldTime )
                 {
 #if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
                     snx::Logger::log( "Triggered HOLD EVENT\n" );
@@ -304,7 +304,7 @@ InputId InputHandler::fromGesture()
                 snx::debug::cliLog( "Triggered GESTURE_DRAG\n" );
 #endif
                 //* Set modifier
-                isModifierActive = true;
+                isModifierActive_ = true;
 
                 Vector2 direction = Vector2MainDirection( GetGestureDragVector() );
                 if ( direction == Vector2{ 0, -1 } )
@@ -337,5 +337,5 @@ InputId InputHandler::fromGesture()
 
 void InputHandler::toggleCursorState()
 {
-    isCursorActive = !isCursorActive;
+    isCursorActive_ = !isCursorActive_;
 }

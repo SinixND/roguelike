@@ -1,8 +1,5 @@
 #include "Scene.h"
 
-#define DEBUG_TILEINFO
-//* #define DEBUG_FOG
-
 #include "ChunkSystem.h"
 #include "Colors.h"
 #include "Cursor.h"
@@ -27,16 +24,10 @@
 #include <raylib.h>
 #include <raymath.h>
 
-#if defined( DEBUG ) && defined( DEBUG_TILEINFO )
-#include "Objects.h"
-#include <string>
-#endif
-
 void setupSceneEvents(
     Scene& scene,
     Hero const& hero,
-    Levels const& levels,
-    Cursor const& cursor
+    Levels const& levels
 )
 {
     snx::EventDispatcher::addListener(
@@ -223,8 +214,7 @@ namespace SceneModule
     Scene const& init(
         Scene& scene,
         Hero const& hero,
-        Levels const& levels,
-        Cursor const& cursor
+        Levels const& levels
     )
     {
         scene.panels = PanelSystem::init( scene.panels );
@@ -251,8 +241,7 @@ namespace SceneModule
         setupSceneEvents(
             scene,
             hero,
-            levels,
-            cursor
+            levels
         );
 
         return scene;

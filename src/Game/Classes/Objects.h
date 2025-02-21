@@ -12,6 +12,8 @@ enum class EventId;
 
 class Objects
 {
+    snx::IdManager idManager_{};
+
 public:
     snx::DenseMap<Vector2I, size_t> ids{};
 
@@ -29,9 +31,6 @@ public:
         RenderId renderId,
         EventId event
     );
-
-private:
-    snx::IdManager idManager{};
 };
 
 #endif

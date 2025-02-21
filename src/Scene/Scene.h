@@ -20,10 +20,6 @@ struct Scene
     RenderData renderData{};
 
     snx::DenseMap<Vector2I, Chunk> chunks{};
-
-#if defined( DEBUG )
-    static inline Camera2D gcam{};
-#endif
 };
 
 namespace SceneModule
@@ -32,8 +28,7 @@ namespace SceneModule
     Scene const& init(
         Scene& scene,
         Hero const& hero,
-        Levels const& levels,
-        Cursor const& cursor
+        Levels const& levels
     );
 
     [[nodiscard]]

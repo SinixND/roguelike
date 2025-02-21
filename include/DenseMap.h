@@ -12,6 +12,15 @@ namespace snx
     template <typename Key, typename Type>
     class DenseMap
     {
+        //* Vector index is used as value key
+        std::vector<Type> values_{};
+
+        //* Key is used to identify value
+        std::unordered_map<Key, size_t> keyToIndex_{};
+
+        //* Store a index (value) to key mapping
+        std::vector<Key> indexToKey_{};
+
     public:
         //* ITERATORS
         auto begin() const
@@ -229,9 +238,9 @@ namespace snx
         }
 
         //* Get key for value index
-        Key const& key( size_t index ) const
+        Key const& key( size_t idx ) const
         {
-            return indexToKey_[index];
+            return indexToKey_[idx];
         }
 
         //* Get value index for key
@@ -251,16 +260,6 @@ namespace snx
         {
             return const_cast<std::vector<Type>&>( std::as_const( *this ).values() );
         }
-
-    private:
-        //* Vector index is used as value key
-        std::vector<Type> values_{};
-
-        //* Key is used to identify value
-        std::unordered_map<Key, size_t> keyToIndex_{};
-
-        //* Store a index (value) to key mapping
-        std::vector<Key> indexToKey_{};
     };
 }
 

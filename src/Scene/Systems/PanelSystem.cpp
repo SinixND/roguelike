@@ -1,7 +1,5 @@
 #include "PanelSystem.h"
 
-#include "EventDispatcher.h"
-#include "Events.h"
 #include "GameFont.h"
 #include "Hero.h"
 #include "Logger.h"

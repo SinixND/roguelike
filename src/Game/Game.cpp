@@ -225,10 +225,13 @@ namespace GameModule
     [[nodiscard]]
     Game const& init( Game& game )
     {
+#if defined( DEBUG )
+        snx::RNG::seed( 1 );
+#endif
         game = setupGameEvents( game );
 
 #if defined( DEBUG )
-        // snx::EventDispatcher::publish( EventId::NEXT_LEVEL );
+        snx::EventDispatcher::notify( EventId::NEXT_LEVEL );
 #endif
 
         return game;

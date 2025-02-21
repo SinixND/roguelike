@@ -2,9 +2,19 @@
 
 #include "MapGeneratorSystem.h"
 
+void Levels::addNewMap()
+{
+    maps_.push_back( MapGeneratorSystem::createRandomMapType( maxMapLevel_ ) );
+}
+
+void Levels::setCurrentMap( int level )
+{
+    currentMap = &maps_[level];
+}
+
 Levels::Levels()
 {
-    currentMap = &maps.back();
+    currentMap = &maps_.back();
 }
 
 void Levels::increaseMapLevel()
@@ -30,15 +40,5 @@ void Levels::decreaseMapLevel()
     --currentMapLevel;
 
     setCurrentMap( currentMapLevel );
-}
-
-void Levels::addNewMap()
-{
-    maps.push_back( MapGeneratorSystem::createRandomMapType( maxMapLevel_ ) );
-}
-
-void Levels::setCurrentMap( int level )
-{
-    currentMap = &maps[level];
 }
 

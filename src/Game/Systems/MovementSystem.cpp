@@ -10,10 +10,6 @@
 #include <cassert>
 #include <raymath.h>
 
-#if defined( DEBUG )
-#include "Debugger.h"
-#endif
-
 namespace MovementSystem
 {
     Vector2 const& updateSingle(

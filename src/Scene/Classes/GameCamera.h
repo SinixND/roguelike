@@ -22,9 +22,7 @@ namespace GameCameraModule
         Vector2 const& heroPosition
     );
 
-    RectangleExI viewportInTiles(
-        GameCamera& gameCamera
-    );
+    RectangleExI viewportInTiles( GameCamera const& gameCamera );
 
     //* Screen offset to draw target at
     [[nodiscard]]

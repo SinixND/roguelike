@@ -16,8 +16,10 @@
 #include <emscripten/html5.h>
 #endif
 
-#if defined( DEBUG )
-#include "RNG.h"
+#define DEBUG_TILEINFO
+#if defined( DEBUG ) && defined( DEBUG_TILEINFO )
+#include "Objects.h"
+#include <string>
 #endif
 
 void setupRaylib( AppConfig const& config )
@@ -157,9 +159,9 @@ void setupAppEvents( App& app )
         EventId::CURSOR_POSITION_CHANGED,
         [&]()
         {
-            Vector2I cursorPos{ Convert::worldToTile( cursor.position ) };
+            Vector2I cursorPos{ Convert::worldToTile( app.cursor.position ) };
 
-            Tiles& tiles{ levels.currentMap->tiles };
+            Tiles& tiles{ app.game.levels.currentMap->tiles };
 
             if ( !tiles.ids.contains( cursorPos ) )
             {
@@ -211,46 +213,46 @@ void setupAppEvents( App& app )
                 + "\n"
             );
 
-            Objects& objects{ levels.currentMap->objects };
+            Objects& objects{ app.game.levels.currentMap->objects };
 
-            if ( objects.ids.contains( Convert::worldToTile( cursor.position ) ) )
+            if ( objects.ids.contains( Convert::worldToTile( app.cursor.position ) ) )
             {
-                size_t objectId{ objects.ids.at( Convert::worldToTile( cursor.position ) ) };
+                size_t objectId{ objects.ids.at( Convert::worldToTile( app.cursor.position ) ) };
 
                 snx::debug::cliLog( "OBJECT\n" );
 
                 snx::debug::cliPrint(
                     "Name: "
-                    + levels.currentMap->objects.names.at( objectId )
+                    + app.game.levels.currentMap->objects.names.at( objectId )
                     + "\n"
                 );
 
                 snx::debug::cliPrint(
                     "Actions: "
-                    + levels.currentMap->objects.actions.at( objectId )
+                    + app.game.levels.currentMap->objects.actions.at( objectId )
                     + "\n"
                 );
 
                 snx::debug::cliPrint(
                     "RenderId: "
-                    + std::to_string( static_cast<int>( levels.currentMap->objects.renderIds.at( objectId ) ) )
+                    + std::to_string( static_cast<int>( app.game.levels.currentMap->objects.renderIds.at( objectId ) ) )
                     + "\n"
                 );
 
                 snx::debug::cliPrint(
                     "Event: "
-                    + std::to_string( static_cast<int>( levels.currentMap->objects.events.at( objectId ) ) )
+                    + std::to_string( static_cast<int>( app.game.levels.currentMap->objects.events.at( objectId ) ) )
                     + "\n"
                 );
             }
 
-            if ( levels.currentMap->enemies.ids.contains( cursorPos ) )
+            if ( app.game.levels.currentMap->enemies.ids.contains( cursorPos ) )
             {
                 snx::debug::cliLog( "ENEMY\n" );
 
                 snx::debug::cliPrint(
                     "Id: "
-                    + std::to_string( levels.currentMap->enemies.ids.at( cursorPos ) )
+                    + std::to_string( app.game.levels.currentMap->enemies.ids.at( cursorPos ) )
                     + "\n"
                 );
             }
@@ -296,9 +298,6 @@ namespace AppModule
         AppConfig const& config
     )
     {
-#if defined( DEBUG )
-        snx::RNG::seed( 1 );
-#endif
         setupFrameworks( config );
 
         appIO.game = GameModule::init( appIO.game );
@@ -306,8 +305,7 @@ namespace AppModule
         appIO.scene = SceneModule::init(
             appIO.scene,
             appIO.game.hero,
-            appIO.game.levels,
-            appIO.cursor
+            appIO.game.levels
         );
 
         setupAppEvents( appIO );

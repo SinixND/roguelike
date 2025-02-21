@@ -33,7 +33,7 @@ void Enemies::insert(
     RenderId renderId
 )
 {
-    size_t id{ idManager.requestId() };
+    size_t id{ idManager_.requestId() };
 
     ids.insert( tilePosition, id );
     positions.insert( id, Convert::tileToWorld( tilePosition ) );

@@ -16,9 +16,6 @@ namespace snx
         static inline GameCamera gcam_{};
 
     public:
-        static inline size_t cntr{};
-
-    public:
         static GameCamera& gcam()
         {
             return instance().gcam_;

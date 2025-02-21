@@ -5,7 +5,6 @@
 
 class DeveloperMode : public snx::Singleton<DeveloperMode>
 {
-private:
     static inline bool debugMode_{ true };
 
 public:

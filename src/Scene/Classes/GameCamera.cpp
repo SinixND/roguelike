@@ -1,8 +1,6 @@
 #include "GameCamera.h"
 
 #include "Convert.h"
-#include "EventDispatcher.h"
-#include "Events.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -24,14 +22,10 @@ namespace GameCameraModule
             0.75
         };
 
-        snx::EventDispatcher::notify( EventId::CAMERA_CHANGED );
-
         return gameCamera;
     }
 
-    RectangleExI viewportInTiles(
-        GameCamera& gameCamera
-    )
+    RectangleExI viewportInTiles( GameCamera const& gameCamera )
     {
         return RectangleExI{
             Convert::screenToTile(
@@ -44,6 +38,7 @@ namespace GameCameraModule
             )
         };
     }
+
     [[nodiscard]]
     GameCamera const& setOffset(
         GameCamera& gameCamera,
@@ -51,7 +46,6 @@ namespace GameCameraModule
     )
     {
         gameCamera.camera.offset = offset;
-        snx::EventDispatcher::notify( EventId::CAMERA_CHANGED );
 
         return gameCamera;
     }
@@ -63,7 +57,6 @@ namespace GameCameraModule
     )
     {
         gameCamera.camera.target = target;
-        snx::EventDispatcher::notify( EventId::CAMERA_CHANGED );
 
         return gameCamera;
     }
@@ -75,7 +68,6 @@ namespace GameCameraModule
     )
     {
         gameCamera.camera.zoom = zoom;
-        snx::EventDispatcher::notify( EventId::CAMERA_CHANGED );
 
         return gameCamera;
     }

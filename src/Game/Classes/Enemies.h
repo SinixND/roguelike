@@ -18,6 +18,8 @@ class Tiles;
 
 class Enemies
 {
+    snx::IdManager idManager_{};
+
 public:
     snx::DenseMap<Vector2I, size_t> ids{};
 
@@ -43,9 +45,6 @@ public:
     );
 
     void remove( size_t id );
-
-private:
-    snx::IdManager idManager{};
 };
 
 namespace EnemiesModule

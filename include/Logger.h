@@ -48,11 +48,11 @@ namespace snx
             turnMessages_.front() += message;
         }
 
-        static std::string const& getMessage( size_t index )
+        static std::string const& getMessage( size_t idx )
         {
-            assert( index < turnMessages_.size() && "Max messages per turn exceeded. See Logger.h" );
+            assert( idx < turnMessages_.size() && "Max messages per turn exceeded. See Logger.h" );
 
-            return turnMessages_[index];
+            return turnMessages_[idx];
         }
 
         static void setTurn( size_t turn )

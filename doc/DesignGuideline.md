@@ -34,8 +34,8 @@ void f(S& sIO)
 ```
 
 ## Struct/Class general
-- `struct`: POD (Plain Old Data) -> no functions
 - `class` for "single/few entities", `struct` for "many components"
+- `struct`: POD (Plain Old Data) -> no functions, members descending size
 - Name `private` member variables: name_
 - OOP/AoS if there is 1; DOD/SoA if there are more
 - Prefer NMNF function [Nmsp::f(C& o)] over member functions [o.f()], if no need for private access / public API (interface) is sufficient
@@ -88,7 +88,7 @@ namespace SSystem
     - Define it (and its member structs) in `SoA.cpp`
 
 ## SparseSet
-- Maps _integer/size_t_ `id` => `idx` and `idx` => `data` (array to array) (potentially BIG!)
+- Maps  `id` => `idx` and `idx` => `data` (array to array) (potentially BIG!)
 
 ## DenseMap 
 - Maps _arbitrary_ `id` => `idx` and `idx` => `data` (hashmap to array)

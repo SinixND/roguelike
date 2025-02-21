@@ -2,7 +2,6 @@
 #define IG20231210202055
 
 #include <cassert>
-#include <cstddef>
 #include <limits>
 #include <unordered_set>
 
@@ -10,8 +9,8 @@ namespace snx
 {
     class IdManager
     {
-        size_t maxId = std::numeric_limits<size_t>::max();
-        size_t lastId{ 0 };
+        size_t maxId_ = std::numeric_limits<size_t>::max();
+        size_t lastId_{ 0 };
 
         std::unordered_set<size_t> activeIds_{};
         std::unordered_set<size_t> freeIds_{};
@@ -55,13 +54,13 @@ namespace snx
         size_t incrementedId()
         {
             //* START WITH ID = 1
-            ++lastId;
+            ++lastId_;
 
-            assert( lastId < maxId && "ID OVERFLOWING!" );
+            assert( lastId_ < maxId_ && "ID OVERFLOWING!" );
 
-            activeIds_.insert( lastId );
+            activeIds_.insert( lastId_ );
 
-            return lastId;
+            return lastId_;
         }
     };
 }

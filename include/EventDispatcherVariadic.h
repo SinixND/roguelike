@@ -1,7 +1,6 @@
-#include <functional>
-#include <iostream>
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 enum class EventId;
 
@@ -50,7 +49,9 @@ struct Dispatcher
 };
 
 /* Example Usage
-//* Have an existing function
+#include <functional>
+#include <iostream>
+/// Have an existing function
 void exampleFunction( int a, int b )
 {
     std::cout
@@ -61,14 +62,14 @@ void exampleFunction( int a, int b )
         << "\n";
 }
 
-//* Create  an Event
+/// Create  an Event
 enum class EventId
 {
     EVENTNAME,
 };
 
-//* Create a Listener object to store
-//* This is basically a functor
+/// Create a Listener object to store
+/// This is basically a functor
 struct Listener : public ListenerBaseVirtual
 {
     std::function<void( int, int )> wrappedFunction;
@@ -89,7 +90,7 @@ struct Listener : public ListenerBaseVirtual
     }
 };
 
-//* Client code
+/// Client code
 int main()
 {
     int a = 2;

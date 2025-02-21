@@ -285,7 +285,7 @@ namespace MapGeneratorSystem
         testRoom.objects.insert(
             Vector2I{
                 0,
-                -5
+                0
             },
             "Stairs",
             "Descend",
@@ -404,15 +404,14 @@ namespace MapGeneratorSystem
             EventId::PREVIOUS_LEVEL
         );
 
-        // Add next level trigger
-        // setObject(
-        //     map.objects_,
-        //     "Descend",
-        //     Vector2I{
-        //         0,
-        //         -5},
-        //     RenderId::descend,
-        //     EventId::nextLevel);
+        //* Add next level trigger
+        map.objects.insert(
+            roomPosition,
+            "Stairs",
+            "Descend",
+            RenderId::DESCEND,
+            EventId::NEXT_LEVEL
+        );
 
         //* Add enemies
         map.enemies = EnemiesModule::createForLevel(

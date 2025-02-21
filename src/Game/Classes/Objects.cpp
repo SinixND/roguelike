@@ -15,7 +15,7 @@ void Objects::insert(
     EventId event
 )
 {
-    size_t id{ idManager.requestId() };
+    size_t id{ idManager_.requestId() };
 
     ids.insert( tilePosition, id );
     positions.insert( id, Convert::tileToWorld( tilePosition ) );
