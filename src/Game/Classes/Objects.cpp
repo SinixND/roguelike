@@ -22,5 +22,5 @@ void Objects::insert(
     renderIds.insert( id, renderId );
     names.insert( id, name );
     actions.insert( id, action );
-    events.insert( id, event );
+    eventIds.insert( id, event );
 }

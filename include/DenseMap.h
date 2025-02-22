@@ -1,6 +1,7 @@
 #ifndef IG20240128195657
 #define IG20240128195657
 
+#include "Debugger.h"
 #include <cassert>
 #include <cstddef>
 #include <unordered_map>
@@ -209,17 +210,6 @@ namespace snx
         {
             return const_cast<Type&>( std::as_const( *this ).at( key ) );
         }
-
-        // Type const& operator[]( Key const& key ) const
-        // {
-        //     return values_[index( key )];
-        // }
-        //
-        // //* Allow non-const calls
-        // Type& operator[]( Key const& key )
-        // {
-        //     return const_cast<Type&>( std::as_const( *this )[key] );
-        // }
 
         Type const& operator[]( size_t idx ) const
         {

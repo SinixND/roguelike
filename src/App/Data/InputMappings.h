@@ -26,7 +26,7 @@ struct InputMappings
         { KEY_LEFT_SHIFT, InputId::MOD },
     };
 
-    std::unordered_map<InputId, int> modifiers{
+    std::unordered_map<InputId, int> modifierToKeyboard{
         { InputId::MOD, KEY_LEFT_SHIFT },
     };
 

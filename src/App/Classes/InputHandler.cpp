@@ -28,7 +28,7 @@ InputId InputHandler::fromKeyboard()
     currentKey_ = GetKeyPressed();
 
     //* Check modifiers
-    isModifierActive_ = IsKeyDown( mappings.modifiers.at( InputId::MOD ) );
+    isModifierActive_ = IsKeyDown( mappings.modifierToKeyboard.at( InputId::MOD ) );
 
     //* Repeat last key if no input but modifier down
     if ( ( isModifierActive_

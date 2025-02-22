@@ -21,7 +21,7 @@ public:
     snx::DenseMap<size_t, RenderId> renderIds{};
     snx::DenseMap<size_t, std::string> names{};
     snx::DenseMap<size_t, std::string> actions{};
-    snx::DenseMap<size_t, EventId> events{};
+    snx::DenseMap<size_t, EventId> eventIds{};
 
 public:
     void insert(

@@ -185,14 +185,14 @@ namespace PanelSystem
             return;
         }
 
-        size_t objectId{ objects.ids.at( cursorPosition ) };
+        size_t objectIdx{ objects.ids.index( cursorPosition ) };
 
         int fontSize{ GuiGetStyle( DEFAULT, TEXT_SIZE ) };
 
         //* Draw tag and action from tile under cursor
         DrawTextEx(
             GameFont::font(),
-            TextFormat( "Object: %s\nAction: %s", objects.names.at( objectId ).c_str(), objects.actions.at( objectId ).c_str() ),
+            TextFormat( "Object: %s\nAction: %s", objects.names[objectIdx].c_str(), objects.actions[objectIdx].c_str() ),
             Vector2{
                 panels.tileInfo.left() + ( 0.5f * GameFont::fontWidth ),
                 panels.tileInfo.top() + ( 0.5f * fontSize )

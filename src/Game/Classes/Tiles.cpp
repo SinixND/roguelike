@@ -16,7 +16,10 @@ void Tiles::insert(
     VisibilityId visibilityId
 )
 {
-    size_t id{ idManager.requestId() };
+    //* Check if id exists to avoid usage of new id for existing tilePosition
+    size_t id = ( ids.contains( tilePosition ) )
+                    ? ids.at( tilePosition )
+                    : idManager_.requestId();
 
     ids.insert_or_assign( tilePosition, id );
 
@@ -56,4 +59,6 @@ void Tiles::insert(
             std::max( tilePosition.y, mapSize.bottom() )
         }
     };
+
+    assert( ids.size() == positions.size() && "Tiles.ids mismatches Tiles.positions" );
 }

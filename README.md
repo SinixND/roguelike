@@ -5,15 +5,11 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Refactor
-    - [ ] Use `values()` of Densemap where >1 SoA member-values needed (no `contains()`!)
-    - [ ] Refactor parameters to low/member level ( if < 3 members used );
-        - Split modified and const members
-        - Parameter order -> Check `DesignGuideline.md` for fake return
-
-    - [ ] Check for struct/class invariants
-        - Refactor: Extract possible NMNF functions
-    - [ ] Extract function if code is `prepare -> do -> cleanup`? Or starts with `prepare` and ends with `cleanup`?
+- [ ] Refactor: Look for struct invariants -> class
+- [ ] Refactor **functions**: Only use  
+    - for repeated code 
+    - to reduce nesting/readability
+- [ ] Check on emscripten mouse bug
 
 
 ## Shortterm
@@ -46,21 +42,18 @@ Platforms: Linux, Windows, Browser
 - [ ] Account settings via lua
 - [ ] Implement zoom?
 - [ ] Deactivate cursor trigger game action outside map panel (needed?!)
-- [ ] Setup docker (non-trvial for GUI apps)
+- [ ] Setup docker (non-trvial for GUI apps?)
 
-
-## Continuous
-- Check for possible NMNF functions
-- Check for obsolete [[maybe_unused]] and //* comments
-
-
-# Ideas
+## Ideas
 - [ ] Make game a mix of `rogue` and `factorio`
 - [ ] (Hold) KEY to show map overview
 - [ ] Lua/Jinx settings file?
 - [ ] Use shaders
     - (send matrix/vector of shadows by SetShaderValue()) and render one big black overlay with applied shader?
     - to render Fogs
+
+## Continuous
+- Check for obsolete [[maybe_unused]] and //* comments
 
 
 # Notes
@@ -172,3 +165,4 @@ Platforms: Linux, Windows, Browser
 - [x] Refactor public/private (see Notes) ~~namespace Class/Module/System~~
 - [x] Separate System (not related to class) and Module (former member functions) via namespace?
 - [x] Refactor to DenseMap<size_t, Type> (instead of SparseSet -> check emscripten)
+- [x] Refactor to fake-return function signature (returns modified parameter)

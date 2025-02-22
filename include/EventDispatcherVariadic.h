@@ -6,17 +6,18 @@ enum class EventId;
 
 class ListenerBaseVirtual
 {
-protected:
+public:
     virtual void onNotify() = 0;
     virtual ~ListenerBaseVirtual() = default;
 };
 
 using ListenerList = std::vector<std::unique_ptr<ListenerBaseVirtual>>;
 
-struct Listener;
+class Listener;
 
-struct Dispatcher
+class Dispatcher
 {
+public:
     static inline std::unordered_map<EventId, ListenerList> eventToListenerList{};
 
     static void addListener(
@@ -71,8 +72,9 @@ enum class EventId
 
 /// Create a Listener object to store
 /// This is basically a functor
-struct Listener : public ListenerBaseVirtual
+class Listener : public ListenerBaseVirtual
 {
+public:
     std::function<void( int, int )> wrappedFunction;
 
     int& a_;

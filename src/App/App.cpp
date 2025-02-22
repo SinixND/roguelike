@@ -217,31 +217,31 @@ void setupAppEvents( App& app )
 
             if ( objects.ids.contains( Convert::worldToTile( app.cursor.position ) ) )
             {
-                size_t objectId{ objects.ids.at( Convert::worldToTile( app.cursor.position ) ) };
+                size_t objectIdx{ objects.ids.index( Convert::worldToTile( app.cursor.position ) ) };
 
                 snx::debug::cliLog( "OBJECT\n" );
 
                 snx::debug::cliPrint(
                     "Name: "
-                    + app.game.levels.currentMap->objects.names.at( objectId )
+                    + app.game.levels.currentMap->objects.names[objectIdx]
                     + "\n"
                 );
 
                 snx::debug::cliPrint(
                     "Actions: "
-                    + app.game.levels.currentMap->objects.actions.at( objectId )
+                    + app.game.levels.currentMap->objects.actions[objectIdx]
                     + "\n"
                 );
 
                 snx::debug::cliPrint(
                     "RenderId: "
-                    + std::to_string( static_cast<int>( app.game.levels.currentMap->objects.renderIds.at( objectId ) ) )
+                    + std::to_string( static_cast<int>( app.game.levels.currentMap->objects.renderIds[objectIdx] ) )
                     + "\n"
                 );
 
                 snx::debug::cliPrint(
                     "Event: "
-                    + std::to_string( static_cast<int>( app.game.levels.currentMap->objects.events.at( objectId ) ) )
+                    + std::to_string( static_cast<int>( app.game.levels.currentMap->objects.eventIds[objectIdx] ) )
                     + "\n"
                 );
             }

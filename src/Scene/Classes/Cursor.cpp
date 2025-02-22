@@ -13,13 +13,11 @@ namespace CursorModule
     {
         cursor.isActive = !cursor.isActive;
 
-        if ( cursor.isActive )
-        {
-            HideCursor();
-            return cursor;
-        }
-
-        ShowCursor();
+#if !defined( EMSCRIPTEN )
+        ( cursor.isActive )
+            ? HideCursor()
+            : ShowCursor();
+#endif
 
         return cursor;
     }

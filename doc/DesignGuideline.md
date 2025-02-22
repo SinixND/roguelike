@@ -15,7 +15,7 @@
 - Input last (can have default value, needs to be rightmost in that case)
     `(out >) io > in` 
 - According to the above (see below example why to avoid ptr parameters for non-sideeffect like parameters)
-    `(&/* >) const& > v `
+    `(&/* >) const& / v `
 
 ### Example: Fake-pure, but copyless/performant and clear intention:
 ```cpp
@@ -36,6 +36,8 @@ void f(S& sIO)
 ## Struct/Class general
 - `class` for "single/few entities", `struct` for "many components"
 - `struct`: POD (Plain Old Data) -> no functions, members descending size
+    - `struct` can have a non-default ctor, but no private members or a base class
+    - NOTE: According to deprectated `is_trivial` and `is_standard_layout` struct can have member funcitons
 - Name `private` member variables: name_
 - OOP/AoS if there is 1; DOD/SoA if there are more
 - Prefer NMNF function [Nmsp::f(C& o)] over member functions [o.f()], if no need for private access / public API (interface) is sufficient
@@ -102,17 +104,20 @@ void func(int arg)
 
 struct fFunctor
 {
-  void operator()(int arg) {func(arg);}
-
-  fFunctor() = default;
-  fFunctor(int arg, bool ctorTrigger = false)
-  {
-    if (ctorTrigger)
-    {
-      std::cout << "Trigger in ctor: ";
-      func(arg);
+    int arg;
+    void operator()(int arg) {
+        func(arg);
     }
-  }
+
+    fFunctor() = default;
+    fFunctor(int arg, bool ctorTrigger = false)
+    {
+        if (ctorTrigger)
+        {
+            std::cout << "Trigger in ctor: ";
+            func(arg);
+        }
+    }
 };
 ```
 

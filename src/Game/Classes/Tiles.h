@@ -10,7 +10,7 @@
 
 class Tiles
 {
-    snx::IdManager idManager{};
+    snx::IdManager idManager_{};
 
 public:
     snx::DenseMap<Vector2I, size_t> ids{};

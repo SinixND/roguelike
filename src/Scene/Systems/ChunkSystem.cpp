@@ -88,15 +88,15 @@ namespace ChunkSystem
                         continue;
                     }
 
-                    size_t tileId{ tiles.ids.at( tilePosition ) };
+                    size_t tileIdx{ tiles.ids.index( tilePosition ) };
 
                     RenderSystem::renderTexture(
                         textures,
                         Vector2Subtract(
-                            tiles.positions.at( tileId ),
+                            tiles.positions[tileIdx],
                             chunk.position
                         ),
-                        tiles.renderIds.at( tileId )
+                        tiles.renderIds[tileIdx]
                     );
                 }
             }

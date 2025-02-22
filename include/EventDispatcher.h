@@ -28,7 +28,7 @@ namespace snx
         )
         {
 #if defined( DEBUG )
-            debug::cliLog( "Listener added for event '", eventNames.at( event ), "'.\n" );
+            debug::cliLog( "Listener added for event '", eventIdToName.at( event ), "'.\n" );
 #endif
             ensureList( event );
 
@@ -44,7 +44,7 @@ namespace snx
         static void notify( EventId event )
         {
 #if defined( DEBUG )
-            debug::cliLog( "Notify about event '", eventNames.at( event ), "'.\n" );
+            debug::cliLog( "Notify about event '", eventIdToName.at( event ), "'.\n" );
 #endif
             for ( std::function<void()>& listener : eventToListenerLists_[event] )
             {

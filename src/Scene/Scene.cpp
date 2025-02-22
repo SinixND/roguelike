@@ -127,11 +127,11 @@ void renderOutput(
     for ( size_t idx{ 0 }; idx < enemies.renderIds.values().size(); ++idx )
     {
         if (
-            tiles.visibilityIds.at(
-                tiles.ids.at( Convert::worldToTile(
+            tiles.visibilityIds[tiles.ids.index(
+                Convert::worldToTile(
                     enemies.positions.values()[idx]
-                ) )
-            )
+                )
+            )]
             != VisibilityId::VISIBILE
         )
         {

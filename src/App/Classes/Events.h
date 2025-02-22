@@ -21,7 +21,7 @@ enum class EventId
     WINDOW_RESIZED,
 };
 
-inline std::unordered_map<EventId, std::string> eventNames{
+inline std::unordered_map<EventId, std::string> const eventIdToName{
     { EventId::NONE, "None" },
     { EventId::CHANGE_COLOR_THEME, "Change color theme" },
     { EventId::CURSOR_POSITION_CHANGED, "Cursor position changed" },

@@ -44,7 +44,7 @@ Hero const& processDirectionalInput(
         EnergyModule::consume( heroIO.energy );
 
         HealthModule::damage(
-            mapIO.enemies.healths.at( mapIO.enemies.ids.at( target ) ),
+            mapIO.enemies.healths[mapIO.enemies.ids.index( target )],
             DamageModule::damageRNG( heroIO.damage )
         );
     }
@@ -193,7 +193,7 @@ namespace ActionSystem
 
                     snx::Logger::log( "Hero deals " );
                     HealthModule::damage(
-                        mapIO.enemies.healths.at( mapIO.enemies.ids.at( path.rbegin()[1] ) ),
+                        mapIO.enemies.healths[mapIO.enemies.ids.index( path.rbegin()[1] )],
                         DamageModule::damageRNG( heroIO.damage )
                     );
 
@@ -240,14 +240,14 @@ namespace ActionSystem
                     size_t objectId{ mapIO.objects.ids.at( Convert::worldToTile( heroIO.position ) ) };
 
                     //* Wait if nothing to interact
-                    if ( mapIO.objects.events.contains( objectId ) )
+                    if ( mapIO.objects.eventIds.contains( objectId ) )
                     {
 #if defined( DEBUG )
                         snx::debug::cliLog( "Hero interacts.\n" );
 #endif
                         EnergyModule::consume( heroIO.energy );
 
-                        snx::EventDispatcher::notify( mapIO.objects.events.at( objectId ) );
+                        snx::EventDispatcher::notify( mapIO.objects.eventIds.at( objectId ) );
 
                         break;
                     }

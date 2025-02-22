@@ -313,7 +313,7 @@ namespace VisibilitySystem
         fogsIO.clear();
 
         //* Hero is always visible
-        tiles.visibilityIds.at( tiles.ids.at( heroPosition ) ) = VisibilityId::VISIBILE;
+        tiles.visibilityIds[tiles.ids.index( heroPosition )] = VisibilityId::VISIBILE;
 
         //* Iterate octants:
         //* Orientation dependent range (horizontal, vertical)
