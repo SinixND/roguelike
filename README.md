@@ -58,7 +58,9 @@ Platforms: Linux, Windows, Browser
 - [ ] Make game a mix of `rogue` and `factorio`
 - [ ] (Hold) KEY to show map overview
 - [ ] Lua/Jinx settings file?
-- [ ] Use shaders (send matrix/vector of shadows by SetShaderValue()) and render one big black overlay with applied shader?
+- [ ] Use shaders
+    - (send matrix/vector of shadows by SetShaderValue()) and render one big black overlay with applied shader?
+    - to render Fogs
 
 
 # Notes

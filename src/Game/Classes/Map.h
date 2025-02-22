@@ -9,9 +9,9 @@
 
 struct Map
 {
-    Tiles tiles{};
-    Objects objects{};
     Enemies enemies{};
+    Objects objects{};
+    Tiles tiles{};
     snx::DenseMap<Vector2I, Fog> fogs{};
 };
 

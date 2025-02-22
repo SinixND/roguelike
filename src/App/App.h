@@ -11,11 +11,11 @@
 
 struct App
 {
-    Game game{};
-
     Scene scene{};
 
     InputHandler inputHandler{};
+
+    Game game{};
 
     Cursor cursor{};
 

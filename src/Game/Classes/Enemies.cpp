@@ -43,7 +43,7 @@ void Enemies::insert(
     energies.insert( id, energy );
     healths.insert( id, health );
     damages.insert( id, damage );
-    ais.insert( id, AIComponent{ scanRange } );
+    ais.insert( id, AIComponent{ .scanRange = scanRange } );
 }
 
 void Enemies::remove( size_t id )
@@ -228,7 +228,7 @@ namespace EnemiesModule
     size_t getActive(
         snx::DenseMap<size_t, EnergyComponent> const& energies,
         snx::DenseMap<size_t, AIComponent> const& ais,
-        int const turn
+        size_t const turn
     )
     {
         size_t activeEnemyId{ 0 };

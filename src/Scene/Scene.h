@@ -16,10 +16,9 @@ enum class InputId;
 struct Scene
 {
     Panels panels{};
-    GameCamera gameCamera{};
-    RenderData renderData{};
-
     snx::DenseMap<Vector2I, Chunk> chunks{};
+    RenderData renderData{};
+    GameCamera gameCamera{};
 };
 
 namespace SceneModule

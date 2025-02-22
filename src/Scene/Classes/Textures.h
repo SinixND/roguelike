@@ -8,9 +8,10 @@
 
 struct Textures
 {
+    std::unordered_map<RenderId, Vector2> textureIdToAtlasPosition{};
+
     //* Texture atlas
     Texture2D atlas{};
-    std::unordered_map<RenderId, Vector2> textureIdToAtlasPosition{};
 };
 
 namespace TexturesModule

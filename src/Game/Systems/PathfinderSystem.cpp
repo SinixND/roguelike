@@ -33,8 +33,8 @@ struct AStarTile
 {
     Vector2I tilePosition{};
     Vector2I offsetToTarget{};
-    int stepsNeeded{};
     AStarTile* ancestor{ nullptr };
+    int stepsNeeded{};
     int penalty{ 0 };
 
     AStarTile(
@@ -45,8 +45,8 @@ struct AStarTile
     )
         : tilePosition( tilePosition )
         , offsetToTarget( Vector2Subtract( target, tilePosition ) )
-        , stepsNeeded( stepsNeeded )
         , ancestor( ancestor )
+        , stepsNeeded( stepsNeeded )
     {
     }
 };

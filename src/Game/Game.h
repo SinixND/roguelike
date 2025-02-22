@@ -10,9 +10,9 @@ struct GameCamera;
 
 struct Game
 {
-    Levels levels{};
-
     Hero hero{};
+
+    Levels levels{};
 
     //* Track game turns
     size_t turn{ 1 };

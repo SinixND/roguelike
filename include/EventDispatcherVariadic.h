@@ -4,8 +4,9 @@
 
 enum class EventId;
 
-struct ListenerBaseVirtual
+class ListenerBaseVirtual
 {
+protected:
     virtual void onNotify() = 0;
     virtual ~ListenerBaseVirtual() = default;
 };

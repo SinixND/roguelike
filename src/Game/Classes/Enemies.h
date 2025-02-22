@@ -90,7 +90,7 @@ namespace EnemiesModule
     size_t getActive(
         snx::DenseMap<size_t, EnergyComponent> const& energies,
         snx::DenseMap<size_t, AIComponent> const& ais,
-        int const turn
+        size_t const turn
     );
 
     [[nodiscard]]

@@ -12,9 +12,9 @@
 //* - center position
 struct Chunk
 {
+    RenderTexture renderTexture{};
     RectangleExI rectangle{};
     Vector2 position{};
-    RenderTexture renderTexture{};
 
     Chunk() = default;
 
@@ -22,7 +22,8 @@ struct Chunk
         Vector2 const& position,
         RenderTexture const& texture
     )
-        : rectangle(
+        : renderTexture( texture )
+        , rectangle(
               RectangleExI{
                   Convert::worldToTile( position ).x,
                   Convert::worldToTile( position ).y,
@@ -31,7 +32,6 @@ struct Chunk
               }
           )
         , position( position )
-        , renderTexture( texture )
     {
     }
 };
