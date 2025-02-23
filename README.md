@@ -5,7 +5,6 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Refactor: Look for struct invariants -> class
 - [ ] Refactor **functions**: Only use  
     - for repeated code 
     - to reduce nesting/readability

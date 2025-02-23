@@ -94,10 +94,10 @@ void renderOutput(
     //* Draw viewport content
     BeginMode2D( scene.gameCamera.camera );
     BeginScissorMode(
-        scene.gameCamera.viewport->left(),
-        scene.gameCamera.viewport->top(),
-        scene.gameCamera.viewport->width(),
-        scene.gameCamera.viewport->height()
+        scene.panels.map.left(),
+        scene.panels.map.top(),
+        scene.panels.map.width(),
+        scene.panels.map.height()
     );
 
     //* Levels

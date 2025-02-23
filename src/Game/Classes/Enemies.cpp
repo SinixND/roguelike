@@ -8,6 +8,7 @@
 #include "EnergyComponent.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
+#include "Logger.h"
 #include "MovementComponent.h"
 #include "MovementSystem.h"
 #include "RNG.h"
@@ -38,6 +39,7 @@ void Enemies::insert(
     ids.insert( tilePosition, id );
     positions.insert( id, Convert::tileToWorld( tilePosition ) );
     renderIds.insert( id, renderId );
+    names.insert( id, enemyNames.at( renderId ) );
     transforms.insert( id, transform );
     movements.insert( id, movement );
     energies.insert( id, energy );
@@ -51,6 +53,7 @@ void Enemies::remove( size_t id )
     ids.erase( Convert::worldToTile( positions.at( id ) ) );
     positions.erase( id );
     renderIds.erase( id );
+    names.erase( id );
     transforms.erase( id );
     movements.erase( id );
     energies.erase( id );
@@ -258,6 +261,7 @@ namespace EnemiesModule
             //* Kill enemy at 0 health
             if ( enemies.healths[idx].currentHealth <= 0 )
             {
+                snx::Logger::log( enemies.names[idx] + " died.\n" );
                 enemies.remove( enemies.ids[idx]
                 );
 

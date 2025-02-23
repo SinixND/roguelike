@@ -26,6 +26,7 @@ public:
     snx::DenseMap<size_t, AIComponent> ais{};
     snx::DenseMap<size_t, Vector2> positions{};
     snx::DenseMap<size_t, RenderId> renderIds{};
+    snx::DenseMap<size_t, std::string> names{};
     snx::DenseMap<size_t, TransformComponent> transforms{};
     snx::DenseMap<size_t, MovementComponent> movements{};
     snx::DenseMap<size_t, EnergyComponent> energies{};

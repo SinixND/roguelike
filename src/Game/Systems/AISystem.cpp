@@ -6,7 +6,6 @@
 #include "Enemies.h"
 #include "HealthComponent.h"
 #include "Hero.h"
-#include "Logger.h"
 #include "Map.h"
 #include "MovementSystem.h"
 #include "PathfinderSystem.h"
@@ -33,11 +32,10 @@ Enemies& executeAction(
     {
         //* Attack
 #if defined( DEBUG )
-        snx::debug::cliLog( "Enemy[", enemyId, "] attacks.\n" );
+        snx::debug::cliLog( "Enemy[", enemyId, "] attacks and deals" );
 #endif
         EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
 
-        snx::Logger::log( "Hero takes " );
         HealthModule::damage(
             heroHealthIO,
             DamageModule::damageRNG( enemiesIO.damages.at( enemyId ) )

@@ -1,14 +1,12 @@
 #include "DamageComponent.h"
 
-// #define DEBUG_DAMAGE
+#define DEBUG_DAMAGE
 
-#include "Logger.h"
 #include "RNG.h"
 #include <raylib.h>
 
 #if defined( DEBUG ) && defined( DEBUG_DAMAGE )
 #include "Debugger.h"
-#include <string>
 #endif
 
 namespace DamageModule
@@ -21,7 +19,9 @@ namespace DamageModule
                              < damageComponent.critChanceFactor )
                          * damageComponent.critDamageFactor );
 
-        snx::Logger::logAppend( TextFormat( "%i damage", damage ) );
+#if defined( DEBUG )
+        snx::debug::cliPrint( TextFormat( "%i damage", damage ) );
+#endif
 
         return damage;
     }

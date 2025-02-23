@@ -38,9 +38,8 @@ Hero const& processDirectionalInput(
     if ( mapIO.enemies.ids.contains( target ) )
     {
 #if defined( DEBUG )
-        snx::debug::cliLog( "Hero attacks.\n" );
+        snx::debug::cliLog( "Hero attacks and deals " );
 #endif
-        snx::Logger::log( "Hero deals " );
         EnergyModule::consume( heroIO.energy );
 
         HealthModule::damage(
