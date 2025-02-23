@@ -13,14 +13,14 @@ namespace GameCameraModule
         Vector2 const& heroPosition
     )
     {
-        gameCamera.viewport = &viewport;
-
         gameCamera.camera = Camera2D{
             viewport.center(),
             heroPosition,
             0,
             0.75
         };
+
+        gameCamera.viewport = &viewport;
 
         return gameCamera;
     }
@@ -40,35 +40,35 @@ namespace GameCameraModule
     }
 
     [[nodiscard]]
-    GameCamera const& setOffset(
-        GameCamera& gameCamera,
+    Camera2D const& setOffset(
+        Camera2D& camera,
         Vector2 const& offset
     )
     {
-        gameCamera.camera.offset = offset;
+        camera.offset = offset;
 
-        return gameCamera;
+        return camera;
     }
 
     [[nodiscard]]
-    GameCamera const& setTarget(
-        GameCamera& gameCamera,
+    Camera2D const& setTarget(
+        Camera2D& camera,
         Vector2 const& target
     )
     {
-        gameCamera.camera.target = target;
+        camera.target = target;
 
-        return gameCamera;
+        return camera;
     }
 
     [[nodiscard]]
-    GameCamera const& setZoom(
-        GameCamera& gameCamera,
+    Camera2D const& setZoom(
+        Camera2D& camera,
         float zoom
     )
     {
-        gameCamera.camera.zoom = zoom;
+        camera.zoom = zoom;
 
-        return gameCamera;
+        return camera;
     }
 }

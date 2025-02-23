@@ -21,8 +21,8 @@ namespace Convert
     {
         //* World pixel is center of tile
         return Vector2I{
-            static_cast<int>( std::floor( ( pixel.x + ( TileData::tileSizeHalf ) ) / TileData::tileSize ) ),
-            static_cast<int>( std::floor( ( pixel.y + ( TileData::tileSizeHalf ) ) / TileData::tileSize ) )
+            static_cast<int>( std::floor( ( pixel.x ) / TileData::tileSize ) ),
+            static_cast<int>( std::floor( ( pixel.y ) / TileData::tileSize ) )
         };
     }
 

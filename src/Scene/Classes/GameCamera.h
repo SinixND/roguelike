@@ -26,21 +26,21 @@ namespace GameCameraModule
 
     //* Screen offset to draw target at
     [[nodiscard]]
-    GameCamera const& setOffset(
-        GameCamera& gameCamera,
+    Camera2D const& setOffset(
+        Camera2D& camera,
         Vector2 const& offset
     );
 
     //* World position to draw at offset
     [[nodiscard]]
-    GameCamera const& setTarget(
-        GameCamera& gameCamera,
+    Camera2D const& setTarget(
+        Camera2D& camera,
         Vector2 const& target
     );
 
     [[nodiscard]]
-    GameCamera const& setZoom(
-        GameCamera& gameCamera,
+    Camera2D const& setZoom(
+        Camera2D& camera,
         float zoom
     );
 }

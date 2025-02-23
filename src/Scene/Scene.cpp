@@ -47,8 +47,8 @@ void setupSceneEvents(
         EventId::HERO_MOVED,
         [&]()
         {
-            scene.gameCamera = GameCameraModule::setTarget(
-                scene.gameCamera,
+            scene.gameCamera.camera = GameCameraModule::setTarget(
+                scene.gameCamera.camera,
                 hero.position
             );
         }
