@@ -34,7 +34,7 @@ void setupSceneEvents(
         EventId::CHANGE_COLOR_THEME,
         [&]()
         {
-            RenderSystem::cycleThemes( scene.renderData.theme );
+            scene.renderData.theme = RenderSystem::cycleThemes( scene.renderData.theme );
 
             scene.renderData = RenderSystem::loadRenderData( scene.renderData );
 

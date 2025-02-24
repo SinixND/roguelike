@@ -5,22 +5,16 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Refactor **functions**: Only use  
-    - for repeated code 
-    - to reduce nesting/readability
 - [ ] Check on emscripten mouse bug
+    - if window is width/2, mousePosition is off by x2
 
 
 ## Shortterm
-- [ ] Check Event System for unnecessary complexity (only cross scene <-> game necessary?)
 - [ ] Replace //* with /// for function descriptions)
-- [ ] Make internal members private (if no external references)
-- [x] Separate fog calculation from visibility calculation
-- [ ] Split Component(temp) and Data(persistent)? (existential)
-- [ ] Implement tests/tdd (what behaviour do I want (to implement) -> test -> write code)
 - [ ] Implement ncurses (raycurses?) -> Redesign Panels
     - Layers (bottom-up): Map -> LevelInfo -> Stats (minimal: HP, EXP; overlay-toggle) -> Log/TileInfo (exclusive)
 - [ ] End/Restart game on death
+- [ ] Exp System
 - [ ] Add AI behaviour with new enemy types
 
     | Default state before attacked                          | Name       |
@@ -165,3 +159,4 @@ Platforms: Linux, Windows, Browser
 - [x] Separate System (not related to class) and Module (former member functions) via namespace?
 - [x] Refactor to DenseMap<size_t, Type> (instead of SparseSet -> check emscripten)
 - [x] Refactor to fake-return function signature (returns modified parameter)
+- [x] Separate fog calculation from visibility calculation

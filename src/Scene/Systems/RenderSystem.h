@@ -29,6 +29,7 @@ namespace RenderSystem
         Fog fog
     );
 
+    [[nodiscard]]
     size_t cycleThemes( size_t theme );
 
     void deinit( Textures const& textures );
