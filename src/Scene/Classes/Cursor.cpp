@@ -30,22 +30,22 @@ namespace CursorModule
     )
     {
         //* Update cursor position if active
-        if ( cursor.isActive )
+        if ( !cursor.isActive )
         {
-            Vector2I mouseTile{ Convert::screenToTile( GetMousePosition(), camera ) };
-
-            if ( !( Convert::worldToTile( cursor.position ) == mouseTile ) )
-            {
-                cursor.position = Convert::tileToWorld( mouseTile );
-
-                snx::EventDispatcher::notify( EventId::CURSOR_POSITION_CHANGED );
-            }
+            //* Keep cursor on hero if inactive
+            cursor.position = Convert::tileToWorld( heroPosition );
 
             return cursor;
         }
 
-        //* Keep cursor on hero if inactive
-        cursor.position = Convert::tileToWorld( heroPosition );
+        Vector2I mouseTile{ Convert::screenToTile( GetMousePosition(), camera ) };
+
+        if ( !( Convert::worldToTile( cursor.position ) == mouseTile ) )
+        {
+            cursor.position = Convert::tileToWorld( mouseTile );
+
+            snx::EventDispatcher::notify( EventId::CURSOR_POSITION_CHANGED );
+        }
 
         return cursor;
     }

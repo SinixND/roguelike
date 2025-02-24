@@ -9,6 +9,7 @@ Platforms: Linux, Windows, Browser
     - for repeated code 
     - to reduce nesting/readability
 - [ ] Check on emscripten mouse bug
+    - if window is width/2, mousePosition is off by x2
 
 
 ## Shortterm

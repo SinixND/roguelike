@@ -5,7 +5,6 @@
 #include <raylib.h>
 
 struct Camera2D;
-typedef struct Camera2D Camera2D;
 struct Vector2I;
 
 struct Cursor
