@@ -9,6 +9,10 @@ struct Chunk;
 enum class Fog;
 struct RenderData;
 struct Textures;
+class Panel;
+struct Hero;
+class Objects;
+struct Vector2I;
 
 namespace RenderSystem
 {
@@ -28,6 +32,20 @@ namespace RenderSystem
         Vector2 const& fogPosition,
         Fog fog
     );
+
+    void renderStatusPanel(
+        Panel const& statusPanel,
+        Hero const& hero,
+        int mapLevel
+    );
+
+    void renderInfoPanel(
+        Panel const& infoPanel,
+        Objects const& objects,
+        Vector2I const& cursorPosition
+    );
+
+    void renderLogPanel( Panel const& logPanel );
 
     size_t cycleThemes( size_t theme );
 

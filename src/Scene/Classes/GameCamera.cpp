@@ -17,7 +17,7 @@ namespace GameCameraModule
             viewport.center(),
             heroPosition,
             0,
-            0.75
+            0.5
         };
 
         gameCamera.viewport = &viewport;

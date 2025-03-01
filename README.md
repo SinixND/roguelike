@@ -5,10 +5,11 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Refactor **functions**: Only use  
-    - for repeated code 
-    - to reduce nesting/readability
-- [ ] Check on emscripten mouse bug
+- [ ] Rework panels -> Layers
+    - Map [whole]
+    - Status (Level, Herostats) [top]
+    - Log [top, below status]
+    - Info (tile or object info) [bottom]
 
 
 ## Shortterm
@@ -18,8 +19,7 @@ Platforms: Linux, Windows, Browser
 - [x] Separate fog calculation from visibility calculation
 - [ ] Split Component(temp) and Data(persistent)? (existential)
 - [ ] Implement tests/tdd (what behaviour do I want (to implement) -> test -> write code)
-- [ ] Implement ncurses (raycurses?) -> Redesign Panels
-    - Layers (bottom-up): Map -> LevelInfo -> Stats (minimal: HP, EXP; overlay-toggle) -> Log/TileInfo (exclusive)
+- [ ] Implement ncurses (raycurses?) 
 - [ ] End/Restart game on death
 - [ ] Add AI behaviour with new enemy types
 
@@ -53,6 +53,7 @@ Platforms: Linux, Windows, Browser
 
 ## Continuous
 - Check for obsolete [[maybe_unused]] and //* comments
+- [ ] Check on emscripten mouse bug [seems to be emscripten side, investigate later; probably not an easy fix]
 
 
 # Notes
