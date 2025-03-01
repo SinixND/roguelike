@@ -300,7 +300,7 @@ namespace GameModule
             snx::debug::cliLog( "Hero ready. Next Turn\n\n" );
 #endif
             ++game.turn;
-            snx::Logger::setTurn( game.turn );
+            snx::Logger::incrementTurn();
         }
 
         return game;

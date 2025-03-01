@@ -1,6 +1,7 @@
 #ifndef IG20240601015436
 #define IG20240601015436
 
+#include "raygui.h"
 #include <raylib.h>
 
 class GameFont
@@ -8,8 +9,7 @@ class GameFont
     static inline Font font_{};
 
 public:
-    static inline float const fontHeight{ 24 };
-    //* raygui font padding is 4
+    static inline float fontSize{ 16 };
     static inline float fontWidth{};
 
 public:
@@ -17,7 +17,7 @@ public:
     {
         font_ = LoadFontEx(
             "assets/fonts/LiberationMono-Regular.ttf",
-            GameFont::fontHeight,
+            GameFont::fontSize,
             nullptr,
             0
         );
@@ -25,9 +25,9 @@ public:
         fontWidth = static_cast<float>(
             MeasureTextEx(
                 font_,
-                "1",
-                fontHeight,
-                0
+                "X",
+                fontSize,
+                GuiGetStyle( DEFAULT, TEXT_SPACING )
             )
                 .x
         );
@@ -35,7 +35,6 @@ public:
 
     static void unload() { UnloadFont( font_ ); }
 
-public:
     static Font const& font()
     {
         return font_;

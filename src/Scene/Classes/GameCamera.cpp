@@ -1,6 +1,8 @@
 #include "GameCamera.h"
 
 #include "Convert.h"
+#include "GameFont.h"
+#include "TileData.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -17,7 +19,8 @@ namespace GameCameraModule
             viewport.center(),
             heroPosition,
             0,
-            0.75
+            // 0.5
+            GameFont::fontSize / TileData::tileSize
         };
 
         gameCamera.viewport = &viewport;

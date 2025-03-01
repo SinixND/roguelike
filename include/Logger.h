@@ -2,6 +2,7 @@
 #define IG20250104224727
 
 #include <cassert>
+#include <cstring>
 #include <deque>
 #include <string>
 
@@ -12,7 +13,7 @@ namespace snx
 {
     class Logger
     {
-        static inline size_t turn_{ 0 };
+        static inline size_t turn_{ 1 };
         static inline size_t lastTurn_{ 0 };
 
         static inline std::deque<std::string> turnMessages_{ maxMessagesPerTurn, "" };
@@ -21,15 +22,11 @@ namespace snx
         static inline std::deque<std::string> history_{ historySizeMax, "" };
 
     public:
-        /// Logs single line message
-        static void log(
-            std::string const& message
-        )
+        static void updateHistory()
         {
-            //* Update history
-            if ( lastTurn_ < turn_ )
+            if ( lastTurn_ == ( turn_ - 1 ) )
             {
-                lastTurn_ = turn_;
+                lastTurn_ = turn_ - 1;
 
                 for ( auto& turnMessage : turnMessages_ )
                 {
@@ -38,14 +35,28 @@ namespace snx
                     turnMessage = "";
                 }
             }
+        }
+
+        /// Logs single line message
+        static void log(
+            std::string const& message
+        )
+        {
+            lastTurn_ = turn_;
 
             turnMessages_.pop_back();
+
             turnMessages_.push_front( "[" + std::to_string( turn_ ) + "] " + message );
         }
 
         static void logAppend( std::string const& message )
         {
             turnMessages_.front() += message;
+        }
+
+        static size_t hasTurnMessage()
+        {
+            return turnMessages_.size();
         }
 
         static std::string const& getMessage( size_t idx )
@@ -55,9 +66,10 @@ namespace snx
             return turnMessages_[idx];
         }
 
-        static void setTurn( size_t turn )
+        static void incrementTurn()
         {
-            turn_ = turn;
+            updateHistory();
+            ++turn_;
         }
     };
 }

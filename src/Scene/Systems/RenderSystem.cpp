@@ -1,13 +1,18 @@
 #include "RenderSystem.h"
-#include "Data/TextureData.h"
-#include "Fog.h"
-#include "RenderData.h"
+#include "PanelSystem.h"
 
 //* #define DEBUG_CHUNKS
 #define DEBUG_VISIBILITY
 
 #include "Chunk.h"
 #include "ChunkData.h"
+#include "Fog.h"
+#include "GameFont.h"
+#include "Hero.h"
+#include "Logger.h"
+#include "Objects.h"
+#include "Panels.h"
+#include "RenderData.h"
 #include "RenderId.h"
 #include "TextureData.h"
 #include "Textures.h"
@@ -157,6 +162,101 @@ namespace RenderSystem
             TileData::tileDimensions,
             tint
         );
+    }
+
+    void renderStatusPanel(
+        Panel const& statusPanel,
+        Hero const& hero,
+        int mapLevel,
+        Color const& bgColor,
+        float borderWidth
+    )
+    {
+        PanelSystem::drawPanelBackground( statusPanel, bgColor );
+        PanelSystem::drawPanelBorder( statusPanel, borderWidth );
+
+        DrawTextEx(
+            GameFont::font(),
+            TextFormat(
+                "| Floor:%2i | HP:%3i/%3i | ATK:%3i |",
+                mapLevel,
+                hero.health.currentHealth,
+                hero.health.maxHealth,
+                DamageModule::damageAverage( hero.damage )
+            ),
+            Vector2{
+                statusPanel.inner().left(),
+                statusPanel.inner().top()
+            },
+            GameFont::fontSize,
+            GuiGetStyle( DEFAULT, TEXT_SPACING ),
+            RAYWHITE
+        );
+    }
+
+    void renderInfoPanel(
+        Panel const& infoPanel,
+        Objects const& objects,
+        Vector2I const& cursorPosition,
+        Color const& bgColor,
+        float borderWidth
+    )
+    {
+        PanelSystem::drawPanelBackground( infoPanel, bgColor );
+
+        if ( !objects.ids.contains( cursorPosition ) )
+        {
+            return;
+        }
+
+        PanelSystem::drawPanelBorder( infoPanel, borderWidth );
+
+        size_t objectIdx{ objects.ids.index( cursorPosition ) };
+
+        //* Draw tag and action from tile under cursor
+        DrawTextEx(
+            GameFont::font(),
+            TextFormat( "[Object] %s: %s", objects.names[objectIdx].c_str(), objects.actions[objectIdx].c_str() ),
+            Vector2{
+                infoPanel.inner().left(),
+                infoPanel.inner().top()
+            },
+            GameFont::fontSize,
+            0,
+            LIGHTGRAY
+        );
+    }
+
+    void renderLogPanel(
+        Panel const& logPanel,
+        Color const& bgColor,
+        float borderWidth
+    )
+    {
+        if ( !snx::Logger::hasTurnMessage() )
+        {
+            return;
+        }
+
+        PanelSystem::drawPanelBackground( logPanel, bgColor );
+        PanelSystem::drawPanelBorder( logPanel, borderWidth );
+
+        float lines{ ( logPanel.inner().height() / ( 1.5f * GameFont::fontSize ) ) - 1 };
+
+        for ( int n{ 0 }; n < lines; ++n )
+        {
+            DrawTextEx(
+                GameFont::font(),
+                snx::Logger::getMessage( n ).c_str(),
+                Vector2{
+                    logPanel.inner().left(),
+                    logPanel.inner().top() + ( n * 1.5f * GameFont::fontSize )
+                },
+                GameFont::fontSize,
+                0,
+                LIGHTGRAY
+            );
+        }
     }
 
     [[nodiscard]]

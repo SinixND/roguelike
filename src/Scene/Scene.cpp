@@ -94,10 +94,10 @@ void renderOutput(
     //* Draw viewport content
     BeginMode2D( scene.gameCamera.camera );
     BeginScissorMode(
-        scene.panels.map.left(),
-        scene.panels.map.top(),
-        scene.panels.map.width(),
-        scene.panels.map.height()
+        scene.panels.map.inner().left(),
+        scene.panels.map.inner().top(),
+        scene.panels.map.inner().width(),
+        scene.panels.map.inner().height()
     );
 
     //* Levels
@@ -178,25 +178,30 @@ void renderOutput(
     EndScissorMode();
     EndMode2D();
 
-    PanelSystem::drawLogPanelContent( scene.panels );
+    Color bgColor{ 0, 0, 0, 127 };
+    float borderWidth{ 1.0f };
 
-    PanelSystem::drawHeroInfoPanelContent(
-        scene.panels,
-        hero
+    RenderSystem::renderStatusPanel(
+        scene.panels.status,
+        hero,
+        currentMapLevel,
+        bgColor,
+        0
     );
 
-    PanelSystem::drawTileInfoPanelContent(
-        scene.panels,
+    RenderSystem::renderInfoPanel(
+        scene.panels.info,
         currentMap.objects,
-        Convert::worldToTile( cursor.position )
+        Convert::worldToTile( cursor.position ),
+        bgColor,
+        borderWidth
     );
 
-    PanelSystem::drawGameInfoPanelContent(
-        scene.panels,
-        currentMapLevel
+    RenderSystem::renderLogPanel(
+        scene.panels.log,
+        bgColor,
+        0
     );
-
-    PanelSystem::drawPanelBorders( scene.panels );
 }
 
 void drawWindowBorder()
@@ -221,7 +226,7 @@ namespace SceneModule
 
         scene.gameCamera = GameCameraModule::init(
             scene.gameCamera,
-            scene.panels.map,
+            scene.panels.map.box(),
             hero.position
         );
 

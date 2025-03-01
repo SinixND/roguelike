@@ -480,7 +480,7 @@ rtest:
 
 rweb:
 	@$(MAKE) PLATFORM=web BUILD=debug build -j
-	http-server -o bin/web/release/$(BIN)$(BIN_EXT) -c-1
+	http-server -o bin/web/debug/$(BIN)$(BIN_EXT) -c-1
 
 test:
 	$(info )
@@ -491,6 +491,7 @@ test:
 web:
 	$(info )
 	$(info === Web build ===)
+	@$(MAKE) PLATFORM=web BUILD=debug build
 	@$(MAKE) PLATFORM=web BUILD=release build
 
 ### Rule for windows build process

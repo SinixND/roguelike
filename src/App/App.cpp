@@ -45,7 +45,7 @@ void setupRaylib( AppConfig const& config )
 
     //* Fonts
     GameFont::load();
-    GuiSetStyle( DEFAULT, TEXT_SIZE, GameFont::fontHeight );
+    GuiSetStyle( DEFAULT, TEXT_SIZE, GameFont::fontSize );
 }
 
 void setupNcurses() {}
@@ -275,7 +275,7 @@ void setupAppEvents( App& app )
 
             app.scene.gameCamera = GameCameraModule::init(
                 app.scene.gameCamera,
-                app.scene.panels.map,
+                app.scene.panels.map.box(),
                 app.game.hero.position
             );
 
