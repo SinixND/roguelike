@@ -192,7 +192,7 @@ namespace EnemiesModule
         return enemies;
     }
 
-    Enemies const& createForLevel(
+    Enemies const& createForMapLevel(
         Enemies& enemies,
         Tiles const& tiles,
         int mapLevel

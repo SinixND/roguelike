@@ -19,7 +19,6 @@ namespace GameCameraModule
             viewport.center(),
             heroPosition,
             0,
-            // 0.5
             GameFont::fontSize / TileData::tileSize
         };
 

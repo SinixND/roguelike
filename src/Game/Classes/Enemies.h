@@ -66,7 +66,7 @@ namespace EnemiesModule
     );
 
     [[nodiscard]]
-    Enemies const& createForLevel(
+    Enemies const& createForMapLevel(
         Enemies& enemies,
         Tiles const& tiles,
         int mapLevel

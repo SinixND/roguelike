@@ -5,23 +5,12 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Rework panels -> Layers
-    - Map [whole]
-    - Status (Level, Herostats) [top]
-    - Log [top, below status]
-    - Info (tile or object info) [bottom]
+- [ ] Rework health regeneration mechanic (regen after not receiving damage for x turns or permanent?)
+- [ ] End/Restart game on death
 
 
 ## Shortterm
-- [ ] Rename (map)Level to Floor
-- [ ] Check Event System for unnecessary complexity (only cross scene <-> game necessary?)
-- [ ] Replace //* with /// for function descriptions)
-- [ ] Make internal members private (if no external references)
-- [x] Separate fog calculation from visibility calculation
-- [ ] Split Component(temp) and Data(persistent)? (existential)
-- [ ] Implement tests/tdd (what behaviour do I want (to implement) -> test -> write code)
-- [ ] Implement ncurses (raycurses?) 
-- [ ] End/Restart game on death
+- [ ] Add experience system
 - [ ] Add AI behaviour with new enemy types
 
     | Default state before attacked                          | Name       |
@@ -43,6 +32,7 @@ Platforms: Linux, Windows, Browser
 - [ ] Implement zoom?
 - [ ] Deactivate cursor trigger game action outside map panel (needed?!)
 - [ ] Setup docker (non-trvial for GUI apps?)
+- [ ] Implement tests/tdd (what behaviour do I want (to implement) -> test -> write code)
 
 ## Ideas
 - [ ] Make game a mix of `rogue` and `factorio`
@@ -167,3 +157,5 @@ Platforms: Linux, Windows, Browser
 - [x] Separate System (not related to class) and Module (former member functions) via namespace?
 - [x] Refactor to DenseMap<size_t, Type> (instead of SparseSet -> check emscripten)
 - [x] Refactor to fake-return function signature (returns modified parameter)
+- [ ] Split Component(temp) and Data(persistent)? (existential programming) -> not used, more cognitive load by hidden state, considered micro-optimization
+- [ ] Implement ncurses (raycurses?) -> no

@@ -10,10 +10,10 @@
 #include "Events.h"
 #include "GameCamera.h"
 #include "Hero.h"
-#include "Levels.h"
 #include "MovementSystem.h"
 #include "Objects.h"
 #include "RenderId.h"
+#include "World.h"
 #include "raylibEx.h"
 #include <Logger.h>
 #include <cstddef>
@@ -51,7 +51,7 @@ Game const& setupGameEvents( Game& game )
         {
             snx::Logger::log( "Entered next level\n" );
 
-            game.levels.increaseMapLevel();
+            game.world.increaseMapLevel();
 
             //* Place Hero on the map entry position
             game.hero.position = Convert::tileToWorld( Vector2I{ 0, 0 } );
@@ -68,10 +68,10 @@ Game const& setupGameEvents( Game& game )
         {
             snx::Logger::log( "Entered previous level\n" );
 
-            game.levels.decreaseMapLevel();
+            game.world.decreaseMapLevel();
 
             //* Place Hero on the map exit
-            auto const& objects{ game.levels.currentMap->objects };
+            auto const& objects{ game.world.currentMap->objects };
             auto const& renderIds{ objects.renderIds.values() };
             auto const& positions{ objects.positions.values() };
 
@@ -175,8 +175,8 @@ Game const& continueMultiFrameActions(
     //* Enemies
     else
     {
-        game.levels.currentMap->enemies = continueEnemyMovements(
-            game.levels.currentMap->enemies,
+        game.world.currentMap->enemies = continueEnemyMovements(
+            game.world.currentMap->enemies,
             dt
         );
     }
@@ -197,7 +197,7 @@ Game const& executeInstantActions(
     {
         game.hero = ActionSystem::executeAction(
             game.hero,
-            *game.levels.currentMap,
+            *game.world.currentMap,
             cursor,
             gameCamera,
             currentInputId
@@ -207,11 +207,11 @@ Game const& executeInstantActions(
     //* Enemies
     else
     {
-        game.levels.currentMap->enemies = AISystem::executeNextAction(
-            game.levels.currentMap->enemies,
+        game.world.currentMap->enemies = AISystem::executeNextAction(
+            game.world.currentMap->enemies,
             game.activeEnemyId,
             game.hero,
-            *game.levels.currentMap,
+            *game.world.currentMap,
             gameCamera,
             game.turn
         );
@@ -267,9 +267,9 @@ namespace GameModule
         }
 
         //* End turn
-        game.levels.currentMap->enemies = EnemiesModule::replaceDead(
-            game.levels.currentMap->enemies,
-            game.levels.currentMap->tiles
+        game.world.currentMap->enemies = EnemiesModule::replaceDead(
+            game.world.currentMap->enemies,
+            game.world.currentMap->tiles
         );
 
         //* Skip energy regeneration while a unit is ready
@@ -290,7 +290,7 @@ namespace GameModule
         {
             //* Unit is ready when regenerate is _not_ successful
             isUnitReady = !EnergyModule::regenerate( game.hero.energy );
-            isUnitReady |= !EnemiesModule::regenerate( game.levels.currentMap->enemies.energies );
+            isUnitReady |= !EnemiesModule::regenerate( game.world.currentMap->enemies.energies );
         }
 
         //* Increment turn when hero is ready

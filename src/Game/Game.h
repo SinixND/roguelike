@@ -3,7 +3,7 @@
 
 #include "Hero.h"
 #include "InputId.h"
-#include "Levels.h"
+#include "World.h"
 
 struct Cursor;
 struct GameCamera;
@@ -12,7 +12,7 @@ struct Game
 {
     Hero hero{};
 
-    Levels levels{};
+    World world{};
 
     //* Track game turns
     size_t turn{ 1 };

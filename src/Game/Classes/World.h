@@ -5,8 +5,8 @@
 #include "MapGeneratorSystem.h"
 #include <vector>
 
-/// Level holds maps which are identified by a mapLevel (int)
-class Levels
+/// World holds maps which are identified by a mapLevel (int)
+class World
 {
 #if defined( DEBUG )
     std::vector<Map> maps_{ MapGeneratorSystem::createTestRoom() };
@@ -21,14 +21,14 @@ public:
     Map* currentMap{};
 
 public:
-    Levels();
+    World();
 
     void increaseMapLevel();
     void decreaseMapLevel();
 
 private:
     void addNewMap();
-    void setCurrentMap( int level );
+    void setCurrentMap( int mapLevel );
 };
 
 #endif

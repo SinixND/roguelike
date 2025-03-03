@@ -11,13 +11,13 @@
 #include "Game.h"
 #include "GameCamera.h"
 #include "InputId.h"
-#include "Levels.h"
 #include "Objects.h"
 #include "PanelSystem.h"
 #include "RenderSystem.h"
 #include "SceneData.h"
 #include "VisibilityId.h"
 #include "VisibilitySystem.h"
+#include "World.h"
 #include "raylibEx.h"
 #include <cstddef>
 #include <raygui.h>
@@ -27,7 +27,7 @@
 void setupSceneEvents(
     Scene& scene,
     Hero const& hero,
-    Levels const& levels
+    World const& world
 )
 {
     snx::EventDispatcher::addListener(
@@ -59,9 +59,9 @@ void setupSceneEvents(
         [&]()
         {
             //* VisibilitySystem
-            levels.currentMap->tiles = VisibilitySystem::calculateVisibilities(
-                levels.currentMap->tiles,
-                levels.currentMap->fogs,
+            world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
+                world.currentMap->tiles,
+                world.currentMap->fogs,
                 GameCameraModule::viewportInTiles( scene.gameCamera ),
                 Convert::worldToTile( hero.position ),
                 hero.visionRange
@@ -77,7 +77,7 @@ void setupSceneEvents(
             scene.chunks = ChunkSystem::reRenderChunks(
                 scene.chunks,
                 scene.renderData.textures,
-                levels.currentMap->tiles
+                world.currentMap->tiles
             );
         }
     );
@@ -100,7 +100,7 @@ void renderOutput(
         scene.panels.map.inner().height()
     );
 
-    //* Levels
+    //* World
     //* Draw map
     //* Draw tiles
     for ( Chunk const& chunk : scene.chunks )
@@ -219,7 +219,7 @@ namespace SceneModule
     Scene const& init(
         Scene& scene,
         Hero const& hero,
-        Levels const& levels
+        World const& world
     )
     {
         scene.panels = PanelSystem::init( scene.panels );
@@ -239,14 +239,14 @@ namespace SceneModule
         scene.chunks = ChunkSystem::reRenderChunks(
             scene.chunks,
             scene.renderData.textures,
-            levels.currentMap->tiles
+            world.currentMap->tiles
         );
 
         //* Setup events
         setupSceneEvents(
             scene,
             hero,
-            levels
+            world
         );
 
         return scene;
@@ -256,7 +256,7 @@ namespace SceneModule
     Scene const& update(
         Scene& scene,
         Hero const& hero,
-        Levels const& levels,
+        World const& world,
         Cursor& cursor,
         InputId currentInputId
     )
@@ -275,9 +275,9 @@ namespace SceneModule
         renderOutput(
             scene,
             hero,
-            *levels.currentMap,
+            *world.currentMap,
             cursor,
-            levels.currentMapLevel
+            world.currentMapLevel
         );
 
         //* Draw simple frame

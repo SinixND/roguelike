@@ -88,7 +88,6 @@ Enemies& executeAction(
             EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
         }
     }
-    // return false;
     return enemiesIO;
 }
 

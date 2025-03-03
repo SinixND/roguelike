@@ -9,9 +9,9 @@ namespace MapGeneratorSystem
     Map createStartRoom();
 
     //* Map types
-    Map createGridRooms( int level );
+    Map createGridRooms( int mapLevel );
 
-    Map createRandomMapType( int level );
+    Map createRandomMapType( int mapLevel );
 }
 
 #endif

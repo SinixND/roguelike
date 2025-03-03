@@ -18,7 +18,6 @@ namespace snx
 
         static inline std::deque<std::string> turnMessages_{ maxMessagesPerTurn, "" };
 
-        /// History has a fixed size
         static inline std::deque<std::string> history_{ historySizeMax, "" };
 
     public:

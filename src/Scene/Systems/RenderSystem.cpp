@@ -178,7 +178,7 @@ namespace RenderSystem
         DrawTextEx(
             GameFont::font(),
             TextFormat(
-                "| Floor:%2i | HP:%3i/%3i | ATK:%3i |",
+                "| Maplevel:%2i | HP:%3i/%3i | ATK:%3i |",
                 mapLevel,
                 hero.health.currentHealth,
                 hero.health.maxHealth,

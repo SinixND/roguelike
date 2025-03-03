@@ -9,7 +9,7 @@
 
 struct Hero;
 struct Map;
-class Levels;
+class World;
 struct Cursor;
 enum class InputId;
 
@@ -27,14 +27,14 @@ namespace SceneModule
     Scene const& init(
         Scene& scene,
         Hero const& hero,
-        Levels const& levels
+        World const& world
     );
 
     [[nodiscard]]
     Scene const& update(
         Scene& scene,
         Hero const& hero,
-        Levels const& levels,
+        World const& world,
         Cursor& cursor,
         InputId currentInputId
     );

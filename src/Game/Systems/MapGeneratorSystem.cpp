@@ -334,13 +334,13 @@ namespace MapGeneratorSystem
         return startRoom;
     }
 
-    Map createGridRooms( int level )
+    Map createGridRooms( int mapLevel )
     {
         Map map{};
 
         Vector2I roomPosition{ 0, 0 };
         int const roomWidth{ 15 };
-        int maxRoomOffset{ ( 2 + level ) * roomWidth };
+        int maxRoomOffset{ ( 2 + mapLevel ) * roomWidth };
 
         //* Add first room
         map.tiles = addRoom(
@@ -414,16 +414,16 @@ namespace MapGeneratorSystem
         );
 
         //* Add enemies
-        map.enemies = EnemiesModule::createForLevel(
+        map.enemies = EnemiesModule::createForMapLevel(
             map.enemies,
             map.tiles,
-            level
+            mapLevel
         );
 
         return map;
     }
 
-    Map createRandomMapType( int level )
+    Map createRandomMapType( int mapLevel )
     {
         Map newMap{};
 
@@ -433,7 +433,7 @@ namespace MapGeneratorSystem
             default:
             case 1:
             {
-                newMap = createGridRooms( level );
+                newMap = createGridRooms( mapLevel );
 
                 break;
             }

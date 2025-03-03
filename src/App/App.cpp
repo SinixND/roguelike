@@ -146,7 +146,7 @@ void updateApp( void* arg )
     app.scene = SceneModule::update(
         app.scene,
         app.game.hero,
-        app.game.levels,
+        app.game.world,
         app.cursor,
         app.currentInputId
     );
@@ -161,7 +161,7 @@ void setupAppEvents( App& app )
         {
             Vector2I cursorPos{ Convert::worldToTile( app.cursor.position ) };
 
-            Tiles& tiles{ app.game.levels.currentMap->tiles };
+            Tiles& tiles{ app.game.world.currentMap->tiles };
 
             if ( !tiles.ids.contains( cursorPos ) )
             {
@@ -213,7 +213,7 @@ void setupAppEvents( App& app )
                 + "\n"
             );
 
-            Objects& objects{ app.game.levels.currentMap->objects };
+            Objects& objects{ app.game.world.currentMap->objects };
 
             if ( objects.ids.contains( Convert::worldToTile( app.cursor.position ) ) )
             {
@@ -223,36 +223,36 @@ void setupAppEvents( App& app )
 
                 snx::debug::cliPrint(
                     "Name: "
-                    + app.game.levels.currentMap->objects.names[objectIdx]
+                    + app.game.world.currentMap->objects.names[objectIdx]
                     + "\n"
                 );
 
                 snx::debug::cliPrint(
                     "Actions: "
-                    + app.game.levels.currentMap->objects.actions[objectIdx]
+                    + app.game.world.currentMap->objects.actions[objectIdx]
                     + "\n"
                 );
 
                 snx::debug::cliPrint(
                     "RenderId: "
-                    + std::to_string( static_cast<int>( app.game.levels.currentMap->objects.renderIds[objectIdx] ) )
+                    + std::to_string( static_cast<int>( app.game.world.currentMap->objects.renderIds[objectIdx] ) )
                     + "\n"
                 );
 
                 snx::debug::cliPrint(
                     "Event: "
-                    + std::to_string( static_cast<int>( app.game.levels.currentMap->objects.eventIds[objectIdx] ) )
+                    + std::to_string( static_cast<int>( app.game.world.currentMap->objects.eventIds[objectIdx] ) )
                     + "\n"
                 );
             }
 
-            if ( app.game.levels.currentMap->enemies.ids.contains( cursorPos ) )
+            if ( app.game.world.currentMap->enemies.ids.contains( cursorPos ) )
             {
                 snx::debug::cliLog( "ENEMY\n" );
 
                 snx::debug::cliPrint(
                     "Id: "
-                    + std::to_string( app.game.levels.currentMap->enemies.ids.at( cursorPos ) )
+                    + std::to_string( app.game.world.currentMap->enemies.ids.at( cursorPos ) )
                     + "\n"
                 );
             }
@@ -279,9 +279,9 @@ void setupAppEvents( App& app )
                 app.game.hero.position
             );
 
-            app.game.levels.currentMap->tiles = VisibilitySystem::calculateVisibilities(
-                app.game.levels.currentMap->tiles,
-                app.game.levels.currentMap->fogs,
+            app.game.world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
+                app.game.world.currentMap->tiles,
+                app.game.world.currentMap->fogs,
                 GameCameraModule::viewportInTiles( app.scene.gameCamera ),
                 Convert::worldToTile( app.game.hero.position ),
                 app.game.hero.visionRange
@@ -305,7 +305,7 @@ namespace AppModule
         appIO.scene = SceneModule::init(
             appIO.scene,
             appIO.game.hero,
-            appIO.game.levels
+            appIO.game.world
         );
 
         setupAppEvents( appIO );
