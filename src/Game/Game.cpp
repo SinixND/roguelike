@@ -97,6 +97,14 @@ Game const& setupGameEvents( Game& game )
         }
     );
 
+    snx::EventDispatcher::addListener(
+        EventId::NEXT_TURN,
+        [&]()
+        {
+            ++game.turn;
+        }
+    );
+
     return game;
 }
 
@@ -299,7 +307,8 @@ namespace GameModule
 #if defined( DEBUG )
             snx::debug::cliLog( "Hero ready. Next Turn\n\n" );
 #endif
-            ++game.turn;
+            snx::EventDispatcher::notify( EventId::NEXT_TURN );
+
             snx::Logger::incrementTurn();
         }
 
