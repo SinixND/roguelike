@@ -25,7 +25,6 @@ namespace SceneGameOverModule
         return scene;
     }
 
-    [[nodiscard]]
     SceneGameOver const& update( SceneGameOver& scene )
     {
         BeginDrawing();

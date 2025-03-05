@@ -206,7 +206,6 @@ void renderOutput(
 
 namespace SceneGameModule
 {
-    [[nodiscard]]
     SceneGame const& init(
         SceneGame& gameScene,
         Hero const& hero,
@@ -243,7 +242,6 @@ namespace SceneGameModule
         return gameScene;
     }
 
-    [[nodiscard]]
     SceneGame const& update(
         SceneGame& gameScene,
         Hero const& hero,

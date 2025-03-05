@@ -8,7 +8,6 @@
 
 namespace GameCameraModule
 {
-    [[nodiscard]]
     GameCamera const& init(
         GameCamera& gameCamera,
         RectangleEx const& viewport,
@@ -41,7 +40,6 @@ namespace GameCameraModule
         };
     }
 
-    [[nodiscard]]
     Camera2D const& setOffset(
         Camera2D& camera,
         Vector2 const& offset
@@ -52,7 +50,6 @@ namespace GameCameraModule
         return camera;
     }
 
-    [[nodiscard]]
     Camera2D const& setTarget(
         Camera2D& camera,
         Vector2 const& target
@@ -63,7 +60,6 @@ namespace GameCameraModule
         return camera;
     }
 
-    [[nodiscard]]
     Camera2D const& setZoom(
         Camera2D& camera,
         float zoom

@@ -8,7 +8,6 @@
 
 namespace CursorModule
 {
-    [[nodiscard]]
     Cursor const& toggle( Cursor& cursor )
     {
         cursor.isActive = !cursor.isActive;
@@ -22,7 +21,6 @@ namespace CursorModule
         return cursor;
     }
 
-    [[nodiscard]]
     Cursor const& update(
         Cursor& cursor,
         Camera2D const& camera,

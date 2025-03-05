@@ -48,6 +48,7 @@ namespace MovementSystem
         Vector2I const& to
     );
 
+    [[nodiscard]]
     TransformComponent const& resetTransform( TransformComponent& transform );
 };
 

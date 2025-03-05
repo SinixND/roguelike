@@ -30,7 +30,6 @@ std::string textureAtlasFileName( size_t theme )
 
 namespace RenderSystem
 {
-    [[nodiscard]]
     RenderData const& loadRenderData( RenderData& renderData )
     {
         //* Load texture atlas

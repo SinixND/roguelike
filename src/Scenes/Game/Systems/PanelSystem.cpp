@@ -9,7 +9,6 @@
 
 namespace PanelSystem
 {
-    [[nodiscard]]
     SceneGamePanels const& init( SceneGamePanels& panels )
     {
         Vector2 charSize{ MeasureTextEx(

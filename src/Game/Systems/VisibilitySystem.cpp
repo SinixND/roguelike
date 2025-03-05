@@ -296,7 +296,6 @@ Tiles const& calculateVisibilitiesInOctant(
 
 namespace VisibilitySystem
 {
-    [[nodiscard]]
     Tiles const& calculateVisibilities(
         Tiles& tiles,
         snx::DenseMap<Vector2I, Fog>& fogsIO,

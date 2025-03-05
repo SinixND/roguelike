@@ -5,8 +5,6 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] nodiscard in cpp?
-- [ ] End/Restart game on death
 - [ ] Enum folder for enum
 
 
@@ -162,3 +160,4 @@ Platforms: Linux, Windows, Browser
 - [x] Refactor to fake-return function signature (returns modified parameter)
 - [ ] Split Component(temp) and Data(persistent)? (existential programming) -> not used, more cognitive load by hidden state, considered micro-optimization
 - [ ] Implement ncurses (raycurses?) -> no
+- [x] End/Restart game on death

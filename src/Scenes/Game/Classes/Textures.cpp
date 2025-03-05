@@ -17,7 +17,6 @@ namespace TexturesModule
         UnloadTexture( textures.atlas );
     }
 
-    [[nodiscard]]
     Textures const& loadAtlas(
         Textures& textures,
         std::string const& filename
@@ -30,7 +29,6 @@ namespace TexturesModule
         return textures;
     }
 
-    [[nodiscard]]
     Textures const& registerTexture(
         Textures& textures,
         RenderId textureId,

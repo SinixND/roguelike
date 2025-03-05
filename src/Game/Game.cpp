@@ -230,7 +230,6 @@ Game const& executeInstantActions(
 
 namespace GameModule
 {
-    [[nodiscard]]
     Game const& init( Game& game )
     {
 #if defined( DEBUG )
@@ -251,7 +250,6 @@ namespace GameModule
         return game;
     }
 
-    [[nodiscard]]
     Game const& update(
         Game& game,
         GameCamera const& gameCamera,
