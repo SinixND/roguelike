@@ -8,10 +8,10 @@
 #include "ChunkData.h"
 #include "Fog.h"
 #include "GameFont.h"
+#include "GameScenePanels.h"
 #include "Hero.h"
 #include "Logger.h"
 #include "Objects.h"
-#include "Panels.h"
 #include "RenderData.h"
 #include "RenderId.h"
 #include "TextureData.h"
@@ -259,7 +259,6 @@ namespace RenderSystem
         }
     }
 
-    [[nodiscard]]
     size_t cycleThemes( size_t theme )
     {
         theme = ( theme < TextureData::themes.size() - 1 ) ? ++theme : 0;

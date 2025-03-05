@@ -510,7 +510,7 @@ windows:
 ### MAKE object files FROM source files; "%" pattern-matches (need pair of)
 $(BUILD_DIR)/%$(OBJ_EXT) : %$(SRC_EXT) 
 	$(info )
-	$(info === Compile: BUILD=$(BUILD), PLATFORM=$(PLATFORM) ===)
+	$(info === Compile: PLATFORM=$(PLATFORM), BUILD=$(BUILD) ===)
 	$(CXX) -o $@ -c $< $(CXX_FLAGS) $(INC_FLAGS)
 
 ### Need separate compiler command for -MJ flag argument

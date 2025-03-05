@@ -55,6 +55,7 @@ namespace RenderSystem
         float borderWidth
     );
 
+    [[nodiscard]]
     size_t cycleThemes( size_t theme );
 
     void deinit( Textures const& textures );

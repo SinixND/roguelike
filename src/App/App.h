@@ -2,26 +2,27 @@
 #define IG20240519210141
 
 #include "AppConfig.h"
+#include "AppState.h"
 #include "Cursor.h"
 #include "Game.h"
 #include "InputHandler.h"
 #include "InputId.h"
-#include "Scene.h"
+#include "Scenes.h"
 #include <raylib.h>
 
 struct App
 {
-    Scene scene{};
-
     InputHandler inputHandler{};
+    Cursor cursor{};
+    float dt{ 0 };
 
+    Scenes scenes{};
     Game game{};
 
-    Cursor cursor{};
+    // GameScene scene{};
 
     InputId currentInputId{ InputId::NONE };
-
-    float dt{ 0 };
+    AppState state{ AppState::RUN_GAME };
 };
 
 namespace AppModule

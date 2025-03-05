@@ -11,6 +11,7 @@ enum class InputId
     ACT_RIGHT,
     ACT_TO_TARGET,
     ACT_IN_PLACE,
+    CONFIRM,
     //* UI
     TOGGLE_CURSOR,
     CYCLE_THEME,

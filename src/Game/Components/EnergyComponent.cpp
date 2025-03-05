@@ -45,10 +45,10 @@ namespace EnergyModule
 #if defined( DEBUG )
             snx::debug::cliPrint( "Energy is full.\n" );
 #endif
-            return false;
+            return true;
         }
 
-//* Regen energy until full
+        //* Regen energy until full
 #if defined( DEBUG )
         snx::debug::cliPrint( "Regen ", energyIO.currentEnergy, "+", energyIO.regenRate, "\n" );
 #endif
@@ -56,7 +56,7 @@ namespace EnergyModule
 
         if ( energyIO.currentEnergy < energyIO.maxEnergy )
         {
-            return true;
+            return false;
         }
 
         //* Energy full: Ensure energy does not exceed maxEnergy

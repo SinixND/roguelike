@@ -236,6 +236,12 @@ namespace GameModule
 #if defined( DEBUG )
         snx::RNG::seed( 1 );
 #endif
+        game.hero = Hero{};
+
+        game.world = World{};
+
+        game.turn = 1;
+
         game = setupGameEvents( game );
 
 #if defined( DEBUG )
@@ -275,6 +281,11 @@ namespace GameModule
         }
 
         //* End turn
+        if ( game.hero.health.currentHealth <= 0 )
+        {
+            snx::EventDispatcher::notify( EventId::GAME_OVER );
+        }
+
         game.world.currentMap->enemies = EnemiesModule::replaceDead(
             game.world.currentMap->enemies,
             game.world.currentMap->tiles
@@ -297,8 +308,8 @@ namespace GameModule
         while ( !isUnitReady )
         {
             //* Unit is ready when regenerate is _not_ successful
-            isUnitReady = !EnergyModule::regenerate( game.hero.energy );
-            isUnitReady |= !EnemiesModule::regenerate( game.world.currentMap->enemies.energies );
+            isUnitReady = EnergyModule::regenerate( game.hero.energy );
+            isUnitReady |= EnemiesModule::regenerate( game.world.currentMap->enemies.energies );
         }
 
         //* Increment turn when hero is ready

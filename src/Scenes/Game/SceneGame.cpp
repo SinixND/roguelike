@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "SceneGame.h"
 
 #include "ChunkSystem.h"
 #include "Colors.h"
@@ -14,7 +14,7 @@
 #include "Objects.h"
 #include "PanelSystem.h"
 #include "RenderSystem.h"
-#include "SceneData.h"
+#include "Scenes.h"
 #include "VisibilityId.h"
 #include "VisibilitySystem.h"
 #include "World.h"
@@ -25,7 +25,7 @@
 #include <raymath.h>
 
 void setupSceneEvents(
-    Scene& scene,
+    SceneGame& scene,
     Hero const& hero,
     World const& world
 )
@@ -34,7 +34,7 @@ void setupSceneEvents(
         EventId::CHANGE_COLOR_THEME,
         [&]()
         {
-            RenderSystem::cycleThemes( scene.renderData.theme );
+            scene.renderData.theme = RenderSystem::cycleThemes( scene.renderData.theme );
 
             scene.renderData = RenderSystem::loadRenderData( scene.renderData );
 
@@ -84,7 +84,7 @@ void setupSceneEvents(
 }
 
 void renderOutput(
-    Scene const& scene,
+    SceneGame const& scene,
     Hero const& hero,
     Map const& currentMap,
     Cursor const& cursor,
@@ -204,57 +204,48 @@ void renderOutput(
     );
 }
 
-void drawWindowBorder()
-{
-    DrawRectangleLinesEx(
-        GetWindowRec(),
-        SceneData::borderWeight,
-        Colors::border
-    );
-}
-
-namespace SceneModule
+namespace SceneGameModule
 {
     [[nodiscard]]
-    Scene const& init(
-        Scene& scene,
+    SceneGame const& init(
+        SceneGame& gameScene,
         Hero const& hero,
         World const& world
     )
     {
-        scene.panels = PanelSystem::init( scene.panels );
+        gameScene.panels = PanelSystem::init( gameScene.panels );
 
-        scene.gameCamera = GameCameraModule::init(
-            scene.gameCamera,
-            scene.panels.map.box(),
+        gameScene.gameCamera = GameCameraModule::init(
+            gameScene.gameCamera,
+            gameScene.panels.map.box(),
             hero.position
         );
 
 #if defined( DEBUG )
-        snx::debug::gcam() = scene.gameCamera;
+        snx::debug::gcam() = gameScene.gameCamera;
 #endif
 
-        scene.renderData = RenderSystem::loadRenderData( scene.renderData );
+        gameScene.renderData = RenderSystem::loadRenderData( gameScene.renderData );
 
-        scene.chunks = ChunkSystem::reRenderChunks(
-            scene.chunks,
-            scene.renderData.textures,
+        gameScene.chunks = ChunkSystem::reRenderChunks(
+            gameScene.chunks,
+            gameScene.renderData.textures,
             world.currentMap->tiles
         );
 
         //* Setup events
         setupSceneEvents(
-            scene,
+            gameScene,
             hero,
             world
         );
 
-        return scene;
+        return gameScene;
     }
 
     [[nodiscard]]
-    Scene const& update(
-        Scene& scene,
+    SceneGame const& update(
+        SceneGame& gameScene,
         Hero const& hero,
         World const& world,
         Cursor& cursor,
@@ -267,13 +258,13 @@ namespace SceneModule
         }
 
 #if defined( DEBUG )
-        snx::debug::gcam() = scene.gameCamera;
+        snx::debug::gcam() = gameScene.gameCamera;
 #endif
         BeginDrawing();
         ClearBackground( Colors::bg );
 
         renderOutput(
-            scene,
+            gameScene,
             hero,
             *world.currentMap,
             cursor,
@@ -281,7 +272,7 @@ namespace SceneModule
         );
 
         //* Draw simple frame
-        drawWindowBorder();
+        ScenesModule::drawWindowBorder();
 
         if ( DeveloperMode::isActive() )
         {
@@ -290,11 +281,11 @@ namespace SceneModule
 
         EndDrawing();
 
-        return scene;
+        return gameScene;
     }
 
-    void deinitialize( Scene& scene )
+    void deinitialize( SceneGame& gameScene )
     {
-        RenderSystem::deinit( scene.renderData.textures );
+        RenderSystem::deinit( gameScene.renderData.textures );
     }
 }

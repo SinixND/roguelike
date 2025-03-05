@@ -1,10 +1,10 @@
-#ifndef IG20231203204746
-#define IG20231203204746
+#ifndef IG20250305221255
+#define IG20250305221255
 
 #include "Chunk.h"
 #include "DenseMap.h"
 #include "GameCamera.h"
-#include "Panels.h"
+#include "GameScenePanels.h"
 #include "RenderData.h"
 
 struct Hero;
@@ -13,32 +13,32 @@ class World;
 struct Cursor;
 enum class InputId;
 
-struct Scene
+struct SceneGame
 {
-    Panels panels{};
+    SceneGamePanels panels{};
     snx::DenseMap<Vector2I, Chunk> chunks{};
     RenderData renderData{};
     GameCamera gameCamera{};
 };
 
-namespace SceneModule
+namespace SceneGameModule
 {
     [[nodiscard]]
-    Scene const& init(
-        Scene& scene,
+    SceneGame const& init(
+        SceneGame& scene,
         Hero const& hero,
         World const& world
     );
 
     [[nodiscard]]
-    Scene const& update(
-        Scene& scene,
+    SceneGame const& update(
+        SceneGame& scene,
         Hero const& hero,
         World const& world,
         Cursor& cursor,
         InputId currentInputId
     );
 
-    void deinitialize( Scene& scene );
+    void deinitialize( SceneGame& scene );
 }
 #endif

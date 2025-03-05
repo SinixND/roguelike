@@ -29,7 +29,7 @@ namespace EnergyModule
         int value
     );
 
-    //* Returns true if energy was regenerated
+    //* Returns true if energy is full
     bool regenerate( EnergyComponent& energyIO );
 }
 #endif

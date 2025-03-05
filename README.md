@@ -5,12 +5,15 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Rework health regeneration mechanic (regen after not receiving damage for x turns or permanent?)
+- [ ] nodiscard in cpp?
 - [ ] End/Restart game on death
+- [ ] Enum folder for enum
 
 
 ## Shortterm
 - [ ] Add experience system
+- [ ] Add inspection mode
+- [ ] Add stats (1 pt / lvl)
 - [ ] Add AI behaviour with new enemy types
 
     | Default state before attacked                          | Name       |

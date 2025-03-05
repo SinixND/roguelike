@@ -22,6 +22,7 @@ struct InputMappings
         { KEY_L, InputId::ACT_RIGHT },
         { KEY_RIGHT, InputId::ACT_RIGHT },
         { KEY_SPACE, InputId::ACT_IN_PLACE },
+        { KEY_ENTER, InputId::CONFIRM },
         { KEY_F2, InputId::CYCLE_THEME },
         { KEY_LEFT_SHIFT, InputId::MOD },
     };

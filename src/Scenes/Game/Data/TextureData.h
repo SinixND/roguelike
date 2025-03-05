@@ -12,7 +12,6 @@ namespace TextureData
     std::vector<std::string> const themes{
         "Default",
         "Ascii",
-        "AsciiBW"
     };
 
     float const textureSize{ 32 };

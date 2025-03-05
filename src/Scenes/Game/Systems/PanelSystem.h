@@ -3,12 +3,12 @@
 
 struct Color;
 class Panel;
-struct Panels;
+struct SceneGamePanels;
 
 namespace PanelSystem
 {
     [[nodiscard]]
-    Panels const& init( Panels& panels );
+    SceneGamePanels const& init( SceneGamePanels& panels );
 
     void drawPanelBackground( Panel const& panel, Color const& color );
 

@@ -1,7 +1,7 @@
 #include "PanelSystem.h"
 
 #include "GameFont.h"
-#include "Panels.h"
+#include "GameScenePanels.h"
 #include "raylibEx.h"
 #include <raygui.h>
 #include <raylib.h>
@@ -10,7 +10,7 @@
 namespace PanelSystem
 {
     [[nodiscard]]
-    Panels const& init( Panels& panels )
+    SceneGamePanels const& init( SceneGamePanels& panels )
     {
         Vector2 charSize{ MeasureTextEx(
             GameFont::font(),

@@ -1,5 +1,5 @@
-#ifndef IG20240531174000
-#define IG20240531174000
+#ifndef IG20250305143507
+#define IG20250305143507
 
 #include "raylibEx.h"
 
@@ -106,14 +106,6 @@ public:
             rectangle_.height() + 2 * margin_
         };
     }
-};
-
-struct Panels
-{
-    Panel map;
-    Panel status;
-    Panel log;
-    Panel info;
 };
 
 #endif

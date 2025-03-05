@@ -924,6 +924,29 @@ inline Vector2I GetMax(
     };
 }
 
+inline void DrawTextExCentered(
+    Font font,
+    const char* text,
+    RectangleEx rectangle,
+    float yOffsetFromTop,
+    float fontSize,
+    float spacing,
+    Color tint
+)
+{
+    DrawTextEx(
+        font,
+        text,
+        Vector2{
+            rectangle.center().x - ( 0.5f * MeasureTextEx( font, text, fontSize, spacing ).x ),
+            rectangle.center().y + yOffsetFromTop
+        },
+        fontSize,
+        spacing,
+        tint
+    );
+}
+
 //* Operator Overloads
 inline Vector2I& operator+=( Vector2I& lhs, Vector2I const& rhs )
 {

@@ -214,7 +214,7 @@ namespace EnemiesModule
 
     bool regenerate( snx::DenseMap<size_t, EnergyComponent>& energiesIO )
     {
-        bool wasRegenerationSuccessful{ false };
+        bool isEnergyFull{ false };
 
         // for ( EnergyComponent& energy : energiesIO )
         for ( size_t idx{ 0 }; idx < energiesIO.size(); ++idx )
@@ -222,10 +222,10 @@ namespace EnemiesModule
 #if defined( DEBUG )
             snx::debug::cliPrint( "[", idx, "] " );
 #endif
-            wasRegenerationSuccessful |= EnergyModule::regenerate( energiesIO.values()[idx] );
+            isEnergyFull |= EnergyModule::regenerate( energiesIO.values()[idx] );
         }
 
-        return wasRegenerationSuccessful;
+        return isEnergyFull;
     }
 
     size_t getActive(
