@@ -30,26 +30,20 @@ namespace SceneGameOverModule
         BeginDrawing();
         ClearBackground( Colors::bg );
 
-        char const* line1{ ">> GAME OVER <<" };
-        char const* line2{ "You died." };
+        char const* line1{ "You died." };
+        char const* line2{ ">> GAME OVER <<" };
 #if !defined( EMSCRIPTEN )
-        char const* line3{ "([Interact] to restart)" };
+        char const* line3{ "Press [F4] to quit." };
 #else
-        char const* line3{ "(Reload to restart)" };
+        char const* line3{ "Reload to restart" };
 #endif
-
-        DrawRectangleLinesEx(
-            scene.panel.outer().rectangle(),
-            1,
-            Colors::border
-        );
 
         DrawTextExCentered(
             GameFont::font(),
             line1,
             scene.panel.inner(),
-            -3 * GameFont::fontSize,
-            3 * GameFont::fontSize,
+            -2 * GameFont::fontSize,
+            GameFont::fontSize,
             0,
             LIGHTGRAY
         );
@@ -59,7 +53,7 @@ namespace SceneGameOverModule
             line2,
             scene.panel.inner(),
             0,
-            2 * GameFont::fontSize,
+            GameFont::fontSize,
             0,
             LIGHTGRAY
         );
@@ -69,12 +63,11 @@ namespace SceneGameOverModule
             line3,
             scene.panel.inner(),
             2 * GameFont::fontSize,
-            1 * GameFont::fontSize,
+            GameFont::fontSize,
             0,
             LIGHTGRAY
         );
 
-        //* Draw simple frame
         ScenesModule::drawWindowBorder();
 
         EndDrawing();

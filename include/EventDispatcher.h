@@ -1,7 +1,7 @@
 #ifndef IG20240527235606
 #define IG20240527235606
 
-#include "Events.h"
+#include "EventId.h"
 #include <forward_list>
 #include <functional>
 #include <unordered_map>
@@ -50,6 +50,11 @@ namespace snx
             {
                 listener();
             }
+        }
+
+        static void reset()
+        {
+            eventToListenerLists_ = std::unordered_map<EventId, ListenerList>{ {} };
         }
 
     private:

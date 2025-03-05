@@ -5,12 +5,11 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Enum folder for enum
+- [ ] Add inspection mode
 
 
 ## Shortterm
 - [ ] Add experience system
-- [ ] Add inspection mode
 - [ ] Add stats (1 pt / lvl)
 - [ ] Add AI behaviour with new enemy types
 

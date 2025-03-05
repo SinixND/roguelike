@@ -7,7 +7,7 @@
 #include "DeveloperMode.h"
 #include "Enemies.h"
 #include "EventDispatcher.h"
-#include "Events.h"
+#include "EventId.h"
 #include "Game.h"
 #include "GameCamera.h"
 #include "InputId.h"

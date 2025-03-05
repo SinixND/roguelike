@@ -3,7 +3,7 @@
 
 enum class AppState
 {
-    GAME_END,
+    GAME_OVER,
     RUN_GAME,
 };
 

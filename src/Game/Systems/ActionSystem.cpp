@@ -110,7 +110,7 @@ namespace ActionSystem
                     //* Stop
                     else
                     {
-                        MovementSystem::resetTransform( heroIO.transform );
+                        heroIO.transform = MovementSystem::resetTransform( heroIO.transform );
                         heroIO.movement.path.clear();
                     }
                 }

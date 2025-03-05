@@ -2,7 +2,7 @@
 
 #include "Directions.h"
 #include "Enemies.h"
-#include "Events.h"
+#include "EventId.h"
 #include "Map.h"
 #include "Objects.h"
 #include "RNG.h"

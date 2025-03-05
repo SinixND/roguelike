@@ -3,7 +3,7 @@
 #include "AppConfig.h"
 #include "DeveloperMode.h"
 #include "EventDispatcher.h"
-#include "Events.h"
+#include "EventId.h"
 #include "Game.h"
 #include "GameFont.h"
 #include "InputHandler.h"
@@ -160,14 +160,9 @@ void updateApp( void* arg )
             break;
         }
 
-        case AppState::GAME_END:
+        case AppState::GAME_OVER:
         {
             app.scenes.gameOver = SceneGameOverModule::update( app.scenes.gameOver );
-
-            if ( app.currentInputId == InputId::CONFIRM )
-            {
-                snx::EventDispatcher::notify( EventId::GAME_RESTART );
-            }
 
             break;
         }
@@ -316,17 +311,7 @@ void setupAppEvents( App& app )
         EventId::GAME_OVER,
         [&]()
         {
-            app.state = AppState::GAME_END;
-        }
-    );
-
-    snx::EventDispatcher::addListener(
-        EventId::GAME_RESTART,
-        [&]()
-        {
-            app.game = GameModule::init( app.game );
-
-            app.state = AppState::RUN_GAME;
+            app.state = AppState::GAME_OVER;
         }
     );
 }

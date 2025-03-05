@@ -7,7 +7,7 @@
 #include "Enemies.h"
 #include "EnergyComponent.h"
 #include "EventDispatcher.h"
-#include "Events.h"
+#include "EventId.h"
 #include "GameCamera.h"
 #include "Hero.h"
 #include "MovementSystem.h"
