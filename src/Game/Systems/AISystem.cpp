@@ -94,7 +94,7 @@ Enemies& executeAction(
 namespace AISystem
 {
     Enemies const& executeNextAction(
-        Enemies& enemiesIO,
+        Enemies& enemies,
         size_t& activeEnemyIdIO,
         Hero& heroIO,
         Map const& map,
@@ -105,17 +105,17 @@ namespace AISystem
         do
         {
             activeEnemyIdIO = EnemiesModule::getActive(
-                enemiesIO.energies,
-                enemiesIO.ais,
+                enemies.energies,
+                enemies.ais,
                 turn
             );
 
             if ( activeEnemyIdIO )
             {
-                enemiesIO.ais.at( activeEnemyIdIO ).turn = turn;
+                enemies.ais.at( activeEnemyIdIO ).turn = turn;
 
-                enemiesIO = executeAction(
-                    enemiesIO,
+                enemies = executeAction(
+                    enemies,
                     heroIO.health,
                     map,
                     Convert::worldToTile( heroIO.position ),
@@ -125,6 +125,6 @@ namespace AISystem
             }
         } while ( activeEnemyIdIO );
 
-        return enemiesIO;
+        return enemies;
     }
 }

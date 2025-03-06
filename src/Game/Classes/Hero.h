@@ -3,6 +3,7 @@
 
 #include "DamageComponent.h"
 #include "EnergyComponent.h"
+#include "ExperienceComponent.h"
 #include "HealthComponent.h"
 #include "HeroData.h"
 #include "MovementComponent.h"
@@ -24,6 +25,8 @@ struct Hero
         HeroData::healthBase,
         HeroData::healthRegenBase
     };
+
+    ExperienceComponent experience{};
 
     DamageComponent damage{ HeroData::damageBase };
 

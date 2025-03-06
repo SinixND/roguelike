@@ -10,8 +10,9 @@ struct GameCamera;
 namespace ActionSystem
 {
     //* Return if multi-frame action taken
+    [[nodiscard]]
     Hero const& executeAction(
-        Hero& heroIO,
+        Hero& hero,
         Map& mapIO,
         Cursor const& cursor,
         GameCamera const& gameCamera,

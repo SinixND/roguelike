@@ -13,7 +13,7 @@ public:
 
 using ListenerList = std::vector<std::unique_ptr<ListenerBaseVirtual>>;
 
-class Listener;
+class ConcreteListener;
 
 class Dispatcher
 {
