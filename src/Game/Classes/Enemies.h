@@ -5,6 +5,7 @@
 #include "DamageComponent.h"
 #include "DenseMap.h"
 #include "EnergyComponent.h"
+#include "ExperienceComponent.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
 #include "MovementComponent.h"
@@ -32,6 +33,7 @@ public:
     snx::DenseMap<size_t, EnergyComponent> energies{};
     snx::DenseMap<size_t, HealthComponent> healths{};
     snx::DenseMap<size_t, DamageComponent> damages{};
+    snx::DenseMap<size_t, ExperienceComponent> experiences{};
 
 public:
     void insert(
@@ -42,6 +44,7 @@ public:
         DamageComponent const& damage,
         Vector2I const& tilePosition,
         int scanRange,
+        int expLevel,
         RenderId renderId
     );
 
@@ -55,14 +58,16 @@ namespace EnemiesModule
         Enemies& enemies,
         Tiles const& tiles,
         RenderId enemyId,
-        Vector2I tilePosition
+        Vector2I tilePosition,
+        int mapLevel
     );
 
     [[nodiscard]]
     Enemies const& createAtRandomPosition(
         Enemies& enemies,
         Tiles const& tiles,
-        RenderId enemyId
+        RenderId enemyId,
+        int mapLevel
     );
 
     [[nodiscard]]
@@ -97,7 +102,8 @@ namespace EnemiesModule
     [[nodiscard]]
     Enemies const& replaceDead(
         Enemies& enemies,
-        Tiles const& tiles
+        Tiles const& tiles,
+        int mapLevel
     );
 }
 

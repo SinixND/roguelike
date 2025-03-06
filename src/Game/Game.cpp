@@ -285,7 +285,8 @@ namespace GameModule
 
         game.world.currentMap->enemies = EnemiesModule::replaceDead(
             game.world.currentMap->enemies,
-            game.world.currentMap->tiles
+            game.world.currentMap->tiles,
+            game.world.currentMapLevel
         );
 
         //* Skip energy regeneration while a unit is ready

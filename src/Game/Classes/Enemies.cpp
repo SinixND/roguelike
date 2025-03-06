@@ -6,6 +6,7 @@
 #include "DenseMap.h"
 #include "EnemiesData.h"
 #include "EnergyComponent.h"
+#include "ExperienceComponent.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
 #include "Logger.h"
@@ -31,12 +32,14 @@ void Enemies::insert(
     DamageComponent const& damage,
     Vector2I const& tilePosition,
     int scanRange,
+    int expLevel,
     RenderId renderId
 )
 {
     size_t id{ idManager_.requestId() };
 
     ids.insert( tilePosition, id );
+    ais.insert( id, AIComponent{ .scanRange = scanRange } );
     positions.insert( id, Convert::tileToWorld( tilePosition ) );
     renderIds.insert( id, renderId );
     names.insert( id, enemyNames.at( renderId ) );
@@ -45,12 +48,18 @@ void Enemies::insert(
     energies.insert( id, energy );
     healths.insert( id, health );
     damages.insert( id, damage );
-    ais.insert( id, AIComponent{ .scanRange = scanRange } );
+    experiences.insert( id, ExperienceComponent{} );
+
+    experiences.at( id ) = ExperienceModule::levelUp(
+        experiences.at( id ),
+        expLevel
+    );
 }
 
 void Enemies::remove( size_t id )
 {
     ids.erase( Convert::worldToTile( positions.at( id ) ) );
+    ais.erase( id );
     positions.erase( id );
     renderIds.erase( id );
     names.erase( id );
@@ -59,7 +68,7 @@ void Enemies::remove( size_t id )
     energies.erase( id );
     healths.erase( id );
     damages.erase( id );
-    ais.erase( id );
+    experiences.erase( id );
 }
 
 bool isSpawnPositionValid(
@@ -140,7 +149,8 @@ namespace EnemiesModule
         Enemies& enemies,
         Tiles const& tiles,
         RenderId renderId,
-        Vector2I tilePosition
+        Vector2I tilePosition,
+        int mapLevel
     )
     {
         if ( !isSpawnPositionValid(
@@ -154,6 +164,7 @@ namespace EnemiesModule
 
         EnemiesData::EnemyData enemyData{ getEnemyData( renderId ) };
 
+        //* Use mapLevel as expLevel for created enemies
         enemies.insert(
             TransformComponent{},
             MovementComponent{},
@@ -165,6 +176,7 @@ namespace EnemiesModule
             DamageComponent{ enemyData.damageBase },
             tilePosition,
             enemyData.scanRange,
+            mapLevel,
             RenderId::GOBLIN
         );
 
@@ -174,7 +186,8 @@ namespace EnemiesModule
     Enemies const& createAtRandomPosition(
         Enemies& enemies,
         Tiles const& tiles,
-        RenderId renderId
+        RenderId renderId,
+        int mapLevel
     )
     {
         Vector2I tilePosition = getRandomPosition(
@@ -186,7 +199,8 @@ namespace EnemiesModule
             enemies,
             tiles,
             renderId,
-            tilePosition
+            tilePosition,
+            mapLevel
         );
 
         return enemies;
@@ -205,7 +219,8 @@ namespace EnemiesModule
             enemies = createAtRandomPosition(
                 enemies,
                 tiles,
-                RenderId::GOBLIN
+                RenderId::GOBLIN,
+                mapLevel
             );
         }
 
@@ -251,7 +266,8 @@ namespace EnemiesModule
 
     Enemies const& replaceDead(
         Enemies& enemies,
-        Tiles const& tiles
+        Tiles const& tiles,
+        int mapLevel
     )
     {
         size_t idx{ 0 };
@@ -269,7 +285,8 @@ namespace EnemiesModule
                 enemies = createAtRandomPosition(
                     enemies,
                     tiles,
-                    RenderId::GOBLIN
+                    RenderId::GOBLIN,
+                    mapLevel
                 );
 
                 continue;

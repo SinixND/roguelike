@@ -5,6 +5,7 @@
 #include "Cursor.h"
 #include "Directions.h"
 #include "EventDispatcher.h"
+#include "ExperienceComponent.h"
 #include "GameCamera.h"
 #include "HealthComponent.h"
 #include "Hero.h"
@@ -22,10 +23,41 @@
 #endif
 
 [[nodiscard]]
+Hero const& performAttack(
+    Hero& hero,
+    Map& mapIO,
+    Vector2I const& target
+)
+{
+    size_t enemyIdx{ mapIO.enemies.ids.index( target ) };
+
+#if defined( DEBUG )
+    snx::debug::cliLog( "Hero attacks.\n" );
+#endif
+    EnergyModule::consume( hero.energy );
+
+    snx::Logger::log( "Hero deals " );
+
+    HealthModule::damage(
+        mapIO.enemies.healths[mapIO.enemies.ids.index( target )],
+        DamageModule::damageRNG( hero.damage )
+    );
+
+    if ( mapIO.enemies.healths[enemyIdx].currentHealth <= 0 )
+    {
+        hero.experience = ExperienceModule::gainExp(
+            hero.experience,
+            mapIO.enemies.experiences[enemyIdx].expLevel
+        );
+    }
+    return hero;
+}
+
+[[nodiscard]]
 Hero const& processDirectionalInput(
     Hero& hero,
     Map& mapIO,
-    Vector2I direction
+    Vector2I const& direction
 )
 {
     Vector2I target{
@@ -38,14 +70,10 @@ Hero const& processDirectionalInput(
     //* Attack
     if ( mapIO.enemies.ids.contains( target ) )
     {
-#if defined( DEBUG )
-        snx::debug::cliLog( "Hero attacks and deals " );
-#endif
-        EnergyModule::consume( hero.energy );
-
-        HealthModule::damage(
-            mapIO.enemies.healths[mapIO.enemies.ids.index( target )],
-            DamageModule::damageRNG( hero.damage )
+        hero = performAttack(
+            hero,
+            mapIO,
+            target
         );
     }
     //* Move
@@ -86,9 +114,11 @@ namespace HeroModule
             default:
             case InputId::NONE:
             {
-                //* Multi-frame action
+                //* Continue multi-frame action
                 if ( !hero.movement.path.empty()
-                     && !hero.transform.speed )
+                     //* TODO: check if needed
+                     // && !hero.transform.speed
+                )
                 {
                     //* Move
                     if ( !CollisionSystem::checkCollision(
@@ -179,27 +209,26 @@ namespace HeroModule
                 {
                     //* NOTE: Fallthrough
                 }
+
                 else if ( path.empty() )
                 {
                     break;
                 }
+
                 //* Check if an enemy is at the first path tile
                 else if ( mapIO.enemies.ids.contains( path.rbegin()[1] ) )
                 {
-#if defined( DEBUG )
-                    snx::debug::cliLog( "Hero attacks.\n" );
-#endif
-                    EnergyModule::consume( hero.energy );
-
-                    snx::Logger::log( "Hero deals " );
-                    HealthModule::damage(
-                        mapIO.enemies.healths[mapIO.enemies.ids.index( path.rbegin()[1] )],
-                        DamageModule::damageRNG( hero.damage )
+                    hero = performAttack(
+                        hero,
+                        mapIO,
+                        path.rbegin()[1]
                     );
 
                     path.clear();
+
                     break;
                 }
+
                 else if ( !CollisionSystem::checkCollision(
                               mapIO.tiles,
                               mapIO.enemies,
@@ -221,11 +250,14 @@ namespace HeroModule
                         hero.transform,
                         hero.movement
                     );
+
                     break;
                 }
+
                 else
                 {
                     path.clear();
+
                     break;
                 }
                 //* NOTE: Possible fallthrough to ACT_TO_TARGET

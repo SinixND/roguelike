@@ -5,15 +5,24 @@ int constexpr baseExperience = 10;
 
 struct ExperienceComponent
 {
-    int level{ 1 };
-    int experienceCurrent{ 0 };
+    int expLevel{ 1 };
+    int expCurrent{ 0 };
     int levelUpThreshold{ baseExperience };
 };
 
 namespace ExperienceModule
 {
     [[nodiscard]]
-    ExperienceComponent const& gain(
+    ExperienceComponent const& levelUp( ExperienceComponent& component );
+
+    [[nodiscard]]
+    ExperienceComponent const& levelUp(
+        ExperienceComponent& component,
+        int expLevel
+    );
+
+    [[nodiscard]]
+    ExperienceComponent const& gainExp(
         ExperienceComponent& component,
         int value
     );

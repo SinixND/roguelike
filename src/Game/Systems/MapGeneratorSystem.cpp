@@ -297,7 +297,8 @@ namespace MapGeneratorSystem
             testRoom.enemies,
             testRoom.tiles,
             RenderId::GOBLIN,
-            Vector2I{ 3, 0 }
+            Vector2I{ 3, 0 },
+            1
         );
 
         return testRoom;

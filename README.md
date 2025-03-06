@@ -7,12 +7,19 @@ Platforms: Linux, Windows, Browser
 ## Active 
 - [ ] Name XComponent parameter "component"
 - [ ] Add inspection mode
-- [ ] Add experience system
+- [ ] Refine experience system:
+    - asume regular progress if only enemies of same level are killed
+    - increasing penalty for weaker foes, increasing bonus for higher level enemies
 
 
 ## Shortterm
-- [ ] Add stats (1 pt / lvl)
+- [ ] Add stats (1 pt / lvl, bonus at 10^x)
+    - VIT (HP)
+    - STR (ATK), DEF (DamageReDuction)
+    - DEX (CHC/CHD), AGI (EVAsion)
+    - WGT (EnergyReGen)
 - [ ] Add AI behaviour with new enemy types
+    - Simple types named after stats? (`Normal/Default/Standard`, `Strong`, `Quick`, `Healthy`)
 
     | Default state before attacked                          | Name       |
     | ------------------------------------------------------ | ---------- |
@@ -25,6 +32,8 @@ Platforms: Linux, Windows, Browser
 
 
 ## Longterm
+- [ ] Use overlapping Letters to get more combinations?
+- [ ] Colorize enemies: weak: green, normal: white(?), strong: red, above: purple
 - [ ] Regen when exploring undetected areas?
 - [ ] Add overlay boxes for enemy/object information (wanted?)
 - [ ] Changeable key bindings
@@ -38,13 +47,14 @@ Platforms: Linux, Windows, Browser
 ## Ideas
 - [ ] Make game a mix of `rogue` and `factorio`
 - [ ] (Hold) KEY to show map overview
+- [ ] 2.5D display? (consider change of visible map -> direction biased, camera rotation?)
 - [ ] Lua/Jinx settings file?
 - [ ] Use shaders
     - (send matrix/vector of shadows by SetShaderValue()) and render one big black overlay with applied shader?
     - to render Fogs
 
 ## Continuous
-- Check for obsolete [[maybe_unused]] and //* comments
+- Check for obsolete `[[maybe_unused]]`, `//` comments and `TODO`: 
 - [ ] Check on emscripten mouse bug [seems to be emscripten side, investigate later; probably not an easy fix]
 
 
@@ -161,3 +171,4 @@ Platforms: Linux, Windows, Browser
 - [ ] Split Component(temp) and Data(persistent)? (existential programming) -> not used, more cognitive load by hidden state, considered micro-optimization
 - [ ] Implement ncurses (raycurses?) -> no
 - [x] End/Restart game on death
+- [x] Add experience system
