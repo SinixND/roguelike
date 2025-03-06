@@ -1,4 +1,4 @@
-#include "ActionSystem.h"
+#include "Hero.h"
 
 #include "CollisionSystem.h"
 #include "Convert.h"
@@ -71,7 +71,7 @@ Hero const& processDirectionalInput(
     return hero;
 }
 
-namespace ActionSystem
+namespace HeroModule
 {
     Hero const& executeAction(
         Hero& hero,

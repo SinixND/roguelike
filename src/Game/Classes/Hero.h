@@ -37,4 +37,22 @@ struct Hero
     int visionRange{ HeroData::visionRange };
 };
 
+struct Map;
+struct Cursor;
+struct GameCamera;
+enum class InputId;
+
+namespace HeroModule
+{
+    //* Return if multi-frame action taken
+    [[nodiscard]]
+    Hero const& executeAction(
+        Hero& hero,
+        Map& mapIO,
+        Cursor const& cursor,
+        GameCamera const& gameCamera,
+        InputId currentInput
+    );
+};
+
 #endif

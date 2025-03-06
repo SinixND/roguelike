@@ -1,7 +1,6 @@
 #include "Game.h"
 
-#include "AISystem.h"
-#include "ActionSystem.h"
+#include "AIComponent.h"
 #include "Convert.h"
 #include "Cursor.h"
 #include "Enemies.h"
@@ -203,7 +202,7 @@ Game const& executeInstantActions(
     //* Hero
     if ( game.hero.energy.state == EnergyComponent::State::READY )
     {
-        game.hero = ActionSystem::executeAction(
+        game.hero = HeroModule::executeAction(
             game.hero,
             *game.world.currentMap,
             cursor,
@@ -215,7 +214,7 @@ Game const& executeInstantActions(
     //* Enemies
     else
     {
-        game.world.currentMap->enemies = AISystem::executeNextAction(
+        game.world.currentMap->enemies = AIModule::executeNextAction(
             game.world.currentMap->enemies,
             game.activeEnemyId,
             game.hero,
