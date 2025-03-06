@@ -5,11 +5,12 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
+- [ ] Name XComponent parameter "component"
 - [ ] Add inspection mode
+- [ ] Add experience system
 
 
 ## Shortterm
-- [ ] Add experience system
 - [ ] Add stats (1 pt / lvl)
 - [ ] Add AI behaviour with new enemy types
 
