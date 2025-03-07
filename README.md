@@ -7,17 +7,15 @@ Platforms: Linux, Windows, Browser
 ## Active 
 - [ ] Name XComponent parameter "component"
 - [ ] Add inspection mode
-- [ ] Refine experience system:
-    - asume regular progress if only enemies of same level are killed
-    - increasing penalty for weaker foes, increasing bonus for higher level enemies
-
-
-## Shortterm
-- [ ] Add stats (1 pt / lvl, bonus at 10^x)
+- [ ] Add attributes (1 pt / lvl, bonus at 10^x?)
     - VIT (HP)
     - STR (ATK), DEF (DamageReDuction)
     - DEX (CHC/CHD), AGI (EVAsion)
     - WGT (EnergyReGen)
+
+
+## Shortterm
+- [ ] CombatSystem
 - [ ] Add AI behaviour with new enemy types
     - Simple types named after stats? (`Normal/Default/Standard`, `Strong`, `Quick`, `Healthy`)
 
