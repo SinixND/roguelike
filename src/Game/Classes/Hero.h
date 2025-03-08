@@ -17,24 +17,23 @@ struct Hero
     TransformComponent transform{};
 
     EnergyComponent energy{
-        HeroData::energyRegenBase,
-        HeroData::energyMax
+        HeroData::ENERGY_REGEN_BASE,
     };
 
     HealthComponent health{
-        HeroData::healthBase,
-        HeroData::healthRegenBase
+        HeroData::HEALTH_BASE,
+        HeroData::HEALTH_REGEN_BASE
     };
 
     ExperienceComponent experience{};
 
-    DamageComponent damage{ HeroData::damageBase };
+    DamageComponent damage{ HeroData::DAMAGE_BASE };
 
     Vector2 position{};
 
     RenderId renderId{ RenderId::HERO };
 
-    int visionRange{ HeroData::visionRange };
+    int visionRange{ HeroData::VISION_RANGE };
 };
 
 struct Map;

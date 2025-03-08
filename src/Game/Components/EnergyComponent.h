@@ -3,6 +3,10 @@
 
 #include <cassert>
 
+/// Unit can perform action(s) if energy is full (-> READY)
+/// Unit can perform action(s) until energy is < 0 (-> NOT_READY)
+/// Energy can be < 0
+/// Default action cost is 10
 struct EnergyComponent
 {
     enum class State
@@ -11,8 +15,8 @@ struct EnergyComponent
         NOT_READY,
     };
 
-    int regenRate{};
-    int maxEnergy{};
+    int regenRate{ 1 };
+    int maxEnergy{ 5 };
     int currentEnergy{ maxEnergy };
 
     State state{ State::READY };
@@ -21,7 +25,7 @@ struct EnergyComponent
 namespace EnergyModule
 {
     //* Consumes all energy remaining; Returns if consumption was successful
-    bool consume( EnergyComponent& energyIO );
+    bool exhaust( EnergyComponent& energyIO );
 
     //* Consumes energy; Returns if consumption was successful
     bool consume(
@@ -32,4 +36,6 @@ namespace EnergyModule
     //* Returns true if energy is full
     bool regenerate( EnergyComponent& energyIO );
 }
+
 #endif
+

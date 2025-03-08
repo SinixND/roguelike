@@ -28,7 +28,7 @@ namespace SceneGameOverModule
     SceneGameOver const& update( SceneGameOver& scene )
     {
         BeginDrawing();
-        ClearBackground( Colors::bg );
+        ClearBackground( Colors::BG );
 
         char const* line1{ "You died." };
         char const* line2{ ">> GAME OVER <<" };

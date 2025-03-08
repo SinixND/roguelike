@@ -36,7 +36,7 @@ Hero const& performAttack(
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
     snx::debug::cliLog( "Hero attacks.\n" );
 #endif
-    EnergyModule::consume( hero.energy );
+    EnergyModule::exhaust( hero.energy );
 
     snx::Logger::log( "Hero deals " );
 
@@ -89,7 +89,7 @@ Hero const& processDirectionalInput(
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
         snx::debug::cliLog( "Hero moves.\n" );
 #endif
-        EnergyModule::consume( hero.energy );
+        EnergyModule::exhaust( hero.energy );
 
         hero.transform = MovementSystem::prepareByDirection(
             hero.transform,
@@ -133,7 +133,7 @@ namespace HeroModule
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
                         snx::debug::cliLog( "Hero moves.\n" );
 #endif
-                        EnergyModule::consume( hero.energy );
+                        EnergyModule::exhaust( hero.energy );
 
                         hero.transform = MovementSystem::prepareFromExistingPath(
                             hero.transform,
@@ -241,7 +241,7 @@ namespace HeroModule
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
                     snx::debug::cliLog( "Hero moves.\n" );
 #endif
-                    EnergyModule::consume( hero.energy );
+                    EnergyModule::exhaust( hero.energy );
 
                     hero.movement = MovementSystem::prepareByNewPath(
                         hero.movement,
@@ -279,7 +279,7 @@ namespace HeroModule
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
                         snx::debug::cliLog( "Hero interacts.\n" );
 #endif
-                        EnergyModule::consume( hero.energy );
+                        EnergyModule::exhaust( hero.energy );
 
                         snx::EventDispatcher::notify( mapIO.objects.eventIds.at( objectId ) );
 
@@ -292,7 +292,7 @@ namespace HeroModule
 #endif
                 snx::Logger::log( "Hero waits...\n" );
 
-                EnergyModule::consume( hero.energy );
+                EnergyModule::exhaust( hero.energy );
 
                 hero.health = HealthModule::regenerate( hero.health );
 

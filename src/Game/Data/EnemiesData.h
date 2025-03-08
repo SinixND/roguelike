@@ -5,16 +5,16 @@ namespace EnemiesData
 {
     struct EnemyData
     {
-        int energyMax{};
-        int energyRegenBase{};
-        int agilityBase{};
-        int scanRange{};
-        int healthBase{};
-        int damageBase{};
+        // int const energyMax{};
+        int const energyRegenBase{};
+        int const agilityBase{};
+        int const scanRange{};
+        int const healthBase{};
+        int const damageBase{};
     };
 
     EnemyData goblin{
-        2,
+        // 2,
         1,
         1,
         10,

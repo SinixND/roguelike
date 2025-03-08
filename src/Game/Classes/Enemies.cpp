@@ -170,10 +170,7 @@ namespace EnemiesModule
         enemies.insert(
             TransformComponent{},
             MovementComponent{},
-            EnergyComponent{
-                enemyData.energyRegenBase,
-                enemyData.energyMax
-            },
+            EnergyComponent{ enemyData.energyRegenBase },
             HealthComponent{ enemyData.healthBase },
             DamageComponent{ enemyData.damageBase },
             tilePosition,

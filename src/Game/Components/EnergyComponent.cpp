@@ -15,6 +15,7 @@ namespace EnergyModule
         int value
     )
     {
+        // Can't consume if no energy points left
         if ( energyIO.currentEnergy <= 0 )
         {
             return false;
@@ -34,7 +35,7 @@ namespace EnergyModule
         return true;
     }
 
-    bool consume( EnergyComponent& energyIO )
+    bool exhaust( EnergyComponent& energyIO )
     {
         return consume( energyIO, energyIO.currentEnergy );
     }

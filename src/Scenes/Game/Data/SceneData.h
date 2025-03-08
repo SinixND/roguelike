@@ -3,7 +3,7 @@
 
 namespace SceneData
 {
-    float const borderWeight{ 1 };
+    float constexpr BORDER_WEIGHT{ 1 };
 }
 
 #endif

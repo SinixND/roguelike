@@ -66,7 +66,7 @@ inline ThreadPool::ThreadPool()
 inline void ThreadPool::start()
 {
     //* Max # of threads the system supports
-    const uint32_t num_threads = std::thread::hardware_concurrency();
+    uint32_t const num_threads = std::thread::hardware_concurrency();
 
     threads_.reserve( num_threads );
 
@@ -117,7 +117,7 @@ inline void ThreadPool::threadLoop()
     }
 }
 
-inline void ThreadPool::queueJob( const std::function<void()>& job )
+inline void ThreadPool::queueJob( std::function<void()> const& job )
 {
     {
         std::unique_lock<std::mutex> lock( queue_mutex_ );

@@ -14,11 +14,11 @@
 #endif
 
 //* Maximum hold time for tap event to trigger
-double constexpr maxTapTime{ 0.3f };
+double constexpr MAX_TAP_TIME{ 0.3f };
 //* Minimum hold time for hold event to trigger
-double constexpr minHoldTime{ 0.3f };
+double constexpr MIN_HOLD_TIME{ 0.3f };
 //* Maximum time between taps for double tap event to trigger
-double constexpr maxDoubleTapTime{ 0.3f };
+double constexpr MAX_DOUBLE_TAP_TIME{ 0.3f };
 
 InputId InputHandler::fromKeyboard()
 {
@@ -107,10 +107,10 @@ InputId InputHandler::fromGesture()
 
                 //* Check for Tap events
                 if ( lastGesture == GESTURE_HOLD
-                     && ( touchUpTime_ - touchDownTime_ ) < maxTapTime )
+                     && ( touchUpTime_ - touchDownTime_ ) < MAX_TAP_TIME )
                 {
                     //* Check for double tap
-                    if ( ( touchUpTime_ - lastTap_ ) < maxDoubleTapTime )
+                    if ( ( touchUpTime_ - lastTap_ ) < MAX_DOUBLE_TAP_TIME )
                     {
 #if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
                         snx::Logger::log( "Triggered DOUBLE TAP EVENT\n" );
@@ -284,7 +284,7 @@ InputId InputHandler::fromGesture()
             {
                 touchHoldDuration_ = GetTime() - touchDownTime_;
 
-                if ( ( touchHoldDuration_ ) > minHoldTime )
+                if ( ( touchHoldDuration_ ) > MIN_HOLD_TIME )
                 {
 #if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
                     snx::Logger::log( "Triggered HOLD EVENT\n" );

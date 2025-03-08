@@ -5,8 +5,8 @@
 
 namespace Colors
 {
-    Color constexpr border{ GRAY };
-    Color constexpr bg{ BLACK };
+    Color constexpr BORDER{ GRAY };
+    Color constexpr BG{ BLACK };
 }
 
 #endif

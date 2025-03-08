@@ -6,19 +6,19 @@
 #include <deque>
 #include <string>
 
-int constexpr historySizeMax{ 100 };
-int constexpr maxMessagesPerTurn{ 5 };
-
 namespace snx
 {
+    int constexpr HISTORY_SIZE_MAX{ 100 };
+    int constexpr MAX_MESSAGES_PER_TURN{ 5 };
+
     class Logger
     {
         static inline size_t turn_{ 1 };
         static inline size_t lastTurn_{ 0 };
 
-        static inline std::deque<std::string> turnMessages_{ maxMessagesPerTurn, "" };
+        static inline std::deque<std::string> turnMessages_{ MAX_MESSAGES_PER_TURN, "" };
 
-        static inline std::deque<std::string> history_{ historySizeMax, "" };
+        static inline std::deque<std::string> history_{ HISTORY_SIZE_MAX, "" };
 
     public:
         static void updateHistory()

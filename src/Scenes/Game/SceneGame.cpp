@@ -259,7 +259,7 @@ namespace SceneGameModule
         snx::debug::gcam() = gameScene.gameCamera;
 #endif
         BeginDrawing();
-        ClearBackground( Colors::bg );
+        ClearBackground( Colors::BG );
 
         renderOutput(
             gameScene,

@@ -17,53 +17,53 @@ int getNewThreshold( int level )
     //* exp(lvl)    = grows exponentially
     //* f'          = grows logarithmicly,
     //* f''         = shrinks reciprocal (inverted logarithmic);
-    return lvl * static_cast<int>( ( 1 * pow( lvl, 1.5f ) + 10 ) );
+    return lvl * static_cast<int>( ( 1 * pow( lvl, 1.5f ) + BASE_EXPERIENCE ) );
 }
 
 namespace ExperienceModule
 {
-    ExperienceComponent const& levelUp( ExperienceComponent& component )
+    ExperienceComponent const& levelUp( ExperienceComponent& experience )
     {
-        component.expCurrent -= component.levelUpThreshold;
+        experience.expCurrent -= experience.levelUpThreshold;
 
-        ++component.expLevel;
+        ++experience.expLevel;
 
-        component.levelUpThreshold = getNewThreshold( component.expLevel );
+        experience.levelUpThreshold = getNewThreshold( experience.expLevel );
 
-        return component;
+        return experience;
     }
 
     ExperienceComponent const& levelUp(
-        ExperienceComponent& component,
+        ExperienceComponent& experience,
         int expLevel
     )
     {
-        component.expLevel = expLevel;
+        experience.expLevel = expLevel;
 
-        component.levelUpThreshold = getNewThreshold( component.expLevel );
+        experience.levelUpThreshold = getNewThreshold( experience.expLevel );
 
-        return component;
+        return experience;
     }
 
     ExperienceComponent const& gainExp(
-        ExperienceComponent& component,
+        ExperienceComponent& experience,
         int foeExpLevel
     )
     {
         //* NOTE: Divide if 1 skillpoint is additive powerincrease
         //* NOTE: Subtract if 1 skillpoint is multiplicative powerincrease
-        component.expCurrent += foeExpLevel * static_cast<int>( foeExpLevel / component.expLevel );
+        experience.expCurrent += foeExpLevel * static_cast<int>( foeExpLevel / experience.expLevel );
 
-        if ( component.expCurrent < 0 )
+        if ( experience.expCurrent < 0 )
         {
-            component.expCurrent = 0;
+            experience.expCurrent = 0;
         }
 
-        while ( component.expCurrent > component.levelUpThreshold )
+        while ( experience.expCurrent > experience.levelUpThreshold )
         {
-            component = levelUp( component );
+            experience = levelUp( experience );
         }
 
-        return component;
+        return experience;
     }
 }

@@ -24,7 +24,7 @@ namespace TexturesModule
     {
         TexturesModule::unloadAtlas( textures );
 
-        textures.atlas = LoadTexture( ( TextureData::texturePath + filename ).c_str() );
+        textures.atlas = LoadTexture( ( TextureData::TEXTURE_PATH + filename ).c_str() );
 
         return textures;
     }

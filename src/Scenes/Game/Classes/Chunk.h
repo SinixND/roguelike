@@ -27,8 +27,8 @@ struct Chunk
               RectangleExI{
                   Convert::worldToTile( position ).x,
                   Convert::worldToTile( position ).y,
-                  ChunkData::chunkSize,
-                  ChunkData::chunkSize
+                  ChunkData::CHUNK_SIZE,
+                  ChunkData::CHUNK_SIZE
               }
           )
         , position( position )

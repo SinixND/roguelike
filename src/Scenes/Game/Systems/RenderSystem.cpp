@@ -24,7 +24,7 @@
 
 std::string textureAtlasFileName( size_t theme )
 {
-    return TextureData::themes[theme] + ".png";
+    return TextureData::THEMES[theme] + ".png";
 }
 
 namespace RenderSystem
@@ -75,14 +75,14 @@ namespace RenderSystem
                 )
                         .y
                     + 0.5f,
-                TextureData::textureSize - ( 2 * 0.5f ),
-                TextureData::textureSize - ( 2 * 0.5f )
+                TextureData::TEXTURE_SIZE - ( 2 * 0.5f ),
+                TextureData::TEXTURE_SIZE - ( 2 * 0.5f )
             },
             Rectangle{
                 worldPixel.x,
                 worldPixel.y,
-                TileData::tileSize,
-                TileData::tileSize
+                TileData::TILE_SIZE,
+                TileData::TILE_SIZE
             },
             //* TileData::TILE_CENTER,
             Vector2{ 0, 0 },
@@ -104,8 +104,8 @@ namespace RenderSystem
             Rectangle{
                 chunk.position.x,
                 chunk.position.y,
-                ChunkData::chunkSize_f,
-                ChunkData::chunkSize_f
+                ChunkData::CHUNK_SIZE_F,
+                ChunkData::CHUNK_SIZE_F
             },
             Vector2{ 0, 0 },
             0,
@@ -157,7 +157,7 @@ namespace RenderSystem
 
         DrawRectangleV(
             fogPosition,
-            TileData::tileDimensions,
+            TileData::TILE_DIMENSIONS,
             tint
         );
     }
@@ -262,7 +262,7 @@ namespace RenderSystem
 
     size_t cycleThemes( size_t theme )
     {
-        theme = ( theme < TextureData::themes.size() - 1 ) ? ++theme : 0;
+        theme = ( theme < TextureData::THEMES.size() - 1 ) ? ++theme : 0;
 
         return theme;
     }

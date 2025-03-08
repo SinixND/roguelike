@@ -12,7 +12,7 @@ namespace ScenesModule
         DrawRectangleLinesEx(
             GetWindowRec(),
             BORDER_WIDTH,
-            Colors::border
+            Colors::BORDER
         );
     }
 }
