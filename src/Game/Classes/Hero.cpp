@@ -1,5 +1,7 @@
 #include "Hero.h"
 
+// #define DEBUG_HERO_ACTIONS
+
 #include "CollisionSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
@@ -31,7 +33,7 @@ Hero const& performAttack(
 {
     size_t enemyIdx{ mapIO.enemies.ids.index( target ) };
 
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
     snx::debug::cliLog( "Hero attacks.\n" );
 #endif
     EnergyModule::consume( hero.energy );
@@ -84,7 +86,7 @@ Hero const& processDirectionalInput(
                   Convert::worldToTile( hero.position )
               ) )
     {
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
         snx::debug::cliLog( "Hero moves.\n" );
 #endif
         EnergyModule::consume( hero.energy );
@@ -128,7 +130,7 @@ namespace HeroModule
                              Convert::worldToTile( hero.position )
                          ) )
                     {
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
                         snx::debug::cliLog( "Hero moves.\n" );
 #endif
                         EnergyModule::consume( hero.energy );
@@ -236,7 +238,7 @@ namespace HeroModule
                               Convert::worldToTile( hero.position )
                           ) )
                 {
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
                     snx::debug::cliLog( "Hero moves.\n" );
 #endif
                     EnergyModule::consume( hero.energy );
@@ -274,7 +276,7 @@ namespace HeroModule
                     //* Wait if nothing to interact
                     if ( mapIO.objects.eventIds.contains( objectId ) )
                     {
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
                         snx::debug::cliLog( "Hero interacts.\n" );
 #endif
                         EnergyModule::consume( hero.energy );
@@ -285,7 +287,7 @@ namespace HeroModule
                     }
                 }
 
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
                 snx::debug::cliLog( "Hero waits.\n" );
 #endif
                 snx::Logger::log( "Hero waits...\n" );

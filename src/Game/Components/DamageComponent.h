@@ -4,7 +4,7 @@
 struct DamageComponent
 {
     int baseDamage{};
-    float critChanceFactor{ 0.0f };
+    float critChanceFactor{};
     float critDamageFactor{ 2.0f };
 };
 

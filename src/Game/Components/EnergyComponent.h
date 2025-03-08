@@ -11,8 +11,8 @@ struct EnergyComponent
         NOT_READY,
     };
 
-    int regenRate{ 1 };
-    int maxEnergy{ 2 };
+    int regenRate{};
+    int maxEnergy{};
     int currentEnergy{ maxEnergy };
 
     State state{ State::READY };

@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+// #define DEBUG_ENERGY
+
 #if defined( DEBUG )
 #include "Debugger.h"
 #endif
@@ -19,7 +21,7 @@ namespace EnergyModule
         }
 
 //* Consume energy
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_ENERGY )
         snx::debug::cliLog( "EnergyModule::consume()\n" );
 #endif
         energyIO.currentEnergy -= value;
@@ -42,14 +44,14 @@ namespace EnergyModule
         //* If already full
         if ( energyIO.currentEnergy >= energyIO.maxEnergy )
         {
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_ENERGY )
             snx::debug::cliPrint( "Energy is full.\n" );
 #endif
             return true;
         }
 
         //* Regen energy until full
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_ENERGY )
         snx::debug::cliPrint( "Regen ", energyIO.currentEnergy, "+", energyIO.regenRate, "\n" );
 #endif
         energyIO.currentEnergy += energyIO.regenRate;

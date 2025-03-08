@@ -1,5 +1,7 @@
 #include "Game.h"
 
+// #define DEBUG_GAME_LOOP
+
 #include "AIComponent.h"
 #include "Convert.h"
 #include "Cursor.h"
@@ -300,7 +302,7 @@ namespace GameModule
         bool isUnitReady{ false };
 
         //* Regenerate until one unit becomes ready
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_GAME_LOOP )
         snx::debug::cliLog( "No action left. Regen units.\n" );
 #endif
         while ( !isUnitReady )
@@ -313,7 +315,7 @@ namespace GameModule
         //* Increment turn when hero is ready
         if ( game.hero.energy.state == EnergyComponent::State::READY )
         {
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_GAME_LOOP )
             snx::debug::cliLog( "Hero ready. Next Turn\n\n" );
 #endif
             snx::EventDispatcher::notify( EventId::NEXT_TURN );

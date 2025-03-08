@@ -6,6 +6,7 @@ Platforms: Linux, Windows, Browser
 # TODOs
 ## Active 
 - [ ] Name XComponent parameter "component"
+- [ ] Base data (constexpr?) in config/data file
 - [ ] Add inspection mode
 - [ ] Add attributes (1 pt / lvl, bonus at 10^x?)
     - VIT (HP)

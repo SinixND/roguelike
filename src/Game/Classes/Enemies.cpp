@@ -1,5 +1,7 @@
 #include "Enemies.h"
 
+// #define DEBUG_ENERGY
+
 #include "AIComponent.h"
 #include "Convert.h"
 #include "DamageComponent.h"
@@ -234,7 +236,7 @@ namespace EnemiesModule
         // for ( EnergyComponent& energy : energiesIO )
         for ( size_t idx{ 0 }; idx < energiesIO.size(); ++idx )
         {
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_ENERGY )
             snx::debug::cliPrint( "[", idx, "] " );
 #endif
             isEnergyFull |= EnergyModule::regenerate( energiesIO.values()[idx] );

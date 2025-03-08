@@ -1,8 +1,9 @@
 #include "AIComponent.h"
 
+// #define DEBUG_AI_ACTIONS
+
 #include "CollisionSystem.h"
 #include "Convert.h"
-#include "Debugger.h"
 #include "Enemies.h"
 #include "HealthComponent.h"
 #include "Hero.h"
@@ -11,6 +12,10 @@
 #include "PathfinderSystem.h"
 #include <cstddef>
 #include <vector>
+
+#if defined( DEBUG )
+#include "Debugger.h"
+#endif
 
 Enemies& executeAction(
     Enemies& enemiesIO,
@@ -31,7 +36,7 @@ Enemies& executeAction(
          == 1 )
     {
         //* Attack
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
         snx::debug::cliLog( "Enemy[", enemyId, "] attacks and deals" );
 #endif
         EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
@@ -65,7 +70,7 @@ Enemies& executeAction(
                  heroPosition
              ) )
         {
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
             snx::debug::cliLog( "Enemy[", enemyId, "] moves.\n" );
 #endif
             EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
@@ -82,7 +87,7 @@ Enemies& executeAction(
         else
         {
             //* Wait
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
             snx::debug::cliLog( "Enemy[", enemyId, "] waits.\n" );
 #endif
             EnergyModule::consume( enemiesIO.energies.at( enemyId ) );

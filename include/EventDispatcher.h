@@ -1,6 +1,8 @@
 #ifndef IG20240527235606
 #define IG20240527235606
 
+// #define DEBUG_EVENT_DISPATCHER
+
 #include "EventId.h"
 #include <forward_list>
 #include <functional>
@@ -27,7 +29,7 @@ namespace snx
             bool notifyOnCreation = false
         )
         {
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_EVENT_DISPATCHER )
             debug::cliLog( "Listener added for event '", eventIdToName.at( event ), "'.\n" );
 #endif
             ensureList( event );
@@ -43,7 +45,7 @@ namespace snx
         //* Notify (= execute) all listeners for given event
         static void notify( EventId event )
         {
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_EVENT_DISPATCHER )
             debug::cliLog( "Notify about event '", eventIdToName.at( event ), "'.\n" );
 #endif
             for ( std::function<void()>& listener : eventToListenerLists_[event] )
