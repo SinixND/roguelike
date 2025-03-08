@@ -242,11 +242,11 @@ namespace SceneGameModule
         return gameScene;
     }
 
-    SceneGame const& update(
-        SceneGame& gameScene,
+    void update(
+        SceneGame const& gameScene,
         Hero const& hero,
         World const& world,
-        Cursor& cursor,
+        Cursor const& cursor,
         InputId currentInputId
     )
     {
@@ -278,8 +278,6 @@ namespace SceneGameModule
         }
 
         EndDrawing();
-
-        return gameScene;
     }
 
     void deinitialize( SceneGame& gameScene )

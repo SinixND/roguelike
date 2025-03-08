@@ -12,7 +12,7 @@ struct EnergyComponent
     };
 
     int regenRate{ 1 };
-    int maxEnergy{ 10 };
+    int maxEnergy{ 2 };
     int currentEnergy{ maxEnergy };
 
     State state{ State::READY };

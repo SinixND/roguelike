@@ -24,24 +24,11 @@ namespace GameCameraModule
 
     RectangleExI viewportInTiles( GameCamera const& gameCamera );
 
-    //* Screen offset to draw target at
-    [[nodiscard]]
-    Camera2D const& setOffset(
-        Camera2D& camera,
-        Vector2 const& offset
-    );
-
     //* World position to draw at offset
     [[nodiscard]]
     Camera2D const& setTarget(
         Camera2D& camera,
         Vector2 const& target
-    );
-
-    [[nodiscard]]
-    Camera2D const& setZoom(
-        Camera2D& camera,
-        float zoom
     );
 }
 

@@ -1,17 +1,16 @@
 #include "RenderSystem.h"
 #include "PanelSystem.h"
 
-//* #define DEBUG_CHUNKS
-#define DEBUG_VISIBILITY
+// #define DEBUG_CHUNKS
 
 #include "Chunk.h"
 #include "ChunkData.h"
 #include "Fog.h"
 #include "GameFont.h"
-#include "GameScenePanels.h"
 #include "Hero.h"
 #include "Logger.h"
 #include "Objects.h"
+#include "Panel.h"
 #include "RenderData.h"
 #include "RenderId.h"
 #include "TextureData.h"
@@ -134,7 +133,7 @@ namespace RenderSystem
     {
         Color tint{};
 
-#if defined( DEBUG ) && defined( DEBUG_VISIBILITY )
+#if defined( DEBUG )
         if ( fog == Fog::OPAQUE )
         {
             tint = ColorAlpha( RED, 0.5f );

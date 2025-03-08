@@ -395,10 +395,14 @@ ifeq ($(TESTMODE),true)
 endif
 
 ### Non-file (.phony)targets (aka. rules)
-.PHONY: all build clean debug dtb init publish release run rdebug rrelease rtest rweb test web windows 
+.PHONY: all analyze build clean debug dtb init publish release run rdebug rrelease rtest rweb test web windows 
 
 ### Default rule by convention
 all: debug release
+
+### CppCheck static analysis
+analyze:
+	cppcheck --quiet --enable=all --suppress=missingIncludeSystem --suppress=missingInclude --suppress=selfAssignment --suppress=cstyleCast --check-level=exhaustive src/
 
 ### Build binary with current config
 build: $(BIN_DIR)/$(BIN)$(BIN_EXT)
@@ -426,6 +430,7 @@ debug:
 	$(info === Debug build ===)
 	@$(MAKE) BUILD=debug build
 	@$(MAKE) -s dtb
+	@$(MAKE) analyze
 
 ### Build compile_commands.json
 dtb:

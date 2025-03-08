@@ -1,4 +1,5 @@
 .cache
+.git
 bin/unix
 bin/web/debug/
 bin/windows

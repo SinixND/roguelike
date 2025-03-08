@@ -123,7 +123,7 @@ std::vector<Shadow>& mergeNewShadow(
     // for ( size_t idx{ 0 }; idx < shadowsSize; ++idx )
     while ( itr != shadows.end() )
     {
-        Shadow& oldShadow{ *itr };
+        Shadow const& oldShadow{ *itr };
 
         switch ( getSlopesCovered(
             oldShadow,

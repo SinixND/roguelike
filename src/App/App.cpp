@@ -1,5 +1,7 @@
 #include "App.h"
 
+// #define DEBUG_TILEINFO
+
 #include "AppConfig.h"
 #include "DeveloperMode.h"
 #include "EventDispatcher.h"
@@ -18,7 +20,6 @@
 #include <emscripten/html5.h>
 #endif
 
-#define DEBUG_TILEINFO
 #if defined( DEBUG ) && defined( DEBUG_TILEINFO )
 #include "Objects.h"
 #include <string>
@@ -150,7 +151,7 @@ void updateApp( void* arg )
                 app.dt
             );
 
-            app.scenes.game = SceneGameModule::update(
+            SceneGameModule::update(
                 app.scenes.game,
                 app.game.hero,
                 app.game.world,

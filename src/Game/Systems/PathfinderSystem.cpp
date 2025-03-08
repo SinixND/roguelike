@@ -1,6 +1,6 @@
 #include "PathfinderSystem.h"
 
-//* #define DEBUG_PATHFINDER
+// #define DEBUG_PATHFINDER
 
 #include "Convert.h"
 #include "GameCamera.h"
@@ -145,11 +145,10 @@ struct GuidedDirectionRNG
     Vector2I main;
     Vector2I off;
 
-    GuidedDirectionRNG( Vector2I const& offset )
+    explicit GuidedDirectionRNG( Vector2I const& offset )
+        : main( Vector2MainDirection( offset ) )
+        , off( Vector2OffDirection( offset ) )
     {
-        main = Vector2MainDirection( offset );
-        off = Vector2OffDirection( offset );
-
         //* Handle exceptions
         //* Exception: |x| == |y| => main is RNG, off is dependent
         if ( abs( offset.x ) == abs( offset.y ) )

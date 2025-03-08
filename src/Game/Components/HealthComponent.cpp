@@ -1,6 +1,6 @@
 #include "HealthComponent.h"
 
-#define DEBUG_HEALTH
+// #define DEBUG_HEALTH
 
 #include "EventDispatcher.h"
 
