@@ -25,8 +25,8 @@ snx::DenseMap<Vector2I, Chunk> const& requireChunk(
             chunkPosition,
             Convert::tileToWorld( chunkPosition ),
             LoadRenderTexture(
-                ChunkData::chunkSize_f,
-                ChunkData::chunkSize_f
+                ChunkData::CHUNK_SIZE_F,
+                ChunkData::CHUNK_SIZE_F
             )
         );
     }
@@ -73,7 +73,7 @@ namespace ChunkSystem
 
             BeginTextureMode( chunk.renderTexture );
 
-            ClearBackground( Colors::bg );
+            ClearBackground( Colors::BG );
 
             //* Iterate all tilePositions in chunk
             for ( int x{ chunkSize.left() - 1 }; x < ( chunkSize.right() + 2 ); ++x )

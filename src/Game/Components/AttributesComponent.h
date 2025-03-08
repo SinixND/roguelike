@@ -1,14 +1,19 @@
 #ifndef IG20250307140313
 #define IG20250307140313
 
+struct HealthComponent;
+struct EnergyComponent;
+
 struct AttributesComponent
 {
-    int Vitality{};  //* Health
-    int Strength{};  //* Damage
-    int Dexterity{}; //* CHC/CHD
-    int Defense{};   //* Damage reduction
-    int Agility{};   //* Evasion
-    int Weight{};    //* Energy regen
+    int vitality{}; //* Health
+    // int Strength{};  //* Damage
+    // int Defense{};   //* Damage reduction
+    // int Dexterity{}; //* CHD
+    int agility{}; //* Energy regen
+    // int Luck{};      //* Evasion (and CHC?)
+    // int Awareness{}; //* Vision range
 };
 
 #endif
+

@@ -21,16 +21,16 @@ namespace HealthModule
 #endif
         if ( value )
         {
-            healthIO.currentHealth -= value;
+            healthIO.current -= value;
         }
         else
         {
-            healthIO.currentHealth = 0;
+            healthIO.current = 0;
         }
 
         snx::EventDispatcher::notify( EventId::INTERRUPT_MOVEMENT );
 
-        if ( healthIO.currentHealth <= 0 )
+        if ( healthIO.current <= 0 )
         {
             return true;
         }
@@ -45,16 +45,16 @@ namespace HealthModule
     {
         if ( value )
         {
-            health.currentHealth += value;
+            health.current += value;
         }
         else
         {
-            health.currentHealth = health.maxHealth;
+            health.current = health.maximum;
         }
 
-        if ( health.currentHealth > health.maxHealth )
+        if ( health.current > health.maximum )
         {
-            health.currentHealth = health.maxHealth;
+            health.current = health.maximum;
         }
 
         return health;

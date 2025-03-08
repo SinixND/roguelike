@@ -298,7 +298,7 @@ namespace MapGeneratorSystem
             testRoom.tiles,
             RenderId::GOBLIN,
             Vector2I{ 3, 0 },
-            1
+            5
         );
 
         return testRoom;
@@ -340,16 +340,16 @@ namespace MapGeneratorSystem
         Map map{};
 
         Vector2I roomPosition{ 0, 0 };
-        int const roomWidth{ 15 };
-        int maxRoomOffset{ ( 2 + mapLevel ) * roomWidth };
+        int constexpr ROOM_WIDTH{ 15 };
+        int maxRoomOffset{ ( 2 + mapLevel ) * ROOM_WIDTH };
 
         //* Add first room
         map.tiles = addRoom(
             map.tiles,
             RectangleExI{
                 roomPosition,
-                roomWidth,
-                roomWidth
+                ROOM_WIDTH,
+                ROOM_WIDTH
             }
         );
 
@@ -365,7 +365,7 @@ namespace MapGeneratorSystem
             Vector2I direction{ Directions::directions[snx::RNG::random( 0, 3 )] };
 
             //* Update new room position
-            roomPosition += Vector2Scale( direction, roomWidth );
+            roomPosition += Vector2Scale( direction, ROOM_WIDTH );
 
             //* Add new room if room position unused
             if ( !usedPositions.contains( roomPosition ) )
@@ -376,8 +376,8 @@ namespace MapGeneratorSystem
                     map.tiles,
                     RectangleExI{
                         roomPosition,
-                        roomWidth,
-                        roomWidth
+                        ROOM_WIDTH,
+                        ROOM_WIDTH
                     }
                 );
             }

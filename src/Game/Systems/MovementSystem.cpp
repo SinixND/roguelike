@@ -64,7 +64,7 @@ namespace MovementSystem
 
         transform.direction = direction;
         transform.speed = movement.baseSpeed;
-        transform.remainingDistance = TileData::tileSize;
+        transform.remainingDistance = TileData::TILE_SIZE;
 
         snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTION_ACTIVE );
 

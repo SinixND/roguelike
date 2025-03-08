@@ -337,16 +337,17 @@ ifeq ($(OS),linux)
     endif
 endif
 
+# Define RELEASE in debug builds to keep lsp working for release only code
 ifeq ($(PLATFORM),web)
     CXX_FLAGS 			+= -Os -Wall -DEMSCRIPTEN -DPLATFORM_WEB
     ifeq ($(BUILD),debug)
-        CXX_FLAGS 			+= -g -Wall -DDEBUG 
+        CXX_FLAGS 			+= -g -Wall -DDEBUG
     else
         CXX_FLAGS 			+= -DNDEBUG
     endif
 else
     ifeq ($(BUILD),debug)
-        CXX_FLAGS 			+= -g -ggdb -O0 -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -DDEBUG 
+        CXX_FLAGS 			+= -g -ggdb -O0 -Wall -Wextra -Wshadow -Werror -Wpedantic -pedantic-errors -DDEBUG
         ifeq ($(FATAL),true)
             CXX_FLAGS			+= -Wfatal-errors
         endif

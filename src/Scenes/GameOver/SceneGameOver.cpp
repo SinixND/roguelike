@@ -15,20 +15,20 @@ namespace SceneGameOverModule
 
         scene.panel.setRectangle(
             RectangleEx{
-                0.25f * renderWidth,
-                0.25f * renderHeight,
-                0.5f * static_cast<float>( renderWidth ),
-                0.5f * static_cast<float>( renderHeight )
+                0.1f * renderWidth,
+                0.1f * renderHeight,
+                0.8f * static_cast<float>( renderWidth ),
+                0.8f * static_cast<float>( renderHeight )
             }
         );
 
         return scene;
     }
 
-    SceneGameOver const& update( SceneGameOver& scene )
+    void update( SceneGameOver& scene )
     {
         BeginDrawing();
-        ClearBackground( Colors::bg );
+        ClearBackground( Colors::BG );
 
         char const* line1{ "You died." };
         char const* line2{ ">> GAME OVER <<" };
@@ -71,7 +71,5 @@ namespace SceneGameOverModule
         ScenesModule::drawWindowBorder();
 
         EndDrawing();
-
-        return scene;
     }
 }

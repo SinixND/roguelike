@@ -15,7 +15,8 @@ namespace EnergyModule
         int value
     )
     {
-        if ( energyIO.currentEnergy <= 0 )
+        //* Can't consume if not ready
+        if ( !isReady( energyIO ) )
         {
             return false;
         }
@@ -24,25 +25,20 @@ namespace EnergyModule
 #if defined( DEBUG ) && defined( DEBUG_ENERGY )
         snx::debug::cliLog( "EnergyModule::consume()\n" );
 #endif
-        energyIO.currentEnergy -= value;
-
-        if ( energyIO.currentEnergy <= 0 )
-        {
-            energyIO.state = EnergyComponent::State::NOT_READY;
-        }
+        energyIO.current -= value;
 
         return true;
     }
 
-    bool consume( EnergyComponent& energyIO )
+    bool exhaust( EnergyComponent& energyIO )
     {
-        return consume( energyIO, energyIO.currentEnergy );
+        return consume( energyIO, energyIO.maximum );
     }
 
     bool regenerate( EnergyComponent& energyIO )
     {
         //* If already full
-        if ( energyIO.currentEnergy >= energyIO.maxEnergy )
+        if ( energyIO.current >= energyIO.maximum )
         {
 #if defined( DEBUG ) && defined( DEBUG_ENERGY )
             snx::debug::cliPrint( "Energy is full.\n" );
@@ -54,18 +50,19 @@ namespace EnergyModule
 #if defined( DEBUG ) && defined( DEBUG_ENERGY )
         snx::debug::cliPrint( "Regen ", energyIO.currentEnergy, "+", energyIO.regenRate, "\n" );
 #endif
-        energyIO.currentEnergy += energyIO.regenRate;
+        energyIO.current += energyIO.regenRate;
 
-        if ( energyIO.currentEnergy < energyIO.maxEnergy )
+        if ( energyIO.current < energyIO.maximum )
         {
             return false;
         }
 
-        //* Energy full: Ensure energy does not exceed maxEnergy
-        energyIO.currentEnergy = energyIO.maxEnergy;
-        energyIO.state = EnergyComponent::State::READY;
-
         return true;
+    }
+
+    bool isReady( EnergyComponent const& energy )
+    {
+        return !( energy.current < energy.maximum );
     }
 }
 

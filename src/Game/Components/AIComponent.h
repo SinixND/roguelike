@@ -5,7 +5,6 @@
 
 struct AIComponent
 {
-    size_t turn{ 0 };
     int scanRange{ 0 };
 };
 
@@ -23,8 +22,7 @@ namespace AIModule
         size_t& activeEnemyIdIO,
         Hero& heroIO,
         Map const& map,
-        GameCamera const& gameCamera,
-        int turn
+        GameCamera const& gameCamera
     );
 }
 

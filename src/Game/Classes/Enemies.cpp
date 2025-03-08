@@ -11,6 +11,7 @@
 #include "ExperienceComponent.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
+#include "LevelUpSystem.h"
 #include "Logger.h"
 #include "MovementComponent.h"
 #include "MovementSystem.h"
@@ -52,7 +53,7 @@ void Enemies::insert(
     damages.insert( id, damage );
     experiences.insert( id, ExperienceComponent{} );
 
-    experiences.at( id ) = ExperienceModule::levelUp(
+    experiences.at( id ) = LevelUpSystem::levelUpTo(
         experiences.at( id ),
         expLevel
     );
@@ -170,10 +171,7 @@ namespace EnemiesModule
         enemies.insert(
             TransformComponent{},
             MovementComponent{},
-            EnergyComponent{
-                enemyData.energyRegenBase,
-                enemyData.energyMax
-            },
+            EnergyComponent{},
             HealthComponent{ enemyData.healthBase },
             DamageComponent{ enemyData.damageBase },
             tilePosition,
@@ -233,7 +231,6 @@ namespace EnemiesModule
     {
         bool isEnergyFull{ false };
 
-        // for ( EnergyComponent& energy : energiesIO )
         for ( size_t idx{ 0 }; idx < energiesIO.size(); ++idx )
         {
 #if defined( DEBUG ) && defined( DEBUG_ENERGY )
@@ -245,18 +242,13 @@ namespace EnemiesModule
         return isEnergyFull;
     }
 
-    size_t getActive(
-        snx::DenseMap<size_t, EnergyComponent> const& energies,
-        snx::DenseMap<size_t, AIComponent> const& ais,
-        size_t const turn
-    )
+    size_t getActive( snx::DenseMap<size_t, EnergyComponent> const& energies )
     {
         size_t activeEnemyId{ 0 };
 
         for ( size_t idx{ 0 }; idx < energies.size(); ++idx )
         {
-            if ( energies[idx].state == EnergyComponent::State::READY
-                 && ais[idx].turn < turn )
+            if ( EnergyModule::isReady( energies[idx] ) )
             {
                 activeEnemyId = energies.key( idx );
                 break;
@@ -277,7 +269,7 @@ namespace EnemiesModule
         while ( idx < enemies.ids.values().size() )
         {
             //* Kill enemy at 0 health
-            if ( enemies.healths[idx].currentHealth <= 0 )
+            if ( enemies.healths[idx].current <= 0 )
             {
                 snx::Logger::log( enemies.names[idx] + " died.\n" );
                 enemies.remove( enemies.ids[idx]

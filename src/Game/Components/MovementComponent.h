@@ -5,14 +5,17 @@
 #include "raylibEx.h"
 #include <vector>
 
-//* Movementspeed in tiles per second
-constexpr int MOVEMENTSPEED{ 20 };
+namespace MovementData
+{
+    //* Movementspeed in tiles per second
+    int constexpr MOVEMENT_SPEED{ 20 };
+}
 
 struct MovementComponent
 {
     std::vector<Vector2I> path{};
 
-    float baseSpeed{ MOVEMENTSPEED * TileData::tileSize };
+    float baseSpeed{ MovementData::MOVEMENT_SPEED * TileData::TILE_SIZE };
 };
 
 #endif

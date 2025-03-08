@@ -1,5 +1,4 @@
 #include "RenderSystem.h"
-#include "PanelSystem.h"
 
 // #define DEBUG_CHUNKS
 
@@ -7,6 +6,7 @@
 #include "ChunkData.h"
 #include "Fog.h"
 #include "GameFont.h"
+#include "GamePanels.h"
 #include "Hero.h"
 #include "Logger.h"
 #include "Objects.h"
@@ -24,7 +24,7 @@
 
 std::string textureAtlasFileName( size_t theme )
 {
-    return TextureData::themes[theme] + ".png";
+    return TextureData::THEMES[theme] + ".png";
 }
 
 namespace RenderSystem
@@ -75,14 +75,14 @@ namespace RenderSystem
                 )
                         .y
                     + 0.5f,
-                TextureData::textureSize - ( 2 * 0.5f ),
-                TextureData::textureSize - ( 2 * 0.5f )
+                TextureData::TEXTURE_SIZE - ( 2 * 0.5f ),
+                TextureData::TEXTURE_SIZE - ( 2 * 0.5f )
             },
             Rectangle{
                 worldPixel.x,
                 worldPixel.y,
-                TileData::tileSize,
-                TileData::tileSize
+                TileData::TILE_SIZE,
+                TileData::TILE_SIZE
             },
             //* TileData::TILE_CENTER,
             Vector2{ 0, 0 },
@@ -104,8 +104,8 @@ namespace RenderSystem
             Rectangle{
                 chunk.position.x,
                 chunk.position.y,
-                ChunkData::chunkSize_f,
-                ChunkData::chunkSize_f
+                ChunkData::CHUNK_SIZE_F,
+                ChunkData::CHUNK_SIZE_F
             },
             Vector2{ 0, 0 },
             0,
@@ -157,7 +157,7 @@ namespace RenderSystem
 
         DrawRectangleV(
             fogPosition,
-            TileData::tileDimensions,
+            TileData::TILE_DIMENSIONS,
             tint
         );
     }
@@ -170,20 +170,21 @@ namespace RenderSystem
         float borderWidth
     )
     {
-        PanelSystem::drawPanelBackground( statusPanel, bgColor );
-        PanelSystem::drawPanelBorder( statusPanel, borderWidth );
+        GamePanelsModule::drawPanelBackground( statusPanel, bgColor );
+        GamePanelsModule::drawPanelBorder( statusPanel, borderWidth );
 
         DrawTextEx(
             GameFont::font(),
             TextFormat(
-                "Maplevel:%2i   Lvl:%3i   EXP:%5i/%5i   HP:%3i/%3i   ATK:%3i",
+                // "Maplevel:%2i   Lvl:%3i   Exp:%5i/%5i   Hp:%3i/%3i   Atk:%3i",
+                "Maplevel:%i | Lvl:%i  Hp:%i/%i  Atk:%i  Exp:%i/%i",
                 mapLevel,
-                hero.experience.expLevel,
-                hero.experience.expCurrent,
-                hero.experience.levelUpThreshold,
-                hero.health.currentHealth,
-                hero.health.maxHealth,
-                DamageModule::damageAverage( hero.damage )
+                hero.experience.level,
+                hero.health.current,
+                hero.health.maximum,
+                DamageModule::damageAverage( hero.damage ),
+                hero.experience.current,
+                hero.experience.levelUpThreshold
             ),
             Vector2{
                 statusPanel.inner().left(),
@@ -203,14 +204,14 @@ namespace RenderSystem
         float borderWidth
     )
     {
-        PanelSystem::drawPanelBackground( infoPanel, bgColor );
+        GamePanelsModule::drawPanelBackground( infoPanel, bgColor );
 
         if ( !objects.ids.contains( cursorPosition ) )
         {
             return;
         }
 
-        PanelSystem::drawPanelBorder( infoPanel, borderWidth );
+        GamePanelsModule::drawPanelBorder( infoPanel, borderWidth );
 
         size_t objectIdx{ objects.ids.index( cursorPosition ) };
 
@@ -239,8 +240,8 @@ namespace RenderSystem
             return;
         }
 
-        PanelSystem::drawPanelBackground( logPanel, bgColor );
-        PanelSystem::drawPanelBorder( logPanel, borderWidth );
+        GamePanelsModule::drawPanelBackground( logPanel, bgColor );
+        GamePanelsModule::drawPanelBorder( logPanel, borderWidth );
 
         float lines{ ( logPanel.inner().height() / ( 1.5f * GameFont::fontSize ) ) - 1 };
 
@@ -262,7 +263,7 @@ namespace RenderSystem
 
     size_t cycleThemes( size_t theme )
     {
-        theme = ( theme < TextureData::themes.size() - 1 ) ? ++theme : 0;
+        theme = ( theme < TextureData::THEMES.size() - 1 ) ? ++theme : 0;
 
         return theme;
     }

@@ -1,29 +1,22 @@
 #ifndef IG20250306120651
 #define IG20250306120651
 
-int constexpr baseExperience = 10;
+int constexpr BASE_EXPERIENCE = 10;
 
 struct ExperienceComponent
 {
-    int expLevel{ 1 };
-    int expCurrent{ 0 };
-    int levelUpThreshold{ baseExperience };
+    int level{ 1 };
+    int current{ 0 };
+    int levelUpThreshold{ BASE_EXPERIENCE };
 };
 
 namespace ExperienceModule
 {
-    [[nodiscard]]
-    ExperienceComponent const& levelUp( ExperienceComponent& component );
-
-    [[nodiscard]]
-    ExperienceComponent const& levelUp(
-        ExperienceComponent& component,
-        int expLevel
-    );
+    int getExpValue( int foeExpLevel, int attackerExpLevel );
 
     [[nodiscard]]
     ExperienceComponent const& gainExp(
-        ExperienceComponent& component,
+        ExperienceComponent& experience,
         int value
     );
 }

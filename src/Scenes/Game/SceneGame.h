@@ -4,7 +4,9 @@
 #include "Chunk.h"
 #include "DenseMap.h"
 #include "GameCamera.h"
-#include "GameScenePanels.h"
+#include "GamePanels.h"
+#include "GameState.h"
+#include "Overlays.h"
 #include "RenderData.h"
 
 struct Hero;
@@ -15,10 +17,11 @@ enum class InputId;
 
 struct SceneGame
 {
-    SceneGamePanels panels{};
+    GamePanels panels{};
     snx::DenseMap<Vector2I, Chunk> chunks{};
     RenderData renderData{};
     GameCamera gameCamera{};
+    Overlays overlays{};
 };
 
 namespace SceneGameModule
@@ -35,6 +38,7 @@ namespace SceneGameModule
         Hero const& hero,
         World const& world,
         Cursor const& cursor,
+        GameState gameState,
         InputId currentInputId
     );
 

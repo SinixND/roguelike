@@ -1,6 +1,7 @@
 #ifndef IG20241011025951
 #define IG20241011025951
 
+#include "GameState.h"
 #include "Hero.h"
 #include "InputId.h"
 #include "World.h"
@@ -13,6 +14,8 @@ struct Game
     Hero hero{};
 
     World world{};
+
+    GameState state{ GameState::DEFAULT };
 
     //* Track game turns
     size_t turn{ 1 };

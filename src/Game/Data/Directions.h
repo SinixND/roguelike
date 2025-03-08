@@ -9,7 +9,7 @@ namespace Directions
 {
     //* X is right-positive, Y is down-positive
     Vector2 constexpr null{ 0, 0 };
-    Vector2I constexpr noDir{ 0, 0 };
+    Vector2I constexpr NO_DIR{ 0, 0 };
     Vector2I constexpr right{ 1, 0 };
     Vector2I constexpr down{ 0, 1 };
     Vector2I constexpr left{ -1, 0 };

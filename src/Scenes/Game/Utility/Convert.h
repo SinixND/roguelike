@@ -21,8 +21,8 @@ namespace Convert
     {
         //* World pixel is center of tile
         return Vector2I{
-            static_cast<int>( std::floor( ( pixel.x ) / TileData::tileSize ) ),
-            static_cast<int>( std::floor( ( pixel.y ) / TileData::tileSize ) )
+            static_cast<int>( std::floor( ( pixel.x ) / TileData::TILE_SIZE ) ),
+            static_cast<int>( std::floor( ( pixel.y ) / TileData::TILE_SIZE ) )
         };
     }
 
@@ -30,8 +30,8 @@ namespace Convert
     inline Vector2 tileToWorld( Vector2I const& tilePosition )
     {
         return Vector2{
-            ( tilePosition.x * TileData::tileSize ),
-            ( tilePosition.y * TileData::tileSize )
+            ( tilePosition.x * TileData::TILE_SIZE ),
+            ( tilePosition.y * TileData::TILE_SIZE )
         };
     }
 
@@ -69,8 +69,8 @@ namespace Convert
     inline Vector2I tileToChunk( Vector2I const& tilePosition )
     {
         return Vector2I{
-            static_cast<int>( std::floor( tilePosition.x / static_cast<float>( ChunkData::chunkSize ) ) ) * ChunkData::chunkSize,
-            static_cast<int>( std::floor( tilePosition.y / static_cast<float>( ChunkData::chunkSize ) ) ) * ChunkData::chunkSize
+            static_cast<int>( std::floor( tilePosition.x / static_cast<float>( ChunkData::CHUNK_SIZE ) ) ) * ChunkData::CHUNK_SIZE,
+            static_cast<int>( std::floor( tilePosition.y / static_cast<float>( ChunkData::CHUNK_SIZE ) ) ) * ChunkData::CHUNK_SIZE
         };
     }
 

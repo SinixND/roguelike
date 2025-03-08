@@ -19,8 +19,6 @@ struct App
     Scenes scenes{};
     Game game{};
 
-    // GameScene scene{};
-
     InputId currentInputId{ InputId::NONE };
     AppState state{ AppState::RUN_GAME };
 };

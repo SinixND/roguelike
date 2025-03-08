@@ -1,23 +1,16 @@
-#include "PanelSystem.h"
+#include "GamePanels.h"
 
 #include "GameFont.h"
-#include "GameScenePanels.h"
+#include "GamePanels.h"
 #include "raylibEx.h"
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
 
-namespace PanelSystem
+namespace GamePanelsModule
 {
-    SceneGamePanels const& init( SceneGamePanels& panels )
+    GamePanels const& init( GamePanels& panels )
     {
-        Vector2 charSize{ MeasureTextEx(
-            GameFont::font(),
-            "I",
-            GameFont::fontSize,
-            0
-        ) };
-
         panels.map.setRectangle(
             RectangleEx{
                 0,
@@ -33,10 +26,10 @@ namespace PanelSystem
                     0,
                     0,
                     static_cast<float>( GetRenderWidth() ),
-                    ( 1 * charSize.y ) + charSize.y
+                    ( 1 * GameFont::fontSize ) + GameFont::fontSize
                 },
                 0,
-                0.5f * charSize.y
+                0.5f * GameFont::fontSize
             );
 
         panels.info
@@ -45,10 +38,10 @@ namespace PanelSystem
                     panels.status.outer().left(),
                     panels.status.outer().bottom(),
                     static_cast<float>( GetRenderWidth() ),
-                    ( 1 * charSize.y ) + charSize.y
+                    ( 1 * GameFont::fontSize ) + GameFont::fontSize
                 },
                 0,
-                0.5f * charSize.y
+                0.5f * GameFont::fontSize
             );
 
         panels.log
@@ -57,10 +50,10 @@ namespace PanelSystem
                     panels.info.outer().left(),
                     panels.info.outer().bottom(),
                     static_cast<float>( GetRenderWidth() ),
-                    ( 3 * charSize.y ) + charSize.y
+                    ( 3 * GameFont::fontSize ) + GameFont::fontSize
                 },
                 0,
-                0.5f * charSize.y
+                0.5f * GameFont::fontSize
             );
 
         return panels;

@@ -3,25 +3,19 @@
 
 #include <cassert>
 
+/// Unit can perform action(s) if energy is full (-> READY)
 struct EnergyComponent
 {
-    enum class State
-    {
-        READY,
-        NOT_READY,
-    };
-
-    int regenRate{};
-    int maxEnergy{};
-    int currentEnergy{ maxEnergy };
-
-    State state{ State::READY };
+    /// RegenRate = (max + AGI) / weight
+    /// Default weight is 4
+    int baseRegen{ 4 };
+    int regenRate{ 4 };
+    int maximum{ 16 };
+    int current{ maximum };
 };
 
 namespace EnergyModule
 {
-    //* Consumes all energy remaining; Returns if consumption was successful
-    bool consume( EnergyComponent& energyIO );
 
     //* Consumes energy; Returns if consumption was successful
     bool consume(
@@ -29,7 +23,14 @@ namespace EnergyModule
         int value
     );
 
+    //* Consumes all energy remaining; Returns if consumption was successful
+    bool exhaust( EnergyComponent& energyIO );
+
     //* Returns true if energy is full
     bool regenerate( EnergyComponent& energyIO );
+
+    bool isReady( EnergyComponent const& energy );
 }
+
 #endif
+

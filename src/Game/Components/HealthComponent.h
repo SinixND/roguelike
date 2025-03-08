@@ -3,9 +3,10 @@
 
 struct HealthComponent
 {
-    int maxHealth{ 1 };
+    int base{ 1 };
     int regenRate{ 0 };
-    int currentHealth{ maxHealth };
+    int maximum{ base };
+    int current{ maximum };
 };
 
 namespace HealthModule

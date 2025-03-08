@@ -3,13 +3,10 @@
 
 namespace HeroData
 {
-    int constexpr energyMax{ 2 };
-    int constexpr energyRegenBase{ 1 };
-    int constexpr agilityBase{ 1 };
-    int constexpr visionRange{ 10 };
-    int constexpr healthBase{ 20 };
-    int constexpr healthRegenBase{ 1 };
-    int constexpr damageBase{ 2 };
+    int constexpr HEALTH_BASE{ 20 };
+    int constexpr HEALTH_REGEN_BASE{ 1 };
+    int constexpr DAMAGE_BASE{ 2 };
+    int constexpr VISION_RANGE{ 10 };
 }
 
 #endif

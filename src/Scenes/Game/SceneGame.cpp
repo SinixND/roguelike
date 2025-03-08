@@ -10,10 +10,11 @@
 #include "EventId.h"
 #include "Game.h"
 #include "GameCamera.h"
+#include "GameState.h"
 #include "InputId.h"
 #include "Objects.h"
-#include "PanelSystem.h"
 #include "RenderSystem.h"
+#include "SceneGame.h"
 #include "Scenes.h"
 #include "VisibilityId.h"
 #include "VisibilitySystem.h"
@@ -135,7 +136,9 @@ void renderOutput(
             != VisibilityId::VISIBILE
         )
         {
+#if !defined( DEBUG )
             continue;
+#endif
         }
 
         RenderSystem::renderTexture(
@@ -212,7 +215,8 @@ namespace SceneGameModule
         World const& world
     )
     {
-        gameScene.panels = PanelSystem::init( gameScene.panels );
+        gameScene.panels = GamePanelsModule::init( gameScene.panels );
+        gameScene.overlays = OverlaysModule::init( gameScene.overlays );
 
         gameScene.gameCamera = GameCameraModule::init(
             gameScene.gameCamera,
@@ -247,6 +251,7 @@ namespace SceneGameModule
         Hero const& hero,
         World const& world,
         Cursor const& cursor,
+        GameState gameState,
         InputId currentInputId
     )
     {
@@ -259,7 +264,7 @@ namespace SceneGameModule
         snx::debug::gcam() = gameScene.gameCamera;
 #endif
         BeginDrawing();
-        ClearBackground( Colors::bg );
+        ClearBackground( Colors::BG );
 
         renderOutput(
             gameScene,
@@ -268,6 +273,19 @@ namespace SceneGameModule
             cursor,
             world.currentMapLevel
         );
+
+        switch ( gameState )
+        {
+            default:
+            case GameState::DEFAULT:
+                break;
+
+            case GameState::LEVEL_UP:
+            {
+                OverlayLevelUpModule::update( gameScene.overlays.levelUp );
+                break;
+            }
+        }
 
         //* Draw simple frame
         ScenesModule::drawWindowBorder();

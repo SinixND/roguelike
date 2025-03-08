@@ -93,11 +93,7 @@ namespace EnemiesModule
     );
 
     //* Returns the id of the first ready enemy
-    size_t getActive(
-        snx::DenseMap<size_t, EnergyComponent> const& energies,
-        snx::DenseMap<size_t, AIComponent> const& ais,
-        size_t const turn
-    );
+    size_t getActive( snx::DenseMap<size_t, EnergyComponent> const& energies );
 
     [[nodiscard]]
     Enemies const& replaceDead(

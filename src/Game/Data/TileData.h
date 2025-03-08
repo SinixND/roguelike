@@ -6,10 +6,10 @@
 namespace TileData
 {
     //* Odd number to have dedicated center
-    float constexpr tileSize{ 32 };
-    Vector2 constexpr tileCenter{ 0.5f * tileSize, 0.5f * tileSize };
-    float constexpr tileSizeHalf{ 0.5f * tileSize };
-    Vector2 constexpr tileDimensions{ tileSize, tileSize };
+    float constexpr TILE_SIZE{ 32 };
+    Vector2 constexpr TILE_CENTER{ 0.5f * TILE_SIZE, 0.5f * TILE_SIZE };
+    float constexpr TILE_SIZE_HALF{ 0.5f * TILE_SIZE };
+    Vector2 constexpr TILE_DIMENSIONS{ TILE_SIZE, TILE_SIZE };
 }
 
 #endif

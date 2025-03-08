@@ -5,14 +5,10 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Name XComponent parameter "component"
-- [ ] Base data (constexpr?) in config/data file
+- [ ] Level up attributes with Gestures (select & confirm)
 - [ ] Add inspection mode
-- [ ] Add attributes (1 pt / lvl, bonus at 10^x?)
-    - VIT (HP)
-    - STR (ATK), DEF (DamageReDuction)
-    - DEX (CHC/CHD), AGI (EVAsion)
-    - WGT (EnergyReGen)
+- [ ] Extend attributes
+- [ ] Enemy scaling
 
 
 ## Shortterm
@@ -171,3 +167,4 @@ Platforms: Linux, Windows, Browser
 - [ ] Implement ncurses (raycurses?) -> no
 - [x] End/Restart game on death
 - [x] Add experience system
+- [x] Add attribute system

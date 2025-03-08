@@ -1,6 +1,7 @@
 #ifndef IG20240531143458
 #define IG20240531143458
 
+#include "AttributesComponent.h"
 #include "DamageComponent.h"
 #include "EnergyComponent.h"
 #include "ExperienceComponent.h"
@@ -14,27 +15,26 @@ struct Hero
 {
     MovementComponent movement{};
 
+    AttributesComponent attributes{};
+
     TransformComponent transform{};
 
-    EnergyComponent energy{
-        HeroData::energyRegenBase,
-        HeroData::energyMax
-    };
+    EnergyComponent energy{};
 
     HealthComponent health{
-        HeroData::healthBase,
-        HeroData::healthRegenBase
+        HeroData::HEALTH_BASE,
+        HeroData::HEALTH_REGEN_BASE
     };
 
     ExperienceComponent experience{};
 
-    DamageComponent damage{ HeroData::damageBase };
+    DamageComponent damage{ HeroData::DAMAGE_BASE };
 
     Vector2 position{};
 
     RenderId renderId{ RenderId::HERO };
 
-    int visionRange{ HeroData::visionRange };
+    int visionRange{ HeroData::VISION_RANGE };
 };
 
 struct Map;

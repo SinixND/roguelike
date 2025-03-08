@@ -15,7 +15,6 @@ namespace MovementSystem
     Vector2 const& updateSingle(
         Vector2& positionIO,
         TransformComponent& transformIO,
-        // MovementComponent& movementIO,
         float dt
     );
 

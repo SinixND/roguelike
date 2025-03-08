@@ -120,7 +120,6 @@ std::vector<Shadow>& mergeNewShadow(
 
     //* Merge newShadow with existing shadows
     auto itr{ shadows.begin() };
-    // for ( size_t idx{ 0 }; idx < shadowsSize; ++idx )
     while ( itr != shadows.end() )
     {
         Shadow const& oldShadow{ *itr };

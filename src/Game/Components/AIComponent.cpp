@@ -39,7 +39,7 @@ Enemies& executeAction(
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
         snx::debug::cliLog( "Enemy[", enemyId, "] attacks and deals" );
 #endif
-        EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
+        EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
 
         HealthModule::damage(
             heroHealthIO,
@@ -73,7 +73,7 @@ Enemies& executeAction(
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
             snx::debug::cliLog( "Enemy[", enemyId, "] moves.\n" );
 #endif
-            EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
+            EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
 
             enemiesIO.transforms.at( enemyId ) = MovementSystem::prepareByFromTo(
                 enemiesIO.transforms.at( enemyId ),
@@ -90,7 +90,7 @@ Enemies& executeAction(
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
             snx::debug::cliLog( "Enemy[", enemyId, "] waits.\n" );
 #endif
-            EnergyModule::consume( enemiesIO.energies.at( enemyId ) );
+            EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
         }
     }
     return enemiesIO;
@@ -103,22 +103,15 @@ namespace AIModule
         size_t& activeEnemyIdIO,
         Hero& heroIO,
         Map const& map,
-        GameCamera const& gameCamera,
-        int turn
+        GameCamera const& gameCamera
     )
     {
         do
         {
-            activeEnemyIdIO = EnemiesModule::getActive(
-                enemies.energies,
-                enemies.ais,
-                turn
-            );
+            activeEnemyIdIO = EnemiesModule::getActive( enemies.energies );
 
             if ( activeEnemyIdIO )
             {
-                enemies.ais.at( activeEnemyIdIO ).turn = turn;
-
                 enemies = executeAction(
                     enemies,
                     heroIO.health,

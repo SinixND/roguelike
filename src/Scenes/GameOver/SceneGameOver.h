@@ -13,7 +13,6 @@ namespace SceneGameOverModule
     [[nodiscard]]
     SceneGameOver const& init( SceneGameOver& scene );
 
-    [[nodiscard]]
-    SceneGameOver const& update( SceneGameOver& scene );
+    void update( SceneGameOver& scene );
 }
 #endif

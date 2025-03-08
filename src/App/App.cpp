@@ -8,9 +8,9 @@
 #include "EventId.h"
 #include "Game.h"
 #include "GameFont.h"
+#include "GamePanels.h"
 #include "InputHandler.h"
 #include "InputId.h"
-#include "PanelSystem.h"
 #include "VisibilitySystem.h"
 #include <raygui.h>
 #include <raylib.h>
@@ -156,14 +156,16 @@ void updateApp( void* arg )
                 app.game.hero,
                 app.game.world,
                 app.cursor,
+                app.game.state,
                 app.currentInputId
             );
+
             break;
         }
 
         case AppState::GAME_OVER:
         {
-            app.scenes.gameOver = SceneGameOverModule::update( app.scenes.gameOver );
+            SceneGameOverModule::update( app.scenes.gameOver );
 
             break;
         }
@@ -289,7 +291,9 @@ void setupAppEvents( App& app )
         EventId::WINDOW_RESIZED,
         [&]()
         {
-            app.scenes.game.panels = PanelSystem::init( app.scenes.game.panels );
+            app.scenes.game.panels = GamePanelsModule::init( app.scenes.game.panels );
+            app.scenes.gameOver = SceneGameOverModule::init( app.scenes.gameOver );
+            app.scenes.game.overlays = OverlaysModule::init( app.scenes.game.overlays );
 
             app.scenes.game.gameCamera = GameCameraModule::init(
                 app.scenes.game.gameCamera,

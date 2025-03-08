@@ -3,6 +3,7 @@
 // #define DEBUG_GAME_LOOP
 
 #include "AIComponent.h"
+#include "AgilitySystem.h"
 #include "Convert.h"
 #include "Cursor.h"
 #include "Enemies.h"
@@ -10,10 +11,12 @@
 #include "EventDispatcher.h"
 #include "EventId.h"
 #include "GameCamera.h"
+#include "GameState.h"
 #include "Hero.h"
 #include "MovementSystem.h"
 #include "Objects.h"
 #include "RenderId.h"
+#include "VitalitySystem.h"
 #include "World.h"
 #include "raylibEx.h"
 #include <Logger.h>
@@ -27,8 +30,7 @@
 #include "RNG.h"
 #endif
 
-[[nodiscard]]
-Game const& setupGameEvents( Game& game )
+void setupGameEvents( Game& game )
 {
     snx::EventDispatcher::addListener(
         EventId::MULTIFRAME_ACTION_ACTIVE,
@@ -106,7 +108,21 @@ Game const& setupGameEvents( Game& game )
         }
     );
 
-    return game;
+    snx::EventDispatcher::addListener(
+        EventId::LEVEL_UP,
+        [&]()
+        {
+            game.state = GameState::LEVEL_UP;
+        }
+    );
+
+    snx::EventDispatcher::addListener(
+        EventId::LEVELED_UP,
+        [&]()
+        {
+            game.state = GameState::DEFAULT;
+        }
+    );
 }
 
 [[nodiscard]]
@@ -120,7 +136,6 @@ Hero const& continueHeroMovement(
     hero.position = MovementSystem::updateSingle(
         hero.position,
         hero.transform,
-        // hero.movement,
         dt
     );
 
@@ -150,7 +165,6 @@ Enemies const& continueEnemyMovements(
         enemies.positions[idx] = MovementSystem::updateSingle(
             enemies.positions[idx],
             enemies.transforms[idx],
-            // enemies.movements[idx],
             dt
         );
 
@@ -202,7 +216,7 @@ Game const& executeInstantActions(
 )
 {
     //* Hero
-    if ( game.hero.energy.state == EnergyComponent::State::READY )
+    if ( EnergyModule::isReady( game.hero.energy ) )
     {
         game.hero = HeroModule::executeAction(
             game.hero,
@@ -221,12 +235,127 @@ Game const& executeInstantActions(
             game.activeEnemyId,
             game.hero,
             *game.world.currentMap,
-            gameCamera,
-            game.turn
+            gameCamera
         );
     }
 
     return game;
+}
+
+[[nodiscard]]
+Game const& updateDefault(
+    Game& game,
+    GameCamera const& gameCamera,
+    Cursor const& cursor,
+    InputId currentInputId,
+    float dt
+)
+{
+    if ( !game.isMultiFrameActionActive )
+    {
+        game = executeInstantActions(
+            game,
+            gameCamera,
+            cursor,
+            currentInputId
+        );
+    }
+
+    if ( game.isMultiFrameActionActive )
+    {
+        game = continueMultiFrameActions(
+            game,
+            dt
+        );
+
+        return game;
+    }
+
+    //* End turn
+    if ( game.hero.health.current <= 0 )
+    {
+        snx::EventDispatcher::notify( EventId::GAME_OVER );
+    }
+
+    game.world.currentMap->enemies = EnemiesModule::replaceDead(
+        game.world.currentMap->enemies,
+        game.world.currentMap->tiles,
+        game.world.currentMapLevel
+    );
+
+    //* Skip energy regeneration while a unit is ready
+    if ( EnergyModule::isReady( game.hero.energy )
+         || game.activeEnemyId )
+    {
+        return game;
+    }
+
+    //* Regenerate energy until a unit becomes ready
+    bool isUnitReady{ false };
+
+    //* Regenerate until one unit becomes ready
+#if defined( DEBUG ) && defined( DEBUG_GAME_LOOP )
+    snx::debug::cliLog( "No action left. Regen units.\n" );
+#endif
+    while ( !isUnitReady )
+    {
+        //* Unit is ready when regenerate is _not_ successful
+        isUnitReady = EnergyModule::regenerate( game.hero.energy );
+        isUnitReady |= EnemiesModule::regenerate( game.world.currentMap->enemies.energies );
+    }
+
+    //* Increment turn when hero is ready
+    if ( EnergyModule::isReady( game.hero.energy ) )
+    {
+#if defined( DEBUG ) && defined( DEBUG_GAME_LOOP )
+        snx::debug::cliLog( "Hero ready. Next Turn\n\n" );
+#endif
+        snx::EventDispatcher::notify( EventId::NEXT_TURN );
+
+        snx::Logger::incrementTurn();
+    }
+
+    return game;
+}
+
+[[nodiscard]]
+Hero const& updateLevelUp(
+    Hero& hero
+)
+{
+    switch ( GetCharPressed() )
+    {
+        default:
+            return hero;
+
+        //* Vitality
+        case 'V':
+        case 'v':
+        {
+            hero.attributes.vitality = VitalitySystem::increaseVitality(
+                hero.attributes.vitality,
+                hero.health
+            );
+
+            break;
+        }
+
+        //* Agility
+        case 'A':
+        case 'a':
+        {
+            hero.attributes.agility = AgilitySystem::increaseAgility(
+                hero.attributes.agility,
+                hero.energy
+            );
+
+            break;
+        }
+    }
+
+    snx::EventDispatcher::notify( EventId::LEVELED_UP );
+
+    return hero;
 }
 
 namespace GameModule
@@ -242,7 +371,7 @@ namespace GameModule
 
         game.turn = 1;
 
-        game = setupGameEvents( game );
+        setupGameEvents( game );
 
 #if defined( DEBUG )
         snx::EventDispatcher::notify( EventId::NEXT_LEVEL );
@@ -259,68 +388,27 @@ namespace GameModule
         float dt
     )
     {
-        if ( !game.isMultiFrameActionActive )
+        switch ( game.state )
         {
-            game = executeInstantActions(
-                game,
-                gameCamera,
-                cursor,
-                currentInputId
-            );
-        }
+            default:
+            case GameState::DEFAULT:
+            {
+                game = updateDefault(
+                    game,
+                    gameCamera,
+                    cursor,
+                    currentInputId,
+                    dt
+                );
+                break;
+            }
 
-        if ( game.isMultiFrameActionActive )
-        {
-            game = continueMultiFrameActions(
-                game,
-                dt
-            );
+            case GameState::LEVEL_UP:
+            {
+                game.hero = updateLevelUp( game.hero );
 
-            return game;
-        }
-
-        //* End turn
-        if ( game.hero.health.currentHealth <= 0 )
-        {
-            snx::EventDispatcher::notify( EventId::GAME_OVER );
-        }
-
-        game.world.currentMap->enemies = EnemiesModule::replaceDead(
-            game.world.currentMap->enemies,
-            game.world.currentMap->tiles,
-            game.world.currentMapLevel
-        );
-
-        //* Skip energy regeneration while a unit is ready
-        if ( game.hero.energy.state == EnergyComponent::State::READY
-             || game.activeEnemyId )
-        {
-            return game;
-        }
-
-        //* Regenerate energy until a unit becomes ready
-        bool isUnitReady{ false };
-
-        //* Regenerate until one unit becomes ready
-#if defined( DEBUG ) && defined( DEBUG_GAME_LOOP )
-        snx::debug::cliLog( "No action left. Regen units.\n" );
-#endif
-        while ( !isUnitReady )
-        {
-            //* Unit is ready when regenerate is _not_ successful
-            isUnitReady = EnergyModule::regenerate( game.hero.energy );
-            isUnitReady |= EnemiesModule::regenerate( game.world.currentMap->enemies.energies );
-        }
-
-        //* Increment turn when hero is ready
-        if ( game.hero.energy.state == EnergyComponent::State::READY )
-        {
-#if defined( DEBUG ) && defined( DEBUG_GAME_LOOP )
-            snx::debug::cliLog( "Hero ready. Next Turn\n\n" );
-#endif
-            snx::EventDispatcher::notify( EventId::NEXT_TURN );
-
-            snx::Logger::incrementTurn();
+                break;
+            }
         }
 
         return game;

@@ -5,7 +5,7 @@
 
 namespace RotationMatrices
 {
-    Matrix2x2I constexpr rotationNone{
+    Matrix2x2I constexpr ROTATION_NONE{
         1,
         0,
         0,

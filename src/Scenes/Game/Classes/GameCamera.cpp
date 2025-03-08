@@ -18,7 +18,7 @@ namespace GameCameraModule
             viewport.center(),
             heroPosition,
             0,
-            GameFont::fontSize / TileData::tileSize
+            GameFont::fontSize / TileData::TILE_SIZE
         };
 
         gameCamera.viewport = &viewport;
