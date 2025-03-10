@@ -246,9 +246,9 @@ namespace SceneGameModule
         return gameScene;
     }
 
-    void update(
-        SceneGame const& gameScene,
-        Hero const& hero,
+    SceneGame const& update(
+        SceneGame& gameScene,
+        Hero& heroIO,
         World const& world,
         Cursor const& cursor,
         GameState gameState,
@@ -268,7 +268,7 @@ namespace SceneGameModule
 
         renderOutput(
             gameScene,
-            hero,
+            heroIO,
             *world.currentMap,
             cursor,
             world.currentMapLevel
@@ -282,7 +282,11 @@ namespace SceneGameModule
 
             case GameState::LEVEL_UP:
             {
-                OverlayLevelUpModule::update( gameScene.overlays.levelUp );
+                gameScene.overlays.levelUp = OverlayLevelUpModule::update(
+                    gameScene.overlays.levelUp,
+                    heroIO,
+                    currentInputId
+                );
                 break;
             }
         }
@@ -296,6 +300,8 @@ namespace SceneGameModule
         }
 
         EndDrawing();
+
+        return gameScene;
     }
 
     void deinitialize( SceneGame& gameScene )

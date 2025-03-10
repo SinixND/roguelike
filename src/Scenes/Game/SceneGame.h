@@ -33,9 +33,10 @@ namespace SceneGameModule
         World const& world
     );
 
-    void update(
-        SceneGame const& scene,
-        Hero const& hero,
+    [[nodiscard]]
+    SceneGame const& update(
+        SceneGame& gameScene,
+        Hero& hero,
         World const& world,
         Cursor const& cursor,
         GameState gameState,

@@ -318,46 +318,6 @@ Game const& updateDefault(
     return game;
 }
 
-[[nodiscard]]
-Hero const& updateLevelUp(
-    Hero& hero
-)
-{
-    switch ( GetCharPressed() )
-    {
-        default:
-            return hero;
-
-        //* Vitality
-        case 'V':
-        case 'v':
-        {
-            hero.attributes.vitality = VitalitySystem::increaseVitality(
-                hero.attributes.vitality,
-                hero.health
-            );
-
-            break;
-        }
-
-        //* Agility
-        case 'A':
-        case 'a':
-        {
-            hero.attributes.agility = AgilitySystem::increaseAgility(
-                hero.attributes.agility,
-                hero.energy
-            );
-
-            break;
-        }
-    }
-
-    snx::EventDispatcher::notify( EventId::LEVELED_UP );
-
-    return hero;
-}
-
 namespace GameModule
 {
     Game const& init( Game& game )
@@ -405,8 +365,7 @@ namespace GameModule
 
             case GameState::LEVEL_UP:
             {
-                game.hero = updateLevelUp( game.hero );
-
+                //* SceneGameOver handles input because it can be a UI selection
                 break;
             }
         }
