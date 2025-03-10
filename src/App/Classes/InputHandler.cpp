@@ -60,7 +60,10 @@ InputId InputHandler::fromMouse()
 {
     InputId inputId{ InputId::NONE };
 
-    for ( int mouseButton : { MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT } )
+    for ( int mouseButton : {
+              MOUSE_BUTTON_LEFT,
+              MOUSE_BUTTON_RIGHT
+          } )
     {
         if ( ( isCursorActive_
                || mappings.mouseToInput.at( mouseButton ) == InputId::TOGGLE_CURSOR )
@@ -77,10 +80,10 @@ InputId InputHandler::fromGesture()
 {
     InputId inputId{ InputId::NONE };
 
-    if ( isCursorActive_ )
-    {
-        return inputId;
-    }
+    // if ( isCursorActive_ )
+    // {
+    //     return inputId;
+    // }
 
     //* IMPORTANT NOTE:
     //* Implemented events TAP, DOUBLETAP and HOLD as raylib gesture registration was unreliable
@@ -125,12 +128,14 @@ InputId InputHandler::fromGesture()
 #endif
                         inputId = InputId::ACT_IN_PLACE;
                     }
-                    else
+                    else if ( isCursorActive_
+                              && touchHoldDuration_ < MAX_TAP_TIME )
                     {
 #if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
                         snx::Logger::log( "Triggered TAP EVENT\n" );
                         snx::debug::cliLog( "Triggered TAP EVENT\n" );
 #endif
+                        inputId = InputId::ACT_TO_TARGET;
                     }
 
                     lastTap_ = touchUpTime_;
@@ -180,6 +185,11 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered first GESTURE_DRAG\n" );
                 snx::debug::cliLog( "Triggered first GESTURE_DRAG\n" );
 #endif
+                if ( isCursorActive_ )
+                {
+                    break;
+                }
+
                 //* Set modifier
                 isModifierActive_ = true;
 
@@ -213,6 +223,11 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered GESTURE_SWIPE_UP\n" );
                 snx::debug::cliLog( "Triggered GESTURE_SWIPE_UP\n" );
 #endif
+                if ( isCursorActive_ )
+                {
+                    break;
+                }
+
                 inputId = InputId::ACT_UP;
 
                 break;
@@ -224,6 +239,11 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered GESTURE_SWIPE_LEFT\n" );
                 snx::debug::cliLog( "Triggered GESTURE_SWIPE_LEFT\n" );
 #endif
+                if ( isCursorActive_ )
+                {
+                    break;
+                }
+
                 inputId = InputId::ACT_LEFT;
 
                 break;
@@ -235,6 +255,11 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered GESTURE_SWIPE_DOWN\n" );
                 snx::debug::cliLog( "Triggered GESTURE_SWIPE_DOWN\n" );
 #endif
+                if ( isCursorActive_ )
+                {
+                    break;
+                }
+
                 inputId = InputId::ACT_DOWN;
 
                 break;
@@ -246,6 +271,11 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered GESTURE_SWIPE_RIGHT\n" );
                 snx::debug::cliLog( "Triggered GESTURE_SWIPE_RIGHT\n" );
 #endif
+                if ( isCursorActive_ )
+                {
+                    break;
+                }
+
                 inputId = InputId::ACT_RIGHT;
 
                 break;
@@ -310,6 +340,11 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered GESTURE_DRAG\n" );
                 snx::debug::cliLog( "Triggered GESTURE_DRAG\n" );
 #endif
+                if ( isCursorActive_ )
+                {
+                    break;
+                }
+
                 //* Set modifier
                 isModifierActive_ = true;
 
