@@ -3,9 +3,13 @@
 
 #include "Panel.h"
 
+enum class InputId;
+struct Hero;
+
 struct OverlayLevelUp
 {
     Panel panel{};
+    int selectedOption{ 0 };
 };
 
 namespace OverlayLevelUpModule
@@ -13,6 +17,11 @@ namespace OverlayLevelUpModule
     [[nodiscard]]
     OverlayLevelUp const& init( OverlayLevelUp& overlay );
 
-    void update( OverlayLevelUp const& overlay );
+    [[nodiscard]]
+    OverlayLevelUp const& update(
+        OverlayLevelUp& overlay,
+        Hero& heroIO,
+        InputId currentInputId
+    );
 }
 #endif

@@ -151,7 +151,7 @@ void updateApp( void* arg )
                 app.dt
             );
 
-            SceneGameModule::update(
+            app.scenes.game = SceneGameModule::update(
                 app.scenes.game,
                 app.game.hero,
                 app.game.world,

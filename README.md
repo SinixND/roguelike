@@ -5,29 +5,22 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
-- [ ] Level up attributes with Gestures (select & confirm)
-- [ ] Add inspection mode
-- [ ] Extend attributes
+- [ ] Extend attributes/leveling
+    - levels increase all stat base values
+    - Attribute distribution modifies stats 
+    - Possibility of classes: different starting distribution
+    - And/Or change class if certain distribution threshold(s) met
 - [ ] Enemy scaling
 
 
 ## Shortterm
+- [ ] Add inspection mode
 - [ ] CombatSystem
 - [ ] Add AI behaviour with new enemy types
     - Simple types named after stats? (`Normal/Default/Standard`, `Strong`, `Quick`, `Healthy`)
 
-    | Default state before attacked                          | Name       |
-    | ------------------------------------------------------ | ---------- |
-    | stationary, defensive                                  | [M]imic    |
-    | moving, defensive                                      | [G]olem    |
-    | moving, aggressive                                     | [R]at      |
-    | moving, aggressive, invisible till (near or first hit) | [P]redator |
-    | Passes solids                                          | [S]hade    |
-    |                                                        | [D]jin     |
-
 
 ## Longterm
-- [ ] Use overlapping Letters to get more combinations?
 - [ ] Colorize enemies: weak: green, normal: white(?), strong: red, above: purple
 - [ ] Regen when exploring undetected areas?
 - [ ] Add overlay boxes for enemy/object information (wanted?)
@@ -35,9 +28,7 @@ Platforms: Linux, Windows, Browser
 - [ ] Save/Load for Account > Character > CurrentRun
 - [ ] Account settings via lua
 - [ ] Implement zoom?
-- [ ] Deactivate cursor trigger game action outside map panel (needed?!)
 - [ ] Setup docker (non-trvial for GUI apps?)
-- [ ] Implement tests/tdd (what behaviour do I want (to implement) -> test -> write code)
 
 ## Ideas
 - [ ] Make game a mix of `rogue` and `factorio`
