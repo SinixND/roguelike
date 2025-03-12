@@ -23,7 +23,7 @@ struct Hero
 
     HealthComponent health{
         HeroData::HEALTH_BASE,
-        HeroData::HEALTH_REGEN_BASE
+        HeroData::HEALTH_REGEN_BASE,
     };
 
     ExperienceComponent experience{};

@@ -3,6 +3,7 @@
 // #define DEBUG_HEALTH
 
 #include "EventDispatcher.h"
+#include <cassert>
 
 #if defined( DEBUG ) && defined( DEBUG_HEALTH )
 #include "Debugger.h"
@@ -43,14 +44,9 @@ namespace HealthModule
         int value
     )
     {
-        if ( value )
-        {
-            health.current += value;
-        }
-        else
-        {
-            health.current = health.maximum;
-        }
+        assert( value >= 0 && "Can't heal by negative value" );
+
+        health.current += value;
 
         if ( health.current > health.maximum )
         {

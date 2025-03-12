@@ -176,7 +176,6 @@ namespace RenderSystem
         DrawTextEx(
             GameFont::font(),
             TextFormat(
-                // "Maplevel:%2i   Lvl:%3i   Exp:%5i/%5i   Hp:%3i/%3i   Atk:%3i",
                 "Maplevel:%i | Lvl:%i  Hp:%i/%i  Atk:%i  Exp:%i/%i",
                 mapLevel,
                 hero.experience.level,

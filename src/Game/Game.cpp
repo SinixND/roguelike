@@ -3,7 +3,7 @@
 // #define DEBUG_GAME_LOOP
 
 #include "AIComponent.h"
-#include "AgilitySystem.h"
+#include "AttributeSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
 #include "Enemies.h"
@@ -16,7 +16,6 @@
 #include "MovementSystem.h"
 #include "Objects.h"
 #include "RenderId.h"
-#include "VitalitySystem.h"
 #include "World.h"
 #include "raylibEx.h"
 #include <Logger.h>
@@ -26,7 +25,9 @@
 #include <raymath.h>
 
 #if defined( DEBUG )
+#if defined( DEBUG_GAME_LOOP )
 #include "Debugger.h"
+#endif
 #include "RNG.h"
 #endif
 
@@ -121,6 +122,7 @@ void setupGameEvents( Game& game )
         [&]()
         {
             game.state = GameState::DEFAULT;
+            //* TODO: Update stats
         }
     );
 }

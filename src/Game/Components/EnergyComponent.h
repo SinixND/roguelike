@@ -3,26 +3,21 @@
 
 #include <cassert>
 
+/// Max energy is determined by maximum movement/action speed increase
+/// factor of sqrt(ENERGY_MAX)
+int constexpr ENERGY_MAX{ 16 }; /// Equates to a max of 4x speed increase
+
 /// Unit can perform action(s) if energy is full (-> READY)
 struct EnergyComponent
 {
-    /// RegenRate = (max + AGI) / weight
-    /// Default weight is 4
-    int baseRegen{ 4 };
-    int regenRate{ 4 };
-    int maximum{ 16 };
-    int current{ maximum };
+    // int baseRegen{ 4 };
+    float regenRate{ 4.0f };
+    // int maximum{ 16 };
+    float current{ ENERGY_MAX };
 };
 
 namespace EnergyModule
 {
-
-    //* Consumes energy; Returns if consumption was successful
-    bool consume(
-        EnergyComponent& energyIO,
-        int value
-    );
-
     //* Consumes all energy remaining; Returns if consumption was successful
     bool exhaust( EnergyComponent& energyIO );
 

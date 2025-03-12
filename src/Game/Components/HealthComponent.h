@@ -3,9 +3,9 @@
 
 struct HealthComponent
 {
-    int base{ 1 };
+    int base{ 10 };
     int regenRate{ 0 };
-    int maximum{ base };
+    int maximum{ base / 2 };
     int current{ maximum };
 };
 

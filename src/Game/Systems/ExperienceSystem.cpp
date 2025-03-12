@@ -1,8 +1,12 @@
-#include "LevelUpSystem.h"
+#include "ExperienceSystem.h"
 
 #include "ExperienceComponent.h"
+#include "HealthComponent.h"
 #include <cassert>
 #include <cmath>
+
+//* Health increase factor
+float HEALTH_INCREASE_PER_LEVEL{ 1.1f };
 
 int getNewThreshold( int level )
 {
@@ -22,7 +26,7 @@ int getNewThreshold( int level )
     return lvl * static_cast<int>( ( 1 * pow( lvl, 1.5f ) + BASE_EXPERIENCE ) );
 }
 
-namespace LevelUpSystem
+namespace ExperienceSystem
 {
     ExperienceComponent const& levelUp( ExperienceComponent& experience )
     {
@@ -49,7 +53,25 @@ namespace LevelUpSystem
 
         experience.levelUpThreshold = getNewThreshold( experience.level );
 
+        experience.current = 0;
+
         return experience;
+    }
+
+    HealthComponent const& raiseHealth(
+        HealthComponent& health
+    )
+    {
+        health.base *= HEALTH_INCREASE_PER_LEVEL;
+
+        return health;
+    }
+
+    void updateStats(
+        HealthComponent& healthIO
+    )
+    {
+        healthIO = raiseHealth( healthIO );
     }
 }
 

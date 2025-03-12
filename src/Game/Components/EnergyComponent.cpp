@@ -4,16 +4,13 @@
 
 // #define DEBUG_ENERGY
 
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_ENERGY )
 #include "Debugger.h"
 #endif
 
 namespace EnergyModule
 {
-    bool consume(
-        EnergyComponent& energyIO,
-        int value
-    )
+    bool exhaust( EnergyComponent& energyIO )
     {
         //* Can't consume if not ready
         if ( !isReady( energyIO ) )
@@ -23,22 +20,17 @@ namespace EnergyModule
 
 //* Consume energy
 #if defined( DEBUG ) && defined( DEBUG_ENERGY )
-        snx::debug::cliLog( "EnergyModule::consume()\n" );
+        snx::debug::cliLog( "EnergyModule::exhaust()\n" );
 #endif
-        energyIO.current -= value;
+        energyIO.current = 0;
 
         return true;
-    }
-
-    bool exhaust( EnergyComponent& energyIO )
-    {
-        return consume( energyIO, energyIO.maximum );
     }
 
     bool regenerate( EnergyComponent& energyIO )
     {
         //* If already full
-        if ( energyIO.current >= energyIO.maximum )
+        if ( energyIO.current >= ENERGY_MAX )
         {
 #if defined( DEBUG ) && defined( DEBUG_ENERGY )
             snx::debug::cliPrint( "Energy is full.\n" );
@@ -52,7 +44,7 @@ namespace EnergyModule
 #endif
         energyIO.current += energyIO.regenRate;
 
-        if ( energyIO.current < energyIO.maximum )
+        if ( energyIO.current < ENERGY_MAX )
         {
             return false;
         }
@@ -62,7 +54,7 @@ namespace EnergyModule
 
     bool isReady( EnergyComponent const& energy )
     {
-        return !( energy.current < energy.maximum );
+        return !( energy.current < ENERGY_MAX );
     }
 }
 

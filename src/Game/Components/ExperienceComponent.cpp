@@ -1,5 +1,5 @@
 #include "ExperienceComponent.h"
-#include "LevelUpSystem.h"
+#include "ExperienceSystem.h"
 
 #include <cassert>
 #include <cmath>
@@ -23,7 +23,7 @@ namespace ExperienceModule
 
         while ( experience.current >= experience.levelUpThreshold )
         {
-            experience = LevelUpSystem::levelUp( experience );
+            experience = ExperienceSystem::levelUp( experience );
         }
 
         return experience;

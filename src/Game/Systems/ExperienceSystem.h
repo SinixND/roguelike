@@ -2,8 +2,9 @@
 #define IG20250309184551
 
 struct ExperienceComponent;
+struct HealthComponent;
 
-namespace LevelUpSystem
+namespace ExperienceSystem
 {
     [[nodiscard]]
     ExperienceComponent const& levelUp( ExperienceComponent& experience );
@@ -12,6 +13,16 @@ namespace LevelUpSystem
     ExperienceComponent const& levelUpTo(
         ExperienceComponent& experience,
         int expLevelDelta
+    );
+
+    [[nodiscard]]
+    HealthComponent const& raiseHealth(
+        HealthComponent& healthIO,
+        int level
+    );
+
+    void updateStats(
+        HealthComponent& healthIO
     );
 }
 

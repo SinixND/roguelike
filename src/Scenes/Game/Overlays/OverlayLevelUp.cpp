@@ -1,19 +1,18 @@
 #include "OverlayLevelUp.h"
 
-#include "AgilitySystem.h"
+#include "AttributeSystem.h"
+#include "AttributesComponent.h"
 #include "Colors.h"
 #include "EventDispatcher.h"
 #include "EventId.h"
+#include "ExperienceSystem.h"
 #include "GameFont.h"
 #include "Hero.h"
 #include "InputId.h"
-#include "VitalitySystem.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
-int constexpr OPTIONS = 2;
-
-char options[OPTIONS + 1]{
+char options[ATTRIBUTES + 1]{
     '0',
     'V',
     'A'
@@ -34,10 +33,7 @@ Hero const& levelUpHero(
         case 'V':
         case 'v':
         {
-            hero.attributes.vitality = VitalitySystem::increaseVitality(
-                hero.attributes.vitality,
-                hero.health
-            );
+            ++hero.attributes.vitality;
 
             break;
         }
@@ -46,14 +42,21 @@ Hero const& levelUpHero(
         case 'A':
         case 'a':
         {
-            hero.attributes.agility = AgilitySystem::increaseAgility(
-                hero.attributes.agility,
-                hero.energy
-            );
+            ++hero.attributes.agility;
 
             break;
         }
     }
+
+    // ExperienceSystem::updateStats( hero.health );
+
+    AttributeSystem::udpateStats(
+        hero.health,
+        hero.energy,
+        hero.attributes
+    );
+
+    hero.health.current = hero.health.maximum;
 
     snx::EventDispatcher::notify( EventId::LEVELED_UP );
 
@@ -88,6 +91,7 @@ namespace OverlayLevelUpModule
     )
     {
         char selection = GetCharPressed();
+        // int selection{ 0 };
 
         switch ( currentInputId )
         {
@@ -119,13 +123,13 @@ namespace OverlayLevelUpModule
             }
         }
 
-        if ( overlay.selectedOption > OPTIONS )
+        if ( overlay.selectedOption > ATTRIBUTES )
         {
             overlay.selectedOption = 1;
         }
         else if ( overlay.selectedOption < 1 )
         {
-            overlay.selectedOption = OPTIONS;
+            overlay.selectedOption = ATTRIBUTES;
         }
 
         DrawRectangleRec(

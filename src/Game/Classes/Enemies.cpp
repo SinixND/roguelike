@@ -9,9 +9,9 @@
 #include "EnemiesData.h"
 #include "EnergyComponent.h"
 #include "ExperienceComponent.h"
+#include "ExperienceSystem.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
-#include "LevelUpSystem.h"
 #include "Logger.h"
 #include "MovementComponent.h"
 #include "MovementSystem.h"
@@ -23,7 +23,7 @@
 #include "raylibEx.h"
 #include <vector>
 
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_ENERGY )
 #include "Debugger.h"
 #endif
 
@@ -53,7 +53,7 @@ void Enemies::insert(
     damages.insert( id, damage );
     experiences.insert( id, ExperienceComponent{} );
 
-    experiences.at( id ) = LevelUpSystem::levelUpTo(
+    experiences.at( id ) = ExperienceSystem::levelUpTo(
         experiences.at( id ),
         expLevel
     );

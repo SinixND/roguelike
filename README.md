@@ -8,6 +8,8 @@ Platforms: Linux, Windows, Browser
 - [ ] Extend attributes/leveling
     - levels increase all stat base values
     - Attribute distribution modifies stats 
+        - ER = pow(ER_max, SP/SP_max)
+        - ER_max is determined by speed_max / speed_default, eg. ER_max = 16 for a 4x speed at max SP spent
     - Possibility of classes: different starting distribution
     - And/Or change class if certain distribution threshold(s) met
 - [ ] Enemy scaling
