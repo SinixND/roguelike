@@ -218,7 +218,7 @@ Game const& executeInstantActions(
 )
 {
     //* Hero
-    if ( EnergyModule::isReady( game.hero.energy ) )
+    if ( game.hero.energy.isReady )
     {
         game.hero = HeroModule::executeAction(
             game.hero,
@@ -286,7 +286,7 @@ Game const& updateDefault(
     );
 
     //* Skip energy regeneration while a unit is ready
-    if ( EnergyModule::isReady( game.hero.energy )
+    if ( game.hero.energy.isReady
          || game.activeEnemyId )
     {
         return game;
@@ -297,7 +297,7 @@ Game const& updateDefault(
 
     //* Regenerate until one unit becomes ready
 #if defined( DEBUG ) && defined( DEBUG_GAME_LOOP )
-    snx::debug::cliLog( "No action left. Regen units.\n" );
+    snx::Debugger::cliLog( "No action left. Regen units.\n" );
 #endif
     while ( !isUnitReady )
     {
@@ -307,10 +307,10 @@ Game const& updateDefault(
     }
 
     //* Increment turn when hero is ready
-    if ( EnergyModule::isReady( game.hero.energy ) )
+    if ( game.hero.energy.isReady )
     {
 #if defined( DEBUG ) && defined( DEBUG_GAME_LOOP )
-        snx::debug::cliLog( "Hero ready. Next Turn\n\n" );
+        snx::Debugger::cliLog( "Hero ready. Next Turn\n\n" );
 #endif
         snx::EventDispatcher::notify( EventId::NEXT_TURN );
 

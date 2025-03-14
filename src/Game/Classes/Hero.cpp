@@ -34,9 +34,12 @@ Hero const& performAttack(
     size_t enemyIdx{ mapIO.enemies.ids.index( target ) };
 
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
-    snx::debug::cliLog( "Hero attacks.\n" );
+    snx::Debugger::cliLog( "Hero attacks.\n" );
 #endif
-    EnergyModule::exhaust( hero.energy );
+    hero.energy = EnergyModule::consume(
+        hero.energy,
+        hero.damage.costMultiplier
+    );
 
     HealthModule::damage(
         mapIO.enemies.healths[mapIO.enemies.ids.index( target )],
@@ -99,9 +102,9 @@ Hero const& processDirectionalInput(
               ) )
     {
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
-        snx::debug::cliLog( "Hero moves.\n" );
+        snx::Debugger::cliLog( "Hero moves.\n" );
 #endif
-        EnergyModule::exhaust( hero.energy );
+        hero.energy = EnergyModule::exhaust( hero.energy );
 
         hero.transform = MovementSystem::prepareByDirection(
             hero.transform,
@@ -140,9 +143,9 @@ namespace HeroModule
                          ) )
                     {
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
-                        snx::debug::cliLog( "Hero moves.\n" );
+                        snx::Debugger::cliLog( "Hero moves.\n" );
 #endif
-                        EnergyModule::exhaust( hero.energy );
+                        hero.energy = EnergyModule::exhaust( hero.energy );
 
                         hero.transform = MovementSystem::prepareFromExistingPath(
                             hero.transform,
@@ -249,9 +252,9 @@ namespace HeroModule
                           ) )
                 {
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
-                    snx::debug::cliLog( "Hero moves.\n" );
+                    snx::Debugger::cliLog( "Hero moves.\n" );
 #endif
-                    EnergyModule::exhaust( hero.energy );
+                    hero.energy = EnergyModule::exhaust( hero.energy );
 
                     hero.movement = MovementSystem::prepareByNewPath(
                         hero.movement,
@@ -283,13 +286,13 @@ namespace HeroModule
                 {
                     size_t objectId{ mapIO.objects.ids.at( Convert::worldToTile( hero.position ) ) };
 
-                    //* Wait if nothing to interact
+                    //* Interact if possible
                     if ( mapIO.objects.eventIds.contains( objectId ) )
                     {
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
-                        snx::debug::cliLog( "Hero interacts.\n" );
+                        snx::Debugger::cliLog( "Hero interacts.\n" );
 #endif
-                        EnergyModule::exhaust( hero.energy );
+                        hero.energy = EnergyModule::exhaust( hero.energy );
 
                         snx::EventDispatcher::notify( mapIO.objects.eventIds.at( objectId ) );
 
@@ -298,11 +301,11 @@ namespace HeroModule
                 }
 
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
-                snx::debug::cliLog( "Hero waits.\n" );
+                snx::Debugger::cliLog( "Hero waits.\n" );
 #endif
                 snx::Logger::log( "Hero waits...\n" );
 
-                EnergyModule::exhaust( hero.energy );
+                hero.energy = EnergyModule::exhaust( hero.energy );
 
                 hero.health = HealthModule::regenerate( hero.health );
 

@@ -18,7 +18,7 @@ namespace HealthModule
     )
     {
 #if defined( DEBUG ) && defined( DEBUG_HEALTH )
-        snx::debug::cliLog( "Remove " + std::to_string( value ) + " from " + std::to_string( healthIO.currentHealth ) + " health\n" );
+        snx::Debugger::cliLog( "Remove " + std::to_string( value ) + " from " + std::to_string( healthIO.currentHealth ) + " health\n" );
 #endif
         if ( value )
         {
@@ -59,7 +59,7 @@ namespace HealthModule
     HealthComponent const& regenerate( HealthComponent& health )
     {
 #if defined( DEBUG ) && defined( DEBUG_HEALTH )
-        snx::debug::cliLog( "Gain " + std::to_string( health.regenRate ) + " to " + std::to_string( health.currentHealth ) + " health\n" );
+        snx::Debugger::cliLog( "Gain " + std::to_string( health.regenRate ) + " to " + std::to_string( health.currentHealth ) + " health\n" );
 #endif
 
         health = HealthModule::heal(

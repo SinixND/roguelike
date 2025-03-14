@@ -6,6 +6,7 @@ struct DamageComponent
     int baseDamage{};
     float critChanceFactor{};
     float critDamageFactor{ 2.0f };
+    float costMultiplier{ 1.0f };
 };
 
 namespace DamageModule

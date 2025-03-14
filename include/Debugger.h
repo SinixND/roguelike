@@ -11,7 +11,7 @@
 
 namespace snx
 {
-    class debug : public snx::Singleton<debug>
+    class Debugger : public snx::Singleton<Debugger>
     {
         static inline GameCamera gcam_{};
 

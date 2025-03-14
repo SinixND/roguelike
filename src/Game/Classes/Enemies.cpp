@@ -3,6 +3,8 @@
 // #define DEBUG_ENERGY
 
 #include "AIComponent.h"
+#include "AttributeSystem.h"
+#include "AttributesComponent.h"
 #include "Convert.h"
 #include "DamageComponent.h"
 #include "DenseMap.h"
@@ -33,6 +35,8 @@ void Enemies::insert(
     EnergyComponent const& energy,
     HealthComponent const& health,
     DamageComponent const& damage,
+    int vitality,
+    int agility,
     Vector2I const& tilePosition,
     int scanRange,
     int expLevel,
@@ -45,13 +49,17 @@ void Enemies::insert(
     ais.insert( id, AIComponent{ .scanRange = scanRange } );
     positions.insert( id, Convert::tileToWorld( tilePosition ) );
     renderIds.insert( id, renderId );
-    names.insert( id, enemyNames.at( renderId ) );
+    names.insert( id, renderNames.at( renderId ) );
     transforms.insert( id, transform );
     movements.insert( id, movement );
     energies.insert( id, energy );
     healths.insert( id, health );
     damages.insert( id, damage );
     experiences.insert( id, ExperienceComponent{} );
+    attributes.insert( id, AttributesComponent{
+                               vitality,
+                               agility,
+                           } );
 
     experiences.at( id ) = ExperienceSystem::levelUpTo(
         experiences.at( id ),
@@ -174,11 +182,15 @@ namespace EnemiesModule
             EnergyComponent{},
             HealthComponent{ enemyData.healthBase },
             DamageComponent{ enemyData.damageBase },
+            enemyData.vitality,
+            enemyData.agility,
             tilePosition,
             enemyData.scanRange,
             mapLevel,
             RenderId::GOBLIN
         );
+
+        enemies = updateStats( enemies );
 
         return enemies;
     }
@@ -234,7 +246,7 @@ namespace EnemiesModule
         for ( size_t idx{ 0 }; idx < energiesIO.size(); ++idx )
         {
 #if defined( DEBUG ) && defined( DEBUG_ENERGY )
-            snx::debug::cliPrint( "[", idx, "] " );
+            snx::Debugger::cliPrint( "[", idx, "] " );
 #endif
             isEnergyFull |= EnergyModule::regenerate( energiesIO.values()[idx] );
         }
@@ -248,7 +260,7 @@ namespace EnemiesModule
 
         for ( size_t idx{ 0 }; idx < energies.size(); ++idx )
         {
-            if ( EnergyModule::isReady( energies[idx] ) )
+            if ( energies[idx].isReady )
             {
                 activeEnemyId = energies.key( idx );
                 break;
@@ -269,24 +281,44 @@ namespace EnemiesModule
         while ( idx < enemies.ids.values().size() )
         {
             //* Kill enemy at 0 health
-            if ( enemies.healths[idx].current <= 0 )
+            if ( enemies.healths[idx].current > 0 )
             {
-                snx::Logger::log( enemies.names[idx] + " died.\n" );
-                enemies.remove( enemies.ids[idx]
-                );
-
-                //* Spawn new enemy
-                enemies = createAtRandomPosition(
-                    enemies,
-                    tiles,
-                    RenderId::GOBLIN,
-                    mapLevel
-                );
+                ++idx;
 
                 continue;
             }
 
-            ++idx;
+            snx::Logger::log( enemies.names[idx] + " died.\n" );
+            enemies.remove( enemies.ids[idx]
+            );
+
+            //* Spawn new enemy
+            enemies = createAtRandomPosition(
+                enemies,
+                tiles,
+                RenderId::GOBLIN,
+                mapLevel
+            );
+        }
+
+        return enemies;
+    }
+
+    Enemies const& updateStats( Enemies& enemies )
+    {
+        for ( size_t i{ 0 }; i < enemies.healths.values().size(); ++i )
+        {
+            enemies.healths[i] = AttributeSystem::updateFromVitality(
+                enemies.healths[i],
+                enemies.attributes[i].vitality,
+                AttributesModule::totalPoints( enemies.attributes[i] )
+            );
+
+            enemies.energies[i] = AttributeSystem::updateFromAgility(
+                enemies.energies[i],
+                enemies.attributes[i].agility,
+                AttributesModule::totalPoints( enemies.attributes[i] )
+            );
         }
 
         return enemies;

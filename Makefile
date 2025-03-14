@@ -396,10 +396,10 @@ ifeq ($(TESTMODE),true)
 endif
 
 ### Non-file (.phony)targets (aka. rules)
-.PHONY: all analyze build clean debug dtb init publish release run rdebug rrelease rtest rweb test web windows 
+.PHONY: all analyze build bd br bt bwd bwr clean dtb init publish run rd rr rt web windows 
 
 ### Default rule by convention
-all: debug release
+all: bd br
 
 ### CppCheck static analysis
 analyze:
@@ -407,6 +407,30 @@ analyze:
 
 ### Build binary with current config
 build: $(BIN_DIR)/$(BIN)$(BIN_EXT)
+
+bd: 
+	$(info )
+	$(info === Debug build ===)
+	@$(MAKE) BUILD=debug build
+	@$(MAKE) -s dtb
+	@$(MAKE) analyze
+
+### Rule for release build process with binary as prerequisite
+br: 
+	$(info )
+	$(info === Release build ===)
+	@$(MAKE) BUILD=release build
+
+bt:
+	$(info )
+	$(info === Test build ===)
+	@$(MAKE) TESTMODE=true build
+
+bwd:
+	@$(MAKE) PLATFORM=web BUILD=debug build
+
+bwr:
+	@$(MAKE) PLATFORM=web BUILD=release build
 
 ### Clear dynamically created directories
 clean:
@@ -426,13 +450,6 @@ clean:
 	@rm -rf $(BUILD_DIR_ROOT)/windows/release/*
 
 ### Debug build
-debug: 
-	$(info )
-	$(info === Debug build ===)
-	@$(MAKE) BUILD=debug build
-	@$(MAKE) -s dtb
-	@$(MAKE) analyze
-
 ### Build compile_commands.json
 dtb:
 	$(info )
@@ -460,45 +477,29 @@ init:
 publish:
 	$(info )
 	$(info === Publish ===)
-	@$(MAKE) debug release web windows -j
-
-### Rule for release build process with binary as prerequisite
-release: 
-	$(info )
-	$(info === Release build ===)
-	@$(MAKE) BUILD=release build
+	@$(MAKE) all web windows -j
 
 ### Run binary file
 run: 
 	$(BIN_DIR_ROOT)/$(PLATFORM)/$(BUILD)/$(BIN)$(BIN_EXT) $(EXEC_ARGS)
 
-rdebug:
-	@$(MAKE) debug -j
+rd:
+	@$(MAKE) bd -j
 	@$(MAKE) BUILD=debug run
 
-rrelease:
-	@$(MAKE) release -j
+rr:
+	@$(MAKE) br -j
 	@$(MAKE) BUILD=release run
 
-rtest:
-	@$(MAKE) test -j
+rt:
+	@$(MAKE) bt -j
 	@$(MAKE) TESTMODE=true run
-
-rweb:
-	@$(MAKE) PLATFORM=web BUILD=debug build -j
-	http-server -o bin/web/debug/$(BIN)$(BIN_EXT) -c-1
-
-test:
-	$(info )
-	$(info === Test build ===)
-	@$(MAKE) TESTMODE=true build
 
 ### Rule for web build process
 web:
 	$(info )
 	$(info === Web build ===)
-	@$(MAKE) PLATFORM=web BUILD=debug build
-	@$(MAKE) PLATFORM=web BUILD=release build
+	@$(MAKE) bwd bwr -j
 
 ### Rule for windows build process
 windows:

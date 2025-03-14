@@ -190,10 +190,10 @@ void setupAppEvents( App& app )
 
             size_t tileId{ tiles.ids.at( cursorPos ) };
 
-            snx::debug::cliPrint( "\n" );
-            snx::debug::cliLog( "TILE:\n" );
+            snx::Debugger::cliPrint( "\n" );
+            snx::Debugger::cliLog( "TILE:\n" );
 
-            snx::debug::cliPrint(
+            snx::Debugger::cliPrint(
                 "TilePosition: "
                 + std::to_string( cursorPos.x )
                 + ", "
@@ -201,7 +201,7 @@ void setupAppEvents( App& app )
                 + "\n"
             );
 
-            snx::debug::cliPrint(
+            snx::Debugger::cliPrint(
                 "WorldPixel: "
                 + std::to_string( tiles.positions.at( tileId ).x )
                 + ", "
@@ -209,25 +209,25 @@ void setupAppEvents( App& app )
                 + "\n"
             );
 
-            snx::debug::cliPrint(
+            snx::Debugger::cliPrint(
                 "RenderId: "
                 + std::to_string( static_cast<int>( tiles.renderIds.at( tileId ) ) )
                 + "\n"
             );
 
-            snx::debug::cliPrint(
+            snx::Debugger::cliPrint(
                 "VisibilityId: "
                 + std::to_string( static_cast<int>( tiles.visibilityIds.at( tileId ) ) )
                 + "\n"
             );
 
-            snx::debug::cliPrint(
+            snx::Debugger::cliPrint(
                 "IsSolid: "
                 + std::to_string( tiles.isSolids.contains( tileId ) )
                 + "\n"
             );
 
-            snx::debug::cliPrint(
+            snx::Debugger::cliPrint(
                 "IsOpaque: "
                 + std::to_string( tiles.isOpaques.contains( tileId ) )
                 + "\n"
@@ -239,27 +239,27 @@ void setupAppEvents( App& app )
             {
                 size_t objectIdx{ objects.ids.index( Convert::worldToTile( app.cursor.position ) ) };
 
-                snx::debug::cliLog( "OBJECT\n" );
+                snx::Debugger::cliLog( "OBJECT\n" );
 
-                snx::debug::cliPrint(
+                snx::Debugger::cliPrint(
                     "Name: "
                     + app.game.world.currentMap->objects.names[objectIdx]
                     + "\n"
                 );
 
-                snx::debug::cliPrint(
+                snx::Debugger::cliPrint(
                     "Actions: "
                     + app.game.world.currentMap->objects.actions[objectIdx]
                     + "\n"
                 );
 
-                snx::debug::cliPrint(
+                snx::Debugger::cliPrint(
                     "RenderId: "
                     + std::to_string( static_cast<int>( app.game.world.currentMap->objects.renderIds[objectIdx] ) )
                     + "\n"
                 );
 
-                snx::debug::cliPrint(
+                snx::Debugger::cliPrint(
                     "Event: "
                     + std::to_string( static_cast<int>( app.game.world.currentMap->objects.eventIds[objectIdx] ) )
                     + "\n"
@@ -268,9 +268,9 @@ void setupAppEvents( App& app )
 
             if ( app.game.world.currentMap->enemies.ids.contains( cursorPos ) )
             {
-                snx::debug::cliLog( "ENEMY\n" );
+                snx::Debugger::cliLog( "ENEMY\n" );
 
-                snx::debug::cliPrint(
+                snx::Debugger::cliPrint(
                     "Id: "
                     + std::to_string( app.game.world.currentMap->enemies.ids.at( cursorPos ) )
                     + "\n"

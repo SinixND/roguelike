@@ -22,7 +22,7 @@ enum class RenderId
     //* Misc
 };
 
-inline std::unordered_map<RenderId, std::string> const enemyNames{
+inline std::unordered_map<RenderId, std::string> const renderNames{
     { RenderId::GOBLIN, "Goblin" },
 };
 

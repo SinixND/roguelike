@@ -1,9 +1,15 @@
 #include "AttributeSystem.h"
 
+#define DEBUG_ENERGY_REGEN
+
 #include "AttributesComponent.h"
 #include "EnergyComponent.h"
 #include "HealthComponent.h"
 #include <cmath>
+
+#if defined( DEBUG ) && defined( DEBUG_ENERGY_REGEN )
+#include "Debugger.h"
+#endif
 
 namespace AttributeSystem
 {
@@ -25,8 +31,10 @@ namespace AttributeSystem
         int attributePointsTotal
     )
     {
-        // energyIO.regenRate = energyIO.baseRegen + agility * AGILITY_TO_REGEN_RATIO;
-        energyIO.regenRate = std::pow( ENERGY_MAX, agility / attributePointsTotal );
+        energyIO.regenRate = ENERGY_REGEN_MIN * std::pow( ( ENERGY_REGEN_MAX / ENERGY_REGEN_MIN ), 1.0f * agility / attributePointsTotal );
+#if defined( DEBUG ) && defined( DEBUG_ENERGY_REGEN )
+        snx::Debugger::cliLog( "Rate: ", energyIO.regenRate, ", Speed: ", energyIO.regenRate / ENERGY_REGEN_AVG, "\n" );
+#endif
 
         return energyIO;
     }

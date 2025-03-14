@@ -2,6 +2,7 @@
 #define IG20240909134010
 
 #include "AIComponent.h"
+#include "AttributesComponent.h"
 #include "DamageComponent.h"
 #include "DenseMap.h"
 #include "EnergyComponent.h"
@@ -34,6 +35,7 @@ public:
     snx::DenseMap<size_t, HealthComponent> healths{};
     snx::DenseMap<size_t, DamageComponent> damages{};
     snx::DenseMap<size_t, ExperienceComponent> experiences{};
+    snx::DenseMap<size_t, AttributesComponent> attributes{};
 
 public:
     void insert(
@@ -42,6 +44,8 @@ public:
         EnergyComponent const& energy,
         HealthComponent const& health,
         DamageComponent const& damage,
+        int vitality,
+        int agility,
         Vector2I const& tilePosition,
         int scanRange,
         int expLevel,
@@ -101,6 +105,10 @@ namespace EnemiesModule
         Tiles const& tiles,
         int mapLevel
     );
+
+    [[nodiscard]]
+    Enemies const& updateStats( Enemies& enemies );
+
 }
 
 #endif

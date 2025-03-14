@@ -90,12 +90,13 @@ namespace OverlayLevelUpModule
         InputId currentInputId
     )
     {
-        char selection = GetCharPressed();
+        char selection{ 0 };
         // int selection{ 0 };
 
         switch ( currentInputId )
         {
             default:
+                // selection = GetCharPressed();
                 break;
 
             case InputId::ACT_DOWN:

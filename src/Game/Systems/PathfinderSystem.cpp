@@ -314,13 +314,13 @@ bool continueTargetSearch(
                     .c_str(),
                 Convert::tileToScreen(
                     newTilePosition,
-                    snx::debug::gcam().camera()
+                    snx::Debugger::gcam().camera()
                 )
                         .x
                     + 10,
                 Convert::tileToScreen(
                     newTilePosition,
-                    snx::debug::gcam().camera()
+                    snx::Debugger::gcam().camera()
                 )
                         .y
                     + 10,
@@ -421,7 +421,7 @@ namespace PathfinderSystem
                 Vector2Add(
                     Convert::tileToScreen(
                         position,
-                        snx::debug::gcam().camera()
+                        snx::Debugger::gcam().camera()
                     ),
                     Vector2{ TileData::TILE_SIZE_HALF, TileData::TILE_SIZE_HALF }
                 ),

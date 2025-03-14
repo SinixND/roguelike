@@ -8,12 +8,16 @@ namespace EnemiesData
         int const healthBase{};
         int const damageBase{};
         int const scanRange{};
+        int const vitality{};
+        int const agility{};
     };
 
-    EnemyData goblin{
-        5,
+    EnemyData constexpr goblin{
+        10,
         1,
-        10
+        10,
+        10,
+        10,
     };
 }
 

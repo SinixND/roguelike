@@ -225,7 +225,7 @@ namespace SceneGameModule
         );
 
 #if defined( DEBUG )
-        snx::debug::gcam() = gameScene.gameCamera;
+        snx::Debugger::gcam() = gameScene.gameCamera;
 #endif
 
         gameScene.renderData = RenderSystem::loadRenderData( gameScene.renderData );
@@ -261,7 +261,7 @@ namespace SceneGameModule
         }
 
 #if defined( DEBUG )
-        snx::debug::gcam() = gameScene.gameCamera;
+        snx::Debugger::gcam() = gameScene.gameCamera;
 #endif
         BeginDrawing();
         ClearBackground( Colors::BG );

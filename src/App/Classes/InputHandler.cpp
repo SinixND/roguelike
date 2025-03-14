@@ -104,11 +104,11 @@ InputId InputHandler::fromGesture()
             {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
                 snx::Logger::log( "Triggered GESTURE_NONE\n" );
-                snx::debug::cliLog( "Triggered GESTURE_NONE\n" );
+                snx::Debugger::cliLog( "Triggered GESTURE_NONE\n" );
 #endif
 #if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
                 snx::Logger::log( "Triggered TOUCH UP EVENT\n" );
-                snx::debug::cliLog( "Triggered TOUCH UP EVENT\n" );
+                snx::Debugger::cliLog( "Triggered TOUCH UP EVENT\n" );
 #endif
                 touchUpTime_ = GetTime();
 
@@ -124,7 +124,7 @@ InputId InputHandler::fromGesture()
                     {
 #if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
                         snx::Logger::log( "Triggered DOUBLE TAP EVENT\n" );
-                        snx::debug::cliLog( "Triggered DOUBLE TAP EVENT\n" );
+                        snx::Debugger::cliLog( "Triggered DOUBLE TAP EVENT\n" );
 #endif
                         inputId = InputId::ACT_IN_PLACE;
                     }
@@ -133,7 +133,7 @@ InputId InputHandler::fromGesture()
                     {
 #if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
                         snx::Logger::log( "Triggered TAP EVENT\n" );
-                        snx::debug::cliLog( "Triggered TAP EVENT\n" );
+                        snx::Debugger::cliLog( "Triggered TAP EVENT\n" );
 #endif
                         inputId = InputId::ACT_TO_TARGET;
                     }
@@ -172,7 +172,7 @@ InputId InputHandler::fromGesture()
             {
 #if defined( DEBUG ) && ( defined( DEBUG_GESTURES ) || defined( DEBUG_GESTURE_EVENTS ) )
                 snx::Logger::log( "Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n" );
-                snx::debug::cliLog( "Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n" );
+                snx::Debugger::cliLog( "Triggered first GESTURE_HOLD (TOUCH DOWN EVENT)\n" );
 #endif
                 touchDownTime_ = GetTime();
 
@@ -183,7 +183,7 @@ InputId InputHandler::fromGesture()
             {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
                 snx::Logger::log( "Triggered first GESTURE_DRAG\n" );
-                snx::debug::cliLog( "Triggered first GESTURE_DRAG\n" );
+                snx::Debugger::cliLog( "Triggered first GESTURE_DRAG\n" );
 #endif
                 if ( isCursorActive_ )
                 {
@@ -221,7 +221,7 @@ InputId InputHandler::fromGesture()
             {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
                 snx::Logger::log( "Triggered GESTURE_SWIPE_UP\n" );
-                snx::debug::cliLog( "Triggered GESTURE_SWIPE_UP\n" );
+                snx::Debugger::cliLog( "Triggered GESTURE_SWIPE_UP\n" );
 #endif
                 if ( isCursorActive_ )
                 {
@@ -237,7 +237,7 @@ InputId InputHandler::fromGesture()
             {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
                 snx::Logger::log( "Triggered GESTURE_SWIPE_LEFT\n" );
-                snx::debug::cliLog( "Triggered GESTURE_SWIPE_LEFT\n" );
+                snx::Debugger::cliLog( "Triggered GESTURE_SWIPE_LEFT\n" );
 #endif
                 if ( isCursorActive_ )
                 {
@@ -253,7 +253,7 @@ InputId InputHandler::fromGesture()
             {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
                 snx::Logger::log( "Triggered GESTURE_SWIPE_DOWN\n" );
-                snx::debug::cliLog( "Triggered GESTURE_SWIPE_DOWN\n" );
+                snx::Debugger::cliLog( "Triggered GESTURE_SWIPE_DOWN\n" );
 #endif
                 if ( isCursorActive_ )
                 {
@@ -269,7 +269,7 @@ InputId InputHandler::fromGesture()
             {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
                 snx::Logger::log( "Triggered GESTURE_SWIPE_RIGHT\n" );
-                snx::debug::cliLog( "Triggered GESTURE_SWIPE_RIGHT\n" );
+                snx::Debugger::cliLog( "Triggered GESTURE_SWIPE_RIGHT\n" );
 #endif
                 if ( isCursorActive_ )
                 {
@@ -285,7 +285,7 @@ InputId InputHandler::fromGesture()
             {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
                 snx::Logger::log( "Triggered GESTURE_PINCH_IN\n" );
-                snx::debug::cliLog( "Triggered GESTURE_PINCH_IN\n" );
+                snx::Debugger::cliLog( "Triggered GESTURE_PINCH_IN\n" );
 #endif
 
                 break;
@@ -295,7 +295,7 @@ InputId InputHandler::fromGesture()
             {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
                 snx::Logger::log( "Triggered GESTURE_PINCH_OUT\n" );
-                snx::debug::cliLog( "Triggered GESTURE_PINCH_OUT\n" );
+                snx::Debugger::cliLog( "Triggered GESTURE_PINCH_OUT\n" );
 #endif
 
                 break;
@@ -325,7 +325,7 @@ InputId InputHandler::fromGesture()
                 {
 #if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
                     snx::Logger::log( "Triggered HOLD EVENT\n" );
-                    snx::debug::cliLog( "Triggered HOLD EVENT\n" );
+                    snx::Debugger::cliLog( "Triggered HOLD EVENT\n" );
 #endif
                     //* Get/Set info panel reference to tile/object/enemy at current position
                     snx::EventDispatcher::notify( EventId::CURSOR_POSITION_CHANGED );
@@ -338,7 +338,7 @@ InputId InputHandler::fromGesture()
             {
 #if defined( DEBUG ) && defined( DEBUG_GESTURES )
                 snx::Logger::log( "Triggered GESTURE_DRAG\n" );
-                snx::debug::cliLog( "Triggered GESTURE_DRAG\n" );
+                snx::Debugger::cliLog( "Triggered GESTURE_DRAG\n" );
 #endif
                 if ( isCursorActive_ )
                 {

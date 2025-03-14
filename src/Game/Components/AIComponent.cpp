@@ -13,7 +13,7 @@
 #include <cstddef>
 #include <vector>
 
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
 #include "Debugger.h"
 #endif
 
@@ -37,9 +37,9 @@ Enemies& executeAction(
     {
         //* Attack
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
-        snx::debug::cliLog( "Enemy[", enemyId, "] attacks and deals" );
+        snx::Debugger::cliLog( "Enemy[", enemyId, "] attacks and deals" );
 #endif
-        EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
+        enemiesIO.energies.at( enemyId ) = EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
 
         HealthModule::damage(
             heroHealthIO,
@@ -71,9 +71,9 @@ Enemies& executeAction(
              ) )
         {
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
-            snx::debug::cliLog( "Enemy[", enemyId, "] moves.\n" );
+            snx::Debugger::cliLog( "Enemy[", enemyId, "] moves.\n" );
 #endif
-            EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
+            enemiesIO.energies.at( enemyId ) = EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
 
             enemiesIO.transforms.at( enemyId ) = MovementSystem::prepareByFromTo(
                 enemiesIO.transforms.at( enemyId ),
@@ -88,9 +88,9 @@ Enemies& executeAction(
         {
             //* Wait
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
-            snx::debug::cliLog( "Enemy[", enemyId, "] waits.\n" );
+            snx::Debugger::cliLog( "Enemy[", enemyId, "] waits.\n" );
 #endif
-            EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
+            enemiesIO.energies.at( enemyId ) = EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
         }
     }
     return enemiesIO;

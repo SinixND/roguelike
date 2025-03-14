@@ -20,7 +20,7 @@ namespace DamageModule
                          * damageComponent.critDamageFactor );
 
 #if defined( DEBUG ) && defined( DEBUG_DAMAGE )
-        snx::debug::cliPrint( TextFormat( "%i damage", damage ) );
+        snx::Debugger::cliPrint( TextFormat( "%i damage", damage ) );
 #endif
 
         return damage;

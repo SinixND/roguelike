@@ -2,29 +2,40 @@
 #define IG20240601002118
 
 #include <cassert>
+#include <cmath>
 
-/// Max energy is determined by maximum movement/action speed increase
-/// factor of sqrt(ENERGY_MAX)
-int constexpr ENERGY_MAX{ 16 }; /// Equates to a max of 4x speed increase
+/// Equals default action cost
+float constexpr ENERGY_REGEN_MAX{ 36.0f };
+
+/// Speed can vary between multiplier and 1/multiplier
+float constexpr SPEED_MULTIPLIER_MAX{ 2.0f };
+
+float const ENERGY_REGEN_AVG{ ENERGY_REGEN_MAX / SPEED_MULTIPLIER_MAX };
+float const ENERGY_REGEN_MIN{ ENERGY_REGEN_MAX / std::pow( SPEED_MULTIPLIER_MAX, 2.0f ) };
 
 /// Unit can perform action(s) if energy is full (-> READY)
 struct EnergyComponent
 {
-    // int baseRegen{ 4 };
-    float regenRate{ 4.0f };
-    // int maximum{ 16 };
-    float current{ ENERGY_MAX };
+    float regenRate{ ENERGY_REGEN_AVG };
+    float current{ 0 };
+    bool isReady{ true };
 };
 
 namespace EnergyModule
 {
-    //* Consumes all energy remaining; Returns if consumption was successful
-    bool exhaust( EnergyComponent& energyIO );
+    /// Consume proportional energy
+    [[nodiscard]]
+    EnergyComponent const& consume(
+        EnergyComponent& energy,
+        float multiplier
+    );
 
-    //* Returns true if energy is full
+    /// Consume default cost
+    [[nodiscard]]
+    EnergyComponent const& exhaust( EnergyComponent& energy );
+
+    /// Returns true if energy is full
     bool regenerate( EnergyComponent& energyIO );
-
-    bool isReady( EnergyComponent const& energy );
 }
 
 #endif
