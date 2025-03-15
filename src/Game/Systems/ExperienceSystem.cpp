@@ -6,7 +6,8 @@
 #include <cmath>
 
 //* Health increase factor
-float HEALTH_INCREASE_PER_LEVEL{ 1.1f };
+// float HEALTH_INCREASE_FACTOR{ 1.1f };
+float HEALTH_INCREASE_DELTA{ 10.0f };
 
 int getNewThreshold( int level )
 {
@@ -62,7 +63,8 @@ namespace ExperienceSystem
         HealthComponent& health
     )
     {
-        health.base *= HEALTH_INCREASE_PER_LEVEL;
+        // health.base *= HEALTH_INCREASE_PER_LEVEL;
+        health.base += HEALTH_INCREASE_DELTA;
 
         return health;
     }

@@ -10,7 +10,9 @@
 #include "Hero.h"
 #include "InputId.h"
 #include "raylibEx.h"
+#include <cstring>
 #include <raylib.h>
+#include <string>
 
 char options[ATTRIBUTES + 1]{
     '0',
@@ -48,7 +50,7 @@ Hero const& levelUpHero(
         }
     }
 
-    // ExperienceSystem::updateStats( hero.health );
+    ExperienceSystem::updateStats( hero.health );
 
     AttributeSystem::udpateStats(
         hero.health,
@@ -140,7 +142,7 @@ namespace OverlayLevelUpModule
 
         DrawTextExCentered(
             GameFont::font(),
-            "LevelUp!",
+            "Level Up!",
             overlay.panel.inner(),
             -4 * GameFont::fontSize,
             GameFont::fontSize,
@@ -150,7 +152,7 @@ namespace OverlayLevelUpModule
 
         DrawTextExCentered(
             GameFont::font(),
-            "1 Attribute point to spend.",
+            "1 proficiency point to spend.",
             overlay.panel.inner(),
             -2 * GameFont::fontSize,
             GameFont::fontSize,
@@ -169,9 +171,15 @@ namespace OverlayLevelUpModule
         );
 
         //* Options
+        std::string opt1{ ( overlay.selectedOption == 1 ) ? "[x]" : "[ ]" };
+        opt1 += TextFormat(
+            "[%i%] VIT",
+            100 * ( heroIO.attributes.vitality + ( overlay.selectedOption == 1 ) ) / AttributesModule::totalPoints( heroIO.attributes )
+        );
+
         DrawTextExCentered(
             GameFont::font(),
-            ( overlay.selectedOption == 1 ) ? "> [V]itality" : "[V]itality",
+            opt1.c_str(),
             overlay.panel.inner(),
             1 * GameFont::fontSize,
             GameFont::fontSize,
@@ -179,9 +187,14 @@ namespace OverlayLevelUpModule
             LIGHTGRAY
         );
 
+        std::string opt2{ ( overlay.selectedOption == 2 ) ? "[x]" : "[ ]" };
+        opt2 += TextFormat(
+            "[%i%] AGI",
+            100 * ( heroIO.attributes.agility + ( overlay.selectedOption == 2 ) ) / AttributesModule::totalPoints( heroIO.attributes )
+        );
         DrawTextExCentered(
             GameFont::font(),
-            ( overlay.selectedOption == 2 ) ? "> [A]gility" : "[A]gility",
+            opt2.c_str(),
             overlay.panel.inner(),
             2 * GameFont::fontSize,
             GameFont::fontSize,
