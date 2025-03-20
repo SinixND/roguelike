@@ -7,7 +7,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make (-j)",
-            "program": "${workspaceFolder}/bin/unix/debug/main",
+            "program": "${workspaceFolder}/bin/unix/debug/main"
         },
         {
             "name": "Build (lldb, -j)",
@@ -15,7 +15,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make (-j)",
-            "program": "${workspaceFolder}/bin/unix/debug/main",
+            "program": "${workspaceFolder}/bin/unix/debug/main"
         },
         {
             "name": "Build debug (cppdbg)",
@@ -23,7 +23,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make debug FATAL=yes",
-            "program": "${workspaceFolder}/bin/unix/debug/main",
+            "program": "${workspaceFolder}/bin/unix/debug/main"
         },
         {
             "name": "Build debug (cppdbg, -j)",
@@ -31,7 +31,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make debug (-j)",
-            "program": "${workspaceFolder}/bin/unix/debug/main",
+            "program": "${workspaceFolder}/bin/unix/debug/main"
         },
         {
             "name": "Build debug (lldb)",
@@ -39,7 +39,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make debug FATAL=yes",
-            "program": "${workspaceFolder}/bin/unix/debug/main",
+            "program": "${workspaceFolder}/bin/unix/debug/main"
         },
         {
             "name": "Build debug (lldb, -j)",
@@ -47,7 +47,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make debug (-j)",
-            "program": "${workspaceFolder}/bin/unix/debug/main",
+            "program": "${workspaceFolder}/bin/unix/debug/main"
         },
         {
             "name": "Build release (cppdbg)",
@@ -55,7 +55,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make release",
-            "program": "${workspaceFolder}/bin/release/main",
+            "program": "${workspaceFolder}/bin/release/main"
         },
         {
             "name": "Build release (lldb)",
@@ -63,7 +63,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make release",
-            "program": "${workspaceFolder}/bin/release/main",
+            "program": "${workspaceFolder}/bin/release/main"
         },
         {
             "name": "Build test (cppdbg)",
@@ -71,7 +71,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Make test",
-            "program": "${workspaceFolder}/test/test.exe",
+            "program": "${workspaceFolder}/test/test.exe"
         }
     ]
 }

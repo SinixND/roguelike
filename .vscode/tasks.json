@@ -6,7 +6,7 @@
             "command": "make -j",
             "options": {
                 "cwd": "${workspaceFolder}"
-            },
+            }
         },
         {
             "type": "shell",
@@ -14,7 +14,7 @@
             "command": "make debug",
             "options": {
                 "cwd": "${workspaceFolder}"
-            },
+            }
         },
         {
             "type": "shell",
@@ -22,7 +22,7 @@
             "command": "make debug -j",
             "options": {
                 "cwd": "${workspaceFolder}"
-            },
+            }
         },
         {
             "type": "shell",
@@ -30,7 +30,7 @@
             "command": "make release -j",
             "options": {
                 "cwd": "${workspaceFolder}"
-            },
+            }
         },
         {
             "type": "shell",
@@ -38,7 +38,7 @@
             "command": "make test",
             "options": {
                 "cwd": "${workspaceFolder}"
-            },
+            }
         }
     ],
     "version": "2.0.0"

@@ -3,11 +3,11 @@
 // #define DEBUG_HERO_ACTIONS
 
 #include "CollisionSystem.h"
+#include "CombatSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
 #include "Directions.h"
 #include "EventDispatcher.h"
-#include "ExperienceComponent.h"
 #include "GameCamera.h"
 #include "HealthComponent.h"
 #include "Hero.h"
@@ -23,52 +23,6 @@
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
 #include "Debugger.h"
 #endif
-
-[[nodiscard]]
-Hero const& performAttack(
-    Hero& hero,
-    Map& mapIO,
-    Vector2I const& target
-)
-{
-    size_t enemyIdx{ mapIO.enemies.ids.index( target ) };
-
-#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
-    snx::Debugger::cliLog( "Hero attacks.\n" );
-#endif
-    hero.energy = EnergyModule::consume(
-        hero.energy,
-        hero.damage.costMultiplier
-    );
-
-    HealthModule::damage(
-        mapIO.enemies.healths[mapIO.enemies.ids.index( target )],
-        DamageModule::damageRNG( hero.damage )
-    );
-
-    if ( mapIO.enemies.healths[enemyIdx].current > 0 )
-    {
-        return hero;
-    }
-
-    if (
-        ( hero.experience.levelUpThreshold - hero.experience.current )
-        <= ExperienceModule::getExpValue(
-            mapIO.enemies.experiences[enemyIdx].level,
-            hero.experience.level
-        )
-    )
-    {
-        snx::EventDispatcher::notify( EventId::LEVEL_UP );
-    }
-
-    hero.experience = ExperienceModule::gainExp(
-        hero.experience,
-        mapIO.enemies.experiences[enemyIdx].level
-    );
-
-    return hero;
-}
 
 [[nodiscard]]
 Hero const& processDirectionalInput(
@@ -87,7 +41,7 @@ Hero const& processDirectionalInput(
     //* Attack
     if ( mapIO.enemies.ids.contains( target ) )
     {
-        hero = performAttack(
+        CombatSystem::performAttack(
             hero,
             mapIO,
             target
@@ -233,7 +187,7 @@ namespace HeroModule
                 //* Check if an enemy is at the first path tile
                 else if ( mapIO.enemies.ids.contains( path.rbegin()[1] ) )
                 {
-                    hero = performAttack(
+                    CombatSystem::performAttack(
                         hero,
                         mapIO,
                         path.rbegin()[1]
