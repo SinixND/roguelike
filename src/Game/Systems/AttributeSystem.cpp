@@ -1,6 +1,6 @@
 #include "AttributeSystem.h"
 
-#define DEBUG_ENERGY_REGEN
+// #define DEBUG_ENERGY_REGEN
 
 #include "AttributesComponent.h"
 #include "EnergyComponent.h"
@@ -39,7 +39,7 @@ namespace AttributeSystem
         return energyIO;
     }
 
-    void udpateStats(
+    void updateStats(
         HealthComponent& healthIO,
         EnergyComponent& energyIO,
         AttributesComponent const& attributes

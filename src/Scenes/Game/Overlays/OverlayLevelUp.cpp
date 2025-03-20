@@ -52,7 +52,7 @@ Hero const& levelUpHero(
 
     ExperienceSystem::updateStats( hero.health );
 
-    AttributeSystem::udpateStats(
+    AttributeSystem::updateStats(
         hero.health,
         hero.energy,
         hero.attributes

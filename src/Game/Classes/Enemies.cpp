@@ -190,7 +190,7 @@ namespace EnemiesModule
             RenderId::GOBLIN
         );
 
-        enemies = updateStats( enemies );
+        enemies = updateAllStats( enemies );
 
         return enemies;
     }
@@ -224,7 +224,7 @@ namespace EnemiesModule
         int mapLevel
     )
     {
-        size_t const maxEnemies{ static_cast<size_t>( ( mapLevel + 1 ) * 3 ) };
+        size_t const maxEnemies{ static_cast<size_t>( ( mapLevel + 1 ) * 2 ) };
 
         while ( enemies.renderIds.size() < maxEnemies )
         {
@@ -304,20 +304,14 @@ namespace EnemiesModule
         return enemies;
     }
 
-    Enemies const& updateStats( Enemies& enemies )
+    Enemies const& updateAllStats( Enemies& enemies )
     {
         for ( size_t i{ 0 }; i < enemies.healths.values().size(); ++i )
         {
-            enemies.healths[i] = AttributeSystem::updateFromVitality(
+            AttributeSystem::updateStats(
                 enemies.healths[i],
-                enemies.attributes[i].vitality,
-                AttributesModule::totalPoints( enemies.attributes[i] )
-            );
-
-            enemies.energies[i] = AttributeSystem::updateFromAgility(
                 enemies.energies[i],
-                enemies.attributes[i].agility,
-                AttributesModule::totalPoints( enemies.attributes[i] )
+                enemies.attributes[i]
             );
         }
 

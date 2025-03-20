@@ -21,7 +21,7 @@ namespace AttributeSystem
         int attributesPointsSum
     );
 
-    void udpateStats(
+    void updateStats(
         HealthComponent& healthIO,
         EnergyComponent& energyIO,
         AttributesComponent const& attributes

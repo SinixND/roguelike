@@ -107,7 +107,7 @@ namespace EnemiesModule
     );
 
     [[nodiscard]]
-    Enemies const& updateStats( Enemies& enemies );
+    Enemies const& updateAllStats( Enemies& enemies );
 
 }
 

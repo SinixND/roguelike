@@ -329,6 +329,12 @@ namespace GameModule
 #endif
         game.hero = Hero{};
 
+        AttributeSystem::updateStats(
+            game.hero.health,
+            game.hero.energy,
+            game.hero.attributes
+        );
+
         game.world = World{};
 
         game.turn = 1;

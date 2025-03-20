@@ -13,7 +13,7 @@ namespace EnemiesData
     };
 
     EnemyData constexpr goblin{
-        10,
+        20,
         1,
         10,
         10,

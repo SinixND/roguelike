@@ -4,13 +4,13 @@
 struct HealthComponent;
 struct EnergyComponent;
 
-int constexpr ATTRIBUTES{ 2 };
+int constexpr ATTRIBUTES{ 4 };
 
 struct AttributesComponent
 {
     int vitality{ 10 }; //* Health
-    // int Strength{};  //* Damage
-    // int Defense{};   //* Damage reduction
+    int strength{ 10 }; //* Damage
+    int defense{ 10 };  //* Damage reduction
     // int Dexterity{}; //* CHD
     int agility{ 10 }; //* Energy regen
     // int Luck{};      //* Evasion (and CHC?)
