@@ -12,7 +12,7 @@ struct ExperienceComponent
 
 namespace ExperienceModule
 {
-    int getExpValue( int foeExpLevel, int attackerExpLevel );
+    int getExpValue( int defenderExpLevel, int attackerExpLevel );
 
     [[nodiscard]]
     ExperienceComponent const& gainExp(

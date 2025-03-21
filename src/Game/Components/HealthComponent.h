@@ -11,10 +11,10 @@ struct HealthComponent
 
 namespace HealthModule
 {
-    //* Returns true if health is <= 0
     //* Reduces health to 0 with no argument
-    bool damage(
-        HealthComponent& healthIO,
+    [[nodiscard]]
+    HealthComponent const& damage(
+        HealthComponent& health,
         int value = 0
     );
 

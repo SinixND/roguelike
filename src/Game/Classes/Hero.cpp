@@ -8,6 +8,7 @@
 #include "Cursor.h"
 #include "Directions.h"
 #include "EventDispatcher.h"
+#include "ExperienceComponent.h"
 #include "GameCamera.h"
 #include "HealthComponent.h"
 #include "Hero.h"
@@ -41,11 +42,39 @@ Hero const& processDirectionalInput(
     //* Attack
     if ( mapIO.enemies.ids.contains( target ) )
     {
+        size_t enemyIdx{ mapIO.enemies.ids.index( target ) };
+
+#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
+        snx::Debugger::cliLog( "Hero attacks.\n" );
+#endif
         CombatSystem::performAttack(
-            hero,
-            mapIO,
-            target
+            hero.energy,
+            hero.damage,
+            mapIO.enemies.healths[enemyIdx]
         );
+
+        if ( mapIO.enemies.healths[enemyIdx].current <= 0 )
+        {
+            return hero;
+        }
+
+        if (
+            ExperienceModule::getExpValue(
+                mapIO.enemies.experiences[enemyIdx].level,
+                hero.experience.level
+            )
+            > ( hero.experience.levelUpThreshold - hero.experience.current )
+        )
+        {
+            snx::EventDispatcher::notify( EventId::LEVEL_UP );
+
+            hero.experience = ExperienceModule::gainExp(
+                hero.experience,
+                mapIO.enemies.experiences[enemyIdx].level
+            );
+        }
+
+        return hero;
     }
     //* Move
     else if ( !CollisionSystem::checkCollision(
@@ -187,10 +216,12 @@ namespace HeroModule
                 //* Check if an enemy is at the first path tile
                 else if ( mapIO.enemies.ids.contains( path.rbegin()[1] ) )
                 {
+                    size_t enemyIdx{ mapIO.enemies.ids.at( path.rbegin()[1] ) };
+
                     CombatSystem::performAttack(
-                        hero,
-                        mapIO,
-                        path.rbegin()[1]
+                        hero.energy,
+                        hero.damage,
+                        mapIO.enemies.healths[enemyIdx]
                     );
 
                     path.clear();

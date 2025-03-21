@@ -5,6 +5,11 @@ Platforms: Linux, Windows, Browser
 
 # TODOs
 ## Active 
+- [ ] Check layer/hierarchy
+    - data -> logic | data -> visual
+        - UI interaction (visual-only data)
+    - data -> modules -> systems (flowchart?)
+    - (orthogonal) components (= data/struct?) -> classes -> game ?
 - [ ] Extend attributes/leveling
     - Possibility of classes: different starting distribution
     - And/Or change class if certain distribution threshold(s) met

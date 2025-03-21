@@ -3,6 +3,7 @@
 // #define DEBUG_AI_ACTIONS
 
 #include "CollisionSystem.h"
+#include "CombatSystem.h"
 #include "Convert.h"
 #include "Enemies.h"
 #include "HealthComponent.h"
@@ -19,9 +20,8 @@
 
 Enemies& executeAction(
     Enemies& enemiesIO,
-    HealthComponent& heroHealthIO,
+    Hero& heroIO,
     Map const& map,
-    Vector2I const& heroPosition,
     GameCamera const& gameCamera,
     size_t enemyId
 )
@@ -30,7 +30,7 @@ Enemies& executeAction(
     if ( Vector2Length(
              Vector2Subtract(
                  Convert::worldToTile( enemiesIO.positions.at( enemyId ) ),
-                 heroPosition
+                 Convert::worldToTile( heroIO.position )
              )
          )
          == 1 )
@@ -39,11 +39,12 @@ Enemies& executeAction(
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
         snx::Debugger::cliLog( "Enemy[", enemyId, "] attacks and deals" );
 #endif
-        enemiesIO.energies.at( enemyId ) = EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
-
-        HealthModule::damage(
-            heroHealthIO,
-            DamageModule::damageRNG( enemiesIO.damages.at( enemyId ) )
+        CombatSystem::performAttack(
+            enemiesIO.energies.at( enemyId ),
+            enemiesIO.experiences.at( enemyId ),
+            enemiesIO.damages.at( enemyId ),
+            heroIO.health,
+            heroIO.experience
         );
     }
     //* Check path
@@ -51,7 +52,7 @@ Enemies& executeAction(
     {
         std::vector<Vector2I> path{ PathfinderSystem::calculateAStarPath(
             Convert::worldToTile( enemiesIO.positions.at( enemyId ) ),
-            heroPosition,
+            Convert::worldToTile( heroIO.position ),
             map,
             gameCamera,
             false,
@@ -67,7 +68,7 @@ Enemies& executeAction(
                  map.tiles,
                  map.enemies,
                  path.rbegin()[1],
-                 heroPosition
+                 Convert::worldToTile( heroIO.position )
              ) )
         {
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
@@ -114,9 +115,8 @@ namespace AIModule
             {
                 enemies = executeAction(
                     enemies,
-                    heroIO.health,
+                    heroIO,
                     map,
-                    Convert::worldToTile( heroIO.position ),
                     gameCamera,
                     activeEnemyIdIO
                 );

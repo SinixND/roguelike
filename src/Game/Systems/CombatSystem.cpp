@@ -1,54 +1,25 @@
 #include "CombatSystem.h"
 
-#include "EventDispatcher.h"
-#include "EventId.h"
-#include "Hero.h"
-#include "Map.h"
-#include "raylibEx.h"
-#include <cstddef>
+#include "DamageComponent.h"
+#include "EnergyComponent.h"
+#include "HealthComponent.h"
 
 namespace CombatSystem
 {
     void performAttack(
-        Hero& heroIO,
-        Map& mapIO,
-        Vector2I const& target
+        EnergyComponent& attackerEnergyIO,
+        DamageComponent const& attackerDamage,
+        HealthComponent& defenderHealthIO
     )
     {
-        size_t enemyIdx{ mapIO.enemies.ids.index( target ) };
-
-#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
-        snx::Debugger::cliLog( "Hero attacks.\n" );
-#endif
-        heroIO.energy = EnergyModule::consume(
-            heroIO.energy,
-            heroIO.damage.costMultiplier
+        attackerEnergyIO = EnergyModule::consume(
+            attackerEnergyIO,
+            attackerDamage.costMultiplier
         );
 
-        HealthModule::damage(
-            mapIO.enemies.healths[mapIO.enemies.ids.index( target )],
-            DamageModule::damageRNG( heroIO.damage )
-        );
-
-        if ( mapIO.enemies.healths[enemyIdx].current > 0 )
-        {
-            return;
-        }
-
-        if (
-            ( heroIO.experience.levelUpThreshold - heroIO.experience.current )
-            <= ExperienceModule::getExpValue(
-                mapIO.enemies.experiences[enemyIdx].level,
-                heroIO.experience.level
-            )
-        )
-        {
-            snx::EventDispatcher::notify( EventId::LEVEL_UP );
-        }
-
-        heroIO.experience = ExperienceModule::gainExp(
-            heroIO.experience,
-            mapIO.enemies.experiences[enemyIdx].level
+        defenderHealthIO = HealthModule::damage(
+            defenderHealthIO,
+            DamageModule::damageRNG( attackerDamage )
         );
 
         return;

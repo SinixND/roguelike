@@ -12,8 +12,8 @@
 
 namespace HealthModule
 {
-    bool damage(
-        HealthComponent& healthIO,
+    HealthComponent const& damage(
+        HealthComponent& health,
         int value
     )
     {
@@ -22,21 +22,21 @@ namespace HealthModule
 #endif
         if ( value )
         {
-            healthIO.current -= value;
+            health.current -= value;
         }
         else
         {
-            healthIO.current = 0;
+            health.current = 0;
         }
 
         snx::EventDispatcher::notify( EventId::INTERRUPT_MOVEMENT );
 
-        if ( healthIO.current <= 0 )
+        if ( health.current <= 0 )
         {
-            return true;
+            return health;
         }
 
-        return false;
+        return health;
     }
 
     HealthComponent const& heal(

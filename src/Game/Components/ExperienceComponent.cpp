@@ -2,14 +2,16 @@
 #include "ExperienceSystem.h"
 
 #include <cassert>
-#include <cmath>
 
 namespace ExperienceModule
 {
-    int getExpValue( int foeExpLevel, int attackerExpLevel )
+    int getExpValue( int defenderExpLevel, int attackerExpLevel )
     {
-        int exp = foeExpLevel * static_cast<int>( foeExpLevel / attackerExpLevel );
-        return ( exp < 0 ) ? 0 : exp;
+        int exp = defenderExpLevel * static_cast<int>( defenderExpLevel / attackerExpLevel );
+
+        assert( !( exp < 0 ) && "Exp is negative" );
+
+        return exp;
     }
 
     ExperienceComponent const& gainExp(

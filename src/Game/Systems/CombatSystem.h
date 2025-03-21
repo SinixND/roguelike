@@ -1,16 +1,16 @@
 #ifndef IG20250320163415
 #define IG20250320163415
 
-struct Hero;
-struct Map;
-struct Vector2I;
+struct EnergyComponent;
+struct DamageComponent;
+struct HealthComponent;
 
 namespace CombatSystem
 {
     void performAttack(
-        Hero& heroIO,
-        Map& mapIO,
-        Vector2I const& target
+        EnergyComponent& attackerEnergyIO,
+        DamageComponent const& attackerDamage,
+        HealthComponent& defenderHealthIO
     );
 }
 
