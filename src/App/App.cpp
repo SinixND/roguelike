@@ -9,7 +9,6 @@
 #include "Game.h"
 #include "GameFont.h"
 #include "GamePanels.h"
-#include "GameSystem.h"
 #include "InputHandler.h"
 #include "InputId.h"
 #include "VisibilitySystem.h"
@@ -144,7 +143,7 @@ void updateApp( void* arg )
         default:
         case AppState::RUN_GAME:
         {
-            app.game = GameSystem::update(
+            app.game = GameModule::update(
                 app.game,
                 app.scenes.game.gameCamera,
                 app.cursor,

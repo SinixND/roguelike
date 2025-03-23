@@ -31,22 +31,22 @@ public:
     }
 
     void setRectangle( RectangleEx rectangle );
-    void setMargin( float margin );
-    void setPadding( float padding );
+    // void setMargin( float margin );
+    // void setPadding( float padding );
     void setOuter(
         RectangleEx outer,
         float margin,
         float padding
     );
 
-    void setInner(
-        RectangleEx inner,
-        float margin,
-        float padding
-    );
+    // void setInner(
+    //     RectangleEx inner,
+    //     float margin,
+    //     float padding
+    // );
 
-    float margin() const;
-    float padding() const;
+    // float margin() const;
+    // float padding() const;
 
     RectangleEx const& box() const;
     RectangleEx inner() const;
