@@ -41,10 +41,8 @@ Enemies& executeAction(
 #endif
         CombatSystem::performAttack(
             enemiesIO.energies.at( enemyId ),
-            enemiesIO.experiences.at( enemyId ),
             enemiesIO.damages.at( enemyId ),
-            heroIO.health,
-            heroIO.experience
+            heroIO.health
         );
     }
     //* Check path

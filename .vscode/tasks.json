@@ -11,7 +11,7 @@
         {
             "type": "shell",
             "label": "Make debug",
-            "command": "make debug",
+            "command": "make bd",
             "options": {
                 "cwd": "${workspaceFolder}"
             }
@@ -19,7 +19,7 @@
         {
             "type": "shell",
             "label": "Make debug (-j)",
-            "command": "make debug -j",
+            "command": "make bd -j",
             "options": {
                 "cwd": "${workspaceFolder}"
             }
@@ -27,7 +27,7 @@
         {
             "type": "shell",
             "label": "Make release",
-            "command": "make release -j",
+            "command": "make br -j",
             "options": {
                 "cwd": "${workspaceFolder}"
             }
@@ -35,7 +35,7 @@
         {
             "type": "shell",
             "label": "Make test",
-            "command": "make test",
+            "command": "make bt",
             "options": {
                 "cwd": "${workspaceFolder}"
             }

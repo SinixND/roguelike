@@ -1,0 +1,6 @@
+[submodule "ECS_2.0"]
+	path = ECS_2.0
+	url = https://github.com/SinixND/ECS_2.0
+[submodule "include/ECS"]
+	path = include/ECS
+	url = https://github.com/SinixND/ECS
