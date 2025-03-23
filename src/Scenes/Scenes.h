@@ -10,9 +10,4 @@ struct Scenes
     SceneGameOver gameOver{};
 };
 
-namespace ScenesModule
-{
-    void drawWindowBorder();
-}
-
 #endif

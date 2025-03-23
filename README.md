@@ -17,6 +17,7 @@ Platforms: Linux, Windows, Browser
 
 
 ## Shortterm
+- [ ] Add ECS for data/component management?
 - [ ] Add inspection mode
 - [ ] CombatSystem
 - [ ] Add AI behaviour with new enemy types

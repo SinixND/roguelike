@@ -3,6 +3,7 @@
 #include "Colors.h"
 #include "GameFont.h"
 #include "Scenes.h"
+#include "Utility.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -68,7 +69,7 @@ namespace SceneGameOverModule
             LIGHTGRAY
         );
 
-        ScenesModule::drawWindowBorder();
+        Utility::drawWindowBorder();
 
         EndDrawing();
     }

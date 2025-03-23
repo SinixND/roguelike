@@ -10,12 +10,14 @@
 #include "EventId.h"
 #include "Game.h"
 #include "GameCamera.h"
+#include "GamePanels.h"
 #include "GameState.h"
 #include "InputId.h"
 #include "Objects.h"
 #include "RenderSystem.h"
 #include "SceneGame.h"
 #include "Scenes.h"
+#include "Utility.h"
 #include "VisibilityId.h"
 #include "VisibilitySystem.h"
 #include "World.h"
@@ -292,7 +294,7 @@ namespace SceneGameModule
         }
 
         //* Draw simple frame
-        ScenesModule::drawWindowBorder();
+        Utility::drawWindowBorder();
 
         if ( DeveloperMode::isActive() )
         {
