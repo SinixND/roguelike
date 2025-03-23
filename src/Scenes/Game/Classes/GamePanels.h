@@ -18,10 +18,6 @@ namespace GamePanelsModule
 {
     [[nodiscard]]
     GamePanels const& init( GamePanels& panels );
-
-    void drawPanelBackground( Panel const& panel, Color const& color );
-
-    void drawPanelBorder( Panel const& panel, float borderWidth );
 }
 
 #endif

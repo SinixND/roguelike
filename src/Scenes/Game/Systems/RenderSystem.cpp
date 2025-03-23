@@ -170,8 +170,8 @@ namespace RenderSystem
         float borderWidth
     )
     {
-        GamePanelsModule::drawPanelBackground( statusPanel, bgColor );
-        GamePanelsModule::drawPanelBorder( statusPanel, borderWidth );
+        statusPanel.drawBackground( bgColor );
+        statusPanel.drawBorder( borderWidth );
 
         DrawTextEx(
             GameFont::font(),
@@ -203,14 +203,14 @@ namespace RenderSystem
         float borderWidth
     )
     {
-        GamePanelsModule::drawPanelBackground( infoPanel, bgColor );
+        infoPanel.drawBackground( bgColor );
 
         if ( !objects.ids.contains( cursorPosition ) )
         {
             return;
         }
 
-        GamePanelsModule::drawPanelBorder( infoPanel, borderWidth );
+        infoPanel.drawBorder( borderWidth );
 
         size_t objectIdx{ objects.ids.index( cursorPosition ) };
 
@@ -239,8 +239,8 @@ namespace RenderSystem
             return;
         }
 
-        GamePanelsModule::drawPanelBackground( logPanel, bgColor );
-        GamePanelsModule::drawPanelBorder( logPanel, borderWidth );
+        logPanel.drawBackground( bgColor );
+        logPanel.drawBorder( borderWidth );
 
         float lines{ ( logPanel.inner().height() / ( 1.5f * GameFont::fontSize ) ) - 1 };
 

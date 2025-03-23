@@ -30,82 +30,30 @@ public:
     {
     }
 
-    void setRectangle( RectangleEx rectangle )
-    {
-        rectangle_ = rectangle;
-    }
-
-    void setMargin( float margin )
-    {
-        margin_ = margin;
-    }
-
-    void setPadding( float padding )
-    {
-        padding_ = padding;
-    }
-
+    void setRectangle( RectangleEx rectangle );
+    void setMargin( float margin );
+    void setPadding( float padding );
     void setOuter(
         RectangleEx outer,
         float margin,
         float padding
-    )
-    {
-        margin_ = margin;
-        padding_ = padding;
-
-        rectangle_ = RectangleEx{
-            outer.left() + margin,
-            outer.top() + margin,
-            outer.width() - 2 * margin,
-            outer.height() - 2 * margin,
-        };
-    }
+    );
 
     void setInner(
         RectangleEx inner,
         float margin,
         float padding
-    )
-    {
-        margin_ = margin;
-        padding_ = padding;
+    );
 
-        rectangle_ = RectangleEx{
-            inner.left() - padding,
-            inner.top() - padding,
-            inner.width() + 2 * padding,
-            inner.height() + 2 * padding,
-        };
-    }
+    float margin() const;
+    float padding() const;
 
-    float margin() const { return margin_; }
-    float padding() const { return padding_; }
+    RectangleEx const& box() const;
+    RectangleEx inner() const;
+    RectangleEx outer() const;
 
-    RectangleEx const& box() const
-    {
-        return rectangle_;
-    }
-
-    RectangleEx inner() const
-    {
-        return RectangleEx{
-            rectangle_.left() + padding_,
-            rectangle_.top() + padding_,
-            rectangle_.width() - 2 * padding_,
-            rectangle_.height() - 2 * padding_
-        };
-    }
-
-    RectangleEx outer() const
-    {
-        return RectangleEx{
-            rectangle_.left() - margin_,
-            rectangle_.top() - margin_,
-            rectangle_.width() + 2 * margin_,
-            rectangle_.height() + 2 * margin_
-        };
-    }
+    void drawBackground( Color const& color ) const;
+    void drawBorder( float borderWidth ) const;
 };
 
 #endif

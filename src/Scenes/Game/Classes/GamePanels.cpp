@@ -58,21 +58,4 @@ namespace GamePanelsModule
 
         return panels;
     }
-
-    void drawPanelBackground( Panel const& panel, Color const& color )
-    {
-        DrawRectangleRec(
-            panel.box().rectangle(),
-            color
-        );
-    }
-
-    void drawPanelBorder( Panel const& panel, float borderWidth )
-    {
-        DrawRectangleLinesEx(
-            panel.box().rectangle(),
-            borderWidth,
-            Color{ 25, 25, 25, 255 }
-        );
-    }
 }
