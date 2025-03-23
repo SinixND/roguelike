@@ -1,4 +1,4 @@
-#include "AIComponent.h"
+#include "AISystem.h"
 
 // #define DEBUG_AI_ACTIONS
 
@@ -95,7 +95,7 @@ Enemies& executeAction(
     return enemiesIO;
 }
 
-namespace AIModule
+namespace AISystem
 {
     Enemies const& executeNextAction(
         Enemies& enemies,

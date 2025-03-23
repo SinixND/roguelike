@@ -1,5 +1,6 @@
 #include "GameSystem.h"
 
+#include "AISystem.h"
 #include "Convert.h"
 #include "EventDispatcher.h"
 #include "EventId.h"
@@ -112,7 +113,7 @@ Game const& executeInstantActions(
     //* Enemies
     else
     {
-        game.world.currentMap->enemies = AIModule::executeNextAction(
+        game.world.currentMap->enemies = AISystem::executeNextAction(
             game.world.currentMap->enemies,
             game.activeEnemyId,
             game.hero,

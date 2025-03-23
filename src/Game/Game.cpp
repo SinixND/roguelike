@@ -2,7 +2,7 @@
 
 // #define DEBUG_GAME_LOOP
 
-#include "AIComponent.h"
+#include "AISystem.h"
 #include "AttributeSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
@@ -232,7 +232,7 @@ Game const& executeInstantActions(
     //* Enemies
     else
     {
-        game.world.currentMap->enemies = AIModule::executeNextAction(
+        game.world.currentMap->enemies = AISystem::executeNextAction(
             game.world.currentMap->enemies,
             game.activeEnemyId,
             game.hero,
