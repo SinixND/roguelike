@@ -1,10 +1,10 @@
 # Design guideline
-
+The Zen of Python (selection):
+> - Explicit is better than implicit.
 > - Simple is better than complex.
 > - Complex is better than complicated.
 > - Flat is better than nested.
-> - Sparse (data) is better than dense.
-> - Readability counts.
+> - Sparse (code) is better than dense.
 > - Practicality beats purity.
 > - Now is better than never.
 
