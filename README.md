@@ -8,8 +8,13 @@ Platforms: Linux, Windows, Browser
 - [ ] Check layer/hierarchy
     - data -> logic | data -> visual
         - UI interaction (visual-only data)
-    - data -> modules -> systems (flowchart?)
+    - data <- modules <- systems! (flowchart?)
     - (orthogonal) components (= data/struct?) -> classes -> game ?
+- [ ] Check EventSystem: instead of running system every frame, it gets triggered by an event (no need to pass information)
+- [ ] Design (Nystrom): 
+    - gainEnergy(); if isReady doYourThing()
+    - WalkAction() -> Result triggers action (eg. attack) 
+        - Action objects? (Command pattern)
 - [ ] Extend attributes/leveling
     - Possibility of classes: different starting distribution
     - And/Or change class if certain distribution threshold(s) met
@@ -17,9 +22,7 @@ Platforms: Linux, Windows, Browser
 
 
 ## Shortterm
-- [ ] Add ECS for data/component management?
 - [ ] Add inspection mode
-- [ ] CombatSystem
 - [ ] Add AI behaviour with new enemy types
     - Simple types named after stats? (`Normal/Default/Standard`, `Strong`, `Quick`, `Healthy`)
 
@@ -115,7 +118,7 @@ Platforms: Linux, Windows, Browser
 # Implemented ToDo's
 - [x] Compile for linux & windows
 - [x] Render sprites/textures
-- [ ] Make ECS (removed)
+- [ ] Make ECS (removed for the overhead of getting (eg.) only Enemies)
 - [ ] Command pattern for rendering and layers (will not be implemented -> need to handle abiguous keys in SparseSet: potential duplicate positions for tiles in different layers)
 - [x] Refactor tilePosition to float position
 - [x] Implement render area (have been named panels)
