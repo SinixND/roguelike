@@ -1,15 +1,10 @@
-# ROGUELIKE
-A roguelike made with raylib to practise programming (concepts).
-Platforms: Linux, Windows, Browser
-
-
 # TODOs
 ## Active 
-- [ ] Check layer/hierarchy
-    - data -> logic | data -> visual
-        - UI interaction (visual-only data)
-    - data <- modules <- systems! (flowchart?)
-    - (orthogonal) components (= data/struct?) -> classes -> game ?
+- [ ] No EXP gain in lvl 1
+
+- [ ] Check layer/hierarchy (ECS based)
+    - Modules, entities, systems, data, configs
+    - [ ] Use ECS to manage components/game state
 - [ ] Check EventSystem: instead of running system every frame, it gets triggered by an event (no need to pass information)
 - [ ] Design (Nystrom): 
     - gainEnergy(); if isReady doYourThing()
@@ -37,6 +32,7 @@ Platforms: Linux, Windows, Browser
 - [ ] Implement zoom?
 - [ ] Setup docker (non-trvial for GUI apps?)
 
+
 ## Ideas
 - [ ] Make game a mix of `rogue` and `factorio`
 - [ ] (Hold) KEY to show map overview
@@ -45,10 +41,71 @@ Platforms: Linux, Windows, Browser
 - [ ] Use shaders
     - (send matrix/vector of shadows by SetShaderValue()) and render one big black overlay with applied shader?
     - to render Fogs
+- [ ] Maptypes:
+    - Cellular Automata (dungeon)
+    - Rogue-like (rooms and tunnels)
+    - Square rooms grid
+    - Extend side -> new room wall
+    - Random border match
+    - Quad tree ()
+
 
 ## Continuous
 - Check for obsolete `[[maybe_unused]]`, `//` comments and `TODO`: 
 - [ ] Check on emscripten mouse bug [seems to be emscripten side, investigate later; probably not an easy fix]
+
+
+# README
+A roguelike made with raylib and emscripten to learn programming.
+Platforms: Linux, Windows, Browser
+
+## Concepts used in project (currently or in former versions)
+- Generic Makefile (no cmake)
+- Support for linux / web (library: emscripten) / windows
+- Support for keyboard / mouse / touch
+- Texture/Sprite rendering (library: raylib)
+- Making of a simple ECS
+    - Research on SparseSet and Archetype
+- OOP/DOD
+    Lots of thoughts went into OOP vs DOD/POD design.
+    The basic takeaway was: 
+    - loose coupling/dependencies via getters/setters/interfaces; more code, possible cost in performance and complexity;
+    - PODs for coupled design, but clear program
+    - default to: public and non-member/non-friend until specific action needed
+- AoS classes (for single objects) vs SoA (for multiple)
+- Made DenseMap for container with contiguous data storage (`std::vector`) and persistant id on erase (`std::unordered_map`)
+- Static publisher-subscriber system to communicate between different program areas 
+- Shadowcast a FogOfWar layer over Tiles
+- Time-dependent / smooth movement 
+- A* pathfinding
+- Procedural map generation
+- EventDispatcher (publisher/subscriber): Holds lambdas that get executed if notified about event (enum)
+- Modular, feature-first architecture/directory structure; namespaces for layers that correspond to folders in modules (eg. components or data):
+```cpp
+src/modules/
+|-- exampleModule/ // eg. Core, Game or UI
+    |-- components/ // Plain old data (POD); defines application state; Usually used multiple times, managed by ECS?
+        |-- ExampleComponent.h
+        ...
+    |-- configs/    // changeable data (eg. window dimensions)
+        |-- ExampleConfig.h
+        ...
+    |-- data/       // persistent data (eg. constants or enums)
+        |-- ExampleData.h
+        ...
+    |-- entities/   // Organizes components (either POD/struct or Id); Usually used once (unique)
+        |-- ExampleEntity.h
+        ...
+    |-- systems/    // Functions modifying components or entities
+        |-- ExampleSystem.h
+        ...
+    |-- utils/      // Functions used accross the application
+        |-- ExampleUtils.h
+        ...
+    ...
+src/main.cpp
+```
+- Use of clang-format, clang-tidy, cppcheck
 
 
 # Notes
@@ -80,45 +137,13 @@ Platforms: Linux, Windows, Browser
 | (DOUBLE) TAP | Interact / Wait         |
 
 
-## Maptypes:
-- Cellular Automata (dungeon)
-- Rogue-like (rooms and tunnels)
-- Square rooms grid
-- Extend side -> new room wall
-- Random border match
-- Quad tree ()
-
-
 ## Docker:
 [Install docker](https://itsfoss.com/install-docker-arch-linux/)
-
-
-## Concepts used in project
-- Generic Makefile (no cmake)
-- Support for linux / web (library: emscripten) / windows
-- Support for keyboard / mouse / touch
-- Texture/Sprite rendering (library: raylib)
-- Making of a simple ECS
-    - Research on SparseSet and Archetype
-- OOP/DOD
-    Lots of thoughts went into OOP vs DOD/POD design.
-    The basic takeaway was: 
-    - loose coupling/dependencies via getters/setters/interfaces; more code, possible cost in performance and complexity;
-    - PODs for coupled design, but clear program
-    - default to: public and non-member/non-friend until specific action needed
-- AoS classes (for single objects) vs SoA (for multiple)
-- Made DenseMap(arbitrary id)/SparseSet(`size_t` id) for contiguous container with persistant id on erase
-- Static publisher-subscriber system to communicate between different program areas (only enums, no variables)
-- Shadowcast a FogOfWar layer over Tiles
-- Time-dependent / smooth movement 
-- A* pathfinding
-- Procedural map generation
 
 
 # Implemented ToDo's
 - [x] Compile for linux & windows
 - [x] Render sprites/textures
-- [ ] Make ECS (removed for the overhead of getting (eg.) only Enemies)
 - [ ] Command pattern for rendering and layers (will not be implemented -> need to handle abiguous keys in SparseSet: potential duplicate positions for tiles in different layers)
 - [x] Refactor tilePosition to float position
 - [x] Implement render area (have been named panels)

@@ -4,3 +4,6 @@
 [submodule "include/ECS"]
 	path = include/ECS
 	url = https://github.com/SinixND/ECS
+[submodule "include/DenseMap"]
+	path = include/DenseMap
+	url = https://github.com/SinixND/DenseMap
