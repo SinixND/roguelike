@@ -2,7 +2,8 @@
 
 // #define DEBUG_TILEINFO
 
-#include "AppConfig.h"
+#include "ConfigApp.h"
+#include "DataApp.h"
 #include "DeveloperMode.h"
 #include "EventDispatcher.h"
 #include "EventId.h"
@@ -35,21 +36,37 @@ void setupRaylib( AppConfig const& config )
     }
 
     //* Initialize window
-    InitWindow( config.windowWidth, config.windowHeight, "Roguelike" );
+    InitWindow(
+        config.windowWidth,
+        config.windowHeight,
+        "Roguelike"
+    );
 
     //* Raylib Settings
-    SetWindowIcon( config.favicon );
-    SetWindowMinSize( 640, 480 );
+    SetWindowIcon( Data::App::FAVICON );
+    SetWindowMinSize(
+        Data::App::WINDOE_WIDTH_MIN,
+        Data::App::WINDOE_HEIGHT_MIN
+    );
+
 #if defined( EMSCRIPTEN )
     MaximizeWindow();
 #endif
+
     SetExitKey( KEY_F4 );
-    SetTargetFPS( config.fpsTarget );
-    SetTextureFilter( GetFontDefault().texture, TEXTURE_FILTER_POINT );
+    SetTargetFPS( Data::App::FPS_TARGET );
+    SetTextureFilter(
+        GetFontDefault().texture,
+        TEXTURE_FILTER_POINT
+    );
 
     //* Fonts
     GameFont::load();
-    GuiSetStyle( DEFAULT, TEXT_SIZE, GameFont::fontSize );
+    GuiSetStyle(
+        DEFAULT,
+        TEXT_SIZE,
+        GameFont::fontSize
+    );
 }
 
 void setupNcurses() {}
@@ -122,9 +139,9 @@ void updateApp( void* arg )
 #if defined( DEBUG )
     updateDeveloperMode();
 #endif
-    app.currentInputId = getUserInput( app.inputHandler );
+    app.inputHandler.currentInputId = getUserInput( app.inputHandler );
 
-    if ( app.currentInputId == InputId::TOGGLE_CURSOR )
+    if ( app.inputHandler.currentInputId == InputId::TOGGLE_CURSOR )
     {
         app.inputHandler.toggleCursorState();
         snx::EventDispatcher::notify( EventId::CURSOR_TOGGLE );
@@ -141,13 +158,13 @@ void updateApp( void* arg )
     switch ( app.state )
     {
         default:
-        case AppState::RUN_GAME:
+        case AppStateId::RUN_GAME:
         {
             app.game = GameModule::update(
                 app.game,
                 app.scenes.game.gameCamera,
                 app.cursor,
-                app.currentInputId,
+                app.inputHandler.currentInputId,
                 app.dt
             );
 
@@ -157,13 +174,13 @@ void updateApp( void* arg )
                 app.game.world,
                 app.cursor,
                 app.game.state,
-                app.currentInputId
+                app.inputHandler.currentInputId
             );
 
             break;
         }
 
-        case AppState::GAME_OVER:
+        case AppStateId::GAME_OVER:
         {
             SceneGameOverModule::update( app.scenes.gameOver );
 
@@ -316,7 +333,7 @@ void setupAppEvents( App& app )
         EventId::GAME_OVER,
         [&]()
         {
-            app.state = AppState::GAME_OVER;
+            app.state = AppStateId::GAME_OVER;
         }
     );
 }

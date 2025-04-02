@@ -1,4 +1,5 @@
 #include "App.h"
+#include "ConfigApp.h"
 
 //* Only define once
 #define RAYGUI_IMPLEMENTATION

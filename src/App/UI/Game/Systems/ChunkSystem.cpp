@@ -2,8 +2,8 @@
 
 #include "Chunk.h"
 #include "ChunkData.h"
-#include "Colors.h"
 #include "Convert.h"
+#include "DataColors.h"
 #include "DenseMap.h"
 #include "RenderSystem.h"
 #include "Tiles.h"
@@ -73,7 +73,7 @@ namespace ChunkSystem
 
             BeginTextureMode( chunk.renderTexture );
 
-            ClearBackground( Colors::BG );
+            ClearBackground( Data::Colors::BG );
 
             //* Iterate all tilePositions in chunk
             for ( int x{ chunkSize.left() - 1 }; x < ( chunkSize.right() + 2 ); ++x )

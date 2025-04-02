@@ -80,27 +80,30 @@ Platforms: Linux, Windows, Browser
 - A* pathfinding
 - Procedural map generation
 - EventDispatcher (publisher/subscriber): Holds lambdas that get executed if notified about event (enum)
-- Modular, feature-first architecture/directory structure; namespaces for layers that correspond to folders in modules (eg. components or data):
+- Modular, feature-first architecture/directory structure; namespaces for layers that correspond to folders in modules (eg. components, data) and potential naming conflicts (eg. Dta::Hero, Cfg::Hero, Cmp::Health, Sys::Health):
 ```cpp
-src/modules/
-|-- exampleModule/ // eg. Core, Game or UI
-    |-- components/ // Plain old data (POD); defines application state; Usually used multiple times, managed by ECS?
-        |-- ExampleComponent.h
+src/Modules/
+|-- ExampleModule/  // eg. App, Game or UI
+    |-- Classes/    // Classes with private members and methods; one-ofs
+        |-- Example.h
         ...
-    |-- configs/    // changeable data (eg. window dimensions)
-        |-- ExampleConfig.h
+    |-- Components/ // Plain old data (POD); defines application state; Usually used multiple times, managed by ECS?
+        |-- CmpExample.h
         ...
-    |-- data/       // persistent data (eg. constants or enums)
-        |-- ExampleData.h
+    |-- Configs/    // changeable data (eg. window dimensions)
+        |-- CfgExample.h
         ...
-    |-- entities/   // Organizes components (either POD/struct or Id); Usually used once (unique)
-        |-- ExampleEntity.h
+    |-- Data/       // persistent data (eg. constants or enums)
+        |-- DatExample.h
         ...
-    |-- systems/    // Functions modifying components or entities
-        |-- ExampleSystem.h
+    |-- Entities/   // Organizes components (either POD/struct or Id);
+        |-- Example.h
         ...
-    |-- utils/      // Functions used accross the application
-        |-- ExampleUtils.h
+    |-- Systems/    // Functions modifying components or entities
+        |-- SysExample.h
+        ...
+    |-- Utils/      // Functions used accross the application
+        |-- Example.h
         ...
     ...
 src/main.cpp

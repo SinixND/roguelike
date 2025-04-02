@@ -24,6 +24,8 @@ class InputHandler
 public:
     InputMappings mappings;
 
+    InputId currentInputId{ InputId::NONE };
+
 public:
     InputId fromKeyboard();
     InputId fromMouse();
