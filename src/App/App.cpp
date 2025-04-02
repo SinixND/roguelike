@@ -2,14 +2,13 @@
 
 // #define DEBUG_TILEINFO
 
-#include "ConfigApp.h"
-#include "DataApp.h"
+#include "AppConfigs.h"
+#include "AppData.h"
 #include "DeveloperMode.h"
 #include "EventDispatcher.h"
 #include "EventId.h"
 #include "Game.h"
 #include "GameFont.h"
-#include "GamePanels.h"
 #include "InputHandler.h"
 #include "InputId.h"
 #include "VisibilitySystem.h"
@@ -43,10 +42,10 @@ void setupRaylib( AppConfig const& config )
     );
 
     //* Raylib Settings
-    SetWindowIcon( Data::App::FAVICON );
+    SetWindowIcon( AppData::FAVICON );
     SetWindowMinSize(
-        Data::App::WINDOE_WIDTH_MIN,
-        Data::App::WINDOE_HEIGHT_MIN
+        AppData::WINDOE_WIDTH_MIN,
+        AppData::WINDOE_HEIGHT_MIN
     );
 
 #if defined( EMSCRIPTEN )
@@ -54,7 +53,7 @@ void setupRaylib( AppConfig const& config )
 #endif
 
     SetExitKey( KEY_F4 );
-    SetTargetFPS( Data::App::FPS_TARGET );
+    SetTargetFPS( AppData::FPS_TARGET );
     SetTextureFilter(
         GetFontDefault().texture,
         TEXTURE_FILTER_POINT
@@ -62,6 +61,7 @@ void setupRaylib( AppConfig const& config )
 
     //* Fonts
     GameFont::load();
+
     GuiSetStyle(
         DEFAULT,
         TEXT_SIZE,
@@ -155,10 +155,10 @@ void updateApp( void* arg )
         Convert::worldToTile( app.game.hero.position )
     );
 
-    switch ( app.state )
+    switch ( app.stateId )
     {
         default:
-        case AppStateId::RUN_GAME:
+        case App::StateId::RUN_GAME:
         {
             app.game = GameModule::update(
                 app.game,
@@ -180,7 +180,7 @@ void updateApp( void* arg )
             break;
         }
 
-        case AppStateId::GAME_OVER:
+        case App::StateId::GAME_OVER:
         {
             SceneGameOverModule::update( app.scenes.gameOver );
 
@@ -189,7 +189,7 @@ void updateApp( void* arg )
     }
 }
 
-void setupAppEvents( App& app )
+void App::setupAppEvents()
 {
 #if defined( DEBUG ) && defined( DEBUG_TILEINFO )
     snx::EventDispatcher::addListener(
@@ -300,7 +300,7 @@ void setupAppEvents( App& app )
         EventId::CURSOR_TOGGLE,
         [&]()
         {
-            app.cursor = CursorModule::toggle( app.cursor );
+            cursor = CursorModule::toggle( cursor );
         }
     );
 
@@ -308,22 +308,22 @@ void setupAppEvents( App& app )
         EventId::WINDOW_RESIZED,
         [&]()
         {
-            app.scenes.game.panels = GamePanelsModule::init( app.scenes.game.panels );
-            app.scenes.gameOver = SceneGameOverModule::init( app.scenes.gameOver );
-            app.scenes.game.overlays = OverlaysModule::init( app.scenes.game.overlays );
+            scenes.game.panels = GamePanelsModule::init( scenes.game.panels );
+            scenes.gameOver = SceneGameOverModule::init( scenes.gameOver );
+            scenes.game.overlays = OverlaysModule::init( scenes.game.overlays );
 
-            app.scenes.game.gameCamera = GameCameraModule::init(
-                app.scenes.game.gameCamera,
-                app.scenes.game.panels.map.box(),
-                app.game.hero.position
+            scenes.game.gameCamera = GameCameraModule::init(
+                scenes.game.gameCamera,
+                scenes.game.panels.map.box(),
+                game.hero.position
             );
 
-            app.game.world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
-                app.game.world.currentMap->tiles,
-                app.game.world.currentMap->fogs,
-                GameCameraModule::viewportInTiles( app.scenes.game.gameCamera ),
-                Convert::worldToTile( app.game.hero.position ),
-                app.game.hero.visionRange
+            game.world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
+                game.world.currentMap->tiles,
+                game.world.currentMap->fogs,
+                GameCameraModule::viewportInTiles( scenes.game.gameCamera ),
+                Convert::worldToTile( game.hero.position ),
+                game.hero.visionRange
             );
         },
         true
@@ -333,58 +333,52 @@ void setupAppEvents( App& app )
         EventId::GAME_OVER,
         [&]()
         {
-            app.state = AppStateId::GAME_OVER;
+            stateId = App::StateId::GAME_OVER;
         }
     );
 }
 
-namespace AppModule
+void App::init(
+    AppConfig const& config
+)
 {
-    App const& init(
-        App& appIO,
-        AppConfig const& config
-    )
-    {
-        setupFrameworks( config );
+    setupFrameworks( config );
 
-        appIO.game = GameModule::init( appIO.game );
+    game = GameModule::init( game );
 
-        appIO.scenes.game = SceneGameModule::init(
-            appIO.scenes.game,
-            appIO.game.hero,
-            appIO.game.world
-        );
+    scenes.game = SceneGameModule::init(
+        scenes.game,
+        game.hero,
+        game.world
+    );
 
-        appIO.scenes.gameOver = SceneGameOverModule::init( appIO.scenes.gameOver );
+    scenes.gameOver = SceneGameOverModule::init( scenes.gameOver );
 
-        setupAppEvents( appIO );
+    setupAppEvents();
+}
 
-        return appIO;
-    }
-
-    void run( App& appIO )
-    {
+void App::run()
+{
 #if defined( EMSCRIPTEN )
-        emscripten_set_main_loop_arg(
-            updateApp,
-            &appIO,
-            60 /*FPS*/,
-            1 /*Simulate infinite loop*/
-        );
+    emscripten_set_main_loop_arg(
+        updateApp,
+        &appIO,
+        60 /*FPS*/,
+        1 /*Simulate infinite loop*/
+    );
 #else
-        while ( !( WindowShouldClose() ) )
-        {
-            updateApp( &appIO );
-        }
-#endif
-    }
-
-    void deinit( App& appIO )
+    while ( !( WindowShouldClose() ) )
     {
-        GameFont::unload();
-        SceneGameModule::deinitialize( appIO.scenes.game );
-
-        //* Close window and opengl context
-        CloseWindow();
+        updateApp( this );
     }
+#endif
+}
+
+void App::deinit()
+{
+    GameFont::unload();
+    SceneGameModule::deinitialize( scenes.game );
+
+    //* Close window and opengl context
+    CloseWindow();
 }

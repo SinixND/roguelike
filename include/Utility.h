@@ -1,7 +1,7 @@
 #ifndef IG20240317183916
 #define IG20240317183916
 
-#include "DataColors.h"
+#include "Colors.h"
 #include "raylibEx.h"
 
 namespace Utility
@@ -35,17 +35,6 @@ namespace Utility
             0.7071068,
             0.7071068
         };
-    }
-
-    float constexpr BORDER_WIDTH{ 1 };
-
-    inline void drawWindowBorder()
-    {
-        DrawRectangleLinesEx(
-            GetWindowRec(),
-            BORDER_WIDTH,
-            Data::Colors::BORDER
-        );
     }
 }
 #endif

@@ -4,7 +4,7 @@
 #include <raylib.h>
 
 /// Configurations for the application
-namespace Data::App
+namespace AppData
 {
     Image const FAVICON{ LoadImage( "assets/favicon/favicon.png" ) };
 

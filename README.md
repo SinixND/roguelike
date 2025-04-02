@@ -1,10 +1,8 @@
 # TODOs
 ## Active 
-- [ ] No EXP gain in lvl 1
-
 - [ ] Check layer/hierarchy (ECS based)
     - Modules, entities, systems, data, configs
-    - [ ] Use ECS to manage components/game state
+    - [ ] Use ECS to manage components (=game state?)
 - [ ] Check EventSystem: instead of running system every frame, it gets triggered by an event (no need to pass information)
 - [ ] Design (Nystrom): 
     - gainEnergy(); if isReady doYourThing()
@@ -82,27 +80,27 @@ Platforms: Linux, Windows, Browser
 - EventDispatcher (publisher/subscriber): Holds lambdas that get executed if notified about event (enum)
 - Modular, feature-first architecture/directory structure; namespaces for layers that correspond to folders in modules (eg. components, data) and potential naming conflicts (eg. Dta::Hero, Cfg::Hero, Cmp::Health, Sys::Health):
 ```cpp
-src/Modules/
-|-- ExampleModule/  // eg. App, Game or UI
-    |-- Classes/    // Classes with private members and methods; one-ofs
+src/
+|-- Module/  // eg. App, Game or UI
+    |-- classes/    // Classes with private members and methods; one-ofs
         |-- Example.h
         ...
-    |-- Components/ // Plain old data (POD); defines application state; Usually used multiple times, managed by ECS?
-        |-- CmpExample.h
+    |-- components/ // Plain old data (POD); defines application state; Usually used multiple times, managed by ECS?
+        |-- ExampleComponent.h
         ...
-    |-- Configs/    // changeable data (eg. window dimensions)
-        |-- CfgExample.h
+    |-- configs/    // changeable data (eg. window dimensions)
+        |-- ExampleConfigs.h
         ...
-    |-- Data/       // persistent data (eg. constants or enums)
-        |-- DatExample.h
+    |-- data/       // persistent data (eg. constants or enums)
+        |-- ExampleData.h
         ...
-    |-- Entities/   // Organizes components (either POD/struct or Id);
+    |-- entities/   // Organizes components (either POD/struct or Id);
         |-- Example.h
         ...
-    |-- Systems/    // Functions modifying components or entities
-        |-- SysExample.h
+    |-- systems/    // Functions modifying components or entities
+        |-- ExampleSystem.h
         ...
-    |-- Utils/      // Functions used accross the application
+    |-- utils/      // Functions used accross the application
         |-- Example.h
         ...
     ...

@@ -1,7 +1,7 @@
 #ifndef IG20250402173915
 #define IG20250402173915
 
-namespace Data::Input
+namespace InputData
 {
     //* Maximum hold time for tap event to trigger
     double constexpr MAX_TAP_TIME{ 0.3f };

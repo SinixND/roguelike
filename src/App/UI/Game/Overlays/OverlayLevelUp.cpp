@@ -2,7 +2,7 @@
 
 #include "AttributeSystem.h"
 #include "AttributesComponent.h"
-#include "DataColors.h"
+#include "ColorData.h"
 #include "EventDispatcher.h"
 #include "EventId.h"
 #include "ExperienceSystem.h"
@@ -143,7 +143,7 @@ namespace OverlayLevelUpModule
 
         DrawRectangleRec(
             overlay.panel.box().rectangle(),
-            Data::Colors::BG
+            ColorData::BG
         );
 
         DrawTextExCentered(
@@ -211,7 +211,7 @@ namespace OverlayLevelUpModule
         DrawRectangleLinesEx(
             overlay.panel.outer().rectangle(),
             1,
-            Data::Colors::BORDER
+            ColorData::BORDER
         );
 
         heroIO = levelUpHero( heroIO, attributeChoice );

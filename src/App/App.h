@@ -1,7 +1,6 @@
 #ifndef IG20240519210141
 #define IG20240519210141
 
-#include "AppStateId.h"
 #include "Cursor.h"
 #include "Game.h"
 #include "InputHandler.h"
@@ -10,8 +9,16 @@
 
 struct AppConfig;
 
-struct App
+class App
 {
+public:
+    enum class StateId
+    {
+        GAME_OVER,
+        RUN_GAME,
+    };
+
+public:
     InputHandler inputHandler{};
 
     Cursor cursor{};
@@ -20,18 +27,17 @@ struct App
     Scenes scenes{};
     Game game{};
 
-    AppStateId state{ AppStateId::RUN_GAME };
-};
+    App::StateId stateId{ App::StateId::RUN_GAME };
 
-namespace AppModule
-{
-    [[nodiscard]]
-    App const& init(
-        App& app,
+public:
+    void init(
         AppConfig const& config
     );
 
-    void run( App& appIO );
-    void deinit( App& appIO );
-}
+    void run();
+    void deinit();
+
+private:
+    void setupAppEvents();
+};
 #endif

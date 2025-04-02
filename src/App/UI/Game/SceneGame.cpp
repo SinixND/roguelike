@@ -1,8 +1,8 @@
 #include "SceneGame.h"
 
 #include "ChunkSystem.h"
+#include "ColorData.h"
 #include "Cursor.h"
-#include "DataColors.h"
 #include "Debugger.h"
 #include "DeveloperMode.h"
 #include "Enemies.h"
@@ -16,7 +16,7 @@
 #include "Objects.h"
 #include "RenderSystem.h"
 #include "SceneGame.h"
-#include "Utility.h"
+#include "UISystems.h"
 #include "VisibilityId.h"
 #include "VisibilitySystem.h"
 #include "World.h"
@@ -265,7 +265,7 @@ namespace SceneGameModule
         snx::Debugger::gcam() = gameScene.gameCamera;
 #endif
         BeginDrawing();
-        ClearBackground( Data::Colors::BG );
+        ClearBackground( ColorData::BG );
 
         renderOutput(
             gameScene,
@@ -293,7 +293,7 @@ namespace SceneGameModule
         }
 
         //* Draw simple frame
-        Utility::drawWindowBorder();
+        UISystems::drawWindowBorder();
 
         if ( DeveloperMode::isActive() )
         {

@@ -3,7 +3,7 @@
 
 #include <raylib.h>
 
-namespace Data::Colors
+namespace ColorData
 {
     Color constexpr BORDER{ GRAY };
     Color constexpr BG{ BLACK };

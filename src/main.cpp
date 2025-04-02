@@ -1,5 +1,5 @@
 #include "App.h"
-#include "ConfigApp.h"
+#include "AppConfigs.h"
 
 //* Only define once
 #define RAYGUI_IMPLEMENTATION
@@ -15,13 +15,10 @@ int main( /* int argc, char** argv */ )
 
     App app{};
 
-    app = AppModule::init(
-        app,
-        config
-    );
+    app.init( config );
 
-    AppModule::run( app );
-    AppModule::deinit( app );
+    app.run();
+    app.deinit();
 
     return 0;
 }

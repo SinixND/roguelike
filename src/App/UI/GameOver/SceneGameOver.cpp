@@ -1,8 +1,8 @@
 #include "SceneGameOver.h"
 
-#include "DataColors.h"
+#include "ColorData.h"
 #include "GameFont.h"
-#include "Utility.h"
+#include "UISystems.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
@@ -28,7 +28,7 @@ namespace SceneGameOverModule
     void update( SceneGameOver& scene )
     {
         BeginDrawing();
-        ClearBackground( Data::Colors::BG );
+        ClearBackground( ColorData::BG );
 
         char const* line1{ "You died." };
         char const* line2{ ">> GAME OVER <<" };
@@ -68,7 +68,7 @@ namespace SceneGameOverModule
             LIGHTGRAY
         );
 
-        Utility::drawWindowBorder();
+        UISystems::drawWindowBorder();
 
         EndDrawing();
     }
