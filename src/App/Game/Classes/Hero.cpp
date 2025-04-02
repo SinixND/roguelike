@@ -53,7 +53,7 @@ Hero const& processDirectionalInput(
             mapIO.enemies.healths[enemyIdx]
         );
 
-        if ( mapIO.enemies.healths[enemyIdx].current <= 0 )
+        if ( mapIO.enemies.healths[enemyIdx].current > 0 )
         {
             return hero;
         }
@@ -67,12 +67,12 @@ Hero const& processDirectionalInput(
         )
         {
             snx::EventDispatcher::notify( EventId::LEVEL_UP );
-
-            hero.experience = ExperienceModule::gainExp(
-                hero.experience,
-                mapIO.enemies.experiences[enemyIdx].level
-            );
         }
+
+        hero.experience = ExperienceModule::gainExp(
+            hero.experience,
+            mapIO.enemies.experiences[enemyIdx].level
+        );
 
         return hero;
     }

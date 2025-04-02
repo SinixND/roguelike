@@ -14,19 +14,21 @@
 #include <raylib.h>
 #include <string>
 
-char options[ATTRIBUTES + 1]{
+char constexpr ATTRIBUTE_CHOICES[ATTRIBUTES + 1]{
     '0',
-    'V',
-    'A'
+    'v',
+    's',
+    'd',
+    'a',
 };
 
 [[nodiscard]]
 Hero const& levelUpHero(
     Hero& hero,
-    char selection
+    char attributeChoice
 )
 {
-    switch ( selection )
+    switch ( attributeChoice )
     {
         default:
             return hero;
@@ -60,6 +62,10 @@ Hero const& levelUpHero(
 
     hero.health.current = hero.health.maximum;
 
+    if ( ( AttributesModule::totalPoints( hero.attributes ) - ( ATTRIBUTES * BASE_POINTS ) ) < hero.experience.level )
+    {
+        return hero;
+    }
     snx::EventDispatcher::notify( EventId::LEVELED_UP );
 
     return hero;
@@ -92,7 +98,7 @@ namespace OverlayLevelUpModule
         InputId currentInputId
     )
     {
-        char selection{ 0 };
+        char attributeChoice{ 0 };
         // int selection{ 0 };
 
         switch ( currentInputId )
@@ -103,36 +109,36 @@ namespace OverlayLevelUpModule
 
             case InputId::ACT_DOWN:
             {
-                ++overlay.selectedOption;
+                ++overlay.selectedAttribute;
 
                 break;
             }
 
             case InputId::ACT_UP:
             {
-                --overlay.selectedOption;
+                --overlay.selectedAttribute;
 
                 break;
             }
 
             case InputId::ACT_IN_PLACE:
             {
-                if ( !selection )
+                if ( !attributeChoice )
                 {
-                    selection = options[overlay.selectedOption];
+                    attributeChoice = ATTRIBUTE_CHOICES[overlay.selectedAttribute];
                 }
 
                 break;
             }
         }
 
-        if ( overlay.selectedOption > ATTRIBUTES )
+        if ( overlay.selectedAttribute > ATTRIBUTES )
         {
-            overlay.selectedOption = 1;
+            overlay.selectedAttribute = 1;
         }
-        else if ( overlay.selectedOption < 1 )
+        else if ( overlay.selectedAttribute < 1 )
         {
-            overlay.selectedOption = ATTRIBUTES;
+            overlay.selectedAttribute = ATTRIBUTES;
         }
 
         DrawRectangleRec(
@@ -171,10 +177,10 @@ namespace OverlayLevelUpModule
         );
 
         //* Options
-        std::string opt1{ ( overlay.selectedOption == 1 ) ? "[x]" : "[ ]" };
+        std::string opt1{ ( overlay.selectedAttribute == 1 ) ? "[x]" : "[ ]" };
         opt1 += TextFormat(
             "[%i%] VIT",
-            100 * ( heroIO.attributes.vitality + ( overlay.selectedOption == 1 ) ) / AttributesModule::totalPoints( heroIO.attributes )
+            100 * ( heroIO.attributes.vitality + ( overlay.selectedAttribute == 1 ) ) / AttributesModule::totalPoints( heroIO.attributes )
         );
 
         DrawTextExCentered(
@@ -187,10 +193,10 @@ namespace OverlayLevelUpModule
             LIGHTGRAY
         );
 
-        std::string opt2{ ( overlay.selectedOption == 2 ) ? "[x]" : "[ ]" };
+        std::string opt2{ ( overlay.selectedAttribute == 2 ) ? "[x]" : "[ ]" };
         opt2 += TextFormat(
             "[%i%] AGI",
-            100 * ( heroIO.attributes.agility + ( overlay.selectedOption == 2 ) ) / AttributesModule::totalPoints( heroIO.attributes )
+            100 * ( heroIO.attributes.agility + ( overlay.selectedAttribute == 2 ) ) / AttributesModule::totalPoints( heroIO.attributes )
         );
         DrawTextExCentered(
             GameFont::font(),
@@ -208,7 +214,7 @@ namespace OverlayLevelUpModule
             Data::Colors::BORDER
         );
 
-        heroIO = levelUpHero( heroIO, selection );
+        heroIO = levelUpHero( heroIO, attributeChoice );
 
         return overlay;
     }

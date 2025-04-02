@@ -9,7 +9,7 @@ struct Hero;
 struct OverlayLevelUp
 {
     Panel panel{};
-    int selectedOption{ 0 };
+    int selectedAttribute{ 0 };
 };
 
 namespace OverlayLevelUpModule
