@@ -1,10 +1,10 @@
-#include "UISystems.h"
+#include "UISystem.h"
 
 #include "ColorData.h"
 #include "UIData.h"
 #include "raylibEx.h"
 
-namespace UISystems
+namespace UISystem
 {
     void drawWindowBorder()
     {

@@ -1,19 +1,19 @@
-#include "SceneGameOver.h"
+#include "GameOverScreen.h"
 
 #include "ColorData.h"
 #include "GameFont.h"
-#include "UISystems.h"
+#include "UISystem.h"
 #include "raylibEx.h"
 #include <raylib.h>
 
-namespace SceneGameOverModule
+namespace ScreenGameOverModule
 {
-    SceneGameOver const& init( SceneGameOver& scene )
+    ScreenGameOver const& init( ScreenGameOver& screen )
     {
         int renderWidth{ GetRenderWidth() };
         int renderHeight{ GetRenderHeight() };
 
-        scene.panel.setRectangle(
+        screen.panelComponent.setRectangle(
             RectangleEx{
                 0.1f * renderWidth,
                 0.1f * renderHeight,
@@ -22,10 +22,10 @@ namespace SceneGameOverModule
             }
         );
 
-        return scene;
+        return screen;
     }
 
-    void update( SceneGameOver& scene )
+    void update( ScreenGameOver& screen )
     {
         BeginDrawing();
         ClearBackground( ColorData::BG );
@@ -41,7 +41,7 @@ namespace SceneGameOverModule
         DrawTextExCentered(
             GameFont::font(),
             line1,
-            scene.panel.inner(),
+            screen.panelComponent.inner(),
             -2 * GameFont::fontSize,
             GameFont::fontSize,
             0,
@@ -51,7 +51,7 @@ namespace SceneGameOverModule
         DrawTextExCentered(
             GameFont::font(),
             line2,
-            scene.panel.inner(),
+            screen.panelComponent.inner(),
             0,
             GameFont::fontSize,
             0,
@@ -61,14 +61,14 @@ namespace SceneGameOverModule
         DrawTextExCentered(
             GameFont::font(),
             line3,
-            scene.panel.inner(),
+            screen.panelComponent.inner(),
             2 * GameFont::fontSize,
             GameFont::fontSize,
             0,
             LIGHTGRAY
         );
 
-        UISystems::drawWindowBorder();
+        UISystem::drawWindowBorder();
 
         EndDrawing();
     }

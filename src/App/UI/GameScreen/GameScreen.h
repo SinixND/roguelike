@@ -15,27 +15,27 @@ class World;
 struct Cursor;
 enum class InputId;
 
-struct SceneGame
+struct ScreenGame
 {
-    GamePanels panels{};
+    GamePanels panelComponents{};
     snx::DenseMap<Vector2I, Chunk> chunks{};
     RenderData renderData{};
     GameCamera gameCamera{};
     Overlays overlays{};
 };
 
-namespace SceneGameModule
+namespace ScreenGameModule
 {
     [[nodiscard]]
-    SceneGame const& init(
-        SceneGame& scene,
+    ScreenGame const& init(
+        ScreenGame& screen,
         Hero const& hero,
         World const& world
     );
 
     [[nodiscard]]
-    SceneGame const& update(
-        SceneGame& gameScene,
+    ScreenGame const& update(
+        ScreenGame& gameScreen,
         Hero& hero,
         World const& world,
         Cursor const& cursor,
@@ -43,6 +43,6 @@ namespace SceneGameModule
         InputId currentInputId
     );
 
-    void deinitialize( SceneGame& scene );
+    void deinitialize( ScreenGame& screen );
 }
 #endif

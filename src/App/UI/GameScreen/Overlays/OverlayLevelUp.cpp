@@ -78,7 +78,7 @@ namespace OverlayLevelUpModule
         int renderWidth{ GetRenderWidth() };
         int renderHeight{ GetRenderHeight() };
 
-        overlay.panel.setOuter(
+        overlay.panelComponent.setOuter(
             RectangleEx{
                 0.25f * renderWidth,
                 0.25f * renderHeight,
@@ -142,14 +142,14 @@ namespace OverlayLevelUpModule
         }
 
         DrawRectangleRec(
-            overlay.panel.box().rectangle(),
+            overlay.panelComponent.box().rectangle(),
             ColorData::BG
         );
 
         DrawTextExCentered(
             GameFont::font(),
             "Level Up!",
-            overlay.panel.inner(),
+            overlay.panelComponent.inner(),
             -4 * GameFont::fontSize,
             GameFont::fontSize,
             0,
@@ -159,7 +159,7 @@ namespace OverlayLevelUpModule
         DrawTextExCentered(
             GameFont::font(),
             "1 proficiency point to spend.",
-            overlay.panel.inner(),
+            overlay.panelComponent.inner(),
             -2 * GameFont::fontSize,
             GameFont::fontSize,
             0,
@@ -169,7 +169,7 @@ namespace OverlayLevelUpModule
         DrawTextExCentered(
             GameFont::font(),
             "Choose or select attribute:",
-            overlay.panel.inner(),
+            overlay.panelComponent.inner(),
             -1 * GameFont::fontSize,
             GameFont::fontSize,
             0,
@@ -186,7 +186,7 @@ namespace OverlayLevelUpModule
         DrawTextExCentered(
             GameFont::font(),
             opt1.c_str(),
-            overlay.panel.inner(),
+            overlay.panelComponent.inner(),
             1 * GameFont::fontSize,
             GameFont::fontSize,
             0,
@@ -201,7 +201,7 @@ namespace OverlayLevelUpModule
         DrawTextExCentered(
             GameFont::font(),
             opt2.c_str(),
-            overlay.panel.inner(),
+            overlay.panelComponent.inner(),
             2 * GameFont::fontSize,
             GameFont::fontSize,
             0,
@@ -209,7 +209,7 @@ namespace OverlayLevelUpModule
         );
 
         DrawRectangleLinesEx(
-            overlay.panel.outer().rectangle(),
+            overlay.panelComponent.outer().rectangle(),
             1,
             ColorData::BORDER
         );

@@ -8,7 +8,7 @@ struct Hero;
 
 struct OverlayLevelUp
 {
-    Panel panel{};
+    Panel panelComponent{};
     int selectedAttribute{ 0 };
 };
 

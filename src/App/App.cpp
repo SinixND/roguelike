@@ -151,25 +151,25 @@ void updateApp( void* arg )
 
     app.cursor = CursorModule::update(
         app.cursor,
-        app.scenes.game.gameCamera.camera,
+        app.screens.game.gameCamera.camera,
         Convert::worldToTile( app.game.hero.position )
     );
 
     switch ( app.stateId )
     {
         default:
-        case App::StateId::RUN_GAME:
+        case App::StateId::GAME_RUNNING:
         {
             app.game = GameModule::update(
                 app.game,
-                app.scenes.game.gameCamera,
+                app.screens.game.gameCamera,
                 app.cursor,
                 app.inputHandler.currentInputId,
                 app.dt
             );
 
-            app.scenes.game = SceneGameModule::update(
-                app.scenes.game,
+            app.screens.game = ScreenGameModule::update(
+                app.screens.game,
                 app.game.hero,
                 app.game.world,
                 app.cursor,
@@ -182,7 +182,7 @@ void updateApp( void* arg )
 
         case App::StateId::GAME_OVER:
         {
-            SceneGameOverModule::update( app.scenes.gameOver );
+            ScreenGameOverModule::update( app.screens.gameOver );
 
             break;
         }
@@ -308,20 +308,20 @@ void App::setupAppEvents()
         EventId::WINDOW_RESIZED,
         [&]()
         {
-            scenes.game.panels = GamePanelsModule::init( scenes.game.panels );
-            scenes.gameOver = SceneGameOverModule::init( scenes.gameOver );
-            scenes.game.overlays = OverlaysModule::init( scenes.game.overlays );
+            screens.game.panelComponents = GamePanelsModule::init( screens.game.panelComponents );
+            screens.gameOver = ScreenGameOverModule::init( screens.gameOver );
+            screens.game.overlays = OverlaysModule::init( screens.game.overlays );
 
-            scenes.game.gameCamera = GameCameraModule::init(
-                scenes.game.gameCamera,
-                scenes.game.panels.map.box(),
+            screens.game.gameCamera = GameCameraModule::init(
+                screens.game.gameCamera,
+                screens.game.panelComponents.map.box(),
                 game.hero.position
             );
 
             game.world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
                 game.world.currentMap->tiles,
                 game.world.currentMap->fogs,
-                GameCameraModule::viewportInTiles( scenes.game.gameCamera ),
+                GameCameraModule::viewportInTiles( screens.game.gameCamera ),
                 Convert::worldToTile( game.hero.position ),
                 game.hero.visionRange
             );
@@ -346,13 +346,13 @@ void App::init(
 
     game = GameModule::init( game );
 
-    scenes.game = SceneGameModule::init(
-        scenes.game,
+    screens.game = ScreenGameModule::init(
+        screens.game,
         game.hero,
         game.world
     );
 
-    scenes.gameOver = SceneGameOverModule::init( scenes.gameOver );
+    screens.gameOver = ScreenGameOverModule::init( screens.gameOver );
 
     setupAppEvents();
 }
@@ -377,7 +377,7 @@ void App::run()
 void App::deinit()
 {
     GameFont::unload();
-    SceneGameModule::deinitialize( scenes.game );
+    ScreenGameModule::deinitialize( screens.game );
 
     //* Close window and opengl context
     CloseWindow();

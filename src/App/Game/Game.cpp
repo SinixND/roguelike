@@ -373,7 +373,7 @@ namespace GameModule
 
             case GameState::LEVEL_UP:
             {
-                //* SceneGameOver handles input because it can be a UI selection
+                //* ScreenGameOver handles input because it can be a UI selection
                 break;
             }
         }

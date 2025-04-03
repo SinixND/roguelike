@@ -4,7 +4,7 @@
 #include "Cursor.h"
 #include "Game.h"
 #include "InputHandler.h"
-#include "Scenes.h"
+#include "Screens.h"
 #include <raylib.h>
 
 struct AppConfig;
@@ -15,7 +15,7 @@ public:
     enum class StateId
     {
         GAME_OVER,
-        RUN_GAME,
+        GAME_RUNNING,
     };
 
 public:
@@ -24,15 +24,13 @@ public:
     Cursor cursor{};
     float dt{ 0 };
 
-    Scenes scenes{};
+    Screens screens{};
     Game game{};
 
-    App::StateId stateId{ App::StateId::RUN_GAME };
+    App::StateId stateId{ App::StateId::GAME_RUNNING };
 
 public:
-    void init(
-        AppConfig const& config
-    );
+    void init( AppConfig const& config );
 
     void run();
     void deinit();

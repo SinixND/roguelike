@@ -1,4 +1,4 @@
-#include "SceneGame.h"
+#include "GameScreen.h"
 
 #include "ChunkSystem.h"
 #include "ColorData.h"
@@ -15,19 +15,16 @@
 #include "InputId.h"
 #include "Objects.h"
 #include "RenderSystem.h"
-#include "SceneGame.h"
-#include "UISystems.h"
-#include "VisibilityId.h"
+#include "UISystem.h"
 #include "VisibilitySystem.h"
 #include "World.h"
-#include "raylibEx.h"
 #include <cstddef>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
 
-void setupSceneEvents(
-    SceneGame& scene,
+void setupScreenEvents(
+    ScreenGame& screen,
     Hero const& hero,
     World const& world
 )
@@ -36,9 +33,9 @@ void setupSceneEvents(
         EventId::CHANGE_COLOR_THEME,
         [&]()
         {
-            scene.renderData.theme = RenderSystem::cycleThemes( scene.renderData.theme );
+            screen.renderData.theme = RenderSystem::cycleThemes( screen.renderData.theme );
 
-            scene.renderData = RenderSystem::loadRenderData( scene.renderData );
+            screen.renderData = RenderSystem::loadRenderData( screen.renderData );
 
             snx::EventDispatcher::notify( EventId::MAP_CHANGE );
         }
@@ -49,8 +46,8 @@ void setupSceneEvents(
         EventId::HERO_MOVED,
         [&]()
         {
-            scene.gameCamera.camera = GameCameraModule::setTarget(
-                scene.gameCamera.camera,
+            screen.gameCamera.camera = GameCameraModule::setTarget(
+                screen.gameCamera.camera,
                 hero.position
             );
         }
@@ -64,7 +61,7 @@ void setupSceneEvents(
             world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
                 world.currentMap->tiles,
                 world.currentMap->fogs,
-                GameCameraModule::viewportInTiles( scene.gameCamera ),
+                GameCameraModule::viewportInTiles( screen.gameCamera ),
                 Convert::worldToTile( hero.position ),
                 hero.visionRange
             );
@@ -76,9 +73,9 @@ void setupSceneEvents(
         EventId::MAP_CHANGE,
         [&]()
         {
-            scene.chunks = ChunkSystem::reRenderChunks(
-                scene.chunks,
-                scene.renderData.textures,
+            screen.chunks = ChunkSystem::reRenderChunks(
+                screen.chunks,
+                screen.renderData.textures,
                 world.currentMap->tiles
             );
         }
@@ -86,7 +83,7 @@ void setupSceneEvents(
 }
 
 void renderOutput(
-    SceneGame const& scene,
+    ScreenGame const& screen,
     Hero const& hero,
     Map const& currentMap,
     Cursor const& cursor,
@@ -94,18 +91,18 @@ void renderOutput(
 )
 {
     //* Draw viewport content
-    BeginMode2D( scene.gameCamera.camera );
+    BeginMode2D( screen.gameCamera.camera );
     BeginScissorMode(
-        scene.panels.map.inner().left(),
-        scene.panels.map.inner().top(),
-        scene.panels.map.inner().width(),
-        scene.panels.map.inner().height()
+        screen.panelComponents.map.inner().left(),
+        screen.panelComponents.map.inner().top(),
+        screen.panelComponents.map.inner().width(),
+        screen.panelComponents.map.inner().height()
     );
 
     //* World
     //* Draw map
     //* Draw tiles
-    for ( Chunk const& chunk : scene.chunks )
+    for ( Chunk const& chunk : screen.chunks )
     {
         RenderSystem::renderChunk( chunk );
     }
@@ -116,7 +113,7 @@ void renderOutput(
     for ( size_t idx{ 0 }; idx < objects.renderIds.values().size(); ++idx )
     {
         RenderSystem::renderTexture(
-            scene.renderData.textures,
+            screen.renderData.textures,
             objects.positions.values()[idx],
             objects.renderIds.values()[idx]
         );
@@ -143,7 +140,7 @@ void renderOutput(
         }
 
         RenderSystem::renderTexture(
-            scene.renderData.textures,
+            screen.renderData.textures,
             enemies.positions.values()[idx],
             enemies.renderIds.values()[idx]
         );
@@ -163,7 +160,7 @@ void renderOutput(
     //* Units
     //* Draw hero
     RenderSystem::renderTexture(
-        scene.renderData.textures,
+        screen.renderData.textures,
         hero.position,
         hero.renderId
     );
@@ -173,7 +170,7 @@ void renderOutput(
     if ( cursor.isActive )
     {
         RenderSystem::renderTexture(
-            scene.renderData.textures,
+            screen.renderData.textures,
             cursor.position,
             cursor.renderId
         );
@@ -186,7 +183,7 @@ void renderOutput(
     float borderWidth{ 1.0f };
 
     RenderSystem::renderStatusPanel(
-        scene.panels.status,
+        screen.panelComponents.status,
         hero,
         currentMapLevel,
         bgColor,
@@ -194,7 +191,7 @@ void renderOutput(
     );
 
     RenderSystem::renderInfoPanel(
-        scene.panels.info,
+        screen.panelComponents.info,
         currentMap.objects,
         Convert::worldToTile( cursor.position ),
         bgColor,
@@ -202,53 +199,53 @@ void renderOutput(
     );
 
     RenderSystem::renderLogPanel(
-        scene.panels.log,
+        screen.panelComponents.log,
         bgColor,
         0
     );
 }
 
-namespace SceneGameModule
+namespace ScreenGameModule
 {
-    SceneGame const& init(
-        SceneGame& gameScene,
+    ScreenGame const& init(
+        ScreenGame& gameScreen,
         Hero const& hero,
         World const& world
     )
     {
-        gameScene.panels = GamePanelsModule::init( gameScene.panels );
-        gameScene.overlays = OverlaysModule::init( gameScene.overlays );
+        gameScreen.panelComponents = GamePanelsModule::init( gameScreen.panelComponents );
+        gameScreen.overlays = OverlaysModule::init( gameScreen.overlays );
 
-        gameScene.gameCamera = GameCameraModule::init(
-            gameScene.gameCamera,
-            gameScene.panels.map.box(),
+        gameScreen.gameCamera = GameCameraModule::init(
+            gameScreen.gameCamera,
+            gameScreen.panelComponents.map.box(),
             hero.position
         );
 
 #if defined( DEBUG )
-        snx::Debugger::gcam() = gameScene.gameCamera;
+        snx::Debugger::gcam() = gameScreen.gameCamera;
 #endif
 
-        gameScene.renderData = RenderSystem::loadRenderData( gameScene.renderData );
+        gameScreen.renderData = RenderSystem::loadRenderData( gameScreen.renderData );
 
-        gameScene.chunks = ChunkSystem::reRenderChunks(
-            gameScene.chunks,
-            gameScene.renderData.textures,
+        gameScreen.chunks = ChunkSystem::reRenderChunks(
+            gameScreen.chunks,
+            gameScreen.renderData.textures,
             world.currentMap->tiles
         );
 
         //* Setup events
-        setupSceneEvents(
-            gameScene,
+        setupScreenEvents(
+            gameScreen,
             hero,
             world
         );
 
-        return gameScene;
+        return gameScreen;
     }
 
-    SceneGame const& update(
-        SceneGame& gameScene,
+    ScreenGame const& update(
+        ScreenGame& gameScreen,
         Hero& heroIO,
         World const& world,
         Cursor const& cursor,
@@ -262,13 +259,13 @@ namespace SceneGameModule
         }
 
 #if defined( DEBUG )
-        snx::Debugger::gcam() = gameScene.gameCamera;
+        snx::Debugger::gcam() = gameScreen.gameCamera;
 #endif
         BeginDrawing();
         ClearBackground( ColorData::BG );
 
         renderOutput(
-            gameScene,
+            gameScreen,
             heroIO,
             *world.currentMap,
             cursor,
@@ -283,8 +280,8 @@ namespace SceneGameModule
 
             case GameState::LEVEL_UP:
             {
-                gameScene.overlays.levelUp = OverlayLevelUpModule::update(
-                    gameScene.overlays.levelUp,
+                gameScreen.overlays.levelUp = OverlayLevelUpModule::update(
+                    gameScreen.overlays.levelUp,
                     heroIO,
                     currentInputId
                 );
@@ -293,7 +290,7 @@ namespace SceneGameModule
         }
 
         //* Draw simple frame
-        UISystems::drawWindowBorder();
+        UISystem::drawWindowBorder();
 
         if ( DeveloperMode::isActive() )
         {
@@ -302,11 +299,11 @@ namespace SceneGameModule
 
         EndDrawing();
 
-        return gameScene;
+        return gameScreen;
     }
 
-    void deinitialize( SceneGame& gameScene )
+    void deinitialize( ScreenGame& gameScreen )
     {
-        RenderSystem::deinit( gameScene.renderData.textures );
+        RenderSystem::deinit( gameScreen.renderData.textures );
     }
 }
