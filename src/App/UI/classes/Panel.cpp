@@ -1,5 +1,21 @@
 #include "Panel.h"
 
+Panel::Panel( RectangleEx rectangle )
+    : rectangle_{ rectangle }
+{
+}
+
+Panel::Panel(
+    RectangleEx rectangle,
+    float margin,
+    float padding
+)
+    : rectangle_{ rectangle }
+    , margin_{ margin }
+    , padding_{ padding }
+{
+}
+
 void Panel::setRectangle( RectangleEx rectangle )
 {
     rectangle_ = rectangle;

@@ -14,21 +14,13 @@ class Panel
 public:
     Panel() = default;
 
-    explicit Panel( RectangleEx rectangle )
-        : rectangle_{ rectangle }
-    {
-    }
+    explicit Panel( RectangleEx rectangle );
 
     Panel(
         RectangleEx rectangle,
         float margin,
         float padding
-    )
-        : rectangle_{ rectangle }
-        , margin_{ margin }
-        , padding_{ padding }
-    {
-    }
+    );
 
     void setRectangle( RectangleEx rectangle );
     // void setMargin( float margin );

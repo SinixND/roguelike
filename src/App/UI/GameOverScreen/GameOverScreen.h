@@ -3,16 +3,13 @@
 
 #include "Panel.h"
 
-struct ScreenGameOver
+class GameOverScreen
 {
-    Panel panelComponent{};
+    Panel panel{};
+
+public:
+    void init();
+    void update();
 };
 
-namespace ScreenGameOverModule
-{
-    [[nodiscard]]
-    ScreenGameOver const& init( ScreenGameOver& screen );
-
-    void update( ScreenGameOver& screen );
-}
 #endif

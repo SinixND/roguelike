@@ -3,7 +3,6 @@
 #include "ChunkSystem.h"
 #include "ColorData.h"
 #include "Cursor.h"
-#include "Debugger.h"
 #include "DeveloperMode.h"
 #include "Enemies.h"
 #include "EventDispatcher.h"
@@ -15,8 +14,8 @@
 #include "InputId.h"
 #include "Objects.h"
 #include "RenderSystem.h"
-#include "UISystem.h"
 #include "VisibilitySystem.h"
+#include "WindowSystem.h"
 #include "World.h"
 #include <cstddef>
 #include <raygui.h>
@@ -290,7 +289,7 @@ namespace ScreenGameModule
         }
 
         //* Draw simple frame
-        UISystem::drawWindowBorder();
+        WindowSystem::drawWindowBorder();
 
         if ( DeveloperMode::isActive() )
         {

@@ -1,16 +1,16 @@
-#include "UISystem.h"
+#include "WindowSystem.h"
 
 #include "ColorData.h"
-#include "UIData.h"
+#include "WindowData.h"
 #include "raylibEx.h"
 
-namespace UISystem
+namespace WindowSystem
 {
     void drawWindowBorder()
     {
         DrawRectangleLinesEx(
             GetWindowRec(),
-            UIData::BORDER_WIDTH,
+            WindowData::WINDOW_BORDER_WIDTH,
             ColorData::BORDER
         );
     }
