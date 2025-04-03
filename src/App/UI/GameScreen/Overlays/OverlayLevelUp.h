@@ -4,12 +4,11 @@
 #include "Panel.h"
 
 enum class InputId;
-struct Hero;
+struct Game;
 
 struct OverlayLevelUp
 {
-    Panel panelComponent{};
-    int selectedAttribute{ 0 };
+    Panel panel{};
 };
 
 namespace OverlayLevelUpModule
@@ -20,8 +19,7 @@ namespace OverlayLevelUpModule
     [[nodiscard]]
     OverlayLevelUp const& update(
         OverlayLevelUp& overlay,
-        Hero& heroIO,
-        InputId currentInputId
+        Game const& game
     );
 }
 #endif

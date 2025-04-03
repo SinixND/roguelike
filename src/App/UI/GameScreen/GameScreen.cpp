@@ -10,31 +10,25 @@
 #include "Game.h"
 #include "GameCamera.h"
 #include "GamePanels.h"
-#include "GameState.h"
 #include "InputId.h"
 #include "Objects.h"
 #include "RenderSystem.h"
 #include "VisibilitySystem.h"
 #include "WindowSystem.h"
-#include "World.h"
 #include <cstddef>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
 
-void setupScreenEvents(
-    ScreenGame& screen,
-    Hero const& hero,
-    World const& world
-)
+void GameScreen::setupScreenEvents( Game const& game )
 {
     snx::EventDispatcher::addListener(
         EventId::CHANGE_COLOR_THEME,
         [&]()
         {
-            screen.renderData.theme = RenderSystem::cycleThemes( screen.renderData.theme );
+            renderData.theme = RenderSystem::cycleThemes( renderData.theme );
 
-            screen.renderData = RenderSystem::loadRenderData( screen.renderData );
+            renderData = RenderSystem::loadRenderData( renderData );
 
             snx::EventDispatcher::notify( EventId::MAP_CHANGE );
         }
@@ -45,9 +39,9 @@ void setupScreenEvents(
         EventId::HERO_MOVED,
         [&]()
         {
-            screen.gameCamera.camera = GameCameraModule::setTarget(
-                screen.gameCamera.camera,
-                hero.position
+            gameCamera.camera = GameCameraModule::setTarget(
+                gameCamera.camera,
+                game.hero.position
             );
         }
     );
@@ -57,12 +51,12 @@ void setupScreenEvents(
         [&]()
         {
             //* VisibilitySystem
-            world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
-                world.currentMap->tiles,
-                world.currentMap->fogs,
-                GameCameraModule::viewportInTiles( screen.gameCamera ),
-                Convert::worldToTile( hero.position ),
-                hero.visionRange
+            game.world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
+                game.world.currentMap->tiles,
+                game.world.currentMap->fogs,
+                GameCameraModule::viewportInTiles( gameCamera ),
+                Convert::worldToTile( game.hero.position ),
+                game.hero.visionRange
             );
         },
         true
@@ -72,55 +66,52 @@ void setupScreenEvents(
         EventId::MAP_CHANGE,
         [&]()
         {
-            screen.chunks = ChunkSystem::reRenderChunks(
-                screen.chunks,
-                screen.renderData.textures,
-                world.currentMap->tiles
+            chunks = ChunkSystem::reRenderChunks(
+                chunks,
+                renderData.textures,
+                game.world.currentMap->tiles
             );
         }
     );
 }
 
-void renderOutput(
-    ScreenGame const& screen,
-    Hero const& hero,
-    Map const& currentMap,
-    Cursor const& cursor,
-    int currentMapLevel
+void GameScreen::renderOutput(
+    Game const& game,
+    Cursor const& cursor
 )
 {
     //* Draw viewport content
-    BeginMode2D( screen.gameCamera.camera );
+    BeginMode2D( gameCamera.camera );
     BeginScissorMode(
-        screen.panelComponents.map.inner().left(),
-        screen.panelComponents.map.inner().top(),
-        screen.panelComponents.map.inner().width(),
-        screen.panelComponents.map.inner().height()
+        panels.map.inner().left(),
+        panels.map.inner().top(),
+        panels.map.inner().width(),
+        panels.map.inner().height()
     );
 
     //* World
     //* Draw map
     //* Draw tiles
-    for ( Chunk const& chunk : screen.chunks )
+    for ( Chunk const& chunk : chunks )
     {
         RenderSystem::renderChunk( chunk );
     }
 
     //* Draw objects
-    Objects const& objects{ currentMap.objects };
+    Objects const& objects{ game.world.currentMap->objects };
 
     for ( size_t idx{ 0 }; idx < objects.renderIds.values().size(); ++idx )
     {
         RenderSystem::renderTexture(
-            screen.renderData.textures,
+            renderData.textures,
             objects.positions.values()[idx],
             objects.renderIds.values()[idx]
         );
     }
 
     //* Draw enemies
-    Tiles const& tiles{ currentMap.tiles };
-    Enemies const& enemies{ currentMap.enemies };
+    Tiles const& tiles{ game.world.currentMap->tiles };
+    Enemies const& enemies{ game.world.currentMap->enemies };
 
     for ( size_t idx{ 0 }; idx < enemies.renderIds.values().size(); ++idx )
     {
@@ -139,14 +130,14 @@ void renderOutput(
         }
 
         RenderSystem::renderTexture(
-            screen.renderData.textures,
+            renderData.textures,
             enemies.positions.values()[idx],
             enemies.renderIds.values()[idx]
         );
     }
 
     //* Fog of war
-    auto const& fogs{ currentMap.fogs };
+    auto const& fogs{ game.world.currentMap->fogs };
 
     for ( size_t idx{ 0 }; idx < fogs.size(); ++idx )
     {
@@ -159,9 +150,9 @@ void renderOutput(
     //* Units
     //* Draw hero
     RenderSystem::renderTexture(
-        screen.renderData.textures,
-        hero.position,
-        hero.renderId
+        renderData.textures,
+        game.hero.position,
+        game.hero.renderId
     );
 
     //* UI
@@ -169,7 +160,7 @@ void renderOutput(
     if ( cursor.isActive )
     {
         RenderSystem::renderTexture(
-            screen.renderData.textures,
+            renderData.textures,
             cursor.position,
             cursor.renderId
         );
@@ -182,127 +173,89 @@ void renderOutput(
     float borderWidth{ 1.0f };
 
     RenderSystem::renderStatusPanel(
-        screen.panelComponents.status,
-        hero,
-        currentMapLevel,
+        panels.status,
+        game.hero,
+        game.world.currentMapLevel,
         bgColor,
         0
     );
 
     RenderSystem::renderInfoPanel(
-        screen.panelComponents.info,
-        currentMap.objects,
+        panels.info,
+        game.world.currentMap->objects,
         Convert::worldToTile( cursor.position ),
         bgColor,
         borderWidth
     );
 
     RenderSystem::renderLogPanel(
-        screen.panelComponents.log,
+        panels.log,
         bgColor,
         0
     );
 }
 
-namespace ScreenGameModule
+void GameScreen::init( Game const& game )
 {
-    ScreenGame const& init(
-        ScreenGame& gameScreen,
-        Hero const& hero,
-        World const& world
-    )
-    {
-        gameScreen.panelComponents = GamePanelsModule::init( gameScreen.panelComponents );
-        gameScreen.overlays = OverlaysModule::init( gameScreen.overlays );
+    panels = GamePanelsModule::init( panels );
+    overlays = OverlaysModule::init( overlays );
 
-        gameScreen.gameCamera = GameCameraModule::init(
-            gameScreen.gameCamera,
-            gameScreen.panelComponents.map.box(),
-            hero.position
-        );
+    gameCamera = GameCameraModule::init(
+        gameCamera,
+        panels.map.box(),
+        game.hero.position
+    );
 
 #if defined( DEBUG )
-        snx::Debugger::gcam() = gameScreen.gameCamera;
+    snx::Debugger::gcam() = gameCamera;
 #endif
 
-        gameScreen.renderData = RenderSystem::loadRenderData( gameScreen.renderData );
+    renderData = RenderSystem::loadRenderData( renderData );
 
-        gameScreen.chunks = ChunkSystem::reRenderChunks(
-            gameScreen.chunks,
-            gameScreen.renderData.textures,
-            world.currentMap->tiles
-        );
+    chunks = ChunkSystem::reRenderChunks(
+        chunks,
+        renderData.textures,
+        game.world.currentMap->tiles
+    );
 
-        //* Setup events
-        setupScreenEvents(
-            gameScreen,
-            hero,
-            world
-        );
+    //* Setup events
+    setupScreenEvents( game );
+}
 
-        return gameScreen;
-    }
-
-    ScreenGame const& update(
-        ScreenGame& gameScreen,
-        Hero& heroIO,
-        World const& world,
-        Cursor const& cursor,
-        GameState gameState,
-        InputId currentInputId
-    )
+void GameScreen::update(
+    Game const& game,
+    Cursor const& cursor,
+    InputId currentInputId
+)
+{
+    if ( currentInputId == InputId::CYCLE_THEME )
     {
-        if ( currentInputId == InputId::CYCLE_THEME )
-        {
-            snx::EventDispatcher::notify( EventId::CHANGE_COLOR_THEME );
-        }
+        snx::EventDispatcher::notify( EventId::CHANGE_COLOR_THEME );
+    }
 
 #if defined( DEBUG )
-        snx::Debugger::gcam() = gameScreen.gameCamera;
+    snx::Debugger::gcam() = gameCamera;
 #endif
-        BeginDrawing();
-        ClearBackground( ColorData::BG );
+    BeginDrawing();
+    ClearBackground( ColorData::BG );
 
-        renderOutput(
-            gameScreen,
-            heroIO,
-            *world.currentMap,
-            cursor,
-            world.currentMapLevel
-        );
+    renderOutput(
+        game,
+        cursor
+    );
 
-        switch ( gameState )
-        {
-            default:
-            case GameState::DEFAULT:
-                break;
+    //* Draw simple frame
+    WindowSystem::drawWindowBorder();
 
-            case GameState::LEVEL_UP:
-            {
-                gameScreen.overlays.levelUp = OverlayLevelUpModule::update(
-                    gameScreen.overlays.levelUp,
-                    heroIO,
-                    currentInputId
-                );
-                break;
-            }
-        }
-
-        //* Draw simple frame
-        WindowSystem::drawWindowBorder();
-
-        if ( DeveloperMode::isActive() )
-        {
-            DrawFPS( 0, 0 );
-        }
-
-        EndDrawing();
-
-        return gameScreen;
-    }
-
-    void deinitialize( ScreenGame& gameScreen )
+    if ( DeveloperMode::isActive() )
     {
-        RenderSystem::deinit( gameScreen.renderData.textures );
+        DrawFPS( 0, 0 );
     }
+
+    EndDrawing();
+}
+
+void GameScreen::deinit()
+{
+    RenderSystem::deinit( renderData.textures );
 }

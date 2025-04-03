@@ -6,8 +6,8 @@
 
 struct Screens
 {
-    ScreenGame game{};
-    ScreenGameOver gameOver{};
+    GameScreen game{};
+    GameOverScreen gameOver{};
 };
 
 #endif

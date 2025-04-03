@@ -10,6 +10,7 @@
 #include "EnergyComponent.h"
 #include "EventDispatcher.h"
 #include "EventId.h"
+#include "ExperienceSystem.h"
 #include "GameCamera.h"
 #include "GameState.h"
 #include "Hero.h"
@@ -30,6 +31,14 @@
 #endif
 #include "RNG.h"
 #endif
+
+char constexpr ATTRIBUTE_CHOICES[ATTRIBUTES + 1]{
+    '0', //* NONE
+    'v', //* Vitality
+    't', //* Strength
+    'e', //* Defence
+    'g', //* Agility
+};
 
 void setupGameEvents( Game& game )
 {
@@ -245,7 +254,7 @@ Game const& executeInstantActions(
 }
 
 [[nodiscard]]
-Game const& updateDefault(
+Game const& updateGameScreen(
     Game& game,
     GameCamera const& gameCamera,
     Cursor const& cursor,
@@ -320,6 +329,109 @@ Game const& updateDefault(
     return game;
 }
 
+[[nodiscard]]
+Hero const& levelUpHero(
+    Hero& hero,
+    char attributeChoice
+)
+{
+    switch ( attributeChoice )
+    {
+        default:
+            return hero;
+
+        //* Vitality
+        case 'V':
+        case 'v':
+        {
+            ++hero.attributes.vitality;
+
+            break;
+        }
+
+        //* Agility
+        case 'G':
+        case 'g':
+        {
+            ++hero.attributes.agility;
+
+            break;
+        }
+    }
+
+    ExperienceSystem::updateStats( hero.health );
+
+    AttributeSystem::updateStats(
+        hero.health,
+        hero.energy,
+        hero.attributes
+    );
+
+    hero.health.current = hero.health.maximum;
+
+    if ( ( AttributesModule::totalPoints( hero.attributes ) - ( ATTRIBUTES * BASE_POINTS ) ) < hero.experience.level )
+    {
+        return hero;
+    }
+    snx::EventDispatcher::notify( EventId::LEVELED_UP );
+
+    return hero;
+}
+
+[[nodiscard]]
+Game const& updateLevelUpOverlay(
+    Game& game,
+    InputId currentInputId
+)
+{
+    char attributeChoice{ 0 };
+
+    switch ( currentInputId )
+    {
+        default:
+            attributeChoice = GetCharPressed();
+
+            break;
+
+        case InputId::ACT_DOWN:
+        {
+            ++game.selectedAttribute;
+
+            break;
+        }
+
+        case InputId::ACT_UP:
+        {
+            --game.selectedAttribute;
+
+            break;
+        }
+
+        case InputId::ACT_IN_PLACE:
+        {
+            if ( !attributeChoice )
+            {
+                attributeChoice = ATTRIBUTE_CHOICES[game.selectedAttribute];
+            }
+
+            break;
+        }
+    }
+
+    if ( game.selectedAttribute > ATTRIBUTES )
+    {
+        game.selectedAttribute = 1;
+    }
+    else if ( game.selectedAttribute < 1 )
+    {
+        game.selectedAttribute = ATTRIBUTES;
+    }
+
+    game.hero = levelUpHero( game.hero, attributeChoice );
+
+    return game;
+}
+
 namespace GameModule
 {
     Game const& init( Game& game )
@@ -361,7 +473,7 @@ namespace GameModule
             default:
             case GameState::DEFAULT:
             {
-                game = updateDefault(
+                game = updateGameScreen(
                     game,
                     gameCamera,
                     cursor,
@@ -374,6 +486,11 @@ namespace GameModule
             case GameState::LEVEL_UP:
             {
                 //* ScreenGameOver handles input because it can be a UI selection
+                game = updateLevelUpOverlay(
+                    game,
+                    currentInputId
+                );
+
                 break;
             }
         }

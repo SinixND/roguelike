@@ -1,5 +1,7 @@
 # TODOs
 ## Active 
+- Pull level up logic out of screen
+
 - [ ] Check layer/hierarchy (ECS based)
     - Modules, entities, systems, data, configs
     - [ ] Use ECS to manage components (=game state?)

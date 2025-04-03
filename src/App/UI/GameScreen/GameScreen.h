@@ -3,46 +3,43 @@
 
 #include "Chunk.h"
 #include "DenseMap.h"
+#include "Game.h"
 #include "GameCamera.h"
 #include "GamePanels.h"
-#include "GameState.h"
 #include "Overlays.h"
 #include "RenderData.h"
 
-struct Hero;
-struct Map;
-class World;
 struct Cursor;
 enum class InputId;
 
-struct ScreenGame
+class GameScreen
 {
-    GamePanels panelComponents{};
     snx::DenseMap<Vector2I, Chunk> chunks{};
     RenderData renderData{};
-    GameCamera gameCamera{};
+
     Overlays overlays{};
-};
 
-namespace ScreenGameModule
-{
-    [[nodiscard]]
-    ScreenGame const& init(
-        ScreenGame& screen,
-        Hero const& hero,
-        World const& world
-    );
+public:
+    GamePanels panels{};
+    GameCamera gameCamera{};
 
-    [[nodiscard]]
-    ScreenGame const& update(
-        ScreenGame& gameScreen,
-        Hero& hero,
-        World const& world,
+public:
+    void init( Game const& game );
+
+    void update(
+        Game const& game,
         Cursor const& cursor,
-        GameState gameState,
         InputId currentInputId
     );
 
-    void deinitialize( ScreenGame& screen );
-}
+    void deinit();
+
+private:
+    void setupScreenEvents( Game const& game );
+    void renderOutput(
+        Game const& game,
+        Cursor const& cursor
+    );
+};
+
 #endif

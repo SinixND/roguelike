@@ -3,73 +3,13 @@
 #include "AttributeSystem.h"
 #include "AttributesComponent.h"
 #include "ColorData.h"
-#include "EventDispatcher.h"
-#include "EventId.h"
-#include "ExperienceSystem.h"
+#include "Game.h"
 #include "GameFont.h"
 #include "Hero.h"
-#include "InputId.h"
 #include "raylibEx.h"
 #include <cstring>
 #include <raylib.h>
 #include <string>
-
-char constexpr ATTRIBUTE_CHOICES[ATTRIBUTES + 1]{
-    '0',
-    'v',
-    's',
-    'd',
-    'a',
-};
-
-[[nodiscard]]
-Hero const& levelUpHero(
-    Hero& hero,
-    char attributeChoice
-)
-{
-    switch ( attributeChoice )
-    {
-        default:
-            return hero;
-
-        //* Vitality
-        case 'V':
-        case 'v':
-        {
-            ++hero.attributes.vitality;
-
-            break;
-        }
-
-        //* Agility
-        case 'A':
-        case 'a':
-        {
-            ++hero.attributes.agility;
-
-            break;
-        }
-    }
-
-    ExperienceSystem::updateStats( hero.health );
-
-    AttributeSystem::updateStats(
-        hero.health,
-        hero.energy,
-        hero.attributes
-    );
-
-    hero.health.current = hero.health.maximum;
-
-    if ( ( AttributesModule::totalPoints( hero.attributes ) - ( ATTRIBUTES * BASE_POINTS ) ) < hero.experience.level )
-    {
-        return hero;
-    }
-    snx::EventDispatcher::notify( EventId::LEVELED_UP );
-
-    return hero;
-}
 
 namespace OverlayLevelUpModule
 {
@@ -78,7 +18,7 @@ namespace OverlayLevelUpModule
         int renderWidth{ GetRenderWidth() };
         int renderHeight{ GetRenderHeight() };
 
-        overlay.panelComponent.setOuter(
+        overlay.panel.setOuter(
             RectangleEx{
                 0.25f * renderWidth,
                 0.25f * renderHeight,
@@ -94,62 +34,18 @@ namespace OverlayLevelUpModule
 
     OverlayLevelUp const& update(
         OverlayLevelUp& overlay,
-        Hero& heroIO,
-        InputId currentInputId
+        Game const& game
     )
     {
-        char attributeChoice{ 0 };
-        // int selection{ 0 };
-
-        switch ( currentInputId )
-        {
-            default:
-                // selection = GetCharPressed();
-                break;
-
-            case InputId::ACT_DOWN:
-            {
-                ++overlay.selectedAttribute;
-
-                break;
-            }
-
-            case InputId::ACT_UP:
-            {
-                --overlay.selectedAttribute;
-
-                break;
-            }
-
-            case InputId::ACT_IN_PLACE:
-            {
-                if ( !attributeChoice )
-                {
-                    attributeChoice = ATTRIBUTE_CHOICES[overlay.selectedAttribute];
-                }
-
-                break;
-            }
-        }
-
-        if ( overlay.selectedAttribute > ATTRIBUTES )
-        {
-            overlay.selectedAttribute = 1;
-        }
-        else if ( overlay.selectedAttribute < 1 )
-        {
-            overlay.selectedAttribute = ATTRIBUTES;
-        }
-
         DrawRectangleRec(
-            overlay.panelComponent.box().rectangle(),
+            overlay.panel.box().rectangle(),
             ColorData::BG
         );
 
         DrawTextExCentered(
             GameFont::font(),
             "Level Up!",
-            overlay.panelComponent.inner(),
+            overlay.panel.inner(),
             -4 * GameFont::fontSize,
             GameFont::fontSize,
             0,
@@ -159,7 +55,7 @@ namespace OverlayLevelUpModule
         DrawTextExCentered(
             GameFont::font(),
             "1 proficiency point to spend.",
-            overlay.panelComponent.inner(),
+            overlay.panel.inner(),
             -2 * GameFont::fontSize,
             GameFont::fontSize,
             0,
@@ -169,7 +65,7 @@ namespace OverlayLevelUpModule
         DrawTextExCentered(
             GameFont::font(),
             "Choose or select attribute:",
-            overlay.panelComponent.inner(),
+            overlay.panel.inner(),
             -1 * GameFont::fontSize,
             GameFont::fontSize,
             0,
@@ -177,31 +73,31 @@ namespace OverlayLevelUpModule
         );
 
         //* Options
-        std::string opt1{ ( overlay.selectedAttribute == 1 ) ? "[x]" : "[ ]" };
+        std::string opt1{ ( game.selectedAttribute == 1 ) ? "[x]" : "[ ]" };
         opt1 += TextFormat(
             "[%i%] VIT",
-            100 * ( heroIO.attributes.vitality + ( overlay.selectedAttribute == 1 ) ) / AttributesModule::totalPoints( heroIO.attributes )
+            100 * ( game.hero.attributes.vitality + ( game.selectedAttribute == 1 ) ) / AttributesModule::totalPoints( game.hero.attributes )
         );
 
         DrawTextExCentered(
             GameFont::font(),
             opt1.c_str(),
-            overlay.panelComponent.inner(),
+            overlay.panel.inner(),
             1 * GameFont::fontSize,
             GameFont::fontSize,
             0,
             LIGHTGRAY
         );
 
-        std::string opt2{ ( overlay.selectedAttribute == 2 ) ? "[x]" : "[ ]" };
+        std::string opt2{ ( game.selectedAttribute == 2 ) ? "[x]" : "[ ]" };
         opt2 += TextFormat(
             "[%i%] AGI",
-            100 * ( heroIO.attributes.agility + ( overlay.selectedAttribute == 2 ) ) / AttributesModule::totalPoints( heroIO.attributes )
+            100 * ( game.hero.attributes.agility + ( game.selectedAttribute == 2 ) ) / AttributesModule::totalPoints( game.hero.attributes )
         );
         DrawTextExCentered(
             GameFont::font(),
             opt2.c_str(),
-            overlay.panelComponent.inner(),
+            overlay.panel.inner(),
             2 * GameFont::fontSize,
             GameFont::fontSize,
             0,
@@ -209,12 +105,10 @@ namespace OverlayLevelUpModule
         );
 
         DrawRectangleLinesEx(
-            overlay.panelComponent.outer().rectangle(),
+            overlay.panel.outer().rectangle(),
             1,
             ColorData::BORDER
         );
-
-        heroIO = levelUpHero( heroIO, attributeChoice );
 
         return overlay;
     }

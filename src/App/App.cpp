@@ -4,6 +4,7 @@
 
 #include "AppConfigs.h"
 #include "AppData.h"
+#include "Convert.h"
 #include "DeveloperMode.h"
 #include "EventDispatcher.h"
 #include "EventId.h"
@@ -168,12 +169,9 @@ void updateApp( void* arg )
                 app.dt
             );
 
-            app.screens.game = ScreenGameModule::update(
-                app.screens.game,
-                app.game.hero,
-                app.game.world,
+            app.screens.game.update(
+                app.game,
                 app.cursor,
-                app.game.state,
                 app.inputHandler.currentInputId
             );
 
@@ -182,7 +180,7 @@ void updateApp( void* arg )
 
         case App::StateId::GAME_OVER:
         {
-            ScreenGameOverModule::update( app.screens.gameOver );
+            app.screens.gameOver.update();
 
             break;
         }
@@ -308,13 +306,13 @@ void App::setupAppEvents()
         EventId::WINDOW_RESIZED,
         [&]()
         {
-            screens.game.panelComponents = GamePanelsModule::init( screens.game.panelComponents );
-            screens.gameOver = ScreenGameOverModule::init( screens.gameOver );
-            screens.game.overlays = OverlaysModule::init( screens.game.overlays );
+            screens.game.panels = GamePanelsModule::init( screens.game.panels );
+            screens.gameOver.init();
+            screens.game.init( game );
 
             screens.game.gameCamera = GameCameraModule::init(
                 screens.game.gameCamera,
-                screens.game.panelComponents.map.box(),
+                screens.game.panels.map.box(),
                 game.hero.position
             );
 
@@ -346,13 +344,9 @@ void App::init(
 
     game = GameModule::init( game );
 
-    screens.game = ScreenGameModule::init(
-        screens.game,
-        game.hero,
-        game.world
-    );
+    screens.game.init( game );
 
-    screens.gameOver = ScreenGameOverModule::init( screens.gameOver );
+    screens.gameOver.init();
 
     setupAppEvents();
 }
@@ -377,7 +371,7 @@ void App::run()
 void App::deinit()
 {
     GameFont::unload();
-    ScreenGameModule::deinitialize( screens.game );
+    screens.game.deinit();
 
     //* Close window and opengl context
     CloseWindow();

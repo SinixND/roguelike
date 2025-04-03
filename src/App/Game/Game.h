@@ -21,6 +21,7 @@ struct Game
     size_t turn{ 1 };
 
     size_t activeEnemyId{ 0 };
+    int selectedAttribute{ 0 };
     bool isMultiFrameActionActive{ false };
 };
 
