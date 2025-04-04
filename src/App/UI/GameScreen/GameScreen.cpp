@@ -20,7 +20,10 @@
 #include <raylib.h>
 #include <raymath.h>
 
-void GameScreen::setupScreenEvents( Game const& game )
+void GameScreen::setupScreenEvents(
+    Hero const& hero,
+    Map const& currentMap
+)
 {
     snx::EventDispatcher::addListener(
         EventId::CHANGE_COLOR_THEME,
@@ -41,25 +44,9 @@ void GameScreen::setupScreenEvents( Game const& game )
         {
             gameCamera.camera = GameCameraModule::setTarget(
                 gameCamera.camera,
-                game.hero.position
+                hero.position
             );
         }
-    );
-
-    snx::EventDispatcher::addListener(
-        EventId::HERO_POSITION_CHANGED,
-        [&]()
-        {
-            //* VisibilitySystem
-            game.world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
-                game.world.currentMap->tiles,
-                game.world.currentMap->fogs,
-                GameCameraModule::viewportInTiles( gameCamera ),
-                Convert::worldToTile( game.hero.position ),
-                game.hero.visionRange
-            );
-        },
-        true
     );
 
     snx::EventDispatcher::addListener(
@@ -69,7 +56,7 @@ void GameScreen::setupScreenEvents( Game const& game )
             chunks = ChunkSystem::reRenderChunks(
                 chunks,
                 renderData.textures,
-                game.world.currentMap->tiles
+                currentMap.tiles
             );
         }
     );
@@ -98,7 +85,7 @@ void GameScreen::renderOutput(
     }
 
     //* Draw objects
-    Objects const& objects{ game.world.currentMap->objects };
+    Objects const& objects{ currentMap.objects };
 
     for ( size_t idx{ 0 }; idx < objects.renderIds.values().size(); ++idx )
     {
@@ -110,8 +97,8 @@ void GameScreen::renderOutput(
     }
 
     //* Draw enemies
-    Tiles const& tiles{ game.world.currentMap->tiles };
-    Enemies const& enemies{ game.world.currentMap->enemies };
+    Tiles const& tiles{ currentMap.tiles };
+    Enemies const& enemies{ currentMap.enemies };
 
     for ( size_t idx{ 0 }; idx < enemies.renderIds.values().size(); ++idx )
     {
@@ -137,7 +124,7 @@ void GameScreen::renderOutput(
     }
 
     //* Fog of war
-    auto const& fogs{ game.world.currentMap->fogs };
+    auto const& fogs{ currentMap.fogs };
 
     for ( size_t idx{ 0 }; idx < fogs.size(); ++idx )
     {
@@ -151,8 +138,8 @@ void GameScreen::renderOutput(
     //* Draw hero
     RenderSystem::renderTexture(
         renderData.textures,
-        game.hero.position,
-        game.hero.renderId
+        hero.position,
+        hero.renderId
     );
 
     //* UI
@@ -174,7 +161,7 @@ void GameScreen::renderOutput(
 
     RenderSystem::renderStatusPanel(
         panels.status,
-        game.hero,
+        hero,
         game.world.currentMapLevel,
         bgColor,
         0
@@ -182,7 +169,7 @@ void GameScreen::renderOutput(
 
     RenderSystem::renderInfoPanel(
         panels.info,
-        game.world.currentMap->objects,
+        currentMap.objects,
         Convert::worldToTile( cursor.position ),
         bgColor,
         borderWidth
@@ -198,12 +185,12 @@ void GameScreen::renderOutput(
 void GameScreen::init( Game const& game )
 {
     panels = GamePanelsModule::init( panels );
-    overlays = OverlaysModule::init( overlays );
+    levelUpOverlay.init();
 
     gameCamera = GameCameraModule::init(
         gameCamera,
         panels.map.box(),
-        game.hero.position
+        hero.position
     );
 
 #if defined( DEBUG )
@@ -215,7 +202,7 @@ void GameScreen::init( Game const& game )
     chunks = ChunkSystem::reRenderChunks(
         chunks,
         renderData.textures,
-        game.world.currentMap->tiles
+        currentMap.tiles
     );
 
     //* Setup events

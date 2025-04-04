@@ -152,7 +152,7 @@ void updateApp( void* arg )
 
     app.cursor = CursorModule::update(
         app.cursor,
-        app.screens.game.gameCamera.camera,
+        app.gameCamera.camera,
         Convert::worldToTile( app.game.hero.position )
     );
 
@@ -163,14 +163,16 @@ void updateApp( void* arg )
         {
             app.game = GameModule::update(
                 app.game,
-                app.screens.game.gameCamera,
+                app.gameCamera,
                 app.cursor,
                 app.inputHandler.currentInputId,
                 app.dt
             );
 
             app.screens.game.update(
-                app.game,
+                app.game.hero,
+                *app.game.world.currentMap,
+                app.game.world.currentMapLevel,
                 app.cursor,
                 app.inputHandler.currentInputId
             );
@@ -308,10 +310,14 @@ void App::setupAppEvents()
         {
             screens.game.panels = GamePanelsModule::init( screens.game.panels );
             screens.gameOver.init();
-            screens.game.init( game );
+            screens.game.init(
+                game.hero,
+                *game.world.currentMap,
+                game.world.currentMapLevel
+            );
 
-            screens.game.gameCamera = GameCameraModule::init(
-                screens.game.gameCamera,
+            gameCamera = GameCameraModule::init(
+                gameCamera,
                 screens.game.panels.map.box(),
                 game.hero.position
             );
@@ -319,7 +325,7 @@ void App::setupAppEvents()
             game.world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
                 game.world.currentMap->tiles,
                 game.world.currentMap->fogs,
-                GameCameraModule::viewportInTiles( screens.game.gameCamera ),
+                GameCameraModule::viewportInTiles( gameCamera ),
                 Convert::worldToTile( game.hero.position ),
                 game.hero.visionRange
             );
@@ -336,15 +342,20 @@ void App::setupAppEvents()
     );
 }
 
-void App::init(
-    AppConfig const& config
-)
+void App::init( AppConfig const& config )
 {
     setupFrameworks( config );
 
-    game = GameModule::init( game );
+    game = GameModule::init(
+        game,
+        gameCamera
+    );
 
-    screens.game.init( game );
+    screens.game.init(
+        game.hero,
+        *game.world.currentMap,
+        game.world.currentMapLevel
+    );
 
     screens.gameOver.init();
 

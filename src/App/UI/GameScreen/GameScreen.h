@@ -6,7 +6,7 @@
 #include "Game.h"
 #include "GameCamera.h"
 #include "GamePanels.h"
-#include "Overlays.h"
+#include "OverlayLevelUp.h"
 #include "RenderData.h"
 
 struct Cursor;
@@ -17,17 +17,22 @@ class GameScreen
     snx::DenseMap<Vector2I, Chunk> chunks{};
     RenderData renderData{};
 
-    Overlays overlays{};
+    LevelUpOverlay levelUpOverlay{};
 
 public:
     GamePanels panels{};
-    GameCamera gameCamera{};
 
 public:
-    void init( Game const& game );
+    void init(
+        Hero const& hero,
+        Map const& currentMap,
+        int currentMapLevel
+    );
 
     void update(
-        Game const& game,
+        Hero const& hero,
+        Map const& currentMap,
+        int currentMapLevel,
         Cursor const& cursor,
         InputId currentInputId
     );
@@ -35,9 +40,16 @@ public:
     void deinit();
 
 private:
-    void setupScreenEvents( Game const& game );
+    void setupScreenEvents(
+        Hero const& hero,
+        Map const& currentMap,
+        int currentMapLevel
+    );
+
     void renderOutput(
-        Game const& game,
+        Hero const& hero,
+        Map const& currentMap,
+        int currentMapLevel,
         Cursor const& cursor
     );
 };

@@ -17,6 +17,7 @@
 #include "MovementSystem.h"
 #include "Objects.h"
 #include "RenderId.h"
+#include "VisibilitySystem.h"
 #include "World.h"
 #include "raylibEx.h"
 #include <Logger.h>
@@ -40,7 +41,10 @@ char constexpr ATTRIBUTE_CHOICES[ATTRIBUTES + 1]{
     'g', //* Agility
 };
 
-void setupGameEvents( Game& game )
+void setupGameEvents(
+    Game& game,
+    GameCamera const& gameCamera
+)
 {
     snx::EventDispatcher::addListener(
         EventId::MULTIFRAME_ACTION_ACTIVE,
@@ -100,6 +104,22 @@ void setupGameEvents( Game& game )
             snx::EventDispatcher::notify( EventId::HERO_POSITION_CHANGED );
             snx::EventDispatcher::notify( EventId::MAP_CHANGE );
         }
+    );
+
+    snx::EventDispatcher::addListener(
+        EventId::HERO_POSITION_CHANGED,
+        [&]()
+        {
+            //* VisibilitySystem
+            game.world.currentMap->tiles = VisibilitySystem::calculateVisibilities(
+                game.world.currentMap->tiles,
+                game.world.currentMap->fogs,
+                GameCameraModule::viewportInTiles( gameCamera ),
+                Convert::worldToTile( game.hero.position ),
+                game.hero.visionRange
+            );
+        },
+        true
     );
 
     snx::EventDispatcher::addListener(
@@ -434,7 +454,10 @@ Game const& updateLevelUpOverlay(
 
 namespace GameModule
 {
-    Game const& init( Game& game )
+    Game const& init(
+        Game& game,
+        GameCamera const& gameCamera
+    )
     {
 #if defined( DEBUG )
         snx::RNG::seed( 1 );
@@ -451,7 +474,10 @@ namespace GameModule
 
         game.turn = 1;
 
-        setupGameEvents( game );
+        setupGameEvents(
+            game,
+            gameCamera
+        );
 
 #if defined( DEBUG )
         snx::EventDispatcher::notify( EventId::NEXT_LEVEL );
@@ -480,12 +506,12 @@ namespace GameModule
                     currentInputId,
                     dt
                 );
+
                 break;
             }
 
             case GameState::LEVEL_UP:
             {
-                //* ScreenGameOver handles input because it can be a UI selection
                 game = updateLevelUpOverlay(
                     game,
                     currentInputId

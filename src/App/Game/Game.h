@@ -28,7 +28,10 @@ struct Game
 namespace GameModule
 {
     [[nodiscard]]
-    Game const& init( Game& game );
+    Game const& init(
+        Game& game,
+        GameCamera const& gameCamera
+    );
 
     [[nodiscard]]
     Game const& update(

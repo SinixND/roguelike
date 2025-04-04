@@ -8,6 +8,7 @@
 #include <raylib.h>
 
 struct AppConfig;
+struct GameCamera;
 
 class App
 {
@@ -19,13 +20,13 @@ public:
     };
 
 public:
+    Game game{};
     InputHandler inputHandler{};
-
-    Cursor cursor{};
     float dt{ 0 };
 
     Screens screens{};
-    Game game{};
+    GameCamera gameCamera{};
+    Cursor cursor{};
 
     App::StateId stateId{ App::StateId::GAME_RUNNING };
 

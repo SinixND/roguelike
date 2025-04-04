@@ -3,23 +3,16 @@
 
 #include "Panel.h"
 
-enum class InputId;
 struct Game;
 
-struct OverlayLevelUp
+class LevelUpOverlay
 {
     Panel panel{};
+
+public:
+    void init();
+
+    void update( Game const& game );
 };
 
-namespace OverlayLevelUpModule
-{
-    [[nodiscard]]
-    OverlayLevelUp const& init( OverlayLevelUp& overlay );
-
-    [[nodiscard]]
-    OverlayLevelUp const& update(
-        OverlayLevelUp& overlay,
-        Game const& game
-    );
-}
 #endif
