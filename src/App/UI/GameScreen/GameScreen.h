@@ -3,12 +3,14 @@
 
 #include "Chunk.h"
 #include "DenseMap.h"
-#include "Game.h"
-#include "GameCamera.h"
 #include "GamePanels.h"
-#include "OverlayLevelUp.h"
+#include "LevelUpOverlay.h"
 #include "RenderData.h"
 
+class World;
+struct Map;
+struct GameCamera;
+struct Hero;
 struct Cursor;
 enum class InputId;
 
@@ -24,9 +26,8 @@ public:
 
 public:
     void init(
-        Hero const& hero,
-        Map const& currentMap,
-        int currentMapLevel
+        World const& world,
+        GameCamera const& gameCamera
     );
 
     void update(
@@ -34,6 +35,7 @@ public:
         Map const& currentMap,
         int currentMapLevel,
         Cursor const& cursor,
+        GameCamera const& gameCamera,
         InputId currentInputId
     );
 
@@ -41,16 +43,15 @@ public:
 
 private:
     void setupScreenEvents(
-        Hero const& hero,
-        Map const& currentMap,
-        int currentMapLevel
+        World const& world
     );
 
     void renderOutput(
         Hero const& hero,
         Map const& currentMap,
         int currentMapLevel,
-        Cursor const& cursor
+        Cursor const& cursor,
+        GameCamera const& gameCamera
     );
 };
 

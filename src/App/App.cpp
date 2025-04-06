@@ -137,9 +137,12 @@ void updateApp( void* arg )
     App& app = *(App*)arg;
 
     updateWindowState();
+
 #if defined( DEBUG )
     updateDeveloperMode();
+    snx::Debugger::gcam() = app.gameCamera;
 #endif
+
     app.inputHandler.currentInputId = getUserInput( app.inputHandler );
 
     if ( app.inputHandler.currentInputId == InputId::TOGGLE_CURSOR )
@@ -174,6 +177,7 @@ void updateApp( void* arg )
                 *app.game.world.currentMap,
                 app.game.world.currentMapLevel,
                 app.cursor,
+                app.gameCamera,
                 app.inputHandler.currentInputId
             );
 
@@ -309,11 +313,12 @@ void App::setupAppEvents()
         [&]()
         {
             screens.game.panels = GamePanelsModule::init( screens.game.panels );
+
             screens.gameOver.init();
+
             screens.game.init(
-                game.hero,
-                *game.world.currentMap,
-                game.world.currentMapLevel
+                game.world,
+                gameCamera
             );
 
             gameCamera = GameCameraModule::init(
@@ -334,6 +339,17 @@ void App::setupAppEvents()
     );
 
     snx::EventDispatcher::addListener(
+        EventId::HERO_MOVED,
+        [&]()
+        {
+            gameCamera.camera = GameCameraModule::setTarget(
+                gameCamera.camera,
+                game.hero.position
+            );
+        }
+    );
+
+    snx::EventDispatcher::addListener(
         EventId::GAME_OVER,
         [&]()
         {
@@ -346,15 +362,20 @@ void App::init( AppConfig const& config )
 {
     setupFrameworks( config );
 
+    gameCamera = GameCameraModule::init(
+        gameCamera,
+        screens.game.panels.map.box(),
+        game.hero.position
+    );
+
     game = GameModule::init(
         game,
         gameCamera
     );
 
     screens.game.init(
-        game.hero,
-        *game.world.currentMap,
-        game.world.currentMapLevel
+        game.world,
+        gameCamera
     );
 
     screens.gameOver.init();

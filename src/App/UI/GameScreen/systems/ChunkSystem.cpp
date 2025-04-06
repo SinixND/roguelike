@@ -58,6 +58,8 @@ namespace ChunkSystem
         chunks = clearChunks( chunks );
 
         //* Create necessary chunks
+        [[maybe_unused]]
+        auto dbg{ tiles.positions.size() };
         for ( Vector2 const& position : tiles.positions )
         {
             chunks = requireChunk(

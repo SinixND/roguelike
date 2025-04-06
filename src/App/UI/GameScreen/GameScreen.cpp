@@ -20,10 +20,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-void GameScreen::setupScreenEvents(
-    Hero const& hero,
-    Map const& currentMap
-)
+void GameScreen::setupScreenEvents( World const& world )
 {
     snx::EventDispatcher::addListener(
         EventId::CHANGE_COLOR_THEME,
@@ -39,32 +36,24 @@ void GameScreen::setupScreenEvents(
 
     //* Game events
     snx::EventDispatcher::addListener(
-        EventId::HERO_MOVED,
-        [&]()
-        {
-            gameCamera.camera = GameCameraModule::setTarget(
-                gameCamera.camera,
-                hero.position
-            );
-        }
-    );
-
-    snx::EventDispatcher::addListener(
         EventId::MAP_CHANGE,
         [&]()
         {
             chunks = ChunkSystem::reRenderChunks(
                 chunks,
                 renderData.textures,
-                currentMap.tiles
+                world.currentMap->tiles
             );
         }
     );
 }
 
 void GameScreen::renderOutput(
-    Game const& game,
-    Cursor const& cursor
+    Hero const& hero,
+    Map const& currentMap,
+    int currentMapLevel,
+    Cursor const& cursor,
+    GameCamera const& gameCamera
 )
 {
     //* Draw viewport content
@@ -162,7 +151,7 @@ void GameScreen::renderOutput(
     RenderSystem::renderStatusPanel(
         panels.status,
         hero,
-        game.world.currentMapLevel,
+        currentMapLevel,
         bgColor,
         0
     );
@@ -182,16 +171,13 @@ void GameScreen::renderOutput(
     );
 }
 
-void GameScreen::init( Game const& game )
+void GameScreen::init(
+    World const& world,
+    GameCamera const& gameCamera
+)
 {
     panels = GamePanelsModule::init( panels );
     levelUpOverlay.init();
-
-    gameCamera = GameCameraModule::init(
-        gameCamera,
-        panels.map.box(),
-        hero.position
-    );
 
 #if defined( DEBUG )
     snx::Debugger::gcam() = gameCamera;
@@ -202,16 +188,19 @@ void GameScreen::init( Game const& game )
     chunks = ChunkSystem::reRenderChunks(
         chunks,
         renderData.textures,
-        currentMap.tiles
+        world.currentMap->tiles
     );
 
     //* Setup events
-    setupScreenEvents( game );
+    setupScreenEvents( world );
 }
 
 void GameScreen::update(
-    Game const& game,
+    Hero const& hero,
+    Map const& currentMap,
+    int currentMapLevel,
     Cursor const& cursor,
+    GameCamera const& gameCamera,
     InputId currentInputId
 )
 {
@@ -220,15 +209,15 @@ void GameScreen::update(
         snx::EventDispatcher::notify( EventId::CHANGE_COLOR_THEME );
     }
 
-#if defined( DEBUG )
-    snx::Debugger::gcam() = gameCamera;
-#endif
     BeginDrawing();
     ClearBackground( ColorData::BG );
 
     renderOutput(
-        game,
-        cursor
+        hero,
+        currentMap,
+        currentMapLevel,
+        cursor,
+        gameCamera
     );
 
     //* Draw simple frame

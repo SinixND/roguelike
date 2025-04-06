@@ -3,12 +3,12 @@
 
 #include "Cursor.h"
 #include "Game.h"
+#include "GameCamera.h"
 #include "InputHandler.h"
 #include "Screens.h"
 #include <raylib.h>
 
 struct AppConfig;
-struct GameCamera;
 
 class App
 {
