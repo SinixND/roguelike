@@ -10,6 +10,7 @@
 #include "Game.h"
 #include "GameCamera.h"
 #include "GamePanels.h"
+#include "GameState.h"
 #include "InputId.h"
 #include "Objects.h"
 #include "RenderSystem.h"
@@ -196,9 +197,7 @@ void GameScreen::init(
 }
 
 void GameScreen::update(
-    Hero const& hero,
-    Map const& currentMap,
-    int currentMapLevel,
+    Game const& game,
     Cursor const& cursor,
     GameCamera const& gameCamera,
     InputId currentInputId
@@ -213,12 +212,18 @@ void GameScreen::update(
     ClearBackground( ColorData::BG );
 
     renderOutput(
-        hero,
-        currentMap,
-        currentMapLevel,
+        game.hero,
+        *game.world.currentMap,
+        game.world.currentMapLevel,
         cursor,
         gameCamera
     );
+
+    //* Handle overlay
+    if ( game.state == GameState::LEVEL_UP )
+    {
+        levelUpOverlay.update( game );
+    }
 
     //* Draw simple frame
     WindowSystem::drawWindowBorder();

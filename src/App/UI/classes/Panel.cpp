@@ -63,20 +63,29 @@ RectangleEx Panel::outer() const
     };
 }
 
-void Panel::drawBackground( Color const& color ) const
+namespace PanelModule
 {
-    DrawRectangleRec(
-        box().rectangle(),
-        color
-    );
-}
+    void drawBackground(
+        Panel const& panel,
+        Color const& color
+    )
+    {
+        DrawRectangleRec(
+            panel.box().rectangle(),
+            color
+        );
+    }
 
-void Panel::drawBorder( float borderWidth ) const
-{
-    DrawRectangleLinesEx(
-        box().rectangle(),
-        borderWidth,
-        Color{ 25, 25, 25, 255 }
-    );
+    void drawBorder(
+        Panel const& panel,
+        float borderWidth
+    )
+    {
+        DrawRectangleLinesEx(
+            panel.box().rectangle(),
+            borderWidth,
+            Color{ 25, 25, 25, 255 }
+        );
+    }
 }
 

@@ -13,6 +13,7 @@ struct GameCamera;
 struct Hero;
 struct Cursor;
 enum class InputId;
+enum class GameState;
 
 class GameScreen
 {
@@ -31,9 +32,7 @@ public:
     );
 
     void update(
-        Hero const& hero,
-        Map const& currentMap,
-        int currentMapLevel,
+        Game const& game,
         Cursor const& cursor,
         GameCamera const& gameCamera,
         InputId currentInputId

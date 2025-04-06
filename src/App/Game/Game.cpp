@@ -274,7 +274,7 @@ Game const& executeInstantActions(
 }
 
 [[nodiscard]]
-Game const& updateGameScreen(
+Game const& updateGameLogic(
     Game& game,
     GameCamera const& gameCamera,
     Cursor const& cursor,
@@ -360,7 +360,6 @@ Hero const& levelUpHero(
         default:
             return hero;
 
-        //* Vitality
         case 'V':
         case 'v':
         {
@@ -369,7 +368,22 @@ Hero const& levelUpHero(
             break;
         }
 
-        //* Agility
+        case 'T':
+        case 't':
+        {
+            ++hero.attributes.strength;
+
+            break;
+        }
+
+        case 'E':
+        case 'e':
+        {
+            ++hero.attributes.defense;
+
+            break;
+        }
+
         case 'G':
         case 'g':
         {
@@ -399,7 +413,7 @@ Hero const& levelUpHero(
 }
 
 [[nodiscard]]
-Game const& updateLevelUpOverlay(
+Game const& updateLevelUpLogic(
     Game& game,
     InputId currentInputId
 )
@@ -499,7 +513,7 @@ namespace GameModule
             default:
             case GameState::DEFAULT:
             {
-                game = updateGameScreen(
+                game = updateGameLogic(
                     game,
                     gameCamera,
                     cursor,
@@ -512,7 +526,7 @@ namespace GameModule
 
             case GameState::LEVEL_UP:
             {
-                game = updateLevelUpOverlay(
+                game = updateLevelUpLogic(
                     game,
                     currentInputId
                 );

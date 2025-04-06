@@ -43,9 +43,18 @@ public:
     RectangleEx const& box() const;
     RectangleEx inner() const;
     RectangleEx outer() const;
-
-    void drawBackground( Color const& color ) const;
-    void drawBorder( float borderWidth ) const;
 };
 
+namespace PanelModule
+{
+    void drawBackground(
+        Panel const& panel,
+        Color const& color
+    );
+
+    void drawBorder(
+        Panel const& panel,
+        float borderWidth
+    );
+}
 #endif

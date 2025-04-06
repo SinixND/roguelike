@@ -78,7 +78,7 @@ void setupFrameworks( AppConfig const& config )
     setupNcurses();
 }
 
-void updateWindowState()
+void updateFullscreenState()
 {
     if ( IsKeyPressed( KEY_F11 ) )
     {
@@ -131,12 +131,12 @@ InputId getUserInput( InputHandler& inputHandler )
     return inputId;
 }
 
-/// @brief C-Style void argument in function signature needed for emscripten
+/// @brief Void argument in function signature needed for emscripten
 void updateApp( void* arg )
 {
     App& app = *(App*)arg;
 
-    updateWindowState();
+    updateFullscreenState();
 
 #if defined( DEBUG )
     updateDeveloperMode();
@@ -173,9 +173,7 @@ void updateApp( void* arg )
             );
 
             app.screens.game.update(
-                app.game.hero,
-                *app.game.world.currentMap,
-                app.game.world.currentMapLevel,
+                app.game,
                 app.cursor,
                 app.gameCamera,
                 app.inputHandler.currentInputId

@@ -30,6 +30,7 @@ InputId InputHandler::fromKeyboard()
     //* - last key is repeatable (directional input)
     if ( ( isModifierActive_
            && !currentKey_
+           && mappings.keyboardToInput.contains( lastKey_ )
            && ( mappings.keyboardToInput.at( lastKey_ ) == InputId::ACT_LEFT
                 || mappings.keyboardToInput.at( lastKey_ ) == InputId::ACT_DOWN
                 || mappings.keyboardToInput.at( lastKey_ ) == InputId::ACT_UP
