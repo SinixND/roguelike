@@ -27,7 +27,8 @@ Tiles const& addTiles(
     {
         for ( int y{ 0 }; y < rectangle.height(); ++y )
         {
-            tiles.insert(
+            tiles = TilesModule::insert(
+                tiles,
                 Vector2I{
                     rectangle.left() + x,
                     rectangle.top() + y
@@ -51,7 +52,8 @@ Tiles const& addRoom(
 {
     if ( room.width() < 2 || room.height() < 2 )
     {
-        tilesIO.insert(
+        tilesIO = TilesModule::insert(
+            tilesIO,
             Vector2I{ room.left(), room.top() },
             RenderId::WALL,
             true,
@@ -233,7 +235,8 @@ namespace MapGeneratorSystem
         );
 
         //* Tiles
-        testRoom.tiles.insert(
+        testRoom.tiles = TilesModule::insert(
+            testRoom.tiles,
             Vector2I{
                 0,
                 -1
@@ -243,7 +246,8 @@ namespace MapGeneratorSystem
             true
         );
 
-        testRoom.tiles.insert(
+        testRoom.tiles = TilesModule::insert(
+            testRoom.tiles,
             Vector2I{
                 5,
                 6
@@ -253,7 +257,8 @@ namespace MapGeneratorSystem
             true
         );
 
-        testRoom.tiles.insert(
+        testRoom.tiles = TilesModule::insert(
+            testRoom.tiles,
             Vector2I{
                 6,
                 5
@@ -263,7 +268,8 @@ namespace MapGeneratorSystem
             true
         );
 
-        testRoom.tiles.insert(
+        testRoom.tiles = TilesModule::insert(
+            testRoom.tiles,
             Vector2I{
                 5,
                 5
@@ -273,7 +279,8 @@ namespace MapGeneratorSystem
             true
         );
 
-        testRoom.tiles.insert(
+        testRoom.tiles = TilesModule::insert(
+            testRoom.tiles,
             Vector2I{
                 -6,
                 5
@@ -282,7 +289,8 @@ namespace MapGeneratorSystem
         );
 
         //* Next level trigger
-        testRoom.objects.insert(
+        testRoom.objects = ObjectsModule::insert(
+            testRoom.objects,
             Vector2I{
                 0,
                 0
@@ -321,7 +329,8 @@ namespace MapGeneratorSystem
         );
 
         //* Add next level trigger
-        startRoom.objects.insert(
+        startRoom.objects = ObjectsModule::insert(
+            startRoom.objects,
             Vector2I{
                 0,
                 -5
@@ -394,7 +403,8 @@ namespace MapGeneratorSystem
         }
 
         //* Add previous level trigger
-        map.objects.insert(
+        map.objects = ObjectsModule::insert(
+            map.objects,
             Vector2I{
                 0,
                 0
@@ -406,7 +416,8 @@ namespace MapGeneratorSystem
         );
 
         //* Add next level trigger
-        map.objects.insert(
+        map.objects = ObjectsModule::insert(
+            map.objects,
             roomPosition,
             "Stairs",
             "Descend",

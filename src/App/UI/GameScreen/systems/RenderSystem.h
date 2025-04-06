@@ -6,12 +6,12 @@
 
 enum class RenderId;
 struct Chunk;
-enum class Fog;
+enum class FogStateId;
 struct RenderData;
 struct Textures;
 class Panel;
 struct Hero;
-class Objects;
+struct Objects;
 struct Vector2I;
 
 namespace RenderSystem
@@ -30,7 +30,7 @@ namespace RenderSystem
 
     void renderFog(
         Vector2 const& fogPosition,
-        Fog fog
+        FogStateId fog
     );
 
     void renderStatusPanel(

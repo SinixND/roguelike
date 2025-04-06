@@ -6,7 +6,7 @@
 struct Vector2I;
 struct Chunk;
 struct Textures;
-class Tiles;
+struct Tiles;
 
 namespace ChunkSystem
 {

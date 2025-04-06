@@ -3,7 +3,7 @@
 
 #include <cstddef>
 
-class Enemies;
+struct Enemies;
 struct Hero;
 struct Map;
 struct GameCamera;

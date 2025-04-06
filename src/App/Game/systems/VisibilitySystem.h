@@ -6,8 +6,8 @@
 #include "DenseMap.h"
 #include "raylibEx.h"
 
-class Tiles;
-enum class Fog;
+struct Tiles;
+enum class FogStateId;
 
 namespace VisibilitySystem
 {
@@ -16,7 +16,7 @@ namespace VisibilitySystem
     [[nodiscard]]
     Tiles const& calculateVisibilities(
         Tiles& tiles,
-        snx::DenseMap<Vector2I, Fog>& fogsIO,
+        snx::DenseMap<Vector2I, FogStateId>& fogsIO,
         RectangleExI const& viewportInTiles,
         Vector2I const& heroPosition,
         int visionRange

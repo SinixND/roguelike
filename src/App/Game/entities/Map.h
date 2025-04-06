@@ -3,7 +3,7 @@
 
 #include "DenseMap.h"
 #include "Enemies.h"
-#include "Fog.h"
+#include "FogStateId.h"
 #include "Objects.h"
 #include "Tiles.h"
 
@@ -12,7 +12,7 @@ struct Map
     Enemies enemies{};
     Objects objects{};
     Tiles tiles{};
-    snx::DenseMap<Vector2I, Fog> fogs{};
+    snx::DenseMap<Vector2I, FogStateId> fogs{};
 };
 
 #endif

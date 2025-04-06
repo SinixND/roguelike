@@ -2,7 +2,7 @@
 
 #include "Convert.h"
 #include "DenseMap.h"
-#include "Fog.h"
+#include "FogStateId.h"
 #include "Tiles.h"
 #include "VisibilityId.h"
 #include "raylibEx.h"
@@ -64,19 +64,19 @@ VisibilityId getOutOfVisionVisibility( VisibilityId tileVisibilityOld )
     return visibilityId;
 }
 
-Fog getFogOfWarState( VisibilityId tileVisibility )
+FogStateId getFogOfWarState( VisibilityId tileVisibility )
 {
-    Fog fog{};
+    FogStateId fog{};
 
     if ( tileVisibility == VisibilityId::VISIBILE
          || tileVisibility == VisibilityId::SEEN )
     {
-        fog = Fog::TRANSPARENT;
+        fog = FogStateId::TRANSPARENT;
     }
 
     else
     {
-        fog = Fog::OPAQUE;
+        fog = FogStateId::OPAQUE;
     }
 
     return fog;
@@ -197,7 +197,7 @@ bool checkVisibility(
 [[nodiscard]]
 VisibilityId& updateVisibilityId(
     VisibilityId& visibilityId,
-    snx::DenseMap<Vector2I, Fog>& fogsIO,
+    snx::DenseMap<Vector2I, FogStateId>& fogsIO,
     std::vector<Shadow> const& shadows,
     Vector2I const& tilePosition,
     int visionRange,
@@ -228,7 +228,7 @@ VisibilityId& updateVisibilityId(
 [[nodiscard]]
 Tiles const& calculateVisibilitiesInOctant(
     Tiles& tiles,
-    snx::DenseMap<Vector2I, Fog>& fogsIO,
+    snx::DenseMap<Vector2I, FogStateId>& fogsIO,
     Vector2I const& heroPosition,
     int octant,
     int visionRange,
@@ -297,7 +297,7 @@ namespace VisibilitySystem
 {
     Tiles const& calculateVisibilities(
         Tiles& tiles,
-        snx::DenseMap<Vector2I, Fog>& fogsIO,
+        snx::DenseMap<Vector2I, FogStateId>& fogsIO,
         RectangleExI const& viewportInTiles,
         Vector2I const& heroPosition,
         int visionRange

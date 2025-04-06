@@ -44,7 +44,6 @@ enum class InputId;
 
 namespace HeroModule
 {
-    //* Return if multi-frame action taken
     [[nodiscard]]
     Hero const& executeAction(
         Hero& hero,

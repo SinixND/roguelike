@@ -8,11 +8,10 @@
 #include "raylibEx.h"
 #include <unordered_set>
 
-class Tiles
+struct Tiles
 {
-    snx::IdManager idManager_{};
+    static inline snx::IdManager idManager_{};
 
-public:
     snx::DenseMap<Vector2I, size_t> ids{};
 
     snx::DenseMap<size_t, Vector2> positions{};
@@ -22,15 +21,18 @@ public:
     std::unordered_set<size_t> isOpaques{};
 
     RectangleExI mapSize{};
+};
 
-public:
-    void insert(
+namespace TilesModule
+{
+    [[nodiscard]]
+    Tiles const& insert(
+        Tiles& tiles,
         Vector2I const& tilePosition,
         RenderId renderId,
         bool isSolid = false,
         bool isOpaque = false,
         VisibilityId visibilityId = VisibilityId::INVISIBLE
     );
-};
-
+}
 #endif

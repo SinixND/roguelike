@@ -10,11 +10,10 @@ struct Vector2;
 enum class RenderId;
 enum class EventId;
 
-class Objects
+struct Objects
 {
-    snx::IdManager idManager_{};
+    static inline snx::IdManager idManager_{};
 
-public:
     snx::DenseMap<Vector2I, size_t> ids{};
 
     snx::DenseMap<size_t, Vector2> positions{};
@@ -22,15 +21,18 @@ public:
     snx::DenseMap<size_t, std::string> names{};
     snx::DenseMap<size_t, std::string> actions{};
     snx::DenseMap<size_t, EventId> eventIds{};
+};
 
-public:
-    void insert(
+namespace ObjectsModule
+{
+    [[nodiscard]]
+    Objects const& insert(
+        Objects& objects,
         Vector2I const& tilePosition,
         std::string const& name,
         std::string const& action,
         RenderId renderId,
         EventId event
     );
-};
-
+}
 #endif

@@ -6,7 +6,7 @@
 #include <vector>
 
 /// World holds maps which are identified by a mapLevel (int)
-class World
+struct World
 {
 #if defined( DEBUG )
     std::vector<Map> maps_{ MapGeneratorSystem::createTestRoom() };
@@ -16,19 +16,25 @@ class World
 
     int maxMapLevel_{};
 
-public:
     int currentMapLevel{};
-    Map* currentMap{};
-
-public:
-    World();
-
-    void increaseMapLevel();
-    void decreaseMapLevel();
-
-private:
-    void addNewMap();
-    void setCurrentMap( int mapLevel );
+    Map* currentMap{ &maps_.back() };
 };
 
+namespace WorldModule
+{
+    [[nodiscard]]
+    World const& increaseMapLevel( World& world );
+
+    [[nodiscard]]
+    World const& decreaseMapLevel( World& world );
+
+    [[nodiscard]]
+    World const& addNewMap( World& world );
+
+    [[nodiscard]]
+    World const& activateCurrentMap(
+        World& world,
+        int mapLevel
+    );
+}
 #endif

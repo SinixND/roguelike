@@ -16,13 +16,12 @@
 
 struct Vector2I;
 struct Map;
-class Tiles;
+struct Tiles;
 
-class Enemies
+struct Enemies
 {
-    snx::IdManager idManager_{};
+    static inline snx::IdManager idManager_{};
 
-public:
     snx::DenseMap<Vector2I, size_t> ids{};
 
     snx::DenseMap<size_t, AIComponent> ais{};
@@ -36,9 +35,13 @@ public:
     snx::DenseMap<size_t, DamageComponent> damages{};
     snx::DenseMap<size_t, ExperienceComponent> experiences{};
     snx::DenseMap<size_t, AttributesComponent> attributes{};
+};
 
-public:
-    void insert(
+namespace EnemiesModule
+{
+    [[nodiscard]]
+    Enemies const& insert(
+        Enemies& enemies,
         TransformComponent const& transform,
         MovementComponent const& movement,
         EnergyComponent const& energy,
@@ -52,11 +55,12 @@ public:
         RenderId renderId
     );
 
-    void remove( size_t id );
-};
+    [[nodiscard]]
+    Enemies const& remove(
+        Enemies& enemies,
+        size_t id
+    );
 
-namespace EnemiesModule
-{
     [[nodiscard]]
     Enemies const& createAtPosition(
         Enemies& enemies,

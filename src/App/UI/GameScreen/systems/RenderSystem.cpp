@@ -4,7 +4,7 @@
 
 #include "Chunk.h"
 #include "ChunkData.h"
-#include "Fog.h"
+#include "FogStateId.h"
 #include "GameFont.h"
 #include "GamePanels.h"
 #include "Hero.h"
@@ -128,13 +128,13 @@ namespace RenderSystem
 
     void renderFog(
         Vector2 const& fogPosition,
-        Fog fog
+        FogStateId fog
     )
     {
         Color tint{};
 
 #if defined( DEBUG )
-        if ( fog == Fog::OPAQUE )
+        if ( fog == FogStateId::OPAQUE )
         {
             tint = ColorAlpha( RED, 0.5f );
         }
@@ -144,7 +144,7 @@ namespace RenderSystem
             tint = ColorAlpha( BLUE, 0.5f );
         }
 #else
-        if ( fog == Fog::OPAQUE )
+        if ( fog == FogStateId::OPAQUE )
         {
             tint = BLACK;
         }

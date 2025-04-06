@@ -29,59 +29,6 @@
 #include "Debugger.h"
 #endif
 
-void Enemies::insert(
-    TransformComponent const& transform,
-    MovementComponent const& movement,
-    EnergyComponent const& energy,
-    HealthComponent const& health,
-    DamageComponent const& damage,
-    int vitality,
-    int agility,
-    Vector2I const& tilePosition,
-    int scanRange,
-    int expLevel,
-    RenderId renderId
-)
-{
-    size_t id{ idManager_.requestId() };
-
-    ids.insert( tilePosition, id );
-    ais.insert( id, AIComponent{ .scanRange = scanRange } );
-    positions.insert( id, Convert::tileToWorld( tilePosition ) );
-    renderIds.insert( id, renderId );
-    names.insert( id, renderNames.at( renderId ) );
-    transforms.insert( id, transform );
-    movements.insert( id, movement );
-    energies.insert( id, energy );
-    healths.insert( id, health );
-    damages.insert( id, damage );
-    experiences.insert( id, ExperienceComponent{} );
-    attributes.insert( id, AttributesComponent{
-                               vitality,
-                               agility,
-                           } );
-
-    experiences.at( id ) = ExperienceSystem::levelUpTo(
-        experiences.at( id ),
-        expLevel
-    );
-}
-
-void Enemies::remove( size_t id )
-{
-    ids.erase( Convert::worldToTile( positions.at( id ) ) );
-    ais.erase( id );
-    positions.erase( id );
-    renderIds.erase( id );
-    names.erase( id );
-    transforms.erase( id );
-    movements.erase( id );
-    energies.erase( id );
-    healths.erase( id );
-    damages.erase( id );
-    experiences.erase( id );
-}
-
 bool isSpawnPositionValid(
     Tiles const& tiles,
     snx::DenseMap<Vector2I, size_t> const& enemiesIds,
@@ -156,6 +103,67 @@ EnemiesData::EnemyData getEnemyData( RenderId renderId )
 
 namespace EnemiesModule
 {
+    Enemies const& insert(
+        Enemies& enemies,
+        TransformComponent const& transform,
+        MovementComponent const& movement,
+        EnergyComponent const& energy,
+        HealthComponent const& health,
+        DamageComponent const& damage,
+        int vitality,
+        int agility,
+        Vector2I const& tilePosition,
+        int scanRange,
+        int expLevel,
+        RenderId renderId
+    )
+    {
+        size_t id{ Enemies::idManager_.requestId() };
+
+        enemies.ids.insert( tilePosition, id );
+        enemies.ais.insert( id, AIComponent{ .scanRange = scanRange } );
+        enemies.positions.insert( id, Convert::tileToWorld( tilePosition ) );
+        enemies.renderIds.insert( id, renderId );
+        enemies.names.insert( id, renderNames.at( renderId ) );
+        enemies.transforms.insert( id, transform );
+        enemies.movements.insert( id, movement );
+        enemies.energies.insert( id, energy );
+        enemies.healths.insert( id, health );
+        enemies.damages.insert( id, damage );
+        enemies.experiences.insert( id, ExperienceComponent{} );
+        enemies.attributes.insert( id, AttributesComponent{
+                                           vitality,
+                                           agility,
+                                       } );
+
+        enemies.experiences.at( id ) = ExperienceSystem::levelUpTo(
+            enemies.experiences.at( id ),
+            expLevel
+        );
+
+        return enemies;
+    }
+
+    Enemies const& remove(
+        Enemies& enemies,
+        size_t id
+    )
+    {
+        enemies.ids.erase( Convert::worldToTile( enemies.positions.at( id ) ) );
+        enemies.ais.erase( id );
+        enemies.positions.erase( id );
+        enemies.renderIds.erase( id );
+        enemies.names.erase( id );
+        enemies.transforms.erase( id );
+        enemies.movements.erase( id );
+        enemies.energies.erase( id );
+        enemies.healths.erase( id );
+        enemies.damages.erase( id );
+        enemies.experiences.erase( id );
+
+        return enemies;
+    }
+
     Enemies const& createAtPosition(
         Enemies& enemies,
         Tiles const& tiles,
@@ -176,7 +184,8 @@ namespace EnemiesModule
         EnemiesData::EnemyData enemyData{ getEnemyData( renderId ) };
 
         //* Use mapLevel as expLevel for created enemies
-        enemies.insert(
+        enemies = insert(
+            enemies,
             TransformComponent{},
             MovementComponent{},
             EnergyComponent{},
@@ -289,7 +298,10 @@ namespace EnemiesModule
             }
 
             snx::Logger::log( enemies.names[idx] + " died.\n" );
-            enemies.remove( enemies.ids[idx]
+
+            enemies = remove(
+                enemies,
+                enemies.ids[idx]
             );
 
             //* Spawn new enemy

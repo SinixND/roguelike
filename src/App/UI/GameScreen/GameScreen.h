@@ -7,7 +7,7 @@
 #include "LevelUpOverlay.h"
 #include "RenderData.h"
 
-class World;
+struct World;
 struct Map;
 struct GameCamera;
 struct Hero;
