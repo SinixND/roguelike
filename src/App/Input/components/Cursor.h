@@ -27,4 +27,5 @@ namespace CursorModule
         Vector2I const& heroPosition
     );
 }
+
 #endif

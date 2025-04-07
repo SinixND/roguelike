@@ -10,7 +10,7 @@
 #include "EventId.h"
 #include "Game.h"
 #include "GameFont.h"
-#include "InputHandler.h"
+#include "Input.h"
 #include "InputId.h"
 #include "VisibilitySystem.h"
 #include <raygui.h>
@@ -107,7 +107,7 @@ void updateDeveloperMode()
     }
 }
 
-InputId getUserInput( InputHandler& inputHandler )
+InputId getUserInput( Input& inputHandler )
 {
     InputId inputId{};
 
@@ -147,14 +147,13 @@ void updateApp( void* arg )
 
     if ( app.inputHandler.currentInputId == InputId::TOGGLE_CURSOR )
     {
-        app.inputHandler.toggleCursorState();
-        snx::EventDispatcher::notify( EventId::CURSOR_TOGGLE );
+        app.inputHandler.cursor = CursorModule::toggle( app.inputHandler.cursor );
     }
 
     app.dt = GetFrameTime();
 
-    app.cursor = CursorModule::update(
-        app.cursor,
+    app.inputHandler.cursor = CursorModule::update(
+        app.inputHandler.cursor,
         app.gameCamera.camera,
         Convert::worldToTile( app.game.hero.position )
     );
@@ -167,14 +166,14 @@ void updateApp( void* arg )
             app.game = GameModule::update(
                 app.game,
                 app.gameCamera,
-                app.cursor,
+                app.inputHandler.cursor,
                 app.inputHandler.currentInputId,
                 app.dt
             );
 
             app.screens.game.update(
                 app.game,
-                app.cursor,
+                app.inputHandler.cursor,
                 app.gameCamera,
                 app.inputHandler.currentInputId
             );
@@ -298,14 +297,6 @@ void App::setupAppEvents()
         }
     );
 #endif
-    snx::EventDispatcher::addListener(
-        EventId::CURSOR_TOGGLE,
-        [&]()
-        {
-            cursor = CursorModule::toggle( cursor );
-        }
-    );
-
     snx::EventDispatcher::addListener(
         EventId::WINDOW_RESIZED,
         [&]()

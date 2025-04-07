@@ -1,4 +1,4 @@
-#include "InputHandler.h"
+#include "Input.h"
 
 // #define DEBUG_GESTURES
 
@@ -14,7 +14,7 @@
 #include "Logger.h"
 #endif
 
-InputId InputHandler::fromKeyboard()
+InputId Input::fromKeyboard()
 {
     //* Update key pressed
     //* Set lastKey only to valid inputs (associated with actions)
@@ -51,7 +51,7 @@ InputId InputHandler::fromKeyboard()
     return mappings.keyboardToInput.at( currentKey_ );
 }
 
-InputId InputHandler::fromMouse()
+InputId Input::fromMouse()
 {
     InputId inputId{ InputId::NONE };
 
@@ -60,7 +60,7 @@ InputId InputHandler::fromMouse()
               MOUSE_BUTTON_RIGHT
           } )
     {
-        if ( ( isCursorActive_
+        if ( ( cursor.isActive
                || mappings.mouseToInput.at( mouseButton ) == InputId::TOGGLE_CURSOR )
              && IsMouseButtonPressed( mouseButton ) )
         {
@@ -71,14 +71,9 @@ InputId InputHandler::fromMouse()
     return inputId;
 }
 
-InputId InputHandler::fromGesture()
+InputId Input::fromGesture()
 {
     InputId inputId{ InputId::NONE };
-
-    // if ( isCursorActive_ )
-    // {
-    //     return inputId;
-    // }
 
     //* IMPORTANT NOTE:
     //* Implemented events TAP, DOUBLETAP and HOLD as raylib gesture registration was unreliable
@@ -123,7 +118,7 @@ InputId InputHandler::fromGesture()
 #endif
                         inputId = InputId::ACT_IN_PLACE;
                     }
-                    else if ( isCursorActive_
+                    else if ( cursor.isActive
                               && touchHoldDuration_ < InputData::MAX_TAP_TIME )
                     {
 #if defined( DEBUG ) && defined( DEBUG_GESTURE_EVENTS )
@@ -180,7 +175,7 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered first GESTURE_DRAG\n" );
                 snx::Debugger::cliLog( "Triggered first GESTURE_DRAG\n" );
 #endif
-                if ( isCursorActive_ )
+                if ( cursor.isActive )
                 {
                     break;
                 }
@@ -218,7 +213,7 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered GESTURE_SWIPE_UP\n" );
                 snx::Debugger::cliLog( "Triggered GESTURE_SWIPE_UP\n" );
 #endif
-                if ( isCursorActive_ )
+                if ( cursor.isActive )
                 {
                     break;
                 }
@@ -234,7 +229,7 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered GESTURE_SWIPE_LEFT\n" );
                 snx::Debugger::cliLog( "Triggered GESTURE_SWIPE_LEFT\n" );
 #endif
-                if ( isCursorActive_ )
+                if ( cursor.isActive )
                 {
                     break;
                 }
@@ -250,7 +245,7 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered GESTURE_SWIPE_DOWN\n" );
                 snx::Debugger::cliLog( "Triggered GESTURE_SWIPE_DOWN\n" );
 #endif
-                if ( isCursorActive_ )
+                if ( cursor.isActive )
                 {
                     break;
                 }
@@ -266,7 +261,7 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered GESTURE_SWIPE_RIGHT\n" );
                 snx::Debugger::cliLog( "Triggered GESTURE_SWIPE_RIGHT\n" );
 #endif
-                if ( isCursorActive_ )
+                if ( cursor.isActive )
                 {
                     break;
                 }
@@ -335,7 +330,7 @@ InputId InputHandler::fromGesture()
                 snx::Logger::log( "Triggered GESTURE_DRAG\n" );
                 snx::Debugger::cliLog( "Triggered GESTURE_DRAG\n" );
 #endif
-                if ( isCursorActive_ )
+                if ( cursor.isActive )
                 {
                     break;
                 }
@@ -372,7 +367,3 @@ InputId InputHandler::fromGesture()
     return inputId;
 }
 
-void InputHandler::toggleCursorState()
-{
-    isCursorActive_ = !isCursorActive_;
-}

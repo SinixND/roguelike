@@ -151,7 +151,6 @@ void setupGameEvents(
         [&]()
         {
             game.state = GameState::DEFAULT;
-            //* TODO: Update stats
         }
     );
 }

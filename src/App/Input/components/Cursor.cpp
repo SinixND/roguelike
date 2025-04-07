@@ -27,23 +27,23 @@ namespace CursorModule
         Vector2I const& heroPosition
     )
     {
-        //* Update cursor position if active
-        if ( cursor.isActive )
+        //* Keep cursor on hero if inactive
+        if ( !cursor.isActive )
         {
-            Vector2I mouseTile{ Convert::screenToTile( GetMousePosition(), camera ) };
-
-            if ( !( Convert::worldToTile( cursor.position ) == mouseTile ) )
-            {
-                cursor.position = Convert::tileToWorld( mouseTile );
-
-                snx::EventDispatcher::notify( EventId::CURSOR_POSITION_CHANGED );
-            }
+            cursor.position = Convert::tileToWorld( heroPosition );
 
             return cursor;
         }
 
-        //* Keep cursor on hero if inactive
-        cursor.position = Convert::tileToWorld( heroPosition );
+        //* Update cursor position if active
+        Vector2I mouseTile{ Convert::screenToTile( GetMousePosition(), camera ) };
+
+        if ( !( Convert::worldToTile( cursor.position ) == mouseTile ) )
+        {
+            cursor.position = Convert::tileToWorld( mouseTile );
+
+            snx::EventDispatcher::notify( EventId::CURSOR_POSITION_CHANGED );
+        }
 
         return cursor;
     }

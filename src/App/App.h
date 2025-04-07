@@ -1,10 +1,9 @@
 #ifndef IG20240519210141
 #define IG20240519210141
 
-#include "Cursor.h"
 #include "Game.h"
 #include "GameCamera.h"
-#include "InputHandler.h"
+#include "Input.h"
 #include "Screens.h"
 #include <raylib.h>
 
@@ -21,12 +20,11 @@ public:
 
 public:
     Game game{};
-    InputHandler inputHandler{};
+    Input inputHandler{};
     float dt{ 0 };
 
     Screens screens{};
     GameCamera gameCamera{};
-    Cursor cursor{};
 
     App::StateId stateId{ App::StateId::GAME_RUNNING };
 
