@@ -38,7 +38,7 @@ namespace MovementSystem
         MovementComponent& movementIO
     );
 
-    //* Sets direction, currentVelocity and isTriggered_
+    //* Sets direction, currentVelocity and isTriggered
     [[nodiscard]]
     TransformComponent const& prepareByFromTo(
         TransformComponent& transform,

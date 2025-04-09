@@ -6,7 +6,7 @@ namespace WorldModule
 {
     World const& addNewMap( World& world )
     {
-        world.maps_.push_back( MapGeneratorSystem::createRandomMapType( world.maxMapLevel_ ) );
+        world.maps.push_back( MapGeneratorSystem::createRandomMapType( world.maxMapLevel ) );
 
         return world;
     }
@@ -16,16 +16,16 @@ namespace WorldModule
         int mapLevel
     )
     {
-        world.currentMap = &world.maps_[mapLevel];
+        world.currentMap = &world.maps[mapLevel];
 
         return world;
     }
 
     World const& increaseMapLevel( World& world )
     {
-        if ( world.currentMapLevel == world.maxMapLevel_ )
+        if ( world.currentMapLevel == world.maxMapLevel )
         {
-            ++world.maxMapLevel_;
+            ++world.maxMapLevel;
             world = addNewMap( world );
         }
 

@@ -14,6 +14,7 @@
 #include "GameCamera.h"
 #include "GameState.h"
 #include "Hero.h"
+#include "InputId.h"
 #include "MovementSystem.h"
 #include "Objects.h"
 #include "RenderId.h"

@@ -20,7 +20,7 @@ struct Tiles;
 
 struct Enemies
 {
-    static inline snx::IdManager idManager_{};
+    static inline snx::IdManager idManager{};
 
     snx::DenseMap<Vector2I, size_t> ids{};
 

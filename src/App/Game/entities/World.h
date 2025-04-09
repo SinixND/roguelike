@@ -9,15 +9,15 @@
 struct World
 {
 #if defined( DEBUG )
-    std::vector<Map> maps_{ MapGeneratorSystem::createTestRoom() };
+    std::vector<Map> maps{ MapGeneratorSystem::createTestRoom() };
 #else
-    std::vector<Map> maps_{ MapGeneratorSystem::createStartRoom() };
+    std::vector<Map> maps{ MapGeneratorSystem::createStartRoom() };
 #endif
 
-    int maxMapLevel_{};
+    int maxMapLevel{};
 
     int currentMapLevel{};
-    Map* currentMap{ &maps_.back() };
+    Map* currentMap{ &maps.back() };
 };
 
 namespace WorldModule

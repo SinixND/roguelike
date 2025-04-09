@@ -20,7 +20,7 @@ public:
 
 public:
     Game game{};
-    Input inputHandler{};
+    Input input{};
     float dt{ 0 };
 
     Screens screens{};

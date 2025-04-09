@@ -143,17 +143,17 @@ void updateApp( void* arg )
     snx::Debugger::gcam() = app.gameCamera;
 #endif
 
-    app.inputHandler.currentInputId = getUserInput( app.inputHandler );
+    app.input.currentInputId = getUserInput( app.input );
 
-    if ( app.inputHandler.currentInputId == InputId::TOGGLE_CURSOR )
+    if ( app.input.currentInputId == InputId::TOGGLE_CURSOR )
     {
-        app.inputHandler.cursor = CursorModule::toggle( app.inputHandler.cursor );
+        app.input.cursor = CursorModule::toggle( app.input.cursor );
     }
 
     app.dt = GetFrameTime();
 
-    app.inputHandler.cursor = CursorModule::update(
-        app.inputHandler.cursor,
+    app.input.cursor = CursorModule::update(
+        app.input.cursor,
         app.gameCamera.camera,
         Convert::worldToTile( app.game.hero.position )
     );
@@ -166,16 +166,16 @@ void updateApp( void* arg )
             app.game = GameModule::update(
                 app.game,
                 app.gameCamera,
-                app.inputHandler.cursor,
-                app.inputHandler.currentInputId,
+                app.input.cursor,
+                app.input.currentInputId,
                 app.dt
             );
 
             app.screens.game.update(
                 app.game,
-                app.inputHandler.cursor,
+                app.input.cursor,
                 app.gameCamera,
-                app.inputHandler.currentInputId
+                app.input.currentInputId
             );
 
             break;

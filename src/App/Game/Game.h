@@ -3,22 +3,19 @@
 
 #include "GameState.h"
 #include "Hero.h"
-#include "InputId.h"
 #include "World.h"
 
 struct Cursor;
 struct GameCamera;
+enum class InputId;
 
 struct Game
 {
     Hero hero{};
-
     World world{};
+    size_t turn{ 1 };
 
     GameState state{ GameState::DEFAULT };
-
-    //* Track game turns
-    size_t turn{ 1 };
 
     size_t activeEnemyId{ 0 };
     int selectedAttribute{ 0 };

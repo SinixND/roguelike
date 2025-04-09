@@ -22,7 +22,7 @@ namespace TilesModule
         //* Check if id exists to avoid usage of new id for existing tilePosition
         size_t id = ( tiles.ids.contains( tilePosition ) )
                         ? tiles.ids.at( tilePosition )
-                        : Tiles::idManager_.requestId();
+                        : Tiles::idManager.requestId();
 
         tiles.ids.insert_or_assign( tilePosition, id );
 

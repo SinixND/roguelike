@@ -118,7 +118,7 @@ namespace EnemiesModule
         RenderId renderId
     )
     {
-        size_t id{ Enemies::idManager_.requestId() };
+        size_t id{ Enemies::idManager.requestId() };
 
         enemies.ids.insert( tilePosition, id );
         enemies.ais.insert( id, AIComponent{ .scanRange = scanRange } );
