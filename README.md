@@ -1,9 +1,7 @@
 # TODOs
 ## Active 
-- [ ] Check layer/hierarchy (ECS based)
-    - Modules, entities, systems, data, configs
-    - [ ] Use ECS to manage components (=game state?)
-- [ ] Check EventSystem: instead of running system every frame, it gets triggered by an event (no need to pass information)
+- [ ] Split gameLoop in phases/states
+- [ ] Decouple systems with components -> ECS
 - [ ] Design (Nystrom): 
     - gainEnergy(); if isReady doYourThing()
     - WalkAction() -> Result triggers action (eg. attack) 

@@ -15,11 +15,10 @@ struct Game
     World world{};
     size_t turn{ 1 };
 
-    GameState state{ GameState::DEFAULT };
+    GameState state{ GameState::IDLE };
 
     size_t activeEnemyId{ 0 };
     int selectedAttribute{ 0 };
-    bool isMultiFrameActionActive{ false };
 };
 
 namespace GameModule

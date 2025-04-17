@@ -3,7 +3,14 @@
 
 enum class GameState
 {
-    DEFAULT,
+    DEFAULT_OLD,
+    LEVEL_UP_OLD,
+    REGEN,
+    //* Update single frame systems
+    IDLE,
+    //* Update multi frame systems
+    BUSY,
+    TURN_END,
     LEVEL_UP,
 };
 

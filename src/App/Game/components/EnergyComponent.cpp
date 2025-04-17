@@ -1,4 +1,5 @@
 #include "EnergyComponent.h"
+#include "EnergyData.h"
 
 #include <cassert>
 
@@ -16,18 +17,13 @@ namespace EnergyModule
     )
     {
         //* Can't consume if not ready
-        if ( !energy.isReady )
+        if ( energy.current < 0 )
         {
             return energy;
         }
 
         //* Consume energy
-        energy.current -= ENERGY_REGEN_MAX * multiplier;
-
-        if ( ( energy.current < 0 ) )
-        {
-            energy.isReady = false;
-        }
+        energy.current -= EnergyData::ENERGY_REGEN_MAX * multiplier;
 
         return energy;
     }
@@ -35,7 +31,7 @@ namespace EnergyModule
     EnergyComponent const& exhaust( EnergyComponent& energy )
     {
         //* Can't consume if not ready
-        if ( !energy.isReady )
+        if ( energy.current < 0 )
         {
             return energy;
         }
@@ -51,31 +47,24 @@ namespace EnergyModule
         return energy;
     }
 
-    bool regenerate( EnergyComponent& energyIO )
+    EnergyComponent const& regenerate( EnergyComponent& energy )
     {
-        //* If already full
-        if ( !( energyIO.current < 0 ) )
+        //* If not already full
+        if ( energy.current < 0 )
         {
 #if defined( DEBUG ) && defined( DEBUG_ENERGY )
-            snx::Debugger::cliPrint( "Energy is full.\n" );
+            snx::Debugger::cliPrint( "Regen ", energyIO.current, "+", energyIO.regenRate, "\n" );
 #endif
-            return true;
+
+            //* Regen energy until full
+            energy.current += energy.regenRate;
         }
 
-        //* Regen energy until full
-#if defined( DEBUG ) && defined( DEBUG_ENERGY )
-        snx::Debugger::cliPrint( "Regen ", energyIO.current, "+", energyIO.regenRate, "\n" );
-#endif
-        energyIO.current += energyIO.regenRate;
+        // #if defined( DEBUG ) && defined( DEBUG_ENERGY )
+        //         snx::Debugger::cliPrint( "Energy is full.\n" );
+        // #endif
 
-        if ( energyIO.current < 0 )
-        {
-            return false;
-        }
-
-        energyIO.isReady = true;
-
-        return true;
+        return energy;
     }
 }
 

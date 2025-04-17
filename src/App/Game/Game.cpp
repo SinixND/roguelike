@@ -51,7 +51,8 @@ void setupGameEvents(
         EventId::MULTIFRAME_ACTION_ACTIVE,
         [&]()
         {
-            game.isMultiFrameActionActive = true;
+            // game.isMultiFrameActionActive = true;
+            game.state = GameState::BUSY;
         }
     );
 
@@ -59,7 +60,8 @@ void setupGameEvents(
         EventId::MULTIFRAME_ACTION_DONE,
         [&]()
         {
-            game.isMultiFrameActionActive = false;
+            // game.isMultiFrameActionActive = false;
+            game.state = GameState::TURN_END;
         }
     );
 
@@ -136,6 +138,7 @@ void setupGameEvents(
         [&]()
         {
             ++game.turn;
+            snx::Logger::incrementTurn();
         }
     );
 
@@ -143,7 +146,7 @@ void setupGameEvents(
         EventId::LEVEL_UP,
         [&]()
         {
-            game.state = GameState::LEVEL_UP;
+            game.state = GameState::LEVEL_UP_OLD;
         }
     );
 
@@ -151,7 +154,7 @@ void setupGameEvents(
         EventId::LEVELED_UP,
         [&]()
         {
-            game.state = GameState::DEFAULT;
+            game.state = GameState::DEFAULT_OLD;
         }
     );
 }
@@ -330,7 +333,6 @@ Game const& updateGameLogic(
 #endif
     while ( !isUnitReady )
     {
-        //* Unit is ready when regenerate is _not_ successful
         isUnitReady = EnergyModule::regenerate( game.hero.energy );
         isUnitReady |= EnemiesModule::regenerate( game.world.currentMap->enemies.energies );
     }
@@ -508,10 +510,35 @@ namespace GameModule
         float dt
     )
     {
+        Hero& hero{ game.hero };
+        Enemies& enemies{ game.world.currentMap->enemies };
+
         switch ( game.state )
         {
+            case GameState::REGEN:
+            {
+                //* Regen system
+
+                break;
+            }
+            case GameState::IDLE:
+            {
+                //* Action system
+                break;
+            }
+            case GameState::BUSY:
+            {
+                //* Single fram systems
+                //* Multi frame systems
+                break;
+            }
+            case GameState::TURN_END:
+            {
+                break;
+            }
+
             default:
-            case GameState::DEFAULT:
+            case GameState::DEFAULT_OLD:
             {
                 game = updateGameLogic(
                     game,
@@ -524,7 +551,7 @@ namespace GameModule
                 break;
             }
 
-            case GameState::LEVEL_UP:
+            case GameState::LEVEL_UP_OLD:
             {
                 game = updateLevelUpLogic(
                     game,
