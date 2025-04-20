@@ -13,28 +13,26 @@
 
 struct Hero
 {
-    MovementComponent movement{};
-
+    //* Persistent components
     AttributesComponent attributes{};
-
-    TransformComponent transform{};
-
     EnergyComponent energy{};
-
     HealthComponent health{
         HeroData::HEALTH_BASE,
         HeroData::HEALTH_REGEN_BASE,
     };
-
     ExperienceComponent experience{};
-
     DamageComponent damage{ HeroData::DAMAGE_BASE };
-
     Vector2 position{};
-
     RenderId renderId{ RenderId::HERO };
-
     int visionRange{ HeroData::VISION_RANGE };
+
+    //* Optional components
+    //* Old
+    //* TODO: CHANGE/REMOVE
+    TransformComponent transform{};
+    MovementComponent movement{};
+    //* New
+    bool isReady{};
 };
 
 struct Map;

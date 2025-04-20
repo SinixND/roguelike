@@ -220,7 +220,7 @@ void GameScreen::update(
     );
 
     //* Handle overlay
-    if ( game.state == GameState::LEVEL_UP )
+    if ( game.state == GameState::LEVEL_UP_OLD )
     {
         levelUpOverlay.update( game );
     }

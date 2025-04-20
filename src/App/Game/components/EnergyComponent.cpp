@@ -51,6 +51,7 @@ namespace EnergyModule
         return energy;
     }
 
+    //* TODO: CHANGE/REMOVE
     bool regenerate( EnergyComponent& energyIO )
     {
         //* If already full

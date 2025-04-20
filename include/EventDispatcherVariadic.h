@@ -4,16 +4,18 @@
 
 enum class EventId;
 
-class ListenerBaseVirtual
+class IListener
 {
 public:
     virtual void onNotify() = 0;
-    virtual ~ListenerBaseVirtual() = default;
+    virtual ~IListener() = default;
 };
 
-using ListenerList = std::vector<std::unique_ptr<ListenerBaseVirtual>>;
+using ListenerList = std::vector<std::unique_ptr<IListener>>;
 
-class ConcreteListener;
+class ConcreteListener : public IListener
+{
+};
 
 class Dispatcher
 {
@@ -22,7 +24,7 @@ public:
 
     static void addListener(
         EventId eventId,
-        std::unique_ptr<ListenerBaseVirtual> listener
+        std::unique_ptr<IListener> listener
     )
     {
         eventToListenerList[eventId].push_back( std::move( listener ) );

@@ -7,6 +7,7 @@
 #include "DenseMap.h"
 #include "EnergyComponent.h"
 #include "ExperienceComponent.h"
+#include "FlagComponent.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
 #include "MovementComponent.h"
@@ -22,19 +23,26 @@ struct Enemies
 {
     static inline snx::IdManager idManager{};
 
+    //* Persistent components
     snx::DenseMap<Vector2I, size_t> ids{};
 
     snx::DenseMap<size_t, AIComponent> ais{};
     snx::DenseMap<size_t, Vector2> positions{};
     snx::DenseMap<size_t, RenderId> renderIds{};
     snx::DenseMap<size_t, std::string> names{};
-    snx::DenseMap<size_t, TransformComponent> transforms{};
-    snx::DenseMap<size_t, MovementComponent> movements{};
     snx::DenseMap<size_t, EnergyComponent> energies{};
     snx::DenseMap<size_t, HealthComponent> healths{};
     snx::DenseMap<size_t, DamageComponent> damages{};
     snx::DenseMap<size_t, ExperienceComponent> experiences{};
     snx::DenseMap<size_t, AttributesComponent> attributes{};
+
+    //* Optional components
+    //* Old
+    //* TODO: CHANGE/REMOVE
+    snx::DenseMap<size_t, TransformComponent> transforms{};
+    snx::DenseMap<size_t, MovementComponent> movements{};
+    //* New
+    snx::DenseMap<size_t, FlagComponent> isReadies{};
 };
 
 namespace EnemiesModule

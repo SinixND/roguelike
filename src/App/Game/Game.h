@@ -15,7 +15,7 @@ struct Game
     World world{};
     size_t turn{ 1 };
 
-    GameState state{ GameState::DEFAULT };
+    GameState state{ GameState::REGEN };
 
     size_t activeEnemyId{ 0 };
     int selectedAttribute{ 0 };
