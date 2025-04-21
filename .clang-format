@@ -85,6 +85,7 @@ BreakArrays:     true
 BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeConceptDeclarations: Always
 BreakBeforeBraces: Allman
+# BreakBeforeBraces: Attach
 BreakBeforeInlineASMColon: OnlyMultiline
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
@@ -131,6 +132,7 @@ IndentCaseBlocks: false
 IndentCaseLabels: true
 IndentExternBlock: AfterExternBlock
 IndentGotoLabels: true
+# IndentPPDirectives: BeforeHash
 IndentPPDirectives: None
 IndentRequiresClause: true
 IndentWidth:     4
@@ -223,6 +225,7 @@ SpacesInLineCommentPrefix:
   Maximum:         -1
 SpacesInParens:  Custom
 SpacesInParensOptions:
+  ExceptDoubleParentheses: true
   InCStyleCasts:   false
   InConditionalStatements: false
   InEmptyParentheses: false

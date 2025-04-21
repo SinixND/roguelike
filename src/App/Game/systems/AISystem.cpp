@@ -81,7 +81,7 @@ Enemies& executeAction(
                 path.rbegin()[1]
             );
         }
-        //* Path is "empty"
+        //* Path is "empty" or own position
         //* Wait
         else
         {

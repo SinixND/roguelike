@@ -5,9 +5,9 @@
 #include "AttributesComponent.h"
 #include "DamageComponent.h"
 #include "DenseMap.h"
+#include "EmptyComponent.h"
 #include "EnergyComponent.h"
 #include "ExperienceComponent.h"
-#include "FlagComponent.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
 #include "MovementComponent.h"
@@ -42,7 +42,7 @@ struct Enemies
     snx::DenseMap<size_t, TransformComponent> transforms{};
     snx::DenseMap<size_t, MovementComponent> movements{};
     //* New
-    snx::DenseMap<size_t, FlagComponent> isReadies{};
+    snx::DenseMap<size_t, EmptyComponent> isReadies{};
 };
 
 namespace EnemiesModule

@@ -3,6 +3,7 @@
 // #define DEBUG_GAME_LOOP
 
 #include "AISystem.h"
+#include "ActionSystem.h"
 #include "AttributeSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
@@ -530,6 +531,13 @@ namespace GameModule
             case GameState::IDLE:
             {
                 //* Action system
+                ActionSystem::update(
+                    game.hero,
+                    *game.world.currentMap,
+                    currentInputId,
+                    cursor,
+                    gameCamera
+                );
                 break;
             }
             case GameState::BUSY:

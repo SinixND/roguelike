@@ -4,11 +4,12 @@
 // #define DEBUG_ENERGY_SYSTEM
 
 #include "DenseMap.h"
+#include "EmptyComponent.h"
 #include "EnergyComponent.h"
 #include "EventDispatcher.h"
 #include "EventId.h"
-#include "FlagComponent.h"
 
+[[nodiscard]]
 EnergyComponent const& regenerate( EnergyComponent& energy )
 {
     //* If not already full
@@ -29,9 +30,9 @@ namespace EnergySystem
 {
     void udpate(
         EnergyComponent& heroEnergyIO,
-        bool& heroIsReadyIO,
+        bool& heroIsReadyOut,
         snx::DenseMap<size_t, EnergyComponent>& enemyEnergiesIO,
-        snx::DenseMap<size_t, FlagComponent>& enemyIsReadiesIO
+        snx::DenseMap<size_t, EmptyComponent>& enemyIsReadiesOut
     )
     {
         //* Regenerate energy until a unit becomes ready
@@ -52,7 +53,7 @@ namespace EnergySystem
 #if defined( DEBUG ) && defined( DEBUG_ENERGY_SYSTEM )
                 snx::Debugger::cliLog( "Hero ready. Next Turn.\n\n" );
 #endif
-                heroIsReadyIO = true;
+                heroIsReadyOut = true;
 
                 snx::EventDispatcher::notify( EventId::NEXT_TURN );
 
@@ -72,7 +73,7 @@ namespace EnergySystem
 #if defined( DEBUG ) && defined( DEBUG_ENERGY_SYSTEM )
                     snx::Debugger::cliPrint( ": is ready.\n\n" );
 #endif
-                    enemyIsReadiesIO.insert( enemyEnergiesIO.key( idx ) );
+                    enemyIsReadiesOut.insert( enemyEnergiesIO.key( idx ) );
 
                     isUnitReady = true;
                 }

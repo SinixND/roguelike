@@ -120,4 +120,17 @@ struct fFunctor
     }
 };
 ```
+# Git conventional commits
+```markdown
+// Subject line
+type(scope): desc
+// type:   change/feature/codestyle/structure/...
+// scope:  area of app that is changed
+// desc:   short description of solution **ONLY**
 
+// Body
+Explain what **and why**...
+
+// Optional footer
+
+```

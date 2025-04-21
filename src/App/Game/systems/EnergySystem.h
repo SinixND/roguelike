@@ -4,16 +4,16 @@
 #include "DenseMap.h"
 
 struct EnergyComponent;
-struct FlagComponent;
+struct EmptyComponent;
 
 namespace EnergySystem
 {
-    /// Regen energy until a unit becomes ready to act
+    /// Regen energy until a unit becomes ready to act and mark it as such
     void udpate(
         EnergyComponent& heroEnergyIO,
-        bool& heroIsReadyIO,
+        bool& heroIsReadyOut,
         snx::DenseMap<size_t, EnergyComponent>& enemyEnergiesIO,
-        snx::DenseMap<size_t, FlagComponent>& enemyIsReadiesIO
+        snx::DenseMap<size_t, EmptyComponent>& enemyIsReadiesOut
     );
 }
 

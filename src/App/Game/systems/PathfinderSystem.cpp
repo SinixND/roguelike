@@ -92,7 +92,6 @@ namespace AStarTileModule
 /// - not equal to start
 bool isTileValid(
     Vector2I const& targetToCheck,
-    Vector2I const& start,
     Tiles const& tiles,
     bool skipInvisibleTiles
 )
@@ -106,10 +105,8 @@ bool isTileValid(
 
     return !(
         tiles.isSolids.contains( tileId )
-        || ( skipInvisibleTiles
-             && ( tiles.visibilityIds.at( tileId ) == VisibilityId::INVISIBLE )
-        )
-        || ( start == targetToCheck )
+        || ( skipInvisibleTiles && ( tiles.visibilityIds.at( tileId ) == VisibilityId::INVISIBLE ) )
+        // || ( start == targetToCheck )
     );
 }
 
@@ -371,13 +368,19 @@ namespace PathfinderSystem
         //* Return empty path if target is invalid
         if ( !isTileValid(
                  target,
-                 start,
                  map.tiles,
                  skipInvisibleTiles
              ) )
         {
             return path;
         };
+
+        if ( start == target )
+        {
+            path.push_back( target );
+
+            return path;
+        }
 
         //* Create tile to start path from
         AStarTile firstTile{
