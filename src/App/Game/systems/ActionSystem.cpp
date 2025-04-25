@@ -2,6 +2,7 @@
 
 // #define DEBUG_HERO_ACTIONS
 
+#include "ActionId.h"
 #include "AttackComponent.h"
 #include "CollisionSystem.h"
 #include "Convert.h"
@@ -22,7 +23,32 @@
 #endif
 
 [[nodiscard]]
-Hero handleInputToTarget(
+Hero const& handleInputInPlace(
+    Hero& hero,
+    Map const& map
+)
+{
+    //* Interact (if object exists and has a event)
+    if ( map.objects.ids.contains( Convert::worldToTile( hero.position ) )
+         && map.objects.eventIds.contains( map.objects.ids.at( Convert::worldToTile( hero.position ) ) ) )
+    {
+        hero.action = std::make_shared<ActionId>( ActionId::INTERACT );
+
+        return hero;
+    }
+
+#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
+    snx::Debugger::cliLog( "Hero waits.\n" );
+#endif
+    snx::Logger::log( "Hero waits...\n" );
+
+    hero.action = std::make_shared<ActionId>( ActionId::WAIT );
+
+    return hero;
+}
+
+[[nodiscard]]
+Hero const& handleInputToAdjacentTarget(
     Hero& hero,
     Map const& map,
     Vector2I const& target
@@ -34,49 +60,42 @@ Hero handleInputToTarget(
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
         snx::Debugger::cliLog( "Add attack component to hero.\n" );
 #endif
-        hero.attack = std::make_shared<AttackComponent>( target );
+        hero.action = std::make_shared<ActionId>( ActionId::ATTACK );
 
-        return hero;
+        hero.attack = std::make_shared<AttackComponent>( target );
     }
 
+    return hero;
+}
+[[nodiscard]]
+Hero const& handleInputToDistantTarget(
+    Hero& hero,
+    Map const& map,
+    Vector2I const& target,
+    std::vector<Vector2I> const& path
+)
+{
     //* Move
-    else if ( map.tiles.isSolids.contains( map.tiles.ids.at( target ) ) )
+    if ( map.tiles.isSolids.contains( map.tiles.ids.at( target ) ) )
     {
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
         snx::Debugger::cliLog( "Add move component to hero\n" );
 #endif
 
-        hero.move = std::make_shared<MoveComponent>( target );
+        hero.action = std::make_shared<ActionId>( ActionId::MOVE );
+
+        hero.move = std::make_shared<MoveComponent>(
+            Vector2Subtract(
+                target,
+                Convert::worldToTile( hero.position )
+            )
+        );
+
+        hero.path = path;
+        hero.path.pop_back();
     }
 
     return hero;
-}
-
-[[nodiscard]]
-Hero handleInputInPlace(
-    Hero& hero,
-    Map const& map
-)
-{
-    //* Interact (if object exists and has a event)
-    if ( map.objects.ids.contains( Convert::worldToTile( hero.position ) )
-         && map.objects.eventIds.contains( map.objects.ids.at( Convert::worldToTile( hero.position ) ) ) )
-    {
-        hero.interact = std::make_shared<EmptyComponent>();
-
-        return hero;
-        ;
-    }
-
-#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
-    snx::Debugger::cliLog( "Hero waits.\n" );
-#endif
-    snx::Logger::log( "Hero waits...\n" );
-
-    hero.wait = std::make_shared<EmptyComponent>();
-
-    return hero;
-    ;
 }
 
 namespace ActionSystem
@@ -99,7 +118,7 @@ namespace ActionSystem
             default:
             case InputId::ACT_UP:
             {
-                heroIO = handleInputToTarget(
+                heroIO = handleInputToAdjacentTarget(
                     heroIO,
                     map,
                     Vector2Add(
@@ -113,7 +132,7 @@ namespace ActionSystem
 
             case InputId::ACT_LEFT:
             {
-                heroIO = handleInputToTarget(
+                heroIO = handleInputToAdjacentTarget(
                     heroIO,
                     map,
                     Vector2Add(
@@ -127,7 +146,7 @@ namespace ActionSystem
 
             case InputId::ACT_DOWN:
             {
-                heroIO = handleInputToTarget(
+                heroIO = handleInputToAdjacentTarget(
                     heroIO,
                     map,
                     Vector2Add(
@@ -141,7 +160,7 @@ namespace ActionSystem
 
             case InputId::ACT_RIGHT:
             {
-                heroIO = handleInputToTarget(
+                heroIO = handleInputToAdjacentTarget(
                     heroIO,
                     map,
                     Vector2Add(
@@ -172,15 +191,12 @@ namespace ActionSystem
 
                 else if ( path.size() > 1 )
                 {
-                    heroIO = handleInputToTarget(
+                    heroIO = handleInputToDistantTarget(
                         heroIO,
                         map,
-                        path.rbegin()[1]
+                        path.rbegin()[1],
+                        path
                     );
-
-                    path.pop_back();
-
-                    *heroIO.path = path;
                 }
 
                 break;

@@ -1,6 +1,7 @@
 // https://raw.githubusercontent.com/raysan5/raylib/master/examples/shaders/resources/shaders/glsl330/base.fs
 
 // FRAGMENT SHADER
+// := **How** things are drawn
 // Adds colors to pixels
 
 // Reqired 
@@ -11,7 +12,7 @@
 in vec2 fragTexCoord;
 in vec4 fragColor;
 
-// Input uniform values
+// Input uniform (const?) values
 uniform sampler2D texture0;
 uniform vec4 colDiffuse;
 
@@ -29,3 +30,5 @@ void main()
 
     finalColor = texelColor*colDiffuse;
 }
+
+// vim: set filetype=frag :

@@ -2,6 +2,8 @@
 #define IG20240909134010
 
 #include "AIComponent.h"
+#include "ActionId.h"
+#include "AttackComponent.h"
 #include "AttributesComponent.h"
 #include "DamageComponent.h"
 #include "DenseMap.h"
@@ -10,6 +12,7 @@
 #include "ExperienceComponent.h"
 #include "HealthComponent.h"
 #include "IdManager.h"
+#include "MoveComponent.h"
 #include "MovementComponent.h"
 #include "RenderId.h"
 #include "TransformComponent.h"
@@ -42,6 +45,10 @@ struct Enemies
     snx::DenseMap<size_t, TransformComponent> transforms{};
     snx::DenseMap<size_t, MovementComponent> movements{};
     //* New
+    snx::DenseMap<size_t, ActionId> actions{};
+    snx::DenseMap<size_t, AttackComponent> attacks{};
+    snx::DenseMap<size_t, MoveComponent> moves{};
+    snx::DenseMap<size_t, std::vector<Vector2I>> paths{};
     snx::DenseMap<size_t, EmptyComponent> isReadies{};
 };
 

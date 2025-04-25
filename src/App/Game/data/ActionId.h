@@ -3,11 +3,11 @@
 
 enum class ActionId
 {
-    NONE,
-    MOVE,
-    CONTINUE_MOVE,
-    STOP_MOVE,
+    NONE = 0,
     ATTACK,
+    INTERACT,
+    MOVE,
+    WAIT,
 };
 
 #endif

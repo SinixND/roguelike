@@ -1,6 +1,7 @@
 #ifndef IG20240531143458
 #define IG20240531143458
 
+#include "ActionId.h"
 #include "AttackComponent.h"
 #include "AttributesComponent.h"
 #include "DamageComponent.h"
@@ -37,11 +38,10 @@ struct Hero
     TransformComponent transform{};
     MovementComponent movement{};
     //* New
+    std::shared_ptr<ActionId> action{};
     std::shared_ptr<AttackComponent> attack{};
     std::shared_ptr<MoveComponent> move{};
-    std::shared_ptr<std::vector<Vector2I>> path{};
-    std::shared_ptr<EmptyComponent> interact{};
-    std::shared_ptr<EmptyComponent> wait{};
+    std::vector<Vector2I> path{};
     bool isReady{};
 };
 
@@ -52,6 +52,7 @@ enum class InputId;
 
 namespace HeroModule
 {
+    //* TODO: CHANGE/REMOVE
     [[nodiscard]]
     Hero const& executeAction(
         Hero& hero,
