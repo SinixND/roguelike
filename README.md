@@ -1,20 +1,14 @@
 # TODOs
 ## Active 
-- [ ] Check layer/hierarchy (ECS based)
-    - Modules, entities, systems, data, configs
-    - [ ] Use ECS to manage components (=game state?)
-- [ ] Check EventSystem: instead of running system every frame, it gets triggered by an event (no need to pass information)
-- [ ] Design (Nystrom): 
-    - gainEnergy(); if isReady doYourThing()
-    - WalkAction() -> Result triggers action (eg. attack) 
-        - Action objects? (Command pattern)
+- [ ] separate pathfinder (calculateVisiblePath, calculatePath)
+
+
+## Shortterm
 - [ ] Extend attributes/leveling
     - Possibility of classes: different starting distribution
     - And/Or change class if certain distribution threshold(s) met
 - [ ] Enemy scaling
 
-
-## Shortterm
 - [ ] Add inspection mode
 - [ ] Add AI behaviour with new enemy types
     - Simple types named after stats? (`Normal/Default/Standard`, `Strong`, `Quick`, `Healthy`)

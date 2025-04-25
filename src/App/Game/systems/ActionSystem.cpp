@@ -89,6 +89,11 @@ namespace ActionSystem
         GameCamera const& gameCamera
     )
     {
+        if ( !heroIO.isReady )
+        {
+            return;
+        }
+
         switch ( currentInput )
         {
             default:
