@@ -21,6 +21,7 @@
 #include "Objects.h"
 #include "RenderId.h"
 #include "VisibilitySystem.h"
+#include "WaitSystem.h"
 #include "World.h"
 #include "raylibEx.h"
 #include <Logger.h>
@@ -538,12 +539,25 @@ namespace GameModule
                     cursor,
                     gameCamera
                 );
+
+                game.state = GameState::BUSY;
+
                 break;
             }
             case GameState::BUSY:
             {
-                //* Single fram systems
+                //* Single frame systems
+                //* WaitSystem
+                WaitSystem::update(
+                    game.hero,
+                    game.world.currentMap->enemies
+                );
+                //* AttackSystem
+                //* InteractSystem
+
                 //* Multi frame systems
+                //* MoveSystem
+
                 break;
             }
             case GameState::TURN_END:

@@ -13,23 +13,17 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +534 src/App/Game/Game.cpp
-badd +57 ~/roguelike/src/App/Game/systems/ActionSystem.cpp
-badd +142 src/App/Game/systems/AISystem.cpp
-badd +0 ~/roguelike/src/App/Game/entities/Hero.h
+badd +550 src/App/Game/Game.cpp
+badd +12 ~/roguelike/src/App/Game/systems/WaitSystem.cpp
 argglobal
 %argdel
-edit src/App/Game/systems/AISystem.cpp
+edit src/App/Game/Game.cpp
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
 1wincmd h
-wincmd w
-wincmd _ | wincmd |
-split
-1wincmd k
 wincmd w
 let &splitbelow = s:save_splitbelow
 let &splitright = s:save_splitright
@@ -40,39 +34,10 @@ set winminheight=0
 set winheight=1
 set winminwidth=0
 set winwidth=1
-exe 'vert 1resize ' . ((&columns * 86 + 86) / 173)
-exe '2resize ' . ((&lines * 18 + 20) / 40)
-exe 'vert 2resize ' . ((&columns * 86 + 86) / 173)
-exe '3resize ' . ((&lines * 18 + 20) / 40)
-exe 'vert 3resize ' . ((&columns * 86 + 86) / 173)
+exe 'vert 1resize ' . ((&columns * 105 + 106) / 212)
+exe 'vert 2resize ' . ((&columns * 106 + 106) / 212)
 argglobal
-setlocal foldmethod=indent
-setlocal foldexpr=vimtex#fold#level(v:lnum)
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=99
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-30
-normal! zo
-39
-normal! zo
-107
-normal! zo
-let s:l = 142 - ((23 * winheight(0) + 18) / 37)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 142
-normal! 041|
-wincmd w
-argglobal
-if bufexists(fnamemodify("src/App/Game/systems/AISystem.cpp", ":p")) | buffer src/App/Game/systems/AISystem.cpp | else | edit src/App/Game/systems/AISystem.cpp | endif
-if &buftype ==# 'terminal'
-  silent file src/App/Game/systems/AISystem.cpp
-endif
-balt src/App/Game/Game.cpp
+balt ~/roguelike/src/App/Game/systems/WaitSystem.cpp
 setlocal foldmethod=indent
 setlocal foldexpr=vimtex#fold#level(v:lnum)
 setlocal foldmarker={{{,}}}
@@ -81,19 +46,18 @@ setlocal foldlevel=99
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal nofoldenable
-let s:l = 89 - ((7 * winheight(0) + 9) / 18)
+let s:l = 550 - ((23 * winheight(0) + 24) / 48)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 89
-normal! 0
+keepjumps 550
+normal! 021|
 wincmd w
 argglobal
-if bufexists(fnamemodify("~/roguelike/src/App/Game/entities/Hero.h", ":p")) | buffer ~/roguelike/src/App/Game/entities/Hero.h | else | edit ~/roguelike/src/App/Game/entities/Hero.h | endif
+if bufexists(fnamemodify("~/roguelike/src/App/Game/systems/WaitSystem.cpp", ":p")) | buffer ~/roguelike/src/App/Game/systems/WaitSystem.cpp | else | edit ~/roguelike/src/App/Game/systems/WaitSystem.cpp | endif
 if &buftype ==# 'terminal'
-  silent file ~/roguelike/src/App/Game/entities/Hero.h
+  silent file ~/roguelike/src/App/Game/systems/WaitSystem.cpp
 endif
-balt ~/roguelike/src/App/Game/systems/ActionSystem.cpp
 setlocal foldmethod=indent
 setlocal foldexpr=vimtex#fold#level(v:lnum)
 setlocal foldmarker={{{,}}}
@@ -102,18 +66,21 @@ setlocal foldlevel=99
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal nofoldenable
-let s:l = 40 - ((8 * winheight(0) + 9) / 18)
+10
+sil! normal! zo
+15
+sil! normal! zo
+22
+sil! normal! zo
+let s:l = 12 - ((11 * winheight(0) + 24) / 48)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 40
-normal! 0
+keepjumps 12
+normal! 018|
 wincmd w
-exe 'vert 1resize ' . ((&columns * 86 + 86) / 173)
-exe '2resize ' . ((&lines * 18 + 20) / 40)
-exe 'vert 2resize ' . ((&columns * 86 + 86) / 173)
-exe '3resize ' . ((&lines * 18 + 20) / 40)
-exe 'vert 3resize ' . ((&columns * 86 + 86) / 173)
+exe 'vert 1resize ' . ((&columns * 105 + 106) / 212)
+exe 'vert 2resize ' . ((&columns * 106 + 106) / 212)
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
@@ -129,7 +96,6 @@ if filereadable(s:sx)
 endif
 let &g:so = s:so_save | let &g:siso = s:siso_save
 set hlsearch
-nohlsearch
 doautoall SessionLoadPost
 unlet SessionLoad
 " vim: set ft=vim :

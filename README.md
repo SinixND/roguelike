@@ -1,5 +1,6 @@
 # TODOs
 ## Active 
+- [ ] duplicate info: isReady (energy.isReady and isReady to be iterated over in AISystem): Get rid of energy.isReady?
 - [ ] separate pathfinder (calculateVisiblePath, calculatePath)
 
 
