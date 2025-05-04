@@ -4,6 +4,7 @@
 
 #include "AISystem.h"
 #include "ActionSystem.h"
+#include "AttackSystem.h"
 #include "AttributeSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
@@ -547,16 +548,20 @@ namespace GameModule
             case GameState::BUSY:
             {
                 //* Single frame systems
-                //* WaitSystem
                 WaitSystem::update(
                     game.hero,
                     game.world.currentMap->enemies
                 );
-                //* AttackSystem
-                //* InteractSystem
+
+                AttackSystem::update(
+                    game.hero,
+                    game.world.currentMap->enemies
+                );
+
+                //* TODO: InteractSystem
 
                 //* Multi frame systems
-                //* MoveSystem
+                //* TODO: MoveSystem
 
                 break;
             }

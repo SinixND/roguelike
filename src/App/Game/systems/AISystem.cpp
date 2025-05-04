@@ -49,11 +49,6 @@ Enemies const& handleExisingPath(
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
         snx::Debugger::cliLog( "Add attack component to hero.\n" );
 #endif
-        enemies.actions.insert(
-            enemyId,
-            ActionId::ATTACK
-        );
-
         enemies.attacks.insert(
             enemyId,
             AttackComponent{ target }
@@ -68,7 +63,6 @@ Enemies const& handleExisingPath(
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
         snx::Debugger::cliLog( "Add move component to hero\n" );
 #endif
-
         enemies.moves.insert(
             enemyId,
             MoveComponent{ target }

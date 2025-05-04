@@ -15,6 +15,8 @@ namespace WaitSystem
         if ( *heroIO.action == ActionId::WAIT )
         {
             heroIO.energy = EnergyModule::exhaust( heroIO.energy );
+
+            heroIO.action.reset();
         }
 
         for ( size_t idx{ 0 }; idx < enemiesIO.actions.size(); ++idx )
@@ -24,6 +26,8 @@ namespace WaitSystem
             if ( enemiesIO.actions[idx] == ActionId::WAIT )
             {
                 enemiesIO.energies.at( enemyId ) = EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
+
+                enemiesIO.actions.erase( enemyId );
             }
         }
     }

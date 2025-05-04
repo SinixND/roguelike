@@ -8,7 +8,6 @@
 #include "Convert.h"
 #include "Cursor.h"
 #include "Directions.h"
-#include "EmptyComponent.h"
 #include "GameCamera.h"
 #include "Hero.h"
 #include "InputId.h"
@@ -60,8 +59,6 @@ Hero const& handleInputToAdjacentTarget(
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
         snx::Debugger::cliLog( "Add attack component to hero.\n" );
 #endif
-        hero.action = std::make_shared<ActionId>( ActionId::ATTACK );
-
         hero.attack = std::make_shared<AttackComponent>( target );
     }
 
@@ -81,9 +78,6 @@ Hero const& handleInputToDistantTarget(
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
         snx::Debugger::cliLog( "Add move component to hero\n" );
 #endif
-
-        hero.action = std::make_shared<ActionId>( ActionId::MOVE );
-
         hero.move = std::make_shared<MoveComponent>(
             Vector2Subtract(
                 target,
