@@ -8,7 +8,7 @@ namespace InteractSystem
 {
     void update(
         Hero& heroIO,
-        Objects const& objectsIO
+        Objects const& objects
     );
 }
 

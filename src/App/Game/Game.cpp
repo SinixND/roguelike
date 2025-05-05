@@ -18,6 +18,7 @@
 #include "GameState.h"
 #include "Hero.h"
 #include "InputId.h"
+#include "InteractSystem.h"
 #include "MovementSystem.h"
 #include "Objects.h"
 #include "RenderId.h"
@@ -541,12 +542,6 @@ namespace GameModule
                     gameCamera
                 );
 
-                game.state = GameState::BUSY;
-
-                break;
-            }
-            case GameState::BUSY:
-            {
                 //* Single frame systems
                 WaitSystem::update(
                     game.hero,
@@ -558,8 +553,17 @@ namespace GameModule
                     game.world.currentMap->enemies
                 );
 
-                //* TODO: InteractSystem
+                InteractSystem::update(
+                    game.hero,
+                    game.world.currentMap->objects
+                );
 
+                game.state = GameState::BUSY;
+
+                break;
+            }
+            case GameState::BUSY:
+            {
                 //* Multi frame systems
                 //* TODO: MoveSystem
 
