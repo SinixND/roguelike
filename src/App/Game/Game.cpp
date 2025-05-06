@@ -19,8 +19,10 @@
 #include "Hero.h"
 #include "InputId.h"
 #include "InteractSystem.h"
+#include "MoveSystem.h"
 #include "MovementSystem.h"
 #include "Objects.h"
+#include "PathSystem.h"
 #include "RenderId.h"
 #include "VisibilitySystem.h"
 #include "WaitSystem.h"
@@ -53,18 +55,24 @@ void setupGameEvents(
 )
 {
     snx::EventDispatcher::addListener(
-        EventId::MULTIFRAME_ACTION_ACTIVE,
+        EventId::MULTIFRAME_ACTIONS_ACTIVE,
         [&]()
         {
+            //* TODO: CHANGE/REMOVE
             game.isMultiFrameActionActive = true;
+
+            game.state = GameState::BUSY;
         }
     );
 
     snx::EventDispatcher::addListener(
-        EventId::MULTIFRAME_ACTION_DONE,
+        EventId::MULTIFRAME_ACTIONS_DONE,
         [&]()
         {
+            //* TODO: CHANGE/REMOVE
             game.isMultiFrameActionActive = false;
+
+            game.state = GameState::TURN_END;
         }
     );
 
@@ -515,6 +523,7 @@ namespace GameModule
     {
         Hero& hero{ game.hero };
         Enemies& enemies{ game.world.currentMap->enemies };
+        Objects& objects{ game.world.currentMap->objects };
 
         switch ( game.state )
         {
@@ -535,7 +544,7 @@ namespace GameModule
             {
                 //* Action system
                 ActionSystem::update(
-                    game.hero,
+                    hero,
                     *game.world.currentMap,
                     currentInputId,
                     cursor,
@@ -544,33 +553,45 @@ namespace GameModule
 
                 //* Single frame systems
                 WaitSystem::update(
-                    game.hero,
-                    game.world.currentMap->enemies
-                );
-
-                AttackSystem::update(
-                    game.hero,
-                    game.world.currentMap->enemies
+                    hero,
+                    enemies
                 );
 
                 InteractSystem::update(
-                    game.hero,
-                    game.world.currentMap->objects
+                    hero,
+                    objects
                 );
 
-                game.state = GameState::BUSY;
+                AttackSystem::update(
+                    hero,
+                    enemies
+                );
 
                 break;
             }
             case GameState::BUSY:
             {
                 //* Multi frame systems
-                //* TODO: MoveSystem
+                if ( MoveSystem::update(
+                         hero,
+                         enemies,
+                         dt
+                     ) )
+                {
+                    snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_DONE );
+                    //* TODO: or game.state = TURN_END;
+                }
 
                 break;
             }
             case GameState::TURN_END:
             {
+                //* Multi turn systems
+                PathSystem::update(
+                    hero,
+                    *game.world.currentMap
+                );
+
                 break;
             }
 

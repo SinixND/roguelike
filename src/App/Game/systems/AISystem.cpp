@@ -7,11 +7,13 @@
 #include "CombatSystem.h"
 #include "Convert.h"
 #include "Enemies.h"
+#include "EnemiesData.h"
 #include "Hero.h"
 #include "Map.h"
 #include "MoveComponent.h"
 #include "MovementSystem.h"
 #include "PathfinderSystem.h"
+#include "TileData.h"
 #include <cstddef>
 #include <vector>
 
@@ -65,7 +67,11 @@ Enemies const& handleExisingPath(
 #endif
         enemies.moves.insert(
             enemyId,
-            MoveComponent{ target }
+            MoveComponent{
+                target,
+                EnemiesData::goblin.speedBase,
+                TileData::TILE_SIZE
+            }
         );
 
         enemies.paths.erase( enemyId );

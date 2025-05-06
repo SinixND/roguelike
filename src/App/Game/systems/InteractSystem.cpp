@@ -12,7 +12,10 @@ namespace InteractSystem
         Objects const& objects
     )
     {
-        if ( *heroIO.action == ActionId::INTERACT )
+        if (
+            heroIO.action
+            && *heroIO.action == ActionId::INTERACT
+        )
         {
             heroIO.energy = EnergyModule::exhaust( heroIO.energy );
 

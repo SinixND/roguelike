@@ -377,7 +377,7 @@ void App::run()
 #if defined( EMSCRIPTEN )
     emscripten_set_main_loop_arg(
         updateApp,
-        &appIO,
+        this,
         60 /*FPS*/,
         1 /*Simulate infinite loop*/
     );

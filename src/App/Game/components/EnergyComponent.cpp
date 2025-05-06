@@ -24,7 +24,7 @@ namespace EnergyModule
         //* Consume energy
         energy.current -= ENERGY_REGEN_MAX * multiplier;
 
-        if ( ( energy.current < 0 ) )
+        if (( energy.current < 0 ))
         {
             energy.isReady = false;
         }
@@ -34,12 +34,6 @@ namespace EnergyModule
 
     EnergyComponent const& exhaust( EnergyComponent& energy )
     {
-        //* Can't consume if not ready
-        if ( !energy.isReady )
-        {
-            return energy;
-        }
-
 #if defined( DEBUG ) && defined( DEBUG_ENERGY )
         snx::Debugger::cliLog( "EnergyModule::exhaust()\n" );
 #endif

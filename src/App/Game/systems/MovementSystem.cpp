@@ -66,7 +66,7 @@ namespace MovementSystem
         transform.speed = movement.baseSpeed;
         transform.remainingDistance = TileData::TILE_SIZE;
 
-        snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTION_ACTIVE );
+        snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_ACTIVE );
 
         return transform;
     }
@@ -137,7 +137,7 @@ namespace MovementSystem
         transform.speed = .0f;
         transform.remainingDistance = 0;
 
-        snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTION_DONE );
+        snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_DONE );
 
         return transform;
     }

@@ -8,6 +8,7 @@
 #include "Convert.h"
 #include "Cursor.h"
 #include "Directions.h"
+#include "EventDispatcher.h"
 #include "GameCamera.h"
 #include "Hero.h"
 #include "InputId.h"
@@ -15,6 +16,7 @@
 #include "Map.h"
 #include "MoveComponent.h"
 #include "PathfinderSystem.h"
+#include "TileData.h"
 #include <memory>
 
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
@@ -28,8 +30,20 @@ Hero const& handleInputInPlace(
 )
 {
     //* Interact (if object exists and has a event)
-    if ( map.objects.ids.contains( Convert::worldToTile( hero.position ) )
-         && map.objects.eventIds.contains( map.objects.ids.at( Convert::worldToTile( hero.position ) ) ) )
+    if (
+        map.objects.ids.contains(
+            Convert::worldToTile(
+                hero.position
+            )
+        )
+        && map.objects.eventIds.contains(
+            map.objects.ids.at(
+                Convert::worldToTile(
+                    hero.position
+                )
+            )
+        )
+    )
     {
         hero.action = std::make_shared<ActionId>( ActionId::INTERACT );
 
@@ -47,53 +61,57 @@ Hero const& handleInputInPlace(
 }
 
 [[nodiscard]]
-Hero const& handleInputToAdjacentTarget(
-    Hero& hero,
-    Map const& map,
-    Vector2I const& target
-)
-{
-    //* Attack
-    if ( map.enemies.ids.contains( target ) )
-    {
-#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
-        snx::Debugger::cliLog( "Add attack component to hero.\n" );
-#endif
-        hero.attack = std::make_shared<AttackComponent>( target );
-    }
-
-    return hero;
-}
-[[nodiscard]]
 Hero const& handleInputToDistantTarget(
     Hero& hero,
-    Map const& map,
-    Vector2I const& target,
     std::vector<Vector2I> const& path
 )
 {
-    //* Move
-    if ( map.tiles.isSolids.contains( map.tiles.ids.at( target ) ) )
-    {
-#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
-        snx::Debugger::cliLog( "Add move component to hero\n" );
-#endif
-        hero.move = std::make_shared<MoveComponent>(
-            Vector2Subtract(
-                target,
-                Convert::worldToTile( hero.position )
-            )
-        );
-
-        hero.path = path;
-        hero.path.pop_back();
-    }
+    //* Path
+    hero.path = path;
+    hero.path.pop_back();
 
     return hero;
 }
 
 namespace ActionSystem
 {
+    [[nodiscard]]
+    Hero const& handleInputToAdjacentTarget(
+        Hero& hero,
+        Map const& map,
+        Vector2I const& target
+    )
+    {
+        //* Attack
+        if ( map.enemies.ids.contains( target ) )
+        {
+#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
+            snx::Debugger::cliLog( "Add attack component to hero.\n" );
+#endif
+            hero.attack = std::make_shared<AttackComponent>( target );
+        }
+
+        //* Move
+        else if ( !map.tiles.isSolids.contains( map.tiles.ids.at( target ) ) )
+        {
+#if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
+            snx::Debugger::cliLog( "Add move component to hero\n" );
+#endif
+            hero.move = std::make_shared<MoveComponent>(
+                Vector2Subtract(
+                    target,
+                    Convert::worldToTile( hero.position )
+                ),
+                HeroData::SPEED_BASE,
+                TileData::TILE_SIZE
+            );
+
+            snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_ACTIVE );
+        }
+
+        return hero;
+    }
+
     void update(
         Hero& heroIO,
         Map const& map,
@@ -175,7 +193,14 @@ namespace ActionSystem
                     gameCamera
                 ) };
 
-                if ( path.size() == 1 )
+                size_t pathSize{ path.size() };
+
+                if ( !pathSize )
+                {
+                    break;
+                }
+
+                else if ( pathSize == 1 )
                 {
                     heroIO = handleInputInPlace(
                         heroIO,
@@ -183,12 +208,19 @@ namespace ActionSystem
                     );
                 }
 
-                else if ( path.size() > 1 )
+                else // if ( pathSize > 1 )
+                {
+                    heroIO = handleInputToAdjacentTarget(
+                        heroIO,
+                        map,
+                        path.rbegin()[1]
+                    );
+                }
+
+                if ( pathSize > 2 )
                 {
                     heroIO = handleInputToDistantTarget(
                         heroIO,
-                        map,
-                        path.rbegin()[1],
                         path
                     );
                 }

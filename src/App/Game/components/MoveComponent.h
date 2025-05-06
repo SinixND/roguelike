@@ -6,6 +6,7 @@
 struct MoveComponent
 {
     Vector2I direction{};
+    float speed{};
     float remainingDistance{};
 };
 

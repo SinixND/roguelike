@@ -12,7 +12,10 @@ namespace WaitSystem
         Enemies& enemiesIO
     )
     {
-        if ( *heroIO.action == ActionId::WAIT )
+        if (
+            heroIO.action
+            && *heroIO.action == ActionId::WAIT
+        )
         {
             heroIO.energy = EnergyModule::exhaust( heroIO.energy );
 
