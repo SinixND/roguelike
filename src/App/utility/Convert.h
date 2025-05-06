@@ -79,9 +79,8 @@ namespace Convert
     //* Coordinates within octanct are usual cartesian
     //* Octant[0] is from vertical up CW,
     //* Octants enumerated CW
-    template <typename Type>
-    inline Type transformFromOctant(
-        Type const& octantPosition,
+    inline Vector2I transformFromOctant(
+        Vector2I const& octantPosition,
         int octant
     )
     {
@@ -89,28 +88,28 @@ namespace Convert
         {
             default:
             case 0:
-                return Type( { octantPosition.x, -octantPosition.y } );
+                return { octantPosition.x, -octantPosition.y };
 
             case 1:
-                return Type( { octantPosition.y, -octantPosition.x } );
+                return { octantPosition.y, -octantPosition.x };
 
             case 2:
-                return Type( { octantPosition.y, octantPosition.x } );
+                return { octantPosition.y, octantPosition.x };
 
             case 3:
-                return Type( { octantPosition.x, octantPosition.y } );
+                return { octantPosition.x, octantPosition.y };
 
             case 4:
-                return Type( { -octantPosition.x, octantPosition.y } );
+                return { -octantPosition.x, octantPosition.y };
 
             case 5:
-                return Type( { -octantPosition.y, octantPosition.x } );
+                return { -octantPosition.y, octantPosition.x };
 
             case 6:
-                return Type( { -octantPosition.y, -octantPosition.x } );
+                return { -octantPosition.y, -octantPosition.x };
 
             case 7:
-                return Type( { -octantPosition.x, -octantPosition.y } );
+                return { -octantPosition.x, -octantPosition.y };
         }
     }
 
@@ -120,26 +119,7 @@ namespace Convert
         Vector2I const& origin
     )
     {
-        return Vector2Add( origin, transformFromOctant<Vector2I>( octantPosition, octant ) );
-    }
-
-    inline Vector2 octantToWorld(
-        Vector2 const& octantPosition,
-        int octant,
-        Vector2I const& origin
-    )
-    {
-        return Vector2Add( tileToWorld( origin ), transformFromOctant<Vector2>( octantPosition, octant ) );
-    }
-
-    inline Vector2 octantToScreen(
-        Vector2 const& octantPosition,
-        int octant,
-        Vector2I const& origin,
-        Camera2D const& camera
-    )
-    {
-        return GetWorldToScreen2D( octantToWorld( octantPosition, octant, origin ), camera );
+        return Vector2Add( origin, transformFromOctant( octantPosition, octant ) );
     }
 }
 
