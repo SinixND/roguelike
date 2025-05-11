@@ -1,15 +1,14 @@
 #ifndef IG20250506234330
 #define IG20250506234330
 
-struct Hero;
-struct Map;
+#include <vector>
+
 struct Vector2I;
 
 namespace PathSystem
 {
-    void update(
-        Hero& heroIO,
-        Map const& map
+    std::vector<Vector2I> const& update(
+        std::vector<Vector2I>& heroPath
     );
 }
 

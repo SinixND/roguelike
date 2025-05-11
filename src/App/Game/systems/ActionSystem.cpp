@@ -128,6 +128,42 @@ namespace ActionSystem
         switch ( currentInput )
         {
             default:
+            case InputId::NONE:
+            {
+                size_t pathSize{ heroIO.path.size() };
+
+                if ( !pathSize )
+                {
+                    break;
+                }
+
+                else if ( pathSize == 1 )
+                {
+                    heroIO = handleInputInPlace(
+                        heroIO,
+                        map
+                    );
+                }
+
+                else // if ( pathSize > 1 )
+                {
+                    heroIO = handleInputToAdjacentTarget(
+                        heroIO,
+                        map,
+                        heroIO.path.rbegin()[1]
+                    );
+                    // }
+
+                    // if ( pathSize > 2 )
+                    // {
+                    heroIO = handleInputToDistantTarget(
+                        heroIO,
+                        heroIO.path
+                    );
+                }
+                break;
+            }
+
             case InputId::ACT_UP:
             {
                 heroIO = handleInputToAdjacentTarget(

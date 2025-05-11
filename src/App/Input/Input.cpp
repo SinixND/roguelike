@@ -73,6 +73,11 @@ InputId Input::fromMouse()
 
 InputId Input::fromGesture()
 {
+    if ( cursor.isActive )
+    {
+        return InputId::NONE;
+    }
+
     InputId inputId{ InputId::NONE };
 
     //* IMPORTANT NOTE:

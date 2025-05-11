@@ -3,28 +3,20 @@
 #include "ActionSystem.h"
 #include "Enemies.h"
 #include "Hero.h"
+#include "raylibEx.h"
+#include <vector>
 
 namespace PathSystem
 {
-    void update(
-        Hero& heroIO,
-        Map const& map
+    std::vector<Vector2I> const& update(
+        std::vector<Vector2I>& heroPath
     )
     {
-        if ( heroIO.path.size() > 1 )
+        if ( heroPath.size() < 2 )
         {
-            heroIO = ActionSystem::handleInputToAdjacentTarget(
-                heroIO,
-                map,
-                heroIO.path.rbegin()[1]
-            );
-
-            heroIO.path.pop_back();
+            heroPath.clear();
         }
 
-        else
-        {
-            heroIO.path.clear();
-        }
+        return heroPath;
     }
 }

@@ -542,7 +542,7 @@ namespace GameModule
             }
             case GameState::IDLE:
             {
-                //* Action system
+                //* Action system (Hero)
                 ActionSystem::update(
                     hero,
                     *game.world.currentMap,
@@ -550,6 +550,8 @@ namespace GameModule
                     cursor,
                     gameCamera
                 );
+
+                //* Action system (Enemy)
 
                 //* Single frame systems
                 WaitSystem::update(
@@ -578,8 +580,10 @@ namespace GameModule
                          dt
                      ) )
                 {
-                    snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_DONE );
-                    //* TODO: or game.state = TURN_END;
+                    //* TODO: CHANGE/REMOVE
+                    // snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_DONE );
+                    //* TODO: or
+                    game.state = GameState::TURN_END;
                 }
 
                 break;
@@ -587,10 +591,11 @@ namespace GameModule
             case GameState::TURN_END:
             {
                 //* Multi turn systems
-                PathSystem::update(
-                    hero,
-                    *game.world.currentMap
+                hero.path = PathSystem::update(
+                    hero.path
                 );
+
+                game.state = GameState::REGEN;
 
                 break;
             }

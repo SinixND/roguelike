@@ -3,6 +3,7 @@
 #include "Enemies.h"
 #include "Hero.h"
 #include "Logger.h"
+#include "raylibEx.h"
 #include <string>
 
 [[nodiscard]]
@@ -26,7 +27,7 @@ Vector2 const& updateEntity(
     {
         //* Move full distance this frame
         position += Vector2Scale(
-            moveIO.direction,
+            Vector2Normalize( moveIO.direction ),
             frameDistance
         );
 
