@@ -8,7 +8,7 @@
 #include <functional>
 #include <unordered_map>
 
-#if defined( DEBUG )
+#if defined( DEBUG ) && defined( DEBUG_EVENT_DISPATCHER )
 #include "Debugger.h"
 #endif
 
@@ -30,7 +30,7 @@ namespace snx
         )
         {
 #if defined( DEBUG ) && defined( DEBUG_EVENT_DISPATCHER )
-            debug::cliLog( "Listener added for event '", eventIdToName.at( event ), "'.\n" );
+            Debugger::cliLog( "Listener added for event '", eventIdToName.at( event ), "'.\n" );
 #endif
             ensureList( event );
 

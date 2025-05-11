@@ -5,7 +5,6 @@
 #include "AttackComponent.h"
 #include "AttributesComponent.h"
 #include "DamageComponent.h"
-#include "EmptyComponent.h"
 #include "EnergyComponent.h"
 #include "ExperienceComponent.h"
 #include "HealthComponent.h"

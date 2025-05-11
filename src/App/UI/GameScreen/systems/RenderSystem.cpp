@@ -6,7 +6,6 @@
 #include "ChunkData.h"
 #include "FogStateId.h"
 #include "GameFont.h"
-#include "GamePanels.h"
 #include "Hero.h"
 #include "Logger.h"
 #include "Objects.h"

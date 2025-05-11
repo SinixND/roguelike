@@ -5,6 +5,7 @@
 #include "AppConfigs.h"
 #include "AppData.h"
 #include "Convert.h"
+#include "Debugger.h"
 #include "DeveloperMode.h"
 #include "EventDispatcher.h"
 #include "EventId.h"

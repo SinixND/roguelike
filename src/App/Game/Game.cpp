@@ -591,8 +591,8 @@ namespace GameModule
             case GameState::TURN_END:
             {
                 //* Multi turn systems
-                hero.path = PathSystem::update(
-                    hero.path
+                hero = PathSystem::update(
+                    hero
                 );
 
                 game.state = GameState::REGEN;

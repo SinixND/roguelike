@@ -3,6 +3,7 @@
 #include "ChunkSystem.h"
 #include "ColorData.h"
 #include "Cursor.h"
+#include "Debugger.h"
 #include "DeveloperMode.h"
 #include "Enemies.h"
 #include "EventDispatcher.h"

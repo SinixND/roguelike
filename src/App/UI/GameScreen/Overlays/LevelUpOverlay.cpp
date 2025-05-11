@@ -7,7 +7,6 @@
 #include "GameFont.h"
 #include "Hero.h"
 #include "raylibEx.h"
-#include <cstring>
 #include <raylib.h>
 #include <string>
 
