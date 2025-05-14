@@ -68,7 +68,8 @@ Hero const& handleInputToDistantTarget(
 {
     //* Path
     hero.path = path;
-    hero.path.pop_back();
+    //* TODO: CHANGE/REMOVE
+    // hero.path.pop_back();
 
     return hero;
 }
@@ -125,6 +126,12 @@ namespace ActionSystem
             return;
         }
 
+        //* Interruptable path movement
+        if ( currentInput != InputId::NONE )
+        {
+            heroIO.path.clear();
+        }
+
         switch ( currentInput )
         {
             default:
@@ -152,6 +159,7 @@ namespace ActionSystem
                         map,
                         heroIO.path.rbegin()[1]
                     );
+                    //* TODO: CHANGE/REMOVE
                     // }
 
                     // if ( pathSize > 2 )

@@ -19,6 +19,13 @@ namespace AISystem
         Map const& map,
         GameCamera const& gameCamera
     );
+
+    void update(
+        Enemies& enemiesIO,
+        Map const& map,
+        Hero const& hero,
+        GameCamera const& gameCamera
+    );
 }
 
 #endif

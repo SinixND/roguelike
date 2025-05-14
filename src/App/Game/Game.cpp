@@ -552,6 +552,12 @@ namespace GameModule
                 );
 
                 //* Action system (Enemy)
+                AISystem::update(
+                    enemies,
+                    *game.world.currentMap,
+                    hero,
+                    gameCamera
+                );
 
                 //* Single frame systems
                 WaitSystem::update(
@@ -591,8 +597,9 @@ namespace GameModule
             case GameState::TURN_END:
             {
                 //* Multi turn systems
-                hero = PathSystem::update(
-                    hero
+                PathSystem::update(
+                    hero,
+                    *game.world.currentMap
                 );
 
                 game.state = GameState::REGEN;

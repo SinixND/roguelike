@@ -14,6 +14,7 @@
 #include "MovementSystem.h"
 #include "PathfinderSystem.h"
 #include "TileData.h"
+#include "raylibEx.h"
 #include <cstddef>
 #include <vector>
 
@@ -22,7 +23,7 @@
 #endif
 
 [[nodiscard]]
-Enemies const& handleEmptyPath(
+Enemies const& handleInvalidPath(
     Enemies& enemies,
     size_t enemyId
 )
@@ -37,30 +38,29 @@ Enemies const& handleEmptyPath(
 }
 
 [[nodiscard]]
-Enemies const& handleExisingPath(
+Enemies const& handleValidPath(
     Enemies& enemies,
+    Vector2I const& heroPosition,
     size_t enemyId,
-    std::vector<Vector2I> const& path,
-    Map const& map,
-    Vector2I const& target
+    Vector2I const& adjacentPathTile
 )
 {
     //* Attack
-    if ( path.size() == 2 )
+    if (heroPosition == adjacentPathTile)
     {
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
         snx::Debugger::cliLog( "Add attack component to hero.\n" );
 #endif
         enemies.attacks.insert(
             enemyId,
-            AttackComponent{ target }
+            AttackComponent{ adjacentPathTile }
         );
 
         return enemies;
     }
 
     //* Move
-    else if ( map.tiles.isSolids.contains( map.tiles.ids.at( target ) ) )
+    else // if (!map.tiles.isSolids.contains( map.tiles.ids.at( target ) ))
     {
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
         snx::Debugger::cliLog( "Add move component to hero\n" );
@@ -68,15 +68,16 @@ Enemies const& handleExisingPath(
         enemies.moves.insert(
             enemyId,
             MoveComponent{
-                target,
+                Vector2MainDirection(
+                    Convert::worldToTile(
+                        enemies.positions.at( enemyId )
+                    ),
+                    adjacentPathTile
+                ),
                 EnemiesData::goblin.speedBase,
                 TileData::TILE_SIZE
             }
         );
-
-        enemies.paths.erase( enemyId );
-        enemies.paths.insert( enemyId, path );
-        enemies.paths.at( enemyId ).pop_back();
     }
 
     return enemies;
@@ -92,13 +93,13 @@ Enemies& executeAction(
 )
 {
     //* Instant action: attack
-    if ( Vector2Length(
-             Vector2Subtract(
-                 Convert::worldToTile( enemiesIO.positions.at( enemyId ) ),
-                 Convert::worldToTile( heroIO.position )
-             )
-         )
-         == 1 )
+    if (Vector2Length(
+            Vector2Subtract(
+                Convert::worldToTile( enemiesIO.positions.at( enemyId ) ),
+                Convert::worldToTile( heroIO.position )
+            )
+        )
+        == 1)
     {
         //* Attack
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
@@ -126,13 +127,13 @@ Enemies& executeAction(
 
         //* Path is valid: has at least 2 entries (start and target)
         //* Move
-        if ( pathSize > 2
-             && !CollisionSystem::checkCollision(
-                 map.tiles,
-                 map.enemies,
-                 path.rbegin()[1],
-                 Convert::worldToTile( heroIO.position )
-             ) )
+        if (pathSize > 2
+            && !CollisionSystem::checkCollision(
+                map.tiles,
+                map.enemies,
+                path.rbegin()[1],
+                Convert::worldToTile( heroIO.position )
+            ))
         {
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
             snx::Debugger::cliLog( "Enemy[", enemyId, "] moves.\n" );
@@ -169,7 +170,7 @@ namespace AISystem
         GameCamera const& gameCamera
     )
     {
-        for ( size_t idx{ 0 }; idx < enemiesIO.isReadies.size(); ++idx )
+        for (size_t idx{ 0 }; idx < enemiesIO.isReadies.size(); ++idx)
         {
             size_t enemyId{ enemiesIO.isReadies.key( idx ) };
 
@@ -182,11 +183,9 @@ namespace AISystem
                 enemiesIO.ais.at( enemyId ).scanRange
             ) };
 
-            size_t pathSize{ path.size() };
-
-            if ( !pathSize )
+            if (path.empty())
             {
-                enemiesIO = handleEmptyPath(
+                enemiesIO = handleInvalidPath(
                     enemiesIO,
                     enemyId
                 );
@@ -194,12 +193,11 @@ namespace AISystem
 
             else
             {
-                enemiesIO = handleExisingPath(
+                enemiesIO = handleValidPath(
                     enemiesIO,
+                    Convert::worldToTile( hero.position ),
                     enemyId,
-                    path,
-                    map,
-                    Convert::worldToTile( hero.position )
+                    path.rbegin()[1]
                 );
             }
         }
@@ -218,7 +216,7 @@ namespace AISystem
         {
             activeEnemyIdIO = EnemiesModule::getActive( enemies.energies );
 
-            if ( activeEnemyIdIO )
+            if (activeEnemyIdIO)
             {
                 enemies = executeAction(
                     enemies,
@@ -228,7 +226,7 @@ namespace AISystem
                     activeEnemyIdIO
                 );
             }
-        } while ( activeEnemyIdIO );
+        } while (activeEnemyIdIO);
 
         return enemies;
     }

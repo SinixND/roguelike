@@ -1,20 +1,39 @@
 #include "PathSystem.h"
 
 #include "ActionSystem.h"
+#include "Enemies.h"
 #include "Hero.h"
 #include <vector>
 
 namespace PathSystem
 {
-    Hero const& update(
-        Hero& hero
+    void update(
+        Hero& heroIO,
+        Map const& map
     )
     {
-        if ( hero.path.size() < 2 )
+        if (!heroIO.path.empty())
         {
-            hero.path.clear();
-        }
+            size_t pathSize{ heroIO.path.size() };
 
-        return hero;
+            if (pathSize == 2)
+            {
+                heroIO = ActionSystem::handleInputToAdjacentTarget(
+                    heroIO,
+                    map,
+                    heroIO.path.rbegin()[1]
+                );
+            }
+
+            if (pathSize > 2)
+            {
+                heroIO.path.pop_back();
+            }
+
+            if (pathSize < 2)
+            {
+                heroIO.path.clear();
+            }
+        }
     }
 }

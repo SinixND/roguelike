@@ -227,7 +227,7 @@ SpacesInParens:  Custom
 SpacesInParensOptions:
   ExceptDoubleParentheses: true
   InCStyleCasts:   false
-  InConditionalStatements: false
+  InConditionalStatements: true
   InEmptyParentheses: false
   # Other:           false
   Other:           true

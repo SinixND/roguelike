@@ -44,11 +44,11 @@ struct Enemies
     //* TODO: CHANGE/REMOVE
     snx::DenseMap<size_t, TransformComponent> transforms{};
     snx::DenseMap<size_t, MovementComponent> movements{};
+    // snx::DenseMap<size_t, std::vector<Vector2I>> paths{};
     //* New
     snx::DenseMap<size_t, ActionId> actions{};
     snx::DenseMap<size_t, AttackComponent> attacks{};
     snx::DenseMap<size_t, MoveComponent> moves{};
-    snx::DenseMap<size_t, std::vector<Vector2I>> paths{};
     snx::DenseMap<size_t, EmptyComponent> isReadies{};
 };
 
