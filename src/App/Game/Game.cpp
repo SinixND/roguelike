@@ -588,14 +588,14 @@ namespace GameModule
                     enemies
                 );
 
-                InteractSystem::update(
-                    hero,
-                    objects
-                );
-
                 AttackSystem::update(
                     hero,
                     enemies
+                );
+
+                InteractSystem::update(
+                    hero,
+                    objects
                 );
 
                 game.state = GameState::BUSY;
