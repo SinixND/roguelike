@@ -6,6 +6,9 @@ struct Enemies;
 
 namespace MoveSystem
 {
+    /**
+     * @return if no moves left to update
+     * */
     bool update(
         Hero& heroIO,
         Enemies& enemiesIO,

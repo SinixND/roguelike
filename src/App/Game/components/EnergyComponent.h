@@ -17,7 +17,8 @@ float const ENERGY_REGEN_MIN{ ENERGY_REGEN_MAX / std::pow( SPEED_MULTIPLIER_MAX,
 struct EnergyComponent
 {
     float regenRate{ ENERGY_REGEN_AVG };
-    float current{ 0 };
+    float current{ -ENERGY_REGEN_AVG };
+    //* TODO: CHANGE/REMOVE
     bool isReady{ true };
 };
 

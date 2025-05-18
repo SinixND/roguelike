@@ -550,7 +550,6 @@ namespace GameModule
 
             case GameState::ACTION_HERO:
             {
-                //* Action system (Hero)
                 ActionSystem::update(
                     hero,
                     *game.world.currentMap,
@@ -569,7 +568,6 @@ namespace GameModule
 
             case GameState::ACTION_NPC:
             {
-                //* Action system (Enemy)
                 AISystem::update(
                     enemies,
                     *game.world.currentMap,

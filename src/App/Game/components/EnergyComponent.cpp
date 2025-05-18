@@ -16,18 +16,13 @@ namespace EnergyModule
     )
     {
         //* Can't consume if not ready
-        if ( !energy.isReady )
+        if ( energy.current < 0 )
         {
             return energy;
         }
 
         //* Consume energy
         energy.current -= ENERGY_REGEN_MAX * multiplier;
-
-        if (( energy.current < 0 ))
-        {
-            energy.isReady = false;
-        }
 
         return energy;
     }
@@ -67,8 +62,6 @@ namespace EnergyModule
         {
             return false;
         }
-
-        energyIO.isReady = true;
 
         return true;
     }

@@ -46,7 +46,7 @@ Enemies const& handleValidPath(
 )
 {
     //* Attack
-    if (heroPosition == adjacentPathTile)
+    if ( heroPosition == adjacentPathTile )
     {
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
         snx::Debugger::cliLog( "Add attack component to hero.\n" );
@@ -93,13 +93,13 @@ Enemies& executeAction(
 )
 {
     //* Instant action: attack
-    if (Vector2Length(
-            Vector2Subtract(
-                Convert::worldToTile( enemiesIO.positions.at( enemyId ) ),
-                Convert::worldToTile( heroIO.position )
-            )
-        )
-        == 1)
+    if ( Vector2Length(
+             Vector2Subtract(
+                 Convert::worldToTile( enemiesIO.positions.at( enemyId ) ),
+                 Convert::worldToTile( heroIO.position )
+             )
+         )
+         == 1 )
     {
         //* Attack
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
@@ -127,13 +127,13 @@ Enemies& executeAction(
 
         //* Path is valid: has at least 2 entries (start and target)
         //* Move
-        if (pathSize > 2
-            && !CollisionSystem::checkCollision(
-                map.tiles,
-                map.enemies,
-                path.rbegin()[1],
-                Convert::worldToTile( heroIO.position )
-            ))
+        if ( pathSize > 2
+             && !CollisionSystem::checkCollision(
+                 map.tiles,
+                 map.enemies,
+                 path.rbegin()[1],
+                 Convert::worldToTile( heroIO.position )
+             ) )
         {
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
             snx::Debugger::cliLog( "Enemy[", enemyId, "] moves.\n" );
@@ -170,7 +170,7 @@ namespace AISystem
         GameCamera const& gameCamera
     )
     {
-        for (size_t idx{ 0 }; idx < enemiesIO.isReadies.size(); ++idx)
+        for ( size_t idx{ 0 }; idx < enemiesIO.isReadies.size(); ++idx )
         {
             size_t enemyId{ enemiesIO.isReadies.key( idx ) };
 
@@ -183,7 +183,7 @@ namespace AISystem
                 enemiesIO.ais.at( enemyId ).scanRange
             ) };
 
-            if (path.empty())
+            if ( path.empty() )
             {
                 enemiesIO = handleInvalidPath(
                     enemiesIO,
@@ -216,7 +216,7 @@ namespace AISystem
         {
             activeEnemyIdIO = EnemiesModule::getActive( enemies.energies );
 
-            if (activeEnemyIdIO)
+            if ( activeEnemyIdIO )
             {
                 enemies = executeAction(
                     enemies,
@@ -226,7 +226,7 @@ namespace AISystem
                     activeEnemyIdIO
                 );
             }
-        } while (activeEnemyIdIO);
+        } while ( activeEnemyIdIO );
 
         return enemies;
     }
