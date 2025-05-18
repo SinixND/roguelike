@@ -107,7 +107,10 @@ namespace ActionSystem
                 TileData::TILE_SIZE
             );
 
-            snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_ACTIVE );
+            hero.isReady = false;
+
+            //* TODO: CHANGE/REMOVE
+            // snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_ACTIVE );
         }
 
         return hero;

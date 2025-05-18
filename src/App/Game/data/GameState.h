@@ -9,9 +9,11 @@ enum class GameState
     REGEN,
     //* Update single frame systems
     IDLE,
+    ACTION_HERO,
+    ACTION_NPC,
     //* Update multi frame systems
     BUSY,
-    TURN_END,
+    POST_ACTION,
     LEVEL_UP,
 };
 

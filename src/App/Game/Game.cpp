@@ -72,7 +72,7 @@ void setupGameEvents(
             //* TODO: CHANGE/REMOVE
             game.isMultiFrameActionActive = false;
 
-            game.state = GameState::TURN_END;
+            game.state = GameState::POST_ACTION;
         }
     );
 
@@ -507,7 +507,7 @@ namespace GameModule
         );
 
 #if defined( DEBUG )
-        snx::EventDispatcher::notify( EventId::NEXT_LEVEL );
+        // snx::EventDispatcher::notify( EventId::NEXT_LEVEL );
 #endif
 
         return game;
@@ -536,11 +536,19 @@ namespace GameModule
                     enemies.isReadies
                 );
 
-                game.state = GameState::IDLE;
+                if ( hero.isReady )
+                {
+                    game.state = GameState::ACTION_HERO;
+                }
+                else
+                {
+                    game.state = GameState::ACTION_NPC;
+                }
 
                 break;
             }
-            case GameState::IDLE:
+
+            case GameState::ACTION_HERO:
             {
                 //* Action system (Hero)
                 ActionSystem::update(
@@ -551,6 +559,16 @@ namespace GameModule
                     gameCamera
                 );
 
+                if ( !hero.isReady )
+                {
+                    game.state = GameState::IDLE;
+                }
+
+                break;
+            }
+
+            case GameState::ACTION_NPC:
+            {
                 //* Action system (Enemy)
                 AISystem::update(
                     enemies,
@@ -559,6 +577,13 @@ namespace GameModule
                     gameCamera
                 );
 
+                game.state = GameState::IDLE;
+
+                break;
+            }
+
+            case GameState::IDLE:
+            {
                 //* Single frame systems
                 WaitSystem::update(
                     hero,
@@ -575,8 +600,11 @@ namespace GameModule
                     enemies
                 );
 
+                game.state = GameState::BUSY;
+
                 break;
             }
+
             case GameState::BUSY:
             {
                 //* Multi frame systems
@@ -589,12 +617,13 @@ namespace GameModule
                     //* TODO: CHANGE/REMOVE
                     // snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_DONE );
                     //* TODO: or
-                    game.state = GameState::TURN_END;
+                    game.state = GameState::POST_ACTION;
                 }
 
                 break;
             }
-            case GameState::TURN_END:
+
+            case GameState::POST_ACTION:
             {
                 //* Multi turn systems
                 PathSystem::update(
