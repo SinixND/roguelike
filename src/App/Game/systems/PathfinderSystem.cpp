@@ -1,6 +1,6 @@
 #include "PathfinderSystem.h"
 
-// #define DEBUG_PATHFINDER
+#define DEBUG_PATHFINDER
 
 #include "Convert.h"
 #include "GameCamera.h"
@@ -54,7 +54,7 @@ struct AStarTile
 namespace AStarTileModule
 {
     //* Heuristic used to rate tiles
-    int getRating( AStarTile const& ratedTile )
+    float getRating( AStarTile const& ratedTile )
     {
         return
             //* Distance to target
@@ -246,7 +246,7 @@ bool continueTargetSearch(
             };
 
             //* If Target found
-            if ( ( newAStarTile.tilePosition == target ) )
+            if (( newAStarTile.tilePosition == target ))
             {
                 AStarTileModule::reconstructPath(
                     path,
@@ -304,23 +304,9 @@ bool continueTargetSearch(
 
 #if defined( DEBUG ) && defined( DEBUG_PATHFINDER )
             DrawText(
-                std::format(
-                    "{:.0f}",
-                    newAStarTile.rating()
-                )
-                    .c_str(),
-                Convert::tileToScreen(
-                    newTilePosition,
-                    snx::Debugger::gcam().camera()
-                )
-                        .x
-                    + 10,
-                Convert::tileToScreen(
-                    newTilePosition,
-                    snx::Debugger::gcam().camera()
-                )
-                        .y
-                    + 10,
+                std::format( "{:.0f}", AStarTileModule::getRating( newAStarTile ) ).c_str(),
+                Convert::tileToScreen( newAStarTile.tilePosition, snx::Debugger::gcam().camera ).x,
+                Convert::tileToScreen( newAStarTile.tilePosition, snx::Debugger::gcam().camera ).y,
                 10,
                 WHITE
             );
@@ -424,9 +410,9 @@ namespace PathfinderSystem
                 Vector2Add(
                     Convert::tileToScreen(
                         position,
-                        snx::Debugger::gcam().camera()
+                        snx::Debugger::gcam().camera
                     ),
-                    Vector2{ TileData::TILE_SIZE_HALF, TileData::TILE_SIZE_HALF }
+                    Vector2{ TileData::TILE_SIZE_HALF / 2, TileData::TILE_SIZE_HALF / 2 }
                 ),
                 5,
                 ColorAlpha(

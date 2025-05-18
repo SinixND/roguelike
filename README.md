@@ -1,10 +1,12 @@
 # TODOs
 ## Active 
-- [ ] duplicate info: isReady (energy.isReady and isReady to be iterated over in AISystem): Get rid of energy.isReady?
-- [ ] separate pathfinder (calculateVisiblePath, calculatePath)
+- [ ] NPC keeps moving when moving by path
+- [ ] NPCs can (must not) select same tile: path movment penalty?
 
 
 ## Shortterm
+- [ ] duplicate info: isReady (energy.isReady and isReady to be iterated over in AISystem): Get rid of energy.isReady?
+- [ ] separate pathfinder (calculateVisiblePath, calculatePath)
 - [ ] Extend attributes/leveling
     - Possibility of classes: different starting distribution
     - And/Or change class if certain distribution threshold(s) met

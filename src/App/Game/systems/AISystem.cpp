@@ -63,7 +63,7 @@ Enemies const& handleValidPath(
     else // if (!map.tiles.isSolids.contains( map.tiles.ids.at( target ) ))
     {
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
-        snx::Debugger::cliLog( "Add move component to hero\n" );
+        snx::Debugger::cliLog( "Add move component to enemy\n" );
 #endif
         Vector2I direction{ Vector2MainDirection(
             Convert::worldToTile(

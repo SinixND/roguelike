@@ -246,6 +246,12 @@ Tiles const& calculateVisibilitiesInOctant(
     {
         for ( int octX{ 0 }; octX <= octY + 1; ++octX )
         {
+            //* TODO: CHECK IF NECESSARY
+            // if ( !( octX || octY ) )
+            // {
+            //     continue;
+            // }
+
             Vector2I octantPosition{ octX, octY };
 
             Vector2I tilePosition{
