@@ -47,6 +47,8 @@ Hero const& handleInputInPlace(
     {
         hero.action = std::make_shared<ActionId>( ActionId::INTERACT );
 
+        hero.isReady = false;
+
         return hero;
     }
 
@@ -56,6 +58,8 @@ Hero const& handleInputInPlace(
     snx::Logger::log( "Hero waits...\n" );
 
     hero.action = std::make_shared<ActionId>( ActionId::WAIT );
+
+    hero.isReady = false;
 
     return hero;
 }
@@ -90,6 +94,8 @@ namespace ActionSystem
             snx::Debugger::cliLog( "Add attack component to hero.\n" );
 #endif
             hero.attack = std::make_shared<AttackComponent>( target );
+
+            hero.isReady = false;
         }
 
         //* Move
@@ -124,11 +130,6 @@ namespace ActionSystem
         GameCamera const& gameCamera
     )
     {
-        if ( !heroIO.isReady )
-        {
-            return;
-        }
-
         //* Interruptable path movement
         if ( currentInput != InputId::NONE )
         {
