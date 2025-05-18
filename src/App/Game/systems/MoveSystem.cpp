@@ -1,6 +1,9 @@
 #include "MoveSystem.h"
 
+#include "Convert.h"
 #include "Enemies.h"
+#include "EventDispatcher.h"
+#include "EventId.h"
 #include "Hero.h"
 #include "raylibEx.h"
 
@@ -63,6 +66,8 @@ namespace MoveSystem
         {
             allMovesDone = false;
 
+            Vector2I oldPosition{ Convert::worldToTile( heroIO.position ) };
+
             heroIO.energy = EnergyModule::exhaust( heroIO.energy );
 
             heroIO.position = updateEntity(
@@ -71,10 +76,19 @@ namespace MoveSystem
                 dt
             );
 
+            snx::EventDispatcher::notify( EventId::HERO_MOVED );
+
+            if ( oldPosition != Convert::worldToTile( heroIO.position ) )
+            {
+                snx::EventDispatcher::notify( EventId::HERO_POSITION_CHANGED );
+            }
+
             if ( !heroIO.move->speed )
             {
                 heroIO.move.reset();
             }
+
+            return false;
         }
 
         for ( size_t idx{ 0 }; idx < enemiesIO.moves.size(); ++idx )

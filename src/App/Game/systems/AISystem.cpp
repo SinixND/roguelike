@@ -65,18 +65,29 @@ Enemies const& handleValidPath(
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
         snx::Debugger::cliLog( "Add move component to hero\n" );
 #endif
+        Vector2I direction{ Vector2MainDirection(
+            Convert::worldToTile(
+                enemies.positions.at( enemyId )
+            ),
+            adjacentPathTile
+        ) };
+
         enemies.moves.insert(
             enemyId,
             MoveComponent{
-                Vector2MainDirection(
-                    Convert::worldToTile(
-                        enemies.positions.at( enemyId )
-                    ),
-                    adjacentPathTile
-                ),
+                direction,
                 EnemiesData::goblin.speedBase,
                 TileData::TILE_SIZE
             }
+        );
+
+        Vector2I currentPosition{
+            Convert::worldToTile( enemies.positions.at( enemyId ) )
+        };
+
+        enemies.ids.changeKey(
+            currentPosition,
+            Vector2Add( currentPosition, direction )
         );
     }
 
