@@ -49,7 +49,7 @@ struct Enemies
     snx::DenseMap<size_t, ActionId> actions{};
     snx::DenseMap<size_t, AttackComponent> attacks{};
     snx::DenseMap<size_t, MoveComponent> moves{};
-    snx::DenseMap<size_t, EmptyComponent> isReadies{};
+    snx::DenseMap<size_t, EmptyComponent> isIdles{};
 };
 
 namespace EnemiesModule

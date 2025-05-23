@@ -54,14 +54,14 @@ void setupGameEvents(
     GameCamera const& gameCamera
 )
 {
+    //* TODO: CHANGE/REMOVE
     snx::EventDispatcher::addListener(
         EventId::MULTIFRAME_ACTIONS_ACTIVE,
         [&]()
         {
-            //* TODO: CHANGE/REMOVE
             game.isMultiFrameActionActive = true;
 
-            game.state = GameState::BUSY;
+            // game.state = GameState::BUSYALAKJSFD;
         }
     );
 
@@ -531,12 +531,12 @@ namespace GameModule
             {
                 EnergySystem::udpate(
                     hero.energy,
-                    hero.isReady,
+                    hero.isIdle,
                     enemies.energies,
-                    enemies.isReadies
+                    enemies.isIdles
                 );
 
-                if ( hero.isReady )
+                if ( hero.isIdle )
                 {
                     game.state = GameState::ACTION_HERO;
                 }
@@ -558,9 +558,9 @@ namespace GameModule
                     gameCamera
                 );
 
-                if ( !hero.isReady )
+                if ( !hero.isIdle )
                 {
-                    game.state = GameState::IDLE;
+                    game.state = GameState::BUSY;
                 }
 
                 break;
@@ -575,12 +575,12 @@ namespace GameModule
                     gameCamera
                 );
 
-                game.state = GameState::IDLE;
+                game.state = GameState::BUSY;
 
                 break;
             }
 
-            case GameState::IDLE:
+            case GameState::BUSY:
             {
                 //* Single frame systems
                 WaitSystem::update(
@@ -598,13 +598,6 @@ namespace GameModule
                     objects
                 );
 
-                game.state = GameState::BUSY;
-
-                break;
-            }
-
-            case GameState::BUSY:
-            {
                 //* Multi frame systems
                 if ( MoveSystem::update(
                          hero,

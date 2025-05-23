@@ -41,7 +41,7 @@ struct Hero
     std::shared_ptr<AttackComponent> attack{};
     std::shared_ptr<MoveComponent> move{};
     std::vector<Vector2I> path{};
-    bool isReady{};
+    bool isIdle{};
 };
 
 struct Map;

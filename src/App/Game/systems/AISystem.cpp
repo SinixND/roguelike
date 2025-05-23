@@ -181,9 +181,9 @@ namespace AISystem
         GameCamera const& gameCamera
     )
     {
-        for ( size_t idx{ 0 }; idx < enemiesIO.isReadies.size(); ++idx )
+        for ( size_t idx{ 0 }; idx < enemiesIO.isIdles.size(); ++idx )
         {
-            size_t enemyId{ enemiesIO.isReadies.key( idx ) };
+            size_t enemyId{ enemiesIO.isIdles.key( idx ) };
 
             std::vector<Vector2I> path{ PathfinderSystem::calculateAStarPath(
                 Convert::worldToTile( enemiesIO.positions.at( enemyId ) ),

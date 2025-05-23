@@ -8,7 +8,6 @@
 #include "Convert.h"
 #include "Cursor.h"
 #include "Directions.h"
-#include "EventDispatcher.h"
 #include "GameCamera.h"
 #include "Hero.h"
 #include "InputId.h"
@@ -47,7 +46,7 @@ Hero const& handleInputInPlace(
     {
         hero.action = std::make_shared<ActionId>( ActionId::INTERACT );
 
-        hero.isReady = false;
+        hero.isIdle = false;
 
         return hero;
     }
@@ -59,7 +58,7 @@ Hero const& handleInputInPlace(
 
     hero.action = std::make_shared<ActionId>( ActionId::WAIT );
 
-    hero.isReady = false;
+    hero.isIdle = false;
 
     return hero;
 }
@@ -95,7 +94,7 @@ namespace ActionSystem
 #endif
             hero.attack = std::make_shared<AttackComponent>( target );
 
-            hero.isReady = false;
+            hero.isIdle = false;
         }
 
         //* Move
@@ -113,7 +112,9 @@ namespace ActionSystem
                 TileData::TILE_SIZE
             );
 
-            hero.isReady = false;
+            assert( ( !hero.move->direction.x || !hero.move->direction.y ) && "Direction not orthogonal!" );
+
+            hero.isIdle = false;
 
             //* TODO: CHANGE/REMOVE
             // snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_ACTIVE );

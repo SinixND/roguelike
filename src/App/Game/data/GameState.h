@@ -8,11 +8,10 @@ enum class GameState
     LEVEL_UP_OLD,
     REGEN,
     //* Update single frame systems
-    IDLE,
+    BUSY,
     ACTION_HERO,
     ACTION_NPC,
     //* Update multi frame systems
-    BUSY,
     POST_ACTION,
     LEVEL_UP,
 };
