@@ -1,7 +1,7 @@
 # TODOs
 ## Active 
-- [ ] NPC keeps moving when moving by path
-- [ ] NPCs can (must not) select same tile: path movment penalty?
+- [ ] Check enemy moving two tiles (to reproduce: move in circles in first level first room)
+- [ ] Rework attack system
 
 
 ## Shortterm

@@ -31,7 +31,25 @@ bool checkCollisionWithNextPosition(
 
 namespace CollisionSystem
 {
-    bool checkCollision(
+    bool checkCollisionForHero(
+        Tiles const& tiles,
+        Enemies const& enemies,
+        // Objects const& objects,
+        Vector2I const& tilePositionToCheck
+    )
+    {
+        return (
+            //* Next tilePosition unit moves to
+            enemies.ids.contains( tilePositionToCheck )
+            // || map.objects_.getIsSolids().contains(tilePositionToCheck)
+            || tiles.isSolids.contains( tiles.ids.at( tilePositionToCheck ) )
+            || checkCollisionWithNextPosition(
+                enemies,
+                tilePositionToCheck
+            )
+        );
+    }
+    bool checkCollisionForEnemy(
         Tiles const& tiles,
         Enemies const& enemies,
         // Objects const& objects,

@@ -42,7 +42,8 @@ Enemies const& handleValidPath(
     Enemies& enemies,
     Vector2I const& heroPosition,
     size_t enemyId,
-    Vector2I const& adjacentPathTile
+    Vector2I const& adjacentPathTile,
+    Map const& map
 )
 {
     //* Attack
@@ -60,7 +61,12 @@ Enemies const& handleValidPath(
     }
 
     //* Move
-    else // if (!map.tiles.isSolids.contains( map.tiles.ids.at( target ) ))
+    else if ( !CollisionSystem::checkCollisionForEnemy(
+                  map.tiles,
+                  enemies,
+                  adjacentPathTile,
+                  heroPosition
+              ) )
     {
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
         snx::Debugger::cliLog( "Add move component to enemy\n" );
@@ -139,7 +145,7 @@ Enemies& executeAction(
         //* Path is valid: has at least 2 entries (start and target)
         //* Move
         if ( pathSize > 2
-             && !CollisionSystem::checkCollision(
+             && !CollisionSystem::checkCollisionForEnemy(
                  map.tiles,
                  map.enemies,
                  path.rbegin()[1],
@@ -208,7 +214,8 @@ namespace AISystem
                     enemiesIO,
                     Convert::worldToTile( hero.position ),
                     enemyId,
-                    path.rbegin()[1]
+                    path.rbegin()[1],
+                    map
                 );
             }
         }

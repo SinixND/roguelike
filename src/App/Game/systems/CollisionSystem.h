@@ -8,11 +8,16 @@ struct Vector2I;
 
 namespace CollisionSystem
 {
-    //* Checks for
-    //* - solid tiles
-    //* - enemies
     //* Returns if collision occurs
-    bool checkCollision(
+    bool checkCollisionForHero(
+        Tiles const& tiles,
+        Enemies const& enemies,
+        // Objects const& objects,
+        Vector2I const& tilePositionToCheck
+    );
+
+    //* Returns if collision occurs
+    bool checkCollisionForEnemy(
         Tiles const& tiles,
         Enemies const& enemies,
         // Objects const& objects,

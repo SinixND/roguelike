@@ -77,11 +77,10 @@ Hero const& processDirectionalInput(
         return hero;
     }
     //* Move
-    else if ( !CollisionSystem::checkCollision(
+    else if ( !CollisionSystem::checkCollisionForHero(
                   mapIO.tiles,
                   mapIO.enemies,
-                  target,
-                  Convert::worldToTile( hero.position )
+                  target
               ) )
     {
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
@@ -118,11 +117,10 @@ namespace HeroModule
                 if ( !hero.movement.path.empty() )
                 {
                     //* Move
-                    if ( !CollisionSystem::checkCollision(
+                    if ( !CollisionSystem::checkCollisionForHero(
                              mapIO.tiles,
                              mapIO.enemies,
-                             hero.movement.path.rbegin()[1],
-                             Convert::worldToTile( hero.position )
+                             hero.movement.path.rbegin()[1]
                          ) )
                     {
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
@@ -229,11 +227,10 @@ namespace HeroModule
                     break;
                 }
 
-                else if ( !CollisionSystem::checkCollision(
+                else if ( !CollisionSystem::checkCollisionForHero(
                               mapIO.tiles,
                               mapIO.enemies,
-                              path.rbegin()[1],
-                              Convert::worldToTile( hero.position )
+                              path.rbegin()[1]
                           ) )
                 {
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
