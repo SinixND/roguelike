@@ -1,36 +1,26 @@
 #include "PathSystem.h"
 
 #include "ActionSystem.h"
-#include "Enemies.h"
+#include "Convert.h"
 #include "Hero.h"
 #include <vector>
 
 namespace PathSystem
 {
-    void update(
-        Hero& heroIO,
-        Map const& map
-    )
+    void update( Hero& heroIO )
     {
-        if (!heroIO.path.empty())
+        if ( !heroIO.path.empty() )
         {
             size_t pathSize{ heroIO.path.size() };
 
-            if (pathSize == 2)
-            {
-                heroIO = ActionSystem::handleInputToAdjacentTarget(
-                    heroIO,
-                    map,
-                    heroIO.path.rbegin()[1]
-                );
-            }
-
-            if (pathSize > 2)
+            if (
+                heroIO.path.rbegin()[1] == Convert::worldToTile( heroIO.position )
+            )
             {
                 heroIO.path.pop_back();
             }
 
-            if (pathSize < 2)
+            if ( pathSize < 2 )
             {
                 heroIO.path.clear();
             }

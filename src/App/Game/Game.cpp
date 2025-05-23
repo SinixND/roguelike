@@ -617,10 +617,7 @@ namespace GameModule
             case GameState::POST_ACTION:
             {
                 //* Multi turn systems
-                PathSystem::update(
-                    hero,
-                    *game.world.currentMap
-                );
+                PathSystem::update( hero );
 
                 game.state = GameState::REGEN;
 
