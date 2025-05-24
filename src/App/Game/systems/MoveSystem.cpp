@@ -6,6 +6,7 @@
 #include "EventId.h"
 #include "Hero.h"
 #include "raylibEx.h"
+#include <cassert>
 
 [[nodiscard]]
 Vector2 const& updateEntity(
@@ -14,6 +15,8 @@ Vector2 const& updateEntity(
     float dt
 )
 {
+    assert( moveIO.remainingDistance > 0 && "Movement done but not cleaned up" );
+
     //* TODO: Where/How to store/use speed? Separate component? Attributes?
     //* TODO: Find goblin.speedBase and replace accordingly
     if ( !moveIO.speed )
@@ -42,7 +45,7 @@ Vector2 const& updateEntity(
             moveIO.remainingDistance
         );
 
-        moveIO.speed = 0;
+        moveIO.remainingDistance = 0;
 
         //* === Moved one tile ===
         //* Clean precision errors
@@ -83,7 +86,7 @@ namespace MoveSystem
                 snx::EventDispatcher::notify( EventId::HERO_POSITION_CHANGED );
             }
 
-            if ( !heroIO.move->speed )
+            if ( !heroIO.move->remainingDistance )
             {
                 heroIO.move.reset();
             }
@@ -105,7 +108,7 @@ namespace MoveSystem
                 dt
             );
 
-            if ( !enemiesIO.moves.at( enemyId ).speed )
+            if ( !enemiesIO.moves.at( enemyId ).remainingDistance )
             {
                 enemiesIO.moves.erase( enemyId );
             }
