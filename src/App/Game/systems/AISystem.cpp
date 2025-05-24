@@ -123,7 +123,6 @@ Enemies& executeAction(
         snx::Debugger::cliLog( "Enemy[", enemyId, "] attacks and deals" );
 #endif
         CombatSystem::performAttack(
-            enemiesIO.energies.at( enemyId ),
             enemiesIO.damages.at( enemyId ),
             heroIO.health
         );

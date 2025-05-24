@@ -16,7 +16,6 @@ namespace AttackSystem
             heroIO.energy = EnergyModule::exhaust( heroIO.energy );
 
             CombatSystem::performAttack(
-                heroIO.energy,
                 heroIO.damage,
                 enemiesIO.healths.at(
                     enemiesIO.ids.at(
@@ -35,7 +34,6 @@ namespace AttackSystem
             enemiesIO.energies.at( enemyId ) = EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
 
             CombatSystem::performAttack(
-                enemiesIO.energies.at( enemyId ),
                 enemiesIO.damages.at( enemyId ),
                 heroIO.health
             );

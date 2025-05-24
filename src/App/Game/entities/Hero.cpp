@@ -48,7 +48,6 @@ Hero const& processDirectionalInput(
         snx::Debugger::cliLog( "Hero attacks.\n" );
 #endif
         CombatSystem::performAttack(
-            hero.energy,
             hero.damage,
             mapIO.enemies.healths[enemyIdx]
         );
@@ -217,7 +216,6 @@ namespace HeroModule
                     size_t enemyIdx{ mapIO.enemies.ids.at( path.rbegin()[1] ) };
 
                     CombatSystem::performAttack(
-                        hero.energy,
                         hero.damage,
                         mapIO.enemies.healths[enemyIdx]
                     );
