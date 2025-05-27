@@ -1,6 +1,6 @@
 #include "PathfinderSystem.h"
 
-#define DEBUG_PATHFINDER
+// #define DEBUG_PATHFINDER
 
 #include "Convert.h"
 #include "GameCamera.h"

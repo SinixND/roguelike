@@ -1,7 +1,7 @@
 # TODOs
 ## Active 
-- [ ] Check enemy moving two tiles (to reproduce: move in circles in first level first room)
-- [ ] Rework attack system
+- [ ] Regen on wait
+- [ ] Level up
 
 
 ## Shortterm
@@ -54,6 +54,15 @@
 A roguelike made with raylib and emscripten to learn programming.
 Platforms: Linux, Windows, Browser
 
+## Game features/actions
+- [ ] Move: Single-tile (on button, swipe) and path-guided movement (on mouse click, modifier button or mouse click) possible.
+- [ ] Wait: Perform no action this turn and regenerate 1 HP.
+- [ ] Attack: Damage a adjacent unit. Gain experience by killing.
+- [ ] Interact: Use objects (eg. stairs/ladders) to advance to the next level.
+- [ ] Level up: Gain attribute points on leveling up.
+- [ ] Attributes: Change your stats based on the distribution of your total attribute points among the available stats (experimental approach).
+
+
 ## Concepts used in project (currently or in former versions)
 - Generic Makefile (no cmake)
 - Support for linux / web (library: emscripten) / windows
@@ -65,17 +74,18 @@ Platforms: Linux, Windows, Browser
     Lots of thoughts went into OOP vs DOD/POD design.
     The basic takeaway was: 
     - loose coupling/dependencies via getters/setters/interfaces; more code, possible cost in performance and complexity;
-    - PODs for coupled design, but clear program
+    - PODs for coupled design (clear dependencies), but clear program
     - default to: public and non-member/non-friend until specific action needed
 - AoS classes (for single objects) vs SoA (for multiple)
 - Made DenseMap for container with contiguous data storage (`std::vector`) and persistant id on erase (`std::unordered_map`)
 - Static publisher-subscriber system to communicate between different program areas 
+    - EventDispatcher (publisher/subscriber): Holds lambdas that get executed if notified about event (enum)
 - Shadowcast a FogOfWar layer over Tiles
 - Time-dependent / smooth movement 
 - A* pathfinding
 - Procedural map generation
-- EventDispatcher (publisher/subscriber): Holds lambdas that get executed if notified about event (enum)
-- Modular, feature-first architecture/directory structure; namespaces for layers that correspond to folders in modules (eg. components, data) and potential naming conflicts (eg. Dta::Hero, Cfg::Hero, Cmp::Health, Sys::Health):
+- Modular, feature-first architecture/directory structure and file naming; namespaces correspond to filenames:
+
 ```cpp
 src/
 |-- Module/  // eg. App, Game or UI

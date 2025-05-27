@@ -524,22 +524,18 @@ namespace GameModule
         float dt
     )
     {
-        Hero& hero{ game.hero };
-        Enemies& enemies{ game.world.currentMap->enemies };
-        Objects& objects{ game.world.currentMap->objects };
-
         switch ( game.state )
         {
             case GameState::REGEN:
             {
                 EnergySystem::udpate(
-                    hero.energy,
-                    hero.isIdle,
-                    enemies.energies,
-                    enemies.isIdles
+                    game.hero.energy,
+                    game.hero.isIdle,
+                    game.world.currentMap->enemies.energies,
+                    game.world.currentMap->enemies.isIdles
                 );
 
-                if ( hero.isIdle )
+                if ( game.hero.isIdle )
                 {
                     game.state = GameState::ACTION_HERO;
                 }
@@ -554,14 +550,14 @@ namespace GameModule
             case GameState::ACTION_HERO:
             {
                 ActionSystem::update(
-                    hero,
+                    game.hero,
                     *game.world.currentMap,
                     currentInputId,
                     cursor,
                     gameCamera
                 );
 
-                if ( !hero.isIdle )
+                if ( !game.hero.isIdle )
                 {
                     game.state = GameState::BUSY;
                 }
@@ -572,9 +568,9 @@ namespace GameModule
             case GameState::ACTION_NPC:
             {
                 AISystem::update(
-                    enemies,
+                    game.world.currentMap->enemies,
                     *game.world.currentMap,
-                    hero,
+                    game.hero,
                     gameCamera
                 );
 
@@ -587,24 +583,24 @@ namespace GameModule
             {
                 //* Single frame systems
                 WaitSystem::update(
-                    hero,
-                    enemies
+                    game.hero,
+                    game.world.currentMap->enemies
                 );
 
                 AttackSystem::update(
-                    hero,
-                    enemies
+                    game.hero,
+                    game.world.currentMap->enemies
                 );
 
                 InteractSystem::update(
-                    hero,
-                    objects
+                    game.hero,
+                    game.world.currentMap->objects
                 );
 
                 //* Multi frame systems
                 if ( MoveSystem::update(
-                         hero,
-                         enemies,
+                         game.hero,
+                         game.world.currentMap->enemies,
                          dt
                      ) )
                 {
@@ -627,7 +623,6 @@ namespace GameModule
                     game.world.currentMap->enemies
                 );
 
-                //* TODO: replace dead enemies
                 game.world.currentMap->enemies = EnemiesModule::replaceDead(
                     game.world.currentMap->enemies,
                     game.world.currentMap->tiles,
