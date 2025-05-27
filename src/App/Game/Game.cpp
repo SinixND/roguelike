@@ -140,7 +140,9 @@ void setupGameEvents(
         EventId::INTERRUPT_MOVEMENT,
         [&]()
         {
-            game.hero.movement.path.clear();
+            game.hero.path.clear();
+            //* TODO: CHANGE/REMOVE
+            // game.hero.movement.path.clear();
         }
     );
 
