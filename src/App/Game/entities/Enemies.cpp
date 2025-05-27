@@ -85,7 +85,7 @@ Vector2I getRandomPosition(
              ) )
         {
             return randomPosition;
-        };
+        }
     }
 }
 
@@ -125,6 +125,7 @@ namespace EnemiesModule
         enemies.positions.insert( id, Convert::tileToWorld( tilePosition ) );
         enemies.renderIds.insert( id, renderId );
         enemies.names.insert( id, renderNames.at( renderId ) );
+        //* TODO: CHANGE/REMOVE
         enemies.transforms.insert( id, transform );
         enemies.movements.insert( id, movement );
         enemies.energies.insert( id, energy );
@@ -154,12 +155,19 @@ namespace EnemiesModule
         enemies.positions.erase( id );
         enemies.renderIds.erase( id );
         enemies.names.erase( id );
-        enemies.transforms.erase( id );
-        enemies.movements.erase( id );
         enemies.energies.erase( id );
         enemies.healths.erase( id );
         enemies.damages.erase( id );
         enemies.experiences.erase( id );
+        enemies.attributes.erase( id );
+        //* TODO: CHANGE/REMOVE
+        enemies.transforms.erase( id );
+        enemies.movements.erase( id );
+
+        enemies.actions.erase( id );
+        enemies.attacks.erase( id );
+        enemies.moves.erase( id );
+        enemies.isIdles.erase( id );
 
         return enemies;
     }

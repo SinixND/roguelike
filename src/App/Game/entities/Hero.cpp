@@ -49,6 +49,7 @@ Hero const& processDirectionalInput(
 #endif
         CombatSystem::performAttack(
             hero.damage,
+            1,
             mapIO.enemies.healths[enemyIdx]
         );
 
@@ -217,6 +218,7 @@ namespace HeroModule
 
                     CombatSystem::performAttack(
                         hero.damage,
+                        1,
                         mapIO.enemies.healths[enemyIdx]
                     );
 

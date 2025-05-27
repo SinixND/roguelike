@@ -7,12 +7,14 @@ namespace CombatSystem
 {
     void performAttack(
         DamageComponent const& attackerDamage,
+        size_t attackerId,
         HealthComponent& defenderHealthIO
     )
     {
         defenderHealthIO = HealthModule::damage(
             defenderHealthIO,
-            DamageModule::damageRNG( attackerDamage )
+            DamageModule::damageRNG( attackerDamage ),
+            attackerId
         );
 
         return;

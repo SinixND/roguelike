@@ -124,6 +124,7 @@ Enemies& executeAction(
 #endif
         CombatSystem::performAttack(
             enemiesIO.damages.at( enemyId ),
+            enemyId,
             heroIO.health
         );
     }

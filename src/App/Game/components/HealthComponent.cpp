@@ -14,7 +14,8 @@ namespace HealthModule
 {
     HealthComponent const& damage(
         HealthComponent& health,
-        int value
+        int value,
+        size_t damageSourceId
     )
     {
 #if defined( DEBUG ) && defined( DEBUG_HEALTH )
@@ -29,12 +30,9 @@ namespace HealthModule
             health.current = 0;
         }
 
-        snx::EventDispatcher::notify( EventId::INTERRUPT_MOVEMENT );
+        health.lastDamageSourceId = damageSourceId;
 
-        if ( health.current <= 0 )
-        {
-            return health;
-        }
+        snx::EventDispatcher::notify( EventId::INTERRUPT_MOVEMENT );
 
         return health;
     }

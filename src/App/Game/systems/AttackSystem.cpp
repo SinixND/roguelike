@@ -17,6 +17,7 @@ namespace AttackSystem
 
             CombatSystem::performAttack(
                 heroIO.damage,
+                1,
                 enemiesIO.healths.at(
                     enemiesIO.ids.at(
                         heroIO.attack->target
@@ -35,6 +36,7 @@ namespace AttackSystem
 
             CombatSystem::performAttack(
                 enemiesIO.damages.at( enemyId ),
+                enemyId,
                 heroIO.health
             );
         }

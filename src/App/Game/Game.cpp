@@ -19,6 +19,7 @@
 #include "Hero.h"
 #include "InputId.h"
 #include "InteractSystem.h"
+#include "KillSystem.h"
 #include "MoveSystem.h"
 #include "MovementSystem.h"
 #include "Objects.h"
@@ -619,7 +620,19 @@ namespace GameModule
             case GameState::POST_ACTION:
             {
                 //* Multi turn systems
-                PathSystem::update( hero );
+                PathSystem::update( game.hero );
+
+                KillSystem::update(
+                    game.hero,
+                    game.world.currentMap->enemies
+                );
+
+                //* TODO: replace dead enemies
+                game.world.currentMap->enemies = EnemiesModule::replaceDead(
+                    game.world.currentMap->enemies,
+                    game.world.currentMap->tiles,
+                    game.world.currentMapLevel
+                );
 
                 game.state = GameState::REGEN;
 

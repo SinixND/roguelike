@@ -24,7 +24,7 @@ int getNewThreshold( int level )
     //* NOTE: Multiply whole expression by current level to make kills necessary the scaling threshold
     int lvl = level - 1;
 
-    return lvl * static_cast<int>( ( 1 * pow( lvl, 1.5f ) + BASE_EXPERIENCE ) );
+    return lvl * static_cast<int>(( 1 * pow( lvl, 1.5f ) + BASE_EXPERIENCE ));
 }
 
 namespace ExperienceSystem
@@ -59,7 +59,7 @@ namespace ExperienceSystem
         return experience;
     }
 
-    HealthComponent const& raiseHealth(
+    HealthComponent const& raiseBaseHealth(
         HealthComponent& health
     )
     {
@@ -73,7 +73,7 @@ namespace ExperienceSystem
         HealthComponent& healthIO
     )
     {
-        healthIO = raiseHealth( healthIO );
+        healthIO = raiseBaseHealth( healthIO );
     }
 }
 
