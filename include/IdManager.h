@@ -10,7 +10,8 @@ namespace snx
     class IdManager
     {
         size_t maxId_ = std::numeric_limits<size_t>::max();
-        size_t lastId_{ 0 };
+        //* First requested id is initialization value + 1
+        size_t lastId_{ 1 };
 
         std::unordered_set<size_t> activeIds_{};
         std::unordered_set<size_t> freeIds_{};
@@ -53,7 +54,6 @@ namespace snx
 
         size_t incrementedId()
         {
-            //* START WITH ID = 1
             ++lastId_;
 
             assert( lastId_ < maxId_ && "ID OVERFLOWING!" );
