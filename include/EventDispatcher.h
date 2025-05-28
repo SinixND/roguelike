@@ -48,7 +48,7 @@ namespace snx
 #if defined( DEBUG ) && defined( DEBUG_EVENT_DISPATCHER )
             debug::cliLog( "Notify about event '", eventIdToName.at( event ), "'.\n" );
 #endif
-            for ( std::function<void()>& listener : eventToListenerLists_[event] )
+            for ( std::function<void()> const& listener : eventToListenerLists_[event] )
             {
                 listener();
             }
@@ -65,7 +65,7 @@ namespace snx
         {
             if ( eventToListenerLists_.find( event ) == eventToListenerLists_.end() )
             {
-                eventToListenerLists_[event] = ListenerList();
+                eventToListenerLists_.try_emplace( event, ListenerList() );
             }
         }
     };

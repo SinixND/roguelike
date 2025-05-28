@@ -150,6 +150,8 @@ namespace EnemiesModule
         size_t id
     )
     {
+        Enemies::idManager.suspendId( id );
+
         enemies.ids.erase( Convert::worldToTile( enemies.positions.at( id ) ) );
         enemies.ais.erase( id );
         enemies.positions.erase( id );

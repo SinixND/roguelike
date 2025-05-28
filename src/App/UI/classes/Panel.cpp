@@ -1,6 +1,6 @@
 #include "Panel.h"
 
-Panel::Panel( RectangleEx rectangle )
+Panel::Panel( RectangleEx const& rectangle )
     : rectangle_{ rectangle }
 {
 }
@@ -16,13 +16,13 @@ Panel::Panel(
 {
 }
 
-void Panel::setRectangle( RectangleEx rectangle )
+void Panel::setRectangle( RectangleEx const& rectangle )
 {
     rectangle_ = rectangle;
 }
 
 void Panel::setOuter(
-    RectangleEx outer,
+    RectangleEx const& outer,
     float margin,
     float padding
 )

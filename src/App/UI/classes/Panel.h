@@ -14,7 +14,7 @@ class Panel
 public:
     Panel() = default;
 
-    explicit Panel( RectangleEx rectangle );
+    explicit Panel( RectangleEx const& rectangle );
 
     Panel(
         RectangleEx rectangle,
@@ -22,11 +22,11 @@ public:
         float padding
     );
 
-    void setRectangle( RectangleEx rectangle );
+    void setRectangle( RectangleEx const& rectangle );
     // void setMargin( float margin );
     // void setPadding( float padding );
     void setOuter(
-        RectangleEx outer,
+        RectangleEx const& outer,
         float margin,
         float padding
     );

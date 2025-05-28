@@ -91,8 +91,6 @@ namespace MoveSystem
             {
                 heroIO.move.reset();
             }
-
-            return false;
         }
 
         for ( size_t idx{ 0 }; idx < enemiesIO.moves.size(); ++idx )

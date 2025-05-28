@@ -403,7 +403,21 @@ all: bd br
 
 ### CppCheck static analysis
 analyze:
-	cppcheck --quiet --enable=all --suppress=missingIncludeSystem --suppress=missingInclude --suppress=selfAssignment --suppress=cstyleCast --check-level=exhaustive src/
+	@cppcheck \
+		--quiet \
+		--enable=all \
+		--suppress=missingIncludeSystem \
+		--suppress=missingInclude \
+		--suppress=selfAssignment \
+		--suppress=cstyleCast \
+		--suppress=unmatchedSuppression \
+		--check-level=exhaustive \
+		--error-exitcode=1 \
+		--cppcheck-build-dir=$(BUILD_DIR_ROOT)/cppcheck \
+		--template=gcc \
+		-I include/ \
+		-I src/ \
+		src/
 
 ### Build binary with current config
 build: $(BIN_DIR)/$(BIN)$(BIN_EXT)

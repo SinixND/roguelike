@@ -48,10 +48,10 @@ namespace snx
             turnMessages_.push_front( message );
         }
 
-        static void logAppend( std::string const& message )
-        {
-            turnMessages_.front() += message;
-        }
+        // static void logAppend( std::string const& message )
+        // {
+        //     turnMessages_.front() += message;
+        // }
 
         static size_t hasTurnMessage()
         {
