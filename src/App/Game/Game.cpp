@@ -20,6 +20,7 @@
 #include "InputId.h"
 #include "InteractSystem.h"
 #include "KillSystem.h"
+#include "LevelUpSystem.h"
 #include "MoveSystem.h"
 #include "MovementSystem.h"
 #include "Objects.h"
@@ -41,14 +42,6 @@
 #endif
 #include "RNG.h"
 #endif
-
-char constexpr ATTRIBUTE_CHOICES[ATTRIBUTES + 1]{
-    '0', //* NONE
-    'v', //* Vitality
-    't', //* Strength
-    'e', //* Defence
-    'g', //* Agility
-};
 
 void setupGameEvents(
     Game& game,
@@ -159,7 +152,7 @@ void setupGameEvents(
         EventId::LEVEL_UP,
         [&]()
         {
-            game.state = GameState::LEVEL_UP_OLD;
+            game.state = GameState::LEVEL_UP;
         }
     );
 
@@ -167,7 +160,9 @@ void setupGameEvents(
         EventId::LEVELED_UP,
         [&]()
         {
-            game.state = GameState::DEFAULT_OLD;
+            game.state = GameState::REGEN;
+            //* TODO: CHANGE/REMOVE
+            // game.state = GameState::DEFAULT_OLD;
         }
     );
 }
@@ -365,123 +360,6 @@ Game const& updateGameLogic(
     return game;
 }
 
-[[nodiscard]]
-Hero const& levelUpHero(
-    Hero& hero,
-    char attributeChoice
-)
-{
-    switch ( attributeChoice )
-    {
-        default:
-            return hero;
-
-        case 'V':
-        case 'v':
-        {
-            ++hero.attributes.vitality;
-
-            break;
-        }
-
-        case 'T':
-        case 't':
-        {
-            ++hero.attributes.strength;
-
-            break;
-        }
-
-        case 'E':
-        case 'e':
-        {
-            ++hero.attributes.defense;
-
-            break;
-        }
-
-        case 'G':
-        case 'g':
-        {
-            ++hero.attributes.agility;
-
-            break;
-        }
-    }
-
-    ExperienceSystem::updateStats( hero.health );
-
-    AttributeSystem::updateStats(
-        hero.health,
-        hero.energy,
-        hero.attributes
-    );
-
-    hero.health.current = hero.health.maximum;
-
-    if ( ( AttributesModule::totalPoints( hero.attributes ) - ( ATTRIBUTES * BASE_POINTS ) ) < hero.experience.level )
-    {
-        return hero;
-    }
-    snx::EventDispatcher::notify( EventId::LEVELED_UP );
-
-    return hero;
-}
-
-[[nodiscard]]
-Game const& updateLevelUpLogic(
-    Game& game,
-    InputId currentInputId
-)
-{
-    char attributeChoice{ 0 };
-
-    switch ( currentInputId )
-    {
-        default:
-            attributeChoice = GetCharPressed();
-
-            break;
-
-        case InputId::ACT_DOWN:
-        {
-            ++game.selectedAttribute;
-
-            break;
-        }
-
-        case InputId::ACT_UP:
-        {
-            --game.selectedAttribute;
-
-            break;
-        }
-
-        case InputId::ACT_IN_PLACE:
-        {
-            if ( !attributeChoice )
-            {
-                attributeChoice = ATTRIBUTE_CHOICES[game.selectedAttribute];
-            }
-
-            break;
-        }
-    }
-
-    if ( game.selectedAttribute > ATTRIBUTES )
-    {
-        game.selectedAttribute = 1;
-    }
-    else if ( game.selectedAttribute < 1 )
-    {
-        game.selectedAttribute = ATTRIBUTES;
-    }
-
-    game.hero = levelUpHero( game.hero, attributeChoice );
-
-    return game;
-}
-
 namespace GameModule
 {
     Game const& init(
@@ -559,7 +437,7 @@ namespace GameModule
 
                 if ( !game.hero.isIdle )
                 {
-                    game.state = GameState::BUSY;
+                    game.state = GameState::SINGLE_FRAME_ACTIONS;
                 }
 
                 break;
@@ -574,14 +452,13 @@ namespace GameModule
                     gameCamera
                 );
 
-                game.state = GameState::BUSY;
+                game.state = GameState::SINGLE_FRAME_ACTIONS;
 
                 break;
             }
 
-            case GameState::BUSY:
+            case GameState::SINGLE_FRAME_ACTIONS:
             {
-                //* Single frame systems
                 WaitSystem::update(
                     game.hero,
                     game.world.currentMap->enemies
@@ -597,7 +474,13 @@ namespace GameModule
                     game.world.currentMap->objects
                 );
 
-                //* Multi frame systems
+                game.state = GameState::MULTI_FRAME_ACTIONS;
+
+                break;
+            }
+
+            case GameState::MULTI_FRAME_ACTIONS:
+            {
                 if ( MoveSystem::update(
                          game.hero,
                          game.world.currentMap->enemies,
@@ -615,7 +498,6 @@ namespace GameModule
 
             case GameState::POST_ACTION:
             {
-                //* Multi turn systems
                 PathSystem::update( game.hero );
 
                 KillSystem::update(
@@ -629,7 +511,24 @@ namespace GameModule
                     game.world.currentMapLevel
                 );
 
-                game.state = GameState::REGEN;
+                if ( game.hero.experience.current < game.hero.experience.levelUpThreshold )
+                {
+                    game.state = GameState::REGEN;
+                }
+                else
+                {
+                    game.state = GameState::LEVEL_UP;
+                }
+
+                break;
+            }
+
+            case GameState::LEVEL_UP:
+            {
+                game = LevelUpSystem::update(
+                    game,
+                    currentInputId
+                );
 
                 break;
             }
@@ -643,16 +542,6 @@ namespace GameModule
                     cursor,
                     currentInputId,
                     dt
-                );
-
-                break;
-            }
-
-            case GameState::LEVEL_UP_OLD:
-            {
-                game = updateLevelUpLogic(
-                    game,
-                    currentInputId
                 );
 
                 break;

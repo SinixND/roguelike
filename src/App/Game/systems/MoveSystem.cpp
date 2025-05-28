@@ -7,6 +7,7 @@
 #include "Hero.h"
 #include "raylibEx.h"
 #include <cassert>
+#include <cstddef>
 
 [[nodiscard]]
 Vector2 const& updateEntity(

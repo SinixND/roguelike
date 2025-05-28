@@ -5,15 +5,15 @@
 enum class GameState
 {
     DEFAULT_OLD,
-    LEVEL_UP_OLD,
+    LEVEL_UP,
     REGEN,
     //* Update single frame systems
-    BUSY,
+    SINGLE_FRAME_ACTIONS,
     ACTION_HERO,
     ACTION_NPC,
     //* Update multi frame systems
+    MULTI_FRAME_ACTIONS,
     POST_ACTION,
-    LEVEL_UP,
 };
 
 #endif
