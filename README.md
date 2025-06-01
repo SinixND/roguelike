@@ -1,7 +1,6 @@
 # TODOs
 ## Active 
-- [ ] Regen on wait
-- [ ] Level up
+- [ ] Check Regeneration Rate change with agility
 
 
 ## Shortterm
