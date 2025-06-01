@@ -30,9 +30,9 @@ namespace EnergySystem
 {
     void udpate(
         EnergyComponent& heroEnergyIO,
-        bool& heroIsReadyOut,
+        bool& heroIsIdleOut,
         snx::DenseMap<size_t, EnergyComponent>& enemyEnergiesIO,
-        snx::DenseMap<size_t, EmptyComponent>& enemyIsReadiesOut
+        snx::DenseMap<size_t, EmptyComponent>& enemyIsIdlesOut
     )
     {
         //* Regenerate energy until a unit becomes ready
@@ -53,7 +53,7 @@ namespace EnergySystem
 #if defined( DEBUG ) && defined( DEBUG_ENERGY_SYSTEM )
                 snx::Debugger::cliLog( "Hero ready. Next Turn.\n\n" );
 #endif
-                heroIsReadyOut = true;
+                heroIsIdleOut = true;
 
                 snx::EventDispatcher::notify( EventId::NEXT_TURN );
 
@@ -73,7 +73,7 @@ namespace EnergySystem
 #if defined( DEBUG ) && defined( DEBUG_ENERGY_SYSTEM )
                     snx::Debugger::cliPrint( ": is ready.\n\n" );
 #endif
-                    enemyIsReadiesOut.insert( enemyEnergiesIO.key( idx ) );
+                    enemyIsIdlesOut.insert( enemyEnergiesIO.key( idx ) );
 
                     isUnitReady = true;
 
