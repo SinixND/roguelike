@@ -2,7 +2,6 @@
 
 #include "ActionId.h"
 #include "Enemies.h"
-#include "EnergyComponent.h"
 #include "Hero.h"
 
 namespace WaitSystem
@@ -17,7 +16,7 @@ namespace WaitSystem
             && *heroIO.action == ActionId::WAIT
         )
         {
-            heroIO.energy = EnergyModule::exhaust( heroIO.energy );
+            heroIO.health = HealthModule::regenerate( heroIO.health );
 
             heroIO.action.reset();
         }
@@ -28,8 +27,6 @@ namespace WaitSystem
 
             if ( enemiesIO.actions[idx] == ActionId::WAIT )
             {
-                enemiesIO.energies.at( enemyId ) = EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
-
                 enemiesIO.actions.erase( enemyId );
             }
         }

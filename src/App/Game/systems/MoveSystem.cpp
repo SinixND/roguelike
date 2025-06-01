@@ -72,8 +72,6 @@ namespace MoveSystem
 
             Vector2I oldPosition{ Convert::worldToTile( heroIO.position ) };
 
-            heroIO.energy = EnergyModule::exhaust( heroIO.energy );
-
             heroIO.position = updateEntity(
                 heroIO.position,
                 *heroIO.move,
@@ -98,8 +96,6 @@ namespace MoveSystem
             allMovesDone = false;
 
             size_t enemyId{ enemiesIO.moves.key( idx ) };
-
-            enemiesIO.energies.at( enemyId ) = EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
 
             enemiesIO.positions.at( enemyId ) = updateEntity(
                 enemiesIO.positions.at( enemyId ),

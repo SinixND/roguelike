@@ -44,6 +44,8 @@ Hero const& handleInputInPlace(
         )
     )
     {
+        hero.energy = EnergyModule::exhaust( hero.energy );
+
         hero.action = std::make_shared<ActionId>( ActionId::INTERACT );
 
         hero.isIdle = false;
@@ -55,6 +57,8 @@ Hero const& handleInputInPlace(
     snx::Debugger::cliLog( "Hero waits.\n" );
 #endif
     snx::Logger::log( "Hero waits...\n" );
+
+    hero.energy = EnergyModule::exhaust( hero.energy );
 
     hero.action = std::make_shared<ActionId>( ActionId::WAIT );
 
@@ -92,6 +96,8 @@ namespace ActionSystem
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
             snx::Debugger::cliLog( "Add attack component to hero.\n" );
 #endif
+            hero.energy = EnergyModule::exhaust( hero.energy );
+
             hero.attack = std::make_shared<AttackComponent>( target );
 
             hero.isIdle = false;
@@ -103,6 +109,8 @@ namespace ActionSystem
 #if defined( DEBUG ) && defined( DEBUG_HERO_ACTIONS )
             snx::Debugger::cliLog( "Add move component to hero\n" );
 #endif
+            hero.energy = EnergyModule::exhaust( hero.energy );
+
             hero.move = std::make_shared<MoveComponent>(
                 Vector2Subtract(
                     target,

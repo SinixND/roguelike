@@ -13,8 +13,6 @@ namespace AttackSystem
     {
         if ( heroIO.attack )
         {
-            heroIO.energy = EnergyModule::exhaust( heroIO.energy );
-
             CombatSystem::performAttack(
                 heroIO.damage,
                 1,
@@ -31,8 +29,6 @@ namespace AttackSystem
         for ( size_t idx{ 0 }; idx < enemiesIO.attacks.size(); ++idx )
         {
             size_t enemyId{ enemiesIO.attacks.key( idx ) };
-
-            enemiesIO.energies.at( enemyId ) = EnergyModule::exhaust( enemiesIO.energies.at( enemyId ) );
 
             CombatSystem::performAttack(
                 enemiesIO.damages.at( enemyId ),

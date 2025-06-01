@@ -29,6 +29,8 @@ Enemies const& handleInvalidPath(
 )
 {
     //* Wait
+    enemies.energies.at( enemyId ) = EnergyModule::exhaust( enemies.energies.at( enemyId ) );
+
     enemies.actions.insert(
         enemyId,
         ActionId::WAIT
@@ -52,6 +54,8 @@ Enemies const& handleValidPath(
 #if defined( DEBUG ) && defined( DEBUG_AI_ACTIONS )
         snx::Debugger::cliLog( "Add attack component to hero.\n" );
 #endif
+        enemies.energies.at( enemyId ) = EnergyModule::exhaust( enemies.energies.at( enemyId ) );
+
         enemies.attacks.insert(
             enemyId,
             AttackComponent{ adjacentPathTile }
@@ -77,6 +81,8 @@ Enemies const& handleValidPath(
             ),
             adjacentPathTile
         ) };
+
+        enemies.energies.at( enemyId ) = EnergyModule::exhaust( enemies.energies.at( enemyId ) );
 
         enemies.moves.insert(
             enemyId,

@@ -17,8 +17,6 @@ namespace InteractSystem
             && *heroIO.action == ActionId::INTERACT
         )
         {
-            heroIO.energy = EnergyModule::exhaust( heroIO.energy );
-
             size_t objectId{ objects.ids.at( Convert::worldToTile( heroIO.position ) ) };
 
             //* Interact if possible
