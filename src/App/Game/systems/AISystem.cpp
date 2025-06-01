@@ -82,7 +82,8 @@ Enemies const& handleValidPath(
             adjacentPathTile
         ) };
 
-        enemies.energies.at( enemyId ) = EnergyModule::exhaust( enemies.energies.at( enemyId ) );
+        //* TODO: CHANGE/REMOVE
+        // enemies.energies.at( enemyId ) = EnergyModule::exhaust( enemies.energies.at( enemyId ) );
 
         enemies.moves.insert(
             enemyId,
@@ -102,6 +103,8 @@ Enemies const& handleValidPath(
             Vector2Add( currentPosition, direction )
         );
     }
+
+    enemies.energies.at( enemyId ) = EnergyModule::exhaust( enemies.energies.at( enemyId ) );
 
     return enemies;
 }
