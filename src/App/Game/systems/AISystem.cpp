@@ -228,6 +228,8 @@ namespace AISystem
                 );
             }
         }
+
+        enemiesIO.isIdles.clear();
     }
 
     //* TODO: CHANGE/REMOVE
