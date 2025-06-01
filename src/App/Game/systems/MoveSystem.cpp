@@ -58,7 +58,7 @@ Vector2 const& updateEntity(
 
 namespace MoveSystem
 {
-    bool update(
+    void update(
         Hero& heroIO,
         Enemies& enemiesIO,
         float dt
@@ -113,6 +113,9 @@ namespace MoveSystem
             }
         }
 
-        return allMovesDone;
+        if ( allMovesDone )
+        {
+            snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_DONE );
+        };
     }
 }

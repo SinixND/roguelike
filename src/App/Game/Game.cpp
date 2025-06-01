@@ -145,6 +145,16 @@ void setupGameEvents(
         [&]()
         {
             ++game.turn;
+
+            game.state = GameState::ACTION_HERO;
+        }
+    );
+
+    snx::EventDispatcher::addListener(
+        EventId::NPC_ACTION,
+        [&]()
+        {
+            game.state = GameState::ACTION_NPC;
         }
     );
 
@@ -413,15 +423,6 @@ namespace GameModule
                     game.world.currentMap->enemies.isIdles
                 );
 
-                if ( game.hero.isIdle )
-                {
-                    game.state = GameState::ACTION_HERO;
-                }
-                else
-                {
-                    game.state = GameState::ACTION_NPC;
-                }
-
                 break;
             }
 
@@ -481,17 +482,11 @@ namespace GameModule
 
             case GameState::MULTI_FRAME_ACTIONS:
             {
-                if ( MoveSystem::update(
-                         game.hero,
-                         game.world.currentMap->enemies,
-                         dt
-                     ) )
-                {
-                    //* TODO: CHANGE/REMOVE
-                    // snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_DONE );
-                    //* TODO: or
-                    game.state = GameState::POST_ACTION;
-                }
+                MoveSystem::update(
+                    game.hero,
+                    game.world.currentMap->enemies,
+                    dt
+                );
 
                 break;
             }
@@ -511,13 +506,9 @@ namespace GameModule
                     game.world.currentMapLevel
                 );
 
-                if ( game.hero.experience.current < game.hero.experience.levelUpThreshold )
+                if ( game.state == GameState::POST_ACTION )
                 {
                     game.state = GameState::REGEN;
-                }
-                else
-                {
-                    game.state = GameState::LEVEL_UP;
                 }
 
                 break;

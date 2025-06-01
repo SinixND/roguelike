@@ -76,6 +76,8 @@ namespace EnergySystem
                     enemyIsReadiesOut.insert( enemyEnergiesIO.key( idx ) );
 
                     isUnitReady = true;
+
+                    snx::EventDispatcher::notify( EventId::NPC_ACTION );
                 }
             }
         }

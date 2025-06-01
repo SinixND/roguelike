@@ -20,6 +20,7 @@ enum class EventId
     MULTIFRAME_ACTIONS_DONE,
     NEXT_LEVEL,
     NEXT_TURN,
+    NPC_ACTION,
     PREVIOUS_LEVEL,
     WINDOW_RESIZED,
 };
@@ -38,7 +39,8 @@ inline std::unordered_map<EventId, std::string> const eventIdToName{
     { EventId::MULTIFRAME_ACTIONS_ACTIVE, "Multiframe action active" },
     { EventId::MULTIFRAME_ACTIONS_DONE, "Multiframe action done" },
     { EventId::NEXT_LEVEL, "Next level" },
-    { EventId::NEXT_TURN, "Next turn" },
+    { EventId::NEXT_TURN, "Next turn, take hero action" },
+    { EventId::NPC_ACTION, "Take enemy action" },
     { EventId::PREVIOUS_LEVEL, "Previous level" },
     { EventId::WINDOW_RESIZED, "Window resized" },
 };
