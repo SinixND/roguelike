@@ -10,7 +10,7 @@ bool checkCollisionWithNextPosition(
     Vector2I const& tilePositionToCheck
 )
 {
-    for ( size_t idx{ 0 }; idx < enemies.transforms.size(); ++idx )
+    for ( size_t idx{ 0 }; idx < enemies.moves.size(); ++idx )
     {
         if ( Vector2Equals(
                  tilePositionToCheck,
@@ -18,7 +18,9 @@ bool checkCollisionWithNextPosition(
                      Convert::worldToTile(
                          enemies.positions[idx]
                      ),
-                     enemies.transforms.values()[idx].direction
+                     //* TODO: CHANGE/REMOVE
+                     // enemies.transforms.values()[idx].direction
+                     enemies.moves.values()[idx].direction
                  )
              ) )
         {
@@ -39,14 +41,14 @@ namespace CollisionSystem
     )
     {
         return (
+            tiles.isSolids.contains( tiles.ids.at( tilePositionToCheck ) )
+            || enemies.ids.contains( tilePositionToCheck )
             //* Next tilePosition unit moves to
-            enemies.ids.contains( tilePositionToCheck )
-            // || map.objects_.getIsSolids().contains(tilePositionToCheck)
-            || tiles.isSolids.contains( tiles.ids.at( tilePositionToCheck ) )
             || checkCollisionWithNextPosition(
                 enemies,
                 tilePositionToCheck
             )
+            // || map.objects_.getIsSolids().contains(tilePositionToCheck)
         );
     }
     bool checkCollisionForEnemy(
@@ -58,15 +60,15 @@ namespace CollisionSystem
     )
     {
         return (
+            tiles.isSolids.contains( tiles.ids.at( tilePositionToCheck ) )
+            || enemies.ids.contains( tilePositionToCheck )
             //* Next tilePosition unit moves to
-            enemies.ids.contains( tilePositionToCheck )
-            // || map.objects_.getIsSolids().contains(tilePositionToCheck)
-            || tiles.isSolids.contains( tiles.ids.at( tilePositionToCheck ) )
-            || Vector2Equals( tilePositionToCheck, heroPosition )
             || checkCollisionWithNextPosition(
                 enemies,
                 tilePositionToCheck
             )
+            // || map.objects_.getIsSolids().contains(tilePositionToCheck)
+            || Vector2Equals( tilePositionToCheck, heroPosition )
         );
     }
 }
