@@ -59,7 +59,7 @@ namespace AStarTileModule
         return
             //* Distance to target
             Vector2Length( ratedTile.offsetToTarget )
-            + BIAS * ratedTile.stepsNeeded;
+            + ( BIAS * ( ratedTile.stepsNeeded + ratedTile.penalty ) );
     }
 
     void reconstructPath(
@@ -136,7 +136,7 @@ bool isTileValid(
 }
 
 /// Get main- and off direction while using RNG
-/// for horizontal, vertical and diagnoal offset
+/// for offsets that are exactly horizontal, vertical or diagnoal
 struct GuidedDirectionRNG
 {
     Vector2I main;
