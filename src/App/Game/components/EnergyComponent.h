@@ -2,7 +2,6 @@
 #define IG20240601002118
 
 #include <cassert>
-#include <cmath>
 
 /// Equals default action cost
 float constexpr ENERGY_REGEN_MAX{ 60.0f };

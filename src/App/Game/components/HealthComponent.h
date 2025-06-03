@@ -5,7 +5,7 @@
 
 struct HealthComponent
 {
-    int base{ 10 };
+    int base{ 0 };
     int regenRate{ 0 };
     int maximum{ base };
     int current{ maximum };

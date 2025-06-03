@@ -11,16 +11,20 @@ namespace EnemiesData
         float const speedBase{};
         int const scanRange{};
         int const vitality{};
+        int const strength{};
+        int const defense{};
         int const agility{};
     };
 
     EnemyData constexpr goblin{
-        20,
+        4,
         1,
         20 * TileData::TILE_SIZE,
         10,
-        10,
-        10,
+        1,
+        1,
+        1,
+        1,
     };
 }
 

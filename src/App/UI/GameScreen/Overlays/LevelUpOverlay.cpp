@@ -64,11 +64,16 @@ void LevelUpOverlay::update( Game const& game )
         LIGHTGRAY
     );
 
-    //* Options
-    std::string opt1{ ( game.selectedAttribute == 1 ) ? "[x]" : "[ ]" };
+    int selection{};
+
+    //* Attribute options
+    selection = ( game.selectedAttribute == 1 );
+
+    std::string opt1{ ( selection ) ? "[x]" : "[ ]" };
     opt1 += TextFormat(
-        "[%i%] VIT",
-        100 * ( game.hero.attributes.vitality + ( game.selectedAttribute == 1 ) ) / AttributesModule::totalPoints( game.hero.attributes )
+        " VIT [%][i%]",
+        game.hero.attributes.vitality + selection,
+        100 * ( game.hero.attributes.vitality + selection ) / ( AttributesModule::totalPoints( game.hero.attributes ) + 1 )
     );
 
     DrawTextExCentered(
@@ -81,10 +86,13 @@ void LevelUpOverlay::update( Game const& game )
         LIGHTGRAY
     );
 
-    std::string opt2{ ( game.selectedAttribute == 2 ) ? "[x]" : "[ ]" };
+    selection = ( game.selectedAttribute == 2 );
+
+    std::string opt2{ ( selection ) ? "[x]" : "[ ]" };
     opt2 += TextFormat(
-        "[%i%] STR",
-        100 * ( game.hero.attributes.strength + ( game.selectedAttribute == 2 ) ) / AttributesModule::totalPoints( game.hero.attributes )
+        " STR [%][i%]",
+        game.hero.attributes.strength + selection,
+        100 * ( game.hero.attributes.strength + selection ) / ( AttributesModule::totalPoints( game.hero.attributes ) + 1 )
     );
 
     DrawTextExCentered(
@@ -97,10 +105,13 @@ void LevelUpOverlay::update( Game const& game )
         LIGHTGRAY
     );
 
-    std::string opt3{ ( game.selectedAttribute == 3 ) ? "[x]" : "[ ]" };
+    selection = ( game.selectedAttribute == 3 );
+
+    std::string opt3{ ( selection ) ? "[x]" : "[ ]" };
     opt3 += TextFormat(
-        "[%i%] DEF",
-        100 * ( game.hero.attributes.defense + ( game.selectedAttribute == 3 ) ) / AttributesModule::totalPoints( game.hero.attributes )
+        " DEF [%][i%]",
+        game.hero.attributes.defense + selection,
+        100 * ( game.hero.attributes.defense + selection ) / ( AttributesModule::totalPoints( game.hero.attributes ) + 1 )
     );
 
     DrawTextExCentered(
@@ -113,10 +124,13 @@ void LevelUpOverlay::update( Game const& game )
         LIGHTGRAY
     );
 
-    std::string opt4{ ( game.selectedAttribute == 4 ) ? "[x]" : "[ ]" };
+    selection = ( game.selectedAttribute == 4 );
+
+    std::string opt4{ ( selection ) ? "[x]" : "[ ]" };
     opt4 += TextFormat(
-        "[%i%] AGI",
-        100 * ( game.hero.attributes.agility + ( game.selectedAttribute == 4 ) ) / AttributesModule::totalPoints( game.hero.attributes )
+        " AGI [%][i%]",
+        game.hero.attributes.agility + ( selection ),
+        100 * ( game.hero.attributes.agility + ( selection ) ) / ( AttributesModule::totalPoints( game.hero.attributes ) + 1 )
     );
 
     DrawTextExCentered(

@@ -5,7 +5,7 @@ struct HealthComponent;
 struct EnergyComponent;
 
 int constexpr ATTRIBUTES{ 4 };
-int constexpr BASE_POINTS{ 10 };
+int constexpr BASE_POINTS{ 1 };
 
 struct AttributesComponent
 {

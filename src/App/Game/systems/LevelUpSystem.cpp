@@ -59,7 +59,8 @@ Hero const& levelUpHero(
         }
     }
 
-    ExperienceSystem::updateStats( hero.health );
+    //* NOTE: Deactivate health.base increase for now
+    // ExperienceSystem::updateStats( hero.health );
 
     AttributeSystem::updateStats(
         hero.health,

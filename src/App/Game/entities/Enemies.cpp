@@ -111,6 +111,8 @@ namespace EnemiesModule
         HealthComponent const& health,
         DamageComponent const& damage,
         int vitality,
+        int strength,
+        int defense,
         int agility,
         Vector2I const& tilePosition,
         int scanRange,
@@ -134,6 +136,8 @@ namespace EnemiesModule
         enemies.experiences.insert( id, ExperienceComponent{} );
         enemies.attributes.insert( id, AttributesComponent{
                                            vitality,
+                                           strength,
+                                           defense,
                                            agility,
                                        } );
 
@@ -202,6 +206,8 @@ namespace EnemiesModule
             HealthComponent{ enemyData.healthBase },
             DamageComponent{ enemyData.damageBase },
             enemyData.vitality,
+            enemyData.strength,
+            enemyData.defense,
             enemyData.agility,
             tilePosition,
             enemyData.scanRange,
