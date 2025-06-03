@@ -83,14 +83,47 @@ void LevelUpOverlay::update( Game const& game )
 
     std::string opt2{ ( game.selectedAttribute == 2 ) ? "[x]" : "[ ]" };
     opt2 += TextFormat(
-        "[%i%] AGI",
-        100 * ( game.hero.attributes.agility + ( game.selectedAttribute == 2 ) ) / AttributesModule::totalPoints( game.hero.attributes )
+        "[%i%] STR",
+        100 * ( game.hero.attributes.strength + ( game.selectedAttribute == 2 ) ) / AttributesModule::totalPoints( game.hero.attributes )
     );
+
     DrawTextExCentered(
         GameFont::font(),
         opt2.c_str(),
         panel.inner(),
         2 * GameFont::fontSize,
+        GameFont::fontSize,
+        0,
+        LIGHTGRAY
+    );
+
+    std::string opt3{ ( game.selectedAttribute == 3 ) ? "[x]" : "[ ]" };
+    opt3 += TextFormat(
+        "[%i%] DEF",
+        100 * ( game.hero.attributes.defense + ( game.selectedAttribute == 3 ) ) / AttributesModule::totalPoints( game.hero.attributes )
+    );
+
+    DrawTextExCentered(
+        GameFont::font(),
+        opt3.c_str(),
+        panel.inner(),
+        3 * GameFont::fontSize,
+        GameFont::fontSize,
+        0,
+        LIGHTGRAY
+    );
+
+    std::string opt4{ ( game.selectedAttribute == 4 ) ? "[x]" : "[ ]" };
+    opt4 += TextFormat(
+        "[%i%] AGI",
+        100 * ( game.hero.attributes.agility + ( game.selectedAttribute == 4 ) ) / AttributesModule::totalPoints( game.hero.attributes )
+    );
+
+    DrawTextExCentered(
+        GameFont::font(),
+        opt4.c_str(),
+        panel.inner(),
+        4 * GameFont::fontSize,
         GameFont::fontSize,
         0,
         LIGHTGRAY
