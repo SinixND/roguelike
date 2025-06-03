@@ -1,6 +1,7 @@
 # TODOs
 ## Active 
-- [ ] Check Regeneration Rate change with agility
+- [ ] Check level up UI (both desktop and web): 
+    - [ ] Include all attributes OR remove unused
 
 
 ## Shortterm

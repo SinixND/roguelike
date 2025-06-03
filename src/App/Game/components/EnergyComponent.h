@@ -5,18 +5,18 @@
 #include <cmath>
 
 /// Equals default action cost
-float constexpr ENERGY_REGEN_MAX{ 36.0f };
+float constexpr ENERGY_REGEN_MAX{ 60.0f };
 
-/// Speed can vary between multiplier and 1/multiplier
-float constexpr SPEED_MULTIPLIER_MAX{ 2.0f };
+/// Maximum speed difference between slowest and fastest
+float constexpr SPEED_RATIO_MAX{ 4.0f };
 
-float const ENERGY_REGEN_AVG{ ENERGY_REGEN_MAX / SPEED_MULTIPLIER_MAX };
-float const ENERGY_REGEN_MIN{ ENERGY_REGEN_MAX / std::pow( SPEED_MULTIPLIER_MAX, 2.0f ) };
+/// Helper values
+float const ENERGY_REGEN_MIN{ ENERGY_REGEN_MAX / SPEED_RATIO_MAX };
 
 /// Unit can perform action(s) if energy is full (-> READY)
 struct EnergyComponent
 {
-    float regenRate{ ENERGY_REGEN_AVG };
+    float regenRate{ 0 };
     float current{ 0 };
     //* TODO: CHANGE/REMOVE
     bool isReady{ true };
