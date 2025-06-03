@@ -1,8 +1,10 @@
 # TODOs
 ## Active 
-- [ ] Check level up UI (both desktop and web): 
-    - [ ] Include all attributes OR remove unused
+- [ ] Clean up TODO: CHANGE/REMOVE
 
+# DISCLAIMER
+This project is not under active development anymore.
+In favor of other, smaller projects I may or may not continue working on this in the future.
 
 ## Shortterm
 - [ ] duplicate info: isReady (energy.isReady and isReady to be iterated over in AISystem): Get rid of energy.isReady?

@@ -71,7 +71,7 @@ void LevelUpOverlay::update( Game const& game )
 
     std::string opt1{ ( selection ) ? "[x]" : "[ ]" };
     opt1 += TextFormat(
-        " VIT [%][i%]",
+        " VIT [%i][%i%%]",
         game.hero.attributes.vitality + selection,
         100 * ( game.hero.attributes.vitality + selection ) / ( AttributesModule::totalPoints( game.hero.attributes ) + 1 )
     );
@@ -90,7 +90,7 @@ void LevelUpOverlay::update( Game const& game )
 
     std::string opt2{ ( selection ) ? "[x]" : "[ ]" };
     opt2 += TextFormat(
-        " STR [%][i%]",
+        " STR [%i][%i%%]",
         game.hero.attributes.strength + selection,
         100 * ( game.hero.attributes.strength + selection ) / ( AttributesModule::totalPoints( game.hero.attributes ) + 1 )
     );
@@ -109,7 +109,7 @@ void LevelUpOverlay::update( Game const& game )
 
     std::string opt3{ ( selection ) ? "[x]" : "[ ]" };
     opt3 += TextFormat(
-        " DEF [%][i%]",
+        " DEF [%i][%i%%]",
         game.hero.attributes.defense + selection,
         100 * ( game.hero.attributes.defense + selection ) / ( AttributesModule::totalPoints( game.hero.attributes ) + 1 )
     );
@@ -128,7 +128,7 @@ void LevelUpOverlay::update( Game const& game )
 
     std::string opt4{ ( selection ) ? "[x]" : "[ ]" };
     opt4 += TextFormat(
-        " AGI [%][i%]",
+        " AGI [%i][%i%%]",
         game.hero.attributes.agility + ( selection ),
         100 * ( game.hero.attributes.agility + ( selection ) ) / ( AttributesModule::totalPoints( game.hero.attributes ) + 1 )
     );
