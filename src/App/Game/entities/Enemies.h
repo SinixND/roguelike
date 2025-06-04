@@ -40,12 +40,6 @@ struct Enemies
     snx::DenseMap<size_t, AttributesComponent> attributes{};
 
     //* Optional components
-    //* Old
-    //* TODO: CHANGE/REMOVE
-    snx::DenseMap<size_t, TransformComponent> transforms{};
-    snx::DenseMap<size_t, MovementComponent> movements{};
-    // snx::DenseMap<size_t, std::vector<Vector2I>> paths{};
-    //* New
     snx::DenseMap<size_t, ActionId> actions{};
     snx::DenseMap<size_t, AttackComponent> attacks{};
     snx::DenseMap<size_t, MoveComponent> moves{};
@@ -80,7 +74,7 @@ namespace EnemiesModule
     Enemies const& createAtPosition(
         Enemies& enemies,
         Tiles const& tiles,
-        RenderId enemyId,
+        RenderId renderId,
         Vector2I tilePosition,
         int mapLevel
     );
@@ -89,7 +83,7 @@ namespace EnemiesModule
     Enemies const& createAtRandomPosition(
         Enemies& enemies,
         Tiles const& tiles,
-        RenderId enemyId,
+        RenderId renderId,
         int mapLevel
     );
 
@@ -106,17 +100,11 @@ namespace EnemiesModule
         size_t id
     );
 
-    //* Returns if an at least one energy is/becomes full aka. one enemy is ready
-    bool regenerate( snx::DenseMap<size_t, EnergyComponent>& energiesIO );
-
     [[nodiscard]]
     Enemies const& updateMovements(
         Enemies& enemies,
         float dt
     );
-
-    //* Returns the id of the first ready enemy
-    size_t getActive( snx::DenseMap<size_t, EnergyComponent> const& energies );
 
     [[nodiscard]]
     Enemies const& replaceDead(

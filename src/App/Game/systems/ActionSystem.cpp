@@ -75,8 +75,6 @@ Hero const& handleInputToDistantTarget(
 {
     //* Path
     hero.path = path;
-    //* TODO: CHANGE/REMOVE
-    // hero.path.pop_back();
 
     return hero;
 }
@@ -123,9 +121,6 @@ namespace ActionSystem
             assert( ( !hero.move->direction.x || !hero.move->direction.y ) && "Direction not orthogonal!" );
 
             hero.isIdle = false;
-
-            //* TODO: CHANGE/REMOVE
-            // snx::EventDispatcher::notify( EventId::MULTIFRAME_ACTIONS_ACTIVE );
         }
 
         return hero;
@@ -172,11 +167,7 @@ namespace ActionSystem
                         map,
                         heroIO.path.rbegin()[1]
                     );
-                    //* TODO: CHANGE/REMOVE
-                    // }
 
-                    // if ( pathSize > 2 )
-                    // {
                     heroIO = handleInputToDistantTarget(
                         heroIO,
                         heroIO.path

@@ -19,7 +19,6 @@ struct Game
 
     size_t activeEnemyId{ 0 };
     int selectedAttribute{ 0 };
-    bool isMultiFrameActionActive{ false };
 };
 
 namespace GameModule

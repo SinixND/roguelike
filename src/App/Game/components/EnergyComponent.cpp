@@ -39,31 +39,5 @@ namespace EnergyModule
 
         return energy;
     }
-
-    //* TODO: CHANGE/REMOVE
-    bool regenerate( EnergyComponent& energyIO )
-    {
-        //* If already full
-        if ( !( energyIO.current < 0 ) )
-        {
-#if defined( DEBUG ) && defined( DEBUG_ENERGY )
-            snx::Debugger::cliPrint( "Energy is full.\n" );
-#endif
-            return true;
-        }
-
-        //* Regen energy until full
-#if defined( DEBUG ) && defined( DEBUG_ENERGY )
-        snx::Debugger::cliPrint( "Regen ", energyIO.current, "+", energyIO.regenRate, "\n" );
-#endif
-        energyIO.current += energyIO.regenRate;
-
-        if ( energyIO.current < 0 )
-        {
-            return false;
-        }
-
-        return true;
-    }
 }
 

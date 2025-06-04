@@ -11,9 +11,9 @@ namespace EnergySystem
     /// Regen energy until a unit becomes ready to act and mark it as such
     void udpate(
         EnergyComponent& heroEnergyIO,
-        bool& heroIsReadyOut,
+        bool& heroIsIdleOut,
         snx::DenseMap<size_t, EnergyComponent>& enemyEnergiesIO,
-        snx::DenseMap<size_t, EmptyComponent>& enemyIsReadiesOut
+        snx::DenseMap<size_t, EmptyComponent>& enemyIsIdlesOut
     );
 }
 

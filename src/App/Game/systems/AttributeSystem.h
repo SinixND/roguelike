@@ -11,14 +11,14 @@ namespace AttributeSystem
     HealthComponent const& updateFromVitality(
         HealthComponent& healthIO,
         int vitality,
-        int attributesPointsSum
+        int attributePointsTotal
     );
 
     [[nodiscard]]
     EnergyComponent const& updateFromAgility(
         EnergyComponent& energyIO,
         int agility,
-        int attributesPointsSum
+        int attributePointsTotal
     );
 
     void updateStats(

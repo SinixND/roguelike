@@ -16,7 +16,6 @@
 #include "IdManager.h"
 #include "Logger.h"
 #include "MovementComponent.h"
-#include "MovementSystem.h"
 #include "RNG.h"
 #include "RenderId.h"
 #include "Tiles.h"
@@ -105,8 +104,6 @@ namespace EnemiesModule
 {
     Enemies const& insert(
         Enemies& enemies,
-        TransformComponent const& transform,
-        MovementComponent const& movement,
         EnergyComponent const& energy,
         HealthComponent const& health,
         DamageComponent const& damage,
@@ -127,9 +124,6 @@ namespace EnemiesModule
         enemies.positions.insert( id, Convert::tileToWorld( tilePosition ) );
         enemies.renderIds.insert( id, renderId );
         enemies.names.insert( id, renderNames.at( renderId ) );
-        //* TODO: CHANGE/REMOVE
-        enemies.transforms.insert( id, transform );
-        enemies.movements.insert( id, movement );
         enemies.energies.insert( id, energy );
         enemies.healths.insert( id, health );
         enemies.damages.insert( id, damage );
@@ -166,9 +160,6 @@ namespace EnemiesModule
         enemies.damages.erase( id );
         enemies.experiences.erase( id );
         enemies.attributes.erase( id );
-        //* TODO: CHANGE/REMOVE
-        enemies.transforms.erase( id );
-        enemies.movements.erase( id );
 
         enemies.actions.erase( id );
         enemies.attacks.erase( id );
@@ -200,8 +191,6 @@ namespace EnemiesModule
         //* Use mapLevel as expLevel for created enemies
         enemies = insert(
             enemies,
-            TransformComponent{},
-            MovementComponent{},
             EnergyComponent{},
             HealthComponent{ enemyData.healthBase },
             DamageComponent{ enemyData.damageBase },
@@ -262,37 +251,6 @@ namespace EnemiesModule
         }
 
         return enemies;
-    }
-
-    bool regenerate( snx::DenseMap<size_t, EnergyComponent>& energiesIO )
-    {
-        bool isEnergyFull{ false };
-
-        for ( size_t idx{ 0 }; idx < energiesIO.size(); ++idx )
-        {
-#if defined( DEBUG ) && defined( DEBUG_ENERGY )
-            snx::Debugger::cliPrint( "[", idx, "] " );
-#endif
-            isEnergyFull |= EnergyModule::regenerate( energiesIO.values()[idx] );
-        }
-
-        return isEnergyFull;
-    }
-
-    size_t getActive( snx::DenseMap<size_t, EnergyComponent> const& energies )
-    {
-        size_t activeEnemyId{ 0 };
-
-        for ( size_t idx{ 0 }; idx < energies.size(); ++idx )
-        {
-            if ( energies[idx].isReady )
-            {
-                activeEnemyId = energies.key( idx );
-                break;
-            }
-        }
-
-        return activeEnemyId;
     }
 
     Enemies const& replaceDead(

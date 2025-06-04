@@ -10,16 +10,6 @@ struct GameCamera;
 
 namespace AISystem
 {
-    //* Return if multi-frame action taken
-    [[nodiscard]]
-    Enemies const& executeNextAction(
-        Enemies& enemies,
-        size_t& activeEnemyIdIO,
-        Hero& heroIO,
-        Map const& map,
-        GameCamera const& gameCamera
-    );
-
     void update(
         Enemies& enemiesIO,
         Map const& map,

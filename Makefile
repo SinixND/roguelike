@@ -411,6 +411,7 @@ analyze:
 		--suppress=selfAssignment \
 		--suppress=cstyleCast \
 		--suppress=unmatchedSuppression \
+		--inconclusive \
 		--check-level=exhaustive \
 		--error-exitcode=1 \
 		--cppcheck-build-dir=$(BUILD_DIR_ROOT)/cppcheck \
@@ -462,6 +463,7 @@ clean:
 	@rm -rf $(BUILD_DIR_ROOT)/unix/release/*
 	@rm -rf $(BUILD_DIR_ROOT)/web/release/*
 	@rm -rf $(BUILD_DIR_ROOT)/windows/release/*
+	@rm -rf $(BUILD_DIR_ROOT)/cppcheck/*
 
 ### Debug build
 ### Build compile_commands.json
@@ -486,6 +488,7 @@ init:
 	@mkdir -p $(BUILD_DIR_ROOT)/unix/release/
 	@mkdir -p $(BUILD_DIR_ROOT)/web/release/
 	@mkdir -p $(BUILD_DIR_ROOT)/windows/release/
+	@mkdir -p $(BUILD_DIR_ROOT)/cppcheck/
 
 ### Rule for complete compilation, ready to publish
 publish:

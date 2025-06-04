@@ -18,8 +18,6 @@ bool checkCollisionWithNextPosition(
                      Convert::worldToTile(
                          enemies.positions[idx]
                      ),
-                     //* TODO: CHANGE/REMOVE
-                     // enemies.transforms.values()[idx].direction
                      enemies.moves.values()[idx].direction
                  )
              ) )
@@ -33,24 +31,6 @@ bool checkCollisionWithNextPosition(
 
 namespace CollisionSystem
 {
-    bool checkCollisionForHero(
-        Tiles const& tiles,
-        Enemies const& enemies,
-        // Objects const& objects,
-        Vector2I const& tilePositionToCheck
-    )
-    {
-        return (
-            tiles.isSolids.contains( tiles.ids.at( tilePositionToCheck ) )
-            || enemies.ids.contains( tilePositionToCheck )
-            //* Next tilePosition unit moves to
-            || checkCollisionWithNextPosition(
-                enemies,
-                tilePositionToCheck
-            )
-            // || map.objects_.getIsSolids().contains(tilePositionToCheck)
-        );
-    }
     bool checkCollisionForEnemy(
         Tiles const& tiles,
         Enemies const& enemies,

@@ -16,12 +16,12 @@ namespace ExperienceModule
 
     ExperienceComponent const& gainExp(
         ExperienceComponent& experience,
-        int foeExpLevel
+        int value
     )
     {
         //* NOTE: Divide if 1 skillpoint is additive powerincrease
         //* NOTE: Subtract if 1 skillpoint is multiplicative powerincrease
-        experience.current += getExpValue( foeExpLevel, experience.level );
+        experience.current += getExpValue( value, experience.level );
 
         while ( experience.current >= experience.levelUpThreshold )
         {

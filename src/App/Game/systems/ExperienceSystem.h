@@ -12,7 +12,7 @@ namespace ExperienceSystem
     [[nodiscard]]
     ExperienceComponent const& levelUpTo(
         ExperienceComponent& experience,
-        int expLevelDelta
+        int expLevel
     );
 
     [[nodiscard]]

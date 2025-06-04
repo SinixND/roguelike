@@ -17,8 +17,6 @@ struct EnergyComponent
 {
     float regenRate{ 0 };
     float current{ 0 };
-    //* TODO: CHANGE/REMOVE
-    bool isReady{ true };
 };
 
 namespace EnergyModule
@@ -33,9 +31,6 @@ namespace EnergyModule
     /// Consume default cost
     [[nodiscard]]
     EnergyComponent const& exhaust( EnergyComponent& energy );
-
-    /// Returns true if energy is full
-    bool regenerate( EnergyComponent& energyIO );
 }
 
 #endif

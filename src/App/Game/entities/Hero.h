@@ -32,34 +32,11 @@ struct Hero
     int visionRange{ HeroData::VISION_RANGE };
 
     //* Optional components / actions
-    //* Old
-    //* TODO: CHANGE/REMOVE
-    TransformComponent transform{};
-    MovementComponent movement{};
-    //* New
     std::shared_ptr<ActionId> action{};
     std::shared_ptr<AttackComponent> attack{};
     std::shared_ptr<MoveComponent> move{};
     std::vector<Vector2I> path{};
     bool isIdle{};
-};
-
-struct Map;
-struct Cursor;
-struct GameCamera;
-enum class InputId;
-
-namespace HeroModule
-{
-    //* TODO: CHANGE/REMOVE
-    [[nodiscard]]
-    Hero const& executeAction(
-        Hero& hero,
-        Map& mapIO,
-        Cursor const& cursor,
-        GameCamera const& gameCamera,
-        InputId currentInput
-    );
 };
 
 #endif
