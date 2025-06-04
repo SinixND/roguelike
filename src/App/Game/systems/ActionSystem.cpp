@@ -4,6 +4,7 @@
 
 #include "ActionId.h"
 #include "AttackComponent.h"
+#include "AttributesComponent.h"
 #include "CollisionSystem.h"
 #include "Convert.h"
 #include "Cursor.h"
@@ -114,7 +115,7 @@ namespace ActionSystem
                     target,
                     Convert::worldToTile( hero.position )
                 ),
-                HeroData::SPEED_BASE,
+                SPEED_MIN + SPEED_MAX * ( 1.0f * hero.attributes.agility / AttributesModule::totalPoints( hero.attributes ) ),
                 TileData::TILE_SIZE
             );
 

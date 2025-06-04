@@ -8,7 +8,6 @@ namespace EnemiesData
     {
         int const healthBase{};
         int const damageBase{};
-        float const speedBase{};
         int const scanRange{};
         int const vitality{};
         int const strength{};
@@ -19,7 +18,6 @@ namespace EnemiesData
     EnemyData constexpr goblin{
         4,
         1,
-        20 * TileData::TILE_SIZE,
         10,
         1,
         1,
