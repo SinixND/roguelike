@@ -145,6 +145,8 @@ void setupGameEvents(
         [&]()
         {
             ++game.turn;
+            snx::Logger::incrementTurn();
+            snx::Logger::updateHistory();
 
             game.state = GameState::ACTION_HERO;
         }
