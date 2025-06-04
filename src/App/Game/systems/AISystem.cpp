@@ -4,10 +4,8 @@
 
 #include "ActionId.h"
 #include "CollisionSystem.h"
-#include "CombatSystem.h"
 #include "Convert.h"
 #include "Enemies.h"
-#include "EnemiesData.h"
 #include "Hero.h"
 #include "Map.h"
 #include "MoveComponent.h"
@@ -85,7 +83,8 @@ Enemies const& handleValidPath(
             enemyId,
             MoveComponent{
                 direction,
-                EnemiesData::goblin.speedBase,
+                // EnemiesData::goblin.speedBase,
+                SPEED_MIN + SPEED_MAX * ( 1.0f * enemies.attributes.at( enemyId ).agility / AttributesModule::totalPoints( enemies.attributes.at( enemyId ) ) ),
                 TileData::TILE_SIZE
             }
         );

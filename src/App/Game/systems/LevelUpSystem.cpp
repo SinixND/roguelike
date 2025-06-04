@@ -120,13 +120,13 @@ namespace LevelUpSystem
             }
         }
 
-        if ( game.selectedAttribute > ATTRIBUTES )
-        {
-            game.selectedAttribute = 1;
-        }
-        else if ( game.selectedAttribute < 1 )
+        if ( game.selectedAttribute < 0 )
         {
             game.selectedAttribute = ATTRIBUTES;
+        }
+        else if ( game.selectedAttribute > ATTRIBUTES )
+        {
+            game.selectedAttribute = 0;
         }
 
         game.hero = levelUpHero(
