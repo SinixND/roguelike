@@ -21,7 +21,7 @@ snx::DenseMap<Vector2I, Chunk> const& requireChunk(
     //* NOTE: !!! If clause is needed due to exclude unnecessary LoadRenderTexture() calls !!!
     if ( !chunks.contains( chunkPosition ) )
     {
-        chunks.emplace(
+        chunks.try_emplace(
             chunkPosition,
             Convert::tileToWorld( chunkPosition ),
             LoadRenderTexture(

@@ -46,8 +46,8 @@ void setupRaylib( AppConfig const& config )
     //* Raylib Settings
     SetWindowIcon( AppData::FAVICON );
     SetWindowMinSize(
-        AppData::WINDOE_WIDTH_MIN,
-        AppData::WINDOE_HEIGHT_MIN
+        AppData::WINDOW_WIDTH_MIN,
+        AppData::WINDOW_HEIGHT_MIN
     );
 
 #if defined( EMSCRIPTEN )

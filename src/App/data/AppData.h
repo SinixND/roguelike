@@ -8,8 +8,8 @@ namespace AppData
 {
     Image const FAVICON{ LoadImage( "assets/favicon/favicon.png" ) };
 
-    int constexpr WINDOE_WIDTH_MIN{ 640 };
-    int constexpr WINDOE_HEIGHT_MIN{ 480 };
+    int constexpr WINDOW_WIDTH_MIN{ 640 };
+    int constexpr WINDOW_HEIGHT_MIN{ 480 };
 
     int constexpr FPS_TARGET{ 300 };
 };
