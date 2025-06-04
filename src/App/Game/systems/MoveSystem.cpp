@@ -18,8 +18,6 @@ Vector2 const& updateEntity(
 {
     assert( moveIO.remainingDistance > 0 && "Movement done but not cleaned up" );
 
-    //* TODO: Where/How to store/use speed? Separate component? Attributes?
-    //* Find goblin.speedBase and replace accordingly
     if ( !moveIO.speed )
     {
         return position;

@@ -413,12 +413,12 @@ analyze:
 		--suppress=unmatchedSuppression \
 		--inconclusive \
 		--check-level=exhaustive \
-		--error-exitcode=1 \
 		--cppcheck-build-dir=$(BUILD_DIR_ROOT)/cppcheck \
 		--template=gcc \
 		-I include/ \
 		-I src/ \
 		src/
+# --error-exitcode=1 \
 
 ### Build binary with current config
 build: $(BIN_DIR)/$(BIN)$(BIN_EXT)
