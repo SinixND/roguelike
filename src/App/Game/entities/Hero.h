@@ -36,7 +36,7 @@ struct Hero
     std::shared_ptr<AttackComponent> attack{};
     std::shared_ptr<MoveComponent> move{};
     std::vector<Vector2I> path{};
-    bool isIdle{};
+    bool awaitsInput{};
 };
 
 #endif

@@ -190,7 +190,7 @@ DEPS 					= $(patsubst $(BUILD_DIR)/%$(OBJ_EXT),$(BUILD_DIR)/%$(DEP_EXT),$(OBJS)
 # LBL_OtherDirectories
 ### Define /usr directory
 ifeq ($(OS),termux)
-    USR					:= $(PREFIX)
+    USR					:= $(PREFIX)/local
 else
     USR 				:= /usr
 endif

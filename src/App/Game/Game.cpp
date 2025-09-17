@@ -49,7 +49,8 @@ void setupGameEvents(
         EventId::MULTIFRAME_ACTIONS_DONE,
         [&]()
         {
-            game.state = GameState::POST_ACTION;
+            // game.state = GameState::POST_ACTION;
+            game.state = GameState::ACTION_HERO;
         }
     );
 
@@ -161,27 +162,27 @@ void setupGameEvents(
 namespace GameModule
 {
     Game const& init(
-        Game& game,
+        Game& gameIO,
         GameCamera const& gameCamera
     )
     {
 #if defined( DEBUG )
         snx::RNG::seed( 1 );
 #endif
-        game.hero = Hero{};
+        gameIO.hero = Hero{};
 
         AttributeSystem::updateStats(
-            game.hero.health,
-            game.hero.energy,
-            game.hero.attributes
+            gameIO.hero.health,
+            gameIO.hero.energy,
+            gameIO.hero.attributes
         );
 
-        game.world = World{};
+        gameIO.world = World{};
 
-        game.turn = 1;
+        gameIO.turn = 1;
 
         setupGameEvents(
-            game,
+            gameIO,
             gameCamera
         );
 
@@ -189,28 +190,33 @@ namespace GameModule
         // snx::EventDispatcher::notify( EventId::NEXT_LEVEL );
 #endif
 
-        return game;
+        return gameIO;
     }
 
     Game const& update(
-        Game& game,
+        Game& gameIO,
         GameCamera const& gameCamera,
         Cursor const& cursor,
         InputId currentInputId,
         float dt
     )
     {
-        switch ( game.state )
+        switch ( gameIO.state )
         {
             default:
             case GameState::REGEN:
             {
                 EnergySystem::udpate(
-                    game.hero.energy,
-                    game.hero.isIdle,
-                    game.world.currentMap->enemies.energies,
-                    game.world.currentMap->enemies.isIdles
+                    gameIO.hero.energy,
+                    gameIO.hero.awaitsInput,
+                    gameIO.world.currentMap->enemies.energies,
+                    gameIO.world.currentMap->enemies.isIdles
                 );
+
+                if ( gameIO.hero.awaitsInput )
+                {
+                    gameIO.state = GameState::MULTI_FRAME_ACTIONS;
+                }
 
                 break;
             }
@@ -218,16 +224,16 @@ namespace GameModule
             case GameState::ACTION_HERO:
             {
                 ActionSystem::update(
-                    game.hero,
-                    *game.world.currentMap,
+                    gameIO.hero,
+                    *gameIO.world.currentMap,
                     currentInputId,
                     cursor,
                     gameCamera
                 );
 
-                if ( !game.hero.isIdle )
+                if ( !gameIO.hero.awaitsInput )
                 {
-                    game.state = GameState::SINGLE_FRAME_ACTIONS;
+                    gameIO.state = GameState::SINGLE_FRAME_ACTIONS;
                 }
 
                 break;
@@ -236,13 +242,13 @@ namespace GameModule
             case GameState::ACTION_NPC:
             {
                 AISystem::update(
-                    game.world.currentMap->enemies,
-                    *game.world.currentMap,
-                    game.hero,
+                    gameIO.world.currentMap->enemies,
+                    *gameIO.world.currentMap,
+                    gameIO.hero,
                     gameCamera
                 );
 
-                game.state = GameState::SINGLE_FRAME_ACTIONS;
+                gameIO.state = GameState::SINGLE_FRAME_ACTIONS;
 
                 break;
             }
@@ -250,21 +256,22 @@ namespace GameModule
             case GameState::SINGLE_FRAME_ACTIONS:
             {
                 WaitSystem::update(
-                    game.hero,
-                    game.world.currentMap->enemies
+                    gameIO.hero,
+                    gameIO.world.currentMap->enemies
                 );
 
                 AttackSystem::update(
-                    game.hero,
-                    game.world.currentMap->enemies
+                    gameIO.hero,
+                    gameIO.world.currentMap->enemies
                 );
 
                 InteractSystem::update(
-                    game.hero,
-                    game.world.currentMap->objects
+                    gameIO.hero,
+                    gameIO.world.currentMap->objects
                 );
 
-                game.state = GameState::MULTI_FRAME_ACTIONS;
+                // gameIO.state = GameState::MULTI_FRAME_ACTIONS;
+                gameIO.state = GameState::POST_ACTION;
 
                 break;
             }
@@ -272,8 +279,8 @@ namespace GameModule
             case GameState::MULTI_FRAME_ACTIONS:
             {
                 MoveSystem::update(
-                    game.hero,
-                    game.world.currentMap->enemies,
+                    gameIO.hero,
+                    gameIO.world.currentMap->enemies,
                     dt
                 );
 
@@ -282,31 +289,32 @@ namespace GameModule
 
             case GameState::POST_ACTION:
             {
-                PathSystem::update( game.hero );
+                PathSystem::update( gameIO.hero );
 
                 KillSystem::update(
-                    game.hero,
-                    game.world.currentMap->enemies
+                    gameIO.hero,
+                    gameIO.world.currentMap->enemies
                 );
 
-                game.world.currentMap->enemies = EnemiesModule::replaceDead(
-                    game.world.currentMap->enemies,
-                    game.world.currentMap->tiles,
-                    game.world.currentMapLevel
+                gameIO.world.currentMap->enemies = EnemiesModule::replaceDead(
+                    gameIO.world.currentMap->enemies,
+                    gameIO.world.currentMap->tiles,
+                    gameIO.world.currentMapLevel
                 );
 
-                if ( game.state == GameState::POST_ACTION )
-                {
-                    game.state = GameState::REGEN;
-                }
+                //* TODO: Delete redundant check?
+                // if ( gameIO.state == GameState::POST_ACTION )
+                // {
+                gameIO.state = GameState::REGEN;
+                // }
 
                 break;
             }
 
             case GameState::LEVEL_UP:
             {
-                game = LevelUpSystem::update(
-                    game,
+                gameIO = LevelUpSystem::update(
+                    gameIO,
                     currentInputId
                 );
 
@@ -314,6 +322,6 @@ namespace GameModule
             }
         }
 
-        return game;
+        return gameIO;
     }
 }

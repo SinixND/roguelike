@@ -7,6 +7,9 @@ This project is not under active development anymore.
 In favor of other, smaller projects I may or may not continue working on this in the future.
 
 ## Shortterm
+- [ ] Split (visible) movement from game state: 
+    - [x] All visible/rendered moves update simultaneously
+    - [ ] Actions must not wait for visible move update to be done (-> visible and actual position must differ -> extra property of units, eg. 'renderedPosition')
 - [ ] duplicate info: isReady (energy.isReady and isReady to be iterated over in AISystem): Get rid of energy.isReady?
 - [ ] separate pathfinder (calculateVisiblePath, calculatePath)
 - [ ] Extend attributes/leveling

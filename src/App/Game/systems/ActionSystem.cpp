@@ -49,7 +49,7 @@ Hero const& handleInputInPlace(
 
         hero.action = std::make_shared<ActionId>( ActionId::INTERACT );
 
-        hero.isIdle = false;
+        hero.awaitsInput = false;
 
         return hero;
     }
@@ -63,7 +63,7 @@ Hero const& handleInputInPlace(
 
     hero.action = std::make_shared<ActionId>( ActionId::WAIT );
 
-    hero.isIdle = false;
+    hero.awaitsInput = false;
 
     return hero;
 }
@@ -99,7 +99,7 @@ namespace ActionSystem
 
             hero.attack = std::make_shared<AttackComponent>( target );
 
-            hero.isIdle = false;
+            hero.awaitsInput = false;
         }
 
         //* Move
@@ -121,7 +121,7 @@ namespace ActionSystem
 
             assert( ( !hero.move->direction.x || !hero.move->direction.y ) && "Direction not orthogonal!" );
 
-            hero.isIdle = false;
+            hero.awaitsInput = false;
         }
 
         return hero;
