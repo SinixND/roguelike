@@ -15,11 +15,9 @@
 #include "HealthComponent.h"
 #include "IdManager.h"
 #include "Logger.h"
-#include "MovementComponent.h"
 #include "RNG.h"
 #include "RenderId.h"
 #include "Tiles.h"
-#include "TransformComponent.h"
 #include "VisibilityId.h"
 #include "raylibEx.h"
 #include <vector>

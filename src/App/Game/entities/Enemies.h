@@ -13,9 +13,7 @@
 #include "HealthComponent.h"
 #include "IdManager.h"
 #include "MoveComponent.h"
-#include "MovementComponent.h"
 #include "RenderId.h"
-#include "TransformComponent.h"
 #include <cstddef>
 
 struct Vector2I;

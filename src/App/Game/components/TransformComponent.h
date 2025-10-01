@@ -1,6 +1,8 @@
 #ifndef IG20240531201830
 #define IG20240531201830
 
+//* DEPRECATED
+
 #include "raylibEx.h"
 #include <raylib.h>
 

@@ -1,6 +1,8 @@
 #ifndef IG20241214180126
 #define IG20241214180126
 
+//* DEPRECATED
+
 #include "TileData.h"
 #include "raylibEx.h"
 #include <vector>

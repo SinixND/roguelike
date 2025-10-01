@@ -10,9 +10,7 @@
 #include "HealthComponent.h"
 #include "HeroData.h"
 #include "MoveComponent.h"
-#include "MovementComponent.h"
 #include "RenderId.h"
-#include "TransformComponent.h"
 #include "raylibEx.h"
 #include <memory>
 
