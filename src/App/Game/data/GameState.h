@@ -3,8 +3,8 @@
 
 enum class GameState
 {
-    ACTION_HERO,
-    ACTION_NPC,
+    GET_ACTION_HERO,
+    GET_ACTION_NPC,
     LEVEL_UP,
     MULTI_FRAME_ACTIONS,
     POST_ACTION,

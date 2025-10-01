@@ -100,75 +100,115 @@ EnemiesData::EnemyData getEnemyData( RenderId renderId )
     }
 }
 
+[[nodiscard]]
+Enemies const& insert(
+    Enemies& enemies,
+    EnergyComponent const& energy,
+    HealthComponent const& health,
+    DamageComponent const& damage,
+    int vitality,
+    int strength,
+    int defense,
+    int agility,
+    Vector2I const& tilePosition,
+    int scanRange,
+    int expLevel,
+    RenderId renderId
+)
+{
+    size_t id{ Enemies::idManager.requestId() };
+
+    enemies.ids.insert( tilePosition, id );
+    enemies.ais.insert( id, AIComponent{ .scanRange = scanRange } );
+    enemies.positions.insert( id, Convert::tileToWorld( tilePosition ) );
+    enemies.renderIds.insert( id, renderId );
+    enemies.names.insert( id, renderNames.at( renderId ) );
+    enemies.energies.insert( id, energy );
+    enemies.healths.insert( id, health );
+    enemies.damages.insert( id, damage );
+    enemies.experiences.insert( id, ExperienceComponent{} );
+    enemies.attributes.insert( id, AttributesComponent{
+                                       vitality,
+                                       strength,
+                                       defense,
+                                       agility,
+                                   } );
+
+    enemies.experiences.at( id ) = ExperienceSystem::levelUpTo(
+        enemies.experiences.at( id ),
+        expLevel
+    );
+
+    return enemies;
+}
+
+[[nodiscard]]
+Enemies const& remove(
+    Enemies& enemies,
+    size_t id
+)
+{
+    Enemies::idManager.suspendId( id );
+
+    enemies.ids.erase( Convert::worldToTile( enemies.positions.at( id ) ) );
+    enemies.ais.erase( id );
+    enemies.positions.erase( id );
+    enemies.renderIds.erase( id );
+    enemies.names.erase( id );
+    enemies.energies.erase( id );
+    enemies.healths.erase( id );
+    enemies.damages.erase( id );
+    enemies.experiences.erase( id );
+    enemies.attributes.erase( id );
+
+    enemies.actions.erase( id );
+    enemies.attacks.erase( id );
+    enemies.moves.erase( id );
+    enemies.isIdles.erase( id );
+
+    return enemies;
+}
+
+[[nodiscard]]
+Enemies const& createAtRandomPosition(
+    Enemies& enemies,
+    Tiles const& tiles,
+    RenderId renderId,
+    int mapLevel
+)
+{
+    Vector2I tilePosition = getRandomPosition(
+        tiles,
+        enemies.ids
+    );
+
+    enemies = createAtPosition(
+        enemies,
+        tiles,
+        renderId,
+        tilePosition,
+        mapLevel
+    );
+
+    return enemies;
+}
+[[nodiscard]]
+Enemies const& updateAllStats( Enemies& enemies )
+{
+    for ( size_t i{ 0 }; i < enemies.healths.values().size(); ++i )
+    {
+        AttributeSystem::updateStats(
+            enemies.healths[i],
+            enemies.energies[i],
+            enemies.attributes[i]
+        );
+    }
+
+    return enemies;
+}
+
 namespace EnemiesModule
 {
-    Enemies const& insert(
-        Enemies& enemies,
-        EnergyComponent const& energy,
-        HealthComponent const& health,
-        DamageComponent const& damage,
-        int vitality,
-        int strength,
-        int defense,
-        int agility,
-        Vector2I const& tilePosition,
-        int scanRange,
-        int expLevel,
-        RenderId renderId
-    )
-    {
-        size_t id{ Enemies::idManager.requestId() };
-
-        enemies.ids.insert( tilePosition, id );
-        enemies.ais.insert( id, AIComponent{ .scanRange = scanRange } );
-        enemies.positions.insert( id, Convert::tileToWorld( tilePosition ) );
-        enemies.renderIds.insert( id, renderId );
-        enemies.names.insert( id, renderNames.at( renderId ) );
-        enemies.energies.insert( id, energy );
-        enemies.healths.insert( id, health );
-        enemies.damages.insert( id, damage );
-        enemies.experiences.insert( id, ExperienceComponent{} );
-        enemies.attributes.insert( id, AttributesComponent{
-                                           vitality,
-                                           strength,
-                                           defense,
-                                           agility,
-                                       } );
-
-        enemies.experiences.at( id ) = ExperienceSystem::levelUpTo(
-            enemies.experiences.at( id ),
-            expLevel
-        );
-
-        return enemies;
-    }
-
-    Enemies const& remove(
-        Enemies& enemies,
-        size_t id
-    )
-    {
-        Enemies::idManager.suspendId( id );
-
-        enemies.ids.erase( Convert::worldToTile( enemies.positions.at( id ) ) );
-        enemies.ais.erase( id );
-        enemies.positions.erase( id );
-        enemies.renderIds.erase( id );
-        enemies.names.erase( id );
-        enemies.energies.erase( id );
-        enemies.healths.erase( id );
-        enemies.damages.erase( id );
-        enemies.experiences.erase( id );
-        enemies.attributes.erase( id );
-
-        enemies.actions.erase( id );
-        enemies.attacks.erase( id );
-        enemies.moves.erase( id );
-        enemies.isIdles.erase( id );
-
-        return enemies;
-    }
-
     Enemies const& createAtPosition(
         Enemies& enemies,
         Tiles const& tiles,
@@ -205,29 +245,6 @@ namespace EnemiesModule
         );
 
         enemies = updateAllStats( enemies );
-
-        return enemies;
-    }
-
-    Enemies const& createAtRandomPosition(
-        Enemies& enemies,
-        Tiles const& tiles,
-        RenderId renderId,
-        int mapLevel
-    )
-    {
-        Vector2I tilePosition = getRandomPosition(
-            tiles,
-            enemies.ids
-        );
-
-        enemies = createAtPosition(
-            enemies,
-            tiles,
-            renderId,
-            tilePosition,
-            mapLevel
-        );
 
         return enemies;
     }
@@ -284,20 +301,6 @@ namespace EnemiesModule
                 tiles,
                 RenderId::GOBLIN,
                 mapLevel
-            );
-        }
-
-        return enemies;
-    }
-
-    Enemies const& updateAllStats( Enemies& enemies )
-    {
-        for ( size_t i{ 0 }; i < enemies.healths.values().size(); ++i )
-        {
-            AttributeSystem::updateStats(
-                enemies.healths[i],
-                enemies.energies[i],
-                enemies.attributes[i]
             );
         }
 

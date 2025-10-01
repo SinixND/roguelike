@@ -50,7 +50,7 @@ void setupGameEvents(
         [&]()
         {
             // game.state = GameState::POST_ACTION;
-            game.state = GameState::ACTION_HERO;
+            game.state = GameState::GET_ACTION_HERO;
         }
     );
 
@@ -130,7 +130,7 @@ void setupGameEvents(
             snx::Logger::incrementTurn();
             snx::Logger::updateHistory();
 
-            game.state = GameState::ACTION_HERO;
+            game.state = GameState::GET_ACTION_HERO;
         }
     );
 
@@ -138,7 +138,7 @@ void setupGameEvents(
         EventId::NPC_ACTION,
         [&]()
         {
-            game.state = GameState::ACTION_NPC;
+            game.state = GameState::GET_ACTION_NPC;
         }
     );
 
@@ -221,7 +221,7 @@ namespace GameModule
                 break;
             }
 
-            case GameState::ACTION_HERO:
+            case GameState::GET_ACTION_HERO:
             {
                 ActionSystem::update(
                     gameIO.hero,
@@ -239,7 +239,7 @@ namespace GameModule
                 break;
             }
 
-            case GameState::ACTION_NPC:
+            case GameState::GET_ACTION_NPC:
             {
                 AISystem::update(
                     gameIO.world.currentMap->enemies,

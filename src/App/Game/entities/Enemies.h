@@ -49,41 +49,11 @@ struct Enemies
 namespace EnemiesModule
 {
     [[nodiscard]]
-    Enemies const& insert(
-        Enemies& enemies,
-        TransformComponent const& transform,
-        MovementComponent const& movement,
-        EnergyComponent const& energy,
-        HealthComponent const& health,
-        DamageComponent const& damage,
-        int vitality,
-        int agility,
-        Vector2I const& tilePosition,
-        int scanRange,
-        int expLevel,
-        RenderId renderId
-    );
-
-    [[nodiscard]]
-    Enemies const& remove(
-        Enemies& enemies,
-        size_t id
-    );
-
-    [[nodiscard]]
     Enemies const& createAtPosition(
         Enemies& enemies,
         Tiles const& tiles,
         RenderId renderId,
         Vector2I tilePosition,
-        int mapLevel
-    );
-
-    [[nodiscard]]
-    Enemies const& createAtRandomPosition(
-        Enemies& enemies,
-        Tiles const& tiles,
-        RenderId renderId,
         int mapLevel
     );
 
@@ -95,27 +65,11 @@ namespace EnemiesModule
     );
 
     [[nodiscard]]
-    Enemies const& remove(
-        Enemies& enemies,
-        size_t id
-    );
-
-    [[nodiscard]]
-    Enemies const& updateMovements(
-        Enemies& enemies,
-        float dt
-    );
-
-    [[nodiscard]]
     Enemies const& replaceDead(
         Enemies& enemies,
         Tiles const& tiles,
         int mapLevel
     );
-
-    [[nodiscard]]
-    Enemies const& updateAllStats( Enemies& enemies );
-
 }
 
 #endif
