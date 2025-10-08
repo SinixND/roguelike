@@ -154,7 +154,7 @@ void setupGameEvents(
         EventId::LEVELED_UP,
         [&]()
         {
-            game.state = GameState::REGEN;
+            game.state = GameState::REGEN_ENERGIES;
         }
     );
 }
@@ -204,7 +204,7 @@ namespace GameModule
         switch ( gameIO.state )
         {
             default:
-            case GameState::REGEN:
+            case GameState::REGEN_ENERGIES:
             {
                 EnergySystem::udpate(
                     gameIO.hero.energy,
@@ -305,7 +305,7 @@ namespace GameModule
                 //* TODO: Delete redundant check?
                 // if ( gameIO.state == GameState::POST_ACTION )
                 // {
-                gameIO.state = GameState::REGEN;
+                gameIO.state = GameState::REGEN_ENERGIES;
                 // }
 
                 break;

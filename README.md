@@ -93,11 +93,13 @@ Platforms: Linux, Windows, Browser
 
 ```cpp
 src/
-|-- Module/  // eg. App, Game or UI
+|-- ModuleName/  // [PascalCase] eg. App, Game or UI
     |-- classes/    // Classes with private members and methods; one-ofs
+        |-- Example.cpp
         |-- Example.h
         ...
     |-- components/ // Plain old data (POD); defines application state; Usually used multiple times, managed by ECS?
+        |-- ExampleComponent.cpp
         |-- ExampleComponent.h
         ...
     |-- configs/    // changeable data (eg. window dimensions)
@@ -107,16 +109,17 @@ src/
         |-- ExampleData.h
         ...
     |-- entities/   // Organizes components (either POD/struct or Id);
+        |-- Example.cpp
         |-- Example.h
         ...
     |-- systems/    // Functions modifying components or entities
+        |-- ExampleSystem.cpp
         |-- ExampleSystem.h
         ...
     |-- utils/      // Functions used accross the application
         |-- Example.h
         ...
-    ...
-src/main.cpp
+    |-- main.cpp
 ```
 - Use of clang-format, clang-tidy, cppcheck
 

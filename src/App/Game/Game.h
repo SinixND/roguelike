@@ -15,7 +15,7 @@ struct Game
     World world{};
     size_t turn{ 1 };
 
-    GameState state{ GameState::REGEN };
+    GameState state{ GameState::REGEN_ENERGIES };
 
     size_t activeEnemyId{ 0 };
     int selectedAttribute{ 0 };

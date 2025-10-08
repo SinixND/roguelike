@@ -172,12 +172,12 @@ void updateApp( void* arg )
                 app.dt
             );
 
-            app.screens.game.update(
-                app.game,
-                app.input.cursor,
-                app.gameCamera,
-                app.input.currentInputId
-            );
+            // app.screens.game.update(
+            //     app.game,
+            //     app.input.cursor,
+            //     app.gameCamera,
+            //     app.input.currentInputId
+            // );
 
             break;
         }

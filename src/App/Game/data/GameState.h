@@ -8,7 +8,7 @@ enum class GameState
     LEVEL_UP,
     MULTI_FRAME_ACTIONS,
     POST_ACTION,
-    REGEN,
+    REGEN_ENERGIES,
     SINGLE_FRAME_ACTIONS,
 };
 

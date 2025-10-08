@@ -5,6 +5,7 @@
 #include "EventDispatcher.h"
 #include "EventId.h"
 #include "Hero.h"
+#include "MovementComponent.h"
 #include "raylibEx.h"
 #include <cassert>
 #include <cstddef>

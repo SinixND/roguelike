@@ -180,7 +180,7 @@ Enemies const& createAtRandomPosition(
         enemies.ids
     );
 
-    enemies = createAtPosition(
+    enemies = EnemiesModule::createAtPosition(
         enemies,
         tiles,
         renderId,
